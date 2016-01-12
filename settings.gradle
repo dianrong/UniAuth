@@ -1,0 +1,5 @@
+rootProject.name = "uniauth"
+
+include ":client"
+include ":subsystem"
+

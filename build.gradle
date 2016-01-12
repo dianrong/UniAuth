@@ -1,0 +1,106 @@
+allprojects {
+    group = 'com.dianrong.common.uniauth'
+    version = '1.0-SNAPSHOT'
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven-publish'
+
+    repositories {
+        maven {
+            url 'http://archiva.dianrong.com/repository/mirror'
+        }
+        maven {
+            url 'http://archiva.dianrong.com/repository/internal'
+        }
+        maven {
+            url 'http://archiva.dianrong.com/repository/snapshots'
+        }
+    }
+
+    publishing {
+        repositories {
+            maven {
+                url 'http://archiva.dianrong.com/repository/mirror'
+                credentials {
+                    username = 'developer'
+                    password = 'welcome123'
+                }
+            }
+            maven {
+                url 'http://archiva.dianrong.com/repository/internal'
+                credentials {
+                    username = 'developer'
+                    password = 'welcome123'
+                }
+            }
+            maven {
+                url 'http://archiva.dianrong.com/repository/snapshots'
+                credentials {
+                    username = 'developer'
+                    password = 'welcome123'
+                }
+            }
+        }
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    
+    configurations.all {
+    	resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
+	}
+	dependencies {
+		//Test Suite
+    	testCompile 'junit:junit:4.12'
+	}
+	
+	/***
+	task wrapper(type: Wrapper) {
+		gradleVersion = '2.9'
+		archiveBase = 'PROJECT'
+		archivePath = 'gradle/dists'
+	}
+	**/
+}
+
+project(':client') {
+	dependencies {
+	    compile 'com.dianrong.loanbusiness.uniauth:loanbusiness-uniauth-client:1.0.27-SNAPSHOT'
+	    compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-remoting:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-ldap:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-acl:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-cas:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-openid:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-taglibs:4.0.3.RELEASE'
+	}
+	
+	repositories{
+		mavenCentral()
+	}
+}
+
+project(':subsystem') {
+	apply plugin: 'war'
+	
+	dependencies {
+	    compile project(":client")
+	    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+	    compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
+	     
+	}
+	configurations{
+    	runtime.exclude group : 'commons-logging',module:'commons-logging'
+	}
+	
+	war {
+    	archiveName = project.name + '.war'
+	}
+}
