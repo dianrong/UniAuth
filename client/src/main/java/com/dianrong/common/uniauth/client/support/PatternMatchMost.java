@@ -1,12 +1,17 @@
 package com.dianrong.common.uniauth.client.support;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PatternMatchMost {
 	private static final Pattern EXCLUDE_CHARS_PATTERN = Pattern.compile("[(\\)(/)(\\|)(\\,)(\\[)(\\])(\\{)(\\})(\\()(\\))(\\^)(\\$)(\\.)(\\-)(\\&)(\\?)(\\*)(\\+)(\\\\s)(\\\\S)(\\\\d)(\\\\D)(\\\\w)(\\\\W)]");
+	private static Logger LOGGER = LoggerFactory.getLogger(PatternMatchMost.class);
 	
 	private PatternMatchMost(){
 		
@@ -16,16 +21,25 @@ public class PatternMatchMost {
 	public static Pattern findMachMost(Iterator<Pattern> patterns, String requestUrl){
 		Pattern matchMostPattern = null;
 		int matchLength = -1;
+		List<String> conflicts = new ArrayList<String>();
 		
 		while (patterns.hasNext()) {
 			Pattern uriPattern = patterns.next();
 			if (uriPattern.matcher(requestUrl).matches()) {
-				String pure = EXCLUDE_CHARS_PATTERN.matcher(uriPattern.pattern()).replaceAll("");
+				String defPattern = uriPattern.pattern();
+				String pure = EXCLUDE_CHARS_PATTERN.matcher(defPattern).replaceAll("");
 				int pureLength = pure.length();
 				if(pure.length() > matchLength){
 					matchMostPattern = uriPattern;
 					matchLength = pureLength;
+					conflicts.add(defPattern);
 				}
+			}
+		}
+		
+		if(conflicts.size() > 1){
+			if(LOGGER.isWarnEnabled()){
+				LOGGER.warn("Found more than one pattern<" + Arrays.asList(conflicts) + "> matcing <" + requestUrl +">,choose " + matchMostPattern.pattern());
 			}
 		}
 		
