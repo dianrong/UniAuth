@@ -25,21 +25,21 @@ allprojects {
                 url 'http://archiva.dianrong.com/repository/mirror'
                 credentials {
                     username = 'developer'
-                    password = 'welcome123'
+                    password = '#a1GiRoKJnG'
                 }
             }
             maven {
                 url 'http://archiva.dianrong.com/repository/internal'
                 credentials {
                     username = 'developer'
-                    password = 'welcome123'
+                    password = '#a1GiRoKJnG'
                 }
             }
             maven {
                 url 'http://archiva.dianrong.com/repository/snapshots'
                 credentials {
                     username = 'developer'
-                    password = 'welcome123'
+                    password = '#a1GiRoKJnG'
                 }
             }
         }
@@ -58,15 +58,14 @@ allprojects {
 		//Test Suite
     	testCompile 'junit:junit:4.12'
 	}
-	
-	/***
-	task wrapper(type: Wrapper) {
-		gradleVersion = '2.9'
-		archiveBase = 'PROJECT'
-		archivePath = 'gradle/dists'
-	}
-	**/
+
 }
+
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '2.6'
+//    archiveBase = 'PROJECT'
+//    archivePath = 'gradle/dists'
+//}
 
 project(':client') {
 	dependencies {
@@ -81,10 +80,31 @@ project(':client') {
 		compile 'org.springframework.security:spring-security-openid:4.0.3.RELEASE'
 		compile 'org.springframework.security:spring-security-taglibs:4.0.3.RELEASE'
 	}
-	
-	repositories{
+
+    repositories{
 		mavenCentral()
 	}
+
+    jar {
+        baseName = 'common-uniauth-client'
+    }
+
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
+
+    publishing {
+        publications {
+            client(MavenPublication) {
+                artifactId 'common-uniauth-client'
+                from components.java
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+    }
 }
 
 project(':subsystem') {

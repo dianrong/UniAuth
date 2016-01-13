@@ -2,4 +2,6 @@ rootProject.name = "uniauth"
 
 include ":client"
 include ":subsystem"
-
+include ":common"
+include ":uniauth-server"
+include ":console-client"
