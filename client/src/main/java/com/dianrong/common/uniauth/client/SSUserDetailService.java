@@ -17,11 +17,10 @@ import com.dianrong.uniauth.common.data.UAUserDetailInfo;
 
 public class SSUserDetailService implements UserDetailsService {
 	private UAClientFacade uaClientFacade;
-	private DomainDefine domainDefine;
+	private String domainName;
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
 		if(userName != null && !"".equals(userName.trim())){
-			String domainName = domainDefine.getDomainName();
 			UAUserDetailInfo uaudi = uaClientFacade.detailInfo(userName, domainName);
 			
 			if(uaudi != null){
@@ -61,11 +60,10 @@ public class SSUserDetailService implements UserDetailsService {
 	public void setUaClientFacade(UAClientFacade uaClientFacade) {
 		this.uaClientFacade = uaClientFacade;
 	}
-	public DomainDefine getDomainDefine() {
-		return domainDefine;
+	public String getDomainName() {
+		return domainName;
 	}
-	public void setDomainDefine(DomainDefine domainDefine) {
-		this.domainDefine = domainDefine;
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
 	}
-	
 }

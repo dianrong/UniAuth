@@ -43,7 +43,7 @@
 	
 	<beans:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.SSUserDetailService">
 		<beans:property name="uaClientFacade" ref="uaClientFacade"/>
-		<beans:property name="domainDefine" ref="domainDefine"/>
+		<beans:property name="domainName" value="#{domainDefine.domainName}"/>
 	</beans:bean>
 
 	<beans:bean id="ssAccessDecisionManagerBean" class="com.dianrong.common.uniauth.client.SSAccessDecisionManager">
@@ -51,7 +51,7 @@
 
 	<beans:bean id="securityMetadataSource"	class="com.dianrong.common.uniauth.client.SSInvocationSecurityMetadataSource" init-method="loadResourceDefine">
 		<beans:property name="uaClientFacade" ref="uaClientFacade"/>
-		<beans:property name="domainDefine" ref="domainDefine"/>
+		<beans:property name="domainName" value="#{domainDefine.domainName}"/>
 	</beans:bean>
 
 	<beans:bean id="disconfInitialization" class="com.dianrong.loanbusiness.basic.disconf.DisconfInitialization" />

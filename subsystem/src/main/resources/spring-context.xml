@@ -18,5 +18,6 @@
 
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
 		<property name="domainName" value="techops"></property>
+		<property name="domainDefaultUrl" value="http://localhost:8080/techops/index.jsp"></property>
 	</bean>
 </beans>

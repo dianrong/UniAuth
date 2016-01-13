@@ -19,7 +19,7 @@ import com.dianrong.uniauth.common.data.UAUriPatternRolesMapping;
 
 public class SSInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 	private UAClientFacade uaClientFacade;
-	private DomainDefine domainDefine;
+	private String domainName;
 	private Map<Pattern, List<ConfigAttribute>> resourceMap = new HashMap<Pattern, List<ConfigAttribute>>();
 	private List<ConfigAttribute> allRoleList = new ArrayList<ConfigAttribute>();
 	private List<ConfigAttribute> emptyRoleList = new ArrayList<ConfigAttribute>();
@@ -30,7 +30,6 @@ public class SSInvocationSecurityMetadataSource implements FilterInvocationSecur
 	}*/
 
 	private void loadResourceDefine() {
-		String domainName = domainDefine.getDomainName();
 		List<UAUriPatternRolesMapping> mappingList = uaClientFacade.getUriPatternRolesMapping(domainName);
 		if(mappingList != null && !mappingList.isEmpty()){
 			for(UAUriPatternRolesMapping mapping: mappingList){
@@ -83,12 +82,11 @@ public class SSInvocationSecurityMetadataSource implements FilterInvocationSecur
 		this.uaClientFacade = uaClientFacade;
 	}
 
-	public DomainDefine getDomainDefine() {
-		return domainDefine;
+	public String getDomainName() {
+		return domainName;
 	}
 
-	public void setDomainDefine(DomainDefine domainDefine) {
-		this.domainDefine = domainDefine;
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
 	}
-	
 }
