@@ -9,84 +9,34 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.18.43:3307/loanbase"
-                        userId="loanbase" password="dev_loanbase">
+                        connectionURL="jdbc:mysql://192.168.2.177:3306/uniauth"
+                        userId="root" password="root">
         </jdbcConnection>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="com.dianrong.uniauth.data.entity"
+        <javaModelGenerator targetPackage="com.dianrong.common.uniauth.server.data.entity"
                             targetProject="${targetProject}">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="false"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="com.dianrong.uniauth.data.xml"
+        <sqlMapGenerator targetPackage="com.dianrong.common.uniauth.server.data.xml"
                          targetProject="${targetProject}">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dianrong.uniauth.data.mapper" targetProject="${targetProject}">
+                             targetPackage="com.dianrong.common.uniauth.server.data.mapper" targetProject="${targetProject}">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
 
-        <table tableName="ua_area" domainObjectName="Area" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_domain" domainObjectName="Domain" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_group" domainObjectName="Group" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_menu" domainObjectName="Menu" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_role" domainObjectName="Role" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_role_menu" domainObjectName="RoleMenu" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_uri_pattern" domainObjectName="UriPattern" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_role_uri_pattern" domainObjectName="RoleUriPattern" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_user" domainObjectName="User" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_user_domain" domainObjectName="UserDomain" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-
-        <table tableName="ua_user_role" domainObjectName="UserRole" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
+        <table tableName="%" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
         </table>
 
     </context>
