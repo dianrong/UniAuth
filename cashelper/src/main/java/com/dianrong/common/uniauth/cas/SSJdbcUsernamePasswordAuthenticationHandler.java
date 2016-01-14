@@ -18,7 +18,7 @@ public class SSJdbcUsernamePasswordAuthenticationHandler extends AbstractJdbcUse
         final String inputPassword = credentials.getPassword();
         
         try {
-            final String dbPasswordCombine = getJdbcTemplate().queryForObject(this.sql, String.class, inputUser);
+            final String dbPasswordCombine = getJdbcTemplate().queryForObject(this.sql, String.class, inputUser, inputUser);
             if(dbPasswordCombine == null){
             	return false;
             }
