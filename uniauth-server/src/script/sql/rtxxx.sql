@@ -133,7 +133,7 @@ CREATE UNIQUE INDEX `display_name_UNIQUE` ON `domain` (`display_name` ASC);
 -- Table `role_code`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `role_code` (
-  `id` INT NOT NULL COMMENT 'ADMIN, USER, VIEW',
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'ADMIN, USER, VIEW',
   `code` VARCHAR(32) NOT NULL COMMENT 'ADMIN, USER, VIEW',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -321,4 +321,14 @@ CREATE TABLE IF NOT EXISTS `stakeholder` (
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_stakeholder_domain1_idx` ON `stakeholder` (`domain_id` ASC);
+
 alter table `user` AUTO_INCREMENT=200000000;
+
+insert into `role_code`(`code`) values ('ADMIN');
+insert into `role_code`(`code`) values ('USER');
+insert into `role_code`(`code`) values ('VIEW');
+
+insert into `group_code`(`code`, `description`) values ('SALES', '销售组用的code, 给子系统用于标识组别');
+insert into `group_code`(`code`, `description`) values ('RISK', '风控组用的code, 给子系统用于标识组别');
+insert into `group_code`(`code`, `description`) values ('EMPLOYEE', '员工组用的code, 给子系统用于标识组别');
+insert into `group_code`(`code`, `description`) values ('ADMIN', '管理员组用的code, 给子系统用于标识组别');
