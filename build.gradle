@@ -124,3 +124,13 @@ project(':subsystem') {
     	archiveName = project.name + '.war'
 	}
 }
+
+project(':cashelper') {
+	dependencies {
+		compile 'org.jasig.cas:cas-server-core:3.5.2.1'
+	}
+	
+	repositories{
+		mavenCentral()
+	}
+}
