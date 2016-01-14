@@ -19,6 +19,10 @@ allprojects {
         }
     }
 
+    repositories{
+		mavenCentral()
+	}
+	
     publishing {
         repositories {
             maven {
@@ -67,8 +71,16 @@ allprojects {
 //    archivePath = 'gradle/dists'
 //}
 
+project(':common') {
+	dependencies {
+		compile 'org.apache.commons:commons-lang3:3.4'
+		compile 'com.google.guava:guava:18.0'
+	}
+}
+
 project(':client') {
 	dependencies {
+		compile project(":common")
 	    compile 'com.dianrong.loanbusiness.uniauth:loanbusiness-uniauth-client:1.0.27-SNAPSHOT'
 	    compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
 		compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
@@ -79,10 +91,6 @@ project(':client') {
 		compile 'org.springframework.security:spring-security-cas:4.0.3.RELEASE'
 		compile 'org.springframework.security:spring-security-openid:4.0.3.RELEASE'
 		compile 'org.springframework.security:spring-security-taglibs:4.0.3.RELEASE'
-	}
-
-    repositories{
-		mavenCentral()
 	}
 
     jar {
@@ -127,10 +135,7 @@ project(':subsystem') {
 
 project(':cashelper') {
 	dependencies {
-		compile 'org.jasig.cas:cas-server-core:3.5.2.1'
-	}
-	
-	repositories{
-		mavenCentral()
+		compile project(":common")
+		compile 'org.jasig.cas:cas-server-support-jdbc:3.5.2.1'
 	}
 }
