@@ -15,29 +15,79 @@
     <global-method-security pre-post-annotations="enabled" secured-annotations="enabled" jsr250-annotations="enabled" proxy-target-class="true">
     </global-method-security>
     
+    <!-- 
 	<http pattern="/index.jsp" security="none"/> 
-    <http use-expressions="true">
+	 -->
+    <http entry-point-ref="casAuthEntryPoint" use-expressions="true">
+    	<!-- 
       	<form-login default-target-url="/index.jsp"/>
-      	<!-- <intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_USER')"/> -->
+      	<intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_USER')"/>
       	<logout logout-success-url="/index.jsp"/>
-      	<custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="ssFilter" />
-      	<csrf disabled="true"/>
       	<access-denied-handler error-page="/403.jsp"/>
+      	 -->
+      	<custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="ssFilter" />
+      	<custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
+      	<custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+      	<custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
+      	<csrf disabled="true"/>
     </http>
 	
-	<beans:bean id="ssFilter" class="com.dianrong.common.uniauth.client.SSFilterSecurityInterceptor">
-		<beans:property name="authenticationManager" ref="authenticationManager" />
-		<beans:property name="accessDecisionManager" ref="ssAccessDecisionManagerBean" />
-		<beans:property name="securityMetadataSource" ref="securityMetadataSource" />
+	<beans:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
+	  <beans:property name="loginUrl" value="http://localhost:9080/cas/login"/>    
+	  <beans:property name="serviceProperties" ref="casService"/>    
+	</beans:bean>  
+	
+	<beans:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
+		<beans:property name="service" value="#{domainDefine.domainDefaultUrl}/j_spring_cas_security_check"/>   
+		<beans:property name="authenticateAllArtifacts" value="true"/> 
+	</beans:bean>  
+	
+	<beans:bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">    
+		<beans:property name="authenticationManager" ref="authenticationManager"/>
+		<beans:property name="filterProcessesUrl" value="/j_spring_cas_security_check"></beans:property>
 	</beans:bean>
-
+	
+	<beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
+		<beans:property name="ticketValidator" ref="casTicketValidator"/>    
+		<beans:property name="serviceProperties" ref="casService"/>    
+		<beans:property name="key" value="dianrong-ss-uniauth-cas"/>    
+		<beans:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>    
+	</beans:bean>
+	
+	<beans:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
+		<beans:constructor-arg value="http://localhost:9080/cas/"/>    
+	</beans:bean>
+	
+	<beans:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">    
+		<beans:property name="userDetailsService" ref="ssUserDetailService"/>    
+	</beans:bean>  
+	
+	<beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+	
+	<beans:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<beans:property name="filterProcessesUrl" value="/j_spring_cas_security_logout"></beans:property>
+		<beans:constructor-arg value="http://localhost:9080/cas/logout" />
+		<beans:constructor-arg>
+			<beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+		</beans:constructor-arg>
+	</beans:bean>
+	
 	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="casAuthenticationProvider"/>
+		<!-- 
 		<authentication-provider user-service-ref="ssUserDetailService">
 			<password-encoder ref="ssPasswordEncoder">
                 <salt-source user-property="passwordSalt"/>
             </password-encoder> 
 		</authentication-provider>
+		 -->
 	</authentication-manager>
+		
+	<beans:bean id="ssFilter" class="com.dianrong.common.uniauth.client.SSFilterSecurityInterceptor">
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="accessDecisionManager" ref="ssAccessDecisionManagerBean" />
+		<beans:property name="securityMetadataSource" ref="securityMetadataSource" />
+	</beans:bean>
 	
 	<beans:bean id="ssPasswordEncoder" class="com.dianrong.common.uniauth.client.SSPasswordEncoder"></beans:bean>
 	
