@@ -18,6 +18,6 @@
 
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
 		<property name="domainName" value="techops"></property>
-		<property name="domainDefaultUrl" value="http://localhost:8090/subsystem"></property>
+		<property name="domainDefaultUrl" value="http://localhost:8080/subsystem"></property>
 	</bean>
 </beans>
