@@ -2,8 +2,8 @@ package com.dianrong.common.uniauth.client;
 
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 
-import com.dianrong.common.uniauth.client.support.AuthUtils;
-import com.dianrong.common.uniauth.client.support.Base64;
+import com.dianrong.common.uniauth.common.util.AuthUtils;
+import com.dianrong.common.uniauth.common.util.Base64;
 
 @SuppressWarnings("deprecation")
 public class SSPasswordEncoder implements PasswordEncoder {
