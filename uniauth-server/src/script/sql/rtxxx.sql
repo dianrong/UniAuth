@@ -324,9 +324,10 @@ CREATE INDEX `fk_stakeholder_domain1_idx` ON `stakeholder` (`domain_id` ASC);
 
 alter table `user` AUTO_INCREMENT=200000000;
 
-insert into `role_code`(`code`) values ('ADMIN');
-insert into `role_code`(`code`) values ('USER');
-insert into `role_code`(`code`) values ('VIEW');
+alter table `role_code` add column `description` VARCHAR(512) NULL AFTER `code`;
+insert into `role_code`(`code`, `description`) values ('ADMIN', '管理员');
+insert into `role_code`(`code`, `description`) values ('USER', '普通用户');
+insert into `role_code`(`code`, `description`) values ('VIEW', 'Guest用户');
 
 insert into `group_code`(`code`, `description`) values ('SALES', '销售组用的code, 给子系统用于标识组别');
 insert into `group_code`(`code`, `description`) values ('RISK', '风控组用的code, 给子系统用于标识组别');
