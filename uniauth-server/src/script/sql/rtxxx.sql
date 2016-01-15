@@ -333,3 +333,7 @@ insert into `group_code`(`code`, `description`) values ('SALES', '销售组用�
 insert into `group_code`(`code`, `description`) values ('RISK', '风控组用的code, 给子系统用于标识组别');
 insert into `group_code`(`code`, `description`) values ('EMPLOYEE', '员工组用的code, 给子系统用于标识组别');
 insert into `group_code`(`code`, `description`) values ('ADMIN', '管理员组用的code, 给子系统用于标识组别');
+
+ALTER TABLE `permission` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `domain_id`;
+ALTER TABLE `role` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `description`;
+ALTER TABLE `domain` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `description`;
