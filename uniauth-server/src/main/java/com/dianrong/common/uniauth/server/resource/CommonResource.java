@@ -7,14 +7,14 @@ import com.dianrong.common.uniauth.common.interfaces.ICommonResource;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.server.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Created by Arc on 15/1/16.
  */
-@RestController
+@Component
 public class CommonResource implements ICommonResource {
 
     @Autowired
