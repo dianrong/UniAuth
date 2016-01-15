@@ -136,6 +136,9 @@ project(':subsystem') {
 project(':cashelper') {
 	dependencies {
 		compile project(":common")
-		compile 'org.jasig.cas:cas-server-support-jdbc:3.5.2.1'
+		compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
+			transitive = true
+			exclude group: 'javax.xml', module: 'xmldsig'
+		}
 	}
 }
