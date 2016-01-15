@@ -2,7 +2,9 @@ package com.dianrong.common.uniauth.common.bean;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Arc on 14/1/16.
@@ -10,50 +12,43 @@ import java.util.List;
 public class Response<T> implements Serializable {
 
     private static final long serialVersionUID = 4391955854748049770L;
-    private static Error errorOK = new Error(ErrorName.OK);
-    private static Error internalError = Error.build(ErrorName.INTERNAL_ERROR, "Internal error");
-    private static List<Error> okErrorList = Arrays.asList(errorOK);
+    private static Info internalError = Info.build(InfoName.INTERNAL_ERROR, "Internal error");
+    private static String emptyString = "";
     private String uuid;
     /** 返回数据 */
-    private T result;
+    private T data;
     /** 返回信息 */
-    private List<Error> info;
+    private List<Info> info;
 
     public Response() {
     }
 
-    public Response(List<Error> errors) {
-        this.info = errors;
+    public Response(List<Info> info) {
+        this.info = info;
     }
 
-    public Response(Error error) {
-        this.info = Arrays.asList(error);
+    public Response(Info info) {
+        this.info = Arrays.asList(info);
     }
 
-    public Response(T result, List<Error> errors) {
-        this.result = result;
-        this.info = errors;
+    public Response(T result) {
+        this.data = result;
     }
 
-    public Response(T result, Error error) {
-        this.result = result;
-        this.info = Arrays.asList(error);
+    public T getData() {
+        return data;
     }
 
-    public T getResult() {
-        return result;
-    }
-
-    public Response<T> setResult(T result) {
-        this.result = result;
+    public Response<T> setData(T data) {
+        this.data = data;
         return this;
     }
 
-    public List<Error> getInfo() {
+    public List<Info> getInfo() {
         return info;
     }
 
-    public Response setInfo(List<Error> info) {
+    public Response setInfo(List<Info> info) {
         this.info = info;
         return this;
     }
@@ -68,31 +63,27 @@ public class Response<T> implements Serializable {
     }
 
     public static <T> Response<T> success(T result) {
-        return new Response<T>(result, okErrorList);
+        return new Response<T>(result);
     }
 
-    public static <T> Response<T> success() {
-        return new Response<T>(okErrorList);
+    public static Response<String> success() {
+        return new Response<String>(emptyString);
     }
 
-    public static <T> Response<T> success(T result, Error error) {
-        return new Response<T>(result, error);
+    public static <T> Response<T> failure(Info info) {
+        return new Response<T>(info);
     }
 
-    public static <T> Response<T> failure(Error error) {
-        return new Response<T>(error);
-    }
-
-    public static <T> Response<T> failure(List<Error> errors) {
-        return new Response<T>(errors);
+    public static <T> Response<T> failure(List<Info> info) {
+        return new Response<T>(info);
     }
 
     public static <T> Response<T> failure() {
         return new Response<T>(internalError);
     }
 
-    public static <T> Response<T> failure(ErrorName name, String errMsg) {
-        return failure(Error.build(name, errMsg));
+    public static <T> Response<T> failure(InfoName name, String errMsg) {
+        return failure(Info.build(name, errMsg));
     }
 
 }

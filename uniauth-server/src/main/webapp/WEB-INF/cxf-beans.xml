@@ -11,10 +11,11 @@
     <jaxrs:server address="/rs">
         <jaxrs:serviceBeans>
             <ref bean="userResource" />
+            <ref bean="commonResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />
-            <ref bean="wadlGenerator" />
+            <!--<ref bean="wadlGenerator" />-->
         </jaxrs:providers>
     </jaxrs:server>
 
@@ -26,8 +27,8 @@
         <constructor-arg ref="jacksonObjectMapper"></constructor-arg>
     </bean>
 
-    <bean id="wadlGenerator" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator">
-        <property name="linkAnyMediaTypeToXmlSchema" value="true" />
-    </bean>
+    <!--<bean id="wadlGenerator" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator">-->
+        <!--<property name="linkAnyMediaTypeToXmlSchema" value="true" />-->
+    <!--</bean>-->
     <!-- CXF Configuration Ends -->
 </beans>
