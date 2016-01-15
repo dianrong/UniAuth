@@ -6,7 +6,7 @@ apply from: 'build-mybatis.gradle'
 
 dependencies {
 
-    compile project(":client")
+    compile project(":common")
 
     //Spring
     def spring_version = '4.1.6.RELEASE'
@@ -39,9 +39,12 @@ dependencies {
 
     //cxf
     compile "org.apache.cxf:cxf-rt-transports-http:${cxf_version}"
+    compile "org.apache.cxf:cxf-rt-rs-service-description:${cxf_version}"  // for wadl generate purpose
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.3' // for json support
 
     //Google Jar
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.guava:guava:18.0'
 
     //JDBC Pool
     compile 'org.apache.commons:commons-dbcp2:2.1'

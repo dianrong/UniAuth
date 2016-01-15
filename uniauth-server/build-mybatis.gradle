@@ -21,7 +21,7 @@ task generateMybatis << {
     )
     ant.mbgenerator(
             overwrite: true,
-            configfile: "$rootDir/server/src/deployment/mybatis/generatorConfig.xml",
+            configfile: "$rootDir/uniauth-server/src/deployment/mybatis/generatorConfig.xml",
             verbose: true
     ) {
         propertyset {
