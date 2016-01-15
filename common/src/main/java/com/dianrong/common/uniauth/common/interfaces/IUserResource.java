@@ -2,10 +2,9 @@ package com.dianrong.common.uniauth.common.interfaces;
 
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
@@ -14,9 +13,10 @@ import java.util.Map;
  */
 @Path("user")
 @Produces({MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
 public interface IUserResource {
-    @GET
+    @POST
     @Path("test")
-    Response<String> testResult();
+    Response<String> testResult(UserQuery userQuery);
 
 }
