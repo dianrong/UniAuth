@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Operator {
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    protected String email;
+    protected String opEmail;
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    protected String phone;
+    protected String opPhone;
 }
