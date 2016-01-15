@@ -14,30 +14,30 @@ public class Response<T> implements Serializable {
     private static Error internalError = Error.build(ErrorName.INTERNAL_ERROR, "Internal error");
     private static List<Error> okErrorList = Arrays.asList(errorOK);
     private String uuid;
-    /** 数据记录 */
+    /** 返回数据 */
     private T result;
-    /** 错误信息 */
-    private List<Error> errors;
+    /** 返回信息 */
+    private List<Error> info;
 
     public Response() {
     }
 
     public Response(List<Error> errors) {
-        this.errors = errors;
+        this.info = errors;
     }
 
     public Response(Error error) {
-        this.errors = Arrays.asList(error);
+        this.info = Arrays.asList(error);
     }
 
     public Response(T result, List<Error> errors) {
         this.result = result;
-        this.errors = errors;
+        this.info = errors;
     }
 
     public Response(T result, Error error) {
         this.result = result;
-        this.errors = Arrays.asList(error);
+        this.info = Arrays.asList(error);
     }
 
     public T getResult() {
@@ -49,12 +49,12 @@ public class Response<T> implements Serializable {
         return this;
     }
 
-    public List<Error> getErrors() {
-        return errors;
+    public List<Error> getInfo() {
+        return info;
     }
 
-    public Response setErrors(List<Error> errors) {
-        this.errors = errors;
+    public Response setInfo(List<Error> info) {
+        this.info = info;
         return this;
     }
 

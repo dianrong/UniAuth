@@ -7,7 +7,7 @@ public enum ErrorName {
     OK,
     REDIRECT,
     BAD_REQUEST,
-    VALIDATE_ERROR,
+    VALIDATE_FAIL,
     INTERNAL_ERROR,
     STACKTRACE
 }
