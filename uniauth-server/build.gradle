@@ -14,6 +14,7 @@ dependencies {
     compile "org.springframework:spring-context:${spring_version}"
     compile "org.springframework:spring-jdbc:${spring_version}"
     compile "org.springframework:spring-tx:${spring_version}"
+    compile "org.springframework:spring-web:${spring_version}"
     //compile "org.springframework:spring-webmvc:${spring_version}"
     compile "org.springframework:spring-context-support:${spring_version}"
     compile "org.springframework:spring-aop:${spring_version}"
