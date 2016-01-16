@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
-           http://www.springframework.org/schema/security
-           http://www.springframework.org/schema/security/spring-security-4.0.xsd">
-	
+			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security-4.0.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+			
+ 	<beans:bean id="caszk" class="com.dianrong.common.uniauth.client.support.ZooKeeperConfig" init-method="init">
+		<beans:property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/loanbusiness/uniauth"/>
+		<beans:property name="needKeepAlive" value="false"/>
+	</beans:bean>
+
 	<beans:bean id="uaClientFacade" class="com.dianrong.uniauth.client.UAClientFacade"></beans:bean>
 		
 	<beans:bean id="customWebInvocationPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
@@ -33,7 +42,7 @@
     </http>
 	
 	<beans:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
-	  <beans:property name="loginUrl" value="http://localhost:9080/cas/login"/>    
+	  <beans:property name="loginUrl" value="#{caszk['cas_server']}/login"/>    
 	  <beans:property name="serviceProperties" ref="casService"/>    
 	</beans:bean>  
 	
@@ -56,7 +65,7 @@
 	</beans:bean>
 	
 	<beans:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
-		<beans:constructor-arg value="http://localhost:9080/cas/"/>    
+		<beans:constructor-arg value="#{caszk['cas_server']}/"/>    
 	</beans:bean>
 	
 	<beans:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">    
@@ -67,7 +76,7 @@
 	
 	<beans:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
 		<beans:property name="filterProcessesUrl" value="/j_spring_cas_security_logout"></beans:property>
-		<beans:constructor-arg value="http://localhost:9080/cas/logout" />
+		<beans:constructor-arg value="#{caszk['cas_server']}/logout" />
 		<beans:constructor-arg>
 			<beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
 		</beans:constructor-arg>
