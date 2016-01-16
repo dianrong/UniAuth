@@ -14,7 +14,7 @@
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd
                         ">
-    <import resource="classpath:ss-security-client.xml" />
+	<import resource="classpath:ss-security-client.xml" />
 
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
 		<property name="domainName" value="techops"></property>
