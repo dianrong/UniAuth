@@ -44,8 +44,7 @@ public class ZooKeeperConfig extends ConcurrentHashMap<String, String> implement
 	public ZooKeeperConfig() {
 		connectString = System.getProperty("DR_CFG_ZOOKEEPER_ENV_URL");
 		if (connectString == null) {
-			throw new IllegalArgumentException(
-					"Cannot get connectString from system properties['DR_CFG_ZOOKEEPER_ENV_URL']");
+			throw new IllegalArgumentException("Cannot get connectString from system properties['DR_CFG_ZOOKEEPER_ENV_URL']");
 		}
 	}
 
@@ -68,8 +67,7 @@ public class ZooKeeperConfig extends ConcurrentHashMap<String, String> implement
 			throw new RuntimeException("Missing Connection String.");
 		try {
 			RetryPolicy retryPolicy = new ExponentialBackoffRetry(this.baseSleepTimes, this.maxRetries);
-			this.client = CuratorFrameworkFactory.builder().connectString(this.connectString).retryPolicy(retryPolicy)
-					.connectionTimeoutMs(this.connectionTimeout).build();
+			this.client = CuratorFrameworkFactory.builder().connectString(this.connectString).retryPolicy(retryPolicy).connectionTimeoutMs(this.connectionTimeout).build();
 
 			this.client.start();
 
@@ -105,9 +103,11 @@ public class ZooKeeperConfig extends ConcurrentHashMap<String, String> implement
 				String value = new String((byte[]) this.client.getData().forPath(path));
 				super.put(formatFullPathToKey(path), value);
 				List<String> cfgs = (List<String>) this.client.getChildren().forPath(path);
-				if (!cfgs.isEmpty())
-					for (String child : cfgs)
+				if (!cfgs.isEmpty()){
+					for (String child : cfgs){
 						getAllCfgsItemFromOneNode(path + "/" + child);
+					}
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Get All Cfgs From One Node Error : {}", e);
