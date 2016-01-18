@@ -337,3 +337,6 @@ insert into `group_code`(`code`, `description`) values ('ADMIN', '管理员组�
 ALTER TABLE `permission` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `domain_id`;
 ALTER TABLE `role` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `description`;
 ALTER TABLE `domain` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `description`;
+
+alter table `permission` add column `description` VARCHAR(512) NULL AFTER `value`;
+ALTER TABLE `domain` CHANGE COLUMN `name` `code` VARCHAR(64) NOT NULL ;
