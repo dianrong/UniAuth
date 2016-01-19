@@ -26,89 +26,70 @@ CREATE INDEX `user_phone_idx` ON `user` (`phone` ASC);
 
 
 -- -----------------------------------------------------
--- Table `group_code`
+-- Table `grp`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `group_code` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'SALES, RISK, EMPLOYEE, ADMIN',
-  `code` VARCHAR(32) NOT NULL COMMENT 'Employee, SALES, OPERATION, RISK, ADMINISTRATOR,',
-  `description` VARCHAR(512) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-CREATE UNIQUE INDEX `code_UNIQUE` ON `group_code` (`code` ASC);
-
-
--- -----------------------------------------------------
--- Table `group`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `group` (
+CREATE TABLE IF NOT EXISTS `grp` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NULL,
+  `code` VARCHAR(128) NOT NULL,
   `description` VARCHAR(512) NULL,
   `status` TINYINT(3) NOT NULL DEFAULT 0,
   `create_date` DATETIME NULL,
   `last_update` DATETIME NULL,
-  `group_code_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_group_group_code1`
-    FOREIGN KEY (`group_code_id`)
-    REFERENCES `group_code` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_group_group_code1_idx` ON `group` (`group_code_id` ASC);
+CREATE INDEX `group_name_idx` ON `grp` (`name` ASC);
 
-CREATE INDEX `group_name_idx` ON `group` (`name` ASC);
+CREATE UNIQUE INDEX `code_UNIQUE` ON `grp` (`code` ASC);
 
 
 -- -----------------------------------------------------
--- Table `group_path`
+-- Table `grp_path`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `group_path` (
+CREATE TABLE IF NOT EXISTS `grp_path` (
   `ancestor` INT NOT NULL,
   `descendant` INT NOT NULL,
   `deepth` TINYINT(3) NOT NULL,
   PRIMARY KEY (`ancestor`, `descendant`),
-  CONSTRAINT `fk_group_path_group1`
+  CONSTRAINT `fk_grp_path_grp1`
     FOREIGN KEY (`ancestor`)
-    REFERENCES `group` (`id`)
+    REFERENCES `grp` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_group_path_group2`
+  CONSTRAINT `fk_grp_path_grp2`
     FOREIGN KEY (`descendant`)
-    REFERENCES `group` (`id`)
+    REFERENCES `grp` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_group_path_group1_idx` ON `group_path` (`ancestor` ASC);
-
-CREATE INDEX `fk_group_path_group2_idx` ON `group_path` (`descendant` ASC);
+CREATE INDEX `fk_grp_path_grp2_idx` ON `grp_path` (`descendant` ASC);
 
 
 -- -----------------------------------------------------
 -- Table `user_group`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `user_group` (
-  `group_id` INT NOT NULL,
   `user_id` BIGINT(20) NOT NULL,
-  PRIMARY KEY (`group_id`, `user_id`),
+  `grp_id` INT NOT NULL,
+  `type` TINYINT(3) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`user_id`, `grp_id`),
   CONSTRAINT `fk_user_group_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_group_group1`
-    FOREIGN KEY (`group_id`)
-    REFERENCES `group` (`id`)
+  CONSTRAINT `fk_user_group_grp1`
+    FOREIGN KEY (`grp_id`)
+    REFERENCES `grp` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_user_group_user1_idx` ON `user_group` (`user_id` ASC);
 
-CREATE INDEX `fk_user_group_group1_idx` ON `user_group` (`group_id` ASC);
+CREATE INDEX `fk_user_group_grp1_idx` ON `user_group` (`grp_id` ASC);
 
 
 -- -----------------------------------------------------
@@ -116,15 +97,16 @@ CREATE INDEX `fk_user_group_group1_idx` ON `user_group` (`group_id` ASC);
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `domain` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(64) NOT NULL,
+  `code` VARCHAR(64) NOT NULL,
   `display_name` VARCHAR(128) NOT NULL,
   `description` VARCHAR(512) NULL,
+  `status` TINYINT(3) NOT NULL DEFAULT 0,
   `create_date` DATETIME NULL,
   `last_update` DATETIME NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `name_UNIQUE` ON `domain` (`name` ASC);
+CREATE UNIQUE INDEX `name_UNIQUE` ON `domain` (`code` ASC);
 
 CREATE UNIQUE INDEX `display_name_UNIQUE` ON `domain` (`display_name` ASC);
 
@@ -148,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(64) NULL,
   `description` VARCHAR(512) NULL,
+  `status` TINYINT(3) NOT NULL DEFAULT 0,
   `domain_id` INT NOT NULL,
   `role_code_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -212,6 +195,8 @@ CREATE UNIQUE INDEX `type_UNIQUE` ON `perm_type` (`type` ASC);
 CREATE TABLE IF NOT EXISTS `permission` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `value` VARCHAR(128) NULL,
+  `description` VARCHAR(512) NULL,
+  `status` TINYINT(3) NOT NULL DEFAULT 0,
   `perm_type_id` INT NOT NULL,
   `domain_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -235,27 +220,27 @@ CREATE UNIQUE INDEX `perm_unique` ON `permission` (`value` ASC, `perm_type_id` A
 
 
 -- -----------------------------------------------------
--- Table `group_role`
+-- Table `grp_role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `group_role` (
-  `group_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `grp_role` (
+  `grp_id` INT NOT NULL,
   `role_id` INT NOT NULL,
-  PRIMARY KEY (`group_id`, `role_id`),
-  CONSTRAINT `fk_group_domain_group1`
-    FOREIGN KEY (`group_id`)
-    REFERENCES `group` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  PRIMARY KEY (`grp_id`, `role_id`),
   CONSTRAINT `fk_group_domain_role_acl_role1`
     FOREIGN KEY (`role_id`)
     REFERENCES `role` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_group_role_grp1`
+    FOREIGN KEY (`grp_id`)
+    REFERENCES `grp` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_group_domain_group1_idx` ON `group_role` (`group_id` ASC);
+CREATE INDEX `fk_group_domain_role_acl_role1_idx` ON `grp_role` (`role_id` ASC);
 
-CREATE INDEX `fk_group_domain_role_acl_role1_idx` ON `group_role` (`role_id` ASC);
+CREATE INDEX `fk_group_role_grp1_idx` ON `grp_role` (`grp_id` ASC);
 
 
 -- -----------------------------------------------------
@@ -323,31 +308,11 @@ ENGINE = InnoDB;
 CREATE INDEX `fk_stakeholder_domain1_idx` ON `stakeholder` (`domain_id` ASC);
 
 alter table `user` AUTO_INCREMENT=200000000;
-
 alter table `role_code` add column `description` VARCHAR(512) NULL AFTER `code`;
 insert into `role_code`(`code`, `description`) values ('SUPER_ADMIN', '超级管理员');
 insert into `role_code`(`code`, `description`) values ('ADMIN', '管理员');
 insert into `role_code`(`code`, `description`) values ('NORMAL', '普通用户');
 insert into `role_code`(`code`, `description`) values ('GUEST', 'Guest用户');
 
-insert into `group_code`(`code`, `description`) values ('SALES', '销售组用的code, 给子系统用于标识组别');
-insert into `group_code`(`code`, `description`) values ('RISK', '风控组用的code, 给子系统用于标识组别');
-insert into `group_code`(`code`, `description`) values ('EMPLOYEE', '员工组用的code, 给子系统用于标识组别');
-insert into `group_code`(`code`, `description`) values ('ADMIN', '管理员组用的code, 给子系统用于标识组别');
-
-ALTER TABLE `permission` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `domain_id`;
-ALTER TABLE `role` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `description`;
-ALTER TABLE `domain` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `description`;
-
-alter table `permission` add column `description` VARCHAR(512) NULL AFTER `value`;
-ALTER TABLE `domain` CHANGE COLUMN `name` `code` VARCHAR(64) NOT NULL ;
 insert into `perm_type`(`type`) values ('PRIVILEGE');
 insert into `perm_type`(`type`) values ('URI_Pattern');
-
-ALTER TABLE `user_group` ADD COLUMN `type` TINYINT(3) NOT NULL DEFAULT 0 AFTER `user_id`;
-ALTER TABLE `group` DROP FOREIGN KEY `fk_group_group_code1`;
-ALTER TABLE `group` DROP COLUMN `group_code_id`,
-DROP INDEX `fk_group_group_code1_idx`;
-DROP TABLE `group_code`;
-ALTER TABLE `group` ADD COLUMN `code` VARCHAR(45) NOT NULL AFTER `name`,
-ADD UNIQUE INDEX `code_UNIQUE` (`code` ASC);
