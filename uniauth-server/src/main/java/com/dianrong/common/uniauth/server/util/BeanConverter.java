@@ -1,8 +1,6 @@
 package com.dianrong.common.uniauth.server.util;
 
-import com.dianrong.common.uniauth.common.bean.dto.GroupCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
-import com.dianrong.common.uniauth.server.data.entity.GroupCode;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 
 /**
@@ -17,11 +15,4 @@ public class BeanConverter {
         }
     }
 
-    public static GroupCodeDto convert(GroupCode groupCode) {
-        if(groupCode == null) {
-            return null;
-        } else {
-            return new GroupCodeDto().setId(groupCode.getId()).setCode(groupCode.getCode()).setDescription(groupCode.getDescription());
-        }
-    }
 }

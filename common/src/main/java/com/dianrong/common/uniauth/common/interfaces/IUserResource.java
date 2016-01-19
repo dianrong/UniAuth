@@ -6,7 +6,6 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.Map;
 
 /**
  * Created by Arc on 14/1/16.

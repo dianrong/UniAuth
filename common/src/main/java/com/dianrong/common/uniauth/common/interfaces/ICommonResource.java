@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.common.interfaces;
 
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.GroupCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 
 import javax.ws.rs.*;
