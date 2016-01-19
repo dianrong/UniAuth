@@ -68,28 +68,28 @@ CREATE INDEX `fk_grp_path_grp2_idx` ON `grp_path` (`descendant` ASC);
 
 
 -- -----------------------------------------------------
--- Table `user_group`
+-- Table `user_grp`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `user_group` (
+CREATE TABLE IF NOT EXISTS `user_grp` (
   `user_id` BIGINT(20) NOT NULL,
   `grp_id` INT NOT NULL,
   `type` TINYINT(3) NOT NULL DEFAULT 0,
   PRIMARY KEY (`user_id`, `grp_id`),
-  CONSTRAINT `fk_user_group_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_group_grp1`
     FOREIGN KEY (`grp_id`)
     REFERENCES `grp` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_grp_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_user_group_user1_idx` ON `user_group` (`user_id` ASC);
+CREATE INDEX `fk_user_group_grp1_idx` ON `user_grp` (`grp_id` ASC);
 
-CREATE INDEX `fk_user_group_grp1_idx` ON `user_group` (`grp_id` ASC);
+CREATE INDEX `fk_user_grp_user1_idx` ON `user_grp` (`user_id` ASC);
 
 
 -- -----------------------------------------------------
