@@ -316,3 +316,33 @@ insert into `role_code`(`code`, `description`) values ('GUEST', 'Guest用户');
 
 insert into `perm_type`(`type`) values ('PRIVILEGE');
 insert into `perm_type`(`type`) values ('URI_Pattern');
+insert into perm_type(id,type) values('DOMAIN');
+
+insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
+values('200000001', '樊双贵', 'shuanggui.fan@dianrong.com', '13011111111', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
+
+insert into grp(id, name, code, description,status, create_date, last_update) values(1, '点融网', 'GRP_ROOT','点融网根组', 0, now(), now());
+insert into grp(id, name, code, description,status, create_date, last_update) values(2, 'techops超级管理员组', 'GRP_TECHOPS_SUPER_ADMIN','techops超级管理员组，组内的人期拥有techops顶级权限', 0, now(), now());
+insert into grp_path(ancestor, descendant, deepth) values(1, 1, 0);
+insert into grp_path(ancestor, descendant, deepth) values(1, 2, 1);
+insert into grp_path(ancestor, descendant, deepth) values(2, 2, 0);
+
+insert into user_grp(user_id, grp_id, type) values(200000001, 2, 0);
+insert into user_grp(user_id, grp_id, type) values(200000001, 1, 1);
+
+insert into domain(id, code, display_name, description, status, create_date, last_update) values(1, 'techops', '权限管理系统', '点融权限管理系统，管理各个子系统的权限和资源访问', 0, now(), now());
+
+insert into role(id, name,description, status, domain_id, role_code_id) values(1, 'techops超级管理员角色', 'techops超级管理员角色，管理所有其他域的权限', 0, 1, 1);
+
+insert into permission(id, value, description, status, perm_type_id, domain_id) values(1, 'techops', '拥有techops整个域的permission，在techops上可进行任何操作(管理组需要额外配置)',0,3,1);
+
+insert into role_permission(role_id, permission_id) values(1, 1);
+
+insert into grp_role(grp_id, role_id)  values(2, 1);
+
+
+
+
+
+
+
