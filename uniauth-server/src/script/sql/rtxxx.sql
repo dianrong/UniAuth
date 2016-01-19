@@ -325,9 +325,10 @@ CREATE INDEX `fk_stakeholder_domain1_idx` ON `stakeholder` (`domain_id` ASC);
 alter table `user` AUTO_INCREMENT=200000000;
 
 alter table `role_code` add column `description` VARCHAR(512) NULL AFTER `code`;
+insert into `role_code`(`code`, `description`) values ('SUPER_ADMIN', '超级管理员');
 insert into `role_code`(`code`, `description`) values ('ADMIN', '管理员');
-insert into `role_code`(`code`, `description`) values ('USER', '普通用户');
-insert into `role_code`(`code`, `description`) values ('VIEW', 'Guest用户');
+insert into `role_code`(`code`, `description`) values ('NORMAL', '普通用户');
+insert into `role_code`(`code`, `description`) values ('GUEST', 'Guest用户');
 
 insert into `group_code`(`code`, `description`) values ('SALES', '销售组用的code, 给子系统用于标识组别');
 insert into `group_code`(`code`, `description`) values ('RISK', '风控组用的code, 给子系统用于标识组别');
@@ -340,3 +341,13 @@ ALTER TABLE `domain` ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `de
 
 alter table `permission` add column `description` VARCHAR(512) NULL AFTER `value`;
 ALTER TABLE `domain` CHANGE COLUMN `name` `code` VARCHAR(64) NOT NULL ;
+insert into `perm_type`(`type`) values ('PRIVILEGE');
+insert into `perm_type`(`type`) values ('URI_Pattern');
+
+ALTER TABLE `user_group` ADD COLUMN `type` TINYINT(3) NOT NULL DEFAULT 0 AFTER `user_id`;
+ALTER TABLE `group` DROP FOREIGN KEY `fk_group_group_code1`;
+ALTER TABLE `group` DROP COLUMN `group_code_id`,
+DROP INDEX `fk_group_group_code1_idx`;
+DROP TABLE `group_code`;
+ALTER TABLE `group` ADD COLUMN `code` VARCHAR(45) NOT NULL AFTER `name`,
+ADD UNIQUE INDEX `code_UNIQUE` (`code` ASC);
