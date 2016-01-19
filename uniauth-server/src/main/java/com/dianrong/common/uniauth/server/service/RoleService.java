@@ -1,8 +1,6 @@
 package com.dianrong.common.uniauth.server.service;
 
-import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
 import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;

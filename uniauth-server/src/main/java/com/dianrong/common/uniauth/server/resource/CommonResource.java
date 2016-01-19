@@ -29,10 +29,4 @@ public class CommonResource implements ICommonResource {
         return Response.success(roleCodeDtos);
     }
 
-    @Override
-    public Response<List<GroupCodeDto>> getAllGroupCodes() {
-        List<GroupCodeDto> groupCodeDtos = groupService.getAllGroupCode();
-        return Response.success(groupCodeDtos);
-    }
-
 }

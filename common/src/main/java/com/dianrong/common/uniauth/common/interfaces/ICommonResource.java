@@ -20,7 +20,4 @@ public interface ICommonResource {
     @Path("role/codes")
     Response<List<RoleCodeDto>> getAllRoleCodes();
 
-    @GET
-    @Path("group/codes")
-    Response<List<GroupCodeDto>> getAllGroupCodes();
 }
