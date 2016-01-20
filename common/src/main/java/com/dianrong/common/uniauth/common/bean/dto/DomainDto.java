@@ -6,8 +6,36 @@ public class DomainDto {
 	private Integer id;
 	private String code;
 	private String displayName;
+	private String description;
+	private Byte status;
 	
+
 	private List<RoleDto> roleList;
+	private List<StakeholderDto> stakeholderList;
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+	
+	public List<StakeholderDto> getStakeholderList() {
+		return stakeholderList;
+	}
+
+	public void setStakeholderList(List<StakeholderDto> stakeholderList) {
+		this.stakeholderList = stakeholderList;
+	}
 
 	public List<RoleDto> getRoleList() {
 		return roleList;
