@@ -8,6 +8,10 @@ public class UserQuery extends Operator {
     private String name;
     private String phone;
     private String email;
+    
+    //from index 0
+    private Integer pageOffset;
+    private Integer pageSize;
 
     public String getName() {
         return name;
@@ -35,4 +39,20 @@ public class UserQuery extends Operator {
         this.email = email;
         return this;
     }
+
+	public Integer getPageOffset() {
+		return pageOffset;
+	}
+
+	public void setPageOffset(Integer pageOffset) {
+		this.pageOffset = pageOffset;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
 }
