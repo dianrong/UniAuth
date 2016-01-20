@@ -26,17 +26,17 @@ public interface IUserResource {
     Response<String> testResult(UserQuery userQuery);
     
     @POST
-    @Path("add")
-    //scenario: add user
-    Response<String> addUser(UserParam userParam);
+    @Path("addnewuser")
+    //scenario: add new user
+    Response<UserDto> addNewUser(UserParam userParam);
     
     @POST
-    @Path("search")
+    @Path("searchusers")
     //scenario: search user
     Response<List<UserDto>> searchUser(UserQuery userQuery);
     
     @POST
-    @Path("update")
+    @Path("updateuser")
     //scenario: update user(including lock, disable, reset password, update profile)
     Response<String> updateUser(UserParam userParam);
     

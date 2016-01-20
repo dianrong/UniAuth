@@ -15,14 +15,15 @@ import com.dianrong.common.uniauth.common.interfaces.IUserResource;
  */
 @RestController
 public class UserResource implements IUserResource {
-    @Override
-    public Response<String> testResult(UserQuery userQuery) {
-        throw new RuntimeException();
-        //return Response.success();
-    }
 
 	@Override
-	public Response<String> addUser(UserParam userParam) {
+	public Response<String> testResult(UserQuery userQuery) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response<UserDto> addNewUser(UserParam userParam) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -38,5 +39,5 @@ public class UserResource implements IUserResource {
 		// TODO Auto-generated method stub
 		return null;
 	}
-    
+	
 }

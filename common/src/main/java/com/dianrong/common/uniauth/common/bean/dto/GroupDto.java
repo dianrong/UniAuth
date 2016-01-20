@@ -7,10 +7,13 @@ public class GroupDto {
 	private String code;
 	private String name;
 	
+	/**
 	private List<UserDto> ownerList;
+	**/
 	private List<UserDto> userList;
 	private List<GroupDto> groupList;
 
+	/**
 	public List<UserDto> getOwnerList() {
 		return ownerList;
 	}
@@ -18,6 +21,7 @@ public class GroupDto {
 	public void setOwnerList(List<UserDto> ownerList) {
 		this.ownerList = ownerList;
 	}
+	**/
 
 	public List<GroupDto> getGroupList() {
 		return groupList;

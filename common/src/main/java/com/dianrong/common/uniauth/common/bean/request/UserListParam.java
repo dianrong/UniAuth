@@ -7,6 +7,9 @@ public class UserListParam extends Operator{
 	//target group id
 	private Integer groupId;
 	
+	//true normal member, false owner member
+	private boolean normalMember;
+	
 	public List<UserParam> getUserList() {
 		return userList;
 	}
@@ -18,5 +21,11 @@ public class UserListParam extends Operator{
 	}
 	public void setGroupId(Integer groupId) {
 		this.groupId = groupId;
+	}
+	public boolean isNormalMember() {
+		return normalMember;
+	}
+	public void setNormalMember(boolean normalMember) {
+		this.normalMember = normalMember;
 	}
 }
