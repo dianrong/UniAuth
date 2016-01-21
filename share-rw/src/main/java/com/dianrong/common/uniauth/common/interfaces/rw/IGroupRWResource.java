@@ -1,14 +1,14 @@
 package com.dianrong.common.uniauth.common.interfaces.rw;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 public interface IGroupRWResource extends IGroupResource {
 
@@ -38,4 +38,8 @@ public interface IGroupRWResource extends IGroupResource {
     //scenario: modify group info
     Response<String> updateGroup(GroupParam groupParam);
 
+    @POST
+    @Path("saverolestogroup")
+    //scenario: save roles to group
+    Response<String> saveRolesToGroup(GroupParam groupParam);
 }

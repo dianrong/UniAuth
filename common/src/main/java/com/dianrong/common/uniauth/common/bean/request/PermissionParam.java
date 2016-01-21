@@ -1,5 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+
 public class PermissionParam {
 	private Integer id;
 	private String value;
@@ -8,6 +12,14 @@ public class PermissionParam {
 	private Integer permTypeId;
 	private Integer domainId;
 	
+	private List<RoleDto> roleList;
+	
+	public List<RoleDto> getRoleList() {
+		return roleList;
+	}
+	public void setRoleList(List<RoleDto> roleList) {
+		this.roleList = roleList;
+	}
 	public Integer getId() {
 		return id;
 	}

@@ -9,6 +9,17 @@ public class PermissionDto {
 	private Integer domainId;
 	
 	private PermTypeDto permTypeDto;
+	
+	//whether this permission connected with this role
+	private boolean checked;
+	
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
 
 	public Integer getId() {
 		return id;

@@ -18,6 +18,22 @@ public class RoleDto {
 	private List<GroupDto> groupList;
 	private List<Map<String, List<String>>> permissionList;
 	
+	//whether this role connected with this permission
+	//private boolean permChecked;
+	//whether this role connected with this user
+	//private boolean roleChecked;
+	//whether this role connected with this group
+	//private boolean groupChecked;
+	
+	//whether this role connected with a permission, user or group
+	private boolean checked;
+	
+	public boolean isChecked() {
+		return checked;
+	}
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
 	public Integer getId() {
 		return id;
 	}

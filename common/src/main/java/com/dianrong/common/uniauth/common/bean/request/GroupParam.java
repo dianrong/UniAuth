@@ -1,5 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+
 public class GroupParam extends Operator {
 	private Integer id;
 	private String code;
@@ -12,6 +16,36 @@ public class GroupParam extends Operator {
 	//if false, both group and members returned
 	private boolean onlyShowGroup;
 	
+	private Integer roleId;
+	
+	private Integer domainId;
+	
+	private List<RoleDto> roleList;
+
+	public List<RoleDto> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<RoleDto> roleList) {
+		this.roleList = roleList;
+	}
+
+	public Integer getDomainId() {
+		return domainId;
+	}
+
+	public void setDomainId(Integer domainId) {
+		this.domainId = domainId;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
+
 	public Integer getId() {
 		return id;
 	}

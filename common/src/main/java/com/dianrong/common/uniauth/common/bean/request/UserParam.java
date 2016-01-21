@@ -1,14 +1,37 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 
-public class UserParam {
+public class UserParam extends Operator {
 	private Long id;
     private String name;
     private String phone;
     private String email;
     
     private UserActionEnum userActionEnum;
+    
+    private Integer domainId;
+    
+    private List<RoleDto> roleList;
+    
+	public List<RoleDto> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<RoleDto> roleList) {
+		this.roleList = roleList;
+	}
+
+	public Integer getDomainId() {
+		return domainId;
+	}
+
+	public void setDomainId(Integer domainId) {
+		this.domainId = domainId;
+	}
 
 	public Long getId() {
 		return id;

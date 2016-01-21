@@ -10,9 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 
@@ -29,4 +29,9 @@ public interface IRoleResource {
     @Path("searchroles")
     //scenario: search role
     Response<List<RoleDto>> searchRole(RoleQuery roleQuery);
+    
+    @POST
+    @Path("perms")
+    //scenario: retrieve all permissions connected with a role(including all other permissions under a domain)
+    Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam);
 }

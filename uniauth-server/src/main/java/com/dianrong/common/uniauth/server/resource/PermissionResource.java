@@ -5,6 +5,7 @@ import java.util.List;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
@@ -39,6 +40,18 @@ public class PermissionResource implements IPermissionRWResource {
 
 	@Override
 	public Response<String> deletePerm(PrimaryKeyParam primaryKeyParam) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response<String> saveRolesToPerm(PermissionParam permissionParam) {
 		// TODO Auto-generated method stub
 		return null;
 	}

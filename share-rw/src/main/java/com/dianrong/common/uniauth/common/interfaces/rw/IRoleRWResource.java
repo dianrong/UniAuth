@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.common.interfaces.rw;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.request.GroupTreeParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
@@ -26,4 +27,15 @@ public interface IRoleRWResource extends IRoleResource {
     @Path("deleterole")
     //scenario: delete role
     Response<String> deleteRole(PrimaryKeyParam primaryKeyParam);
+    
+    @POST
+    @Path("savepermstorole")
+    //scenario: save permissions to a role
+    Response<String> savePermsToRole(RoleParam roleParam);
+
+    @POST
+    @Path("savegrouptreetorole")
+    //scenario: save group tree to role
+    Response<String> saveGroupTreeToRole(GroupTreeParam groupTreeParam);
+    
 }

@@ -12,9 +12,9 @@ import javax.ws.rs.core.MediaType;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 
 @Path("permission")
 @Produces({MediaType.APPLICATION_JSON})
@@ -30,5 +30,9 @@ public interface IPermissionResource {
     @Path("searchperms")
     //scenario: search permissions
     Response<List<PermissionDto>> searchPerm(PermissionQuery permissionQuery);
-
+    
+    @POST
+    @Path("roles")
+    //scenario: retrieve all roles connected with a permission(including all other roles under a domain)
+    Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam);
 }

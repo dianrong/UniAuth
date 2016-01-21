@@ -10,8 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 
@@ -30,4 +30,9 @@ public interface IUserResource {
     @Path("searchusers")
     //scenario: search user
     Response<List<UserDto>> searchUser(UserQuery userQuery);
+    
+    @POST
+    @Path("roles")
+    //scenario: retrieve all roles connected with a user(including all other roles under a domain)
+    Response<List<RoleDto>> getAllRolesToUser(UserParam userParam);
 }

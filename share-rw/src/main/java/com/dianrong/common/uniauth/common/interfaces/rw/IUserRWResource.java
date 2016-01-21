@@ -1,14 +1,14 @@
 package com.dianrong.common.uniauth.common.interfaces.rw;
 
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 /**
  * Created by Arc on 14/1/16.
@@ -27,6 +27,11 @@ public interface IUserRWResource extends IUserResource {
 
     @POST
     @Path("deleteuser")
-        //scenario: delete user, just for techops super admin
+    //scenario: delete user, just for techops super admin
     Response<String> deleteUser(PrimaryKeyParam primaryKeyParam);
+    
+    @POST
+    @Path("saverolestouser")
+    //scenario: save roles to user
+    Response<String> saveRolesToUser(UserParam userParam);
 }

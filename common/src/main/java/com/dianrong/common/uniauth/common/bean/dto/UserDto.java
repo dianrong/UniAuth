@@ -12,6 +12,15 @@ public class UserDto {
 	private String email;
 	private String phone;
 	
+	//whether this group connected with a role
+	private boolean roleChecked;
+	
+	public boolean isRoleChecked() {
+		return roleChecked;
+	}
+	public void setRoleChecked(boolean roleChecked) {
+		this.roleChecked = roleChecked;
+	}
 	public Long getId() {
 		return id;
 	}

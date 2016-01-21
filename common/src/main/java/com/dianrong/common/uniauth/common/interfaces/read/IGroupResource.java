@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
@@ -30,4 +31,9 @@ public interface IGroupResource {
     @Path("groupowners")
     //scenario: get all group owners
     Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam);
+    
+    @POST
+    @Path("roles")
+    //scenario: retrieve all roles connected with a group(including all other roles under a domain)
+    Response<List<RoleDto>> getAllRolesToGroup(GroupParam groupParam);
 }
