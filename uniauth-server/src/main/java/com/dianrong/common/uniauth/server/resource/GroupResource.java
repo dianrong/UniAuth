@@ -12,9 +12,9 @@ import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
 import com.dianrong.common.uniauth.common.interfaces.rw.IGroupRWResource;
 
 public class GroupResource implements IGroupRWResource {
-
+	
 	@Override
-	public Response<GroupDto> getGroupTree(Integer groupId) {
+	public Response<GroupDto> getGroupTree(GroupParam groupParam) {
 		// TODO Auto-generated method stub
 		return null;
 	}

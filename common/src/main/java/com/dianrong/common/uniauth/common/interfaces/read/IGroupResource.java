@@ -14,7 +14,6 @@ import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 
 @Path("group")
 @Produces({MediaType.APPLICATION_JSON})
@@ -25,7 +24,7 @@ public interface IGroupResource {
     @Path("tree")
     //scenario: group/member tree
     //if groupId == -1, retrieve the root tree
-    Response<GroupDto> getGroupTree(Integer groupId);
+    Response<GroupDto> getGroupTree(GroupParam groupParam);
     
     @POST
     @Path("groupowners")

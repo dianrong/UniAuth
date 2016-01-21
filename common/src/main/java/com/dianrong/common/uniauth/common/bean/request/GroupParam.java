@@ -8,6 +8,9 @@ public class GroupParam extends Operator {
 	
 	//when add
 	private Integer targetGroupId;
+	//if true only group, ignore members under each group
+	//if false, both group and members returned
+	private boolean onlyShowGroup;
 	
 	public Integer getId() {
 		return id;
@@ -49,4 +52,11 @@ public class GroupParam extends Operator {
 		this.targetGroupId = targetGroupId;
 	}
 
+	public boolean isOnlyShowGroup() {
+		return onlyShowGroup;
+	}
+
+	public void setOnlyShowGroup(boolean onlyShowGroup) {
+		this.onlyShowGroup = onlyShowGroup;
+	}
 }
