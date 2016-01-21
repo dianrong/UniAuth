@@ -27,5 +27,10 @@ public class CommonResource implements ICommonResource {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public Response<String> login(LoginParam loginParam) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

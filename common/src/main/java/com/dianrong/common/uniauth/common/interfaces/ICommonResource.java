@@ -28,6 +28,11 @@ public interface ICommonResource {
 
     @POST
     @Path("login")
-    //scenario: login and get user details info
+    //scenario: cas login
+    Response<String> login(LoginParam loginParam);
+    
+    @POST
+    @Path("usedetailrinfo")
+    //scenario: get user detail info
     Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam);
 }

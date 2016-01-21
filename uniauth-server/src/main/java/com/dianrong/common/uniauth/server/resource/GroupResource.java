@@ -13,7 +13,7 @@ import com.dianrong.common.uniauth.common.interfaces.IGroupResource;
 public class GroupResource implements IGroupResource {
 
 	@Override
-	public Response<GroupDto> getGroupTree() {
+	public Response<GroupDto> getGroupTree(Integer groupId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

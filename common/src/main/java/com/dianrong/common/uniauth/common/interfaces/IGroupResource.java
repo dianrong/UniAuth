@@ -23,8 +23,9 @@ public interface IGroupResource {
 	
     @GET
     @Path("tree")
-    //scenario: group tree
-    Response<GroupDto> getGroupTree();
+    //scenario: group/member tree
+    //if groupId == -1, retrieve the root tree
+    Response<GroupDto> getGroupTree(Integer groupId);
     
     @POST
     @Path("addusers")
