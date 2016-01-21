@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 
@@ -40,4 +41,8 @@ public interface IUserResource {
     //scenario: update user(including lock, disable, reset password, update profile)
     Response<String> updateUser(UserParam userParam);
     
+    @POST
+    @Path("deleteuser")
+    //scenario: delete user, just for techops super admin
+    Response<String> deleteUser(PrimaryKeyParam primaryKeyParam);
 }

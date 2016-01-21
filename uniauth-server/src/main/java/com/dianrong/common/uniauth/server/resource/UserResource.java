@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.common.interfaces.IUserResource;
@@ -39,5 +40,10 @@ public class UserResource implements IUserResource {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public Response<String> deleteUser(PrimaryKeyParam primaryKeyParam) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
