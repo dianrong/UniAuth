@@ -31,7 +31,7 @@ public interface IDomainResource {
     Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam);
     
     @POST
-    @Path("addnewpstakeholder")
+    @Path("addnewstakeholder")
     //scenario: add new stakeholder
     Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam);
     

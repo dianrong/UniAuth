@@ -22,7 +22,7 @@ import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 public interface IRoleResource {
     @GET
     @Path("allrolecodes")
-    //scenario: get all role codes
+    //scenario: get all role codes, dictionary data from role_code table
     Response<List<RoleCodeDto>> getAllRoleCodes();
 	
     @POST

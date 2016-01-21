@@ -22,7 +22,7 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 public interface IPermissionResource {
     @GET
     @Path("allpermtypecodes")
-    //scenario: get all permission type codes
+    //scenario: get all permission type codes, dictionary data from perm_type table
     Response<List<PermTypeDto>> getAllPermTypeCodes();
 	
     @POST
