@@ -55,9 +55,9 @@ allprojects {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
     
-    configurations.all {
-    	resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
-	}
+//    configurations.all {
+//    	resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
+//	}
 	dependencies {
 		//Test Suite
     	testCompile 'junit:junit:4.12'

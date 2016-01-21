@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.bean;
 /**
  * Created by Arc on 14/1/16.
  */
-public class Info {
+public final class Info {
 
     private InfoName name;
     private String msg;

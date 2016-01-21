@@ -12,8 +12,7 @@ import java.util.Map;
 public class Response<T> implements Serializable {
 
     private static final long serialVersionUID = 4391955854748049770L;
-    private static Info internalError = Info.build(InfoName.INTERNAL_ERROR, "Internal error");
-    private static String emptyString = "";
+    private static final Info internalError = Info.build(InfoName.INTERNAL_ERROR, "Internal error");
     private String uuid;
     /** 返回数据 */
     private T data;
@@ -67,7 +66,7 @@ public class Response<T> implements Serializable {
     }
 
     public static Response<String> success() {
-        return new Response<String>(emptyString);
+        return new Response<String>();
     }
 
     public static <T> Response<T> failure(Info info) {
