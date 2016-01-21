@@ -78,7 +78,7 @@ project(':common') {
 	}
 }
 
-project(':client') {
+project(':ss-client') {
 	dependencies {
 		compile project(":common")
 	    compile 'com.dianrong.loanbusiness.uniauth:loanbusiness-uniauth-client:1.0.27-SNAPSHOT'
@@ -95,7 +95,7 @@ project(':client') {
 	}
 
     jar {
-        baseName = 'common-uniauth-client'
+        baseName = 'common-uniauth-ssclient'
     }
 
 
@@ -106,7 +106,7 @@ project(':client') {
     publishing {
         publications {
             client(MavenPublication) {
-                artifactId 'common-uniauth-client'
+                artifactId 'common-uniauth-ssclient'
                 from components.java
                 artifact sourceJar {
                     classifier "sources"
@@ -120,7 +120,7 @@ project(':subsystem') {
 	apply plugin: 'war'
 	
 	dependencies {
-	    compile project(":client")
+	    compile project(":ss-client")
 	    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 	    compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
 	     

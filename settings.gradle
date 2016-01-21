@@ -1,6 +1,6 @@
 rootProject.name = "uniauth"
 
-include ":client"
+include ":ss-client"
 include ":subsystem"
 include ":cashelper"
 include ":common"
