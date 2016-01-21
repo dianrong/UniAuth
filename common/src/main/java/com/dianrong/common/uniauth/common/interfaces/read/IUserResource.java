@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.common.interfaces;
+package com.dianrong.common.uniauth.common.interfaces.read;
 
 
 import java.util.List;
@@ -27,22 +27,7 @@ public interface IUserResource {
     Response<String> testResult(UserQuery userQuery);
     
     @POST
-    @Path("addnewuser")
-    //scenario: add new user
-    Response<UserDto> addNewUser(UserParam userParam);
-    
-    @POST
     @Path("searchusers")
     //scenario: search user
     Response<List<UserDto>> searchUser(UserQuery userQuery);
-    
-    @POST
-    @Path("updateuser")
-    //scenario: update user(including lock, disable, reset password, update profile)
-    Response<String> updateUser(UserParam userParam);
-    
-    @POST
-    @Path("deleteuser")
-    //scenario: delete user, just for techops super admin
-    Response<String> deleteUser(PrimaryKeyParam primaryKeyParam);
 }

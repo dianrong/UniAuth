@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.common.interfaces;
+package com.dianrong.common.uniauth.common.interfaces.read;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IPermissionResource {
+
     @GET
     @Path("allpermtypecodes")
     //scenario: get all permission type codes, dictionary data from perm_type table
@@ -29,19 +30,5 @@ public interface IPermissionResource {
     @Path("searchperms")
     //scenario: search permissions
     Response<List<PermissionDto>> searchPerm(PermissionQuery permissionQuery);
-    
-    @POST
-    @Path("addnewperm")
-    //scenario: add new permission
-    Response<PermissionDto> addNewPerm(PermissionParam permissionParam);
-    
-    @POST
-    @Path("updateperm")
-    //scenario: update permission
-    Response<String> updatePerm(PermissionParam permissionParam);
-    
-    @POST
-    @Path("deleteperm")
-    //scenario: delete permission
-    Response<String> deletePerm(PrimaryKeyParam primaryKeyParam);
+
 }

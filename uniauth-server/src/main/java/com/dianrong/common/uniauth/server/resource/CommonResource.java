@@ -8,7 +8,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
-import com.dianrong.common.uniauth.common.interfaces.ICommonResource;
+import com.dianrong.common.uniauth.common.interfaces.read.ICommonResource;
 
 /**
  * Created by Arc on 15/1/16.
@@ -18,8 +18,7 @@ public class CommonResource implements ICommonResource {
 
 	@Override
 	public Response<List<RoleCodeDto>> getAllRoleCodes() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException();
 	}
 
 	@Override

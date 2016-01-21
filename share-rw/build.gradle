@@ -1,0 +1,24 @@
+
+dependencies {
+    compile project(":common")
+}
+
+jar {
+    baseName = "share-rw"
+}
+
+// package the sources to be a jar file.
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        common(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}

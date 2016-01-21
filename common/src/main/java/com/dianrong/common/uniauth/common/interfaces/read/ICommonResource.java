@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.common.interfaces;
+package com.dianrong.common.uniauth.common.interfaces.read;
 
 import java.util.List;
 

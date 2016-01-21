@@ -1,12 +1,11 @@
 apply plugin: 'war'
 
 apply from: 'build-tomcat.gradle'
-apply from: 'build-mybatis.gradle'
 
 
 dependencies {
 
-    compile project(":share-rw")
+    compile project(":common")
 
     //Spring
     def spring_version = '4.1.6.RELEASE'
@@ -15,17 +14,13 @@ dependencies {
     compile "org.springframework:spring-jdbc:${spring_version}"
     compile "org.springframework:spring-tx:${spring_version}"
     compile "org.springframework:spring-web:${spring_version}"
-    //compile "org.springframework:spring-webmvc:${spring_version}"
+    compile "org.springframework:spring-webmvc:${spring_version}"
     compile "org.springframework:spring-context-support:${spring_version}"
     compile "org.springframework:spring-aop:${spring_version}"
 
     //Aspectj
     compile "org.aspectj:aspectjrt:1.8.5"
     compile "org.aspectj:aspectjtools:1.8.5"
-
-    //Mybatis
-    compile 'org.mybatis:mybatis:3.2.8'
-    compile 'org.mybatis:mybatis-spring:1.2.2'
 
     //Java EE
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'

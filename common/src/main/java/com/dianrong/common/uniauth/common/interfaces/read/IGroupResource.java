@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.common.interfaces;
+package com.dianrong.common.uniauth.common.interfaces.read;
 
 import java.util.List;
 
@@ -26,31 +26,6 @@ public interface IGroupResource {
     //scenario: group/member tree
     //if groupId == -1, retrieve the root tree
     Response<GroupDto> getGroupTree(Integer groupId);
-    
-    @POST
-    @Path("addusers")
-    //scenario: add users into one specific group(normal member and owner member)
-    Response<String> addUsersIntoGroup(UserListParam userListParam);
-    
-    @POST
-    @Path("removeusers")
-    //scenario: remove users from one specific group(normal member and owner member)
-    Response<String> removeUsersFromGroup(UserListParam userListParam);
-    
-    @POST
-    @Path("addnewgroup")
-    //scenario: add new group into one specific group
-    Response<GroupDto> addNewGroupIntoGroup(GroupParam groupParam);
-    
-    @POST
-    @Path("deletegroup")
-    //scenario: delete group
-    Response<String> deleteGroup(PrimaryKeyParam primaryKeyParam);
-    
-    @POST
-    @Path("updategroup")
-    //scenario: modify group info
-    Response<String> updateGroup(GroupParam groupParam);
     
     @POST
     @Path("groupowners")

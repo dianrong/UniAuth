@@ -8,9 +8,10 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
-import com.dianrong.common.uniauth.common.interfaces.IRoleResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
+import com.dianrong.common.uniauth.common.interfaces.rw.IRoleRWResource;
 
-public class RoleResource implements IRoleResource {
+public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<List<RoleCodeDto>> getAllRoleCodes() {

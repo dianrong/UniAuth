@@ -8,9 +8,10 @@ import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.common.interfaces.IPermissionResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
+import com.dianrong.common.uniauth.common.interfaces.rw.IPermissionRWResource;
 
-public class PermissionResource implements IPermissionResource {
+public class PermissionResource implements IPermissionRWResource {
 
 	@Override
 	public Response<List<PermTypeDto>> getAllPermTypeCodes() {

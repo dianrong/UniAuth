@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.common.interfaces;
+package com.dianrong.common.uniauth.common.interfaces.read;
 
 import java.util.List;
 
@@ -29,19 +29,4 @@ public interface IRoleResource {
     @Path("searchroles")
     //scenario: search role
     Response<List<RoleDto>> searchRole(RoleQuery roleQuery);
-    
-    @POST
-    @Path("addnewrole")
-    //scenario: add new role
-    Response<RoleDto> addNewRole(RoleParam roleParam);
-    
-    @POST
-    @Path("updaterole")
-    //scenario: update role
-    Response<String> updateRole(RoleParam roleParam);
-    
-    @POST
-    @Path("deleterole")
-    //scenario: delete role
-    Response<String> deleteRole(PrimaryKeyParam primaryKeyParam);
 }

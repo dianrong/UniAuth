@@ -8,9 +8,10 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
-import com.dianrong.common.uniauth.common.interfaces.IGroupResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
+import com.dianrong.common.uniauth.common.interfaces.rw.IGroupRWResource;
 
-public class GroupResource implements IGroupResource {
+public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<GroupDto> getGroupTree(Integer groupId) {

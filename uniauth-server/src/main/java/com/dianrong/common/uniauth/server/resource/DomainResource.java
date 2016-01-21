@@ -7,9 +7,10 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
-import com.dianrong.common.uniauth.common.interfaces.IDomainResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
+import com.dianrong.common.uniauth.common.interfaces.rw.IDomainRWResource;
 
-public class DomainResource implements IDomainResource {
+public class DomainResource implements IDomainRWResource {
 
 	@Override
 	public Response<List<DomainDto>> getAllLoginDomains() {

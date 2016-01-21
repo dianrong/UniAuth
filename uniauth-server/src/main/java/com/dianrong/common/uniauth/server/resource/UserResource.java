@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.dianrong.common.uniauth.common.interfaces.rw.IUserRWResource;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -9,13 +10,13 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
-import com.dianrong.common.uniauth.common.interfaces.IUserResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
 
 /**
  * Created by Arc on 14/1/16.
  */
 @RestController
-public class UserResource implements IUserResource {
+public class UserResource implements IUserRWResource {
 
 	@Override
 	public Response<String> testResult(UserQuery userQuery) {
