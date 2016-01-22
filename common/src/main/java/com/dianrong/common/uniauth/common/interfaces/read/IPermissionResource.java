@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
@@ -29,7 +30,7 @@ public interface IPermissionResource {
     @POST
     @Path("searchperms")
     //scenario: search permissions
-    Response<List<PermissionDto>> searchPerm(PermissionQuery permissionQuery);
+    Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery);
     
     @POST
     @Path("roles")

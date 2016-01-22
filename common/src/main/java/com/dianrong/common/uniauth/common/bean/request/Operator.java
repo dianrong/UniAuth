@@ -11,4 +11,5 @@ public class Operator {
     protected String opEmail;
     @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     protected String opPhone;
+    
 }

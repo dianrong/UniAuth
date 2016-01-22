@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
@@ -29,7 +30,7 @@ public interface IUserResource {
     @POST
     @Path("searchusers")
     //scenario: search user
-    Response<List<UserDto>> searchUser(UserQuery userQuery);
+    Response<PageDto<UserDto>> searchUser(UserQuery userQuery);
     
     @POST
     @Path("roles")

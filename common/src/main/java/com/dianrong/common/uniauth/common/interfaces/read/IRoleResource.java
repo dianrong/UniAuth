@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
@@ -28,7 +29,7 @@ public interface IRoleResource {
     @POST
     @Path("searchroles")
     //scenario: search role
-    Response<List<RoleDto>> searchRole(RoleQuery roleQuery);
+    Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery);
     
     @POST
     @Path("perms")

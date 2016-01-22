@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
@@ -16,12 +17,6 @@ public class PermissionResource implements IPermissionRWResource {
 
 	@Override
 	public Response<List<PermTypeDto>> getAllPermTypeCodes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response<List<PermissionDto>> searchPerm(PermissionQuery permissionQuery) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,6 +47,12 @@ public class PermissionResource implements IPermissionRWResource {
 
 	@Override
 	public Response<String> saveRolesToPerm(PermissionParam permissionParam) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery) {
 		// TODO Auto-generated method stub
 		return null;
 	}

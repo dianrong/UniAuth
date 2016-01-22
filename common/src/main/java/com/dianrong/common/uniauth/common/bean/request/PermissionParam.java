@@ -10,6 +10,7 @@ public class PermissionParam {
 	private String description;
 	private Byte status;
 	private Integer permTypeId;
+	
 	private Integer domainId;
 	
 	private List<RoleDto> roleList;

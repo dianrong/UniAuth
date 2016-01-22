@@ -1,17 +1,14 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-public class PermissionQuery {
+public class PermissionQuery extends PageParam {
 	private Integer id;
 	private String value;
 	private String description;
 	private Byte status;
 	private Integer permTypeId;
+	
 	private Integer domainId;
 	
-    //from index 0
-    private Integer pageOffset;
-    private Integer pageSize;
-    
 	public Integer getId() {
 		return id;
 	}

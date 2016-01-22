@@ -11,9 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 
 @Path("domain")
 @Produces({MediaType.APPLICATION_JSON})

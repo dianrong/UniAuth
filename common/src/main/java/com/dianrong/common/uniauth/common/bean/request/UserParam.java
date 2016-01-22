@@ -10,6 +10,7 @@ public class UserParam extends Operator {
     private String name;
     private String phone;
     private String email;
+    private String password;
     
     private UserActionEnum userActionEnum;
     
@@ -17,6 +18,14 @@ public class UserParam extends Operator {
     
     private List<RoleDto> roleList;
     
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public List<RoleDto> getRoleList() {
 		return roleList;
 	}

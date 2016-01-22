@@ -9,8 +9,9 @@ public class RoleParam {
 	private String name;
 	private String description;
 	private Byte status;
-	private Integer domainId;
 	private Integer roleCodeId;
+	
+	private Integer domainId;
 	
 	private List<PermissionDto> permsList;
 	

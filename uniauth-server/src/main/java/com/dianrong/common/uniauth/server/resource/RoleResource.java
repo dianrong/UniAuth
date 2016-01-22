@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
@@ -17,12 +18,6 @@ public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<List<RoleCodeDto>> getAllRoleCodes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response<List<RoleDto>> searchRole(RoleQuery roleQuery) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -59,6 +54,12 @@ public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<String> saveGroupTreeToRole(GroupTreeParam groupTreeParam) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
 		// TODO Auto-generated method stub
 		return null;
 	}

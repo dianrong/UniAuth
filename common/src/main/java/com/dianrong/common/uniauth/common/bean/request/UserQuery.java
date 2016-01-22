@@ -3,15 +3,11 @@ package com.dianrong.common.uniauth.common.bean.request;
 /**
  * Created by Arc on 15/1/16.
  */
-public class UserQuery extends Operator {
+public class UserQuery extends PageParam {
 
     private String name;
     private String phone;
     private String email;
-    
-    //from index 0
-    private Integer pageOffset;
-    private Integer pageSize;
 
     public String getName() {
         return name;

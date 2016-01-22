@@ -1,16 +1,13 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-public class RoleQuery extends Operator {
+public class RoleQuery extends PageParam {
 	private Integer id;
 	private String name;
 	private String description;
 	private Byte status;
-	private Integer domainId;
 	private Integer roleCodeId;
 	
-    //from index 0
-    private Integer pageOffset;
-    private Integer pageSize;
+	private Integer domainId;
 	
 	public Integer getId() {
 		return id;
@@ -48,16 +45,5 @@ public class RoleQuery extends Operator {
 	public void setRoleCodeId(Integer roleCodeId) {
 		this.roleCodeId = roleCodeId;
 	}
-	public Integer getPageOffset() {
-		return pageOffset;
-	}
-	public void setPageOffset(Integer pageOffset) {
-		this.pageOffset = pageOffset;
-	}
-	public Integer getPageSize() {
-		return pageSize;
-	}
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
+
 }
