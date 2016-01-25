@@ -316,7 +316,7 @@ insert into `role_code`(`code`, `description`) values ('GUEST', 'Guest用户');
 
 insert into `perm_type`(`type`) values ('PRIVILEGE');
 insert into `perm_type`(`type`) values ('URI_Pattern');
-insert into perm_type(id,type) values('DOMAIN');
+insert into `perm_type`(`type`) values ('DOMAIN');
 
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
 values('200000001', '樊双贵', 'shuanggui.fan@dianrong.com', '13011111111', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());

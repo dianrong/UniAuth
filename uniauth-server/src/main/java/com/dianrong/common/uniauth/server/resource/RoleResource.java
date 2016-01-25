@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
@@ -11,15 +13,17 @@ import com.dianrong.common.uniauth.common.bean.request.GroupTreeParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
-import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
 import com.dianrong.common.uniauth.common.interfaces.rw.IRoleRWResource;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 
 public class RoleResource implements IRoleRWResource {
+	
+	@Autowired
+	private RoleCodeMapper roleCodeMapper;
 
 	@Override
 	public Response<List<RoleCodeDto>> getAllRoleCodes() {
-		// TODO Auto-generated method stub
-		return null;
+		return roleCodeMapper.getAllRoleCodes();
 	}
 
 	@Override
