@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RestController;
+
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
@@ -12,6 +14,7 @@ import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
 import com.dianrong.common.uniauth.common.interfaces.rw.IGroupRWResource;
 
+@RestController
 public class GroupResource implements IGroupRWResource {
 	
 	@Override

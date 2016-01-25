@@ -1,11 +1,11 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
-import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface RoleCodeMapper {
     /**
@@ -96,5 +96,5 @@ public interface RoleCodeMapper {
      */
     int updateByPrimaryKey(RoleCode record);
     
-	public Response<List<RoleCodeDto>> getAllRoleCodes();
+	public List<RoleCode> getAllRoleCodes();
 }

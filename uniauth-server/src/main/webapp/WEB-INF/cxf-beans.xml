@@ -10,8 +10,12 @@
     <!-- CXF Configuration -->
     <jaxrs:server address="/rs">
         <jaxrs:serviceBeans>
-            <ref bean="userResource" />
             <ref bean="commonResource" />
+            <ref bean="domainResource" />
+            <ref bean="groupResource" />
+            <ref bean="permissionResource" />
+            <ref bean="roleResource" />
+            <ref bean="userResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />

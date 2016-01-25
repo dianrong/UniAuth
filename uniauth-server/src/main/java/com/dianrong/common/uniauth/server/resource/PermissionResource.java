@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RestController;
+
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
@@ -13,6 +15,7 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
 import com.dianrong.common.uniauth.common.interfaces.rw.IPermissionRWResource;
 
+@RestController
 public class PermissionResource implements IPermissionRWResource {
 
 	@Override
