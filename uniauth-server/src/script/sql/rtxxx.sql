@@ -150,8 +150,7 @@ CREATE INDEX `fk_role_domain1_idx` ON `role` (`domain_id` ASC);
 
 CREATE INDEX `fk_role_role_code1_idx` ON `role` (`role_code_id` ASC);
 
-CREATE INDEX `domain_rolename_unique` ON `role` (`domain_id` ASC, `name` ASC);
-
+CREATE UNIQUE INDEX `domain_rolename_unique` ON `role` (`domain_id` ASC, `name` ASC);
 
 -- -----------------------------------------------------
 -- Table `user_role`
