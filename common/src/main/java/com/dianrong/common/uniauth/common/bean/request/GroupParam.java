@@ -9,7 +9,8 @@ public class GroupParam extends Operator {
 	private String code;
 	private String name;
 	private String description;
-	
+	private Byte status;
+
 	//when add
 	private Integer targetGroupId;
 	//if true only group, ignore members under each group
@@ -92,5 +93,14 @@ public class GroupParam extends Operator {
 
 	public void setOnlyShowGroup(boolean onlyShowGroup) {
 		this.onlyShowGroup = onlyShowGroup;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public GroupParam setStatus(Byte status) {
+		this.status = status;
+		return this;
 	}
 }

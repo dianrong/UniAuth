@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.dianrong.common.uniauth.server.service.GroupService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -16,7 +18,10 @@ import com.dianrong.common.uniauth.common.interfaces.rw.IGroupRWResource;
 
 @RestController
 public class GroupResource implements IGroupRWResource {
-	
+
+	@Autowired
+	private GroupService groupService;
+
 	@Override
 	public Response<GroupDto> getGroupTree(GroupParam groupParam) {
 		// TODO Auto-generated method stub
@@ -37,20 +42,20 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<GroupDto> addNewGroupIntoGroup(GroupParam groupParam) {
-		// TODO Auto-generated method stub
-		return null;
+		GroupDto groupDto = groupService.createDescendantGroup(groupParam);
+		return Response.success(groupDto);
 	}
 
 	@Override
-	public Response<String> deleteGroup(PrimaryKeyParam primaryKeyParam) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response<Boolean> deleteGroup(PrimaryKeyParam primaryKeyParam) {
+		Boolean success = groupService.deleteGroup(primaryKeyParam.getId());
+		return Response.success(success);
 	}
 
 	@Override
-	public Response<String> updateGroup(GroupParam groupParam) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response<GroupDto> updateGroup(GroupParam groupParam) {
+		GroupDto groupDto = groupService.updateGroup(groupParam);
+		return Response.success(groupDto);
 	}
 
 	@Override
