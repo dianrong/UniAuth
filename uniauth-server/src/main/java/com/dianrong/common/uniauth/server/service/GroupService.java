@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.util.AppConstants;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,6 +205,9 @@ public class GroupService {
         if(!CollectionUtils.isEmpty(roles)) {
             List<RoleDto> roleDtos = new ArrayList<>();
             for(Role role : roles) {
+                if(role.getStatus().equals(AppConstants.ONE_Byte)) {
+                    continue;
+                }
                 RoleDto roleDto = BeanConverter.convert(role);
                 if(checkedRoleIds.contains(roleDto.getId())) {
                     roleDto.setChecked(Boolean.TRUE);
@@ -223,6 +227,9 @@ public class GroupService {
         if(!CollectionUtils.isEmpty(users)) {
             List<UserDto> userDtos = new ArrayList<>();
             for(User user : users) {
+                if(user.getStatus().equals(AppConstants.ONE_Byte)) {
+                    continue;
+                }
                 UserDto userDto = BeanConverter.convert(user);
                 userDtos.add(userDto);
             }
@@ -230,5 +237,9 @@ public class GroupService {
         } else {
             return null;
         }
+    }
+
+    public GroupDto getGroupTree(Integer groupId, Boolean onlyShowGroup) {
+        return null;
     }
 }
