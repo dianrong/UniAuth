@@ -30,13 +30,13 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<Void> addUsersIntoGroup(UserListParam userListParam) {
-		groupService.addUsersIntoGroup(userListParam);
+		groupService.addUsersIntoGroup(userListParam.getGroupId(),userListParam.getUserIds(),userListParam.getNormalMember());
 		return Response.success();
 	}
 
 	@Override
 	public Response<Void> removeUsersFromGroup(UserListParam userListParam) {
-		groupService.removeUsersFromGroup(userListParam);
+		groupService.removeUsersFromGroup(userListParam.getGroupId(),userListParam.getUserIds(),userListParam.getNormalMember());
 		return Response.success();
 	}
 
@@ -72,7 +72,7 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<Void> saveRolesToGroup(GroupParam groupParam) {
-		groupService.saveRolesToGroup(groupParam);
+		groupService.saveRolesToGroup(groupParam.getId(), groupParam.getRoleIds());
 		return Response.success();
 	}
 

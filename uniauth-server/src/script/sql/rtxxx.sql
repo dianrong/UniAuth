@@ -339,6 +339,8 @@ insert into role_permission(role_id, permission_id) values(1, 1);
 
 insert into grp_role(grp_id, role_id)  values(2, 1);
 
+-- change the primarykey of user_grp
+ALTER TABLE `user_grp` CHANGE COLUMN `type` `type` TINYINT(3) NOT NULL ,DROP PRIMARY KEY,ADD PRIMARY KEY (`user_id`, `grp_id`, `type`);
 
 
 
