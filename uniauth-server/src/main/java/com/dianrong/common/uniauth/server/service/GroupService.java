@@ -7,7 +7,7 @@ import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserGroupMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -27,7 +27,7 @@ public class GroupService {
     @Autowired
     private GrpPathMapper grpPathMapper;
     @Autowired
-    private UserGroupMapper userGroupMapper;
+    private UserGrpMapper userGrpMapper;
     @Autowired
     private GrpRoleMapper grpRoleMapper;
 
@@ -50,21 +50,23 @@ public class GroupService {
 
     @Transactional
     public Boolean deleteGroup(Integer groupId) {
-        GrpPathExample grpPathExample = new GrpPathExample();
-        grpPathExample.createCriteria().andAncestorEqualTo(groupId);
-        int desOfDes = grpPathMapper.countByExample(grpPathExample);
+        GrpPathExample grpPathAncestorExample = new GrpPathExample();
+        grpPathAncestorExample.createCriteria().andAncestorEqualTo(groupId);
+        int desOfDes = grpPathMapper.countByExample(grpPathAncestorExample);
         if(desOfDes > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.delgroup"));
         }
         // cascading delete the users in group and the roles on group.
-        UserGroupExample userGroupExample = new UserGroupExample();
-        userGroupExample.createCriteria().andGrpIdEqualTo(groupId);
-        userGroupMapper.deleteByExample(userGroupExample);
+        UserGrpExample userGrpExample = new UserGrpExample();
+        userGrpExample.createCriteria().andGrpIdEqualTo(groupId);
+        userGrpMapper.deleteByExample(userGrpExample);
         GrpRoleExample grpRoleExample = new GrpRoleExample();
         grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
         grpRoleMapper.deleteByExample(grpRoleExample);
+        GrpPathExample grpPathDescendantExample = new GrpPathExample();
+        grpPathDescendantExample.createCriteria().andDescendantEqualTo(groupId);
+        grpPathMapper.deleteByExample(grpPathDescendantExample);
         grpMapper.deleteByPrimaryKey(groupId);
-        grpPathMapper.deleteByExample(grpPathExample);
         return Boolean.TRUE;
     }
 

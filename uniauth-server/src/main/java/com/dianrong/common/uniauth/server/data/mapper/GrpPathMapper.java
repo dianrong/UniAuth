@@ -94,4 +94,6 @@ public interface GrpPathMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(GrpPath record);
+
+    int insertNewNode(GrpPath record);
 }
