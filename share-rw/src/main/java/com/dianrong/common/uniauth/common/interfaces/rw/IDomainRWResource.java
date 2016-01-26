@@ -19,10 +19,10 @@ public interface IDomainRWResource extends IDomainResource {
     @POST
     @Path("updatestakeholder")
     //scenario: update stakeholder
-    Response<String> updateStakeholder(StakeholderParam stakeholderParam);
+    Response<Void> updateStakeholder(StakeholderParam stakeholderParam);
     
     @POST
     @Path("deletestakeholder")
     //scenario: delete stakeholder
-    Response<String> deleteStakeholder(PrimaryKeyParam primaryKeyParam);
+    Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam);
 }

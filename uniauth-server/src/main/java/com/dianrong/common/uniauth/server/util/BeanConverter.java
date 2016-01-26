@@ -89,14 +89,16 @@ public class BeanConverter {
         }
     }
     
-    public static Stakeholder convert(StakeholderParam stakeholderParam) {
+    public static Stakeholder convert(StakeholderParam stakeholderParam, boolean needSetId) {
         if(stakeholderParam == null) {
             return null;
         } else {
         	Stakeholder stakeholder = new Stakeholder();
+        	if(needSetId){
+            	stakeholder.setId(stakeholderParam.getId());
+        	}
         	stakeholder.setDomainId(stakeholderParam.getDomainId());
         	stakeholder.setEmail(stakeholderParam.getEmail());
-        	//stakeholder.setId(stakeholderParam.getId());
         	stakeholder.setJobtitle(stakeholderParam.getJobtitle());
         	stakeholder.setName(stakeholderParam.getName());
         	stakeholder.setPhone(stakeholderParam.getPhone());
