@@ -51,9 +51,9 @@ public class GroupService {
     @Transactional
     public Boolean deleteGroup(Integer groupId) {
         GrpPathExample grpPathExample = new GrpPathExample();
-        grpPathExample.createCriteria().andDescendantEqualTo(groupId);
+        grpPathExample.createCriteria().andAncestorEqualTo(groupId);
         int desOfDes = grpPathMapper.countByExample(grpPathExample);
-        if(desOfDes > 0) {
+        if(desOfDes > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.delgroup"));
         }
         // cascading delete the users in group and the roles on group.

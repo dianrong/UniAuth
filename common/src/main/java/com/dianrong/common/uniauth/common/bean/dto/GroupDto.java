@@ -19,14 +19,15 @@ public class GroupDto {
 	private List<GroupDto> groupList;
 	
 	//whether this group connected with a role
-	private boolean roleChecked;
+	private Boolean roleChecked;
 
-	public boolean isRoleChecked() {
+	public Boolean getRoleChecked() {
 		return roleChecked;
 	}
 
-	public void setRoleChecked(boolean roleChecked) {
+	public GroupDto setRoleChecked(Boolean roleChecked) {
 		this.roleChecked = roleChecked;
+		return this;
 	}
 
 	/**
