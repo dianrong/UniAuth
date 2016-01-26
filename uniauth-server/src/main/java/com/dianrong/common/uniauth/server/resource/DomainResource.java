@@ -53,6 +53,9 @@ public class DomainResource implements IDomainRWResource {
 		}
 		Integer domainId = primaryKeyParam.getId();
 		Domain domain = domainMapper.selectByPrimaryKey(domainId);
+		if(domain == null){
+			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.notfound", String.valueOf(domainId), "域"));
+		}
 		if(domain.getStatus() == 1){
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.status.isone", String.valueOf(domainId), "域"));
 		}
