@@ -2,13 +2,12 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -17,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Arc on 14/1/16.
@@ -35,6 +31,10 @@ public class GroupService {
     private GrpRoleMapper grpRoleMapper;
     @Autowired
     private UserGrpMapper userGrpMapper;
+    @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Transactional
     public GroupDto createDescendantGroup(GroupParam groupParam) {
@@ -145,22 +145,80 @@ public class GroupService {
         for(Long userId : userIds) {
             if(userIdSet.contains(userId)) {
                 UserGrpExample userGrpExample1 = new UserGrpExample();
-                userGrpExample1.createCriteria();
-                UserGrp userGrp = new UserGrp();
-                userGrp.setGrpId(groupId);
-                userGrp.setUserId(userId);
+                UserGrpExample.Criteria criteria = userGrpExample1.createCriteria().andGrpIdEqualTo(groupId).andUserIdEqualTo(userId);
                 if(normalMember == null || normalMember) {
-                    userGrp.setType((byte)0);
+                    criteria.andTypeEqualTo((byte)0);
                 } else {
-                    userGrp.setType((byte)1);
+                    criteria.andTypeEqualTo((byte)1);
                 }
-                //userGrpMapper.deleteByExample();
+                userGrpMapper.deleteByExample(userGrpExample1);
             }
         }
     }
 
     @Transactional
     public void saveRolesToGroup(GroupParam groupParam) {
+        Integer groupId = groupParam.getId();
+        List<Integer> roleIds = groupParam.getRoleIds();
+        if(groupId == null || CollectionUtils.isEmpty(roleIds)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, roleIds"));
+        }
+        GrpRoleExample grpRoleExample = new GrpRoleExample();
+        grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
+        List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
+        Set<Integer> roleIdSet = new HashSet<>();
+        if(!CollectionUtils.isEmpty(grpRoleKeys)) {
+            for(GrpRoleKey grpRoleKey : grpRoleKeys) {
+                roleIdSet.add(grpRoleKey.getRoleId());
+            }
+        }
+        for(Integer roleId : roleIds) {
+            if(!roleIdSet.contains(roleId)) {
+                GrpRoleKey grpRoleKey = new GrpRoleKey();
+                grpRoleKey.setGrpId(groupId);
+                grpRoleKey.setRoleId(roleId);
+                grpRoleMapper.insert(grpRoleKey);
+            }
+        }
+    }
 
+    public List<RoleDto> getAllRolesToGroup(Integer groupId, Integer domainId) {
+        if(groupId == null || domainId == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, domainId"));
+        }
+        if(grpMapper.selectByPrimaryKey(groupId) == null) {
+            return null;
+        }
+        GrpRoleExample grpRoleExample = new GrpRoleExample();
+        grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
+        List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
+        Set<Integer> checkedRoleIds = new HashSet<>();
+        if(!CollectionUtils.isEmpty(grpRoleKeys)) {
+            for(GrpRoleKey grpRoleKey : grpRoleKeys) {
+                checkedRoleIds.add(grpRoleKey.getRoleId());
+            }
+        }
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andDomainIdEqualTo(domainId);
+        List<Role> roles = roleMapper.selectByExample(roleExample);
+        if(!CollectionUtils.isEmpty(roles)) {
+            List<RoleDto> roleDtos = new ArrayList<>();
+            for(Role role : roles) {
+                RoleDto roleDto = BeanConverter.convert(role);
+                if(checkedRoleIds.contains(roleDto.getId())) {
+                    roleDto.setChecked(Boolean.TRUE);
+                } else {
+                    roleDto.setChecked(Boolean.FALSE);
+                }
+                roleDtos.add(roleDto);
+            }
+            return roleDtos;
+        } else {
+            return null;
+        }
+    }
+
+    public List<UserDto> getGroupOwners(Integer groupId) {
+        return null;
     }
 }

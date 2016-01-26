@@ -36,8 +36,8 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<Void> removeUsersFromGroup(UserListParam userListParam) {
-		// TODO Auto-generated method stub
-		return null;
+		groupService.removeUsersFromGroup(userListParam);
+		return Response.success();
 	}
 
 	@Override
@@ -66,14 +66,14 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<List<RoleDto>> getAllRolesToGroup(GroupParam groupParam) {
-		// TODO Auto-generated method stub
-		return null;
+		List<RoleDto> roleDtos = groupService.getAllRolesToGroup(groupParam.getId(),groupParam.getDomainId());
+		return Response.success(roleDtos);
 	}
 
 	@Override
 	public Response<Void> saveRolesToGroup(GroupParam groupParam) {
-		// TODO Auto-generated method stub
-		return null;
+		groupService.saveRolesToGroup(groupParam);
+		return Response.success();
 	}
 
 }

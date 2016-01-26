@@ -3,10 +3,12 @@ package com.dianrong.common.uniauth.server.util;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
-import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
 
@@ -61,7 +63,7 @@ public class BeanConverter {
             return groupDto;
         }
     }
-    
+
     public static StakeholderDto convert(Stakeholder stakeholder) {
         if(stakeholder == null) {
             return null;
@@ -69,5 +71,18 @@ public class BeanConverter {
             return new StakeholderDto().setDomainId(stakeholder.getDomainId()).setEmail(stakeholder.getEmail()).setId(stakeholder.getId()).setJobtitle(stakeholder.getJobtitle()).setName(stakeholder.getName()).setPhone(stakeholder.getPhone());
         }
     }
-    
+
+
+    public static RoleDto convert(Role role) {
+        if(role == null) {
+            return null;
+        } else {
+            RoleDto roleDto = new RoleDto();
+            roleDto.setDescription(role.getDescription()).
+                    setId(role.getId()).
+                    setStatus(role.getStatus()).
+                    setName(role.getName());
+            return roleDto;
+        }
+    }
 }

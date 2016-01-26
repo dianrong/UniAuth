@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.GrpMapper">
+    <select id="getGroupOwners" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user join user_grp on user.id = user_grp.user_id
+        where user_grp.grp_id=#{id,jdbcType=INTEGER} and user_grp.type=1
+    </select>
+</mapper>

@@ -11,8 +11,7 @@ public class RoleDto {
 	private String name;
 	private String description;
 	private Byte status;
-	private Integer domainId;
-	private Integer roleCodeId;
+	private DomainDto domain;
 	private RoleCodeDto roleCodeDto;
 	
 	private List<GroupDto> groupList;
@@ -64,21 +63,12 @@ public class RoleDto {
 		return this;
 	}
 
-	public Integer getDomainId() {
-		return domainId;
+	public DomainDto getDomain() {
+		return domain;
 	}
 
-	public RoleDto setDomainId(Integer domainId) {
-		this.domainId = domainId;
-		return this;
-	}
-
-	public Integer getRoleCodeId() {
-		return roleCodeId;
-	}
-
-	public RoleDto setRoleCodeId(Integer roleCodeId) {
-		this.roleCodeId = roleCodeId;
+	public RoleDto setDomain(DomainDto domain) {
+		this.domain = domain;
 		return this;
 	}
 
