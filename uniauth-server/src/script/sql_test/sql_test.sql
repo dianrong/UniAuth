@@ -52,6 +52,8 @@ insert into user_role(user_id, role_id) values(200000004, 3);
 insert into grp_role(grp_id, role_id)  values(3, 2);
 insert into grp_role(grp_id, role_id)  values(4, 3);
 
+/**stakeholder*/
+insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '许增伟', 'zengwei.xu@dianrong.com', '18190805518', '开发人员', 1)
 
 
 
