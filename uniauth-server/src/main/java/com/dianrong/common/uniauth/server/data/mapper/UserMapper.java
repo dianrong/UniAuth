@@ -93,4 +93,6 @@ public interface UserMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(User record);
+
+    List<User> getGroupOwners(Integer groupId);
 }
