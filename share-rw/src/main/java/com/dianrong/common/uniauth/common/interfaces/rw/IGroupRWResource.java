@@ -31,12 +31,12 @@ public interface IGroupRWResource extends IGroupResource {
     @POST
     @Path("deletegroup")
     //scenario: delete group
-    Response<String> deleteGroup(PrimaryKeyParam primaryKeyParam);
+    Response<Boolean> deleteGroup(PrimaryKeyParam primaryKeyParam);
     
     @POST
     @Path("updategroup")
     //scenario: modify group info
-    Response<String> updateGroup(GroupParam groupParam);
+    Response<GroupDto> updateGroup(GroupParam groupParam);
 
     @POST
     @Path("saverolestogroup")

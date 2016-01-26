@@ -1,12 +1,17 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.util.Date;
 import java.util.List;
 
 public class GroupDto {
 	private Integer id;
 	private String code;
 	private String name;
-	
+	private Date createDate;
+	private Date lastUpdate;
+	private Byte status;
+	private String description;
+
 	/**
 	private List<UserDto> ownerList;
 	**/
@@ -72,5 +77,41 @@ public class GroupDto {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public GroupDto setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public GroupDto setStatus(Byte status) {
+		this.status = status;
+		return this;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public GroupDto setCreateDate(Date createDate) {
+		this.createDate = createDate;
+		return this;
+	}
+
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public GroupDto setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+		return this;
 	}
 }
