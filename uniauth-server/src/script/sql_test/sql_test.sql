@@ -35,7 +35,6 @@ insert into role(id, name,description, status, domain_id, role_code_id) values(2
 insert into role(id, name,description, status, domain_id, role_code_id) values(3, 'techops上的ams域管理员角色', 'techops上的ams域管理员角色，管理ams域的权限', 0, 1, 2);
 
 /**perm_type表*/
-insert into perm_type(id,type) values(3,'DOMAIN');
 
 /**permission表*/
 insert into permission(id, value, description, status, perm_type_id, domain_id) values(2, 'crm', '拥有techops上crm域的permission，全权管理在techops上的crm域',0,3,1);

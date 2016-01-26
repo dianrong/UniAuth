@@ -17,6 +17,7 @@ import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 import com.dianrong.common.uniauth.common.interfaces.rw.IRoleRWResource;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
 import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 
@@ -28,15 +29,15 @@ public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<List<RoleCodeDto>> getAllRoleCodes() {
-		List<RoleCode> roleCodeList = roleCodeMapper.getAllRoleCodes();
+		RoleCodeExample example = new RoleCodeExample();
+		List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
+		List<RoleCodeDto> roleCodeDtoList = new ArrayList<RoleCodeDto>();
 		if(roleCodeList != null){
-			List<RoleCodeDto> roleCodeDtoList = new ArrayList<RoleCodeDto>();
 			for(RoleCode roleCode : roleCodeList){
 				roleCodeDtoList.add(BeanConverter.convert(roleCode));
 			}
-			return new Response<List<RoleCodeDto>>(roleCodeDtoList);
 		}
-		return null;
+		return new Response<List<RoleCodeDto>>(roleCodeDtoList);
 	}
 
 	@Override

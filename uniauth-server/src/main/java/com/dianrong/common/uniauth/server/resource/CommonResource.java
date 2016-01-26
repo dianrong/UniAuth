@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -15,10 +16,13 @@ import com.dianrong.common.uniauth.common.interfaces.read.ICommonResource;
  */
 @RestController
 public class CommonResource implements ICommonResource {
-
+	
+	@Autowired
+	private RoleResource roleResource;
+	
 	@Override
 	public Response<List<RoleCodeDto>> getAllRoleCodes() {
-		throw new RuntimeException();
+		return roleResource.getAllRoleCodes();
 	}
 
 	@Override

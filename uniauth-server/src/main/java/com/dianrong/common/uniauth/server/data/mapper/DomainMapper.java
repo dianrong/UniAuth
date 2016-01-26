@@ -1,9 +1,11 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface DomainMapper {
     /**
@@ -93,4 +95,6 @@ public interface DomainMapper {
      * @mbggenerated Tue Jan 19 14:24:53 CST 2016
      */
     int updateByPrimaryKey(Domain record);
+    
+    public List<Domain> getAllLoginDomains();
 }
