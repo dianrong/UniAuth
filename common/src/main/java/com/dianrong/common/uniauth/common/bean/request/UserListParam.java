@@ -3,29 +3,37 @@ package com.dianrong.common.uniauth.common.bean.request;
 import java.util.List;
 
 public class UserListParam extends Operator{
-	private List<UserParam> userList;
+	private List<Long> userIds;
 	//target group id
 	private Integer groupId;
 	
 	//true normal member, false owner member
-	private boolean normalMember;
-	
-	public List<UserParam> getUserList() {
-		return userList;
+	private Boolean normalMember;
+
+	public List<Long> getUserIds() {
+		return userIds;
 	}
-	public void setUserList(List<UserParam> userList) {
-		this.userList = userList;
+
+	public UserListParam setUserIds(List<Long> userIds) {
+		this.userIds = userIds;
+		return this;
 	}
+
 	public Integer getGroupId() {
 		return groupId;
 	}
-	public void setGroupId(Integer groupId) {
+
+	public UserListParam setGroupId(Integer groupId) {
 		this.groupId = groupId;
+		return this;
 	}
-	public boolean isNormalMember() {
+
+	public Boolean getNormalMember() {
 		return normalMember;
 	}
-	public void setNormalMember(boolean normalMember) {
+
+	public UserListParam setNormalMember(Boolean normalMember) {
 		this.normalMember = normalMember;
+		return this;
 	}
 }

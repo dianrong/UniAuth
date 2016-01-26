@@ -10,51 +10,69 @@ public class RoleParam {
 	private String description;
 	private Byte status;
 	private Integer roleCodeId;
-	
 	private Integer domainId;
-	
 	private List<PermissionDto> permsList;
-	
-	public List<PermissionDto> getPermsList() {
-		return permsList;
-	}
-	public void setPermsList(List<PermissionDto> permsList) {
-		this.permsList = permsList;
-	}
+
 	public Integer getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public RoleParam setId(Integer id) {
 		this.id = id;
+		return this;
 	}
+
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+
+	public RoleParam setName(String name) {
 		this.name = name;
+		return this;
 	}
+
 	public String getDescription() {
 		return description;
 	}
-	public void setDescription(String description) {
+
+	public RoleParam setDescription(String description) {
 		this.description = description;
+		return this;
 	}
+
 	public Byte getStatus() {
 		return status;
 	}
-	public void setStatus(Byte status) {
+
+	public RoleParam setStatus(Byte status) {
 		this.status = status;
+		return this;
 	}
-	public Integer getDomainId() {
-		return domainId;
-	}
-	public void setDomainId(Integer domainId) {
-		this.domainId = domainId;
-	}
+
 	public Integer getRoleCodeId() {
 		return roleCodeId;
 	}
-	public void setRoleCodeId(Integer roleCodeId) {
+
+	public RoleParam setRoleCodeId(Integer roleCodeId) {
 		this.roleCodeId = roleCodeId;
+		return this;
+	}
+
+	public Integer getDomainId() {
+		return domainId;
+	}
+
+	public RoleParam setDomainId(Integer domainId) {
+		this.domainId = domainId;
+		return this;
+	}
+
+	public List<PermissionDto> getPermsList() {
+		return permsList;
+	}
+
+	public RoleParam setPermsList(List<PermissionDto> permsList) {
+		this.permsList = permsList;
+		return this;
 	}
 }

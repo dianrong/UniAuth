@@ -35,20 +35,4 @@ public class UserQuery extends PageParam {
         this.email = email;
         return this;
     }
-
-	public Integer getPageOffset() {
-		return pageOffset;
-	}
-
-	public void setPageOffset(Integer pageOffset) {
-		this.pageOffset = pageOffset;
-	}
-
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
 }

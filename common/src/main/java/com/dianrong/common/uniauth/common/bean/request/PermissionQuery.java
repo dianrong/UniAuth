@@ -6,55 +6,59 @@ public class PermissionQuery extends PageParam {
 	private String description;
 	private Byte status;
 	private Integer permTypeId;
-	
 	private Integer domainId;
-	
+
 	public Integer getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public PermissionQuery setId(Integer id) {
 		this.id = id;
+		return this;
 	}
+
 	public String getValue() {
 		return value;
 	}
-	public void setValue(String value) {
+
+	public PermissionQuery setValue(String value) {
 		this.value = value;
+		return this;
 	}
+
 	public String getDescription() {
 		return description;
 	}
-	public void setDescription(String description) {
+
+	public PermissionQuery setDescription(String description) {
 		this.description = description;
+		return this;
 	}
+
 	public Byte getStatus() {
 		return status;
 	}
-	public void setStatus(Byte status) {
+
+	public PermissionQuery setStatus(Byte status) {
 		this.status = status;
+		return this;
 	}
+
 	public Integer getPermTypeId() {
 		return permTypeId;
 	}
-	public void setPermTypeId(Integer permTypeId) {
+
+	public PermissionQuery setPermTypeId(Integer permTypeId) {
 		this.permTypeId = permTypeId;
+		return this;
 	}
+
 	public Integer getDomainId() {
 		return domainId;
 	}
-	public void setDomainId(Integer domainId) {
+
+	public PermissionQuery setDomainId(Integer domainId) {
 		this.domainId = domainId;
-	}
-	public Integer getPageOffset() {
-		return pageOffset;
-	}
-	public void setPageOffset(Integer pageOffset) {
-		this.pageOffset = pageOffset;
-	}
-	public Integer getPageSize() {
-		return pageSize;
-	}
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
+		return this;
 	}
 }

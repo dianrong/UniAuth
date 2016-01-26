@@ -26,67 +26,95 @@ public class RoleDto {
 	//private boolean groupChecked;
 	
 	//whether this role connected with a permission, user or group
-	private boolean checked;
-	
-	public boolean isChecked() {
-		return checked;
-	}
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
+	private Boolean checked;
+
 	public Integer getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public RoleDto setId(Integer id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+
+	public RoleDto setName(String name) {
 		this.name = name;
+		return this;
 	}
-	public List<GroupDto> getGroupList() {
-		return groupList;
-	}
-	public void setGroupList(List<GroupDto> groupList) {
-		this.groupList = groupList;
-	}
-	public List<Map<String, List<String>>> getPermissionList() {
-		return permissionList;
-	}
-	public void setPermissionList(List<Map<String, List<String>>> permissionList) {
-		this.permissionList = permissionList;
-	}
+
 	public String getDescription() {
 		return description;
 	}
-	public void setDescription(String description) {
+
+	public RoleDto setDescription(String description) {
 		this.description = description;
+		return this;
 	}
+
 	public Byte getStatus() {
 		return status;
 	}
-	public void setStatus(Byte status) {
+
+	public RoleDto setStatus(Byte status) {
 		this.status = status;
+		return this;
 	}
+
 	public Integer getDomainId() {
 		return domainId;
 	}
-	public void setDomainId(Integer domainId) {
+
+	public RoleDto setDomainId(Integer domainId) {
 		this.domainId = domainId;
+		return this;
 	}
+
 	public Integer getRoleCodeId() {
 		return roleCodeId;
 	}
-	public void setRoleCodeId(Integer roleCodeId) {
+
+	public RoleDto setRoleCodeId(Integer roleCodeId) {
 		this.roleCodeId = roleCodeId;
+		return this;
 	}
+
 	public RoleCodeDto getRoleCodeDto() {
 		return roleCodeDto;
 	}
-	public void setRoleCodeDto(RoleCodeDto roleCodeDto) {
+
+	public RoleDto setRoleCodeDto(RoleCodeDto roleCodeDto) {
 		this.roleCodeDto = roleCodeDto;
+		return this;
+	}
+
+	public List<GroupDto> getGroupList() {
+		return groupList;
+	}
+
+	public RoleDto setGroupList(List<GroupDto> groupList) {
+		this.groupList = groupList;
+		return this;
+	}
+
+	public List<Map<String, List<String>>> getPermissionList() {
+		return permissionList;
+	}
+
+	public RoleDto setPermissionList(List<Map<String, List<String>>> permissionList) {
+		this.permissionList = permissionList;
+		return this;
+	}
+
+	public Boolean getChecked() {
+		return checked;
+	}
+
+	public RoleDto setChecked(Boolean checked) {
+		this.checked = checked;
+		return this;
 	}
 }

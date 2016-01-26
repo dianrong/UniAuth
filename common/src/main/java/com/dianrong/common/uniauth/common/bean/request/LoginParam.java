@@ -17,16 +17,22 @@ public class LoginParam extends Operator {
 		this.domainCode = domainCode;
 	}
 	**/
+
 	public String getAccount() {
 		return account;
 	}
-	public void setAccount(String account) {
+
+	public LoginParam setAccount(String account) {
 		this.account = account;
+		return this;
 	}
+
 	public String getPassword() {
 		return password;
 	}
-	public void setPassword(String password) {
+
+	public LoginParam setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 }

@@ -7,41 +7,58 @@ public class StakeholderParam {
 	private String phone;
 	private String jobtitle;
 	private Integer domainId;
-	
+
 	public Integer getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public StakeholderParam setId(Integer id) {
 		this.id = id;
+		return this;
 	}
+
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+
+	public StakeholderParam setName(String name) {
 		this.name = name;
+		return this;
 	}
+
 	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String email) {
+
+	public StakeholderParam setEmail(String email) {
 		this.email = email;
+		return this;
 	}
+
 	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(String phone) {
+
+	public StakeholderParam setPhone(String phone) {
 		this.phone = phone;
+		return this;
 	}
+
 	public String getJobtitle() {
 		return jobtitle;
 	}
-	public void setJobtitle(String jobtitle) {
+
+	public StakeholderParam setJobtitle(String jobtitle) {
 		this.jobtitle = jobtitle;
+		return this;
 	}
+
 	public Integer getDomainId() {
 		return domainId;
 	}
-	public void setDomainId(Integer domainId) {
+
+	public StakeholderParam setDomainId(Integer domainId) {
 		this.domainId = domainId;
+		return this;
 	}
 }

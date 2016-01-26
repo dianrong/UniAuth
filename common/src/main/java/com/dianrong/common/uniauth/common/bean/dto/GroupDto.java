@@ -21,80 +21,30 @@ public class GroupDto {
 	//whether this group connected with a role
 	private Boolean roleChecked;
 
-	public Boolean getRoleChecked() {
-		return roleChecked;
-	}
-
-	public GroupDto setRoleChecked(Boolean roleChecked) {
-		this.roleChecked = roleChecked;
-		return this;
-	}
-
-	/**
-	public List<UserDto> getOwnerList() {
-		return ownerList;
-	}
-
-	public void setOwnerList(List<UserDto> ownerList) {
-		this.ownerList = ownerList;
-	}
-	**/
-
-	public List<GroupDto> getGroupList() {
-		return groupList;
-	}
-
-	public void setGroupList(List<GroupDto> groupList) {
-		this.groupList = groupList;
-	}
-
-	public List<UserDto> getUserList() {
-		return userList;
-	}
-
-	public void setUserList(List<UserDto> userList) {
-		this.userList = userList;
-	}
-
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public GroupDto setId(Integer id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public GroupDto setCode(String code) {
 		this.code = code;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public GroupDto setName(String name) {
 		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public GroupDto setDescription(String description) {
-		this.description = description;
-		return this;
-	}
-
-	public Byte getStatus() {
-		return status;
-	}
-
-	public GroupDto setStatus(Byte status) {
-		this.status = status;
 		return this;
 	}
 
@@ -113,6 +63,51 @@ public class GroupDto {
 
 	public GroupDto setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
+		return this;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public GroupDto setStatus(Byte status) {
+		this.status = status;
+		return this;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public GroupDto setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public List<UserDto> getUserList() {
+		return userList;
+	}
+
+	public GroupDto setUserList(List<UserDto> userList) {
+		this.userList = userList;
+		return this;
+	}
+
+	public List<GroupDto> getGroupList() {
+		return groupList;
+	}
+
+	public GroupDto setGroupList(List<GroupDto> groupList) {
+		this.groupList = groupList;
+		return this;
+	}
+
+	public Boolean getRoleChecked() {
+		return roleChecked;
+	}
+
+	public GroupDto setRoleChecked(Boolean roleChecked) {
+		this.roleChecked = roleChecked;
 		return this;
 	}
 }

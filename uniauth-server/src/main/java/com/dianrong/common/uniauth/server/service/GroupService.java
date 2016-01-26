@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
@@ -14,8 +15,12 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Arc on 14/1/16.
@@ -27,10 +32,9 @@ public class GroupService {
     @Autowired
     private GrpPathMapper grpPathMapper;
     @Autowired
-    private UserGrpMapper userGrpMapper;
-    @Autowired
     private GrpRoleMapper grpRoleMapper;
-
+    @Autowired
+    private UserGrpMapper userGrpMapper;
 
     @Transactional
     public GroupDto createDescendantGroup(GroupParam groupParam) {
@@ -49,7 +53,7 @@ public class GroupService {
     }
 
     @Transactional
-    public Boolean deleteGroup(Integer groupId) {
+    public void deleteGroup(Integer groupId) {
         GrpPathExample grpPathAncestorExample = new GrpPathExample();
         grpPathAncestorExample.createCriteria().andAncestorEqualTo(groupId);
         int desOfDes = grpPathMapper.countByExample(grpPathAncestorExample);
@@ -67,7 +71,6 @@ public class GroupService {
         grpPathDescendantExample.createCriteria().andDescendantEqualTo(groupId);
         grpPathMapper.deleteByExample(grpPathDescendantExample);
         grpMapper.deleteByPrimaryKey(groupId);
-        return Boolean.TRUE;
     }
 
     @Transactional
@@ -76,5 +79,88 @@ public class GroupService {
         grp.setLastUpdate(new Date());
         grpMapper.updateByPrimaryKeySelective(grp);
         return BeanConverter.convert(grp);
+    }
+
+    @Transactional
+    public void addUsersIntoGroup(UserListParam userListParam) {
+        Integer groupId = userListParam.getGroupId();
+        List<Long> userIds = userListParam.getUserIds();
+        if(groupId == null || CollectionUtils.isEmpty(userIds)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
+        }
+        Boolean normalMember = userListParam.getNormalMember();
+        UserGrpExample userGrpExample = new UserGrpExample();
+        List<UserGrp> userGrps = null;
+        if(normalMember == null || normalMember) {
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)0);
+            userGrps = userGrpMapper.selectByExample(userGrpExample);
+        } else {
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)1);
+            userGrps = userGrpMapper.selectByExample(userGrpExample);
+        }
+        Set<Long> userIdSet = new HashSet<>();
+        if(!CollectionUtils.isEmpty(userGrps)) {
+            for (UserGrp userGrp : userGrps) {
+                userIdSet.add(userGrp.getUserId());
+            }
+        }
+        for(Long userId : userIds) {
+            if(!userIdSet.contains(userId)) {
+                UserGrp userGrp = new UserGrp();
+                userGrp.setGrpId(groupId);
+                userGrp.setUserId(userId);
+                if(normalMember == null || normalMember) {
+                    userGrp.setType((byte)0);
+                } else {
+                    userGrp.setType((byte)1);
+                }
+                userGrpMapper.insert(userGrp);
+            }
+        }
+    }
+
+    @Transactional
+    public void removeUsersFromGroup(UserListParam userListParam) {
+        Integer groupId = userListParam.getGroupId();
+        List<Long> userIds = userListParam.getUserIds();
+        if(groupId == null || CollectionUtils.isEmpty(userIds)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
+        }
+        Boolean normalMember = userListParam.getNormalMember();
+        UserGrpExample userGrpExample = new UserGrpExample();
+        List<UserGrp> userGrps = null;
+        if(normalMember == null || normalMember) {
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)0);
+            userGrps = userGrpMapper.selectByExample(userGrpExample);
+        } else {
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)1);
+            userGrps = userGrpMapper.selectByExample(userGrpExample);
+        }
+        Set<Long> userIdSet = new HashSet<>();
+        if(!CollectionUtils.isEmpty(userGrps)) {
+            for (UserGrp userGrp : userGrps) {
+                userIdSet.add(userGrp.getUserId());
+            }
+        }
+        for(Long userId : userIds) {
+            if(userIdSet.contains(userId)) {
+                UserGrpExample userGrpExample1 = new UserGrpExample();
+                userGrpExample1.createCriteria();
+                UserGrp userGrp = new UserGrp();
+                userGrp.setGrpId(groupId);
+                userGrp.setUserId(userId);
+                if(normalMember == null || normalMember) {
+                    userGrp.setType((byte)0);
+                } else {
+                    userGrp.setType((byte)1);
+                }
+                //userGrpMapper.deleteByExample();
+            }
+        }
+    }
+
+    @Transactional
+    public void saveRolesToGroup(GroupParam groupParam) {
+
     }
 }

@@ -17,68 +17,76 @@ public class UserParam extends Operator {
     private Integer domainId;
     
     private List<RoleDto> roleList;
-    
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public List<RoleDto> getRoleList() {
-		return roleList;
-	}
-
-	public void setRoleList(List<RoleDto> roleList) {
-		this.roleList = roleList;
-	}
-
-	public Integer getDomainId() {
-		return domainId;
-	}
-
-	public void setDomainId(Integer domainId) {
-		this.domainId = domainId;
-	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public UserParam setId(Long id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public UserParam setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
+	public UserParam setPhone(String phone) {
 		this.phone = phone;
+		return this;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public UserParam setEmail(String email) {
 		this.email = email;
+		return this;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public UserParam setPassword(String password) {
+		this.password = password;
+		return this;
 	}
 
 	public UserActionEnum getUserActionEnum() {
 		return userActionEnum;
 	}
 
-	public void setUserActionEnum(UserActionEnum userActionEnum) {
+	public UserParam setUserActionEnum(UserActionEnum userActionEnum) {
 		this.userActionEnum = userActionEnum;
+		return this;
+	}
+
+	public Integer getDomainId() {
+		return domainId;
+	}
+
+	public UserParam setDomainId(Integer domainId) {
+		this.domainId = domainId;
+		return this;
+	}
+
+	public List<RoleDto> getRoleList() {
+		return roleList;
+	}
+
+	public UserParam setRoleList(List<RoleDto> roleList) {
+		this.roleList = roleList;
+		return this;
 	}
 }

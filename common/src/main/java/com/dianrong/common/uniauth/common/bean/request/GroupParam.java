@@ -23,76 +23,40 @@ public class GroupParam extends Operator {
 	
 	private List<RoleDto> roleList;
 
-	public List<RoleDto> getRoleList() {
-		return roleList;
-	}
-
-	public void setRoleList(List<RoleDto> roleList) {
-		this.roleList = roleList;
-	}
-
-	public Integer getDomainId() {
-		return domainId;
-	}
-
-	public void setDomainId(Integer domainId) {
-		this.domainId = domainId;
-	}
-
-	public Integer getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
-	}
-
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public GroupParam setId(Integer id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getCode() {
 		return code;
 	}
 
-	public void setCode(String code) {
+	public GroupParam setCode(String code) {
 		this.code = code;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public GroupParam setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public GroupParam setDescription(String description) {
 		this.description = description;
-	}
-
-	public Integer getTargetGroupId() {
-		return targetGroupId;
-	}
-
-	public void setTargetGroupId(Integer targetGroupId) {
-		this.targetGroupId = targetGroupId;
-	}
-
-	public boolean isOnlyShowGroup() {
-		return onlyShowGroup;
-	}
-
-	public void setOnlyShowGroup(boolean onlyShowGroup) {
-		this.onlyShowGroup = onlyShowGroup;
+		return this;
 	}
 
 	public Byte getStatus() {
@@ -101,6 +65,51 @@ public class GroupParam extends Operator {
 
 	public GroupParam setStatus(Byte status) {
 		this.status = status;
+		return this;
+	}
+
+	public Integer getTargetGroupId() {
+		return targetGroupId;
+	}
+
+	public GroupParam setTargetGroupId(Integer targetGroupId) {
+		this.targetGroupId = targetGroupId;
+		return this;
+	}
+
+	public boolean isOnlyShowGroup() {
+		return onlyShowGroup;
+	}
+
+	public GroupParam setOnlyShowGroup(boolean onlyShowGroup) {
+		this.onlyShowGroup = onlyShowGroup;
+		return this;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public GroupParam setRoleId(Integer roleId) {
+		this.roleId = roleId;
+		return this;
+	}
+
+	public Integer getDomainId() {
+		return domainId;
+	}
+
+	public GroupParam setDomainId(Integer domainId) {
+		this.domainId = domainId;
+		return this;
+	}
+
+	public List<RoleDto> getRoleList() {
+		return roleList;
+	}
+
+	public GroupParam setRoleList(List<RoleDto> roleList) {
+		this.roleList = roleList;
 		return this;
 	}
 }

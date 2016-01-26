@@ -11,69 +11,77 @@ public class PermissionDto {
 	private PermTypeDto permTypeDto;
 	
 	//whether this permission connected with this role
-	private boolean checked;
-	
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
+	private Boolean checked;
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public PermissionDto setId(Integer id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public PermissionDto setValue(String value) {
 		this.value = value;
+		return this;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public PermissionDto setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
 	public Byte getStatus() {
 		return status;
 	}
 
-	public void setStatus(Byte status) {
+	public PermissionDto setStatus(Byte status) {
 		this.status = status;
+		return this;
 	}
 
 	public Integer getPermTypeId() {
 		return permTypeId;
 	}
 
-	public void setPermTypeId(Integer permTypeId) {
+	public PermissionDto setPermTypeId(Integer permTypeId) {
 		this.permTypeId = permTypeId;
+		return this;
 	}
 
 	public Integer getDomainId() {
 		return domainId;
 	}
 
-	public void setDomainId(Integer domainId) {
+	public PermissionDto setDomainId(Integer domainId) {
 		this.domainId = domainId;
+		return this;
 	}
 
 	public PermTypeDto getPermTypeDto() {
 		return permTypeDto;
 	}
 
-	public void setPermTypeDto(PermTypeDto permTypeDto) {
+	public PermissionDto setPermTypeDto(PermTypeDto permTypeDto) {
 		this.permTypeDto = permTypeDto;
+		return this;
+	}
+
+	public Boolean getChecked() {
+		return checked;
+	}
+
+	public PermissionDto setChecked(Boolean checked) {
+		this.checked = checked;
+		return this;
 	}
 }

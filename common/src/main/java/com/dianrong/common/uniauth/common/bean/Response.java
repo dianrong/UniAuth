@@ -65,8 +65,8 @@ public class Response<T> implements Serializable {
         return new Response<T>(result);
     }
 
-    public static Response<String> success() {
-        return new Response<String>();
+    public static Response<Void> success() {
+        return new Response<Void>();
     }
 
     public static <T> Response<T> failure(Info info) {

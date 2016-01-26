@@ -29,13 +29,13 @@ public class GroupResource implements IGroupRWResource {
 	}
 
 	@Override
-	public Response<String> addUsersIntoGroup(UserListParam userListParam) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response<Void> addUsersIntoGroup(UserListParam userListParam) {
+		groupService.addUsersIntoGroup(userListParam);
+		return Response.success();
 	}
 
 	@Override
-	public Response<String> removeUsersFromGroup(UserListParam userListParam) {
+	public Response<Void> removeUsersFromGroup(UserListParam userListParam) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -47,9 +47,9 @@ public class GroupResource implements IGroupRWResource {
 	}
 
 	@Override
-	public Response<Boolean> deleteGroup(PrimaryKeyParam primaryKeyParam) {
-		Boolean success = groupService.deleteGroup(primaryKeyParam.getId());
-		return Response.success(success);
+	public Response<Void> deleteGroup(PrimaryKeyParam primaryKeyParam) {
+		groupService.deleteGroup(primaryKeyParam.getId());
+		return Response.success();
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class GroupResource implements IGroupRWResource {
 	}
 
 	@Override
-	public Response<String> saveRolesToGroup(GroupParam groupParam) {
+	public Response<Void> saveRolesToGroup(GroupParam groupParam) {
 		// TODO Auto-generated method stub
 		return null;
 	}

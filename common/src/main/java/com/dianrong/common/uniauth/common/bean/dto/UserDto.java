@@ -13,48 +13,68 @@ public class UserDto {
 	private String phone;
 	
 	//whether this group connected with a role
-	private boolean roleChecked;
-	
-	public boolean isRoleChecked() {
-		return roleChecked;
-	}
-	public void setRoleChecked(boolean roleChecked) {
-		this.roleChecked = roleChecked;
-	}
+	private Boolean roleChecked;
+
 	public Long getId() {
 		return id;
 	}
-	public void setId(Long id) {
+
+	public UserDto setId(Long id) {
 		this.id = id;
+		return this;
 	}
+
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+
+	public UserDto setName(String name) {
 		this.name = name;
+		return this;
 	}
+
 	public String getPassword() {
 		return password;
 	}
-	public void setPassword(String password) {
+
+	public UserDto setPassword(String password) {
 		this.password = password;
+		return this;
 	}
+
 	public String getPasswordSalt() {
 		return passwordSalt;
 	}
-	public void setPasswordSalt(String passwordSalt) {
+
+	public UserDto setPasswordSalt(String passwordSalt) {
 		this.passwordSalt = passwordSalt;
+		return this;
 	}
+
 	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String email) {
+
+	public UserDto setEmail(String email) {
 		this.email = email;
+		return this;
 	}
+
 	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(String phone) {
+
+	public UserDto setPhone(String phone) {
 		this.phone = phone;
+		return this;
+	}
+
+	public Boolean getRoleChecked() {
+		return roleChecked;
+	}
+
+	public UserDto setRoleChecked(Boolean roleChecked) {
+		this.roleChecked = roleChecked;
+		return this;
 	}
 }

@@ -7,7 +7,8 @@ public class PrimaryKeyParam extends Operator {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public PrimaryKeyParam setId(Integer id) {
 		this.id = id;
+		return this;
 	}
 }

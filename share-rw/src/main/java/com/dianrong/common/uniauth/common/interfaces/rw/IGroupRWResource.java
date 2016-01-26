@@ -16,12 +16,12 @@ public interface IGroupRWResource extends IGroupResource {
     @POST
     @Path("addusers")
     //scenario: add users into one specific group(normal member and owner member)
-    Response<String> addUsersIntoGroup(UserListParam userListParam);
+    Response<Void> addUsersIntoGroup(UserListParam userListParam);
     
     @POST
     @Path("removeusers")
     //scenario: remove users from one specific group(normal member and owner member)
-    Response<String> removeUsersFromGroup(UserListParam userListParam);
+    Response<Void> removeUsersFromGroup(UserListParam userListParam);
     
     @POST
     @Path("addnewgroup")
@@ -31,7 +31,7 @@ public interface IGroupRWResource extends IGroupResource {
     @POST
     @Path("deletegroup")
     //scenario: delete group
-    Response<Boolean> deleteGroup(PrimaryKeyParam primaryKeyParam);
+    Response<Void> deleteGroup(PrimaryKeyParam primaryKeyParam);
     
     @POST
     @Path("updategroup")
@@ -41,5 +41,5 @@ public interface IGroupRWResource extends IGroupResource {
     @POST
     @Path("saverolestogroup")
     //scenario: save roles to group
-    Response<String> saveRolesToGroup(GroupParam groupParam);
+    Response<Void> saveRolesToGroup(GroupParam groupParam);
 }
