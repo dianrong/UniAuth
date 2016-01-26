@@ -24,8 +24,8 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<GroupDto> getGroupTree(GroupParam groupParam) {
-		// TODO Auto-generated method stub
-		return null;
+		GroupDto grpDto = groupService.getGroupTree(groupParam.getId(), groupParam.getCode(), groupParam.getOnlyShowGroup(), groupParam.getRoleId());
+		return Response.success(grpDto);
 	}
 
 	@Override

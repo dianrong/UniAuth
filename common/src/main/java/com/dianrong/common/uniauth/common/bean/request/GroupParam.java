@@ -15,7 +15,7 @@ public class GroupParam extends Operator {
 	private Integer targetGroupId;
 	//if true only group, ignore members under each group
 	//if false, both group and members returned
-	private boolean onlyShowGroup;
+	private Boolean onlyShowGroup;
 	
 	private Integer roleId;
 	
@@ -77,11 +77,11 @@ public class GroupParam extends Operator {
 		return this;
 	}
 
-	public boolean isOnlyShowGroup() {
+	public Boolean getOnlyShowGroup() {
 		return onlyShowGroup;
 	}
 
-	public GroupParam setOnlyShowGroup(boolean onlyShowGroup) {
+	public GroupParam setOnlyShowGroup(Boolean onlyShowGroup) {
 		this.onlyShowGroup = onlyShowGroup;
 		return this;
 	}

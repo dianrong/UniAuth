@@ -21,7 +21,7 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IGroupResource {
 	
-    @GET
+    @POST
     @Path("tree")
     //scenario: group/member tree
     //if groupId not set(or -1), retrieve the root tree or subtree

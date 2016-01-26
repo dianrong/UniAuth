@@ -242,7 +242,7 @@ public class GroupService {
         }
     }
 
-    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup) {
+    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Integer roleId) {
         Grp rootGrp;
         if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
@@ -261,25 +261,49 @@ public class GroupService {
             }
             if(!grp.getId().equals(grps.get(0).getId())) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.code.id.dif", groupCode, groupId));
-            } else {
-                rootGrp = grp;
             }
+            rootGrp = grp;
         } else if(groupCode != null && groupId == null) {
             GrpExample grpExample = new GrpExample();
             grpExample.createCriteria().andCodeEqualTo(groupCode);
             List<Grp> grps = grpMapper.selectByExample(grpExample);
             if (CollectionUtils.isEmpty(grps)) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.code.notfound", groupCode, Grp.class.getSimpleName()));
-            } else {
-                rootGrp = grps.get(0);
             }
-        } else if(groupCode == null && groupId != null) {
+            rootGrp = grps.get(0);
+        } else {
+            //else if(groupCode == null && groupId != null) {
             rootGrp = grpMapper.selectByPrimaryKey(groupId);
             if(rootGrp == null) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
             }
         }
-
-        return null;
+        Integer realGroupId = rootGrp.getId();
+        List<Grp> grps = grpMapper.getGroupTree(realGroupId);
+        if(!CollectionUtils.isEmpty(grps)) {
+            List<HashMap<Integer,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
+            Map<Integer, GroupDto> idGroupDtoPair = new HashMap();
+            for(Grp grp : grps) {
+                GroupDto groupDto = BeanConverter.convert(grp);
+                idGroupDtoPair.put(groupDto.getId(), groupDto);
+            }
+            if(!CollectionUtils.isEmpty(descendantAncestorPairs)) {
+                for(HashMap<Integer,Integer> descendantAncestorPair : descendantAncestorPairs) {
+                    Integer descendantId = descendantAncestorPair.get("descendant");
+                    Integer ancestorId = descendantAncestorPair.get("ancestor");
+                    GroupDto ancestorDto = idGroupDtoPair.get(ancestorId);
+                    GroupDto descendantDto = idGroupDtoPair.get(descendantId);
+                    List<GroupDto> groupDtos = ancestorDto.getGroupList();
+                    if(groupDtos == null) {
+                        groupDtos = new ArrayList<>();
+                        ancestorDto.setGroupList(groupDtos);
+                    }
+                    groupDtos.add(descendantDto);
+                }
+            }
+            return idGroupDtoPair.get(realGroupId);
+        } else {
+            return null;
+        }
     }
 }

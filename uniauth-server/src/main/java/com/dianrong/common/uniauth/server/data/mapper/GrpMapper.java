@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.data.mapper;
 
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+
+import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -93,4 +95,9 @@ public interface GrpMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(Grp record);
+
+
+    List<Grp> getGroupTree(Integer groupId);
+
+    List<HashMap<Integer,Integer>> getGroupTreeLinks(Integer groupId);
 }
