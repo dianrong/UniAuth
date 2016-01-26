@@ -219,6 +219,16 @@ public class GroupService {
     }
 
     public List<UserDto> getGroupOwners(Integer groupId) {
-        return null;
+        List<User> users = userMapper.getGroupOwners(groupId);
+        if(!CollectionUtils.isEmpty(users)) {
+            List<UserDto> userDtos = new ArrayList<>();
+            for(User user : users) {
+                UserDto userDto = BeanConverter.convert(user);
+                userDtos.add(userDto);
+            }
+            return userDtos;
+        } else {
+            return null;
+        }
     }
 }

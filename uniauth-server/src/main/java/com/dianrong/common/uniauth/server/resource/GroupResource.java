@@ -60,8 +60,8 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam) {
-		// TODO Auto-generated method stub
-		return null;
+		List<UserDto> userDtos = groupService.getGroupOwners(primaryKeyParam.getId());
+		return Response.success(userDtos);
 	}
 
 	@Override

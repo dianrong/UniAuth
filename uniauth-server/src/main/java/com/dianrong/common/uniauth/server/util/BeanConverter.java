@@ -5,6 +5,7 @@ import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
@@ -12,6 +13,7 @@ import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
+import com.dianrong.common.uniauth.server.data.entity.User;
 
 /**
  * Created by Arc on 15/1/16.
@@ -101,4 +103,18 @@ public class BeanConverter {
         	return stakeholder;
         }
     }
+    
+    public static UserDto convert(User user) {
+        if(user == null) {
+            return null;
+        } else {
+            UserDto userDto = new UserDto();
+            userDto.setName(user.getName()).
+                    setEmail(user.getEmail()).
+                    setId(user.getId()).
+                    setPhone(user.getPhone());
+            return userDto;
+        }
+    }
+    
 }
