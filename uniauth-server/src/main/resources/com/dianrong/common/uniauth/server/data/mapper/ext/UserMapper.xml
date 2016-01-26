@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.UserMapper">
+
+    <resultMap id="GroupMemberResultMap" type="com.dianrong.common.uniauth.server.data.entity.ext.UserExt" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="groupId" property="groupId" jdbcType="INTEGER" />
+    </resultMap>
+
     <select id="getGroupOwners" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from user join user_grp on user.id = user_grp.user_id
         where user_grp.grp_id=#{id,jdbcType=INTEGER} and user_grp.type=1
     </select>
+
+    <select id="getUserExtGroup" resultMap="GroupMemberResultMap" parameterType="java.lang.Integer">
+        select t1.id, t1.email, t2.id as groupId from user t1 join
+        (
+        select ug.user_id, gid.id
+        from user_grp ug join (select grp.id
+        from grp join grp_path on
+        (grp.id = grp_path.descendant)
+        where grp_path.ancestor = #{id,jdbcType=INTEGER}) gid on ug.grp_id = gid.id where ug.type = 0)
+        t2 on t1.id=t2.user_id
+    </select>
+
 </mapper>

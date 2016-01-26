@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.AppConstants;
@@ -36,6 +37,8 @@ public class GroupService {
     private RoleMapper roleMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Transactional
     public GroupDto createDescendantGroup(GroupParam groupParam) {
@@ -272,7 +275,7 @@ public class GroupService {
             }
             rootGrp = grps.get(0);
         } else {
-            //else if(groupCode == null && groupId != null) {
+            //else if(groupCode == null && groupId != null)
             rootGrp = grpMapper.selectByPrimaryKey(groupId);
             if(rootGrp == null) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
@@ -284,9 +287,11 @@ public class GroupService {
             List<HashMap<Integer,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
             Map<Integer, GroupDto> idGroupDtoPair = new HashMap();
             for(Grp grp : grps) {
-                GroupDto groupDto = BeanConverter.convert(grp);
+                GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName());
                 idGroupDtoPair.put(groupDto.getId(), groupDto);
             }
+
+            // construct the tree
             if(!CollectionUtils.isEmpty(descendantAncestorPairs)) {
                 for(HashMap<Integer,Integer> descendantAncestorPair : descendantAncestorPairs) {
                     Integer descendantId = descendantAncestorPair.get("descendant");
@@ -301,6 +306,55 @@ public class GroupService {
                     groupDtos.add(descendantDto);
                 }
             }
+
+            if(roleId != null) {
+                //role checked on group
+                GrpRoleExample grpRoleExample = new GrpRoleExample();
+                grpRoleExample.createCriteria().andRoleIdEqualTo(roleId).andGrpIdIn(new ArrayList<Integer>(idGroupDtoPair.keySet()));
+                List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
+                if(!CollectionUtils.isEmpty(grpRoleKeys)) {
+                    for (GrpRoleKey grpRoleKey : grpRoleKeys) {
+                        Integer checkedGroupId = grpRoleKey.getGrpId();
+                        idGroupDtoPair.get(checkedGroupId).setRoleChecked(Boolean.TRUE);
+                    }
+                }
+            }
+
+
+            if(onlyShowGroup != null && !onlyShowGroup) {
+                List<UserExt> userExts = userMapper.getUserExtGroup(realGroupId);
+                // construct the users on the tree
+                if(!CollectionUtils.isEmpty(userExts)) {
+                    //role checked on users
+                    Set<Long> userIdsOnRole = null;
+                    if(roleId != null) {
+                        UserRoleExample userRoleExample = new UserRoleExample();
+                        userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+                        List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+                        if(!CollectionUtils.isEmpty(userRoleKeys)) {
+                            userIdsOnRole = new TreeSet<>();
+                            for (UserRoleKey userRoleKey : userRoleKeys) {
+                                userIdsOnRole.add(userRoleKey.getUserId());
+                            }
+                        }
+                    }
+                    for(UserExt userExt : userExts) {
+                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId());
+                        GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
+                        List<UserDto> userDtos = groupDto.getUserList();
+                        if(userDtos == null) {
+                            userDtos = new ArrayList<>();
+                            groupDto.setUserList(userDtos);
+                        }
+                        userDtos.add(userDto);
+                        if(userIdsOnRole != null && userIdsOnRole.contains(userDto.getId())) {
+                            userDto.setRoleChecked(Boolean.TRUE);
+                        }
+                    }
+
+                }
+            }
+
             return idGroupDtoPair.get(realGroupId);
         } else {
             return null;
