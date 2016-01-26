@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.interfaces.rw.IDomainRWResource;
@@ -64,6 +65,18 @@ public class DomainResource implements IDomainRWResource {
 		
 		DomainDto domainDto = BeanConverter.convert(domain);
 		domainDto.setStakeholderList(stakeholderDtoList);
+		
+		return new Response<DomainDto>(domainDto);
+	}
+
+	@Override
+	public Response<DomainDto> updateDomain(DomainParam domainParam) {
+		if(domainParam == null || domainParam.getId() == null){
+			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域ID"));
+		}
+		Domain param = BeanConverter.convert(domainParam);
+		domainMapper.updateByPrimaryKey(param);
+		DomainDto domainDto = BeanConverter.convert(param);
 		
 		return new Response<DomainDto>(domainDto);
 	}

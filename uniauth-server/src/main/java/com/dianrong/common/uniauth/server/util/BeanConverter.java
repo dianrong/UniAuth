@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
@@ -36,6 +37,20 @@ public class BeanConverter {
         }
     }
     
+
+    public static Domain convert(DomainParam domainParam) {
+        if(domainParam == null) {
+            return null;
+        } else {
+        	Domain domain = new Domain();
+        	domain.setCode(domainParam.getCode());
+        	domain.setDescription(domainParam.getDescription());
+        	domain.setDisplayName(domainParam.getDisplayName());
+        	domain.setId(domainParam.getId());
+        	domain.setStatus(domainParam.getStatus());
+        	return domain;
+        }
+    }
     
     public static Grp convert(GroupParam groupParam) {
         if(groupParam == null) {
