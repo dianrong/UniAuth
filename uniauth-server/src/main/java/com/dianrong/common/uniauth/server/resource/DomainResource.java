@@ -52,13 +52,7 @@ public class DomainResource implements IDomainRWResource {
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域ID"));
 		}
 		Integer domainId = primaryKeyParam.getId();
-		Domain domain = domainMapper.selectByPrimaryKey(domainId);
-		if(domain == null){
-			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.notfound", String.valueOf(domainId), "域"));
-		}
-		if(domain.getStatus() == 1){
-			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.status.isone", String.valueOf(domainId), "域"));
-		}
+		Domain domain = checkDomain(domainId);
 		
 		StakeholderExample stakeholderExample = new StakeholderExample();
 		stakeholderExample.createCriteria().andDomainIdEqualTo(domainId);
@@ -76,8 +70,13 @@ public class DomainResource implements IDomainRWResource {
 
 	@Override
 	public Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer domainId = stakeholderParam.getDomainId();
+		checkDomain(domainId);
+		Stakeholder stakeholder = BeanConverter.convert(stakeholderParam);
+		stakeholderMapper.insert(stakeholder);
+		StakeholderDto stakeholderDto = BeanConverter.convert(stakeholder);
+		
+		return new Response<StakeholderDto>(stakeholderDto);
 	}
 
 	@Override
@@ -90,5 +89,16 @@ public class DomainResource implements IDomainRWResource {
 	public Response<String> deleteStakeholder(PrimaryKeyParam primaryKeyParam) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private Domain checkDomain(Integer domainId){
+		Domain domain = domainMapper.selectByPrimaryKey(domainId);
+		if(domain == null){
+			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.notfound", String.valueOf(domainId), "域"));
+		}
+		if(domain.getStatus() == 1){
+			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.status.isone", String.valueOf(domainId), "域"));
+		}
+		return domain;
 	}
 }
