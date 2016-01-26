@@ -36,6 +36,7 @@ public class GroupService {
     public GroupDto createDescendantGroup(GroupParam groupParam) {
         Grp grp = BeanConverter.convert(groupParam);
         Date now = new Date();
+        grp.setStatus((byte)0);
         grp.setCreateDate(now);
         grp.setLastUpdate(now);
         grpMapper.insert(grp);

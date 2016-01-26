@@ -25,7 +25,10 @@
           p:sqlSessionFactoryBeanName="sqlSessionFactory"/>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
-          p:dataSource-ref="dataSource"/>
+          p:dataSource-ref="dataSource"
+          p:mapperLocations="classpath*:com/dianrong/common/uniauth/server/data/mapper/**/*.xml"
+          p:typeAliasesPackage="com.dianrong.common.uniauth.server.data.entity"
+    />
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
           p:dataSource-ref="dataSource"/>
