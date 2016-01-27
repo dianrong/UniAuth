@@ -130,7 +130,8 @@ public class UserService {
             }
         }
 
-        List<RoleCode> roleCodes = roleCodeMapper.getAllRoleCodes();
+        List<RoleCode> roleCodes = roleCodeMapper.selectByExample(new RoleCodeExample());
+        
         // build roleCode index.
         Map<Integer, String> roleCodeIdNamePairs = new TreeMap<>();
         for(RoleCode roleCode : roleCodes) {

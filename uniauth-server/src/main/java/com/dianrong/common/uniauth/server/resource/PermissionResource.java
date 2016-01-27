@@ -152,7 +152,7 @@ public class PermissionResource implements IPermissionRWResource {
 		Integer domainId = permissionQuery.getDomainId();
 		CheckEmpty.checkEmpty(domainId, "域ID");
 		
-	    Integer pageOffset = permissionQuery.getPageOffset();
+	    Integer pageOffset = permissionQuery.getPageNumber();
 	    Integer pageSize = permissionQuery.getPageSize();
 	    CheckEmpty.checkEmpty(pageOffset, "ageOffset");
 		CheckEmpty.checkEmpty(pageOffset, "pageSize");

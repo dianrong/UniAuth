@@ -189,11 +189,8 @@ public class BeanConverter {
                     setStatus(roleExt.getStatus()).
                     setName(roleExt.getName()).setRoleCodeId(roleExt.getRoleCodeId()).setDomainId(roleExt.getDomainId());
             
-            RoleCodeDto roleCodeDto = new RoleCodeDto();
-            roleCodeDto.setCode(roleExt.getRoleCode());
-            roleCodeDto.setId(roleExt.getRoleCodeId());
-            
-            roleDto.setRoleCodeDto(roleCodeDto);
+            roleDto.setRoleCodeId(roleExt.getRoleCodeId());
+            roleDto.setRoleCode(roleExt.getRoleCode());
             
             roleDto.setPermissionId(roleExt.getPermissionId());
             return roleDto;
