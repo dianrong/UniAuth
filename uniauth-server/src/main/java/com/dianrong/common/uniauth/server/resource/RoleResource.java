@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianrong.common.uniauth.server.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,31 +26,25 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 public class RoleResource implements IRoleRWResource {
 	
 	@Autowired
-	private RoleCodeMapper roleCodeMapper;
+	private RoleService roleService;
 
 	@Override
 	public Response<List<RoleCodeDto>> getAllRoleCodes() {
-		RoleCodeExample example = new RoleCodeExample();
-		List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
-		List<RoleCodeDto> roleCodeDtoList = new ArrayList<RoleCodeDto>();
-		if(roleCodeList != null){
-			for(RoleCode roleCode : roleCodeList){
-				roleCodeDtoList.add(BeanConverter.convert(roleCode));
-			}
-		}
-		return new Response<List<RoleCodeDto>>(roleCodeDtoList);
+		List<RoleCodeDto> roleCodeDtos = roleService.getAllRoleCodes();
+		return Response.success(roleCodeDtos);
 	}
 
 	@Override
 	public Response<RoleDto> addNewRole(RoleParam roleParam) {
-		// TODO Auto-generated method stub
-		return null;
+		RoleDto roleDto = roleService.addNewRole(roleParam.getDomainId(), roleParam.getRoleCodeId(),roleParam.getName(),roleParam.getDescription());
+		return Response.success(roleDto);
 	}
 
 	@Override
-	public Response<String> updateRole(RoleParam roleParam) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response<Void> updateRole(RoleParam roleParam) {
+		roleService.updateRole(roleParam.getRoleActionEnum(), roleParam.getId(), roleParam.getRoleCodeId(),
+				roleParam.getName(), roleParam.getDescription(), roleParam.getStatus());
+		return Response.success();
 	}
 
 	@Override

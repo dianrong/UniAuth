@@ -21,7 +21,7 @@ public interface IRoleRWResource extends IRoleResource {
     @POST
     @Path("updaterole")
     //scenario: update role
-    Response<String> updateRole(RoleParam roleParam);
+    Response<Void> updateRole(RoleParam roleParam);
     
     @POST
     @Path("deleterole")

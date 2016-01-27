@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.bean.request;
 import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.enm.RoleActionEnum;
 
 public class RoleParam extends Operator {
 	private Integer id;
@@ -11,6 +12,7 @@ public class RoleParam extends Operator {
 	private Byte status;
 	private Integer roleCodeId;
 	private Integer domainId;
+	private RoleActionEnum roleActionEnum;
 	private List<PermissionDto> permsList;
 
 	public Integer getId() {
@@ -73,6 +75,15 @@ public class RoleParam extends Operator {
 
 	public RoleParam setPermsList(List<PermissionDto> permsList) {
 		this.permsList = permsList;
+		return this;
+	}
+
+	public RoleActionEnum getRoleActionEnum() {
+		return roleActionEnum;
+	}
+
+	public RoleParam setRoleActionEnum(RoleActionEnum roleActionEnum) {
+		this.roleActionEnum = roleActionEnum;
 		return this;
 	}
 }
