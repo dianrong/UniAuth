@@ -23,7 +23,7 @@ public interface IUserRWResource extends IUserResource {
     @POST
     @Path("updateuser")
     //scenario: update user(including lock, disable, reset password, update profile)
-    Response<String> updateUser(UserParam userParam);
+    Response<UserDto> updateUser(UserParam userParam);
 
     @POST
     @Path("deleteuser")

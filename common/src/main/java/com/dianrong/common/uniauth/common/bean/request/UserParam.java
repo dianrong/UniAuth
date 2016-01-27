@@ -11,7 +11,8 @@ public class UserParam extends Operator {
     private String phone;
     private String email;
     private String password;
-    
+    private Byte status;
+
     private UserActionEnum userActionEnum;
     
     private Integer domainId;
@@ -87,6 +88,15 @@ public class UserParam extends Operator {
 
 	public UserParam setRoleList(List<RoleDto> roleList) {
 		this.roleList = roleList;
+		return this;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public UserParam setStatus(Byte status) {
+		this.status = status;
 		return this;
 	}
 }

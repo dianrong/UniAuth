@@ -9,4 +9,5 @@ public interface AppConstants {
     byte ZERO_byte = (byte)0;
     byte ONE_byte = (byte)1;
     String GRP_ROOT = "GRP_ROOT";
+    byte MAX_AUTH_FAIL_COUNT = 10;
 }

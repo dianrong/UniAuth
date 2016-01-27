@@ -32,9 +32,11 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
-	public Response<String> updateUser(UserParam userParam) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response<UserDto> updateUser(UserParam userParam) {
+		UserDto userDto = userService.updateUser(userParam.getUserActionEnum(),userParam.getId(),
+				userParam.getName(),userParam.getPhone(),userParam.getEmail(),
+				userParam.getPassword(),userParam.getStatus());
+		return Response.success(userDto);
 	}
 
 	@Override
