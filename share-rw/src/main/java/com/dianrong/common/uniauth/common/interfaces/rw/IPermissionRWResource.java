@@ -19,15 +19,15 @@ public interface IPermissionRWResource extends IPermissionResource {
     @POST
     @Path("updateperm")
     //scenario: update permission
-    Response<String> updatePerm(PermissionParam permissionParam);
+    Response<Void> updatePerm(PermissionParam permissionParam);
     
     @POST
     @Path("deleteperm")
     //scenario: delete permission
-    Response<String> deletePerm(PrimaryKeyParam primaryKeyParam);
+    Response<Void> deletePerm(PrimaryKeyParam primaryKeyParam);
     
     @POST
     @Path("saverolestoperm")
     //scenario: save roles to a permission
-    Response<String> saveRolesToPerm(PermissionParam permissionParam);
+    Response<Void> saveRolesToPerm(PermissionParam permissionParam);
 }

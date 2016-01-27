@@ -8,8 +8,14 @@ public class CheckEmpty {
 	
 	private CheckEmpty(){}
 	
-	public static void checkId(PrimaryKeyParam primaryKeyParam, String errorMsg){
+	public static void checkParamId(PrimaryKeyParam primaryKeyParam, String errorMsg){
 		if(primaryKeyParam == null || primaryKeyParam.getId() == null){
+			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", errorMsg));
+		}
+	}
+	
+	public static void checkEmpty(Object idOrAnyValue, String errorMsg){
+		if(idOrAnyValue == null){
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", errorMsg));
 		}
 	}

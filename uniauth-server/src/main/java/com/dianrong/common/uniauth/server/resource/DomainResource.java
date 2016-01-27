@@ -51,7 +51,7 @@ public class DomainResource implements IDomainRWResource {
 
 	@Override
 	public Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam) {
-		CheckEmpty.checkId(primaryKeyParam, "域ID");
+		CheckEmpty.checkParamId(primaryKeyParam, "域ID");
 		Integer domainId = primaryKeyParam.getId();
 		Domain domain = checkDomain(domainId);
 		
@@ -70,15 +70,14 @@ public class DomainResource implements IDomainRWResource {
 	}
 
 	@Override
-	public Response<DomainDto> updateDomain(DomainParam domainParam) {
+	public Response<Void> updateDomain(DomainParam domainParam) {
 		if(domainParam == null || domainParam.getId() == null){
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域ID"));
 		}
 		Domain param = BeanConverter.convert(domainParam);
 		domainMapper.updateByPrimaryKey(param);
-		DomainDto domainDto = BeanConverter.convert(param);
 		
-		return new Response<DomainDto>(domainDto);
+		return Response.success();
 	}
 
 	@Override
@@ -106,7 +105,7 @@ public class DomainResource implements IDomainRWResource {
 
 	@Override
 	public Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam) {
-		CheckEmpty.checkId(primaryKeyParam, "域相关人ID");
+		CheckEmpty.checkParamId(primaryKeyParam, "域相关人ID");
 		stakeholderMapper.deleteByPrimaryKey(primaryKeyParam.getId());
 		return  Response.success();
 	}

@@ -11,6 +11,9 @@ public class RoleDto {
 	private String name;
 	private String description;
 	private Byte status;
+	private Integer domainId;
+	private Integer roleCodeId;
+	
 	private DomainDto domain;
 	private RoleCodeDto roleCodeDto;
 	
@@ -26,6 +29,24 @@ public class RoleDto {
 	
 	//whether this role connected with a permission, user or group
 	private Boolean checked;
+	
+	public Integer getRoleCodeId() {
+		return roleCodeId;
+	}
+
+	public RoleDto setRoleCodeId(Integer roleCodeId) {
+		this.roleCodeId = roleCodeId;
+		return this;
+	}
+
+	public Integer getDomainId() {
+		return domainId;
+	}
+
+	public RoleDto setDomainId(Integer domainId) {
+		this.domainId = domainId;
+		return this;
+	}
 
 	public Integer getId() {
 		return id;

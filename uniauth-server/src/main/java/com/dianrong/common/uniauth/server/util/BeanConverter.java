@@ -2,15 +2,20 @@ package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
@@ -131,6 +136,40 @@ public class BeanConverter {
                     setId(user.getId()).
                     setPhone(user.getPhone());
             return userDto;
+        }
+    }
+
+    public static PermTypeDto convert(PermType pt) {
+        if(pt == null) {
+            return null;
+        } else {
+            return new PermTypeDto().setId(pt.getId()).setType(pt.getType());
+        }
+    }
+    
+    public static Permission convert(PermissionParam permissionParam, boolean needSetId) {
+        if(permissionParam == null) {
+            return null;
+        } else {
+        	Permission permission = new Permission();
+        	if(needSetId){
+            	permission.setId(permissionParam.getId());
+        	}
+        	permission.setDescription(permissionParam.getDescription());
+        	permission.setDomainId(permissionParam.getDomainId());
+        	permission.setPermTypeId(permissionParam.getPermTypeId());
+        	permission.setStatus(permissionParam.getStatus());
+        	permission.setValue(permissionParam.getValue());
+        	return permission;
+        }
+    }
+    
+
+    public static PermissionDto convert(Permission permission) {
+        if(permission == null) {
+            return null;
+        } else {
+        	return new PermissionDto().setDescription(permission.getDescription()).setDomainId(permission.getDomainId()).setId(permission.getId()).setPermTypeId(permission.getPermTypeId()).setStatus(permission.getStatus()).setValue(permission.getValue());
         }
     }
     
