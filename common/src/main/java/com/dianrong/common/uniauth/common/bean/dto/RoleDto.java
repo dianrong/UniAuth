@@ -15,7 +15,7 @@ public class RoleDto {
 	private Integer roleCodeId;
 	
 	private DomainDto domain;
-	private RoleCodeDto roleCodeDto;
+	private String roleCode;
 	
 	private List<GroupDto> groupList;
 	private List<Map<String, List<String>>> permissionList;
@@ -93,12 +93,12 @@ public class RoleDto {
 		return this;
 	}
 
-	public RoleCodeDto getRoleCodeDto() {
-		return roleCodeDto;
+	public String getRoleCode() {
+		return roleCode;
 	}
 
-	public RoleDto setRoleCodeDto(RoleCodeDto roleCodeDto) {
-		this.roleCodeDto = roleCodeDto;
+	public RoleDto setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 		return this;
 	}
 

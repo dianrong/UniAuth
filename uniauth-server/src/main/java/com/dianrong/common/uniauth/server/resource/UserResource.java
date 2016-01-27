@@ -32,23 +32,17 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
-	public Response<UserDto> updateUser(UserParam userParam) {
-		UserDto userDto = userService.updateUser(userParam.getUserActionEnum(),userParam.getId(),
+	public Response<Void> updateUser(UserParam userParam) {
+		userService.updateUser(userParam.getUserActionEnum(),userParam.getId(),
 				userParam.getName(),userParam.getPhone(),userParam.getEmail(),
 				userParam.getPassword(),userParam.getStatus());
-		return Response.success(userDto);
+		return Response.success();
 	}
 
 	@Override
-	public Response<String> deleteUser(PrimaryKeyParam primaryKeyParam) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response<List<RoleDto>> getAllRolesToUser(UserParam userParam) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam) {
+		List<RoleDto> roleDtos = userService.getAllRolesToUser(userParam.getId(),userParam.getDomainId());
+		return Response.success(roleDtos);
 	}
 
 	@Override

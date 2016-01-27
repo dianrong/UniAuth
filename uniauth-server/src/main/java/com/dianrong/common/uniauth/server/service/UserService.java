@@ -1,23 +1,28 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.AppConstants;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Arc on 14/1/16.
@@ -26,7 +31,14 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+    @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
+    private RoleCodeMapper roleCodeMapper;
 
+    @Transactional
     public UserDto addNewUser(String name, String phone, String email) {
         this.checkPhoneAndEmail(phone, email, null);
         User user = new User();
@@ -51,7 +63,8 @@ public class UserService {
         return userDto;
     }
 
-    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String name, String phone, String email, String password, Byte status) {
+    @Transactional
+    public void updateUser(UserActionEnum userActionEnum, Long id, String name, String phone, String email, String password, Byte status) {
         if(userActionEnum == null || id == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum, userId"));
         }
@@ -91,7 +104,53 @@ public class UserService {
                 break;
         }
         userMapper.updateByPrimaryKey(user);
-        return BeanConverter.convert(user);
+    }
+
+    public List<RoleDto> getAllRolesToUser(Long userId, Integer domainId) {
+        if(userId == null || domainId == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userId, domainId"));
+        }
+        // 1. get all roles under the domain
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andDomainIdEqualTo(domainId);
+        List<Role> roles = roleMapper.selectByExample(roleExample);
+        if(CollectionUtils.isEmpty(roles)) {
+            return null;
+        }
+        // 2. get the checked roleIds for the user
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andUserIdEqualTo(userId);
+        List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+        Set<Integer> roleIds = null;
+        if(!CollectionUtils.isEmpty(userRoleKeys)) {
+            roleIds = new TreeSet<>();
+            for(UserRoleKey userRoleKey : userRoleKeys) {
+                roleIds.add(userRoleKey.getRoleId());
+            }
+        }
+
+        List<RoleCode> roleCodes = roleCodeMapper.getAllRoleCodes();
+        // build roleCode index.
+        Map<Integer, String> roleCodeIdNamePairs = new TreeMap<>();
+        for(RoleCode roleCode : roleCodes) {
+            roleCodeIdNamePairs.put(roleCode.getId(), roleCode.getCode());
+        }
+
+        // 3. construct all roles under the domain & mark the role checked on the user or not
+        List<RoleDto> roleDtos = new ArrayList<>();
+        for(Role role : roles) {
+            RoleDto roleDto = new RoleDto()
+                    .setId(role.getId())
+                    .setName(role.getName())
+                    .setRoleCode(roleCodeIdNamePairs.get(role.getRoleCodeId()));
+            if(roleIds != null && roleIds.contains(role.getId())) {
+                roleDto.setChecked(Boolean.TRUE);
+            } else {
+                roleDto.setChecked(Boolean.FALSE);
+            }
+            roleDtos.add(roleDto);
+        }
+        return roleDtos;
     }
 
     private void checkPhoneAndEmail(String phone, String email, Long userId) {
@@ -121,4 +180,6 @@ public class UserService {
             }
         }
     }
+
+
 }

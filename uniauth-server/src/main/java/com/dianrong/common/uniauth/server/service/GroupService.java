@@ -71,8 +71,8 @@ public class GroupService {
     public void deleteGroup(Integer groupId) {
         GrpPathExample grpPathAncestorExample = new GrpPathExample();
         grpPathAncestorExample.createCriteria().andAncestorEqualTo(groupId);
-        int desOfDes = grpPathMapper.countByExample(grpPathAncestorExample);
-        if(desOfDes > 1) {
+        int desOfDesCount = grpPathMapper.countByExample(grpPathAncestorExample);
+        if(desOfDesCount > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.delgroup"));
         }
         // cascading delete the users in group and the roles on group.
@@ -189,7 +189,7 @@ public class GroupService {
         }
     }
 
-    public List<RoleDto> getAllRolesToGroup(Integer groupId, Integer domainId) {
+    public List<RoleDto> getAllRolesToGroupAndDomain(Integer groupId, Integer domainId) {
         if(groupId == null || domainId == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, domainId"));
         }

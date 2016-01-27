@@ -33,7 +33,7 @@ public interface IGroupResource {
     Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam);
     
     @POST
-    @Path("roles")
+    @Path("domain/roles")
     //scenario: retrieve all roles connected with a group(including all other roles under a domain)
-    Response<List<RoleDto>> getAllRolesToGroup(GroupParam groupParam);
+    Response<List<RoleDto>> getAllRolesToGroupAndDomain(GroupParam groupParam);
 }

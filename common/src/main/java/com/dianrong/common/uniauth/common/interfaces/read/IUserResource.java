@@ -30,7 +30,7 @@ public interface IUserResource {
     Response<PageDto<UserDto>> searchUser(UserQuery userQuery);
     
     @POST
-    @Path("roles")
+    @Path("domain/roles")
     //scenario: retrieve all roles connected with a user(including all other roles under a domain)
-    Response<List<RoleDto>> getAllRolesToUser(UserParam userParam);
+    Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam);
 }

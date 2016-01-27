@@ -17,7 +17,7 @@ public class UserParam extends Operator {
     
     private Integer domainId;
     
-    private List<RoleDto> roleList;
+    private List<Integer> roleIds;
 
 	public Long getId() {
 		return id;
@@ -82,12 +82,12 @@ public class UserParam extends Operator {
 		return this;
 	}
 
-	public List<RoleDto> getRoleList() {
-		return roleList;
+	public List<Integer> getRoleIds() {
+		return roleIds;
 	}
 
-	public UserParam setRoleList(List<RoleDto> roleList) {
-		this.roleList = roleList;
+	public UserParam setRoleIds(List<Integer> roleIds) {
+		this.roleIds = roleIds;
 		return this;
 	}
 
