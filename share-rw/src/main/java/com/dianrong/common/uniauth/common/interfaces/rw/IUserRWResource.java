@@ -23,15 +23,10 @@ public interface IUserRWResource extends IUserResource {
     @POST
     @Path("updateuser")
     //scenario: update user(including lock, disable, reset password, update profile)
-    Response<String> updateUser(UserParam userParam);
-
-    @POST
-    @Path("deleteuser")
-    //scenario: delete user, just for techops super admin
-    Response<String> deleteUser(PrimaryKeyParam primaryKeyParam);
+    Response<Void> updateUser(UserParam userParam);
     
     @POST
     @Path("saverolestouser")
     //scenario: save roles to user
-    Response<String> saveRolesToUser(UserParam userParam);
+    Response<Void> saveRolesToUser(UserParam userParam);
 }

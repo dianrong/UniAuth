@@ -23,17 +23,14 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IUserResource {
-    @POST
-    @Path("test")
-    Response<String> testResult(UserQuery userQuery);
-    
+
     @POST
     @Path("searchusers")
     //scenario: search user
     Response<PageDto<UserDto>> searchUser(UserQuery userQuery);
     
     @POST
-    @Path("roles")
+    @Path("domain/roles")
     //scenario: retrieve all roles connected with a user(including all other roles under a domain)
-    Response<List<RoleDto>> getAllRolesToUser(UserParam userParam);
+    Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam);
 }

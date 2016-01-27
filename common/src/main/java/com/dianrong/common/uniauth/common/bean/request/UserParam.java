@@ -11,12 +11,13 @@ public class UserParam extends Operator {
     private String phone;
     private String email;
     private String password;
-    
+    private Byte status;
+
     private UserActionEnum userActionEnum;
     
     private Integer domainId;
     
-    private List<RoleDto> roleList;
+    private List<Integer> roleIds;
 
 	public Long getId() {
 		return id;
@@ -81,12 +82,21 @@ public class UserParam extends Operator {
 		return this;
 	}
 
-	public List<RoleDto> getRoleList() {
-		return roleList;
+	public List<Integer> getRoleIds() {
+		return roleIds;
 	}
 
-	public UserParam setRoleList(List<RoleDto> roleList) {
-		this.roleList = roleList;
+	public UserParam setRoleIds(List<Integer> roleIds) {
+		this.roleIds = roleIds;
+		return this;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public UserParam setStatus(Byte status) {
+		this.status = status;
 		return this;
 	}
 }

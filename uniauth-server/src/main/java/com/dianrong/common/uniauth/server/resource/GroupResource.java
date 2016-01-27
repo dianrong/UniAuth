@@ -13,7 +13,6 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
-import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
 import com.dianrong.common.uniauth.common.interfaces.rw.IGroupRWResource;
 
 @RestController
@@ -65,8 +64,8 @@ public class GroupResource implements IGroupRWResource {
 	}
 
 	@Override
-	public Response<List<RoleDto>> getAllRolesToGroup(GroupParam groupParam) {
-		List<RoleDto> roleDtos = groupService.getAllRolesToGroup(groupParam.getId(),groupParam.getDomainId());
+	public Response<List<RoleDto>> getAllRolesToGroupAndDomain(GroupParam groupParam) {
+		List<RoleDto> roleDtos = groupService.getAllRolesToGroupAndDomain(groupParam.getId(),groupParam.getDomainId());
 		return Response.success(roleDtos);
 	}
 

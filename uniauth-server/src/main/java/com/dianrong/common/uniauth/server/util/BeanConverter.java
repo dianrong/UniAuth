@@ -134,10 +134,12 @@ public class BeanConverter {
             return null;
         } else {
             UserDto userDto = new UserDto();
-            userDto.setName(user.getName()).
-                    setEmail(user.getEmail()).
-                    setId(user.getId()).
-                    setPhone(user.getPhone());
+            userDto.setName(user.getName())
+                    .setEmail(user.getEmail())
+                    .setId(user.getId())
+                    .setPhone(user.getPhone())
+                    .setCreateDate(user.getCreateDate())
+                    .setStatus(user.getStatus());
             return userDto;
         }
     }
