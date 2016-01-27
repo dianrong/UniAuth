@@ -15,7 +15,7 @@ public class CheckEmpty {
 	}
 	
 	public static void checkEmpty(Object idOrAnyValue, String errorMsg){
-		if(idOrAnyValue == null){
+		if(idOrAnyValue == null || "".equals(idOrAnyValue.toString().trim())){
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", errorMsg));
 		}
 	}

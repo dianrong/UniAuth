@@ -35,6 +35,23 @@ public class DomainResource implements IDomainRWResource {
 	private StakeholderMapper stakeholderMapper;
 	
 	@Override
+	public Response<DomainDto> addNewDomain(DomainParam domainParam) {
+		String domainCode = domainParam.getCode();
+		CheckEmpty.checkEmpty(domainCode, "域编码");
+		DomainExample example = new DomainExample();
+		example.createCriteria().andCodeEqualTo(domainCode);
+		List<Domain> domainList = domainMapper.selectByExample(example);
+		if(domainList == null || domainList.isEmpty()){
+			Domain param = BeanConverter.convert(domainParam);
+			domainMapper.insert(param);
+			return new Response<DomainDto>(BeanConverter.convert(param));
+		}
+		else{
+			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.code.duplicate", domainCode, "域"));
+		}
+	}
+
+	@Override
 	public Response<List<DomainDto>> getAllLoginDomains() {
 		DomainExample example = new DomainExample();
 		example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);

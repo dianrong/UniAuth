@@ -4,6 +4,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
@@ -11,7 +12,11 @@ import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
 
 public interface IDomainRWResource extends IDomainResource {
-
+    @POST
+    @Path("addnewdomain")
+    //scenario: add new domain
+    Response<DomainDto> addNewDomain(DomainParam domainParam);
+    
     @POST
     @Path("updatedomain")
     //scenario: update domain
