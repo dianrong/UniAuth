@@ -8,10 +8,19 @@ public class PermissionDto {
 	private Integer permTypeId;
 	private Integer domainId;
 	
-	private PermTypeDto permTypeDto;
+	private String permType;
 	
 	//whether this permission connected with this role
 	private Boolean checked;
+	
+	public String getPermType() {
+		return permType;
+	}
+
+	public PermissionDto setPermType(String permType) {
+		this.permType = permType;
+		return this;
+	}
 
 	public Integer getId() {
 		return id;
@@ -64,15 +73,6 @@ public class PermissionDto {
 
 	public PermissionDto setDomainId(Integer domainId) {
 		this.domainId = domainId;
-		return this;
-	}
-
-	public PermTypeDto getPermTypeDto() {
-		return permTypeDto;
-	}
-
-	public PermissionDto setPermTypeDto(PermTypeDto permTypeDto) {
-		this.permTypeDto = permTypeDto;
 		return this;
 	}
 

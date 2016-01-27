@@ -2,8 +2,6 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,8 +41,6 @@ public class PermissionResource implements IPermissionRWResource {
 	@Autowired
 	private RolePermissionMapper rolePermissionMapper;
 	
-	private Map<Integer, PermType> permTypeMap;
-	
 	@Override
 	public Response<List<PermTypeDto>> getAllPermTypeCodes() {
 		PermTypeExample example = new PermTypeExample();
@@ -73,8 +69,7 @@ public class PermissionResource implements IPermissionRWResource {
 		
 		PermissionDto permissionDto = BeanConverter.convert(permission);
 		PermType permType = permTypeMapper.selectByPrimaryKey(permTypeId);
-		PermTypeDto permTypeDto = BeanConverter.convert(permType);
-		permissionDto.setPermTypeDto(permTypeDto);
+		permissionDto.setPermType(permType.getType());
 		
 		return new Response<PermissionDto>(permissionDto);
 	}
@@ -176,29 +171,14 @@ public class PermissionResource implements IPermissionRWResource {
 		if(permissionList != null && !permissionList.isEmpty()){
 			for(Permission permission: permissionList){
 				PermissionDto permissionDto = BeanConverter.convert(permission);
-				PermType permType = initPermTypeMap().get(permissionDto.getPermTypeId());
-				PermTypeDto permTypeDto = BeanConverter.convert(permType);
-				permissionDto.setPermTypeDto(permTypeDto);
+				Integer permTypeId = permissionDto.getPermTypeId();
+				PermType permType = permTypeMapper.selectByPrimaryKey(permTypeId);
+				permissionDto.setPermType(permType.getType());
 				permissionDtoList.add(permissionDto);
 			}
 		}
 		pageDto.setData(permissionDtoList);
 		
 		return new Response<PageDto<PermissionDto>>(pageDto);
-	}
-
-	private Map<Integer, PermType> initPermTypeMap(){
-		//multi thread is not considered
-		if(permTypeMap == null){
-			permTypeMap = new ConcurrentHashMap<Integer, PermType>();
-		}
-		PermTypeExample example = new PermTypeExample();
-		List<PermType> permTypeList = permTypeMapper.selectByExample(example);
-		if(permTypeList != null && !permTypeList.isEmpty()){
-			for(PermType permType: permTypeList){
-				permTypeMap.put(permType.getId(), permType);
-			}
-		}
-		return permTypeMap;
 	}
 }
