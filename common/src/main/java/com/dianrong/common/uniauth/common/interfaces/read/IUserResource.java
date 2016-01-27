@@ -23,10 +23,7 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IUserResource {
-    @POST
-    @Path("test")
-    Response<String> testResult(UserQuery userQuery);
-    
+
     @POST
     @Path("searchusers")
     //scenario: search user

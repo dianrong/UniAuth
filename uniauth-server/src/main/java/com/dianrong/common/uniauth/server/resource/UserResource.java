@@ -3,6 +3,8 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.List;
 
 import com.dianrong.common.uniauth.common.interfaces.rw.IUserRWResource;
+import com.dianrong.common.uniauth.server.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -20,16 +22,13 @@ import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
 @RestController
 public class UserResource implements IUserRWResource {
 
-	@Override
-	public Response<String> testResult(UserQuery userQuery) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Autowired
+	private UserService userService;
 
 	@Override
 	public Response<UserDto> addNewUser(UserParam userParam) {
-		// TODO Auto-generated method stub
-		return null;
+		UserDto userDto = userService.addNewUser(userParam.getName(),userParam.getPhone(),userParam.getEmail());
+		return Response.success(userDto);
 	}
 
 	@Override
