@@ -2,15 +2,15 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 public class PageParam extends Operator {
     //from index 0
-    protected Integer pageOffset;
+    protected Integer pageNumber;
     protected Integer pageSize;
 
-	public Integer getPageOffset() {
-		return pageOffset;
+	public Integer getPageNumber() {
+		return pageNumber;
 	}
 
-	public PageParam setPageOffset(Integer pageOffset) {
-		this.pageOffset = pageOffset;
+	public PageParam setPageNumber(Integer pageNumber) {
+		this.pageNumber = pageNumber;
 		return this;
 	}
 

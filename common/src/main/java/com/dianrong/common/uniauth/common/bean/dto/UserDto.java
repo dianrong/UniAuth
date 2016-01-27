@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.util.Date;
+
 /**
  * Created by Arc on 13/1/16.
  */
@@ -11,7 +13,9 @@ public class UserDto {
 	private String passwordSalt;
 	private String email;
 	private String phone;
-	
+	private Date createDate;
+	private Byte status;
+
 	//whether this group connected with a role
 	private Boolean roleChecked;
 
@@ -75,6 +79,24 @@ public class UserDto {
 
 	public UserDto setRoleChecked(Boolean roleChecked) {
 		this.roleChecked = roleChecked;
+		return this;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public UserDto setCreateDate(Date createDate) {
+		this.createDate = createDate;
+		return this;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public UserDto setStatus(Byte status) {
+		this.status = status;
 		return this;
 	}
 }

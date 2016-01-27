@@ -11,10 +11,8 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
 
 /**
  * Created by Arc on 14/1/16.
@@ -46,14 +44,14 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
-	public Response<String> saveRolesToUser(UserParam userParam) {
-		// TODO Auto-generated method stub
-		return null;
+	public Response<Void> saveRolesToUser(UserParam userParam) {
+		userService.saveRolesToUser(userParam.getId(),userParam.getRoleIds());
+		return Response.success();
 	}
 
 	@Override
 	public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
-		// TODO Auto-generated method stub
-		return null;
+		PageDto<UserDto> pageDto = userService.searchUser(userQuery.getName(),userQuery.getPhone(),userQuery.getEmail(),userQuery.getPageNumber(),userQuery.getPageSize());
+		return Response.success(pageDto);
 	}
 }

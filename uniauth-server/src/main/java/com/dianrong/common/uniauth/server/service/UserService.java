@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
@@ -151,6 +152,63 @@ public class UserService {
             roleDtos.add(roleDto);
         }
         return roleDtos;
+    }
+
+    @Transactional
+    public void saveRolesToUser(Long userId, List<Integer> roleIds) {
+
+        if(userId == null || CollectionUtils.isEmpty(roleIds)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userId, roleIds"));
+        }
+
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andUserIdEqualTo(userId);
+        List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+        Set<Integer> roleIdSet = new TreeSet<>();
+        if(!CollectionUtils.isEmpty(userRoleKeys)) {
+            for (UserRoleKey userRoleKey : userRoleKeys) {
+                roleIdSet.add(userRoleKey.getRoleId());
+            }
+        }
+        for(Integer roleId : roleIds) {
+            if(!roleIdSet.contains(roleId)) {
+                UserRoleKey userRoleKey = new UserRoleKey();
+                userRoleKey.setRoleId(roleId);
+                userRoleKey.setUserId(userId);
+                userRoleMapper.insert(userRoleKey);
+            }
+        }
+    }
+
+    public PageDto<UserDto> searchUser(String name, String phone, String email, Integer pageNumber, Integer pageSize) {
+        if(pageNumber == null || pageSize == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
+        }
+        UserExample userExample = new UserExample();
+        userExample.setOrderByClause("create_date desc");
+        userExample.setPageOffSet(pageNumber * pageSize);
+        userExample.setPageSize(pageSize);
+        UserExample.Criteria criteria = userExample.createCriteria();
+        if(name != null) {
+            criteria.andNameLike("%" + name + "%");
+        }
+        if(phone != null) {
+            criteria.andPhoneLike("%" + phone + "%");
+        }
+        if(email != null) {
+            criteria.andEmailLike("%" + email + "%");
+        }
+        List<User> users = userMapper.selectByExample(userExample);
+        if(!CollectionUtils.isEmpty(users)) {
+            int count = userMapper.countByExample(userExample);
+            List<UserDto> userDtos = new ArrayList<>();
+            for(User user : users) {
+                userDtos.add(BeanConverter.convert(user));
+            }
+            return new PageDto<>(pageNumber,pageSize,count,userDtos);
+        } else {
+            return null;
+        }
     }
 
     private void checkPhoneAndEmail(String phone, String email, Long userId) {

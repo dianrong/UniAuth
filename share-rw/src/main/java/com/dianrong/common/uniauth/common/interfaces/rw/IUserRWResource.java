@@ -28,5 +28,5 @@ public interface IUserRWResource extends IUserResource {
     @POST
     @Path("saverolestouser")
     //scenario: save roles to user
-    Response<String> saveRolesToUser(UserParam userParam);
+    Response<Void> saveRolesToUser(UserParam userParam);
 }
