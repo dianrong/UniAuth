@@ -2,7 +2,11 @@ package com.dianrong.common.uniauth.server.data.mapper;
 
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
+
+import java.util.HashMap;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
@@ -95,4 +99,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     List<User> getGroupOwners(Integer groupId);
+    // userId + email + groupId
+    List<UserExt> getUserExtGroup(Integer groupId);
 }

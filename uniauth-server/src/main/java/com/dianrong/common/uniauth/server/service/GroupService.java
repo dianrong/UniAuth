@@ -5,8 +5,8 @@ import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.AppConstants;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+
 
 /**
  * Created by Arc on 14/1/16.
@@ -36,19 +37,32 @@ public class GroupService {
     private RoleMapper roleMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Transactional
     public GroupDto createDescendantGroup(GroupParam groupParam) {
+        Integer targetGroupId = groupParam.getTargetGroupId();
+        String groupCode = groupParam.getCode();
+        if(targetGroupId == null || groupCode == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "targetGroupId, groupCode"));
+        }
+        GrpExample grpExample = new GrpExample();
+        grpExample.createCriteria().andCodeEqualTo(groupCode);
+        List<Grp> grps = grpMapper.selectByExample(grpExample);
+        if(!CollectionUtils.isEmpty(grps)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.code", groupCode));
+        }
         Grp grp = BeanConverter.convert(groupParam);
         Date now = new Date();
-        grp.setStatus((byte)0);
+        grp.setStatus(AppConstants.ZERO_Byte);
         grp.setCreateDate(now);
         grp.setLastUpdate(now);
         grpMapper.insert(grp);
         GrpPath grpPath = new GrpPath();
-        grpPath.setDeepth((byte)0);
+        grpPath.setDeepth(AppConstants.ZERO_Byte);
         grpPath.setDescendant(grp.getId());
-        grpPath.setAncestor(groupParam.getTargetGroupId());
+        grpPath.setAncestor(targetGroupId);
         grpPathMapper.insertNewNode(grpPath);
         return BeanConverter.convert(grp);
     }
@@ -83,26 +97,23 @@ public class GroupService {
     }
 
     @Transactional
-    public void addUsersIntoGroup(UserListParam userListParam) {
-        Integer groupId = userListParam.getGroupId();
-        List<Long> userIds = userListParam.getUserIds();
+    public void addUsersIntoGroup(Integer groupId, List<Long> userIds, Boolean normalMember) {
         if(groupId == null || CollectionUtils.isEmpty(userIds)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
         }
-        Boolean normalMember = userListParam.getNormalMember();
         UserGrpExample userGrpExample = new UserGrpExample();
-        List<UserGrp> userGrps = null;
+        List<UserGrpKey> userGrpKeys;
         if(normalMember == null || normalMember) {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)0);
-            userGrps = userGrpMapper.selectByExample(userGrpExample);
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ZERO_Byte);
+            userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         } else {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)1);
-            userGrps = userGrpMapper.selectByExample(userGrpExample);
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ONE_Byte);
+            userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         }
         Set<Long> userIdSet = new HashSet<>();
-        if(!CollectionUtils.isEmpty(userGrps)) {
-            for (UserGrp userGrp : userGrps) {
-                userIdSet.add(userGrp.getUserId());
+        if(!CollectionUtils.isEmpty(userGrpKeys)) {
+            for (UserGrpKey userGrpKey : userGrpKeys) {
+                userIdSet.add(userGrpKey.getUserId());
             }
         }
         for(Long userId : userIds) {
@@ -121,26 +132,23 @@ public class GroupService {
     }
 
     @Transactional
-    public void removeUsersFromGroup(UserListParam userListParam) {
-        Integer groupId = userListParam.getGroupId();
-        List<Long> userIds = userListParam.getUserIds();
+    public void removeUsersFromGroup(Integer groupId, List<Long> userIds, Boolean normalMember) {
         if(groupId == null || CollectionUtils.isEmpty(userIds)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
         }
-        Boolean normalMember = userListParam.getNormalMember();
         UserGrpExample userGrpExample = new UserGrpExample();
-        List<UserGrp> userGrps = null;
+        List<UserGrpKey> userGrpKeys;
         if(normalMember == null || normalMember) {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)0);
-            userGrps = userGrpMapper.selectByExample(userGrpExample);
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ZERO_byte);
+            userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         } else {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo((byte)1);
-            userGrps = userGrpMapper.selectByExample(userGrpExample);
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ONE_byte);
+            userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         }
         Set<Long> userIdSet = new HashSet<>();
-        if(!CollectionUtils.isEmpty(userGrps)) {
-            for (UserGrp userGrp : userGrps) {
-                userIdSet.add(userGrp.getUserId());
+        if(!CollectionUtils.isEmpty(userGrpKeys)) {
+            for (UserGrpKey userGrpKey : userGrpKeys) {
+                userIdSet.add(userGrpKey.getUserId());
             }
         }
         for(Long userId : userIds) {
@@ -148,9 +156,9 @@ public class GroupService {
                 UserGrpExample userGrpExample1 = new UserGrpExample();
                 UserGrpExample.Criteria criteria = userGrpExample1.createCriteria().andGrpIdEqualTo(groupId).andUserIdEqualTo(userId);
                 if(normalMember == null || normalMember) {
-                    criteria.andTypeEqualTo((byte)0);
+                    criteria.andTypeEqualTo(AppConstants.ZERO_Byte);
                 } else {
-                    criteria.andTypeEqualTo((byte)1);
+                    criteria.andTypeEqualTo(AppConstants.ONE_Byte);
                 }
                 userGrpMapper.deleteByExample(userGrpExample1);
             }
@@ -158,9 +166,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void saveRolesToGroup(GroupParam groupParam) {
-        Integer groupId = groupParam.getId();
-        List<Integer> roleIds = groupParam.getRoleIds();
+    public void saveRolesToGroup(Integer groupId, List<Integer> roleIds) {
         if(groupId == null || CollectionUtils.isEmpty(roleIds)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, roleIds"));
         }
@@ -239,7 +245,119 @@ public class GroupService {
         }
     }
 
-    public GroupDto getGroupTree(Integer groupId, Boolean onlyShowGroup) {
-        return null;
+    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Integer roleId) {
+        Grp rootGrp;
+        if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
+            GrpExample grpExample = new GrpExample();
+            grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT);
+            rootGrp = grpMapper.selectByExample(grpExample).get(0);
+        } else if(groupCode != null && groupId != null) {
+            GrpExample grpExample = new GrpExample();
+            grpExample.createCriteria().andCodeEqualTo(groupCode);
+            List<Grp> grps = grpMapper.selectByExample(grpExample);
+            Grp grp = grpMapper.selectByPrimaryKey(groupId);
+            if(grp == null) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
+            }
+            if (CollectionUtils.isEmpty(grps)) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.code.notfound", groupCode, Grp.class.getSimpleName()));
+            }
+            if(!grp.getId().equals(grps.get(0).getId())) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.code.id.dif", groupCode, groupId));
+            }
+            rootGrp = grp;
+        } else if(groupCode != null && groupId == null) {
+            GrpExample grpExample = new GrpExample();
+            grpExample.createCriteria().andCodeEqualTo(groupCode);
+            List<Grp> grps = grpMapper.selectByExample(grpExample);
+            if (CollectionUtils.isEmpty(grps)) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.code.notfound", groupCode, Grp.class.getSimpleName()));
+            }
+            rootGrp = grps.get(0);
+        } else {
+            //else if(groupCode == null && groupId != null)
+            rootGrp = grpMapper.selectByPrimaryKey(groupId);
+            if(rootGrp == null) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
+            }
+        }
+        Integer realGroupId = rootGrp.getId();
+        List<Grp> grps = grpMapper.getGroupTree(realGroupId);
+        if(!CollectionUtils.isEmpty(grps)) {
+            List<HashMap<Integer,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
+            Map<Integer, GroupDto> idGroupDtoPair = new HashMap();
+            for(Grp grp : grps) {
+                GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName());
+                idGroupDtoPair.put(groupDto.getId(), groupDto);
+            }
+
+            // construct the tree
+            if(!CollectionUtils.isEmpty(descendantAncestorPairs)) {
+                for(HashMap<Integer,Integer> descendantAncestorPair : descendantAncestorPairs) {
+                    Integer descendantId = descendantAncestorPair.get("descendant");
+                    Integer ancestorId = descendantAncestorPair.get("ancestor");
+                    GroupDto ancestorDto = idGroupDtoPair.get(ancestorId);
+                    GroupDto descendantDto = idGroupDtoPair.get(descendantId);
+                    List<GroupDto> groupDtos = ancestorDto.getGroups();
+                    if(groupDtos == null) {
+                        groupDtos = new ArrayList<>();
+                        ancestorDto.setGroups(groupDtos);
+                    }
+                    groupDtos.add(descendantDto);
+                }
+            }
+
+            if(roleId != null) {
+                //role checked on group
+                GrpRoleExample grpRoleExample = new GrpRoleExample();
+                grpRoleExample.createCriteria().andRoleIdEqualTo(roleId).andGrpIdIn(new ArrayList<Integer>(idGroupDtoPair.keySet()));
+                List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
+                if(!CollectionUtils.isEmpty(grpRoleKeys)) {
+                    for (GrpRoleKey grpRoleKey : grpRoleKeys) {
+                        Integer checkedGroupId = grpRoleKey.getGrpId();
+                        idGroupDtoPair.get(checkedGroupId).setRoleChecked(Boolean.TRUE);
+                    }
+                }
+            }
+
+
+            if(onlyShowGroup != null && !onlyShowGroup) {
+                List<UserExt> userExts = userMapper.getUserExtGroup(realGroupId);
+                // construct the users on the tree
+                if(!CollectionUtils.isEmpty(userExts)) {
+                    //role checked on users
+                    Set<Long> userIdsOnRole = null;
+                    if(roleId != null) {
+                        UserRoleExample userRoleExample = new UserRoleExample();
+                        userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+                        List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+                        if(!CollectionUtils.isEmpty(userRoleKeys)) {
+                            userIdsOnRole = new TreeSet<>();
+                            for (UserRoleKey userRoleKey : userRoleKeys) {
+                                userIdsOnRole.add(userRoleKey.getUserId());
+                            }
+                        }
+                    }
+                    for(UserExt userExt : userExts) {
+                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId());
+                        GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
+                        List<UserDto> userDtos = groupDto.getUsers();
+                        if(userDtos == null) {
+                            userDtos = new ArrayList<>();
+                            groupDto.setUsers(userDtos);
+                        }
+                        userDtos.add(userDto);
+                        if(userIdsOnRole != null && userIdsOnRole.contains(userDto.getId())) {
+                            userDto.setRoleChecked(Boolean.TRUE);
+                        }
+                    }
+
+                }
+            }
+
+            return idGroupDtoPair.get(realGroupId);
+        } else {
+            return null;
+        }
     }
 }

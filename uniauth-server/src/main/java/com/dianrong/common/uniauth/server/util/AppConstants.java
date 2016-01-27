@@ -8,4 +8,5 @@ public interface AppConstants {
     Byte ONE_Byte = (byte)1;
     byte ZERO_byte = (byte)0;
     byte ONE_byte = (byte)1;
+    String GRP_ROOT = "GRP_ROOT";
 }
