@@ -1,9 +1,12 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 
 public interface PermissionMapper {
     /**
@@ -93,4 +96,7 @@ public interface PermissionMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(Permission record);
+    
+    List<Permission> selectByExampleForSearch(PermissionExt permissionExt);
+    Integer countByExampleForSearch(PermissionExt permissionExt);
 }

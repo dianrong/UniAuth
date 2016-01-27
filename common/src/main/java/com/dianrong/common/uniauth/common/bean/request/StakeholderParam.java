@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-public class StakeholderParam {
+public class StakeholderParam extends Operator {
 	private Integer id;
 	private String name;
 	private String email;

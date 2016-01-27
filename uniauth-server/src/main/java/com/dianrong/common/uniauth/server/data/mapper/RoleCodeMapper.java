@@ -93,6 +93,4 @@ public interface RoleCodeMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(RoleCode record);
-
-    List<RoleCode> getAllRoleCodes();
 }

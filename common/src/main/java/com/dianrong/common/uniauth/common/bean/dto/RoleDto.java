@@ -13,6 +13,7 @@ public class RoleDto {
 	private Byte status;
 	private Integer domainId;
 	private Integer roleCodeId;
+	private Integer permissionId;
 	
 	private DomainDto domain;
 	private RoleCodeDto roleCodeDto;
@@ -30,6 +31,15 @@ public class RoleDto {
 	//whether this role connected with a permission, user or group
 	private Boolean checked;
 	
+	public Integer getPermissionId() {
+		return permissionId;
+	}
+
+	public RoleDto setPermissionId(Integer permissionId) {
+		this.permissionId = permissionId;
+		return this;
+	}
+
 	public Integer getRoleCodeId() {
 		return roleCodeId;
 	}

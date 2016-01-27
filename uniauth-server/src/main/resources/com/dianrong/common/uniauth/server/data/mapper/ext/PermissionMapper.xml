@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.PermissionMapper" >
+  <select id="selectByExampleForSearch" resultMap="BaseResultMap" parameterType="com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt" >
+    select
+    <include refid="Base_Column_List" />
+    from permission
+    where domain_id = #{domainId, jdbcType=INTEGER}
+    <if test="value != null and value != ''" >
+       and value like concat(concat('%', #{value, jdbcType=VARCHAR}),'%')  
+    </if>
+	<if test="status != null">
+		and status = #{status, jdbcType=TINYINT}
+	</if>
+	<if test="permTypeId != null">
+		and perm_type_id = #{permTypeId, jdbcType=INTEGER}
+	</if>
+	order by id limit #{startIndex, jdbcType=INTEGER},#{wantCount, jdbcType=INTEGER}
+  </select>
+  
+  <select id="countByExampleForSearch" parameterType="com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt" resultType="java.lang.Integer" >
+    select
+    	count(1)
+    from permission
+    where domain_id = #{domainId, jdbcType=INTEGER}
+    <if test="value != null and value != ''" >
+       and value like concat(concat('%', #{value, jdbcType=VARCHAR}),'%')  
+    </if>
+	<if test="status != null">
+		and status = #{status, jdbcType=TINYINT}
+	</if>
+	<if test="permTypeId != null">
+		and perm_type_id = #{permTypeId, jdbcType=INTEGER}
+	</if>
+  </select>
+</mapper>

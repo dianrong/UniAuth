@@ -1,10 +1,12 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PageDto<T> {
 
-    private int page;       // current page number, from 1
+    private int currentPage;       // current page number, from 0
     private int pageSize;   // page size
     private int totalCount; // total record count
     private List<T> data;   // current page data
@@ -12,8 +14,8 @@ public class PageDto<T> {
     public PageDto() {
     }
 
-    public PageDto(int page, int pageSize, int totalCount, List<T> data) {
-        this.page = page;
+    public PageDto(int currentPage, int pageSize, int totalCount, List<T> data) {
+        this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.totalCount = totalCount;
         this.data = data;
@@ -30,24 +32,21 @@ public class PageDto<T> {
             return totalCount / pageSize + 1;
         }
     }
-    public PageDto setTotalPage(int totalPage) {
-        return this;
-    }
 
     public boolean hasPreviousPage() {
-        return (page > 1) && (page <= getTotalPage());
+        return (currentPage > 0) && (currentPage + 1 <= getTotalPage());
     }
 
     public boolean hasNextPage() {
-        return (page > 0) && (page < getTotalPage());
+        return (currentPage >= 0) && (currentPage + 1 < getTotalPage());
     }
 
-    public int getPage() {
-        return page;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-    public PageDto setPage(int page) {
-        this.page = page;
+    public PageDto setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
         return this;
     }
 

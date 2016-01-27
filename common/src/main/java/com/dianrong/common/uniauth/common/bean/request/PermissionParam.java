@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 
-public class PermissionParam {
+public class PermissionParam extends Operator {
 	private Integer id;
 	private String value;
 	private String description;

@@ -1,9 +1,12 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 
 public interface RoleMapper {
     /**
@@ -93,4 +96,6 @@ public interface RoleMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(Role record);
+    
+    List<RoleExt> selectAllRolesByDomainId(Integer domainId);
 }

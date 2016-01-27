@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
@@ -20,6 +21,8 @@ import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
 import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
+import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 
 /**
  * Created by Arc on 15/1/16.
@@ -170,6 +173,41 @@ public class BeanConverter {
             return null;
         } else {
         	return new PermissionDto().setDescription(permission.getDescription()).setDomainId(permission.getDomainId()).setId(permission.getId()).setPermTypeId(permission.getPermTypeId()).setStatus(permission.getStatus()).setValue(permission.getValue());
+        }
+    }
+    
+    
+    public static RoleDto convert(RoleExt roleExt) {
+        if(roleExt == null) {
+            return null;
+        } else {
+            RoleDto roleDto = new RoleDto();
+            roleDto.setDescription(roleExt.getDescription()).
+                    setId(roleExt.getId()).
+                    setStatus(roleExt.getStatus()).
+                    setName(roleExt.getName()).setRoleCodeId(roleExt.getRoleCodeId()).setDomainId(roleExt.getDomainId());
+            
+            RoleCodeDto roleCodeDto = new RoleCodeDto();
+            roleCodeDto.setCode(roleExt.getRoleCode());
+            roleCodeDto.setId(roleExt.getRoleCodeId());
+            
+            roleDto.setRoleCodeDto(roleCodeDto);
+            
+            roleDto.setPermissionId(roleExt.getPermissionId());
+            return roleDto;
+        }
+    }
+    
+    public static PermissionExt convert(PermissionQuery permissionQuery) {
+        if(permissionQuery == null) {
+            return null;
+        } else {
+        	PermissionExt permissionExt = new PermissionExt();
+        	permissionExt.setDomainId(permissionQuery.getDomainId());
+        	permissionExt.setStatus(permissionQuery.getStatus());
+        	permissionExt.setValue(permissionQuery.getValue());
+        	permissionExt.setPermTypeId(permissionQuery.getPermTypeId());
+        	return permissionExt;
         }
     }
     
