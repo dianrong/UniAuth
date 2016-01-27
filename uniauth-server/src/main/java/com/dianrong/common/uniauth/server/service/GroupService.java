@@ -298,10 +298,10 @@ public class GroupService {
                     Integer ancestorId = descendantAncestorPair.get("ancestor");
                     GroupDto ancestorDto = idGroupDtoPair.get(ancestorId);
                     GroupDto descendantDto = idGroupDtoPair.get(descendantId);
-                    List<GroupDto> groupDtos = ancestorDto.getGroupList();
+                    List<GroupDto> groupDtos = ancestorDto.getGroups();
                     if(groupDtos == null) {
                         groupDtos = new ArrayList<>();
-                        ancestorDto.setGroupList(groupDtos);
+                        ancestorDto.setGroups(groupDtos);
                     }
                     groupDtos.add(descendantDto);
                 }
@@ -341,10 +341,10 @@ public class GroupService {
                     for(UserExt userExt : userExts) {
                         UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
-                        List<UserDto> userDtos = groupDto.getUserList();
+                        List<UserDto> userDtos = groupDto.getUsers();
                         if(userDtos == null) {
                             userDtos = new ArrayList<>();
-                            groupDto.setUserList(userDtos);
+                            groupDto.setUsers(userDtos);
                         }
                         userDtos.add(userDto);
                         if(userIdsOnRole != null && userIdsOnRole.contains(userDto.getId())) {

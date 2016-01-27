@@ -15,8 +15,8 @@ public class GroupDto {
 	/**
 	private List<UserDto> ownerList;
 	**/
-	private List<UserDto> userList;
-	private List<GroupDto> groupList;
+	private List<UserDto> users;
+	private List<GroupDto> groups;
 	
 	//whether this group connected with a role
 	private Boolean roleChecked;
@@ -84,21 +84,21 @@ public class GroupDto {
 		return this;
 	}
 
-	public List<UserDto> getUserList() {
-		return userList;
+	public List<UserDto> getUsers() {
+		return users;
 	}
 
-	public GroupDto setUserList(List<UserDto> userList) {
-		this.userList = userList;
+	public GroupDto setUsers(List<UserDto> users) {
+		this.users = users;
 		return this;
 	}
 
-	public List<GroupDto> getGroupList() {
-		return groupList;
+	public List<GroupDto> getGroups() {
+		return groups;
 	}
 
-	public GroupDto setGroupList(List<GroupDto> groupList) {
-		this.groupList = groupList;
+	public GroupDto setGroups(List<GroupDto> groups) {
+		this.groups = groups;
 		return this;
 	}
 
