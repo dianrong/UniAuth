@@ -26,16 +26,11 @@ public interface IRoleRWResource extends IRoleResource {
     @POST
     @Path("deleterole")
     //scenario: delete role
-    Response<String> deleteRole(PrimaryKeyParam primaryKeyParam);
+    Response<Void> deleteRole(PrimaryKeyParam primaryKeyParam);
     
     @POST
     @Path("savepermstorole")
     //scenario: save permissions to a role
-    Response<String> savePermsToRole(RoleParam roleParam);
-
-    @POST
-    @Path("savegrouptreetorole")
-    //scenario: save group tree to role
-    Response<String> saveGroupTreeToRole(GroupTreeParam groupTreeParam);
+    Response<Void> savePermsToRole(RoleParam roleParam);
     
 }

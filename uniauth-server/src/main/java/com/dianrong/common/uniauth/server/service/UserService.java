@@ -72,7 +72,6 @@ public class UserService {
 
         user.setLastUpdate(now);
         user.setCreateDate(now);
-        user.setPasswordDate(now);
         user.setPhone(phone);
         user.setStatus(AppConstants.ZERO_Byte);
         userMapper.insert(user);

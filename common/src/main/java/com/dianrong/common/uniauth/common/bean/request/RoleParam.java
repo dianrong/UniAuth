@@ -13,7 +13,7 @@ public class RoleParam extends Operator {
 	private Integer roleCodeId;
 	private Integer domainId;
 	private RoleActionEnum roleActionEnum;
-	private List<PermissionDto> permsList;
+	private List<Integer> permIds;
 
 	public Integer getId() {
 		return id;
@@ -69,12 +69,12 @@ public class RoleParam extends Operator {
 		return this;
 	}
 
-	public List<PermissionDto> getPermsList() {
-		return permsList;
+	public List<Integer> getPermIds() {
+		return permIds;
 	}
 
-	public RoleParam setPermsList(List<PermissionDto> permsList) {
-		this.permsList = permsList;
+	public RoleParam setPermIds(List<Integer> permIds) {
+		this.permIds = permIds;
 		return this;
 	}
 
