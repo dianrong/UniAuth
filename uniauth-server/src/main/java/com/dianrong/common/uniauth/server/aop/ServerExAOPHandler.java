@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.aop;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -46,7 +48,10 @@ public class ServerExAOPHandler {
                 PrintWriter pw = new PrintWriter(sw);
                 throwable.printStackTrace(pw);
                 String expInfo = sw.toString();
-                return Response.failure(Info.build(InfoName.STACKTRACE, expInfo));
+                List<Info> infos = new ArrayList<>();
+                infos.add(Info.build(InfoName.STACKTRACE, expInfo));
+                infos.add(Info.build(InfoName.INTERNAL_ERROR, "系统内部错误,请联系程序员"));
+                return Response.failure(infos);
             }
             else{
             	return Response.failure(Info.build(InfoName.INTERNAL_ERROR, "系统内部错误,请联系程序员"));

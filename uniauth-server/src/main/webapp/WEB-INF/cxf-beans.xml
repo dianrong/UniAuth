@@ -10,7 +10,6 @@
     <!-- CXF Configuration -->
     <jaxrs:server address="/rs">
         <jaxrs:serviceBeans>
-            <ref bean="commonResource" />
             <ref bean="domainResource" />
             <ref bean="groupResource" />
             <ref bean="permissionResource" />

@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class RoleDto {
 	
 	private DomainDto domain;
 	private String roleCode;
-	
+
 	private List<GroupDto> groupList;
 	private List<Map<String, List<String>>> permissionList;
 	
@@ -138,4 +139,5 @@ public class RoleDto {
 		this.checked = checked;
 		return this;
 	}
+
 }

@@ -173,7 +173,7 @@ public class GroupService {
         GrpRoleExample grpRoleExample = new GrpRoleExample();
         grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
         List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
-        Set<Integer> roleIdSet = new HashSet<>();
+        Set<Integer> roleIdSet = new TreeSet<>();
         if(!CollectionUtils.isEmpty(grpRoleKeys)) {
             for(GrpRoleKey grpRoleKey : grpRoleKeys) {
                 roleIdSet.add(grpRoleKey.getRoleId());
