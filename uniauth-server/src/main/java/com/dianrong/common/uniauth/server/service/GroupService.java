@@ -222,7 +222,7 @@ public class GroupService {
             }
         }
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId);
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte);
         List<Role> roles = roleMapper.selectByExample(roleExample);
         if(!CollectionUtils.isEmpty(roles)) {
             List<RoleDto> roleDtos = new ArrayList<>();
@@ -269,7 +269,7 @@ public class GroupService {
             rootGrp = grpMapper.selectByExample(grpExample).get(0);
         } else if(groupCode != null && groupId != null) {
             GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(groupCode);
+            grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.ZERO_Byte);
             List<Grp> grps = grpMapper.selectByExample(grpExample);
             Grp grp = grpMapper.selectByPrimaryKey(groupId);
             if(grp == null) {
@@ -284,7 +284,7 @@ public class GroupService {
             rootGrp = grp;
         } else if(groupCode != null && groupId == null) {
             GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(groupCode);
+            grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.ZERO_Byte);
             List<Grp> grps = grpMapper.selectByExample(grpExample);
             if (CollectionUtils.isEmpty(grps)) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.code.notfound", groupCode, Grp.class.getSimpleName()));
@@ -293,7 +293,7 @@ public class GroupService {
         } else {
             //else if(groupCode == null && groupId != null)
             rootGrp = grpMapper.selectByPrimaryKey(groupId);
-            if(rootGrp == null) {
+            if(rootGrp == null || !AppConstants.ZERO_Byte.equals(rootGrp.getStatus())) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
             }
         }
