@@ -45,16 +45,13 @@
         exists
         (
 			select gr.role_id
-			from grp_role gr
-			where gr.grp_id in(
-				select gp.ancestor
-				from grp_path gp, grp g, user_grp ug
-				where gp.descendant = g.id
-				and g.status = 0
-				and g.id = ug.grp_id
-				and ug.type = 0
-				and ug.user_id = #{userId,jdbcType=BIGINT}
-			)
+			from grp_role gr, grp_path gp, grp g, user_grp ug
+			where gr.grp_id = gp.ancestor
+			and gp.descendant = g.id
+			and g.status = 0
+			and g.id = ug.grp_id
+			and ug.type = 0
+			and ug.user_id = #{userId,jdbcType=BIGINT}
 			and r.id = gr.role_id
         )
     )

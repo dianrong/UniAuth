@@ -9,32 +9,25 @@
 	and 
 	(
 		exists
-			(
+		(
 			select ur.role_id
-			from user_role ur
+			from user_role ur, role r
 			where ur.user_id = #{userId,jdbcType=BIGINT}
-			and exists(
-				select r.id
-				from role r
-				where r.status = 0
-				and r.domain_id = d.id
-				and r.id = ur.role_id
-			)
+			and r.status = 0
+			and r.domain_id = d.id
+			and r.id = ur.role_id
 		)
 		or
 		exists
 		(
 			select gr.role_id
-			from grp_role gr, role r
-			where gr.grp_id in(
-				select gp.ancestor
-				from grp_path gp, grp g, user_grp ug
-				where gp.descendant = g.id
-				and g.status = 0
-				and g.id = ug.grp_id
-				and ug.type = 0
-				and ug.user_id = #{userId,jdbcType=BIGINT}
-			)
+			from grp_role gr, role r, grp_path gp, grp g, user_grp ug
+			where gr.grp_id = gp.ancestor
+			and gp.descendant = g.id
+			and g.status = 0
+			and g.id = ug.grp_id
+			and ug.type = 0
+			and ug.user_id = #{userId,jdbcType=BIGINT}
 			and r.id = gr.role_id
 			and r.domain_id = d.id
 			and r.status = 0
