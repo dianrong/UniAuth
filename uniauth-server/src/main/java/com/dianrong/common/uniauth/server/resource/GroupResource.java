@@ -53,7 +53,8 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<GroupDto> updateGroup(GroupParam groupParam) {
-		GroupDto groupDto = groupService.updateGroup(groupParam);
+		GroupDto groupDto = groupService.updateGroup(groupParam.getId(),groupParam.getCode(),
+				groupParam.getName(),groupParam.getStatus(),groupParam.getDescription());
 		return Response.success(groupDto);
 	}
 

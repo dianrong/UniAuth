@@ -49,7 +49,7 @@ public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<Void> updateRole(RoleParam roleParam) {
-		roleService.updateRole(roleParam.getRoleActionEnum(), roleParam.getId(), roleParam.getRoleCodeId(),
+		roleService.updateRole(roleParam.getId(), roleParam.getRoleCodeId(),
 				roleParam.getName(), roleParam.getDescription(), roleParam.getStatus());
 		return Response.success();
 	}

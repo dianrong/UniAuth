@@ -1,19 +1,15 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.request.RoleParam;
-import com.dianrong.common.uniauth.common.enm.RoleActionEnum;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -72,29 +68,24 @@ public class RoleService {
         return BeanConverter.convert(role);
     }
 
-    public void updateRole(RoleActionEnum roleActionEnum, Integer roleId, Integer roleCodeId, String name, String description, Byte status) {
-        CheckEmpty.checkEmpty(roleActionEnum, "roleActionEnum");
+    public void updateRole(Integer roleId, Integer roleCodeId, String name, String description, Byte status) {
+        CheckEmpty.checkEmpty(roleId, "roleId");
         Role role = roleMapper.selectByPrimaryKey(roleId);
         if(role == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleId, Role.class.getSimpleName()));
-        } else if(role.getStatus().equals(AppConstants.ONE_Byte) && !RoleActionEnum.STATUS_CHANGE.equals(roleActionEnum)) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", roleId, Role.class.getSimpleName()));
         }
-        switch (roleActionEnum) {
-            case STATUS_CHANGE :
-                ParamCheck.checkStatus(status);
-                role.setStatus(status);
-                break;
-            case UPDATE_INFO:
-                CheckEmpty.checkEmpty(roleCodeId, "roleCodeId");
-                if(roleCodeMapper.selectByPrimaryKey(roleCodeId) == null) {
-                    throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleCodeId, RoleCode.class.getSimpleName()));
-                }
-                role.setDescription(description);
-                role.setName(name);
-                role.setRoleCodeId(roleCodeId);
-                break;
+
+        CheckEmpty.checkEmpty(roleCodeId, "roleCodeId");
+        if(roleCodeMapper.selectByPrimaryKey(roleCodeId) == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleCodeId, RoleCode.class.getSimpleName()));
         }
+
+        ParamCheck.checkStatus(status);
+        role.setStatus(status);
+        role.setDescription(description);
+        role.setName(name);
+        role.setRoleCodeId(roleCodeId);
+
         roleMapper.updateByPrimaryKey(role);
     }
 
