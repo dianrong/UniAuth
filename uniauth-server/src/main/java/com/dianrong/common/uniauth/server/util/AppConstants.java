@@ -10,4 +10,5 @@ public interface AppConstants {
     byte ONE_byte = (byte)1;
     String GRP_ROOT = "GRP_ROOT";
     byte MAX_AUTH_FAIL_COUNT = 10;
+    int MAX_PASSWORD_VALID_MONTH = 2;
 }

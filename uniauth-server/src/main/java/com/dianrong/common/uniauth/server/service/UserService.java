@@ -1,13 +1,36 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
@@ -15,13 +38,8 @@ import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.AppConstants;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.*;
 
 /**
  * Created by Arc on 14/1/16.
@@ -238,5 +256,62 @@ public class UserService {
         }
     }
 
+    @Transactional
+	public void login(LoginParam loginParam) {
+		String account = loginParam.getAccount();
+		String password = loginParam.getPassword();
+		String ip = loginParam.getIp();
+		CheckEmpty.checkEmpty(account, "账号");
+		CheckEmpty.checkEmpty(password, "密码");
+		CheckEmpty.checkEmpty(ip, "IP地址");
+		
+		UserExample example = new UserExample();
+        if (account.contains("@")) {
+        	example.createCriteria().andEmailEqualTo(account);
+        	
+        } else {
+        	example.createCriteria().andPhoneEqualTo(account);
+        }
+        List<User> userList = userMapper.selectByExample(example);
+        if(userList == null || userList.isEmpty()){
+        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.notfound"));
+        }
+        if(userList.size() > 1){
+        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.multiuser.found"));
+        }
+        
+        User user = userList.get(0);
+        if(user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT){
+        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.account.lock"));
+        }
+        if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), password, user.getPasswordSalt())){
+        	updateLogin(user.getId(), ip, user.getFailCount() + 1);
+            throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.error"));
+        }
+        //successfully loged in
+        updateLogin(user.getId(), ip, 0);
+        
+        Date passwordDate = user.getPasswordDate();
+        if(passwordDate == null){
+        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.newuser"));
+        }
+        else{
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(user.getPasswordDate());
+            calendar.add(Calendar.MONTH, AppConstants.MAX_PASSWORD_VALID_MONTH);
+            Date currentDate = new Date();
+            if (currentDate.after(calendar.getTime())) {
+            	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
+            }
+        }
+	}
 
+    private int updateLogin(Long userId, String ip, int failCount) {
+        User user = new User();
+        user.setId(userId);
+        user.setLastLoginTime(new Date());
+        user.setLastLoginIp(ip);
+        user.setFailCount((byte)failCount);
+        return userMapper.updateByPrimaryKeySelective(user);
+    }
 }

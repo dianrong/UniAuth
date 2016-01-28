@@ -8,6 +8,7 @@ public class LoginParam extends Operator {
 	private String account;
 	//only apply to cas sso
 	private String password;
+	private String ip;
 
 	/**
 	public String getDomainCode() {
@@ -17,9 +18,17 @@ public class LoginParam extends Operator {
 		this.domainCode = domainCode;
 	}
 	**/
-
+	
 	public String getAccount() {
 		return account;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 
 	public LoginParam setAccount(String account) {

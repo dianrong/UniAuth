@@ -8,5 +8,6 @@ public enum InfoName {
     BAD_REQUEST,
     VALIDATE_FAIL,
     INTERNAL_ERROR,
-    STACKTRACE
+    STACKTRACE,
+    LOGIN_ERROR
 }
