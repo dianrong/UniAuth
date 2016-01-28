@@ -174,7 +174,11 @@ public class BeanConverter {
         if(permission == null) {
             return null;
         } else {
-        	return new PermissionDto().setDescription(permission.getDescription()).setDomainId(permission.getDomainId()).setId(permission.getId()).setPermTypeId(permission.getPermTypeId()).setStatus(permission.getStatus()).setValue(permission.getValue());
+        	return new PermissionDto().setDescription(permission.getDescription()).
+                    setDomainId(permission.getDomainId()).setId(permission.getId())
+                    .setPermTypeId(permission.getPermTypeId()).
+                            setStatus(permission.getStatus()).
+                            setValue(permission.getValue());
         }
     }
     

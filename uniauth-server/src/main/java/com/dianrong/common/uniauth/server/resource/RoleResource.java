@@ -29,8 +29,8 @@ public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam) {
-		// TODO Auto-generated method stub
-		return null;
+		List<PermissionDto> permissionDtos = roleService.getAllPermsToRole(roleParam.getDomainId(), roleParam.getId());
+		return Response.success(permissionDtos);
 	}
 
 

@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
@@ -35,7 +36,10 @@ public class RoleService {
     private UserRoleMapper userRoleMapper;
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
-
+    @Autowired
+    private PermTypeMapper permTypeMapper;
+    @Autowired
+    private PermissionMapper permissionMapper;
 
     public List<RoleCodeDto> getAllRoleCodes() {
         RoleCodeExample example = new RoleCodeExample();
@@ -176,5 +180,49 @@ public class RoleService {
         } else {
             return null;
         }
+    }
+
+    public List<PermissionDto> getAllPermsToRole(Integer domainId, Integer roleId) {
+        CheckEmpty.checkEmpty(domainId, "domainId");
+        CheckEmpty.checkEmpty(roleId, "roleId");
+        // 1. get all permissions under the domain
+        PermissionExample permissionExample = new PermissionExample();
+        permissionExample.createCriteria().andDomainIdEqualTo(domainId);
+        List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
+        if(CollectionUtils.isEmpty(permissions)) {
+            return null;
+        }
+        RolePermissionExample rolePermissionExample = new RolePermissionExample();
+        rolePermissionExample.createCriteria().andRoleIdEqualTo(roleId);
+        List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
+
+        // 2. get the checked permIds for the role
+        Set<Integer> permIds = null;
+        if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
+            permIds = new TreeSet<>();
+            for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+                permIds.add(rolePermissionKey.getPermissionId());
+            }
+        }
+        List<PermType> permTypes = permTypeMapper.selectByExample(new PermTypeExample());
+        // build permType index.
+        Map<Integer, String> permTypeIdTypePairs = new TreeMap<>();
+        for(PermType permType : permTypes) {
+            permTypeIdTypePairs.put(permType.getId(), permType.getType());
+        }
+
+        // 3. construct all permissions linked with the role & mark the permission checked on the role or not
+        List<PermissionDto> permissionDtos = new ArrayList<>();
+        for(Permission permission:permissions) {
+            PermissionDto permissionDto = BeanConverter.convert(permission);
+            permissionDto.setPermType(permTypeIdTypePairs.get(permission.getPermTypeId()));
+            if(permIds != null && permIds.contains(permission.getId())) {
+                permissionDto.setChecked(Boolean.TRUE);
+            } else {
+                permissionDto.setChecked(Boolean.FALSE);
+            }
+            permissionDtos.add(permissionDto);
+        }
+        return permissionDtos;
     }
 }
