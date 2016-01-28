@@ -144,7 +144,7 @@ public class UserService {
         }
         // 1. get all roles under the domain
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId);
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte);
         List<Role> roles = roleMapper.selectByExample(roleExample);
         if(CollectionUtils.isEmpty(roles)) {
             return null;

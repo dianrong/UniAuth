@@ -32,7 +32,7 @@ public interface IRoleResource {
     Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery);
     
     @POST
-    @Path("perms")
+    @Path("domain/perms")
     //scenario: retrieve all permissions connected with a role(including all other permissions under a domain)
     Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam);
 }

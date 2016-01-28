@@ -96,8 +96,9 @@ public interface GrpMapper {
      */
     int updateByPrimaryKey(Grp record);
 
-
     List<Grp> getGroupTree(Integer groupId);
 
     List<HashMap<Integer,Integer>> getGroupTreeLinks(Integer groupId);
+
+    Integer selectNameCountBySameLayerGrpId(Integer groupId);
 }
