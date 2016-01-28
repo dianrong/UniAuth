@@ -178,7 +178,7 @@ public class RoleService {
         CheckEmpty.checkEmpty(roleId, "roleId");
         // 1. get all permissions under the domain
         PermissionExample permissionExample = new PermissionExample();
-        permissionExample.createCriteria().andDomainIdEqualTo(domainId);
+        permissionExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte);
         List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
         if(CollectionUtils.isEmpty(permissions)) {
             return null;
