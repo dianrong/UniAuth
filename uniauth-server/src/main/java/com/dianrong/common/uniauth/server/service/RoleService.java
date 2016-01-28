@@ -148,7 +148,7 @@ public class RoleService {
         RoleExample roleExample = new RoleExample();
         roleExample.setPageOffSet(pageNumber*pageSize);
         roleExample.setPageSize(pageSize);
-        roleExample.setOrderByClause("");
+        roleExample.setOrderByClause("status asc");
         RoleExample.Criteria criteria = roleExample.createCriteria().andDomainIdEqualTo(domainId);
         if(roleName != null) {
             criteria.andNameLike("%" + roleName + "%");
