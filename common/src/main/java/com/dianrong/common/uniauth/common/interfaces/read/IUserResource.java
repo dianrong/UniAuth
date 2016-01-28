@@ -12,7 +12,9 @@ import javax.ws.rs.core.MediaType;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 
@@ -33,4 +35,15 @@ public interface IUserResource {
     @Path("domain/roles")
     //scenario: retrieve all roles connected with a user(including all other roles under a domain)
     Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam);
+
+    @POST
+    @Path("login")
+    //scenario: cas login
+    Response<String> login(LoginParam loginParam);
+
+    @POST
+    @Path("usedetailinfo")
+    //scenario: get user detail info
+    Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam);
+
 }
