@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,14 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
@@ -31,6 +37,9 @@ import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
@@ -54,6 +63,13 @@ public class UserService {
     private RoleMapper roleMapper;
     @Autowired
     private RoleCodeMapper roleCodeMapper;
+    @Autowired
+    private DomainMapper domainMapper;
+    @Autowired
+    private PermissionMapper permissionMapper;
+    @Autowired
+    private CommonService commonService;
+    
 
     @Transactional
     public UserDto addNewUser(String name, String phone, String email) {
@@ -263,23 +279,12 @@ public class UserService {
 		CheckEmpty.checkEmpty(account, "账号");
 		CheckEmpty.checkEmpty(password, "密码");
 		CheckEmpty.checkEmpty(ip, "IP地址");
-		
-		UserExample example = new UserExample();
-        if (account.contains("@")) {
-        	example.createCriteria().andEmailEqualTo(account);
-        	
-        } else {
-        	example.createCriteria().andPhoneEqualTo(account);
-        }
-        List<User> userList = userMapper.selectByExample(example);
-        if(userList == null || userList.isEmpty()){
-        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.notfound"));
-        }
-        if(userList.size() > 1){
-        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.multiuser.found"));
-        }
+
+		User user = getUserByAccount(account);
         
-        User user = userList.get(0);
+		if(AppConstants.ONE_Byte.equals(user.getStatus())){
+			throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.status.lock"));
+		}
         if(user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT){
         	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.account.lock"));
         }
@@ -304,6 +309,76 @@ public class UserService {
             }
         }
 	}
+    
+	public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
+		String account = loginParam.getAccount();
+		CheckEmpty.checkEmpty(account, "账号");
+		User user = getUserByAccount(account);
+		
+		UserDetailDto userDetailDto = new UserDetailDto();
+		UserDto userDto = BeanConverter.convert(user);
+		userDetailDto.setUserDto(userDto);
+		
+		Long userId = user.getId();
+		List<DomainDto> domainDtoList = new ArrayList<DomainDto>();
+		userDetailDto.setDomainList(domainDtoList);
+		List<Domain> domainList = domainMapper.selectUserDomainsByUserId(userId);
+		
+		Map<Integer, RoleCode> roleCodeMap = commonService.getRoleCodeMap();
+		Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();
+		
+		if(domainList != null && !domainList.isEmpty()){
+			for(Domain domain : domainList){
+				Integer domainId = domain.getId();
+				Map<String, Object> userAndDomainMap = new HashMap<String, Object>();
+				userAndDomainMap.put("userId", userId);
+				userAndDomainMap.put("domainId", domainId);
+				List<Role> roleList = roleMapper.getRolesByUserAndDomainId(userAndDomainMap);
+				List<RoleDto> roleDtoList = new ArrayList<RoleDto>();
+				
+				DomainDto domainDto = BeanConverter.convert(domain);
+				domainDto.setRoleList(roleDtoList);
+				domainDtoList.add(domainDto);
+				
+				if(roleList != null){
+					for(Role role: roleList){
+						RoleDto roleDto = BeanConverter.convert(role);
+						roleDto.setRoleCode(roleCodeMap.get(roleDto.getId()).getCode());
+						roleDtoList.add(roleDto);
+						
+						Map<String, Object> roleAndDomainMap = new HashMap<String, Object>();
+						roleAndDomainMap.put("domainId", domainId);
+						roleAndDomainMap.put("roleId", roleDto.getId());
+						
+						List<Permission> permList = permissionMapper.selectByRoleAndDomainId(roleAndDomainMap);
+						
+						Map<String, List<String>> permMap = new HashMap<String, List<String>>();
+						
+						if(permList != null){
+							for(Permission permission: permList){
+								Integer permTypeId = permission.getPermTypeId();
+								String permType = permTypeMap.get(permTypeId).getType();
+								String value = permission.getValue();
+								
+								if(permMap.containsKey(permType)){
+									permMap.get(permType).add(value);
+								}
+								else{
+									List<String> list = new ArrayList<String>();
+									list.add(value);
+									permMap.put(permType, list);
+								}
+							}
+						}
+						
+						roleDto.setPermMap(permMap);
+					}
+				}
+			}
+		}
+		
+		return userDetailDto;
+	}
 
     private int updateLogin(Long userId, String ip, int failCount) {
         User user = new User();
@@ -312,5 +387,22 @@ public class UserService {
         user.setLastLoginIp(ip);
         user.setFailCount((byte)failCount);
         return userMapper.updateByPrimaryKeySelective(user);
+    }
+    
+    private User getUserByAccount(String account){
+    	UserExample example = new UserExample();
+    	example.or().andEmailEqualTo(account);
+    	example.or().andEmailEqualTo(account);
+
+        List<User> userList = userMapper.selectByExample(example);
+        if(userList == null || userList.isEmpty()){
+        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.notfound", account));
+        }
+        if(userList.size() > 1){
+        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.multiuser.found"));
+        }
+        
+        User user = userList.get(0);
+        return user;
     }
 }

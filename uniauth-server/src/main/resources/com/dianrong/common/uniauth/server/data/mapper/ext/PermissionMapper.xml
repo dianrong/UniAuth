@@ -18,7 +18,7 @@
 	order by id limit #{startIndex, jdbcType=INTEGER},#{wantCount, jdbcType=INTEGER}
   </select>
   
-  <select id="countByExampleForSearch" parameterType="com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt" resultType="java.lang.Integer" >
+  <select id="countByExampleForSearch" resultType="java.lang.Integer" parameterType="com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt"  >
     select
     	count(1)
     from permission
@@ -32,5 +32,19 @@
 	<if test="permTypeId != null">
 		and perm_type_id = #{permTypeId, jdbcType=INTEGER}
 	</if>
+  </select>
+  
+  
+  <select id="selectByRoleAndDomainId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from permission p
+    where p.status = 0
+    and p.domain_id =  #{domainId, jdbcType=INTEGER}
+    and p.id in(
+    	select rp.permission_id
+    	from role_permission rp
+    	where rp.role_id = #{roleId, jdbcType=INTEGER}
+    )
   </select>
 </mapper>

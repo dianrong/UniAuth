@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.server.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +40,9 @@ public class PermissionService {
 	private RoleMapper roleMapper;
 	@Autowired
 	private RolePermissionMapper rolePermissionMapper;
+	
+	@Autowired
+	private CommonService commonService;
 	
 	public List<PermTypeDto> getAllPermTypeCodes() {
 		PermTypeExample example = new PermTypeExample();
@@ -159,7 +161,7 @@ public class PermissionService {
 		pageDto.setPageSize(pageSize);
 		pageDto.setTotalCount(totalCount);
 		
-		Map<Integer, PermType> permTypeMap = getPermTypeMap();
+		Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();
 		
 		List<PermissionDto> permissionDtoList = new ArrayList<PermissionDto>();
 		if(permissionList != null && !permissionList.isEmpty()){
@@ -176,16 +178,5 @@ public class PermissionService {
 		
 		return pageDto;
 	}
-	
-	private Map<Integer, PermType> getPermTypeMap(){
-		Map<Integer, PermType>	permTypeMap = new HashMap<Integer, PermType>();
-		PermTypeExample example = new PermTypeExample();
-		List<PermType> permTypeList = permTypeMapper.selectByExample(example);
-		if(permTypeList != null && !permTypeList.isEmpty()){
-			for(PermType permType: permTypeList){
-				permTypeMap.put(permType.getId(), permType);
-			}
-		}
-		return permTypeMap;
-	}
+
 }

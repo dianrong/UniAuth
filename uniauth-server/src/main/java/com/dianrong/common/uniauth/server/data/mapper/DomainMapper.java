@@ -93,4 +93,6 @@ public interface DomainMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(Domain record);
+    
+    List<Domain> selectUserDomainsByUserId(Long userId);
 }

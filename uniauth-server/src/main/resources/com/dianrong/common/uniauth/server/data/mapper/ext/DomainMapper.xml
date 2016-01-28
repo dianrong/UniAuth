@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.DomainMapper" >
+  <select id="selectUserDomainsByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	select 
+		<include refid="Base_Column_List" />
+	from domain d
+	where d.status = 0
+	and 
+	(
+		exists
+			(
+			select ur.role_id
+			from user_role ur
+			where ur.user_id = #{userId,jdbcType=BIGINT}
+			and exists(
+				select r.id
+				from role r
+				where r.status = 0
+				and r.domain_id = d.id
+				and r.id = ur.role_id
+			)
+		)
+		or
+		exists
+		(
+			select gr.role_id
+			from grp_role gr, role r
+			where gr.grp_id in(
+				select gp.ancestor
+				from grp_path gp, grp g, user_grp ug
+				where gp.descendant = g.id
+				and g.status = 0
+				and g.id = ug.grp_id
+				and ug.type = 0
+				and ug.user_id = #{userId,jdbcType=BIGINT}
+			)
+			and r.id = gr.role_id
+			and r.domain_id = d.id
+			and r.status = 0
+		)
+	)
+  </select>
+</mapper>

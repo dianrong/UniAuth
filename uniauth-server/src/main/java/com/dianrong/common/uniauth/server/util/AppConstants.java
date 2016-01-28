@@ -11,4 +11,5 @@ public interface AppConstants {
     String GRP_ROOT = "GRP_ROOT";
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
+    String DOMAIN_CODE_TECHOPS = "techops";
 }

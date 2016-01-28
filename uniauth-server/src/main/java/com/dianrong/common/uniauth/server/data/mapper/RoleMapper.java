@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -98,4 +99,6 @@ public interface RoleMapper {
     int updateByPrimaryKey(Role record);
     
     List<RoleExt> selectAllRolesByDomainId(Integer domainId);
+    
+    List<Role> getRolesByUserAndDomainId(Map map);
 }

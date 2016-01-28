@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -99,4 +100,6 @@ public interface PermissionMapper {
     
     List<Permission> selectByExampleForSearch(PermissionExt permissionExt);
     Integer countByExampleForSearch(PermissionExt permissionExt);
+    
+    List<Permission> selectByRoleAndDomainId(Map map);
 }

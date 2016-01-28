@@ -20,7 +20,7 @@ public class RoleDto {
 	private String roleCode;
 
 	private List<GroupDto> groupList;
-	private List<Map<String, List<String>>> permissionList;
+	private Map<String, List<String>> permMap;
 	
 	//whether this role connected with this permission
 	//private boolean permChecked;
@@ -122,12 +122,13 @@ public class RoleDto {
 		return this;
 	}
 
-	public List<Map<String, List<String>>> getPermissionList() {
-		return permissionList;
+
+	public Map<String, List<String>> getPermMap() {
+		return permMap;
 	}
 
-	public RoleDto setPermissionList(List<Map<String, List<String>>> permissionList) {
-		this.permissionList = permissionList;
+	public RoleDto setPermMap(Map<String, List<String>> permMap) {
+		this.permMap = permMap;
 		return this;
 	}
 

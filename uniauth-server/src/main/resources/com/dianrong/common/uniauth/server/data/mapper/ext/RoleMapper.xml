@@ -25,5 +25,39 @@
 	and d.status = 0
 	and r.domain_id  = #{domainId,jdbcType=INTEGER}
   </select>
+    
+  <select id="getRolesByUserAndDomainId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	select 
+		<include refid="Base_Column_List" />
+	from role r
+	where r.status = 0
+	and r.domain_id = #{domainId,jdbcType=INTEGER}
+    and
+    (
+		exists
+		(
+			select ur.role_id
+			from user_role ur
+			where r.id = ur.role_id
+			and ur.user_id = #{userId,jdbcType=BIGINT}
+		)
+        or
+        exists
+        (
+			select gr.role_id
+			from grp_role gr
+			where gr.grp_id in(
+				select gp.ancestor
+				from grp_path gp, grp g, user_grp ug
+				where gp.descendant = g.id
+				and g.status = 0
+				and g.id = ug.grp_id
+				and ug.type = 0
+				and ug.user_id = #{userId,jdbcType=BIGINT}
+			)
+			and r.id = gr.role_id
+        )
+    )
+  </select>
   
 </mapper>
