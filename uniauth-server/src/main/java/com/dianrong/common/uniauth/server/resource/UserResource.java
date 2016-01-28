@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.interfaces.rw.IUserRWResource;
 import com.dianrong.common.uniauth.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +55,15 @@ public class UserResource implements IUserRWResource {
 	public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
 		PageDto<UserDto> pageDto = userService.searchUser(userQuery.getName(),userQuery.getPhone(),userQuery.getEmail(),userQuery.getPageNumber(),userQuery.getPageSize());
 		return Response.success(pageDto);
+	}
+
+	@Override
+	public Response<String> login(LoginParam loginParam) {
+		return null;
+	}
+
+	@Override
+	public Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam) {
+		return null;
 	}
 }
