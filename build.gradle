@@ -143,3 +143,30 @@ project(':cashelper') {
 		}
 	}
 }
+
+project(':cas') {
+	apply plugin: 'war'
+
+	configurations{
+    	runtime.exclude group : 'commons-logging',module:'commons-logging'
+	}
+	
+	war {
+    	archiveName = project.name + '.war'
+	}
+	
+	dependencies {
+		compile(project(':common')){
+			exclude group: 'org.springframework'
+			exclude group: 'org.springframework.security'
+			exclude group: 'com.fasterxml.jackson.core'
+		}
+		providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+		providedCompile 'org.jasig.cas:cas-server-core:4.1.3'
+		
+		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
+			//transitive = true
+			//exclude group: 'javax.xml', module: 'xmldsig'
+		//}
+	}
+}
