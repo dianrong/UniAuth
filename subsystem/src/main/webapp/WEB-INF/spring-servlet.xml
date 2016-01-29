@@ -14,19 +14,9 @@
 						http://www.springframework.org/schema/security
 			http://www.springframework.org/schema/security/spring-security-4.0.xsd
 			">
-
-	<!-- 激活spring的注解. -->
-	<context:annotation-config />
-	
-	<!-- 扫描注解组件并且自动的注入spring beans中. 
-	例如,他会扫描@Controller 和@Service下的文件.所以确保此base-package设置正确. -->
-	<context:component-scan base-package="com.dianrong" />
-	
 	<!-- 配置注解驱动的Spring MVC Controller 的编程模型.注:次标签只在 Servlet MVC工作! -->
 	<mvc:annotation-driven />
-	<!-- 
-	<context:property-placeholder ignore-unresolvable="true" system-properties-mode="OVERRIDE"/>
-	 -->
+
 	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
 </beans>

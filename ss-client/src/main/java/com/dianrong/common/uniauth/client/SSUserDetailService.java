@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,14 +13,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.uniauth.client.UAClientFacade;
 import com.dianrong.uniauth.common.data.UAUserDetailInfo;
 
 public class SSUserDetailService implements UserDetailsService {
+	
+	@Autowired
+	private UniClientFacade uniClientFacade;
+	
 	private UAClientFacade uaClientFacade;
 	private String domainName;
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
+		for(int  i = 0;i < 1000;i++){
+			System.out.println("--------------------------------------------------------------");
+		}
+		System.out.println(uniClientFacade.getDomainResource().getAllLoginDomains().getData().get(0).getDescription());
 		if(userName != null && !"".equals(userName.trim())){
 			UAUserDetailInfo uaudi = uaClientFacade.detailInfo(userName, domainName);
 			

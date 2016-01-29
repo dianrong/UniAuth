@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.loanbusiness.subsystem.service.MyService;
 
 @Controller
@@ -16,12 +17,16 @@ public class MainController {
 	
 	@Autowired
 	private MyService myService;
+	
+	@Autowired
+	private UniClientFacade uniClientFacade;
 
 	@PreAuthorize("hasRole('ROLE_USER')")   
 	@RequestMapping(value = "/common", method = RequestMethod.GET)
 	public String getCommonPage() {
 		logger.debug("Received request to show common page");
 		myService.testService();
+		System.out.println("----------------------------------" + uniClientFacade.getDomainResource().getAllLoginDomains().getData().get(0).getDescription());
 		return "commonpage";
 	}
 	
