@@ -2,7 +2,6 @@ rootProject.name = "uniauth"
 
 include ":ss-client"
 include ":subsystem"
-include ":cashelper"
 include ":common"
 include ":uniauth-server"
 include ":share-rw"
