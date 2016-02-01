@@ -8,6 +8,11 @@ public final class Info {
     private InfoName name;
     private String msg;
 
+    //Note: default constructor is mandatory!!!
+    public Info(){
+    	
+    }
+    
     public Info(InfoName name) {
         this.name = name;
     }
