@@ -283,10 +283,10 @@ public class UserService {
 		User user = getUserByAccount(account);
         
 		if(AppConstants.ONE_Byte.equals(user.getStatus())){
-			throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.status.lock"));
+			throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
 		}
         if(user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT){
-        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.account.lock"));
+        	throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT, UniBundle.getMsg("user.login.account.lock"));
         }
         if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), password, user.getPasswordSalt())){
         	updateLogin(user.getId(), ip, user.getFailCount() + 1);
@@ -297,7 +297,7 @@ public class UserService {
         
         Date passwordDate = user.getPasswordDate();
         if(passwordDate == null){
-        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.newuser"));
+        	throw new AppException(InfoName.LOGIN_ERROR_NEW_USER, UniBundle.getMsg("user.login.newuser"));
         }
         else{
             Calendar calendar = Calendar.getInstance();
@@ -305,7 +305,7 @@ public class UserService {
             calendar.add(Calendar.MONTH, AppConstants.MAX_PASSWORD_VALID_MONTH);
             Date currentDate = new Date();
             if (currentDate.after(calendar.getTime())) {
-            	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
+            	throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH, UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
             }
         }
 	}
@@ -396,10 +396,10 @@ public class UserService {
 
         List<User> userList = userMapper.selectByExample(example);
         if(userList == null || userList.isEmpty()){
-        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.notfound", account));
+        	throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
         }
         if(userList.size() > 1){
-        	throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.multiuser.found"));
+        	throw new AppException(InfoName.LOGIN_ERROR_MULTI_USER_FOUND, UniBundle.getMsg("user.login.multiuser.found"));
         }
         
         User user = userList.get(0);

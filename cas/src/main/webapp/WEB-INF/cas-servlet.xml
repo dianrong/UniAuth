@@ -306,7 +306,7 @@
         p:centralAuthenticationService-ref="centralAuthenticationService"
         p:warnCookieGenerator-ref="warnCookieGenerator"/>
 
-  <bean id="authenticationExceptionHandler" class="org.jasig.cas.web.flow.AuthenticationExceptionHandler" />
+  <bean id="authenticationExceptionHandler" class="com.dianrong.common.uniauth.cas.handler.UniauthAuthenticationExceptionHandler" />
 
   <bean id="generateServiceTicketAction" class="org.jasig.cas.web.flow.GenerateServiceTicketAction"
         p:centralAuthenticationService-ref="centralAuthenticationService"/>

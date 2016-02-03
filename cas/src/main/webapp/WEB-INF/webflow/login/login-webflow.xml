@@ -149,6 +149,10 @@
         <transition on="InvalidLoginTimeException" to="casBadHoursView"/>
         <transition on="FailedLoginException" to="generateLoginTicket"/>
         <transition on="AccountNotFoundException" to="generateLoginTicket"/>
+        
+        <transition on="FreshUserException" to="generateLoginTicket"/>
+        <transition on="MultiUsersFoundException" to="generateLoginTicket"/>
+        
         <transition on="UNKNOWN" to="generateLoginTicket"/>
     </action-state>
 

@@ -67,6 +67,8 @@
     <p/>
 </c:if>
 
+<p><spring:message code="screen.welcome.security"/></p>
+
 <div class="box" id="login">
     <form:form method="post" id="fm1" commandName="${commandName}" htmlEscape="true">
 
@@ -129,8 +131,9 @@
 
 <div id="sidebar">
     <div class="sidebar-content">
+    	<img alt="AD" src="https://www.dianrong.com/resource/banner/pc-login-banner/1446738057130" width="500" height="320">
+    	<!-- 
         <p><spring:message code="screen.welcome.security" /></p>
-
         <div id="list-languages">
             <%final String queryString = request.getQueryString() == null ? "" : request.getQueryString().replaceAll("&locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]|^locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]", "");%>
             <c:set var='query' value='<%=queryString%>' />
@@ -199,6 +202,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
+        -->
     </div>
 </div>
 
