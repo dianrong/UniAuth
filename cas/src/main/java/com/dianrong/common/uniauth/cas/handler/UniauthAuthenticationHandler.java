@@ -3,13 +3,13 @@ package com.dianrong.common.uniauth.cas.handler;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
+import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.HandlerResult;
-import org.jasig.cas.authentication.InvalidLoginTimeException;
 import org.jasig.cas.authentication.PreventedException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
 import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
@@ -55,7 +55,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 				throw new AccountDisabledException(userName + " disabled(status == 1) in db.");
 			}
 			else if(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT.equals(infoName)){
-				throw new InvalidLoginTimeException(userName + " locked due to too many login attempts.");
+				throw new AccountLockedException(userName + " locked due to too many login attempts.");
 			}
 			else if(InfoName.LOGIN_ERROR_NEW_USER.equals(infoName)){
 				throw new FreshUserException("Newly added user, must modify password first.");
