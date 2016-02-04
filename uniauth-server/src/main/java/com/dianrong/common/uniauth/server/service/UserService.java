@@ -271,7 +271,6 @@ public class UserService {
         }
     }
 
-    @Transactional
 	public void login(LoginParam loginParam) {
 		String account = loginParam.getAccount();
 		String password = loginParam.getPassword();
