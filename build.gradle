@@ -151,8 +151,11 @@ project(':cas') {
 			exclude group: 'org.springframework.security'
 			exclude group: 'com.fasterxml.jackson.core'
 		}
-		providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+		providedCompile 'javax.servlet:javax.servlet-api:3.1.0'  
 		providedCompile 'org.jasig.cas:cas-server-core:4.1.3'
+		providedCompile 'org.jasig.cas:cas-server-security-filter:2.0.4'
+		providedCompile 'org.jasig.cas:cas-server-webapp-support:4.1.3'
+		providedCompile 'org.jasig.cas:cas-server-integration-restlet:4.1.3'
 		
 		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
 			//transitive = true
