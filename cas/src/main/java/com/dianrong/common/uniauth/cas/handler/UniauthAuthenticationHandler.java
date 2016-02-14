@@ -13,6 +13,8 @@ import org.jasig.cas.authentication.HandlerResult;
 import org.jasig.cas.authentication.PreventedException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
 import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
+import org.jasig.inspektr.common.web.ClientInfo;
+import org.jasig.inspektr.common.web.ClientInfoHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
@@ -36,7 +38,11 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(userName);
 		loginParam.setPassword(password);
-		loginParam.setIp("127.0.0.1");
+		ClientInfo clientInfo = ClientInfoHolder.getClientInfo();
+		if(clientInfo != null){
+			String clientIp = clientInfo.getClientIpAddress();
+			loginParam.setIp(clientIp);
+		}
 		
 		Response<Void> response = uniUniClientFacade.getUserResource().login(loginParam);
 		List<Info> infoList = response.getInfo();
@@ -55,7 +61,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 				throw new AccountDisabledException(userName + " disabled(status == 1) in db.");
 			}
 			else if(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT.equals(infoName)){
-				throw new AccountLockedException(userName + " locked due to too many login attempts.");
+				throw new AccountLockedException(userName + " locked due to too many failed login attempts.");
 			}
 			else if(InfoName.LOGIN_ERROR_NEW_USER.equals(infoName)){
 				throw new FreshUserException("Newly added user, must modify password first.");
