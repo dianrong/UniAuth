@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
-import com.dianrong.uniauth.rw.interfaces.IPermissionRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

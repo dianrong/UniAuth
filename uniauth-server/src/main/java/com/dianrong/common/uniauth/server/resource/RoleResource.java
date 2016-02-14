@@ -9,7 +9,7 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 import com.dianrong.common.uniauth.server.service.RoleService;
-import com.dianrong.uniauth.rw.interfaces.IRoleRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

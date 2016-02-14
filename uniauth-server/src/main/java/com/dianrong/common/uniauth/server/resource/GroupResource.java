@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.List;
 
 import com.dianrong.common.uniauth.server.service.GroupService;
-import com.dianrong.uniauth.rw.interfaces.IGroupRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

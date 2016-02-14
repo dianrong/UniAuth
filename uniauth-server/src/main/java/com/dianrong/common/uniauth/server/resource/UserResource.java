@@ -9,7 +9,7 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
-import com.dianrong.uniauth.rw.interfaces.IUserRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
