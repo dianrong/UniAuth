@@ -1,9 +1,9 @@
 {
   "@class" : "org.jasig.cas.services.RegexRegisteredService",
-  "serviceId" : "^(https|imaps)://.*",
-  "name" : "HTTPS and IMAPS",
+  "serviceId" : "^(http|https|imaps)://.*",
+  "name" : "HTTP/HTTPS and IMAPS",
   "id" : 10000001,
-  "description" : "This service definition authorized all application urls that support HTTPS and IMAPS protocols.",
+  "description" : "This service definition authorized all application urls that support HTTP/HTTPS and IMAPS protocols.",
   "proxyPolicy" : {
     "@class" : "org.jasig.cas.services.RefuseRegisteredServiceProxyPolicy"
   },
