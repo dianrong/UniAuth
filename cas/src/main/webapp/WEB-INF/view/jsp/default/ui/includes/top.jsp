@@ -45,6 +45,7 @@
 <body id="cas">
   <div id="container">
       <header>
+      	<img alt="点融网" src="images/logo.png">
       	<!-- 
         <a id="logo" href="http://www.dianrong.com" title="<spring:message code="logo.title" />">Dianrong</a>
         <h1>点融网内部统一认证系统</h1>
