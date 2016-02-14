@@ -1,7 +1,4 @@
-package com.dianrong.common.uniauth.common.interfaces.rw;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+package com.dianrong.common.uniauth.sharerw.interfaces;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -10,6 +7,9 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
 public interface IDomainRWResource extends IDomainResource {
     @POST

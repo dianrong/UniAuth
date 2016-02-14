@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +12,6 @@ import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
-import com.dianrong.common.uniauth.common.interfaces.rw.IDomainRWResource;
 import com.dianrong.common.uniauth.server.service.DomainService;
 
 @RestController

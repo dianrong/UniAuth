@@ -9,10 +9,10 @@ sourceSets {
 }
 
 ext {
-    tomcatAppName = 'sstechops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
+    tomcatAppName = 'techops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
     tomcatUsername = 'admin'        //Tomcat用户
     tomcatPassword = 'admin'        //Tomcat密码
-    tomcatHost = '192.168.2.177:8886'        //
+    tomcatHost = '192.168.56.101:8080'        //
     tomcatWarFile = 'build/' + tomcatAppName + '.war'
 }
 
@@ -23,7 +23,7 @@ war {
 }
 
 task warTechopsServer(dependsOn: war) {
-
+    // replace the placeholder of the techops end point in static resource files.
 }
 
 task tomcatUndeploy(type: JavaExec) {

@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.common.interfaces.rw;
+package com.dianrong.common.uniauth.sharerw.interfaces;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
