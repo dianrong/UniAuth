@@ -32,7 +32,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
-  <title>CAS &#8211; Central Authentication Service</title>
+  <title>点融网内部统一认证系统</title>
   
   <spring:theme code="standard.custom.css.file" var="customCssFile" />
   <link rel="stylesheet" href="<c:url value="${customCssFile}" />" />
@@ -45,7 +45,9 @@
 <body id="cas">
   <div id="container">
       <header>
-        <a id="logo" href="http://www.apereo.org" title="<spring:message code="logo.title" />">Apereo</a>
-        <h1>Central Authentication Service (CAS)</h1>
+      	<!-- 
+        <a id="logo" href="http://www.dianrong.com" title="<spring:message code="logo.title" />">Dianrong</a>
+        <h1>点融网内部统一认证系统</h1>
+         -->
       </header>
       <div id="content">

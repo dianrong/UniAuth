@@ -131,7 +131,7 @@
 
 <div id="sidebar">
     <div class="sidebar-content">
-    	<img alt="AD" src="https://www.dianrong.com/resource/banner/pc-login-banner/1446738057130" width="500" height="320">
+    	<img alt="AD" src="images/spring_festival.jpg" width="500" height="320">
     	<!-- 
         <p><spring:message code="screen.welcome.security" /></p>
         <div id="list-languages">
