@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.dianrong.uniauth.rw.interfaces.IPermissionRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,6 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.common.interfaces.rw.IPermissionRWResource;
 import com.dianrong.common.uniauth.server.service.PermissionService;
 
 @RestController

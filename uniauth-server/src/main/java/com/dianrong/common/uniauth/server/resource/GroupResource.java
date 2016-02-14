@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.List;
 
 import com.dianrong.common.uniauth.server.service.GroupService;
+import com.dianrong.uniauth.rw.interfaces.IGroupRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,6 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
-import com.dianrong.common.uniauth.common.interfaces.rw.IGroupRWResource;
 
 @RestController
 public class GroupResource implements IGroupRWResource {
