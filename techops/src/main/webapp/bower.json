@@ -1,0 +1,29 @@
+{
+  "name": "techops",
+  "authors": [
+    "chinese name : 钱晟龙 english name: Arc Qian <286999915@qq.com>"
+  ],
+  "version": "1.0.0",
+  "dependencies": {
+    "angular": "1.2.16",
+    "angular-route": "1.2.16",
+    "angular-resource": "1.2.16",
+    "angular-cookies": "1.2.16",
+    "angular-bootstrap": "0.10.0",
+    "jquery": ">= 1.9.0",
+    "bootstrap": "~3.3.5",
+    "angular-local-storage": "~0.2.3"
+  },
+  "devDependencies": {
+    "angular": "1.2.16",
+    "requirejs": "2.1.11",
+    "angular-route": "1.2.16",
+    "angular-resource": "1.2.16",
+    "angular-cookies": "1.2.16",
+    "angular-bootstrap": "0.12.0",
+    "jquery": ">= 1.9.0"
+  },
+  "resolutions": {
+    "angular": "1.2.16"
+  }
+}
