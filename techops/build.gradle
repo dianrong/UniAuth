@@ -5,18 +5,20 @@ apply from: 'build-tomcat.gradle'
 
 dependencies {
 
-    compile project(":common")
+    compile project(":share-rw")
 
     //Spring
     def spring_version = '4.1.6.RELEASE'
 
     compile "org.springframework:spring-context:${spring_version}"
-    compile "org.springframework:spring-jdbc:${spring_version}"
     compile "org.springframework:spring-tx:${spring_version}"
     compile "org.springframework:spring-web:${spring_version}"
     compile "org.springframework:spring-webmvc:${spring_version}"
     compile "org.springframework:spring-context-support:${spring_version}"
     compile "org.springframework:spring-aop:${spring_version}"
+
+    // zookeeper util.
+    compile 'com.dianrong.platform:cfg-zk-client:1.0.0-SNAPSHOT'
 
     //Aspectj
     compile "org.aspectj:aspectjrt:1.8.5"
@@ -33,22 +35,12 @@ dependencies {
     compile 'org.apache.httpcomponents:fluent-hc:4.4'
     compile 'org.apache.httpcomponents:httpmime:4.4'
 
-    //cxf
-    compile "org.apache.cxf:cxf-rt-transports-http:${cxf_version}"
-    compile "org.apache.cxf:cxf-rt-rs-service-description:${cxf_version}"  // for wadl generate purpose
-    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.1' // for json support
-
     // common
     compile 'org.apache.commons:commons-lang3:3.4'
 
     //Google Jar
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.google.guava:guava:18.0'
-
-    //JDBC Pool
-    compile 'org.apache.commons:commons-dbcp2:2.1'
-    //JDBC Driver
-    compile 'mysql:mysql-connector-java:5.1.36'
 
     //Test Suite
     testCompile 'junit:junit:4.12'
