@@ -1,0 +1,20 @@
+/* TEAM */
+	Site: http://www.dianrong.com/
+	Description: Dianrong.com provides online efficient investment and financing services for individuals and SMEs. Better rates, lower cost, faster way to borrowers and more flexible investment, higher returns, 100% principal protection to investors.
+	Support: support@dianrong.com
+	Media Cooperation: press@dianrong.com
+	Business Cooperation: biz@dianrong.com
+	WeiBo: http://weibo.com/dianrongwang
+	Telephone: (86)400-921-9218
+	Fax:  63232100
+	From:No.388 Madang Road, Building D, 2F, Shanghai
+
+/* THANKS */
+
+
+		
+
+/* SITE */
+	Language: Chinese
+	Doctype:HTML5
+	IDE: Sublime Text
