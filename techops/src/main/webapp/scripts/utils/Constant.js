@@ -3,7 +3,7 @@
  * @module controllers/login
  */
 define({
-        apiBase: "http://192.168.56.101:8080",
+        apiBase: "http://192.168.56.101:8080/techops",
         techOpsBase: "http://localhost:8088",
         // 40 seconds Time out
         reqTimeout: 40000,

@@ -5,14 +5,12 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/MainContro
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
         (function () {
-            fetchPermission().then(bootstrapApplication);
-            function fetchPermission() {
-            }
             function bootstrapApplication() {
                 angular.element(document).ready(function () {
                     angular.bootstrap(document, [appName]);
                 });
             }
+            bootstrapApplication();
         }());
     };
 

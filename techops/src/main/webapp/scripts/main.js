@@ -56,7 +56,6 @@ require(['app'], function(app) {
         if (components[i].svc) {
           // Register Factory
           app.factory(components[i].name, components[i].svc);
-          //console.warn('Initialize Controller without a name: ', components[i].fn);
         } else if (components[i].fn) {
           // Register Controllder
           app.controller(components[i].name, components[i].fn);
