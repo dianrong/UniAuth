@@ -50,7 +50,7 @@ require.config({
   waitSeconds: 0
 });
 
-require(['app'], function(app) {
+require(['app','services/common/logoutSvc'], function(app) {
       var components = Array.prototype.slice.call(arguments, 1);
       for (var i = 0, len = components.length; i < len; i++) {
         if (components[i].svc) {

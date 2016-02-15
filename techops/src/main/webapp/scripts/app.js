@@ -5,6 +5,10 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/MainContro
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
         (function () {
+            app.constant("Permission", {
+                userPermissions: [],
+                permissionMapping: {}
+            });
             function bootstrapApplication() {
                 angular.element(document).ready(function () {
                     angular.bootstrap(document, [appName]);
@@ -17,7 +21,7 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/MainContro
     app.run(['$cookies', '$location', '$rootScope', 'Permission', '$http', function ($cookies, $location, $rootScope, Permission, $http) {
       $rootScope.permissionMapping = Permission.permissionMapping;
       $rootScope.permissions = Permission.userPermissions;
-      $http.get(Constant.techOpsBase + '/common/currentuser').then(function (res) {
+      $http.get(Constant.apiBase + '/common/currentuser').then(function (res) {
         if (res.data.respCode === '_200') {
           $rootScope.userName = res.data.result.name;
         }
