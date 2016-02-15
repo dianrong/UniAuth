@@ -21,6 +21,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-index.jsp
+index.jsp<br><br>
+	<%
+	out.println(request.getRemoteUser());
+	%>
+	<br><br>
+	<a href="http://localhost:9080/cas/logout">Single Sign Out</a>
   </body>
 </html>
