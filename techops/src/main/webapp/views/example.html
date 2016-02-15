@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN" xml:lang="zh-CN">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="renderer" content="webkit" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta name="description" content="点融网为广大个人和微小企业提供便利的投融资服务。借款产品灵活、大额、费用低、手续快；投资方式人性友好、回报高、百分百本金保护！Dianrong.com provides online efficient investment and financing services for individuals and SMEs. Better rates, lower cost, faster way to borrowers and more flexible investment, higher returns, 100% principal protection to investors." />
+  <meta name="keywords" content="P2P网贷,P2P网络贷款平台,P2P网络投资平台,P2P投资理财平台,网络贷款平台,团团赚,点融,点融网,点融官网">
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <title ng-bind="pageTitle">{--title--}点融网-Dianrong</title>
+
+  <link rel="stylesheet" href="js/lib/bootstrap/dist/css/bootstrap.min.css">
+  <!-- build:css styles/app.css -->
+  {--styles--}
+  <!-- endbuild -->
+</head>
+
+<body ng-controller="MainController" class="container">
+  <script src="scripts/lib/requirejs/require.js"></script>
+  <!-- build:js scripts/modules/app.js -->
+  <script src="scripts/config.js"></script>
+  <script src="scripts/{--module--}.js"></script>
+  <!-- endbuild -->
+  {--scripts--}
+  <div ng-show="!pageLoaded" style="padding-top: 1em;text-align: left;">正在加载...</div>
+  <div ng-show="pageLoaded">
+    <div ng-include="'views/common/header.html'"></div>
+    <div ng-hide="hideContent()" ng-view></div>
+  </div>
+</body>
+
+</html>
