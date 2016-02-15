@@ -34,7 +34,7 @@
     <p><spring:message code="screen.cookies.disabled.message" /></p>
 </div>
 
-
+<!-- 
 <c:if test="${not empty registeredService}">
     <c:set var="registeredServiceLogo" value="images/webapp.png"/>
     <c:set var="registeredServiceName" value="${registeredService.name}"/>
@@ -66,7 +66,8 @@
     </div>
     <p/>
 </c:if>
-
+ -->
+ 
 <p><spring:message code="screen.welcome.security"/></p>
 
 <div class="box" id="login">
