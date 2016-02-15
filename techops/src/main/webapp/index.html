@@ -9,19 +9,15 @@
     <link rel="shortcut icon" href="/favicon.ico" />
     <title ng-bind="pageTitle">技术运维系统 - 点融网-Dianrong</title>
 
-    <link rel="stylesheet" href="js/lib/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="js/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="scripts/lib/bootstrap/dist/css/bootstrap.min.css">
     <!-- build:css styles/app.css -->
-    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="styles/common.css">
     <!-- endbuild -->
 </head>
 
 <body ng-controller="MainController" class="container">
-    <script src="js/lib/requirejs/require.js" data-main="js/config.js"></script>
-    <!-- build:js scripts/modules/app.js -->
-    <script src="js/modules/ops.js"></script>
-    <!-- endbuild -->
-    <div ng-include="'views/common/header.html'" class="container"></div>
+    <script src="scripts/lib/requirejs/require.js" data-main="scripts/main"></script>
+    <div ng-include="views/common/header.html" class="container"></div>
     <div ng-view class="container"></div>
 </body>
 </html>

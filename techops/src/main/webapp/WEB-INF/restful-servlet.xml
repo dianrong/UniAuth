@@ -31,11 +31,11 @@
 
     <!-- separated frontend and backend, url rewrite -->
     <mvc:resources mapping="/index.html" location="/" />
-    <mvc:resources mapping="/html/**" location="/views/" />
-    <mvc:resources mapping="/js/**" location="/scripts/" />
-    <mvc:resources mapping="/css/**" location="/styles/" />
-    <mvc:resources mapping="/img/**" location="/images/" />
-    <mvc:resources mapping="/i18n/**" location="/locales/" />
+    <mvc:resources mapping="/views/**" location="/views/" />
+    <mvc:resources mapping="/scripts/**" location="/scripts/" />
+    <mvc:resources mapping="/styles/**" location="/styles/" />
+    <mvc:resources mapping="/images/**" location="/images/" />
+    <mvc:resources mapping="/i18n/**" location="/i18n/" />
     <mvc:resources mapping="/favicon.ico" location="/" />
     <mvc:resources mapping="/humans.txt" location="/" />
     <mvc:resources mapping="/robots.txt" location="/" />

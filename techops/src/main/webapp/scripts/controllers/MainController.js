@@ -1,8 +1,4 @@
-/**
- * Module representing a shirt.
- * @module controllers/login
- */
-define(function (Constant) {
+define(['utils/Constant'], function (Constant) {
   /**
    * A module representing a login controller.
    * @exports controllers/login
@@ -47,12 +43,10 @@ define(function (Constant) {
     $rootScope.getCookieUsername = function () {
       return $rootScope.userName;
     }
-
   };
 
   return {
     name: "MainController",
-    fn: ["$scope", "$log", "LogoutSvc", "$cookies", "$location", "$rootScope", "$window", "localStorageService", "utils/Constant", MainController]
+    fn: ["$scope", "$log", "LogoutSvc", "$cookies", "$location", "$rootScope", "$window", "localStorageService", MainController]
   }
-
 });
