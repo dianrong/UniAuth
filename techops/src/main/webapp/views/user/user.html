@@ -1,0 +1,101 @@
+<div>
+    <div class="row">
+        <div class="col-md-2 col-sm-3">
+            <div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li role="presentation" class="text-left"><a href="#/domain">域管理</a></li>
+                    <li role="presentation" class="text-left"><a href="#/role">角色管理</a></li>
+                    <li role="presentation" class="text-left active"><a href="#/user">用户管理</a></li>
+                    <li role="presentation" class="text-left"><a href="#/group">组管理</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10 col-sm-9">
+            <form class="form-horizontal" name="userQueryForm">
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <span for="" class="col-sm-4 control-label">用户姓名</span>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="" placeholder="用户姓名" ng-model="userQuery.name" maxlength="20">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <span for="" class="col-md-4 control-label">邮箱</span>
+                        <div class="col-md-8">
+                            <input type="email" class="form-control" id="" placeholder="邮箱" ng-model="userQuery.email" maxlength="40">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <span for="" class="col-md-4 control-label">手机号</span>
+                        <div class="col-md-8" ng-class="{'has-error': userQueryForm.phone.$invalid }">
+                            <input name="phone" type="text" class="form-control" id="" placeholder="手机号" ng-model="userQuery.phone" ng-pattern="/^\d{11}$/" maxlength="11">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-5">
+                        <span class="">地域：</span>
+                        <location province="userQuery.province" city="userQuery.city" district="userQuery.district"></location>
+                    </div>
+                    <div class="col-md-4">
+                        <span for="" class="col-sm-3 control-label">所在组</span>
+                        <div class="col-sm-9">
+                            <dropdown options="groupList" pattern="name for id" selected-option="userQuery.groupId" selected-option-text="{{userQuery.groupName}}"></dropdown>
+
+                            <dropdown options="roleTypeDropdownList" pattern="name for value" selected-option="userQuery.roleType" selected-option-text="{{userQuery.roleTypeText}}"></dropdown>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="">禁用：</span>
+                        <dropdown options="disableDropdownList" pattern="name for value" selected-option="userQuery.status"></dropdown>
+                    </div>
+                </div>
+            </form>
+
+            <div class="panel-body">
+                <button class="float-right btn btn-default" ng-click="queryUser()">查询</button>
+                <a class=" float-left btn btn-default" ng-href="#/user/add" target="_blank" role="button">新增用户</a>
+            </div>
+
+            <div>
+                <table class="text-left table grey-border table-hover vertical-middle">
+                    <thead class="text-color-c4">
+                    <tr>
+                        <th>序号</th>
+                        <th>姓名</th>
+                        <th>邮箱</th>
+                        <th>手机号</th>
+                        <th>创建时间</th>
+                        <th>地域</th>
+                        <th>组</th>
+                        <th>禁用</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-color-c6">
+
+                    <tr ng-if="usersLoading!=''">
+                        <td colspan="9" class="tc" ng-bind="usersLoading"></td>
+                    </tr>
+
+                    <tr ng-repeat="d in users">
+                        <td>{{$index + 1}}</td>
+                        <td ng-bind="d.name"></td>
+                        <td ng-bind="d.email"></td>
+                        <td ng-bind="d.phone"></td>
+                        <td>{{d.createDate | date:'yyyy-MM-dd HH:mm'}}</td>
+                        <td>{{d.province +''+ d.city +''+ d.district}}</td>
+                        <td ng-bind="d.groupName"></td>
+                        <td ng-bind="!d.enabled?'是':'否'"></td>
+                        <td class="text-color-c9">
+                            <a ng-href="#/user/{{d.id}}" target="_blank" ng-click="storeUserDetail(d);">详情</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <pagination ng-if="users && users.length" boundary-links="true" ng-change="queryUser()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </div>
+        </div>
+    </div>
+</div>
