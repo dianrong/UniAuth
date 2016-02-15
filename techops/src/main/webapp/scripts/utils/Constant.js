@@ -2,8 +2,7 @@
  * Module representing a shirt.
  * @module controllers/login
  */
-define(function () {
-    return {
+define({
         apiBase: "http://192.168.56.101:8080",
         techOpsBase: "http://localhost:8088",
         // 40 seconds Time out
@@ -548,5 +547,4 @@ define(function () {
             '^/channel/[0-9]+/project/[0-9]+/research/report$': 'reportList' //获取尽调报告列表
         }
     }
-
-});
+);
