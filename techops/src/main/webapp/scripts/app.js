@@ -43,13 +43,12 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/MainContro
           controller: 'UserController',
           helpAlias: '用户管理'
         }).
-        when('/group', {
-          templateUrl: 'views/group/group.html',
-          controller: 'GroupController',
-          helpAlias: '组管理'
+        when('/notfound', {
+          templateUrl: 'views/common/notfound.html',
+          helpAlias: '啥也木有'
         }).
         otherwise({
-          redirectTo: 'views/common/notfound.html'
+          redirectTo: 'notfound'
         });
     }]);
     return app;
