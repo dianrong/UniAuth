@@ -1,4 +1,4 @@
-define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/MainController', 'utils/Constant', 'angular.ui.bootstrap', 'ngLocalStorage'],
+define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/main-controller', 'utils/Constant', 'angular.ui.bootstrap', 'ngLocalStorage'],
   function(angular, ngResource, ngRoute, ngCookies, mainController, Constant) {
     var appName = "ops";
     var app = angular.module(appName, ['ngResource', 'ngRoute', 'ngCookies', 'ui.bootstrap', 'LocalStorageModule']);
