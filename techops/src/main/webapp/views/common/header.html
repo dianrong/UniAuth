@@ -1,16 +1,18 @@
-<nav ng-if="isShowTopBar()" class="navbar navbar-default">
+<nav class="navbar navbar-default">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <a class="navbar-brand" href="#/domain">{{title?title: 'TechOps 权限管理系统'}}</a>
+            <a class="navbar-brand" href="#"><img style="height: 100%" src="images/dianrong+logo.png"></a>
+            <a class="navbar-brand" href="#" style="padding-left:5px">{{title?title: '权限运维系统'}}</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">当前用户：<span ng-bind="getUserName()"></span></a></li>
+                <li>域切换:
+                    <dropdown options="roleTypeDropdownList" pattern="name for value" selected-option="userQuery.roleType" selected-option-text="{{userQuery.roleTypeText}}"></dropdown>
+                </li>
+                <li><a href="#">您好：<span ng-bind="getUserName()"></span></a></li>
                 <li><a href="" ng-click="logout()">安全退出</a></li>
-                <li><a href="" ng-click="setting()">设置</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

@@ -1,0 +1,20 @@
+<div class="btn-group" dropdown>
+  <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle>
+    <span ng-if="!selectedOptionText">请选择</span>
+    <span ng-if="selectedOptionText" ng-bind="selectedOptionText"></span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li ng-if="caseCode===1" ng-repeat="opt in options">
+      <a ng-click="select(opt)" ng-bind="opt"></a>
+    </li>
+
+    <li ng-if="caseCode===2" ng-repeat="(key, val) in options">
+      <a ng-click="select(key)" ng-bind="val"></a>
+    </li>
+
+    <li ng-if="caseCode===3" ng-repeat="val in options">
+      <a ng-click="select(val[patternVal], val[patternName])" ng-bind="val[patternName]"></a>
+    </li>
+  </ul>
+</div>
