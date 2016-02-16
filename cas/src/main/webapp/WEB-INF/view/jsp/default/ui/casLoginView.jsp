@@ -8,9 +8,12 @@
 	} else {
 		response.setContentType("application/json");
 		response.addHeader("Cache-Control", "max-age=0");
+		
+		String reqUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + "login?" + request.getQueryString();
 %>
 		{ 
-			"relogin":true 
+			"relogin":true,
+			"location:":"<%= reqUrl %>"
 		}
 <%
 	}
