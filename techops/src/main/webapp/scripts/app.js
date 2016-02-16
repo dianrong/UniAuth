@@ -1,26 +1,43 @@
-define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/main-controller', 'utils/constant', 'angular.ui.bootstrap', 'ngLocalStorage'],
-  function(angular, ngResource, ngRoute, ngCookies, mainController, Constant) {
+define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap', 'ngLocalStorage'],
+  function(angular, ngResource, ngRoute, ngCookies, mainController, constant, utils) {
     var appName = "ops";
     var app = angular.module(appName, ['ngResource', 'ngRoute', 'ngCookies', 'ui.bootstrap', 'LocalStorageModule']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
+
         (function () {
-            app.constant("permission", {
-                userPermissions: [],
-                permissionMapping: {}
-            });
+
+            fetchPermission().then(bootstrapApplication);
+
+            function fetchPermission() {
+                var initInjector = angular.injector(["ng"]);
+                var $http = initInjector.get("$http");
+                return $http.get(constant.apiBase + "/user/techops/domain").then(function (res) {
+                    var permissionMapping = {},
+                        userPermissions = [];
+                    app.constant("permission", {
+                        userPermissions: userPermissions,
+                        permissionMapping: permissionMapping,
+                        loginDomainsDropdown:res.data.data
+                    });
+
+                }, function (errorResponse) {
+                    // Handle error case
+                });
+            }
+
             function bootstrapApplication() {
                 angular.element(document).ready(function () {
                     angular.bootstrap(document, [appName]);
                 });
             }
-            bootstrapApplication();
         }());
     };
 
     app.run(['$cookies', '$location', '$rootScope', 'permission', '$http', function ($cookies, $location, $rootScope, permission, $http) {
       $rootScope.permissionMapping = permission.permissionMapping;
       $rootScope.permissions = permission.userPermissions;
+      utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.loginDomainsDropdown, permission.loginDomainsDropdown[0]);
       $rootScope.userName = "shenglong.qian@dianrong.com";
       //$http.get(Constant.apiBase + '/common/currentuser').then(function (res) {
       //  if (res.data.respCode === '_200') {

@@ -8,9 +8,19 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li>域切换:
-                    <dropdown options="roleTypeDropdownList" pattern="name for value" selected-option="userQuery.roleType" selected-option-text="{{userQuery.roleTypeText}}"></dropdown>
-                </li>
+                <li style="padding-top: 8px;">
+                    域切换:
+                    <div class="btn-group" dropdown is-open="loginDomainsDropdown.isOpen">
+                        <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+                            <span ng-bind="loginDomainsDropdown.option.displayName"></span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="it in loginDomainsDropdown.items">
+                                <a ng-click="loginDomainsDropdown.selectOption(it)" ng-bind="it.displayName"></a>
+                            </li>
+                        </ul>
+                    </div>                </li>
                 <li><a href="#">您好：<span ng-bind="getUserName()"></span></a></li>
                 <li><a href="" ng-click="logout()">安全退出</a></li>
             </ul>

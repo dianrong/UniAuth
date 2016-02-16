@@ -16,6 +16,14 @@ define(['../../utils/constant'], function (constant) {
          Get     /user/:id/url
          */
         var svc = $resource(constant.apiBase + '/user/:method/:id/:role/:roleId', null, {
+            getLoginDomains: {
+                method: 'GET',
+                params: {
+                    method: 'techops',
+                    id:"domain"
+                },
+                timeout: constant.reqTimeout
+            },
             /*
              /user
              */

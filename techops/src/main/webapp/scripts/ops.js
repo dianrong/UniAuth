@@ -2,8 +2,7 @@ require(['app',
     'controllers/user/user',
     'services/common/logout-service',
     'services/user/user-service',
-    'services/common/common-service',
-    'directives/dropdown'],
+    'services/common/common-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);
