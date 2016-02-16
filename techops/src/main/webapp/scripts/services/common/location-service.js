@@ -2,7 +2,7 @@
  * Module representing a shirt.
  * @module controllers/login
  */
-define(['utils/Constant'], function (Constant) {
+define(['../../utils/constant'], function (constant) {
   /**
    * A module representing a login controller.
    * @exports controllers/login
@@ -12,13 +12,13 @@ define(['utils/Constant'], function (Constant) {
       getProvince: function () {
         return {
           respCode: '_200',
-          result: Object.keys(Constant.CITY_GROUP)
+          result: Object.keys(constant.CITY_GROUP)
         }
       },
       getCity: function (province) {
         return {
           respCode: '_200',
-          result: Constant.CITY_GROUP[province]
+          result: constant.CITY_GROUP[province]
         }
       }
 
@@ -26,7 +26,7 @@ define(['utils/Constant'], function (Constant) {
   }
 
   return {
-    name: "LocationSvc",
+    name: "LocationService",
     svc: ["$resource", Service]
   }
 

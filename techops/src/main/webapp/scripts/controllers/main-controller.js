@@ -1,12 +1,12 @@
-define(['utils/Constant'], function (Constant) {
+define(['../utils/constant'], function (Constant) {
   /**
    * A module representing a login controller.
    * @exports controllers/login
    */
-  var MainController = function ($scope, $log, LogoutSvc, $cookies, $location, $rootScope, $window, localStorageService) {
+  var MainController = function ($scope, $log, LogoutService, $cookies, $location, $rootScope, $window, localStorageService) {
     // … other code here
     $rootScope.logout = function () {
-      LogoutSvc.logout(function (response) {
+      LogoutService.logout(function (response) {
         $cookies[window.location.hostname + '/Techops'] = '';
         console.log(response);
         if (response != undefined) {
@@ -47,6 +47,6 @@ define(['utils/Constant'], function (Constant) {
 
   return {
     name: "MainController",
-    fn: ["$scope", "$log", "LogoutSvc", "$cookies", "$location", "$rootScope", "$window", "localStorageService", MainController]
+    fn: ["$scope", "$log", "LogoutService", "$cookies", "$location", "$rootScope", "$window", "localStorageService", MainController]
   }
 });

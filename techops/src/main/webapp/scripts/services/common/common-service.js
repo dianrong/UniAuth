@@ -2,7 +2,7 @@
  * Module representing a shirt.
  * @module controllers/login
  */
-define(['utils/Constant'], function (Constant) {
+define(['../../utils/constant'], function (constant) {
   'use strict';
   /**
    * A module representing a login controller.
@@ -16,14 +16,14 @@ define(['utils/Constant'], function (Constant) {
       Get     /domain/:domainId/menu
       Get     /domain/:domainId/url
      */
-    var svc = $resource(Constant.apiBase + '/common/:catalog', null, {
+    var svc = $resource(constant.apiBase + '/common/:catalog', null, {
       getRole: {
         method: 'GET',
         params: {
           catalog: 'role'
         },
         //isArray: true,
-        timeout: Constant.reqTimeout
+        timeout: constant.reqTimeout
       },
       getProvince: {
         method: 'GET',
@@ -31,7 +31,7 @@ define(['utils/Constant'], function (Constant) {
           area: 'provinces'
         },
         isArray: false,
-        timeout: Constant.reqTimeout
+        timeout: constant.reqTimeout
       },
       getCity: {
         method: 'GET',
@@ -40,14 +40,14 @@ define(['utils/Constant'], function (Constant) {
           place: 'cities'
         },
         isArray: false,
-        timeout: Constant.reqTimeout
+        timeout: constant.reqTimeout
       },
     });
     return svc;
   };
 
   return {
-    name: 'CommonSvc',
+    name: 'CommonService',
     svc: ['$resource', Service]
   };
 

@@ -2,12 +2,12 @@
  * Module representing a shirt.
  * @module controllers/User
  */
-define(['utils/Constant'], function (Constant) {
+define(['../../utils/constant'], function (Constant) {
     /**
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, $location, UserSvc, CommonSvc, localStorageService) {
+    var Controller = function ($scope, $location, UserService, CommonService, localStorageService) {
         $scope.pagination = {
             pageSize: Constant.pageSize,
             curPage: 1,
@@ -39,7 +39,7 @@ define(['utils/Constant'], function (Constant) {
             $scope.users = [];
             $scope.usersLoading = Constant.loading;
 
-            UserSvc.getUsers(params, function (res) {
+            UserService.getUsers(params, function (res) {
 
                 var result = Constant.transformResponse(res);
                 if (result === undefined) {
@@ -71,7 +71,7 @@ define(['utils/Constant'], function (Constant) {
         };
 
         /*$scope.getUsersByPage = function () {
-         UserSvc.getUsers({
+         UserService.getUsers({
          page: $scope.pagination.curPage,
          pageSize: $scope.pagination.pageSize
          }, function (resp) {
@@ -87,23 +87,23 @@ define(['utils/Constant'], function (Constant) {
 
         $scope.roleTypeDropdownList = Constant.roleTypesArr;
 
-        $scope.getGroups = function () {
-            GroupSvc.getGroups({
-                page: 1,
-                pageSize: Constant.hackMaxPageSize // HACK
-            }, function (res) {
-                if (!res || !res.result || !res.result.data) {
-                    $scope.groupList = [];
-                } else {
-                    $scope.groupList = res.result.data;
-                }
-                $scope.groupList.unshift({
-                    name: '请选择',
-                    value: null
-                });
-            });
-        };
-        $scope.getGroups();
+        //$scope.getGroups = function () {
+        //    GroupSvc.getGroups({
+        //        page: 1,
+        //        pageSize: Constant.hackMaxPageSize // HACK
+        //    }, function (res) {
+        //        if (!res || !res.result || !res.result.data) {
+        //            $scope.groupList = [];
+        //        } else {
+        //            $scope.groupList = res.result.data;
+        //        }
+        //        $scope.groupList.unshift({
+        //            name: '请选择',
+        //            value: null
+        //        });
+        //    });
+        //};
+        //$scope.getGroups();
 
         $scope.addNewUser = function () {
             if (typeof $scope.newUser === 'undefined') {
@@ -116,7 +116,7 @@ define(['utils/Constant'], function (Constant) {
                 }
             }
             $scope.addNewUserErrorMsg = '';
-            UserSvc.addUser($scope.newUser, function (res) {
+            UserService.addUser($scope.newUser, function (res) {
                 var result = Constant.transformResponse(res);
                 if (result === undefined) {
                     $scope.addNewUserErrorMsg = res.errMsg ? res.errMsg : '添加用户失败，请稍后再试';
@@ -132,7 +132,7 @@ define(['utils/Constant'], function (Constant) {
 
     return {
         name: "UserController",
-        fn: ["$scope", "$location", "UserSvc", "CommonSvc", "localStorageService", Controller]
+        fn: ["$scope", "$location", "UserService", "CommonService", "localStorageService", Controller]
     };
 
 

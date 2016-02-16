@@ -2,7 +2,7 @@
  * Module representing a shirt.
  * @module controllers/login
  */
-define(['utils/Constant'], function (Constant) {
+define(['../../utils/constant'], function (constant) {
     /**
      * A module representing a login controller.
      * @exports controllers/login
@@ -15,7 +15,7 @@ define(['utils/Constant'], function (Constant) {
          Get     /user/:id/menu
          Get     /user/:id/url
          */
-        var svc = $resource(Constant.apiBase + '/user/:method/:id/:role/:roleId', null, {
+        var svc = $resource(constant.apiBase + '/user/:method/:id/:role/:roleId', null, {
             /*
              /user
              */
@@ -25,13 +25,13 @@ define(['utils/Constant'], function (Constant) {
                     method: 'query'
                 },
                 isArray: false,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             addUser: {
                 method: 'POST',
                 params: {},
                 isArray: false,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             /*
              /user/:id
@@ -41,7 +41,7 @@ define(['utils/Constant'], function (Constant) {
                 params: {
                     id: '@id'
                 },
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             modifyUser: {
                 method: 'POST',
@@ -49,7 +49,7 @@ define(['utils/Constant'], function (Constant) {
                     method: 'update'
                 },
                 isArray: false,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             /*
              /user/:id/role
@@ -60,7 +60,7 @@ define(['utils/Constant'], function (Constant) {
                     id: '@id',
                     role: 'role'
                 },
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             /*
              /user/addUserRoles
@@ -70,7 +70,7 @@ define(['utils/Constant'], function (Constant) {
                 params: {
                     method: 'addUserRoles'
                 },
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             /*
              /user/:id/role/:roleId
@@ -81,7 +81,7 @@ define(['utils/Constant'], function (Constant) {
                     method: 'rmUserRoles'
                 },
                 isArray: false,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             /*
              Get     /user/:id/url
@@ -93,7 +93,7 @@ define(['utils/Constant'], function (Constant) {
                     catalog: 'url'
                 },
                 isArray: true,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             getProvince: {
                 method: 'GET',
@@ -102,7 +102,7 @@ define(['utils/Constant'], function (Constant) {
                     catalog: 'url'
                 },
                 isArray: true,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             getDistrictByProId: {
                 method: 'GET',
@@ -111,7 +111,7 @@ define(['utils/Constant'], function (Constant) {
                     catalog: 'url'
                 },
                 isArray: true,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             },
             getCityByDistrictId: {
                 method: 'GET',
@@ -120,14 +120,14 @@ define(['utils/Constant'], function (Constant) {
                     catalog: 'url'
                 },
                 isArray: true,
-                timeout: Constant.reqTimeout
+                timeout: constant.reqTimeout
             }
         });
         return svc;
     };
 
     return {
-        name: "UserSvc",
+        name: "UserService",
         svc: ["$resource", Service]
     };
 

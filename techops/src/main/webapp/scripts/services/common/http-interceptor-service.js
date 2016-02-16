@@ -2,7 +2,7 @@
  * Module representing a shirt.
  * @module controllers/login
  */
-define(['utils/Constant'], function (Constant) {
+define(['../../utils/constant'], function (constant) {
   /**
    * A module representing a login controller.
    * @exports controllers/login
@@ -39,7 +39,7 @@ define(['utils/Constant'], function (Constant) {
   };
 
   return {
-    name: "httpInterceptorSvc",
+    name: "HttpInterceptorService",
     svc: ["$q", "$location", Service]
   }
 

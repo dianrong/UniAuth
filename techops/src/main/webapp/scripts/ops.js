@@ -1,8 +1,8 @@
 require(['app',
     'controllers/user/user',
-    'services/common/logoutSvc',
-    'services/user/userSvc',
-    'services/common/commonSvc'],
+    'services/common/logout-service',
+    'services/user/user-service',
+    'services/common/common-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);

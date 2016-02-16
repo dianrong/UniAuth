@@ -2,7 +2,7 @@
  * Module representing a shirt.
  * @module controllers/login
  */
-define(['utils/Constant'], function (Constant) {
+define(['../../utils/constant'], function (constant) {
   /**
    * A module representing a login controller.
    * @exports controllers/login
@@ -16,7 +16,7 @@ define(['utils/Constant'], function (Constant) {
       Get     /domain/:domainId/url
      */
     //var svc = $resource(Constant.apiBase + '/domain/:domainId/:catalog/:catalogId', null, {
-    var svc = $resource(Constant.apiBase + '/:catalog', null, {
+    var svc = $resource(constant.apiBase + '/:catalog', null, {
       /*
          /domain/:domainId
       */
@@ -26,7 +26,7 @@ define(['utils/Constant'], function (Constant) {
           catalog: 'logout'
         },
         //isArray: false,
-        timeout: Constant.reqTimeout,
+        timeout: constant.reqTimeout,
         interceptor: {
           response: function (response) {
             var result = response.resource;
@@ -40,7 +40,7 @@ define(['utils/Constant'], function (Constant) {
   };
 
   return {
-    name: "LogoutSvc",
+    name: "LogoutService",
     svc: ["$resource", Service]
   }
 
