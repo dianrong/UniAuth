@@ -3,8 +3,15 @@ define(['../utils/constant'], function (Constant) {
    * A module representing a login controller.
    * @exports controllers/login
    */
-  var MainController = function ($scope, $log, LogoutService, $cookies, $location, $rootScope, $window, localStorageService) {
+  var MainController = function ($scope, $log, UserService, LogoutService, $cookies, $location, $rootScope, $window, localStorageService) {
     // … other code here
+    //UserService.getLoginDomains(function(response){
+    //  $scope.loginDomainDropdownList = response.data;
+    //  $scope.loginDomainItem = response.data[0];
+    //}, function(error){
+    //  console.log(error);
+    //});
+
     $rootScope.logout = function () {
       LogoutService.logout(function (response) {
         $cookies[window.location.hostname + '/Techops'] = '';
@@ -47,6 +54,6 @@ define(['../utils/constant'], function (Constant) {
 
   return {
     name: "MainController",
-    fn: ["$scope", "$log", "LogoutService", "$cookies", "$location", "$rootScope", "$window", "localStorageService", MainController]
+    fn: ["$scope", "$log", "UserService", "LogoutService", "$cookies", "$location", "$rootScope", "$window", "localStorageService", MainController]
   }
 });

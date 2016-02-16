@@ -15,7 +15,6 @@ define(['../../utils/constant'], function (constant) {
       Get     /domain/:domainId/menu
       Get     /domain/:domainId/url
      */
-    //var svc = $resource(Constant.apiBase + '/domain/:domainId/:catalog/:catalogId', null, {
     var svc = $resource(constant.apiBase + '/:catalog', null, {
       /*
          /domain/:domainId

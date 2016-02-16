@@ -2,14 +2,14 @@
  * Module representing a shirt.
  * @module controllers/User
  */
-define(['../../utils/constant'], function (Constant) {
+define(['../../utils/constant'], function (constant) {
     /**
      * A module representing a User controller.
      * @exports controllers/User
      */
     var Controller = function ($scope, $location, UserService, CommonService, localStorageService) {
         $scope.pagination = {
-            pageSize: Constant.pageSize,
+            pageSize: constant.pageSize,
             curPage: 1,
             totalCount: 0
         };
@@ -37,31 +37,32 @@ define(['../../utils/constant'], function (Constant) {
             params.pageSize = $scope.pagination.pageSize;
 
             $scope.users = [];
-            $scope.usersLoading = Constant.loading;
+            $scope.usersLoading = constant.loading;
 
-            UserService.getUsers(params, function (res) {
-
-                var result = Constant.transformResponse(res);
-                if (result === undefined) {
-                    $scope.usersLoading = Constant.loadError;
-                    return;
-                }
-                if (!result || !result.data || !result.data.length) {
-                    $scope.usersLoading = Constant.loadEmpty;
-                    return;
-                }
-
-                $scope.usersLoading = '';
-                $scope.users = result.data;
-
-                $scope.pagination.curPage = res.result.page;
-                $scope.pagination.totalCount = res.result.totalCount;
-                $scope.pagination.pageSize = res.result.pageSize;
-
-            }, function () {
-                $scope.users = [];
-                $scope.usersLoading = Constant.loadError;
-            });
+            $scope.usersLoading = constant.loadError;
+            //UserService.getUsers(params, function (res) {
+            //
+            //    var result = constant.transformResponse(res);
+            //    if (result === undefined) {
+            //        $scope.usersLoading = constant.loadError;
+            //        return;
+            //    }
+            //    if (!result || !result.data || !result.data.length) {
+            //        $scope.usersLoading = constant.loadEmpty;
+            //        return;
+            //    }
+            //
+            //    $scope.usersLoading = '';
+            //    $scope.users = result.data;
+            //
+            //    $scope.pagination.curPage = res.result.page;
+            //    $scope.pagination.totalCount = res.result.totalCount;
+            //    $scope.pagination.pageSize = res.result.pageSize;
+            //
+            //}, function () {
+            //    $scope.users = [];
+            //    $scope.usersLoading = constant.loadError;
+            //});
         };
 
         $scope.queryUser();
@@ -83,9 +84,9 @@ define(['../../utils/constant'], function (Constant) {
          };*/
 
         // dropdown list
-        $scope.disableDropdownList = Constant.disableDropdownList;
+        $scope.disableDropdownList = constant.disableDropdownList;
 
-        $scope.roleTypeDropdownList = Constant.roleTypesArr;
+        $scope.roleTypeDropdownList = constant.roleTypesArr;
 
         //$scope.getGroups = function () {
         //    GroupSvc.getGroups({
@@ -106,27 +107,28 @@ define(['../../utils/constant'], function (Constant) {
         //$scope.getGroups();
 
         $scope.addNewUser = function () {
-            if (typeof $scope.newUser === 'undefined') {
-                return false;
-            }
-
-            for (var prop in $scope.newUser) {
-                if (typeof $scope.newUser[prop] === 'undefined' || $scope.newUser[prop] === null) {
-                    return false;
-                }
-            }
-            $scope.addNewUserErrorMsg = '';
-            UserService.addUser($scope.newUser, function (res) {
-                var result = Constant.transformResponse(res);
-                if (result === undefined) {
-                    $scope.addNewUserErrorMsg = res.errMsg ? res.errMsg : '添加用户失败，请稍后再试';
-                    return;
-                }
-                //$scope.addNewUserSuccess = true;
-                $location.path('/user/' + res.result);
-            }, function (errorResp) {
-                $scope.addNewUserErrorMsg = errorResp.errMsg ? errorResp.errMsg : '添加用户失败，请稍后再试';
-            });
+            return false;
+            //if (typeof $scope.newUser === 'undefined') {
+            //    return false;
+            //}
+            //
+            //for (var prop in $scope.newUser) {
+            //    if (typeof $scope.newUser[prop] === 'undefined' || $scope.newUser[prop] === null) {
+            //        return false;
+            //    }
+            //}
+            //$scope.addNewUserErrorMsg = '';
+            //UserService.addUser($scope.newUser, function (res) {
+            //    var result = constant.transformResponse(res);
+            //    if (result === undefined) {
+            //        $scope.addNewUserErrorMsg = res.errMsg ? res.errMsg : '添加用户失败，请稍后再试';
+            //        return;
+            //    }
+            //    //$scope.addNewUserSuccess = true;
+            //    $location.path('/user/' + res.result);
+            //}, function (errorResp) {
+            //    $scope.addNewUserErrorMsg = errorResp.errMsg ? errorResp.errMsg : '添加用户失败，请稍后再试';
+            //});
         };
     };
 
