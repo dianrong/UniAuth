@@ -300,7 +300,7 @@ public class GroupService {
         Integer realGroupId = rootGrp.getId();
         List<Grp> grps = grpMapper.getGroupTree(realGroupId);
         if(!CollectionUtils.isEmpty(grps)) {
-            List<HashMap<Integer,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
+            List<HashMap<String,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
             Map<Integer, GroupDto> idGroupDtoPair = new HashMap();
             for(Grp grp : grps) {
                 GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName());
@@ -309,7 +309,7 @@ public class GroupService {
 
             // construct the tree
             if(!CollectionUtils.isEmpty(descendantAncestorPairs)) {
-                for(HashMap<Integer,Integer> descendantAncestorPair : descendantAncestorPairs) {
+                for(HashMap<String,Integer> descendantAncestorPair : descendantAncestorPairs) {
                     Integer descendantId = descendantAncestorPair.get("descendant");
                     Integer ancestorId = descendantAncestorPair.get("ancestor");
                     GroupDto ancestorDto = idGroupDtoPair.get(ancestorId);

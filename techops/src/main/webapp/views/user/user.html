@@ -64,8 +64,7 @@
                         <td ng-bind="d.email"></td>
                         <td ng-bind="d.phone"></td>
                         <td>{{d.createDate | date:'yyyy-MM-dd HH:mm'}}</td>
-                        <td ng-bind="d.groupName"></td>
-                        <td ng-bind="!d.enabled?'是':'否'"></td>
+                        <td ng-bind="!d.status?'启用':'禁用'"></td>
                         <td class="text-color-c9">
                             <a ng-href="#/user/{{d.id}}" target="_blank" ng-click="storeUserDetail(d);">详情</a>
                         </td>

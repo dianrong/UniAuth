@@ -25,7 +25,7 @@ define(['../../utils/constant'], function (constant) {
                 timeout: constant.reqTimeout
             },
             /*
-             /user
+             query user
              */
             getUsers: {
                 method: 'POST',

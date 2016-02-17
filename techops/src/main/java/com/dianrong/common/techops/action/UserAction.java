@@ -6,6 +6,8 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,12 +25,12 @@ public class UserAction {
     @Resource
     private UARWFacade uARWFacade;
 
-    @RequestMapping(value = "/query" , method= RequestMethod.POST)
-    public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
+    @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<PageDto<UserDto>> searchUser(@RequestBody UserQuery userQuery) {
         return uARWFacade.getUserRWResource().searchUser(userQuery);
     }
 
-    @RequestMapping(value = "/techops/domain" , method= RequestMethod.GET)
+    @RequestMapping(value = "/techops/domain" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<List<DomainDto>> getSwitchableDomains(String email) {
 //        LoginParam loginParam = new LoginParam();
 //        loginParam.setAccount(email);

@@ -2,7 +2,7 @@
  * Module representing a shirt.
  * @module controllers/User
  */
-define(['../../utils/constant'], function (constant) {
+define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
     /**
      * A module representing a User controller.
      * @exports controllers/User
@@ -16,60 +16,48 @@ define(['../../utils/constant'], function (constant) {
 
         //Event listeners
         $scope.queryUser = function () {
+
             var params = $scope.userQuery;
 
-            var count = 0,
-                total = 0;
-            for (var prop in params) {
-                total++;
-                if (params[prop] === null || typeof params[prop] === 'undefined') {
-                    count++;
-                }
-            }
-
-            if (count === total) {
-                //return false;
-            }
             if (!params) {
                 params = {};
             }
-            params.page = $scope.pagination.curPage;
+            params.pageNumber = $scope.pagination.curPage - 1;
             params.pageSize = $scope.pagination.pageSize;
 
             $scope.users = [];
             $scope.usersLoading = constant.loading;
 
-            $scope.usersLoading = constant.loadError;
-            //UserService.getUsers(params, function (res) {
-            //
-            //    var result = constant.transformResponse(res);
-            //    if (result === undefined) {
-            //        $scope.usersLoading = constant.loadError;
-            //        return;
-            //    }
-            //    if (!result || !result.data || !result.data.length) {
-            //        $scope.usersLoading = constant.loadEmpty;
-            //        return;
-            //    }
-            //
-            //    $scope.usersLoading = '';
-            //    $scope.users = result.data;
-            //
-            //    $scope.pagination.curPage = res.result.page;
-            //    $scope.pagination.totalCount = res.result.totalCount;
-            //    $scope.pagination.pageSize = res.result.pageSize;
-            //
-            //}, function () {
-            //    $scope.users = [];
-            //    $scope.usersLoading = constant.loadError;
-            //});
+            UserService.getUsers(params, function (res) {
+                debugger;
+                var result = res.data;
+                if (result === undefined) {
+                    $scope.usersLoading = constant.loadError;
+                    return;
+                }
+                if (!result || !result.data || !result.data.length) {
+                    $scope.usersLoading = constant.loadEmpty;
+                    return;
+                }
+
+                $scope.usersLoading = '';
+                $scope.users = result.data;
+
+                $scope.pagination.curPage = result.currentPage + 1;
+                $scope.pagination.totalCount = result.totalCount;
+                $scope.pagination.pageSize = result.pageSize;
+
+            }, function () {
+                $scope.users = [];
+                $scope.usersLoading = constant.loadError;
+            });
         };
 
         $scope.queryUser();
 
-        $scope.storeUserDetail = function (detail) {
-            localStorageService.set('userDetail', detail);
-        };
+        //$scope.storeUserDetail = function (detail) {
+        //    localStorageService.set('userDetail', detail);
+        //};
 
         /*$scope.getUsersByPage = function () {
          UserService.getUsers({
@@ -84,9 +72,9 @@ define(['../../utils/constant'], function (constant) {
          };*/
 
         // dropdown list
-        $scope.disableDropdownList = constant.disableDropdownList;
-
-        $scope.roleTypeDropdownList = constant.roleTypesArr;
+        //$scope.disableDropdownList = constant.disableDropdownList;
+        //
+        //$scope.roleTypeDropdownList = constant.roleTypesArr;
 
         //$scope.getGroups = function () {
         //    GroupSvc.getGroups({
@@ -106,30 +94,29 @@ define(['../../utils/constant'], function (constant) {
         //};
         //$scope.getGroups();
 
-        $scope.addNewUser = function () {
-            return false;
-            //if (typeof $scope.newUser === 'undefined') {
-            //    return false;
-            //}
-            //
-            //for (var prop in $scope.newUser) {
-            //    if (typeof $scope.newUser[prop] === 'undefined' || $scope.newUser[prop] === null) {
-            //        return false;
-            //    }
-            //}
-            //$scope.addNewUserErrorMsg = '';
-            //UserService.addUser($scope.newUser, function (res) {
-            //    var result = constant.transformResponse(res);
-            //    if (result === undefined) {
-            //        $scope.addNewUserErrorMsg = res.errMsg ? res.errMsg : '添加用户失败，请稍后再试';
-            //        return;
-            //    }
-            //    //$scope.addNewUserSuccess = true;
-            //    $location.path('/user/' + res.result);
-            //}, function (errorResp) {
-            //    $scope.addNewUserErrorMsg = errorResp.errMsg ? errorResp.errMsg : '添加用户失败，请稍后再试';
-            //});
-        };
+        //$scope.addNewUser = function () {
+        //    if (typeof $scope.newUser === 'undefined') {
+        //        return false;
+        //    }
+        //
+        //    for (var prop in $scope.newUser) {
+        //        if (typeof $scope.newUser[prop] === 'undefined' || $scope.newUser[prop] === null) {
+        //            return false;
+        //        }
+        //    }
+        //    $scope.addNewUserErrorMsg = '';
+        //    UserService.addUser($scope.newUser, function (res) {
+        //        var result = constant.transformResponse(res);
+        //        if (result === undefined) {
+        //            $scope.addNewUserErrorMsg = res.errMsg ? res.errMsg : '添加用户失败，请稍后再试';
+        //            return;
+        //        }
+        //        //$scope.addNewUserSuccess = true;
+        //        $location.path('/user/' + res.result);
+        //    }, function (errorResp) {
+        //        $scope.addNewUserErrorMsg = errorResp.errMsg ? errorResp.errMsg : '添加用户失败，请稍后再试';
+        //    });
+        //};
     };
 
     return {

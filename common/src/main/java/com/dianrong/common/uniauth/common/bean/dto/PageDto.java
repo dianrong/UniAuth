@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class PageDto<T> {
@@ -31,6 +31,10 @@ public class PageDto<T> {
         } else {
             return totalCount / pageSize + 1;
         }
+    }
+
+    public PageDto setTotalPage(int totalPage) {
+        return this;
     }
 
     public boolean hasPreviousPage() {
