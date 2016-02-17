@@ -66,8 +66,7 @@
                         <td>{{d.createDate | date:'yyyy-MM-dd HH:mm'}}</td>
                         <td ng-bind="!d.status?'启用':'禁用'"></td>
                         <td class="text-color-c9">
-                            <button class="btn btn-success" ng-click="launch()">Confirm Dialog</button>
-                            <a ng-href="#/user/{{d.id}}" target="_blank" ng-click="storeUserDetail(d);">{{d.status?'启用':'禁用'}}</a>
+                            <button class="btn btn-info" ng-click="launch('status', d)">{{d.status?'启用':'禁用'}}</button>
                         </td>
                     </tr>
                     </tbody>

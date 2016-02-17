@@ -50,13 +50,17 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.queryUser();
 
-        $scope.launch = function() {
-            var dlg = dialogs.confirm();
-            dlg.result.then(function(btn){
-                $scope.confirmed = 'You confirmed "Yes."';
-            },function(btn){
-                $scope.confirmed = 'You confirmed "No."';
-            });
+        $scope.launch = function(which, param) {
+            switch(which) {
+                case 'status':
+                    var dlg = dialogs.confirm();
+                    dlg.result.then(function (btn) {
+                        //$scope.confirmed = 'You confirmed "Yes."';
+                    }, function (btn) {
+                        // nothing happen
+                    });
+                    break;
+            }
         }
 
     };

@@ -1,11 +1,11 @@
-define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'dialogsDefaultTranslations',
+define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs',
     'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap',
     'ngLocalStorage', 'angularFileUpload'],
-  function(angular, ngResource, ngRoute, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs, dialogsDefaultTranslations,
+  function(angular, ngResource, ngRoute, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
            mainController, constant, utils) {
     var appName = "ops";
     var app = angular.module(appName, ['ngResource', 'ngRoute', 'pascalprecht.translate',
-        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'dialogs.default-translations', 'angularFileUpload']);
+        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'angularFileUpload']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
 
@@ -62,9 +62,6 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'ngTranslate', 'ngTrans
         function($routeProvider, localStorageServiceProvider, $httpProvider, $translateProvider) {
 
         // wait for interceptor $httpProvider.interceptors.push('httpInterceptorSvc');
-
-        $translateProvider.useSanitizeValueStrategy('sanitize');
-
         $routeProvider.
         when('/', {
             templateUrl: 'views/user/user.html',
@@ -83,6 +80,43 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'ngTranslate', 'ngTrans
         otherwise({
           redirectTo: 'notfound'
         });
+
+        $translateProvider.useSanitizeValueStrategy('sanitize');
+        $translateProvider.translations('en-US',{
+            DIALOGS_ERROR: "Error",
+            DIALOGS_ERROR_MSG: "An unknown error has occurred.",
+            DIALOGS_CLOSE: "Close",
+            DIALOGS_PLEASE_WAIT: "Please Wait",
+            DIALOGS_PLEASE_WAIT_ELIPS: "Please Wait...",
+            DIALOGS_PLEASE_WAIT_MSG: "Waiting on operation to complete.",
+            DIALOGS_PERCENT_COMPLETE: "% Complete",
+            DIALOGS_NOTIFICATION: "Notification",
+            DIALOGS_NOTIFICATION_MSG: "Unknown application notification.",
+            DIALOGS_CONFIRMATION: "Confirmation",
+            DIALOGS_CONFIRMATION_MSG: "Confirmation required.",
+            DIALOGS_OK: "OK",
+            DIALOGS_YES: "Yes",
+            DIALOGS_NO: "No"
+        });
+
+        $translateProvider.translations('zh-CN',{
+            DIALOGS_ERROR: "错误",
+            DIALOGS_ERROR_MSG: "出现未知错误。",
+            DIALOGS_CLOSE: "关闭",
+            DIALOGS_PLEASE_WAIT: "请稍候",
+            DIALOGS_PLEASE_WAIT_ELIPS: "请稍候...",
+            DIALOGS_PLEASE_WAIT_MSG: "请等待操作完成。",
+            DIALOGS_PERCENT_COMPLETE: "% 已完成",
+            DIALOGS_NOTIFICATION: "通知",
+            DIALOGS_NOTIFICATION_MSG: "未知应用程序的通知。",
+            DIALOGS_CONFIRMATION: "确认",
+            DIALOGS_CONFIRMATION_MSG: "确认要求。",
+            DIALOGS_OK: "确定",
+            DIALOGS_YES: "确认",
+            DIALOGS_NO: "取消"
+        });
+
+        $translateProvider.preferredLanguage('zh-CN');
     }]);
     return app;
 });
