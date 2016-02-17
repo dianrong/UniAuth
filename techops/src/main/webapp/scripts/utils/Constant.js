@@ -4,15 +4,9 @@
  */
 define({
         apiBase: "http://192.168.56.101:8080/techops",
-        // 40 seconds Time out
-        reqTimeout: 40000,
-        transformResponse: function (resp) {
-            if (resp && resp.respCode && resp.respCode.indexOf('_2') == 0) {
-                return resp.result;
-            }
-            return undefined;
-        },
-        pageSize: 50,
+        // 20 seconds Time out
+        reqTimeout: 20000,
+        pageSize: 2,
         hackMaxPageSize: 5e7,
         loading: '正在加载...',
         submiting: '提交中...',
