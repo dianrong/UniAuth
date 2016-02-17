@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="modalTest">
+	<head>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.4.8/angular-sanitize.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-translate/2.8.1/angular-translate.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.js"></script>
+		<script src="js/dialogs-default-translations.js"></script>
+		<script src="js/dialogs.js"></script>
+		<script src="js/dialogTest.js"></script>
+	
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/dialogs.css">
+		
+		<style>
+			body { padding: 20px; }
+			.my-class .modal-body {
+				background-color: #eee;
+			}
+			.my-class .modal-footer {
+				margin-top: 0;
+			}
+		</style>
+	</head>
+	<body ng-controller="dialogServiceTest">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Dialog Service Demo (v5.3)</h1>
+				<p class="text-info">(Using: Bootstrap 3.3.6, AngularJS 1.4.8, Angular UI Bootstrap 0.14.3, Angular-Translate 2.8,1)</p>
+				<p>Demo of Angular dialog service using Bootstrap 3 with Angular and Angular UI Bootstrap's modal service.</p>
+				<p>As well as the use of <a href="https://github.com/angular-translate">Angular-Translate (https://github.com/angular-translate)</a></p><br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-danger" ng-click="launch('error')">Error Dialog</button>
+				<button class="btn btn-primary" ng-click="launch('wait')">Wait Dialog</button>
+				<button class="btn btn-primary" ng-click="launch('customwait')">"Custom" Wait Dialog</button>
+				<button class="btn btn-default" ng-click="launch('notify')">Notify Dialog</button>
+				<button class="btn btn-success" ng-click="launch('confirm')">Confirm Dialog</button>
+        		<button class="btn btn-warning" ng-click="launch('custom')">Custom Dialog</button>
+        		<button class="btn btn-warning" ng-click="launch('custom2')">Custom Dialog 2</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<br>
+				<p><strong>Confirmation</strong>: {{confirmed}}</p>
+				<p><strong>Name Enter (From Custom)</strong>: {{name}}</p>
+				<p><strong>Custom 2 Value</strong>: {{custom.val}}</p>
+				<p><strong>Current Language</strong>: {{language}}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-default" ng-click="setLanguage('en-US')">English</button>
+				<button class="btn btn-default" ng-click="setLanguage('es')">Spanish</button>
+			</div>
+		</div>
+	</body>
+</html>

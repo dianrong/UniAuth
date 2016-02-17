@@ -2,26 +2,26 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <a class="navbar-brand" href="#"><img style="height: 100%" src="images/dianrong+logo.png"></a>
-            <a class="navbar-brand" href="#" style="padding-left:5px">{{title?title: '权限运维系统'}}</a>
+            <a class="navbar-brand" href="#/"><img style="height: 100%" src="images/dianrong+logo.png"></a>
+            <a class="navbar-brand" href="#/" style="padding-left:5px">{{title?title: '权限运维系统'}}</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li style="padding-top: 8px;">
                     域切换:
-                    <div class="btn-group" dropdown is-open="loginDomainsDropdown.isOpen">
-                        <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+                    <div class="btn-group" uib-dropdown is-open="loginDomainsDropdown.isOpen">
+                        <button type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
                             <span ng-bind="loginDomainsDropdown.option.displayName"></span>
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" role="menu">
+                        <ul class="uib-dropdown-menu" role="menu">
                             <li ng-repeat="it in loginDomainsDropdown.items">
                                 <a ng-click="loginDomainsDropdown.selectOption(it)" ng-bind="it.displayName"></a>
                             </li>
                         </ul>
                     </div>                </li>
-                <li><a href="#">您好：<span ng-bind="getUserName()"></span></a></li>
+                <li><a href="#/">您好：<span ng-bind="getUserName()"></span></a></li>
                 <li><a href="" ng-click="logout()">安全退出</a></li>
             </ul>
         </div>

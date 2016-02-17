@@ -71,7 +71,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <pagination ng-if="users && users.length" boundary-links="true" ng-change="queryUser()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+                <uib-pagination ng-if="users && users.length" boundary-links="true" ng-change="queryUser()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
             </div>
         </div>
     </div>
