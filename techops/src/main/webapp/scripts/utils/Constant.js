@@ -6,7 +6,7 @@ define({
         apiBase: "http://192.168.56.101:8080/techops",
         // 20 seconds Time out
         reqTimeout: 20000,
-        pageSize: 2,
+        pageSize: 50,
         hackMaxPageSize: 5e7,
         loading: '正在加载...',
         submiting: '提交中...',

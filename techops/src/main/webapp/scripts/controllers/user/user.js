@@ -29,9 +29,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             $scope.usersLoading = constant.loading;
 
             UserService.getUsers(params, function (res) {
-                debugger;
                 var result = res.data;
-                if (result === undefined) {
+                if (result === undefined || result.info) {
                     $scope.usersLoading = constant.loadError;
                     return;
                 }
