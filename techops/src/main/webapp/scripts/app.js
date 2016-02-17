@@ -1,7 +1,11 @@
-define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap', 'ngLocalStorage'],
-  function(angular, ngResource, ngRoute, ngCookies, mainController, constant, utils) {
+define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'dialogsDefaultTranslations',
+    'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap',
+    'ngLocalStorage', 'angularFileUpload'],
+  function(angular, ngResource, ngRoute, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs, dialogsDefaultTranslations,
+           mainController, constant, utils) {
     var appName = "ops";
-    var app = angular.module(appName, ['ngResource', 'ngRoute', 'ngCookies', 'ui.bootstrap', 'LocalStorageModule']);
+    var app = angular.module(appName, ['ngResource', 'ngRoute', 'pascalprecht.translate',
+        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'dialogs.default-translations', 'angularFileUpload']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
 
@@ -54,7 +58,13 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'controllers/main-contr
       })
     }]);
 
-    app.config(['$routeProvider',function($routeProvider) {
+    app.config(['$routeProvider', 'localStorageServiceProvider', '$httpProvider', '$translateProvider',
+        function($routeProvider, localStorageServiceProvider, $httpProvider, $translateProvider) {
+
+        // wait for interceptor $httpProvider.interceptors.push('httpInterceptorSvc');
+
+        $translateProvider.useSanitizeValueStrategy('sanitize');
+
         $routeProvider.
         when('/', {
             templateUrl: 'views/user/user.html',

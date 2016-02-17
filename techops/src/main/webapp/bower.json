@@ -7,6 +7,7 @@
   "dependencies": {
     "angular": "1.5.0",
     "angular-route": "1.5.0",
+    "angular-sanitize": "1.5.0",
     "angular-resource": "1.5.0",
     "angular-cookies": "1.5.0",
     "angular-bootstrap": "^0.14.3",
@@ -14,6 +15,9 @@
     "bootstrap": "~3.3.5",
     "bootstrap-datepicker": ">= 1.6.0",
     "angular-local-storage": "~0.2.3",
+    "angular-file-upload": "~2.2.0",
+    "angular-translate": "2.8.1",
+    "angular-translate-loader-static-files": "2.8.1",
     "angular-dialog-service": "^5.2.11"
   },
   "devDependencies": {
