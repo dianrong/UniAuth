@@ -53,12 +53,12 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.launch = function(which, param) {
             switch(which) {
                 case 'status':
-                    //var dlg = dialogs.create('views/user/dialogs/enable-disable.html','EnableDisableController', param);
-                    //dlg.result.then(function (btn) {
-                    //    //$scope.confirmed = 'You confirmed "Yes."';
-                    //}, function (btn) {
-                    //    // nothing happen
-                    //});
+                    var dlg = dialogs.create('views/user/dialogs/enable-disable.html','EnableDisableController', param, {size:'lg'});
+                    dlg.result.then(function (btn) {
+                        $scope.queryUser();
+                    }, function (btn) {
+                        // nothing happen
+                    });
                     break;
             }
         };

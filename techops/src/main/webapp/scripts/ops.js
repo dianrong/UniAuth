@@ -1,9 +1,10 @@
 require(['app',
     'controllers/user/user',
+    'controllers/user/dialogs/enable-disable',
     'services/common/logout-service',
     'services/user/user-service',
     'services/common/common-service'],
-//    'controllers/user/dialogs/enable-disable',
+
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);
         for (var i = 0, len = components.length; i < len; i++) {

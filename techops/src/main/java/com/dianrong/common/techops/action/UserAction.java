@@ -35,6 +35,7 @@ public class UserAction {
     @RequestMapping(value = "/enable-disable" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<Void> enableDisableUser(@RequestBody UserParam userParam) {
         UserParam param = new UserParam();
+        param.setId(userParam.getId());
         param.setStatus(userParam.getStatus());
         param.setUserActionEnum(UserActionEnum.STATUS_CHANGE);
         return uARWFacade.getUserRWResource().updateUser(param);
