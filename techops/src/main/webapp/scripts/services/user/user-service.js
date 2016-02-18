@@ -1,36 +1,26 @@
-/**
- * Module representing a shirt.
- * @module controllers/login
- */
 define(['../../utils/constant'], function (constant) {
-    /**
-     * A module representing a login controller.
-     * @exports controllers/login
-     */
     var Service = function ($resource) {
-        /*
-         Get     /user/:id
-         Put     /user/:id/user/:ids
-         delete  /user/:id/user/:id
-         Get     /user/:id/menu
-         Get     /user/:id/url
-         */
-        var svc = $resource(constant.apiBase + '/user/:method/:id/:role/:roleId', null, {
+        var svc = $resource(constant.apiBase + '/user/:method/:method2/:id/:role/:roleId', null, {
             getLoginDomains: {
                 method: 'GET',
                 params: {
                     method: 'techops',
-                    id:"domain"
+                    method2:"domain"
                 },
                 timeout: constant.reqTimeout
             },
-            /*
-             query user
-             */
             getUsers: {
                 method: 'POST',
                 params: {
                     method: 'query'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            enableDisableUser: {
+                method: 'POST',
+                params: {
+                    method: 'enable-disable'
                 },
                 isArray: false,
                 timeout: constant.reqTimeout

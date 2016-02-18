@@ -4,7 +4,9 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
+import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,14 @@ public class UserAction {
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<PageDto<UserDto>> searchUser(@RequestBody UserQuery userQuery) {
         return uARWFacade.getUserRWResource().searchUser(userQuery);
+    }
+
+    @RequestMapping(value = "/enable-disable" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<Void> enableDisableUser(@RequestBody UserParam userParam) {
+        UserParam param = new UserParam();
+        param.setStatus(userParam.getStatus());
+        param.setUserActionEnum(UserActionEnum.STATUS_CHANGE);
+        return uARWFacade.getUserRWResource().updateUser(param);
     }
 
     @RequestMapping(value = "/techops/domain" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

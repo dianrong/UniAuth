@@ -3,7 +3,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($rootScope, $scope, $location, UserService, dialogs, CommonService, localStorageService) {
+    var Controller = function ($rootScope, $scope, $location, UserService, dialogs, CommonService) {
         $scope.pagination = {
             pageSize: constant.pageSize,
             curPage: 1,
@@ -53,22 +53,21 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.launch = function(which, param) {
             switch(which) {
                 case 'status':
-                    var dlg = dialogs.confirm();
-                    dlg.result.then(function (btn) {
-                        //$scope.confirmed = 'You confirmed "Yes."';
-                    }, function (btn) {
-                        // nothing happen
-                    });
+                    //var dlg = dialogs.create('views/user/dialogs/enable-disable.html','EnableDisableController', param);
+                    //dlg.result.then(function (btn) {
+                    //    //$scope.confirmed = 'You confirmed "Yes."';
+                    //}, function (btn) {
+                    //    // nothing happen
+                    //});
                     break;
             }
-        }
+        };
 
     };
 
     return {
         name: "UserController",
-        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", "CommonService", "localStorageService", Controller]
+        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", "CommonService", Controller]
     };
-
 
 });

@@ -4,7 +4,7 @@ define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'ngTranslate', 'ngTrans
   function(angular, ngResource, ngRoute, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
            mainController, constant, utils) {
     var appName = "ops";
-    var app = angular.module(appName, ['ngResource', 'ngRoute', 'pascalprecht.translate',
+    var app = angular.module(appName, ['ngResource', 'ngRoute', 'pascalprecht.translate', 'ngSanitize',
         'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'angularFileUpload']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
