@@ -5,11 +5,11 @@
   ],
   "version": "1.0.0",
   "dependencies": {
-    "angular": "1.5.0",
-    "angular-route": "1.5.0",
-    "angular-sanitize": "1.5.0",
-    "angular-resource": "1.5.0",
-    "angular-cookies": "1.5.0",
+    "angular": "1.4.8",
+    "angular-route": "1.4.8",
+    "angular-sanitize": "1.4.8",
+    "angular-resource": "1.4.8",
+    "angular-cookies": "1.4.8",
     "angular-bootstrap": "^0.14.3",
     "jquery": ">= 1.9.0",
     "bootstrap": "~3.3.5",
@@ -21,11 +21,11 @@
     "angular-dialog-service": "^5.2.11"
   },
   "devDependencies": {
-    "angular": "1.5.0",
+    "angular": "1.4.8",
     "requirejs": "2.1.11",
-    "angular-route": "1.5.0",
-    "angular-resource": "1.5.0",
-    "angular-cookies": "1.5.0",
+    "angular-route": "1.4.8",
+    "angular-resource": "1.4.8",
+    "angular-cookies": "1.4.8",
     "angular-bootstrap": "0.12.0",
     "jquery": ">= 1.9.0"
   },

@@ -37,7 +37,7 @@ require.config({
       deps: ['angular']
     },
     ngTranslate: {
-      deps: ['angular']
+      deps: ['ngSanitize']
     },
     ngTranslateLoad: {
       deps: ['ngTranslate']
@@ -55,7 +55,7 @@ require.config({
       deps: ['jQuery']
     },
     dialogs: {
-      deps: ['angular']
+      deps: ['ngTranslate']
     },
     angular: {
       exports: 'angular'
