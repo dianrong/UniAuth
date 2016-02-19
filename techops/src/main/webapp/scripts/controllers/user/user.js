@@ -26,11 +26,11 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
             UserService.getUsers(params, function (res) {
                 var result = res.data;
-                if (result === undefined || result.info) {
+                if(res.info) {
                     $scope.usersLoading = constant.loadError;
                     return;
                 }
-                if (!result || !result.data || !result.data.length) {
+                if(!result) {
                     $scope.usersLoading = constant.loadEmpty;
                     return;
                 }
@@ -86,6 +86,30 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         $scope.queryUser();
                     }, function (dismiss) {
                         //
+                    });
+                    break;
+                case 'unlock':
+                    var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
+                        {
+                            "header":'解锁用户',
+                            "msg":"您确定要解锁用户: " + param.email + "吗?",
+
+                        }, {size:'md'}
+                    );
+                    dlg.result.then(function (yes) {
+                        UserService.unlock(
+                            {
+                                'id':param.id
+                            },
+                            function(res) {
+                                $scope.queryUser();
+                            },
+                            function(err) {
+                                console.log(err);
+                            }
+                        );
+                    }, function (no) {
+                        // do nothing
                     });
                     break;
             }

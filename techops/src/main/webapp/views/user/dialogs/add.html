@@ -6,11 +6,11 @@
 <div class="modal-body">
     <ng-form name="addUserDialog" novalidate role="form">
         <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[addUserDialog.email.$dirty && addUserDialog.email.$invalid]">
-            <label class="control-label" for="username">用户姓名:</label>
+            <label class="control-label" for="username" placeholder="用户姓名">用户姓名:</label>
             <input type="text" class="form-control" name="username" id="username" ng-model="user.name">
-            <label class="control-label" for="email">用户邮箱:</label>
+            <label class="control-label" for="email" placeholder="用户邮箱">用户邮箱:</label>
             <input type="text" class="form-control" name="email" id="email" ng-model="user.email" required>
-            <label class="control-label" for="phone">用户手机:</label>
+            <label class="control-label" for="phone" placeholder="用户手机">用户手机:</label>
             <input type="text" class="form-control" name="phone" id="phone" ng-model="user.phone">
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>

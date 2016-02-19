@@ -33,6 +33,20 @@ define(['../../utils/constant'], function (constant) {
                 isArray: false,
                 timeout: constant.reqTimeout
             },
+            unlock: {
+                method: 'POST',
+                params: {
+                    method: 'unlock'
+                },
+                timeout: constant.reqTimeout
+            },
+            resetpassword: {
+                method: 'POST',
+                params: {
+                    method: 'resetpassword'
+                },
+                timeout: constant.reqTimeout
+            },
             /*
              /user/:id
              */

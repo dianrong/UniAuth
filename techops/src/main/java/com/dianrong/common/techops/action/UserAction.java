@@ -46,6 +46,18 @@ public class UserAction {
         return uARWFacade.getUserRWResource().updateUser(param);
     }
 
+    @RequestMapping(value = "/unlock" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<Void> unlock(@RequestBody UserParam userParam) {
+        userParam.setUserActionEnum(UserActionEnum.UNLOCK);
+        return uARWFacade.getUserRWResource().updateUser(userParam);
+    }
+
+    @RequestMapping(value = "/resetpassword" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<Void> resetPassword(@RequestBody UserParam userParam) {
+        userParam.setUserActionEnum(UserActionEnum.RESET_PASSWORD);
+        return uARWFacade.getUserRWResource().updateUser(userParam);
+    }
+
     @RequestMapping(value = "/techops/domain" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<List<DomainDto>> getSwitchableDomains(String email) {
 //        LoginParam loginParam = new LoginParam();
