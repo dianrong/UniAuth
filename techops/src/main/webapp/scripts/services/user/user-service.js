@@ -27,7 +27,9 @@ define(['../../utils/constant'], function (constant) {
             },
             addUser: {
                 method: 'POST',
-                params: {},
+                params: {
+                    method: 'add'
+                },
                 isArray: false,
                 timeout: constant.reqTimeout
             },

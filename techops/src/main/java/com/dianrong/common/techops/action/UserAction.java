@@ -32,6 +32,11 @@ public class UserAction {
         return uARWFacade.getUserRWResource().searchUser(userQuery);
     }
 
+    @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<UserDto> addUser(@RequestBody UserParam userParam) {
+        return uARWFacade.getUserRWResource().addNewUser(userParam);
+    }
+
     @RequestMapping(value = "/enable-disable" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<Void> enableDisableUser(@RequestBody UserParam userParam) {
         UserParam param = new UserParam();

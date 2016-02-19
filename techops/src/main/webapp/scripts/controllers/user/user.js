@@ -56,24 +56,36 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
                             "header":param.status?'用户-启用':'用户-禁用',
-                            "msg":"您确定要" + (param.status?'启用':'禁用') + "用户:" + param.email + "吗?",
+                            "msg":"您确定要" + (param.status?'启用':'禁用') + "用户: " + param.email + "吗?",
 
-                        }, {size:'lg'}
+                        }, {size:'md'}
                     );
-                    dlg.result.then(function (btn) {
+                    dlg.result.then(function (yes) {
                         UserService.enableDisableUser(
                             {
                                 'id':param.id,
                                 'status':param.status?0:1
                             }
                             , function(res) {
+                                // status change successed
                                 $scope.queryUser();
                             }, function(err) {
                                 console.log(err);
                             }
                         );
-                    }, function (btn) {
-                        console.log(btn);
+                    }, function (no) {
+                        // do nothing
+                    });
+                    break;
+                case 'add':
+                    var dlg = dialogs.create('views/user/dialogs/add.html','AddUserController',
+                        {}, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        // add user successed
+                        $scope.queryUser();
+                    }, function (dismiss) {
+                        //
                     });
                     break;
             }
