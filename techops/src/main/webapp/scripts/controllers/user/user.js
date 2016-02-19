@@ -53,11 +53,27 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.launch = function(which, param) {
             switch(which) {
                 case 'status':
-                    var dlg = dialogs.create('views/user/dialogs/enable-disable.html','EnableDisableController', param, {size:'lg'});
+                    var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
+                        {
+                            "header":param.status?'用户-启用':'用户-禁用',
+                            "msg":"您确定要" + (param.status?'启用':'禁用') + "用户:" + param.email + "吗?",
+
+                        }, {size:'lg'}
+                    );
                     dlg.result.then(function (btn) {
-                        $scope.queryUser();
+                        UserService.enableDisableUser(
+                            {
+                                'id':param.id,
+                                'status':param.status?0:1
+                            }
+                            , function(res) {
+                                $scope.queryUser();
+                            }, function(err) {
+                                console.log(err);
+                            }
+                        );
                     }, function (btn) {
-                        // nothing happen
+                        console.log(btn);
                     });
                     break;
             }
