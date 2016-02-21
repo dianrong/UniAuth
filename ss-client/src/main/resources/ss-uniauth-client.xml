@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans" 
+<b:beans 
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -10,13 +11,11 @@
 			http://www.springframework.org/schema/context
 			http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-	<beans:import resource="classpath:ss-uniauth-common.xml"/>
-	
-	<beans:bean id="uaClientFacade" class="com.dianrong.uniauth.client.UAClientFacade"></beans:bean>
-		
-	<beans:bean id="customWebInvocationPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
-		<beans:constructor-arg name="securityInterceptor" ref="ssFilter" />
-	</beans:bean>
+	<b:import resource="classpath:ss-uniauth-common.xml"/>
+
+	<b:bean id="customWebInvocationPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
+		<b:constructor-arg name="securityInterceptor" ref="ssFilterSecurityInterceptor" />
+	</b:bean>
 
     <global-method-security pre-post-annotations="enabled" secured-annotations="enabled" jsr250-annotations="enabled" proxy-target-class="true">
     </global-method-security>
@@ -28,89 +27,94 @@
     	<!-- 
       	<form-login default-target-url="/index.jsp"/>
       	<intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_USER')"/>
-      	<intercept-url pattern="/**" access="isAuthenticated()" />
       	<logout logout-success-url="/index.jsp"/>
       	<access-denied-handler error-page="/403.jsp"/>
       	 -->
-      	<custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="ssFilter" />
+      	<intercept-url pattern="/**" access="authenticated" />
+      	<custom-filter ref="ssFilterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
       	<custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
       	<custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
       	<csrf disabled="true"/>
     </http>
 	
-	<beans:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
-	  <beans:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
-	  <beans:property name="serviceProperties" ref="casService"/>    
-	</beans:bean>  
+	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
+	  <b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
+	  <b:property name="serviceProperties" ref="casService"/>    
+	</b:bean>  
 	
-	<beans:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
-		<beans:property name="service" value="#{uniauthConfig[domainDefine.domainName]}/j_spring_cas_security_check"/>   
-		<beans:property name="authenticateAllArtifacts" value="true"/>
-		<beans:property name="sendRenew" value="false" />
-	</beans:bean>  
+	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
+		<b:property name="service" value="#{uniauthConfig[domainDefine.domainCode]}/j_spring_cas_security_check"/>   
+		<b:property name="authenticateAllArtifacts" value="true"/>
+		<b:property name="sendRenew" value="false" />
+	</b:bean>  
 	
-	<beans:bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">    
-		<beans:property name="authenticationManager" ref="authenticationManager"/>
-		<beans:property name="filterProcessesUrl" value="/j_spring_cas_security_check"></beans:property>
-	</beans:bean>
+	<b:bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">    
+		<b:property name="authenticationManager" ref="authenticationManager"/>
+		<b:property name="filterProcessesUrl" value="/j_spring_cas_security_check"></b:property>
+	</b:bean>
 	
-	<beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
-		<beans:property name="ticketValidator" ref="casTicketValidator"/>    
-		<beans:property name="serviceProperties" ref="casService"/>    
-		<beans:property name="key" value="dianrong-ss-uniauth-cas"/>    
-		<beans:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>    
-	</beans:bean>
+	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
+		<b:property name="ticketValidator" ref="casTicketValidator"/>    
+		<b:property name="serviceProperties" ref="casService"/>    
+		<b:property name="key" value="dianrong-ss-uniauth-cas"/>    
+		<b:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>    
+	</b:bean>
 	
-	<beans:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
-		<beans:constructor-arg value="#{uniauthConfig['cas_server']}/"/>    
-	</beans:bean>
+	<b:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
+		<b:constructor-arg value="#{uniauthConfig['cas_server']}/"/>    
+	</b:bean>
 	
-	<beans:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">    
-		<beans:property name="userDetailsService" ref="ssUserDetailService"/>    
-	</beans:bean>  
+	<b:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">    
+		<b:property name="userDetailsService" ref="ssUserDetailService"/>    
+	</b:bean>  
 	
-	<beans:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+	<b:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
 	
-	<beans:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-		<beans:property name="filterProcessesUrl" value="/j_spring_cas_security_logout"></beans:property>
-		<beans:constructor-arg value="#{uniauthConfig['cas_server']}/logout" />
-		<beans:constructor-arg>
-			<beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
-		</beans:constructor-arg>
-	</beans:bean>
+	<b:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<b:property name="filterProcessesUrl" value="/j_spring_cas_security_logout"></b:property>
+		<b:constructor-arg value="#{uniauthConfig['cas_server']}/logout" />
+		<b:constructor-arg>
+			<b:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+		</b:constructor-arg>
+	</b:bean>
 	
 	<authentication-manager alias="authenticationManager">
 		<authentication-provider ref="casAuthenticationProvider"/>
-		<!-- 
-		<authentication-provider user-service-ref="ssUserDetailService">
-			<password-encoder ref="ssPasswordEncoder">
-                <salt-source user-property="passwordSalt"/>
-            </password-encoder> 
-		</authentication-provider>
-		 -->
 	</authentication-manager>
 		
-	<beans:bean id="ssFilter" class="com.dianrong.common.uniauth.client.SSFilterSecurityInterceptor">
-		<beans:property name="authenticationManager" ref="authenticationManager" />
-		<beans:property name="accessDecisionManager" ref="ssAccessDecisionManagerBean" />
-		<beans:property name="securityMetadataSource" ref="securityMetadataSource" />
-	</beans:bean>
+	<b:bean id="ssFilterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+		<b:property name="authenticationManager" ref="authenticationManager" />
+		<b:property name="accessDecisionManager" ref="accessDecisionManager" />
+		<b:property name="securityMetadataSource" >
+             <filter-security-metadata-source> 
+                   <intercept-url pattern="/**" access="isAuthenticated()" /> 
+             </filter-security-metadata-source>
+        </b:property>
+	</b:bean>
 	
-	<beans:bean id="ssPasswordEncoder" class="com.dianrong.common.uniauth.client.SSPasswordEncoder"></beans:bean>
+	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.SSUserDetailService">
+	</b:bean>
+    
+	<b:bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
+		<b:property name="rolePrefix" value=""></b:property>
+	</b:bean>
+	<b:bean	id="authenticatedVoter" class="org.springframework.security.access.vote.AuthenticatedVoter" />
+    <b:bean id="expressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+	<b:bean id="expressionVoter" class="org.springframework.security.web.access.expression.WebExpressionVoter">		
+		<b:property name="expressionHandler" ref="expressionHandler"/>	
+	</b:bean>
 	
-	<beans:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.SSUserDetailService">
-		<beans:property name="uaClientFacade" ref="uaClientFacade"/>
-		<beans:property name="domainName" value="#{domainDefine.domainName}"/>
-	</beans:bean>
-
-	<beans:bean id="ssAccessDecisionManagerBean" class="com.dianrong.common.uniauth.client.SSAccessDecisionManager">
-	</beans:bean>
-
-	<beans:bean id="securityMetadataSource"	class="com.dianrong.common.uniauth.client.SSInvocationSecurityMetadataSource" init-method="loadResourceDefine">
-		<beans:property name="uaClientFacade" ref="uaClientFacade"/>
-		<beans:property name="domainName" value="#{domainDefine.domainName}"/>
-	</beans:bean>
-
-	<beans:bean id="disconfInitialization" class="com.dianrong.loanbusiness.basic.disconf.DisconfInitialization" />
-</beans:beans>
+	<b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		<b:property name="decisionVoters">
+			<b:list>
+				<b:ref bean="roleVoter"/>
+				<b:ref bean="authenticatedVoter"/>
+				<b:ref bean="expressionVoter"/>
+			</b:list>
+		</b:property>
+	</b:bean>
+	
+    <b:bean id="ssBeanPostProcessor" class="com.dianrong.common.uniauth.client.support.SSBeanPostProcessor">
+	</b:bean>
+</b:beans>

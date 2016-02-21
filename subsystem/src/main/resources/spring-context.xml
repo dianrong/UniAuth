@@ -16,7 +16,7 @@
                         ">
 
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
-		<property name="domainName" value="subsystem"></property>
+		<property name="domainCode" value="subsystem"></property>
 	</bean>
 
 	<import resource="classpath:ss-uniauth-client.xml" />

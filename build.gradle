@@ -81,7 +81,7 @@ project(':common') {
 project(':ss-client') {
 	dependencies {
 		compile project(":common")
-	    compile 'com.dianrong.loanbusiness.uniauth:loanbusiness-uniauth-client:1.0.27-SNAPSHOT'
+		compile 'javax.servlet:javax.servlet-api:3.1.0'
 	    compile 'org.apache.curator:curator-recipes:2.9.1'
 	    compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
 		compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'

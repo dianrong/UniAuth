@@ -1,13 +1,13 @@
 package com.dianrong.common.uniauth.client;
 
 public class DomainDefine {
-	private String domainName;
+	private String domainCode;
 
-	public String getDomainName() {
-		return domainName;
+	public String getDomainCode() {
+		return domainCode;
 	}
 
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
+	public void setDomainCode(String domainCode) {
+		this.domainCode = domainCode;
 	}
 }

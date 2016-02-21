@@ -5,75 +5,69 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.dianrong.common.uniauth.client.support.UserExtInfo;
+import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
-import com.dianrong.uniauth.client.UAClientFacade;
-import com.dianrong.uniauth.common.data.UAUserDetailInfo;
+import com.dianrong.common.uniauth.common.util.CheckZkConfig;
 
 public class SSUserDetailService implements UserDetailsService {
 	
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	private UAClientFacade uaClientFacade;
-	private String domainName;
+	@Value("#{uniauthConfig[domainDefine.domainCode]}")
+	private String currentDomainCode;
+	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
-		for(int  i = 0;i < 1000;i++){
-			System.out.println("--------------------------------------------------------------");
+		CheckZkConfig.checkZkConfig(currentDomainCode, "domain definition", "/com/dianrong/cfg/1.0.0/uniauth/domains/?");
+		
+		if(userName == null || "".equals(userName.toString())){
+			throw new UsernameNotFoundException(userName + " not found");
 		}
-		System.out.println(uniClientFacade.getDomainResource().getAllLoginDomains().getData().get(0).getDescription());
-		if(userName != null && !"".equals(userName.trim())){
-			UAUserDetailInfo uaudi = uaClientFacade.detailInfo(userName, domainName);
+		else{
+			LoginParam loginParam = new LoginParam();
+			loginParam.setAccount(userName);
+			Response<UserDetailDto> response = uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
+			UserDetailDto userDetailDto = response.getData();
 			
-			if(uaudi != null){
-				String email = uaudi.getEmail();
-				String phone = uaudi.getPhone();
-				String password = uaudi.getPassword();
-				String passwordSalt = uaudi.getPasswordSalt();
-				Byte status = uaudi.getStatus();
-				List<String> roleList = uaudi.getRoleList();
-				boolean accountStatus = status == 0? true: false;
-				
-				Collection<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
-				if(roleList != null && roleList.size() > 0){
-					for(String role : roleList){
-						role = role.startsWith("ROLE_") ? role : "ROLE_" + role;
-						SimpleGrantedAuthority auth = new SimpleGrantedAuthority(role);
-						auths.add(auth);
-					}
-				}
-				
-				//login by mail
-				if(userName.indexOf("@") != -1){
-					User user = new UserExt(email, password, true, true, true, accountStatus, auths, passwordSalt);
-					return user;
-				}
-				else{
-					User user = new UserExt(phone, password, true, true, true, accountStatus, auths, passwordSalt);
-					return user;
+			UserDto userDto = userDetailDto.getUserDto();
+			Long id = userDto.getId();
+			List<DomainDto> domainDtoList = userDetailDto.getDomainList();
+			DomainDto currentDomainDto = null;
+			
+			for(DomainDto domainDto : domainDtoList){
+				String domainCode = domainDto.getCode();
+				if(currentDomainCode.equals(domainCode)){
+					currentDomainDto = domainDto;
+					break;
 				}
 			}
+			
+			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+			if(currentDomainDto != null){
+				List<RoleDto> roleDtoList = currentDomainDto.getRoleList();
+				for(RoleDto roleDto: roleDtoList){
+					String roleCode = roleDto.getRoleCode();
+					SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
+					authorities.add(authority);
+				}
+			}
+			
+			return new UserExtInfo(userName, null, true, true, true, true, authorities, id, userDto, currentDomainDto);
 		}
-		throw new UsernameNotFoundException(userName + " not found");
-	}
-	public UAClientFacade getUaClientFacade() {
-		return uaClientFacade;
-	}
-	public void setUaClientFacade(UAClientFacade uaClientFacade) {
-		this.uaClientFacade = uaClientFacade;
-	}
-	public String getDomainName() {
-		return domainName;
-	}
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
 	}
 }

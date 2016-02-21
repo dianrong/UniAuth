@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
+import com.dianrong.common.uniauth.common.util.CheckZkConfig;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 @Component
@@ -27,6 +28,7 @@ public class UniClientFacade {
 	
 	@PostConstruct
 	public void init(){
+		CheckZkConfig.checkZkConfig(uniWsEndpoint, "/com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint", "uniauth ws endpoint");
 		JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
 		domainResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainResource.class, Arrays.asList(jacksonJsonProvider));
 		groupResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupResource.class, Arrays.asList(jacksonJsonProvider));
