@@ -106,13 +106,13 @@
 	</b:bean>
 	
 	<b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-		<b:property name="decisionVoters">
+		<b:constructor-arg name="decisionVoters">
 			<b:list>
 				<b:ref bean="roleVoter"/>
 				<b:ref bean="authenticatedVoter"/>
 				<b:ref bean="expressionVoter"/>
 			</b:list>
-		</b:property>
+		</b:constructor-arg>
 	</b:bean>
 	
     <b:bean id="ssBeanPostProcessor" class="com.dianrong.common.uniauth.client.support.SSBeanPostProcessor">

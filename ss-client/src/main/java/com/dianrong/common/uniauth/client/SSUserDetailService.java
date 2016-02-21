@@ -67,7 +67,7 @@ public class SSUserDetailService implements UserDetailsService {
 				}
 			}
 			
-			return new UserExtInfo(userName, null, true, true, true, true, authorities, id, userDto, currentDomainDto);
+			return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto);
 		}
 	}
 }
