@@ -2,6 +2,53 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 apply plugin: 'war'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.eriwen:gradle-js-plugin:1.12.0"
+        classpath 'com.eriwen:gradle-css-plugin:1.11.1'
+    }
+}
+
+apply plugin: 'js'
+
+combineJs {
+    source = fileTree("src/main/webapp/scripts") {
+        exclude "lib/**"
+    }
+    dest = file("src/main/webapp/scripts/all.js")
+}
+
+requireJs {
+    source = fileTree("src/main/webapp/scripts") {
+        exclude "lib/**"
+    }
+    dest = file("src/main/webapp/scripts/all.js")
+    requirejs.buildprofile = new File("src/main/webapp/build.js")
+    requirejs.impl = file("src/main/webapp/scripts/lib/requirejs/require.js")
+}
+
+minifyJs {
+    source = requireJs
+    dest = file("src/main/webapp/scripts/all.min.js")
+    closure {
+        warningLevel ='QUIET'
+    }
+}
+
+def timestamp = System.currentTimeMillis();
+
+gzipJs {
+    source = minifyJs
+    dest = file("src/main/webapp/scripts/all-${timestamp}.min.js")
+}
+
+task updateIncludes(dependsOn: ['gzipJs']) {
+    // replace stuffs in index.html
+}
+
 sourceSets {
     deployment {
         java {

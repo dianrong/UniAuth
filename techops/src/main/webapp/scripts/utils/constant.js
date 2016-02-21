@@ -421,7 +421,7 @@ define({
             decrease: '减少额度',
             freeze: '冻结额度',
             recover: '恢复额度',
-            time_limit: '更新额度期限',
+            time_limit: '更新额度期限'
         },
         amountAttachmentType: [{
             name: '额度调整补充资料',
