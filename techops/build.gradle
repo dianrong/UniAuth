@@ -1,7 +1,16 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply plugin: 'war'
 
-apply from: 'build-tomcat.gradle'
-
+sourceSets {
+    deployment {
+        java {
+            srcDir 'src/deployment/java'
+        }
+        compileClasspath += configurations.compile
+        runtimeClasspath += configurations.compile
+    }
+}
 
 dependencies {
 
@@ -47,4 +56,74 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test:${spring_version}"
     testCompile "org.springframework:spring-web:${spring_version}"
+}
+
+loadConfiguration()
+
+task printProps << {
+    println "frontend.apiBase: $config.frontend.apibase"
+}
+
+def loadConfiguration() {
+    def environment = hasProperty('profile') ? profile : 'local'
+    project.ext.environment = environment
+    println "Environment is set to $environment"
+
+    def configFile = file('config.groovy')
+    def config = new ConfigSlurper(environment).parse(configFile.toURI().toURL());
+    project.ext.config = config
+}
+
+war {
+    baseName = config.tomcat.tomcatAppName
+    archiveName = config.tomcat.tomcatAppName + '.war'
+    destinationDir = file('build')
+    configure {
+        filter(ReplaceTokens, tokens: ['apiBase': config.frontend.apibase])
+    }
+}
+
+task warTechopsWebsite(dependsOn: war) {
+
+}
+
+task tomcatUndeploy(type: JavaExec) {
+    main = 'gradle.TomcatDeploy'
+    args = ['undeploy',
+            config.tomcat.tomcatAppName,
+            config.tomcat.tomcatUsername,
+            config.tomcat.tomcatPassword,
+            config.tomcat.tomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+    doFirst {
+        println "removing war file from Tomcat."
+    }
+}
+
+task tomcatDeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
+    doFirst {
+        println "deploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['deploy',
+            config.tomcat.tomcatAppName,
+            config.tomcat.tomcatWarFile,
+            config.tomcat.tomcatUsername,
+            config.tomcat.tomcatPassword,
+            config.tomcat.tomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
+
+task tomcatRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
+    doFirst {
+        println "redeploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['redeploy',
+            config.tomcat.tomcatAppName,
+            config.tomcat.tomcatWarFile,
+            config.tomcat.tomcatUsername,
+            config.tomcat.tomcatPassword,
+            config.tomcat.tomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
 }
