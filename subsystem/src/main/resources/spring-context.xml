@@ -18,7 +18,7 @@
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
 		<property name="domainCode" value="techops"></property>
 	</bean>
-
+	<context:component-scan base-package="com.dianrong.loanbusiness.subsystem.service" />
 	<import resource="classpath:ss-uniauth-client.xml" />
     
 </beans>

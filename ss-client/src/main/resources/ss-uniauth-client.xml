@@ -10,14 +10,17 @@
 			http://www.springframework.org/schema/security/spring-security-4.0.xsd
 			http://www.springframework.org/schema/context
 			http://www.springframework.org/schema/context/spring-context-4.0.xsd">
-
-	<b:import resource="classpath:ss-uniauth-common.xml"/>
-
+    
+    <b:import resource="classpath:ss-uniauth-common.xml"/>
+    
 	<b:bean id="customWebInvocationPrivilegeEvaluator" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
 		<b:constructor-arg name="securityInterceptor" ref="ssFilterSecurityInterceptor" />
 	</b:bean>
 
     <global-method-security pre-post-annotations="enabled" secured-annotations="enabled" jsr250-annotations="enabled" proxy-target-class="true">
+    	<!-- 
+    	<expression-handler ref="expressionHandler"/>
+    	 -->
     </global-method-security>
     
     <!--
@@ -91,20 +94,24 @@
              <filter-security-metadata-source> 
 					<intercept-url pattern="/user/user.jsp" access="hasRole('ADMIN')" />
       				<intercept-url pattern="/admin/admin.jsp" access="hasRole('SUPER_ADMIN')" />
+      				<intercept-url pattern="/**" access="isAuthenticated()"/>
              </filter-security-metadata-source>
         </b:property>
 	</b:bean>
 	
 	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.SSUserDetailService">
 	</b:bean>
+	
+    <b:bean id="expressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+    	<!-- required: use ROLE_ as the role prefix -->
+    	<b:property name="defaultRolePrefix" value="ROLE_" />
+    </b:bean>
     
 	<b:bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter">
 		<b:property name="rolePrefix" value=""></b:property>
 	</b:bean>
 	<b:bean	id="authenticatedVoter" class="org.springframework.security.access.vote.AuthenticatedVoter" />
-    <b:bean id="expressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
-    	<b:property name="defaultRolePrefix" value="" />
-    </b:bean>
+
 	<b:bean id="expressionVoter" class="org.springframework.security.web.access.expression.WebExpressionVoter">		
 		<b:property name="expressionHandler" ref="expressionHandler"/>	
 	</b:bean>

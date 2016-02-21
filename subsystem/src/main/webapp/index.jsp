@@ -25,6 +25,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     anyone can see this page(including anonymous). <br>  
     <a href="/subsystem/user/user.jsp">role user page</a> <br>
     <a href="/subsystem/admin/admin.jsp">role admin page</a> 
-
+	<sec:authorize access="hasRole('ADMIN')">
+		Admin can see this.
+	</sec:authorize>
+		<sec:authorize access="hasRole('SUPER_ADMIN')">
+		Super_Admin can see this.
+	</sec:authorize>
+	<br>
+	ttt
   </body>
 </html>

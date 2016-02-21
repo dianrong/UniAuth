@@ -14,7 +14,7 @@
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd
                         ">
-	<context:component-scan base-package="com.dianrong" />
+	<context:component-scan base-package="com.dianrong.common.uniauth" />
 	
 	<context:property-placeholder ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
 	

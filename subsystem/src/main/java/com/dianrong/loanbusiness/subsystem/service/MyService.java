@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MyService {
 	
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public void testService(){
 		for(int i = 0;i < 10;i++)
 		System.out.println("----------------------------------------------------------------------------------------");

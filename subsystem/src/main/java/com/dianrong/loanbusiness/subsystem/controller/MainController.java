@@ -25,7 +25,7 @@ public class MainController {
 	@RequestMapping(value = "/common", method = RequestMethod.GET)
 	public String getCommonPage() {
 		logger.debug("Received request to show common page");
-		myService.testService();
+		//myService.testService();
 		System.out.println("----------------------------------" + uniClientFacade.getDomainResource().getAllLoginDomains().getData().get(0).getDescription());
 		return "commonpage";
 	}

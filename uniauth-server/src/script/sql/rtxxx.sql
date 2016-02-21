@@ -308,10 +308,10 @@ CREATE INDEX `fk_stakeholder_domain1_idx` ON `stakeholder` (`domain_id` ASC);
 
 alter table `user` AUTO_INCREMENT=200000000;
 alter table `role_code` add column `description` VARCHAR(512) NULL AFTER `code`;
-insert into `role_code`(`code`, `description`) values ('SUPER_ADMIN', '超级管理员');
-insert into `role_code`(`code`, `description`) values ('ADMIN', '管理员');
-insert into `role_code`(`code`, `description`) values ('NORMAL', '普通用户');
-insert into `role_code`(`code`, `description`) values ('GUEST', 'Guest用户');
+insert into `role_code`(`code`, `description`) values ('ROLE_SUPER_ADMIN', '超级管理员');
+insert into `role_code`(`code`, `description`) values ('ROLE_ADMIN', '管理员');
+insert into `role_code`(`code`, `description`) values ('ROLE_NORMAL', '普通用户');
+insert into `role_code`(`code`, `description`) values ('ROLE_GUEST', 'Guest用户');
 
 insert into `perm_type`(`type`) values ('PRIVILEGE');
 insert into `perm_type`(`type`) values ('URI_Pattern');
