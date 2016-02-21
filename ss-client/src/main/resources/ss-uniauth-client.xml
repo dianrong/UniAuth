@@ -35,6 +35,9 @@
       	<logout logout-success-url="/index.jsp"/>
       	<access-denied-handler error-page="/403.jsp"/>
       	 -->
+      	<!-- not working here -->
+      	<intercept-url pattern="/normal/normal.jsp" access="hasRole('ROLE_NORMAL')" />
+      	
       	<custom-filter ref="ssFilterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
       	<custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
@@ -92,8 +95,9 @@
 		<b:property name="accessDecisionManager" ref="accessDecisionManager" />
 		<b:property name="securityMetadataSource" >
              <filter-security-metadata-source> 
-					<intercept-url pattern="/user/user.jsp" access="hasRole('ADMIN')" />
-      				<intercept-url pattern="/admin/admin.jsp" access="hasRole('SUPER_ADMIN')" />
+             		<!-- has the first priority to define url -->
+					<intercept-url pattern="/user/user.jsp" access="hasRole('ROLE_ADMIN')" />
+      				<intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" />
       				<intercept-url pattern="/**" access="isAuthenticated()"/>
              </filter-security-metadata-source>
         </b:property>
