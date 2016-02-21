@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.dianrong.common.uniauth.client.exp.DomainNotDefinedException;
 import com.dianrong.common.uniauth.client.support.UserExtInfo;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -21,19 +22,20 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
-import com.dianrong.common.uniauth.common.util.CheckZkConfig;
 
 public class SSUserDetailService implements UserDetailsService {
 	
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	@Value("#{uniauthConfig[domainDefine.domainCode]}")
+	@Value("#{domainDefine.domainCode}")
 	private String currentDomainCode;
 	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
-		CheckZkConfig.checkZkConfig(currentDomainCode, "domain definition", "/com/dianrong/cfg/1.0.0/uniauth/domains/?");
+		if(currentDomainCode == null){
+			throw new DomainNotDefinedException("The bean of com.dianrong.common.uniauth.client.DomainDefine not defined.");
+		}
 		
 		if(userName == null || "".equals(userName.toString())){
 			throw new UsernameNotFoundException(userName + " not found");

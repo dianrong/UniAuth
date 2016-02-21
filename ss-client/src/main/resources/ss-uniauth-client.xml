@@ -21,8 +21,10 @@
     </global-method-security>
     
     <!--
+    exclude the pattern which does not need protection
 	<http pattern="/index.jsp" security="none"/> 
 	 -->
+
     <http entry-point-ref="casAuthEntryPoint" use-expressions="true">
     	<!-- 
       	<form-login default-target-url="/index.jsp"/>
@@ -30,7 +32,6 @@
       	<logout logout-success-url="/index.jsp"/>
       	<access-denied-handler error-page="/403.jsp"/>
       	 -->
-      	<intercept-url pattern="/**" access="authenticated" />
       	<custom-filter ref="ssFilterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
       	<custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
@@ -88,7 +89,8 @@
 		<b:property name="accessDecisionManager" ref="accessDecisionManager" />
 		<b:property name="securityMetadataSource" >
              <filter-security-metadata-source> 
-                   <intercept-url pattern="/**" access="isAuthenticated()" /> 
+					<intercept-url pattern="/user/user.jsp" access="hasRole('ADMIN')" />
+      				<intercept-url pattern="/admin/admin.jsp" access="hasRole('SUPER_ADMIN')" />
              </filter-security-metadata-source>
         </b:property>
 	</b:bean>
@@ -100,7 +102,9 @@
 		<b:property name="rolePrefix" value=""></b:property>
 	</b:bean>
 	<b:bean	id="authenticatedVoter" class="org.springframework.security.access.vote.AuthenticatedVoter" />
-    <b:bean id="expressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+    <b:bean id="expressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+    	<b:property name="defaultRolePrefix" value="" />
+    </b:bean>
 	<b:bean id="expressionVoter" class="org.springframework.security.web.access.expression.WebExpressionVoter">		
 		<b:property name="expressionHandler" ref="expressionHandler"/>	
 	</b:bean>
