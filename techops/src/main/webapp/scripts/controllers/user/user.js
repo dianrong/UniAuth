@@ -56,8 +56,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
                             "header":param.status?'用户-启用':'用户-禁用',
-                            "msg":"您确定要" + (param.status?'启用':'禁用') + "用户: " + param.email + "吗?",
-
+                            "msg":"您确定要" + (param.status?'启用':'禁用') + "用户: " + param.email + "吗?"
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -92,8 +91,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
                             "header":'解锁用户',
-                            "msg":"您确定要解锁用户: " + param.email + "吗?",
-
+                            "msg":"您确定要解锁用户: " + param.email + "吗?"
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {

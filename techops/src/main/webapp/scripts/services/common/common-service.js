@@ -41,7 +41,7 @@ define(['../../utils/constant'], function (constant) {
         },
         isArray: false,
         timeout: constant.reqTimeout
-      },
+      }
     });
     return svc;
   };
