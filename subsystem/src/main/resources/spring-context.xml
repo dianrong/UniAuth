@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/context
@@ -13,12 +15,30 @@
                         http://www.springframework.org/schema/aop/spring-aop.xsd
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd
+                        
+						http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security-4.0.xsd
                         ">
+
+	<context:component-scan base-package="com.dianrong.loanbusiness.subsystem.service" />
 
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
 		<property name="domainCode" value="techops"></property>
 	</bean>
-	<context:component-scan base-package="com.dianrong.loanbusiness.subsystem.service" />
+	
 	<import resource="classpath:ss-uniauth-client.xml" />
+	
+	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true">
+		<sec:intercept-url pattern="/normal/normal.jsp" access="hasRole('ROLE_NORMAL')" />
+      	<sec:intercept-url pattern="/user/user.jsp" access="hasRole('ROLE_ADMIN')" />
+      	<sec:intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" />
+      	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
+      	
+      	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
+      	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+      	<sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
+      	<sec:csrf disabled="true"/>
+	</sec:http>
+	
     
 </beans>
