@@ -28,6 +28,7 @@
     	<!-- 
       	<form-login default-target-url="/index.jsp"/>
       	<intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_USER')"/>
+      	<intercept-url pattern="/**" access="isAuthenticated()" />
       	<logout logout-success-url="/index.jsp"/>
       	<access-denied-handler error-page="/403.jsp"/>
       	 -->
