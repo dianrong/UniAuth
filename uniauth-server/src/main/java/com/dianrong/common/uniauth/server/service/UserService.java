@@ -247,6 +247,9 @@ public class UserService {
         if(email == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "email"));
         }
+        if(!email.contains("@")) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.email.invalid", email));
+        }
         // check duplicate email
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria1 = userExample.createCriteria().andEmailEqualTo(email);

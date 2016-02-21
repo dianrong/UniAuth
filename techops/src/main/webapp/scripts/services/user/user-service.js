@@ -1,32 +1,14 @@
-/**
- * Module representing a shirt.
- * @module controllers/login
- */
 define(['../../utils/constant'], function (constant) {
-    /**
-     * A module representing a login controller.
-     * @exports controllers/login
-     */
     var Service = function ($resource) {
-        /*
-         Get     /user/:id
-         Put     /user/:id/user/:ids
-         delete  /user/:id/user/:id
-         Get     /user/:id/menu
-         Get     /user/:id/url
-         */
-        var svc = $resource(constant.apiBase + '/user/:method/:id/:role/:roleId', null, {
+        var svc = $resource(constant.apiBase + '/user/:method/:method2/:id/:role/:roleId', null, {
             getLoginDomains: {
                 method: 'GET',
                 params: {
                     method: 'techops',
-                    id:"domain"
+                    method2:"domain"
                 },
                 timeout: constant.reqTimeout
             },
-            /*
-             /user
-             */
             getUsers: {
                 method: 'POST',
                 params: {
@@ -35,10 +17,34 @@ define(['../../utils/constant'], function (constant) {
                 isArray: false,
                 timeout: constant.reqTimeout
             },
+            enableDisableUser: {
+                method: 'POST',
+                params: {
+                    method: 'enable-disable'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
             addUser: {
                 method: 'POST',
-                params: {},
+                params: {
+                    method: 'add'
+                },
                 isArray: false,
+                timeout: constant.reqTimeout
+            },
+            unlock: {
+                method: 'POST',
+                params: {
+                    method: 'unlock'
+                },
+                timeout: constant.reqTimeout
+            },
+            resetpassword: {
+                method: 'POST',
+                params: {
+                    method: 'resetpassword'
+                },
                 timeout: constant.reqTimeout
             },
             /*

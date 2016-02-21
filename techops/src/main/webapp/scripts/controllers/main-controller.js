@@ -1,16 +1,9 @@
-define(['../utils/constant'], function (Constant) {
+define(['../utils/constant'], function (constant) {
   /**
    * A module representing a login controller.
    * @exports controllers/login
    */
   var MainController = function ($scope, $log, UserService, LogoutService, $cookies, $location, $rootScope, $window, localStorageService) {
-    // … other code here
-    //UserService.getLoginDomains(function(response){
-    //  $scope.loginDomainDropdownList = response.data;
-    //  $scope.loginDomainItem = response.data[0];
-    //}, function(error){
-    //  console.log(error);
-    //});
 
     $rootScope.logout = function () {
       LogoutService.logout(function (response) {

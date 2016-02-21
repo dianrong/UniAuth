@@ -1,5 +1,4 @@
-define(function () {
-    return {
+define({
         generatorDropdown: function ($scope, name, items, defaultOpt) {
             $scope[name] = {};
             $scope[name].isOpen = false;
@@ -13,6 +12,12 @@ define(function () {
             } else {
                 $scope[name].option = defaultOpt;
             }
+        },
+        transformResponse: function (resp) {
+            if (resp && resp.respCode && resp.respCode.indexOf('_2') == 0) {
+                return resp.result;
+            }
+            return undefined;
         },
         formatNumbers: function(val){
             return Math.ceil(val*10000)/1000000;
@@ -89,5 +94,4 @@ define(function () {
             }
             return result;
         }
-    }
 });
