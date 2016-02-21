@@ -95,7 +95,7 @@
 		<b:property name="accessDecisionManager" ref="accessDecisionManager" />
 		<b:property name="securityMetadataSource" >
              <filter-security-metadata-source> 
-             		<!-- has the first priority to define url -->
+             		<!-- override http definition -->
 					<intercept-url pattern="/user/user.jsp" access="hasRole('ROLE_ADMIN')" />
       				<intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" />
       				<intercept-url pattern="/**" access="isAuthenticated()"/>
