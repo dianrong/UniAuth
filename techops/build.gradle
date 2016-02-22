@@ -124,9 +124,9 @@ war {
     baseName = config.tomcat.tomcatAppName
     archiveName = config.tomcat.tomcatAppName + '.war'
     destinationDir = file('build')
-//    configure {
-//        filter(ReplaceTokens, tokens: ['apiBase': config.frontend.apibase])
-//    }
+    configure {
+        filter(ReplaceTokens, tokens: ['projectBase': config.frontend.projectBase])
+    }
 }
 
 task warTechopsWebsite(dependsOn: war) {

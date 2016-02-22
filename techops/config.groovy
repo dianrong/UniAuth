@@ -2,6 +2,7 @@ environments {
     local {
         frontend {
             apibase = 'http://192.168.56.101:8080/techops'
+            projectBase = '/techops'
         }
         tomcat {
             tomcatAppName = 'techops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
@@ -14,6 +15,7 @@ environments {
     dev {
         frontend {
             apibase = 'https://techops-dev.dianrong.com'
+            projectBase = ''
         }
         tomcat {
             tomcatAppName = 'techops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
@@ -26,6 +28,7 @@ environments {
     demo {
         frontend {
             apibase = 'https://techops-demo.dianrong.com'
+            projectBase = ''
         }
         tomcat {
             tomcatAppName = 'techops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
@@ -38,6 +41,7 @@ environments {
     pre {
         frontend {
             apibase = 'https://techops-pre.dianrong.com'
+            projectBase = ''
         }
         tomcat {
             tomcatAppName = 'techops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
@@ -50,6 +54,7 @@ environments {
     prod {
         frontend {
             apibase = 'https://techops.dianrong.com'
+            projectBase = ''
         }
         tomcat {
             tomcatAppName = 'techops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
