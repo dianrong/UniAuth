@@ -3,7 +3,7 @@
  * @module controllers/login
  */
 define({
-        apiBase: "@apiBase@",
+        apiBase: window.document.location.origin + "@apibase@",
         // 20 seconds Time out
         reqTimeout: 20000,
         pageSize: 50,

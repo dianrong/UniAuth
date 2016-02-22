@@ -27,7 +27,6 @@ requireJs {
     }
     dest = file("src/main/webapp/scripts/all.js")
     requirejs.buildprofile = new File("src/main/webapp/build.js")
-    requirejs.impl = file("src/main/webapp/scripts/lib/requirejs/require.js")
 }
 
 minifyJs {
@@ -126,7 +125,7 @@ war {
     archiveName = config.tomcat.tomcatAppName + '.war'
     destinationDir = file('build')
     configure {
-        filter(ReplaceTokens, tokens: ['apiBase': config.frontend.apibase])
+        filter(ReplaceTokens, tokens: ['apibase': config.frontend.apibase])
     }
 }
 
