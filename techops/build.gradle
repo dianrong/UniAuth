@@ -27,7 +27,6 @@ requireJs {
     }
     dest = file("src/main/webapp/scripts/all.js")
     requirejs.buildprofile = new File("src/main/webapp/build.js")
-    requirejs.impl = file("src/main/webapp/scripts/lib/requirejs/require.js")
 }
 
 minifyJs {
