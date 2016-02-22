@@ -11,14 +11,12 @@ define(function () {
         }; // end cancel
 
         $scope.save = function(){
-            if(!angular.equals($scope.user.password, $scope.user.password2)) {
-                $scope.msg = '请确保您两次输入的密码相等';
-                return;
-            }
-            UserService.resetpassword(
+            UserService.modifyUser(
                 {
                     "id":$scope.user.id,
-                    "password":$scope.user.password
+                    "name":$scope.user.name,
+                    "email":$scope.user.email,
+                    "phone":$scope.user.phone
                 },
                 function(res) {
                     // user add api successed
@@ -37,7 +35,7 @@ define(function () {
     };
 
     return {
-        name: "ResetPasswordController",
+        name: "ModifyUserController",
         fn: ["$scope","$uibModalInstance", "UserService", "data", Controller]
     };
 

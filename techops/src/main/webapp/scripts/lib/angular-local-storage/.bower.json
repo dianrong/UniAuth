@@ -26,16 +26,18 @@
     "tests",
     "Gruntfile.js"
   ],
-  "devDependencies": {
-    "angular": "~1.x",
-    "angular-mocks": "~1.2.1"
+  "dependencies": {
+    "angular": "^1.x"
   },
-  "version": "0.2.3",
-  "_release": "0.2.3",
+  "devDependencies": {
+    "angular-mocks": "^1.x"
+  },
+  "version": "0.2.4",
+  "_release": "0.2.4",
   "_resolution": {
     "type": "version",
-    "tag": "0.2.3",
-    "commit": "ff233e43be10f55adc56b27a9cad0f42f3fd5675"
+    "tag": "0.2.4",
+    "commit": "42b05a2a14f63913f8185d1902937406f5dcd5ba"
   },
   "_source": "git://github.com/grevory/angular-local-storage.git",
   "_target": "~0.2.3",

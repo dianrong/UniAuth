@@ -47,93 +47,12 @@ define(['../../utils/constant'], function (constant) {
                 },
                 timeout: constant.reqTimeout
             },
-            /*
-             /user/:id
-             */
-            getUserById: {
-                method: 'GET',
-                params: {
-                    id: '@id'
-                },
-                timeout: constant.reqTimeout
-            },
             modifyUser: {
                 method: 'POST',
                 params: {
-                    method: 'update'
+                    method: 'modify'
                 },
                 isArray: false,
-                timeout: constant.reqTimeout
-            },
-            /*
-             /user/:id/role
-             */
-            getRoleOfUser: {
-                method: 'GET',
-                params: {
-                    id: '@id',
-                    role: 'role'
-                },
-                timeout: constant.reqTimeout
-            },
-            /*
-             /user/addUserRoles
-             */
-            manageRoleOfUser: {
-                method: 'POST',
-                params: {
-                    method: 'addUserRoles'
-                },
-                timeout: constant.reqTimeout
-            },
-            /*
-             /user/:id/role/:roleId
-             */
-            removeRoleOfUser: {
-                method: 'POST',
-                params: {
-                    method: 'rmUserRoles'
-                },
-                isArray: false,
-                timeout: constant.reqTimeout
-            },
-            /*
-             Get     /user/:id/url
-             */
-            getuserUrls: {
-                method: 'GET',
-                params: {
-                    id: '@id',
-                    catalog: 'url'
-                },
-                isArray: true,
-                timeout: constant.reqTimeout
-            },
-            getProvince: {
-                method: 'GET',
-                params: {
-                    id: '@id',
-                    catalog: 'url'
-                },
-                isArray: true,
-                timeout: constant.reqTimeout
-            },
-            getDistrictByProId: {
-                method: 'GET',
-                params: {
-                    id: '@id',
-                    catalog: 'url'
-                },
-                isArray: true,
-                timeout: constant.reqTimeout
-            },
-            getCityByDistrictId: {
-                method: 'GET',
-                params: {
-                    id: '@id',
-                    catalog: 'url'
-                },
-                isArray: true,
                 timeout: constant.reqTimeout
             }
         });

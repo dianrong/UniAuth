@@ -7,6 +7,7 @@ require.config({
     'ngResource': 'lib/angular-resource/angular-resource.min',
     'ngLocalStorage': 'lib/angular-local-storage/dist/angular-local-storage.min',
     'ngRoute': 'lib/angular-route/angular-route.min',
+    'angular.ui.router': 'lib/angular-ui-router/release/angular-ui-router.min',
     'ngCookies': 'lib/angular-cookies/angular-cookies.min',
     'ngTranslate': 'lib/angular-translate/angular-translate.min',
     'ngTranslateLoad': 'lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min',
@@ -37,6 +38,9 @@ require.config({
       deps: ['ngTranslate']
     },
     ngRoute: {
+      deps: ['angular']
+    },
+    'angular.ui.router': {
       deps: ['angular']
     },
     angularFileUpload: {

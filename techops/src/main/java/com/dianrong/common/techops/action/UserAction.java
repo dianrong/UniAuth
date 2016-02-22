@@ -58,6 +58,12 @@ public class UserAction {
         return uARWFacade.getUserRWResource().updateUser(userParam);
     }
 
+    @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<Void> updateUser(@RequestBody UserParam userParam) {
+        userParam.setUserActionEnum(UserActionEnum.UPDATE_INFO);
+        return uARWFacade.getUserRWResource().updateUser(userParam);
+    }
+
     @RequestMapping(value = "/techops/domain" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<List<DomainDto>> getSwitchableDomains(String email) {
 //        LoginParam loginParam = new LoginParam();
