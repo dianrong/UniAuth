@@ -12,6 +12,8 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
@@ -22,6 +24,7 @@ import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
 import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
+import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
 import com.dianrong.common.uniauth.server.data.mapper.PermTypeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
@@ -175,8 +178,22 @@ public class PermissionService {
 			}
 		}
 		pageDto.setData(permissionDtoList);
-		
 		return pageDto;
 	}
 
+	public List<UrlRoleMappingDto> selectUrlRoleMapping(DomainParam domainParam){
+		String domainCode = domainParam.getCode();
+		CheckEmpty.checkEmpty(domainCode, "域编码");
+		
+		List<UrlRoleMappingExt> urlRoleMappingExtList = permissionMapper.selectUrlRoleMapping(domainCode);
+		
+		List<UrlRoleMappingDto> urlRoleMappingDtoList = new ArrayList<UrlRoleMappingDto>();
+		if(urlRoleMappingExtList != null){
+			for(UrlRoleMappingExt urlRoleMappingExt: urlRoleMappingExtList){
+				urlRoleMappingDtoList.add(BeanConverter.convert(urlRoleMappingExt));
+			}
+		}
+		return urlRoleMappingDtoList;
+	}
+	
 }

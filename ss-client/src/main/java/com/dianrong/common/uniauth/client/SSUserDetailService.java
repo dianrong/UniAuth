@@ -34,7 +34,7 @@ public class SSUserDetailService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
 		if(currentDomainCode == null){
-			throw new DomainNotDefinedException("The bean of com.dianrong.common.uniauth.client.DomainDefine not defined.");
+			throw new DomainNotDefinedException("The bean of class com.dianrong.common.uniauth.client.DomainDefine not defined client.");
 		}
 		
 		if(userName == null || "".equals(userName.toString())){

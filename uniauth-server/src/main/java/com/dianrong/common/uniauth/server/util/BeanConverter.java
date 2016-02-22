@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
+import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
@@ -23,6 +24,7 @@ import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
+import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
 
 /**
  * Created by Arc on 15/1/16.
@@ -214,4 +216,17 @@ public class BeanConverter {
         }
     }
     
+    public static UrlRoleMappingDto convert(UrlRoleMappingExt urlRoleMappingExt){
+    	if(urlRoleMappingExt == null){
+    		return null;
+    	}
+    	else{
+    		UrlRoleMappingDto urlRoleMappingDto = new UrlRoleMappingDto();
+    		urlRoleMappingDto.setPermType(urlRoleMappingExt.getPermType());
+    		urlRoleMappingDto.setPermUrl(urlRoleMappingExt.getPermUrl());
+    		urlRoleMappingDto.setRoleCode(urlRoleMappingExt.getRoleCode());
+    		
+    		return urlRoleMappingDto;
+    	}
+    }
 }

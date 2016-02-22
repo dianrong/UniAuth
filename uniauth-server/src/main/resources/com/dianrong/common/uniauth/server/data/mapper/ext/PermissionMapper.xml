@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.PermissionMapper" >
+
+  <resultMap id="UrlRoleMappingExtResultMap" type="com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt" >
+      <result column="perm_url" property="permUrl" jdbcType="VARCHAR" />
+      <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+      <result column="perm_type" property="permType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectUrlRoleMapping" resultMap="UrlRoleMappingExtResultMap" parameterType="java.lang.String" >
+	select p.value perm_url,  rc.code role_code, pt.type perm_type
+	from permission p, perm_type pt, role_permission rp, domain d,
+	role r, role_code rc
+	where d.status = 0
+	and d.code = #{domainCode, jdbcType=VARCHAR}
+	and (pt.type = 'URI_Pattern' or pt.type = 'PRIVILEGE')
+	and pt.id = p.perm_type_id
+	and p.status = 0
+	and p.domain_id = d.id
+	and p.id = rp.permission_id
+	and rp.role_id = r.id
+	and r.status = 0
+	and r.domain_id = d.id
+	and r.role_code_id = rc.id
+  </select>
+  
   <select id="selectByExampleForSearch" resultMap="BaseResultMap" parameterType="com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt" >
     select
     <include refid="Base_Column_List" />

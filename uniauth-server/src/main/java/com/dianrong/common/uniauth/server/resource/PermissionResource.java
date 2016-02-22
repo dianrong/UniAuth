@@ -11,6 +11,8 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
@@ -64,4 +66,11 @@ public class PermissionResource implements IPermissionRWResource {
 		
 		return new Response<PageDto<PermissionDto>>(pageDto);
 	}
+
+	@Override
+	public Response<List<UrlRoleMappingDto>> selectUrlRoleMapping(DomainParam domainParam) {
+		List<UrlRoleMappingDto> urlRoleMappingDtoList = permissionService.selectUrlRoleMapping(domainParam);
+		return new Response<List<UrlRoleMappingDto>>(urlRoleMappingDtoList);
+	}
+	
 }
