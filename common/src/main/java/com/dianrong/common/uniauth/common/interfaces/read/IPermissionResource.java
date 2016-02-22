@@ -42,5 +42,5 @@ public interface IPermissionResource {
     @POST
     @Path("urlrolemappings")
     //scenario: populate url and role mappings for ss-client project
-    Response<List<UrlRoleMappingDto>> selectUrlRoleMapping(DomainParam domainParam);
+    Response<List<UrlRoleMappingDto>> getUrlRoleMapping(DomainParam domainParam);
 }

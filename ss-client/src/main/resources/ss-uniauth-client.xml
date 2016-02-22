@@ -69,6 +69,6 @@
 	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.SSUserDetailService">
 	</b:bean>
 	
-    <b:bean id="ssBeanPostProcessor" class="com.dianrong.common.uniauth.client.support.SSBeanPostProcessor">
+    <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor">
 	</b:bean>
 </b:beans>

@@ -181,7 +181,7 @@ public class PermissionService {
 		return pageDto;
 	}
 
-	public List<UrlRoleMappingDto> selectUrlRoleMapping(DomainParam domainParam){
+	public List<UrlRoleMappingDto> getUrlRoleMapping(DomainParam domainParam){
 		String domainCode = domainParam.getCode();
 		CheckEmpty.checkEmpty(domainCode, "域编码");
 		

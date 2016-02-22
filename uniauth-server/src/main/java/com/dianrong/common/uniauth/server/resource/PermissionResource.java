@@ -68,8 +68,8 @@ public class PermissionResource implements IPermissionRWResource {
 	}
 
 	@Override
-	public Response<List<UrlRoleMappingDto>> selectUrlRoleMapping(DomainParam domainParam) {
-		List<UrlRoleMappingDto> urlRoleMappingDtoList = permissionService.selectUrlRoleMapping(domainParam);
+	public Response<List<UrlRoleMappingDto>> getUrlRoleMapping(DomainParam domainParam) {
+		List<UrlRoleMappingDto> urlRoleMappingDtoList = permissionService.getUrlRoleMapping(domainParam);
 		return new Response<List<UrlRoleMappingDto>>(urlRoleMappingDtoList);
 	}
 	

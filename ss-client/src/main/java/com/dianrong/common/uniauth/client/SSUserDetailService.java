@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.dianrong.common.uniauth.client.exp.DomainNotDefinedException;
+import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.client.support.UserExtInfo;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -33,9 +34,7 @@ public class SSUserDetailService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
-		if(currentDomainCode == null){
-			throw new DomainNotDefinedException("The bean of class com.dianrong.common.uniauth.client.DomainDefine not defined client.");
-		}
+		CheckDomainDefine.checkDomainDefine(currentDomainCode);
 		
 		if(userName == null || "".equals(userName.toString())){
 			throw new UsernameNotFoundException(userName + " not found");
