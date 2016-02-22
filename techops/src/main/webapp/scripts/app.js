@@ -1,10 +1,10 @@
-define(['angular', 'ngResource', 'ngRoute', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs',
+define(['angular', 'ngResource', 'ngRoute', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs',
     'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap',
     'ngLocalStorage', 'angularFileUpload'],
-  function(angular, ngResource, ngRoute, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
+  function(angular, ngResource, ngRoute, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
            mainController, constant, utils) {
     var appName = "ops";
-    var app = angular.module(appName, ['ngResource', 'ngRoute', 'pascalprecht.translate', 'ngSanitize',
+    var app = angular.module(appName, ['ngResource', 'ngRoute', 'ui.router', 'pascalprecht.translate', 'ngSanitize',
         'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'angularFileUpload']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
