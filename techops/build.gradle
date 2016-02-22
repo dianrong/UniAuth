@@ -125,7 +125,7 @@ war {
     archiveName = config.tomcat.tomcatAppName + '.war'
     destinationDir = file('build')
     configure {
-        filter(ReplaceTokens, tokens: ['projectBase': config.frontend.projectBase])
+        filter(ReplaceTokens, tokens: ['apibase': config.frontend.apibase])
     }
 }
 
