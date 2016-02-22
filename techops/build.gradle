@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 apply plugin: 'war'
 
 buildscript {
@@ -120,13 +118,15 @@ def loadConfiguration() {
     project.ext.config = config
 }
 
+import org.apache.tools.ant.filters.ReplaceTokens
+
 war {
     baseName = config.tomcat.tomcatAppName
     archiveName = config.tomcat.tomcatAppName + '.war'
     destinationDir = file('build')
-    configure {
-        filter(ReplaceTokens, tokens: ['apibase': config.frontend.apibase])
-    }
+//    configure {
+//        filter(ReplaceTokens, tokens: ['apibase': config.frontend.apibase])
+//    }
 }
 
 task warTechopsWebsite(dependsOn: war) {

@@ -110,6 +110,27 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         // do nothing
                     });
                     break;
+                case 'resetpwd':
+                    var dlg = dialogs.create('views/user/dialogs/reset-password.html','ResetPasswordController',
+                        param, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        // maybe give user a friendly message.
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'modify':
+                    var dlg = dialogs.create('views/user/dialogs/modify.html','ModifyUserController',
+                        param, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        // maybe give user a friendly message.
+                        $scope.queryUser();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
             }
         };
 

@@ -1,6 +1,8 @@
 require(['app',
     'controllers/user/user',
     'controllers/user/dialogs/add',
+    'controllers/user/dialogs/reset-password',
+    'controllers/user/dialogs/modify',
     'controllers/common/dialogs/enable-disable',
     'services/common/logout-service',
     'services/user/user-service',
