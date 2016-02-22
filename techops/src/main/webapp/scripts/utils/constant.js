@@ -3,7 +3,7 @@
  * @module controllers/login
  */
 define({
-        apiBase: "@apiBase@",
+        apiBase: window.document.location.href.substring(0, window.document.location.href.indexOf(window.document.location.pathname)) + window.document.location.pathname.substring(0, window.document.location.pathname.substr(1).indexOf('/')+1),
         // 20 seconds Time out
         reqTimeout: 20000,
         pageSize: 50,
