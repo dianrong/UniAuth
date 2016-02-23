@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.dianrong.common.uniauth.client.exp.DomainNotDefinedException;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.client.support.UserExtInfo;
 import com.dianrong.common.uniauth.common.bean.Response;

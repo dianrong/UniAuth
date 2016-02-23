@@ -13,6 +13,8 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.dianrong.common.uniauth.client.support.PatternMatchMost;
+
 public class SSExpressionSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
 	private Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
@@ -32,13 +34,17 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
 	}
 
 	public Collection<ConfigAttribute> getAttributes(Object object) {
+		Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+		
 		final HttpServletRequest request = ((FilterInvocation) object).getRequest();
 		for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
 			if (entry.getKey().matches(request)) {
-				return entry.getValue();
+				allMatchedMap.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return null;
+		RequestMatcher requestMatcher = PatternMatchMost.findMachMostRequestMatcher(request, allMatchedMap);
+		
+		return requestMatcher == null ? null : allMatchedMap.get(requestMatcher);
 	}
 
 	public boolean supports(Class<?> clazz) {

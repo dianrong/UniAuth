@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +48,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 			CheckDomainDefine.checkDomainDefine(currentDomainCode);
 
 			FilterSecurityInterceptor filterSecurityInterceptor = (FilterSecurityInterceptor)bean;
-			//note: access public secure object is now allowed
-			filterSecurityInterceptor.setRejectPublicInvocations(true);
+			//note: access public secure object is not allowed, this is a bit too overkilled if set to be true
+			//filterSecurityInterceptor.setRejectPublicInvocations(true);
 			FilterInvocationSecurityMetadataSource securityMetadataSource = filterSecurityInterceptor.getSecurityMetadataSource();
 			if(securityMetadataSource instanceof ExpressionBasedFilterInvocationSecurityMetadataSource){
 				ExpressionBasedFilterInvocationSecurityMetadataSource expressionSecurityMetadataSource = (ExpressionBasedFilterInvocationSecurityMetadataSource)securityMetadataSource;
@@ -106,7 +105,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 				String permUrl = plainEntry.getKey();
 				Set<String> plainSet = plainEntry.getValue();
 				
-				//all http methods allowed
+				//note: all http methods allowed
 				RegexRequestMatcher rrm = new RegexRequestMatcher(permUrl, null);
 				StringBuilder sb = new StringBuilder();
 				
@@ -137,8 +136,5 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 		}
 		return appendMap;
 	}
-	public static void main(String[] args) {
-		boolean b = Pattern.compile("/DISPLAY_ADD_BUTTON").matcher("/DISPLAY_ADD_BUTTON123").matches();
-		System.out.println(b);
-	}
+
 }
