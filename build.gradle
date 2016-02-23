@@ -96,6 +96,25 @@ project(':ss-client') {
 		compile 'org.hibernate:hibernate-validator:5.2.4.Final'
 	}
 
+	sourceSets {
+	    main {
+	        java {
+	            srcDirs = ['src/main/java', 'src/main/java-ss']
+	        }
+	        resources {
+	            srcDirs = ['src/main/resources']
+	        }
+	    }
+	    test {
+	        java {
+	            srcDirs = ['src/test/java', 'src/test/java-ss']
+	        }
+	        resources {
+	            srcDirs = ['src/test/resources']
+	        }
+	    }
+	}
+
     jar {
         baseName = 'common-uniauth-ssclient'
     }

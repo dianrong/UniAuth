@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client;
+package org.springframework.security.web.access.expression;
 
 import java.util.Collection;
 import java.util.HashSet;

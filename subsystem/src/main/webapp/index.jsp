@@ -28,8 +28,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		Admin can see this.
 	</sec:authorize>
-		<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
+	<br>
+	<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
 		Super_Admin can see this.
+	</sec:authorize>
+	<br>
+	<sec:authorize url="/DISPLAY_ADD_BUTTON">
+		DISPLAY_ADD_BUTTON
 	</sec:authorize>
 	<br>
 	ttt
