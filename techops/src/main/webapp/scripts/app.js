@@ -47,6 +47,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
 
+      $rootScope.groupSelected = {};
       $rootScope.permissionMapping = permission.permissionMapping;
       $rootScope.permissions = permission.userPermissions;
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.loginDomainsDropdown, permission.loginDomainsDropdown[0]);
@@ -66,9 +67,18 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             templateUrl: "views/user/user.html"
         }).
         state('group', {
+            abstract: true,
             url: "/group",
-            controller: "UserController",
-            templateUrl: "views/user/user.html"
+            controller: "GroupController",
+            templateUrl: "views/group/group.html"
+        }).
+        state('group.tree', {
+            url: '',
+            template: 'views/group/group.tree.html'
+        }).
+        state('group.add', {
+            url: '/add/:parentGrpId',
+            template: 'views/group/group.add.html'
         })
 
         $translateProvider.useSanitizeValueStrategy('sanitize');

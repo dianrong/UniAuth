@@ -1,12 +1,14 @@
 require(['app',
+    'controllers/common/dialogs/enable-disable',
     'controllers/user/user',
     'controllers/user/dialogs/add',
     'controllers/user/dialogs/reset-password',
     'controllers/user/dialogs/modify',
-    'controllers/common/dialogs/enable-disable',
+    'controllers/group/group',
     'services/common/logout-service',
+    'services/common/common-service',
     'services/user/user-service',
-    'services/common/common-service'],
+    'services/group/group-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);
