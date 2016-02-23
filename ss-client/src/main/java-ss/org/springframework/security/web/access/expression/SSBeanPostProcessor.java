@@ -23,12 +23,12 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
-import com.dianrong.common.uniauth.client.support.ReflectionSupport;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.PermTypeEnum;
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 public class SSBeanPostProcessor implements BeanPostProcessor {
 	@Override
@@ -56,7 +56,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 				
 				@SuppressWarnings("unchecked")
 				LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> requestMap = 
-					(LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>)ReflectionSupport.getField(expressionSecurityMetadataSource, "requestMap", true);
+					(LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>)ReflectionUtils.getField(expressionSecurityMetadataSource, "requestMap", true);
 
 				DomainParam domainParam = new DomainParam();
 				domainParam.setCode(currentDomainCode);

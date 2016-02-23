@@ -36,7 +36,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<sec:authorize url="/DISPLAY_ADD_BUTTON">
 		DISPLAY_ADD_BUTTON
 	</sec:authorize>
+	<br>	
+	<sec:authorize url="/abc/123/abc">
+		reg expression
+	</sec:authorize>
+	
 	<br>
-	ttt
+	<%
+	Object obj1 = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	out.println(obj1);
+	out.println("<br>");
+	com.dianrong.common.uniauth.client.support.UserExtInfo userExtInfo = (com.dianrong.common.uniauth.client.support.UserExtInfo)obj1;
+	out.println(userExtInfo.getDomainDto());
+	out.println("<br>");
+	out.println("<br>");
+	Object obj2 = session.getAttribute("SPRING_SECURITY_CONTEXT");
+	out.println(obj2);
+	%>
   </body>
 </html>

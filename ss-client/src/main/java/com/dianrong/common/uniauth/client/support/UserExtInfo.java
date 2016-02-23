@@ -31,4 +31,29 @@ public class UserExtInfo extends User {
 		this.userDto = userDto;
 		this.domainDto = domainDto;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public UserDto getUserDto() {
+		return userDto;
+	}
+
+	public void setUserDto(UserDto userDto) {
+		this.userDto = userDto;
+	}
+
+	public DomainDto getDomainDto() {
+		return domainDto;
+	}
+
+	public void setDomainDto(DomainDto domainDto) {
+		this.domainDto = domainDto;
+	}
+	
 }

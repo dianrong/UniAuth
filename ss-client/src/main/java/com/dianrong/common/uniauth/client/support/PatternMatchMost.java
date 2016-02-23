@@ -16,6 +16,8 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
+
 public class PatternMatchMost {
 	private static final Pattern EXCLUDE_CHARS_PATTERN = Pattern.compile("[(\\)(/)(\\|)(\\,)(\\[)(\\])(\\{)(\\})(\\()(\\))(\\^)(\\$)(\\.)(\\-)(\\&)(\\?)(\\*)(\\+)(\\\\s)(\\\\S)(\\\\d)(\\\\D)(\\\\w)(\\\\W)]");
 	private static Logger LOGGER = LoggerFactory.getLogger(PatternMatchMost.class);
@@ -46,7 +48,7 @@ public class PatternMatchMost {
 			}
 			else if(requestMatcher instanceof RegexRequestMatcher){
 				RegexRequestMatcher regexRequestMatcher = (RegexRequestMatcher)requestMatcher;
-				String pattern = ((Pattern)(ReflectionSupport.getField(regexRequestMatcher, "pattern", false))).pattern();
+				String pattern = ((Pattern)(ReflectionUtils.getField(regexRequestMatcher, "pattern", false))).pattern();
 				String baseOfPattern = EXCLUDE_CHARS_PATTERN.matcher(pattern).replaceAll("");
 				int length = baseOfPattern.length();
 				if(length > matchLength){
