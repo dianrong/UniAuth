@@ -54,8 +54,8 @@ define(['angular', 'ngResource', 'ngRoute', 'angular.ui.router', 'ngCookies', 'n
 
     }]);
 
-    app.config(['$routeProvider', 'localStorageServiceProvider', '$httpProvider', '$translateProvider',
-        function($routeProvider, localStorageServiceProvider, $httpProvider, $translateProvider) {
+    app.config(['$routeProvider', 'localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$urlMatcherFactoryProvider',
+        function($routeProvider, localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider) {
 
         // wait for interceptor $httpProvider.interceptors.push('httpInterceptorSvc');
         $routeProvider.
