@@ -38,24 +38,20 @@ define(['angular', 'ngResource', 'ngRoute', 'angular.ui.router', 'ngCookies', 'n
         }());
     };
 
-    app.run(['$cookies', '$location', '$rootScope', 'permission', '$http', function ($cookies, $location, $rootScope, permission, $http) {
+    app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', '$http',
+        function ($cookies, $location, $rootScope, $state, $stateParams, permission, $http) {
+      // It's very handy to add references to $state and $stateParams to the $rootScope
+      // so that you can access them from any scope within your applications.For example,
+      // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
+      // to active whenever 'contacts.list' or one of its decendents is active.
+      $rootScope.$state = $state;
+      $rootScope.$stateParams = $stateParams;
+
       $rootScope.permissionMapping = permission.permissionMapping;
       $rootScope.permissions = permission.userPermissions;
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.loginDomainsDropdown, permission.loginDomainsDropdown[0]);
-      $rootScope.userName = "shenglong.qian@dianrong.com";
-      //$http.get(Constant.apiBase + '/common/currentuser').then(function (res) {
-      //  if (res.data.respCode === '_200') {
-      //    $rootScope.userName = res.data.result.name;
-      //  }
-      //  }, function (err) {
-      //        console.log(err);
-      //  });
-      $rootScope.$on('$routeChangeSuccess', function (event, routeData) {
-          $rootScope.pageTitle = (routeData.helpAlias? routeData.helpAlias : '首页') + ' BDChannel 点融网-Dianrong';
-          if (!$rootScope.getCookieUsername()) {
-              //$location.url('/login');
-          }
-      })
+      $rootScope.pageTitle = '权限运维系统 点融网-Dianrong';
+
     }]);
 
     app.config(['$routeProvider', 'localStorageServiceProvider', '$httpProvider', '$translateProvider',
