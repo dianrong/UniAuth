@@ -23,7 +23,17 @@
     <script src="scripts/main.js"></script>
     <script src="scripts/ops.js"></script>
     <!-- endbuild -->
-    <div ng-include="'views/common/header.html'" class="container"></div>
-    <div ng-view class="container"></div>
+    <div ng-show="!pageLoaded" style="padding-top: 1em;text-align: left;">正在加载...</div>
+    <div ng-show="pageLoaded">
+        <div ng-include="'views/common/header.html'" class="container"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 col-sm-3">
+                    <div ng-include="'views/common/menu.html'"></div>
+                </div>
+                <ui-view autoscroll />
+            </div>
+        </div>
+    </div>
 </body>
 </html>

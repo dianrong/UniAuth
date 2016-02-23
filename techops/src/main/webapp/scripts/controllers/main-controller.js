@@ -4,7 +4,7 @@ define(['../utils/constant'], function (constant) {
    * @exports controllers/login
    */
   var MainController = function ($scope, $log, UserService, LogoutService, $cookies, $location, $rootScope, $window, localStorageService) {
-
+    $rootScope.pageLoaded = true;
     $rootScope.logout = function () {
       LogoutService.logout(function (response) {
         $cookies[window.location.hostname + '/Techops'] = '';
