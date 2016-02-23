@@ -1,11 +1,11 @@
-define(['angular', 'ngResource', 'ngRoute', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs',
+define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs',
     'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap',
-    'ngLocalStorage', 'angularFileUpload'],
-  function(angular, ngResource, ngRoute, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
+    'ngLocalStorage'],
+  function(angular, ngResource, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
            mainController, constant, utils) {
     var appName = "ops";
-    var app = angular.module(appName, ['ngResource', 'ngRoute', 'ui.router', 'pascalprecht.translate', 'ngSanitize',
-        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'angularFileUpload']);
+    var app = angular.module(appName, ['ngResource', 'ui.router', 'pascalprecht.translate', 'ngSanitize',
+        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
 
@@ -47,6 +47,7 @@ define(['angular', 'ngResource', 'ngRoute', 'angular.ui.router', 'ngCookies', 'n
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
 
+      $rootScope.groupSelected = {};
       $rootScope.permissionMapping = permission.permissionMapping;
       $rootScope.permissions = permission.userPermissions;
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.loginDomainsDropdown, permission.loginDomainsDropdown[0]);
@@ -54,28 +55,31 @@ define(['angular', 'ngResource', 'ngRoute', 'angular.ui.router', 'ngCookies', 'n
 
     }]);
 
-    app.config(['$routeProvider', 'localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$urlMatcherFactoryProvider',
-        function($routeProvider, localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider) {
+    app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$urlMatcherFactoryProvider',
+        function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider) {
 
         // wait for interceptor $httpProvider.interceptors.push('httpInterceptorSvc');
-        $routeProvider.
-        when('/', {
-            templateUrl: 'views/user/user.html',
-            controller: 'UserController',
-            helpAlias: '用户管理'
+        $urlRouterProvider.otherwise('/');
+        $stateProvider.
+        state('user', {
+            url: "/",
+            controller: "UserController",
+            templateUrl: "views/user/user.html"
         }).
-        when('/test-user', {
-          templateUrl: 'views/user/user.html',
-          controller: 'UserController',
-          helpAlias: '用户管理'
+        state('group', {
+            abstract: true,
+            url: "/group",
+            controller: "GroupController",
+            templateUrl: "views/group/group.html"
         }).
-        when('/notfound', {
-          templateUrl: 'views/common/notfound.html',
-          helpAlias: '啥也木有'
+        state('group.add', {
+            url: '',
+            templateUrl: 'views/group/group-add.html'
         }).
-        otherwise({
-          redirectTo: 'notfound'
-        });
+        state('group.modify', {
+            url: '/modify',
+            templateUrl: 'views/group/group-modify.html'
+        })
 
         $translateProvider.useSanitizeValueStrategy('sanitize');
         $translateProvider.translations('en-US',{

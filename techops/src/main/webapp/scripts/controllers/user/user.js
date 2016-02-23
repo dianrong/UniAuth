@@ -3,7 +3,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($rootScope, $scope, $location, UserService, dialogs, CommonService) {
+    var Controller = function ($rootScope, $scope, $location, UserService, dialogs) {
         $scope.pagination = {
             pageSize: constant.pageSize,
             curPage: 1,
@@ -138,7 +138,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "UserController",
-        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", "CommonService", Controller]
+        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", Controller]
     };
 
 });
