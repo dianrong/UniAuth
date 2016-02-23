@@ -1,16 +1,28 @@
-<div><i class="fa fa-exclamation-circle"></i>被选中的组: {{groupSelected.name}}</div>
+<div> <i class="fa fa-exclamation-circle"></i> 被选中的组: {{groupSelected.name}}</div>
 <div class="btn-group">
-    <a class="btn btn-info">新增组</a>
-    <a class="btn btn-info">修改组</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add')}" ui-sref="group.add">新增组</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.modify')}" ui-sref="group.modify">修改组</a>
     <a class="btn btn-info">删除组</a>
     <a class="btn btn-info">添加用户</a>
     <a class="btn btn-info">删除用户</a>
     <a class="btn btn-info">添加owner</a>
     <a class="btn btn-info">删除owner</a>
 </div>
-<div>
+<div class="row">
     <div ui-view class="col-md-4 col-sm-9">
     </div>
-    <div ui-view="tree" class="col-md-8 col-sm-9">
+    <div class="col-md-8 col-sm-9">
+        <h2>All Groups</h2>
+        <ul>
+            <li>
+                aaaaaa
+            </li>
+            <li>
+                bbbbb
+            </li>
+            <li>
+                ccccc
+            </li>
+        </ul>
     </div>
 </div>

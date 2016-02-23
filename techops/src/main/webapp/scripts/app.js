@@ -72,13 +72,13 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "GroupController",
             templateUrl: "views/group/group.html"
         }).
-        state('group.tree', {
-            url: '',
-            template: 'views/group/group.tree.html'
-        }).
         state('group.add', {
-            url: '/add/:parentGrpId',
-            template: 'views/group/group.add.html'
+            url: '',
+            templateUrl: 'views/group/group-add.html'
+        }).
+        state('group.modify', {
+            url: '/modify',
+            templateUrl: 'views/group/group-modify.html'
         })
 
         $translateProvider.useSanitizeValueStrategy('sanitize');
