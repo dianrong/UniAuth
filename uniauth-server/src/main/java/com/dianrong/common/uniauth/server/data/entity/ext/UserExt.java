@@ -9,6 +9,7 @@ public class UserExt {
     private Long id;
     private String email;
     private Integer groupId;
+    private Byte userGroupType;
 
     public Integer getGroupId() {
         return groupId;
@@ -34,6 +35,14 @@ public class UserExt {
 
     public UserExt setEmail(String email) {
         this.email = email;
+        return this;
+    }
+    public Byte getUserGroupType() {
+        return userGroupType;
+    }
+
+    public UserExt setUserGroupType(Byte userGroupType) {
+        this.userGroupType = userGroupType;
         return this;
     }
 }

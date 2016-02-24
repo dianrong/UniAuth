@@ -16,7 +16,9 @@ public class GroupParam extends Operator {
 	//if true only group, ignore members under each group
 	//if false, both group and members returned
 	private Boolean onlyShowGroup;
-	
+	//if onlyShowGroup=false and userGroupType=0, then return members, if if onlyShowGroup=false and userGroupType=1 return owners
+	private Byte userGroupType;
+
 	private Integer roleId;
 	
 	private Integer domainId;
@@ -110,6 +112,15 @@ public class GroupParam extends Operator {
 
 	public GroupParam setRoleIds(List<Integer> roleIds) {
 		this.roleIds = roleIds;
+		return this;
+	}
+
+	public Byte getUserGroupType() {
+		return userGroupType;
+	}
+
+	public GroupParam setUserGroupType(Byte userGroupType) {
+		this.userGroupType = userGroupType;
 		return this;
 	}
 }

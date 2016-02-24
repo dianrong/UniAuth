@@ -2,10 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.UserMapper">
 
-    <resultMap id="GroupMemberResultMap" type="com.dianrong.common.uniauth.server.data.entity.ext.UserExt" >
+    <resultMap id="GroupUsersResultMap" type="com.dianrong.common.uniauth.server.data.entity.ext.UserExt" >
         <id column="id" property="id" jdbcType="BIGINT" />
         <result column="email" property="email" jdbcType="VARCHAR" />
         <result column="groupId" property="groupId" jdbcType="INTEGER" />
+        <result column="type" property="userGroupType" jdbcType="TINYINT" />
     </resultMap>
 
     <select id="getGroupOwners" resultMap="BaseResultMap">
@@ -15,15 +16,13 @@
         where user_grp.grp_id=#{id,jdbcType=INTEGER} and user_grp.type=1
     </select>
 
-    <select id="getUserExtGroup" resultMap="GroupMemberResultMap" parameterType="java.lang.Integer">
-        select t1.id, t1.email, t2.id as groupId from user t1 join
-        (
-        select ug.user_id, gid.id
-        from user_grp ug join (select grp.id
-        from grp join grp_path on
-        (grp.id = grp_path.descendant)
-        where grp_path.ancestor = #{id,jdbcType=INTEGER}) gid on ug.grp_id = gid.id where ug.type = 0)
-        t2 on t1.id=t2.user_id
+    <select id="getUsersByParentGrpIdByUserType" resultMap="GroupUsersResultMap" parameterType="map">
+        select t1.id, t1.email, t2.id as groupId, t2.type from user t1 join
+          (select ug.user_id, gid.id, ug.type from user_grp ug
+          join (select grp.id from grp
+          join grp_path on (grp.id = grp_path.descendant)
+          where grp_path.ancestor = #{id,jdbcType=INTEGER}) gid on ug.grp_id = gid.id where ug.type = #{userGroupType,jdbcType=TINYINT})
+          t2 on t1.id=t2.user_id
     </select>
 
 </mapper>

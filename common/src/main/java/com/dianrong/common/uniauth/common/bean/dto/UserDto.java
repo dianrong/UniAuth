@@ -15,6 +15,7 @@ public class UserDto {
 	private String phone;
 	private Date createDate;
 	private Byte status;
+	private Byte userGroupType;
 
 	//whether this group connected with a role
 	private Boolean roleChecked;
@@ -97,6 +98,15 @@ public class UserDto {
 
 	public UserDto setStatus(Byte status) {
 		this.status = status;
+		return this;
+	}
+
+	public Byte getUserGroupType() {
+		return userGroupType;
+	}
+
+	public UserDto setUserGroupType(Byte userGroupType) {
+		this.userGroupType = userGroupType;
 		return this;
 	}
 }

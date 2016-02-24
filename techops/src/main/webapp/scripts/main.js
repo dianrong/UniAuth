@@ -15,7 +15,8 @@ require.config({
     'angularFileUpload': 'lib/angular-file-upload/dist/angular-file-upload.min',
     'jQuery': 'lib/jquery/jquery-2.1.4.min',
     'datepicker': 'lib/bootstrap-datepicker/bootstrap-datepicker.min',
-    'dialogs':'lib/angular-dialog-service/dist/dialogs.min'
+    'dialogs':'lib/angular-dialog-service/dist/dialogs.min',
+    'ngTreeController' : 'lib/angular-tree-control/angular-tree-control'
   },
 
   shim: {
@@ -54,6 +55,9 @@ require.config({
     },
     dialogs: {
       deps: ['ngTranslate']
+    },
+    ngTreeController: {
+      deps:['angular']
     },
     angular: {
       exports: 'angular'

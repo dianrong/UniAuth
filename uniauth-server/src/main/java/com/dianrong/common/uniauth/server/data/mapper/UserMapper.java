@@ -5,6 +5,7 @@ import com.dianrong.common.uniauth.server.data.entity.UserExample;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import org.apache.ibatis.annotations.Param;
@@ -100,5 +101,5 @@ public interface UserMapper {
 
     List<User> getGroupOwners(Integer groupId);
     // userId + email + groupId
-    List<UserExt> getUserExtGroup(Integer groupId);
+    List<UserExt> getUsersByParentGrpIdByUserType(Map params);
 }

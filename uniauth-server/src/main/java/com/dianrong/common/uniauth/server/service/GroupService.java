@@ -261,7 +261,7 @@ public class GroupService {
         }
     }
 
-    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Integer roleId) {
+    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId) {
         Grp rootGrp;
         if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
@@ -338,7 +338,11 @@ public class GroupService {
 
 
             if(onlyShowGroup != null && !onlyShowGroup) {
-                List<UserExt> userExts = userMapper.getUserExtGroup(realGroupId);
+                CheckEmpty.checkEmpty(userGroupType, "users' type in the group");
+                Map<String, Object> groupIdAndUserType = new HashMap<String, Object>();
+                groupIdAndUserType.put("id", realGroupId);
+                groupIdAndUserType.put("userGroupType", userGroupType);
+                List<UserExt> userExts = userMapper.getUsersByParentGrpIdByUserType(groupIdAndUserType);
                 // construct the users on the tree
                 if(!CollectionUtils.isEmpty(userExts)) {
                     //role checked on users
@@ -355,7 +359,7 @@ public class GroupService {
                         }
                     }
                     for(UserExt userExt : userExts) {
-                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId());
+                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
                         List<UserDto> userDtos = groupDto.getUsers();
                         if(userDtos == null) {
