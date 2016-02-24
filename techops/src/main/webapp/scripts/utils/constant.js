@@ -3,7 +3,7 @@
  * @module controllers/login
  */
 define({
-        apiBase: window.document.location.origin + "/techops",
+        apiBase: window.document.location.origin,
         // 20 seconds Time out
         reqTimeout: 20000,
         pageSize: 50,
