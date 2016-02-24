@@ -183,4 +183,7 @@ project(':cas') {
 			//exclude group: 'javax.xml', module: 'xmldsig'
 		//}
 	}
+	task warCas(dependsOn: war) {
+
+	}
 }
