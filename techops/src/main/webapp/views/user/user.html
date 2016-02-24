@@ -56,9 +56,9 @@
                     <a title="解锁用户" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
                     <a title="重置密码" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-key"></i></a>
                     <a title="{{d.status?'启用该用户':'禁用该用户'}}" class="btn btn-info" ng-click="launch('status', d)">
-                        <i ng-class="d.status?'fa fa-check-square-o':'fa fa-ban'"></i>
+                        <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
                     </a>
-                    <a title="修改用户信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil-square-o"></i></a>
+                    <a title="修改用户信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
                 </div>
             </td>
         </tr>

@@ -19,7 +19,8 @@
     "angular-file-upload": "~2.2.0",
     "angular-translate": "2.8.1",
     "angular-translate-loader-static-files": "2.8.1",
-    "angular-dialog-service": "^5.2.11"
+    "angular-dialog-service": "^5.2.11",
+    "angular-tree-control": "0.2.23"
   },
   "devDependencies": {
     "angular": "1.4.8",
