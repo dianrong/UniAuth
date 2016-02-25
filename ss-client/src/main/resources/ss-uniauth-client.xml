@@ -55,7 +55,7 @@
 	<b:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
 	
 	<b:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-		<b:property name="filterProcessesUrl" value="/j_spring_cas_security_logout"></b:property>
+		<b:property name="filterProcessesUrl" value="/logout/cas"></b:property>
 		<b:constructor-arg value="#{uniauthConfig['cas_server']}/logout" />
 		<b:constructor-arg>
 			<b:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />

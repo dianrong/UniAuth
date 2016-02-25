@@ -29,19 +29,19 @@
 	<import resource="classpath:ss-uniauth-client.xml" />
 	
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true">
-		<sec:intercept-url pattern="/normal/normal.jsp" access="hasRole('ROLE_NORMAL')" />
-      	<sec:intercept-url pattern="/user/user.jsp" access="hasRole('ROLE_ADMIN')" />
-      	<sec:intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" />
-      	
-      	<!-- 
-      		note: conflict with the judgment of regular expression, so the problem of priority MUST be resolved.
-      	-->
-      	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
-      	 
       	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
       	<sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
       	<sec:csrf disabled="true"/>
+      	      	
+      	<!-- 
+      		the following part is customized intercept-url element definition for subsystem
+      		note: conflict with the judgment of regular expression, so the priority problem MUST be resolved.
+      	-->
+      	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
+		<sec:intercept-url pattern="/normal/normal.jsp" access="hasRole('ROLE_NORMAL')" />
+      	<sec:intercept-url pattern="/user/user.jsp" access="hasRole('ROLE_ADMIN')" />
+      	<sec:intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" />
 	</sec:http>
 	
     
