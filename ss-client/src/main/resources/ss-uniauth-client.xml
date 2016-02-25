@@ -27,14 +27,14 @@
 	</b:bean>  
 	
 	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
-		<b:property name="service" value="#{uniauthConfig[domainDefine.domainCode]}/j_spring_cas_security_check"/>   
+		<b:property name="service" value="#{uniauthConfig[domainDefine.domainCode]}/login/cas"/>   
 		<b:property name="authenticateAllArtifacts" value="true"/>
 		<b:property name="sendRenew" value="false" />
 	</b:bean>  
 	
 	<b:bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">    
 		<b:property name="authenticationManager" ref="authenticationManager"/>
-		<b:property name="filterProcessesUrl" value="/j_spring_cas_security_check"></b:property>
+		<b:property name="filterProcessesUrl" value="/login/cas"></b:property>
 	</b:bean>
 	
 	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
