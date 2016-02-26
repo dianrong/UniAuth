@@ -12,5 +12,5 @@
 	</body>
     <a href="/subsystem/admin/admin.jsp">role admin page</a> <br>
     
-     <a href="/subsystem/j_spring_cas_security_logout">Logout</a>
+     <a href="/subsystem/logout/cas">Logout</a>
 </html>

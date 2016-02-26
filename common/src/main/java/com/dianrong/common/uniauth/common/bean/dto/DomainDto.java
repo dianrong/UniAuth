@@ -16,6 +16,16 @@ public class DomainDto {
 	private List<RoleDto> roleList;
 	private List<StakeholderDto> stakeholderList;
 	
+	private String zkDomainUrl;
+	
+	public String getZkDomainUrl() {
+		return zkDomainUrl;
+	}
+
+	public void setZkDomainUrl(String zkDomainUrl) {
+		this.zkDomainUrl = zkDomainUrl;
+	}
+
 	public Date getCreateDate() {
 		return createDate;
 	}

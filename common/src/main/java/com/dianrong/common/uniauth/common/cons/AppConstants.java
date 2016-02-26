@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.util;
+package com.dianrong.common.uniauth.common.cons;
 
 /**
  * Created by Arc on 26/1/16.
@@ -12,4 +12,7 @@ public interface AppConstants {
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
     String DOMAIN_CODE_TECHOPS = "techops";
+    
+	String ZK_DOMAIN_PREFIX = "domains.";
+	String SERVICE_LOGIN_POSTFIX = "/login/cas";
 }

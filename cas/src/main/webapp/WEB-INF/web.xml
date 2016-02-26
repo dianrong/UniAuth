@@ -233,7 +233,11 @@
         <servlet-name>cas</servlet-name>
         <url-pattern>/v1/*</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>cas</servlet-name>
+        <url-pattern>/uniauth/allDomains</url-pattern>
+    </servlet-mapping>
+    
     <!--
     <servlet-mapping>
         <servlet-name>cas</servlet-name>

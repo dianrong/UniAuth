@@ -22,9 +22,9 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class SSUserDetailService implements UserDetailsService {
-	
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
@@ -34,6 +34,7 @@ public class SSUserDetailService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
 		CheckDomainDefine.checkDomainDefine(currentDomainCode);
+		currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 		
 		if(userName == null || "".equals(userName.toString())){
 			throw new UsernameNotFoundException(userName + " not found");

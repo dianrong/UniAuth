@@ -13,6 +13,7 @@ import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
@@ -20,7 +21,6 @@ import com.dianrong.common.uniauth.server.data.entity.StakeholderExample;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.StakeholderMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.util.AppConstants;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -50,9 +50,12 @@ public class DomainService {
 		}
 	}
 
-	public List<DomainDto> getAllLoginDomains() {
+	public List<DomainDto> getAllLoginDomains(DomainParam domainParam) {
+		List<String> domainCodeList = domainParam.getDomainCodeList();
+		CheckEmpty.checkEmpty(domainCodeList, "请求的域编码列表");
 		DomainExample example = new DomainExample();
-		example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
+		example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte).andCodeIn(domainCodeList);
+		
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		List<DomainDto> domainDtoList = new ArrayList<DomainDto>();
 		if(domainList != null){

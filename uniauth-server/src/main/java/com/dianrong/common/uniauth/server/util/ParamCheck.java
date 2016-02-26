@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.exp.AppException;
 
 /**

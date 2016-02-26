@@ -21,8 +21,8 @@ public class DomainResource implements IDomainRWResource {
 	private DomainService domainService;
 	
 	@Override
-	public Response<List<DomainDto>> getAllLoginDomains() {
-		List<DomainDto> domainDtoList = domainService.getAllLoginDomains();
+	public Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam) {
+		List<DomainDto> domainDtoList = domainService.getAllLoginDomains(domainParam);
 		return new Response<List<DomainDto>>(domainDtoList);
 	}
 

@@ -123,6 +123,8 @@
         <prop key="/validate">legacyValidateController</prop>
         <prop key="/proxy">proxyController</prop>
         <prop key="/authorizationFailure.html">passThroughController</prop>
+        
+        <prop key="/uniauth/allDomains">casController</prop>
       </util:properties>
     </property>
     <!--
@@ -136,6 +138,10 @@
       -->
   </bean>
 
+  <bean id="casController" class="com.dianrong.common.uniauth.cas.controller.CasController">
+		<property name="domainService" ref="domainService"></property>
+  </bean>
+  
   <bean id="passThroughController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
 
   <!-- login webflow configuration -->

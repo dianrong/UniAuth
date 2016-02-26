@@ -27,6 +27,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.PermTypeEnum;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
@@ -46,7 +47,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if(bean.getClass().getName().equals("org.springframework.security.web.access.intercept.FilterSecurityInterceptor")){
 			CheckDomainDefine.checkDomainDefine(currentDomainCode);
-
+			currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
+			
 			FilterSecurityInterceptor filterSecurityInterceptor = (FilterSecurityInterceptor)bean;
 			//note: access public secure object is not allowed, this is a bit too overkilled if set to be true
 			//filterSecurityInterceptor.setRejectPublicInvocations(true);

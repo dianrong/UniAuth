@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.server.util;
 
+import java.util.Collection;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.server.exp.AppException;
@@ -14,8 +16,9 @@ public class CheckEmpty {
 		}
 	}
 	
-	public static void checkEmpty(Object idOrAnyValue, String errorMsg){
-		if(idOrAnyValue == null || "".equals(idOrAnyValue.toString().trim())){
+	public static void checkEmpty(Object idOrCollOrAnyObj, String errorMsg){
+		if(idOrCollOrAnyObj == null || "".equals(idOrCollOrAnyObj.toString().trim())
+				|| ((idOrCollOrAnyObj instanceof Collection) && (((Collection<?>)idOrCollOrAnyObj)).isEmpty())){
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", errorMsg));
 		}
 	}

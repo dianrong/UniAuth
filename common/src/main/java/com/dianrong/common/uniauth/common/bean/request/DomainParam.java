@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
 public class DomainParam extends Operator {
     private Integer id;
     //generally, code cann't be changed!
@@ -8,6 +10,14 @@ public class DomainParam extends Operator {
     private String description;
     private Byte status;
     
+    private List<String> domainCodeList;
+    
+	public List<String> getDomainCodeList() {
+		return domainCodeList;
+	}
+	public void setDomainCodeList(List<String> domainCodeList) {
+		this.domainCodeList = domainCodeList;
+	}
 	public Integer getId() {
 		return id;
 	}
