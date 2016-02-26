@@ -125,6 +125,7 @@
         <prop key="/authorizationFailure.html">passThroughController</prop>
         
         <prop key="/uniauth/allDomains">casController</prop>
+        <prop key="/uniauth/kaptcha">kaptchaController</prop>
       </util:properties>
     </property>
     <!--
@@ -139,6 +140,9 @@
   </bean>
 
   <bean id="casController" class="com.dianrong.common.uniauth.cas.controller.CasController">
+		<property name="domainService" ref="domainService"></property>
+  </bean>
+  <bean id="kaptchaController" class="com.dianrong.common.uniauth.cas.controller.KaptchaController">
 		<property name="domainService" ref="domainService"></property>
   </bean>
   

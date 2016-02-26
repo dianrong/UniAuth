@@ -20,11 +20,11 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 @Service
 public class DomainService {
 	
-	@Resource(name = "uniauthConfig")
+	@Resource(name="uniauthConfig")
 	private Map<String, String> allZkNodeMap;
 	
 	@Autowired
-	private UniClientFacade uniUniClientFacade;
+	private UniClientFacade uniClientFacade;
 	
 	public List<DomainDto> getAllLoginPageDomains() {
 		DomainParam domainParam = new DomainParam();
@@ -40,9 +40,8 @@ public class DomainService {
 				domainCodeList.add(zkNodeName);
 			}
 		}
-		System.out.println(domainCodeList);
 		domainParam.setDomainCodeList(domainCodeList);
-		Response<List<DomainDto>> response = uniUniClientFacade.getDomainResource().getAllLoginDomains(domainParam);
+		Response<List<DomainDto>> response = uniClientFacade.getDomainResource().getAllLoginDomains(domainParam);
 		List<DomainDto> domainDtoList = response.getData();
 		if(domainDtoList != null && !domainDtoList.isEmpty()){
 			for(DomainDto domainDto :domainDtoList){

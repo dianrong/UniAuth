@@ -28,7 +28,7 @@ import com.dianrong.common.uniauth.common.client.UniClientFacade;
 public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
 	
 	@Autowired
-	private UniClientFacade uniUniClientFacade;
+	private UniClientFacade uniClientFacade;
 	
 	@Override
 	protected HandlerResult authenticateUsernamePasswordInternal(UsernamePasswordCredential credential)	throws GeneralSecurityException, PreventedException {
@@ -44,7 +44,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 			loginParam.setIp(clientIp);
 		}
 		
-		Response<Void> response = uniUniClientFacade.getUserResource().login(loginParam);
+		Response<Void> response = uniClientFacade.getUserResource().login(loginParam);
 		List<Info> infoList = response.getInfo();
 		
 		if(infoList != null && !infoList.isEmpty()){
