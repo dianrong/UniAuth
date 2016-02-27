@@ -15,4 +15,5 @@ public interface AppConstants {
     
 	String ZK_DOMAIN_PREFIX = "domains.";
 	String SERVICE_LOGIN_POSTFIX = "/login/cas";
+	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
 }
