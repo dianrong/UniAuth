@@ -142,6 +142,7 @@
   <bean id="captchaController" class="com.dianrong.common.uniauth.cas.controller.CaptchaController">
   </bean>
   <bean id="forgetPasswordController" class="com.dianrong.common.uniauth.cas.controller.ForgetPasswordController">
+  		<property name="forgetPasswordService" ref="forgetPasswordService"></property>
   </bean>
   
   <bean id="passThroughController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>

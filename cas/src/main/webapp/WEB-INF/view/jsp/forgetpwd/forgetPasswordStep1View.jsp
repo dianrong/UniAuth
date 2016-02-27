@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-${name} 
+${name} <br>
+${fpm.email}
 </body>
 </html>

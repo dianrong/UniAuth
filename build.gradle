@@ -167,7 +167,7 @@ project(':cas') {
 	}
 	
 	dependencies {
-		compile(project(':common')){
+		compile(project(':share-rw')){
 			exclude group: 'org.springframework'
 			exclude group: 'org.springframework.security'
 			exclude group: 'com.fasterxml.jackson.core'

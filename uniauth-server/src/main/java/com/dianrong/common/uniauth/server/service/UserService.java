@@ -22,6 +22,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
+import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
@@ -281,7 +282,7 @@ public class UserService {
 		CheckEmpty.checkEmpty(password, "密码");
 		CheckEmpty.checkEmpty(ip, "IP地址");
 
-		User user = getUserByAccount(account);
+		User user = getUserByAccount(account, true);
         
 		if(AppConstants.ONE_Byte.equals(user.getStatus())){
 			throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
@@ -314,7 +315,7 @@ public class UserService {
 	public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
 		String account = loginParam.getAccount();
 		CheckEmpty.checkEmpty(account, "账号");
-		User user = getUserByAccount(account);
+		User user = getUserByAccount(account, true);
 		
 		UserDetailDto userDetailDto = new UserDetailDto();
 		UserDto userDto = BeanConverter.convert(user);
@@ -381,6 +382,32 @@ public class UserService {
 		return userDetailDto;
 	}
 
+	public UserDto getSingleUser(UserParam userParam) {
+		String email = userParam.getEmail();
+		CheckEmpty.checkEmpty(email, "邮件");
+		
+		User user = getUserByAccount(email, false);
+		return BeanConverter.convert(user);
+	}
+	
+	@Transactional
+	public void resetPassword(UserParam userParam) {
+		String email = userParam.getEmail();
+		String password = userParam.getPassword();
+		CheckEmpty.checkEmpty(email, "邮件");
+		CheckEmpty.checkEmpty(password, "密码");
+		
+		User user = getUserByAccount(email, false);
+		if(!AuthUtils.validatePasswordRule(password)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
+        }
+        byte salt[] = AuthUtils.createSalt();
+        user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
+        user.setPasswordSalt(Base64.encode(salt));
+        user.setPasswordDate(new Date());
+        
+        userMapper.updateByPrimaryKey(user);
+	}
     private int updateLogin(Long userId, String ip, int failCount) {
         User user = new User();
         user.setId(userId);
@@ -390,10 +417,12 @@ public class UserService {
         return userMapper.updateByPrimaryKeySelective(user);
     }
     
-    private User getUserByAccount(String account){
+    private User getUserByAccount(String account, boolean withPhoneChecked){
     	UserExample example = new UserExample();
     	example.or().andEmailEqualTo(account);
-    	example.or().andEmailEqualTo(account);
+    	if(withPhoneChecked){
+        	example.or().andPhoneEqualTo(account);
+    	}
 
         List<User> userList = userMapper.selectByExample(example);
         if(userList == null || userList.isEmpty()){
