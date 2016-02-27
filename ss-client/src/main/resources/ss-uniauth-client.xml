@@ -27,7 +27,7 @@
 	</b:bean>  
 	
 	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
-		<b:property name="service" value="#{uniauthConfig[domainDefine.domainCode]}/login/cas"/>   
+		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>   
 		<b:property name="authenticateAllArtifacts" value="true"/>
 		<b:property name="sendRenew" value="false" />
 	</b:bean>  

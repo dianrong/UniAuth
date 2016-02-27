@@ -45,9 +45,9 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if(bean.getClass().getName().equals("org.springframework.security.web.access.intercept.FilterSecurityInterceptor")){
+		if(bean.getClass().getName().equals(FilterSecurityInterceptor.class.getName())){
 			CheckDomainDefine.checkDomainDefine(currentDomainCode);
-			currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
+			//currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 			
 			FilterSecurityInterceptor filterSecurityInterceptor = (FilterSecurityInterceptor)bean;
 			//note: access public secure object is not allowed, this is a bit too overkilled if set to be true

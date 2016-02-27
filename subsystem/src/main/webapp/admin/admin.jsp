@@ -24,6 +24,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     role_admin can see this page. <br>
     <a href="/subsystem/user/user.jsp">role user page</a> <br>
     
-    <a href="/subsystem/j_spring_cas_security_logout">Logout</a>
+    <a href="/subsystem/logout/cas">Logout</a>
   </body>
 </html>

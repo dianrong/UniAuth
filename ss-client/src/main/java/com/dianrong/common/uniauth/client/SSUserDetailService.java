@@ -34,7 +34,7 @@ public class SSUserDetailService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
 		CheckDomainDefine.checkDomainDefine(currentDomainCode);
-		currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
+		//currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 		
 		if(userName == null || "".equals(userName.toString())){
 			throw new UsernameNotFoundException(userName + " not found");
