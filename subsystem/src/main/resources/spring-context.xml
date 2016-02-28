@@ -42,7 +42,7 @@
       	<sec:intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" />
 	</sec:http>
 	
-    
-	<bean id="myPermissionEvaluator" class="com.dianrong.loanbusiness.subsystem.service.MyPermissionEvaluator"></bean>
-	<bean id="myService" class="com.dianrong.loanbusiness.subsystem.service.MyService"></bean>
+    <bean id="myService" class="com.dianrong.loanbusiness.subsystem.service.MyService"></bean>
+	<bean id="uniauthPermissionEvaluator" class="com.dianrong.loanbusiness.subsystem.service.MyPermissionEvaluator"></bean>
+
 </beans>

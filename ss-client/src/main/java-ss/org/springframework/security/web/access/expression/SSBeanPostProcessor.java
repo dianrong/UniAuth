@@ -17,14 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.expression.AbstractSecurityExpressionHandler;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluator;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
@@ -39,9 +36,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 	
 	@Value("#{domainDefine.domainCode}")
 	private String currentDomainCode;
-	
-	private UniauthPermissionEvaluator customPermissionEvaluator;
-	
+
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		return bean;
@@ -51,15 +46,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		String beanClazzName = bean.getClass().getName();
 		
-		if(bean instanceof UniauthPermissionEvaluator){
-			customPermissionEvaluator = (UniauthPermissionEvaluator)bean;
-		}
-		
-		if(beanClazzName.equals(DefaultWebSecurityExpressionHandler.class.getName()) || beanClazzName.equals(DefaultMethodSecurityExpressionHandler.class.getName())){
-			AbstractSecurityExpressionHandler<?>  expressionHandler = (AbstractSecurityExpressionHandler<?>)bean;
-			expressionHandler.setPermissionEvaluator(customPermissionEvaluator);
-		}
-		else if(beanClazzName.equals(FilterSecurityInterceptor.class.getName())){
+		if(beanClazzName.equals(FilterSecurityInterceptor.class.getName())){
 			CheckDomainDefine.checkDomainDefine(currentDomainCode);
 			//currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 			
