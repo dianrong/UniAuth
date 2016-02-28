@@ -15,9 +15,11 @@ public class MyPermissionEvaluator implements UniauthPermissionEvaluator {
 
 	@Override
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
+		System.out.println(targetDomainObject);
 		if(authentication.getName().equals("zengwei.xu@dianrong.com")){
 			return true;
 		}
+		
 		return false;
 	}
 

@@ -1,6 +1,5 @@
 package com.dianrong.loanbusiness.subsystem.controller;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -14,6 +13,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.loanbusiness.subsystem.model.TestModel;
 import com.dianrong.loanbusiness.subsystem.service.MyService;
 
 @Controller
@@ -35,13 +35,14 @@ public class MainController {
 		return "commonpage";
 	}
 	
-	@PreAuthorize("hasPermission('1','2')")   
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	public String getAadminPage() {
 		DomainParam domainParam = new DomainParam();
 		domainParam.setCode("techops");
 		Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
 		
+		TestModel tm = new TestModel();
+		myService.testModel(tm);
 		logger.debug("Received request to show admin page");
 		return "adminpage";
 
