@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client;
+package com.dianrong.common.uniauth.client.custom;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
-import com.dianrong.common.uniauth.client.support.UserExtInfo;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;

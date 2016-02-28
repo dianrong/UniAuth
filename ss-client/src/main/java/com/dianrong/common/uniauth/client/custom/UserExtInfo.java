@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.support;
+package com.dianrong.common.uniauth.client.custom;
 
 import java.util.Collection;
 

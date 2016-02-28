@@ -71,7 +71,7 @@
 		<authentication-provider ref="casAuthenticationProvider"/>
 	</authentication-manager>
 	
-	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.SSUserDetailService">
+	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.SSUserDetailService">
 	</b:bean>
 	
     <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor">

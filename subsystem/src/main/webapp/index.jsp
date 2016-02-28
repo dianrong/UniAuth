@@ -51,7 +51,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	Object obj1 = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	out.println(obj1);
 	out.println("<br>");
-	com.dianrong.common.uniauth.client.support.UserExtInfo userExtInfo = (com.dianrong.common.uniauth.client.support.UserExtInfo)obj1;
+	com.dianrong.common.uniauth.client.custom.UserExtInfo userExtInfo = (com.dianrong.common.uniauth.client.custom.UserExtInfo)obj1;
 	out.println(userExtInfo.getDomainDto());
 	out.println("<br>");
 	out.println("<br>");
