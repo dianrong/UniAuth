@@ -22,7 +22,6 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class SSUserDetailService implements UserDetailsService {
 	@Autowired

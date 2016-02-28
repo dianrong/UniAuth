@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluator;
 
-@Component(value="myPermissionEvaluator")
 public class MyPermissionEvaluator implements UniauthPermissionEvaluator {
 
 	public MyPermissionEvaluator() {

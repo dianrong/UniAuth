@@ -40,7 +40,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<sec:authorize url="/abc/123/abc">
 		reg expression
 	</sec:authorize>
+	<br>
 	
+	<sec:accesscontrollist hasPermission="1" domainObject="test">
+		this is acl
+	</sec:accesscontrollist>
+		
 	<br>
 	<%
 	Object obj1 = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();

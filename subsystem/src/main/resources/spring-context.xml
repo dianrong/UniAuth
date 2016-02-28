@@ -20,8 +20,6 @@
 			http://www.springframework.org/schema/security/spring-security-4.0.xsd
                         ">
 
-	<context:component-scan base-package="com.dianrong.loanbusiness.subsystem.service" />
-
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
 		<property name="domainCode" value="techops"></property>
 	</bean>
@@ -45,4 +43,6 @@
 	</sec:http>
 	
     
+	<bean id="myPermissionEvaluator" class="com.dianrong.loanbusiness.subsystem.service.MyPermissionEvaluator"></bean>
+	<bean id="myService" class="com.dianrong.loanbusiness.subsystem.service.MyService"></bean>
 </beans>

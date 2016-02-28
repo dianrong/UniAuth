@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import com.dianrong.loanbusiness.subsystem.model.TestModel;
 
-@Service
 public class MyService {
 	
 	@PreAuthorize("hasRole('ROLE_USER')")

@@ -25,7 +25,6 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluator;
-import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
@@ -41,19 +40,20 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 	@Value("#{domainDefine.domainCode}")
 	private String currentDomainCode;
 	
-	private UniauthPermissionEvaluator customPermissionEvaluator = new UniauthPermissionEvaluatorImpl();
+	private UniauthPermissionEvaluator customPermissionEvaluator;
 	
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		if(bean instanceof UniauthPermissionEvaluator && bean.getClass() != UniauthPermissionEvaluatorImpl.class){
-			customPermissionEvaluator = (UniauthPermissionEvaluator)bean;
-		}
 		return bean;
 	}
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		String beanClazzName = bean.getClass().getName();
+		
+		if(bean instanceof UniauthPermissionEvaluator){
+			customPermissionEvaluator = (UniauthPermissionEvaluator)bean;
+		}
 		
 		if(beanClazzName.equals(DefaultWebSecurityExpressionHandler.class.getName()) || beanClazzName.equals(DefaultMethodSecurityExpressionHandler.class.getName())){
 			AbstractSecurityExpressionHandler<?>  expressionHandler = (AbstractSecurityExpressionHandler<?>)bean;
