@@ -14,7 +14,14 @@
     <b:import resource="classpath:ss-uniauth-common.xml"/>
 
     <global-method-security pre-post-annotations="enabled" secured-annotations="enabled" jsr250-annotations="enabled" proxy-target-class="true">
+    	<expression-handler ref="methodSecurityExpressionHandler"/>
     </global-method-security>
+    
+	<b:bean id="methodSecurityExpressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+		<b:property name="permissionEvaluator" ref="uniauthPermissionEvaluator" />
+	</b:bean>
+
+	<b:bean id="uniauthPermissionEvaluator" class="com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl"/>
     
     <!--
     exclude the pattern which does not need protection

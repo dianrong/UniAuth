@@ -17,35 +17,49 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.expression.AbstractSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluator;
+import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.PermTypeEnum;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 public class SSBeanPostProcessor implements BeanPostProcessor {
-	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		return bean;
-	}
-	
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
 	@Value("#{domainDefine.domainCode}")
 	private String currentDomainCode;
+	
+	private UniauthPermissionEvaluator customPermissionEvaluator = new UniauthPermissionEvaluatorImpl();
+	
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		if(bean instanceof UniauthPermissionEvaluator && bean.getClass() != UniauthPermissionEvaluatorImpl.class){
+			customPermissionEvaluator = (UniauthPermissionEvaluator)bean;
+		}
+		return bean;
+	}
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if(bean.getClass().getName().equals(FilterSecurityInterceptor.class.getName())){
+		String beanClazzName = bean.getClass().getName();
+		
+		if(beanClazzName.equals(DefaultWebSecurityExpressionHandler.class.getName()) || beanClazzName.equals(DefaultMethodSecurityExpressionHandler.class.getName())){
+			AbstractSecurityExpressionHandler<?>  expressionHandler = (AbstractSecurityExpressionHandler<?>)bean;
+			expressionHandler.setPermissionEvaluator(customPermissionEvaluator);
+		}
+		else if(beanClazzName.equals(FilterSecurityInterceptor.class.getName())){
 			CheckDomainDefine.checkDomainDefine(currentDomainCode);
 			//currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 			

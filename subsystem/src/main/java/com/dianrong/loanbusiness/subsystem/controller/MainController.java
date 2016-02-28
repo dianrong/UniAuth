@@ -27,7 +27,7 @@ public class MainController {
 	@Autowired
 	private UniClientFacade uniClientFacade;
 
-	@PreAuthorize("hasRole('ROLE_USER')")   
+	@PreAuthorize("hasRole('ROLE_ADMIN')")   
 	@RequestMapping(value = "/common", method = RequestMethod.GET)
 	public String getCommonPage() {
 		logger.debug("Received request to show common page");
@@ -35,7 +35,7 @@ public class MainController {
 		return "commonpage";
 	}
 	
-	@PreAuthorize("hasRole('ROLE_ADMIN')")   
+	@PreAuthorize("hasPermission('1','2')")   
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	public String getAadminPage() {
 		DomainParam domainParam = new DomainParam();

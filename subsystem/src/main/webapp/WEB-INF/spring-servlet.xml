@@ -19,9 +19,7 @@
 	<context:component-scan base-package="com.dianrong.loanbusiness.subsystem.controller" />
 	
     <sec:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" jsr250-annotations="enabled" proxy-target-class="true">
-    	<!-- 
-    	<expression-handler ref="expressionHandler"/>
-    	 -->
+		<sec:expression-handler ref="methodSecurityExpressionHandler"/>
     </sec:global-method-security>
     
 	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver"
