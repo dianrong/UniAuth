@@ -58,7 +58,8 @@ sourceSets {
 
 dependencies {
 
-    compile project(":share-rw")
+    compile "com.dianrong.common.uniauth:share-rw:1.0.0"
+    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.0"
 
     //Spring
     def spring_version = '4.1.6.RELEASE'
@@ -118,7 +119,7 @@ def loadConfiguration() {
     project.ext.config = config
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
+// import org.apache.tools.ant.filters.ReplaceTokens
 
 war {
     baseName = config.tomcat.tomcatAppName
