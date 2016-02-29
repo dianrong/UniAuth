@@ -22,7 +22,7 @@ public interface IGroupResource {
     @POST
     @Path("tree")
     //scenario: group/member tree
-    //if groupId not set(or -1), retrieve the root tree or subtree
+    //if groupId == null then retrieve from the root tree, otherwise treat the groupId as the root tree.
     Response<GroupDto> getGroupTree(GroupParam groupParam);
     
     @POST
