@@ -39,6 +39,7 @@
     <mvc:resources mapping="/styles/**" location="/styles/" />
     <mvc:resources mapping="/images/**" location="/images/" />
     <mvc:resources mapping="/i18n/**" location="/i18n/" />
+    <mvc:resources mapping="/swagger-ui/**" location="/swagger-ui/" />
     <mvc:resources mapping="/favicon.ico" location="/" />
     <mvc:resources mapping="/humans.txt" location="/" />
     <mvc:resources mapping="/robots.txt" location="/" />
