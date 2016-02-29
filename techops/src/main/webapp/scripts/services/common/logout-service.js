@@ -22,7 +22,7 @@ define(['../../utils/constant'], function (constant) {
       logout: {
         method: 'GET',
         params: {
-          catalog: 'logout'
+          catalog: 'logout/cas'
         },
         //isArray: false,
         timeout: constant.reqTimeout,

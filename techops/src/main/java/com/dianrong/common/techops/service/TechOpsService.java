@@ -46,7 +46,9 @@ public class TechOpsService {
 		}
 		if(authorizedDomainCodeList != null && !authorizedDomainCodeList.isEmpty()){
 			DomainParam domainParam = new DomainParam();
-			domainParam.setDomainCodeList(authorizedDomainCodeList);
+			if(!authorizedDomainCodeList.contains(AppConstants.DOMAIN_CODE_TECHOPS)){
+				domainParam.setDomainCodeList(authorizedDomainCodeList);
+			}
 			domainDtoList = uARWFacade.getDomainRWResource().getAllLoginDomains(domainParam).getData();
 		}
 		return domainDtoList;

@@ -52,9 +52,14 @@ public class DomainService {
 
 	public List<DomainDto> getAllLoginDomains(DomainParam domainParam) {
 		List<String> domainCodeList = domainParam.getDomainCodeList();
-		CheckEmpty.checkEmpty(domainCodeList, "请求的域编码列表");
 		DomainExample example = new DomainExample();
-		example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte).andCodeIn(domainCodeList);
+		//CheckEmpty.checkEmpty(domainCodeList, "请求的域编码列表");
+		if(domainCodeList == null){
+			example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
+		}
+		else{
+			example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte).andCodeIn(domainCodeList);
+		}
 		
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		List<DomainDto> domainDtoList = new ArrayList<DomainDto>();
