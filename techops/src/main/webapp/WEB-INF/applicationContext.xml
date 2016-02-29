@@ -5,6 +5,7 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/context
@@ -13,8 +14,30 @@
                         http://www.springframework.org/schema/aop/spring-aop.xsd
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/security
+						http://www.springframework.org/schema/security/spring-security-4.0.xsd
                         ">
 
-    <import resource="uniauth-beans.xml" />
+	<context:component-scan base-package="com.dianrong.common.techops.service, com.dianrong.common.techops.sscustom" />
 
+	<import resource="classpath:ss-uniauth-client.xml" />
+	
+	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
+		<property name="domainCode" value="techops"></property>
+	</bean>
+	
+	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true" request-matcher="ant">
+      	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
+      	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+      	<sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
+      	<sec:csrf disabled="true"/>
+      	      	
+      	<!-- 
+      		the following part is customized intercept-url element definition for subsystem
+      		note: conflict with the judgment of regular expression, so the priority problem MUST be resolved.
+      	-->
+      	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
+
+	</sec:http>
+	
 </beans>
