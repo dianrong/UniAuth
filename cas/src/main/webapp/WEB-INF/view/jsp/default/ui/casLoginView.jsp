@@ -12,8 +12,11 @@
 		String reqUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + "/login?" + request.getQueryString();
 %>
 		{ 
-			"relogin":true,
-			"location:":"<%= reqUrl %>"
+			"data":
+				{
+					"relogin":true,
+					"location:":"<%= reqUrl %>"
+				}
 		}
 <%
 	}
