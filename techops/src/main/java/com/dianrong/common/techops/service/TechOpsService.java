@@ -1,5 +1,6 @@
 package com.dianrong.common.techops.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,10 +29,10 @@ public class TechOpsService {
     }
     
 	public List<DomainDto> getDropDownDomainList(String ip){
-		List<DomainDto> domainDtoList = null;
+		List<DomainDto> domainDtoList = new ArrayList<DomainDto>();
 		UserExtInfo userExtInfo = getLoginUserInfo();
 		DomainDto domainDto = userExtInfo.getDomainDto();
-		List<String> authorizedDomainCodeList = null;
+		List<String> authorizedDomainCodeList = new ArrayList<String>();
 		if(domainDto != null){
 			List<RoleDto> roleDtoList = domainDto.getRoleList();
 			if(roleDtoList != null && !roleDtoList.isEmpty()){
@@ -39,18 +40,27 @@ public class TechOpsService {
 					String roleCode = roleDto.getRoleCode();
 					if(AppConstants.ROLE_ADMIN.equals(roleCode) || AppConstants.ROLE_SUPER_ADMIN.equals(roleCode)){
 						Map<String, List<String>> roleMap = roleDto.getPermMap();
-						authorizedDomainCodeList = roleMap.get(PermTypeEnum.DOMAIN.toString());
+						List<String> domainCodeList = roleMap.get(PermTypeEnum.DOMAIN.toString());
+						if(domainCodeList != null && !domainCodeList.isEmpty()){
+							for(String domainCode: domainCodeList){
+								if(!authorizedDomainCodeList.contains(domainCode)){
+									authorizedDomainCodeList.add(domainCode);
+								}
+							}
+						}
 					}
 				}
 			}
-		}
-		if(authorizedDomainCodeList != null && !authorizedDomainCodeList.isEmpty()){
-			DomainParam domainParam = new DomainParam();
-			if(!authorizedDomainCodeList.contains(AppConstants.DOMAIN_CODE_TECHOPS)){
-				domainParam.setDomainCodeList(authorizedDomainCodeList);
+			
+			if(!authorizedDomainCodeList.isEmpty()){
+				DomainParam domainParam = new DomainParam();
+				if(!authorizedDomainCodeList.contains(AppConstants.DOMAIN_CODE_TECHOPS)){
+					domainParam.setDomainCodeList(authorizedDomainCodeList);
+				}
+				domainDtoList = uARWFacade.getDomainRWResource().getAllLoginDomains(domainParam).getData();
 			}
-			domainDtoList = uARWFacade.getDomainRWResource().getAllLoginDomains(domainParam).getData();
 		}
+
 		return domainDtoList;
 	}
 }

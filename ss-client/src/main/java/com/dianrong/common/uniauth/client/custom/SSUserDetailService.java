@@ -43,30 +43,39 @@ public class SSUserDetailService implements UserDetailsService {
 			Response<UserDetailDto> response = uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
 			UserDetailDto userDetailDto = response.getData();
 			
-			UserDto userDto = userDetailDto.getUserDto();
-			Long id = userDto.getId();
-			List<DomainDto> domainDtoList = userDetailDto.getDomainList();
-			DomainDto currentDomainDto = null;
-			
-			for(DomainDto domainDto : domainDtoList){
-				String domainCode = domainDto.getCode();
-				if(currentDomainCode.equals(domainCode)){
-					currentDomainDto = domainDto;
-					break;
-				}
+			if(userDetailDto == null){
+				throw new UsernameNotFoundException(userName + " not found");
 			}
-			
-			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-			if(currentDomainDto != null){
-				List<RoleDto> roleDtoList = currentDomainDto.getRoleList();
-				for(RoleDto roleDto: roleDtoList){
-					String roleCode = roleDto.getRoleCode();
-					SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
-					authorities.add(authority);
+			else{
+				UserDto userDto = userDetailDto.getUserDto();
+				Long id = userDto.getId();
+				List<DomainDto> domainDtoList = userDetailDto.getDomainList();
+				DomainDto currentDomainDto = null;
+				
+				if(domainDtoList != null && !domainDtoList.isEmpty()){
+					for(DomainDto domainDto : domainDtoList){
+						String domainCode = domainDto.getCode();
+						if(currentDomainCode.equals(domainCode)){
+							currentDomainDto = domainDto;
+							break;
+						}
+					}
 				}
+				
+				Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+				if(currentDomainDto != null){
+					List<RoleDto> roleDtoList = currentDomainDto.getRoleList();
+					if(roleDtoList != null && !roleDtoList.isEmpty()){
+						for(RoleDto roleDto: roleDtoList){
+							String roleCode = roleDto.getRoleCode();
+							SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
+							authorities.add(authority);
+						}
+					}
+				}
+				
+				return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto);
 			}
-			
-			return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto);
 		}
 	}
 }
