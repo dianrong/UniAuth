@@ -11,12 +11,14 @@
 		
 		String reqUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + "/login?" + request.getQueryString();
 %>
-		{ 
-			"data":
-				{
-					"relogin":true,
-					"location:":"<%= reqUrl %>"
-				}
+		{
+			"info":
+				[
+					{
+						"name": "LOGIN_REDIRECT_URL",
+						"msg": "<%= reqUrl %>"
+					}
+				]
 		}
 <%
 	}
