@@ -21,12 +21,12 @@ var scripts = [
     //"https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js",
     //"https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js",
-    //"https://rawgithub.com/cowboy/javascript-debug/master/ba-debug.min.js"];
+    //"https://rawgithub.com/cowboy/javascript-debug/master/ba-debug.min.js"
+];
 
 head.ready(document, function() {
     head.load(scripts, resourceLoadedSuccessfully);
 });
-
 
 function areCookiesEnabled() {
     $.cookie('cookiesEnabled', 'true');
