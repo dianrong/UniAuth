@@ -37,8 +37,8 @@ insert into role(id, name,description, status, domain_id, role_code_id) values(3
 /**perm_type表*/
 
 /**permission表*/
-insert into permission(id, value, description, status, perm_type_id, domain_id) values(2, 'crm', '拥有techops上crm域的permission，全权管理在techops上的crm域',0,3,1);
-insert into permission(id, value, description, status, perm_type_id, domain_id) values(3, 'ams', '拥有techops上ams域的permission，全权管理在techops上的ams域',0,3,1);
+insert into permission(id, value, description, status, perm_type_id, domain_id) values(2, 'crm', '拥有techops上crm域的permission，全权管理在techops上的crm域',0,1,1);
+insert into permission(id, value, description, status, perm_type_id, domain_id) values(3, 'ams', '拥有techops上ams域的permission，全权管理在techops上的ams域',0,1,1);
 
 /**role_permission表*/
 insert into role_permission(role_id, permission_id) values(2, 2);

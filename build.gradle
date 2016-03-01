@@ -192,6 +192,7 @@ project(':cas') {
 			exclude group: 'org.springframework.security'
 			exclude group: 'com.fasterxml.jackson.core'
 		}
+		providedCompile "org.apache.tomcat:tomcat-catalina:7.0.63"
 		providedCompile 'javax.servlet:javax.servlet-api:3.1.0'  
 		providedCompile 'org.jasig.cas:cas-server-core:4.1.3'
 		providedCompile 'org.jasig.cas:cas-server-security-filter:2.0.4'

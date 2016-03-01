@@ -7,6 +7,7 @@ require(['app',
     'controllers/group/group',
     'services/common/logout-service',
     'services/common/common-service',
+    'services/common/http-interceptor-service',
     'services/user/user-service',
     'services/group/group-service'],
 

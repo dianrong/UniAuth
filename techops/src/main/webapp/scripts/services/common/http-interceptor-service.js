@@ -31,10 +31,15 @@ define(['../../utils/constant'], function (constant) {
         }
       }
       return response;
+    };
+    var request = function(config) {
+      config.headers['X-Requested-With'] = "XMLHttpRequest";
+      return config;
     }
     return {
       responseError: responseError,
-      response: response
+      response: response,
+      request: request
     };
   };
 
