@@ -30,6 +30,7 @@
       	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
       	<sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
+      	<sec:access-denied-handler error-page="/errors/403.jsp"/>
       	<sec:csrf disabled="true"/>
       	      	
       	<!-- 

@@ -1,6 +1,8 @@
-
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
 <%
-	String ajaxReqType = request.getHeader("X-Requested-With");
+	String ajaxReqType = request.getHeader(AppConstants.AJAS_CROSS_HEADER);
+
 	if (ajaxReqType == null) {
 %>
 		<jsp:directive.include file="includes/login.jsp" />
@@ -11,15 +13,15 @@
 		
 		String reqUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath() + "/login?" + request.getQueryString();
 %>
-		{
-			"info":
-				[
-					{
-						"name": "LOGIN_REDIRECT_URL",
-						"msg": "<%= reqUrl %>"
-					}
-				]
-		}
+{
+	"info":
+		[
+			{
+				"name": "<%=AppConstants.LOGIN_REDIRECT_URL%>",
+				"msg": "<%= reqUrl %>"
+			}
+		]
+}
 <%
 	}
 %>
