@@ -16,7 +16,7 @@
 	"info":
 		[
 			{
-				"name": "NO_PRIVILEGE",
+				"name": "<%=AppConstants.NO_PRIVILEGE%>",
 				"msg": "对不起，你没有权限访问当前页面资源！"
 			}
 		]
