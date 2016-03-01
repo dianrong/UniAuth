@@ -28,7 +28,6 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
-import com.dianrong.common.uniauth.common.enm.PermTypeEnum;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 public class SSBeanPostProcessor implements BeanPostProcessor {
@@ -89,9 +88,12 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 				String roleCode = urlRoleMappingDto.getRoleCode();
 				String permType = urlRoleMappingDto.getPermType();
 			
+				/*
+				 * 
 				if(PermTypeEnum.PRIVILEGE.toString().equals(permType)){
 					permUrl = permUrl.startsWith("/") ? permUrl : "/" + permUrl;
 				}
+				*/
 				if(plainMap.containsKey(permUrl)){
 					Set<String> roleCodeSet = plainMap.get(permUrl);
 					roleCodeSet.add(roleCode);
