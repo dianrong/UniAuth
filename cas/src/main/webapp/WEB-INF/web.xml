@@ -48,8 +48,8 @@
         <init-param>
             <param-name>cors.allowed.origins</param-name>
             <param-value>
-                ^http[s]?://[a-z]+\-?[a-z]*\.dianrong\.com,
-                ^http://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:?([0-9]{1,5})?
+                ^http(s)?://[a-z]+(\-[a-z]+)?\.dianrong\.com,
+                ^http://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,6})?
             </param-value>
         </init-param>
         <init-param>
