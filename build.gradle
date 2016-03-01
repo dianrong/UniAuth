@@ -158,6 +158,26 @@ project(':subsystem') {
 project(':cas') {
 	apply plugin: 'war'
 
+	sourceSets {
+		deployment {
+			java {
+				srcDir 'src/deployment/java'
+			}
+			resources {
+				srcDir 'src/deployment/mybatis'
+			}
+			compileClasspath += configurations.compile
+			runtimeClasspath += configurations.compile
+		}
+	}
+
+	ext {
+		tomcatUsername = 'admin'        //Tomcat用户
+		tomcatPassword = 'admin'        //Tomcat密码
+		tomcatHost = '192.168.56.101:8080'        //
+		tomcatWarFile = 'build/libs/' + project.name + '.war'
+	}
+
 	configurations{
     	runtime.exclude group : 'commons-logging',module:'commons-logging'
 	}
@@ -178,7 +198,12 @@ project(':cas') {
 		providedCompile 'org.jasig.cas:cas-server-webapp-support:4.1.3'
 		providedCompile 'org.jasig.cas:cas-server-integration-restlet:4.1.3'
 		compile 'com.dianrong.loanbusiness:kaptcha:1.1'
-		
+
+		//Http Components for deploy on local
+		compile 'org.apache.httpcomponents:httpclient:4.4'
+		compile 'org.apache.httpcomponents:fluent-hc:4.4'
+		compile 'org.apache.httpcomponents:httpmime:4.4'
+
 		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
 			//transitive = true
 			//exclude group: 'javax.xml', module: 'xmldsig'
@@ -187,4 +212,46 @@ project(':cas') {
 	task warCas(dependsOn: war) {
 
 	}
+
+	task tomcatUndeploy(type: JavaExec) {
+		main = 'gradle.TomcatDeploy'
+		args = ['undeploy',
+				project.name,
+				tomcatUsername,
+				tomcatPassword,
+				tomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+		doFirst {
+			println "removing war file from Tomcat."
+		}
+	}
+
+	task tomcatDeploy(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "deploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['deploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				tomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task tomcatRedeploy(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "redeploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['redeploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				tomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
 }

@@ -4,6 +4,7 @@
  */
 define({
         apiBase: window.document.location.origin,
+        logout: window.document.location.origin + "/logout/cas",
         // 20 seconds Time out
         reqTimeout: 20000,
         pageSize: 50,

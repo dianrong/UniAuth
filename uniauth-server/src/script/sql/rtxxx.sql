@@ -180,8 +180,8 @@ CREATE INDEX `fk_user_role_role1_idx` ON `user_role` (`role_id` ASC);
 -- Table `perm_type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `perm_type` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'URIPATTERN, PRIVILEGE',
-  `type` VARCHAR(32) NOT NULL COMMENT 'URI_PATTERN, PRIVILEGE',
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'URIPATTERN',
+  `type` VARCHAR(32) NOT NULL COMMENT 'URI_PATTERN',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -313,9 +313,8 @@ insert into `role_code`(`code`, `description`) values ('ROLE_ADMIN', '管理员'
 insert into `role_code`(`code`, `description`) values ('ROLE_NORMAL', '普通用户');
 insert into `role_code`(`code`, `description`) values ('ROLE_GUEST', 'Guest用户');
 
-insert into `perm_type`(`type`) values ('PRIVILEGE');
-insert into `perm_type`(`type`) values ('URI_Pattern');
-insert into `perm_type`(`type`) values ('DOMAIN');
+insert into `perm_type`(`id`, `type`) values (1, 'DOMAIN');
+insert into `perm_type`(`id`, `type`) values (2, 'URI_PATTERN');
 
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
 values('200000001', '樊双贵', 'shuanggui.fan@dianrong.com', '13011111111', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
@@ -333,7 +332,7 @@ insert into domain(id, code, display_name, description, status, create_date, las
 
 insert into role(id, name,description, status, domain_id, role_code_id) values(1, 'techops超级管理员角色', 'techops超级管理员角色，管理所有其他域的权限', 0, 1, 1);
 
-insert into permission(id, value, description, status, perm_type_id, domain_id) values(1, 'techops', '拥有techops整个域的permission，在techops上可进行任何操作(管理组需要额外配置)',0,3,1);
+insert into permission(id, value, description, status, perm_type_id, domain_id) values(1, 'techops', '拥有techops整个域的permission，在techops上可进行任何操作(管理组需要额外配置)',0,1,1);
 
 insert into role_permission(role_id, permission_id) values(1, 1);
 
@@ -341,9 +340,3 @@ insert into grp_role(grp_id, role_id)  values(2, 1);
 
 -- change the primarykey of user_grp
 ALTER TABLE `user_grp` CHANGE COLUMN `type` `type` TINYINT(3) NOT NULL ,DROP PRIMARY KEY,ADD PRIMARY KEY (`user_id`, `grp_id`, `type`);
-
-
-
-
-
-
