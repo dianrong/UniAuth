@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,7 @@ import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 public class SSBeanPostProcessor implements BeanPostProcessor {
+	private static Logger LOGGER = LoggerFactory.getLogger(SSBeanPostProcessor.class);
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
@@ -63,7 +66,19 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 
 				DomainParam domainParam = new DomainParam();
 				domainParam.setCode(currentDomainCode);
-				Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
+				Response<List<UrlRoleMappingDto>> response = null;
+				while(true){
+					try{
+						response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
+						break;
+					}catch(Exception e){
+						LOGGER.warn("The uniauth server not completely started yet, need sleeping for 2 seconds.");
+						try {
+							Thread.sleep(2000L);
+						} catch (InterruptedException ie) {
+						}
+					}
+				}
 				List<UrlRoleMappingDto> urlRoleMappingDtoList = response.getData();
 				
 				LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = convert2StandardMap(urlRoleMappingDtoList);
