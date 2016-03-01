@@ -3,8 +3,22 @@
  * @module controllers/login
  */
 define({
-        apiBase: window.document.location.origin,
-        logout: window.document.location.origin + "/logout/cas",
+        apiBase: (function() {
+            var origin = window.document.location.origin;
+            if(origin.indexOf("://passport") > 0) {
+                return origin;
+            } else {
+                return origin + "/techops";
+            }
+        })(),
+        logout: (function() {
+            var origin = window.document.location.origin;
+            if(origin.indexOf("://passport") > 0) {
+                return origin + "/logout/cas";
+            } else {
+                return origin + "/techops/logout/cas";
+            }
+        })(),
         // 20 seconds Time out
         reqTimeout: 20000,
         pageSize: 50,
