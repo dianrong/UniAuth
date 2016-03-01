@@ -58,8 +58,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
     app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$urlMatcherFactoryProvider',
         function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider) {
 
-        $httpProvider.defaults.headers.common["X-Requested-With"];
-        // wait for interceptor $httpProvider.interceptors.push('httpInterceptorSvc');
+        $httpProvider.interceptors.push('HttpInterceptorService');
         $urlRouterProvider.otherwise('/');
         $stateProvider.
         state('user', {

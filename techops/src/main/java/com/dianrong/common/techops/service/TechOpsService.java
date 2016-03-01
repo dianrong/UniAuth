@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +63,13 @@ public class TechOpsService {
 		}
 
 		return domainDtoList;
+	}
+
+	public List<RoleDto> getAllRoles() {
+		return null;
+	}
+
+	public List<PermissionDto> getAllPermissions() {
+		return null;
 	}
 }
