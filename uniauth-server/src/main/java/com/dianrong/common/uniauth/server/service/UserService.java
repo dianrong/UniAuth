@@ -1,14 +1,6 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -354,7 +346,7 @@ public class UserService {
 						
 						List<Permission> permList = permissionMapper.selectByRoleAndDomainId(roleAndDomainMap);
 						
-						Map<String, List<String>> permMap = new HashMap<String, List<String>>();
+						Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
 						
 						if(permList != null){
 							for(Permission permission: permList){
@@ -366,9 +358,9 @@ public class UserService {
 									permMap.get(permType).add(value);
 								}
 								else{
-									List<String> list = new ArrayList<String>();
-									list.add(value);
-									permMap.put(permType, list);
+									Set<String> set = new HashSet<>();
+                                    set.add(value);
+									permMap.put(permType, set);
 								}
 							}
 						}

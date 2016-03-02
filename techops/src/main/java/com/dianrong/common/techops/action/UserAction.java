@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.dianrong.common.techops.bean.LoginUser;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,12 +71,9 @@ public class UserAction {
         return uARWFacade.getUserRWResource().updateUser(userParam);
     }
 
-    @RequestMapping(value = "/techops/domain" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response<List<DomainDto>> getSwitchableDomains(HttpServletRequest request, String email) {
-//        LoginParam loginParam = new LoginParam();
-//        loginParam.setAccount(email);
-//        Response<UserDetailDto> userDetailDtoResponse = uARWFacade.getUserRWResource().getUserDetailInfo(loginParam);
-    	List<DomainDto> domainDtoList = techOpsService.getDropDownDomainList(request.getRemoteAddr());
-    	return new Response<List<DomainDto>>(domainDtoList);
+    @RequestMapping(value = "/current" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<LoginUser> getCurrentUserInfo(HttpServletRequest request, String email) {
+        LoginUser loginUser = techOpsService.getLoginUser();
+    	return Response.success(loginUser);
     }
 }

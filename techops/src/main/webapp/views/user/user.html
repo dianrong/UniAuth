@@ -54,12 +54,12 @@
                 <div class="btn-group">
                     <a title="管理用户的角色" class="btn btn-info" href="#/permission"><i class="fa fa-cogs"></i></a>
                     <a title="解锁用户" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
-                    <a title="重置密码" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-key"></i></a>
-                    <a title="{{d.status?'启用该用户':'禁用该用户'}}" class="btn btn-info" ng-click="launch('status', d)">
+                    <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="重置密码" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-key"></i></a>
+                    <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="{{d.status?'启用该用户':'禁用该用户'}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
                     </a>
-                    <a title="修改用户信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
-                </div>
+                    <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="修改用户信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+               </div>
             </td>
         </tr>
         </tbody>

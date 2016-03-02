@@ -29,7 +29,6 @@ public class DomainAction {
     
     @RequestMapping(value = "/all" , method= RequestMethod.GET)
     public Response<List<DomainDto>> getAllLoginDomains(HttpServletRequest request) {
-    	List<DomainDto> domainDtoList = techOpsService.getDropDownDomainList(request.getRemoteAddr());
-    	return new Response<List<DomainDto>>(domainDtoList);
+        return null;
     }
 }

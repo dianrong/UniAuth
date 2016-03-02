@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Arc on 14/1/16.
@@ -20,7 +20,7 @@ public class RoleDto {
 	private String roleCode;
 
 	private List<GroupDto> groupList;
-	private Map<String, List<String>> permMap;
+	private Map<String, Set<String>> permMap;
 	
 	//whether this role connected with this permission
 	//private boolean permChecked;
@@ -123,11 +123,11 @@ public class RoleDto {
 	}
 
 
-	public Map<String, List<String>> getPermMap() {
+	public Map<String, Set<String>> getPermMap() {
 		return permMap;
 	}
 
-	public RoleDto setPermMap(Map<String, List<String>> permMap) {
+	public RoleDto setPermMap(Map<String, Set<String>> permMap) {
 		this.permMap = permMap;
 		return this;
 	}

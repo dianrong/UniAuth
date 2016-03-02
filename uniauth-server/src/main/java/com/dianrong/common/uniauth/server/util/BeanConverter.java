@@ -30,6 +30,7 @@ import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
  * Created by Arc on 15/1/16.
  */
 public class BeanConverter {
+
     public static RoleCodeDto convert(RoleCode roleCode) {
         if(roleCode == null) {
             return null;
