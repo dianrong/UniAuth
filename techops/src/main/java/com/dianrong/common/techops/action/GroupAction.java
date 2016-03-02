@@ -5,6 +5,7 @@ import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ public class GroupAction {
     private UARWFacade uARWFacade;
 
     @RequestMapping(value = "/tree" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     Response<GroupDto> getGroupTree(GroupParam groupParam) {
         return uARWFacade.getGroupRWResource().getGroupTree(groupParam);
     }
