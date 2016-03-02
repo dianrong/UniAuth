@@ -44,6 +44,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $rootScope.$stateParams = $stateParams;
 
       $rootScope.userInfo = permission.userInfo;
+      $rootScope.groupSelected = {};
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
       $rootScope.pageTitle = '权限运维系统 点融网-Dianrong';
 

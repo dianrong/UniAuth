@@ -18,9 +18,9 @@
  */
 
 var scripts = [ 
-    "http://cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
-    "http://cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js",
-    "http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js",
+    "https://cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
+    "https://cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js",
+    "https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js",
     //"https://rawgithub.com/cowboy/javascript-debug/master/ba-debug.min.js"
 ];
 
