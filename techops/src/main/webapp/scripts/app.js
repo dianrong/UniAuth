@@ -69,6 +69,7 @@ require(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate
         }).
         state('group.add', {
             url: '',
+            controller: "GroupAddController",
             templateUrl: 'views/group/group-add.html'
         }).
         state('group.modify', {

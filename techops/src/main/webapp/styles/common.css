@@ -5,7 +5,7 @@
 .dialog-header-error span, .dialog-header-error h4,
 .dialog-header-wait span, .dialog-header-wait h4,
 .dialog-header-confirm span, .dialog-header-confirm h4 { color: #ffffff; }
-.control-panel { background-color: #f0f8ff;padding: 8px 8px 8px 8px;}
+.control-panel { background-color: #f0f8ff;padding: 6px 6px 6px 6px;}
 .font-color-info {
     color:#337ab7;
     padding-right: 2px

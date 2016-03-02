@@ -9,6 +9,7 @@ define(['../../utils/constant'], function (constant) {
                 timeout: constant.reqTimeout
             }
         });
+        svc.tree = {};
         return svc;
     };
 
