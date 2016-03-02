@@ -1,4 +1,4 @@
-require(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'ngTreeController',
+define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'ngTreeController',
     'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap',
     'ngLocalStorage'],
   function(angular, ngResource, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,

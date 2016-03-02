@@ -22,7 +22,8 @@
     </div>
     <div class="col-md-8 col-sm-9">
         <h5><i class="fa fa-info font-color-info"></i>请选择您想要操作的组</h5>
-        <treecontrol class="tree-classic" tree-model="treedata" on-selection="showSelected(node)">
+        <treecontrol class="tree-classic" tree-model="treedata.data" on-selection="showSelected(node)">
+            label: {{node.label}}
         </treecontrol>
     </div>
 </div>

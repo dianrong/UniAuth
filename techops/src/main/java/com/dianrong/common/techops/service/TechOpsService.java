@@ -5,7 +5,7 @@ import java.util.*;
 import javax.annotation.Resource;
 
 import com.dianrong.common.techops.bean.LoginUser;
-import com.dianrong.common.techops.helper.PrimitiveConverter;
+import com.dianrong.common.techops.helper.CustomizeBeanConverter;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class TechOpsService {
 			if(roleDtoList != null && !roleDtoList.isEmpty()){
 				for(RoleDto roleDto: roleDtoList){
 					// construct returnRole
-					RoleDto returnRoleDto = PrimitiveConverter.convert(roleDto);
+					RoleDto returnRoleDto = CustomizeBeanConverter.convert(roleDto);
 					returnRoleList .add(returnRoleDto);
 					String roleCode = roleDto.getRoleCode();
 					// construct returnPermissions

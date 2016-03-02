@@ -8,6 +8,11 @@ public interface AppConstants {
     Byte ONE_Byte = (byte)1;
     byte ZERO_byte = (byte)0;
     byte ONE_byte = (byte)1;
+
+	String NODE_TYPE_GROUP = "grp";
+	String NODE_TYPE_MEMBER_USER = "mUser";
+	String NODE_TYPE_OWNER_USER = "oUser";
+
     String GRP_ROOT = "GRP_ROOT";
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
@@ -24,4 +29,6 @@ public interface AppConstants {
 	String AJAS_HEADER = "X-Requested-With";
 	String LOGIN_REDIRECT_URL = "LOGIN_REDIRECT_URL";
 	String NO_PRIVILEGE = "NO_PRIVILEGE";
+
+
 }

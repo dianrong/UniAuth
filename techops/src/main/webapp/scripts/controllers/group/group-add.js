@@ -6,7 +6,8 @@ define(['../../utils/constant'], function (constant) {
     var Controller = function ($scope, GroupService) {
         $scope.getTree = function() {
             var params = {};
-            params.onlyShowGroup = true;
+            params.onlyShowGroup = false;
+            params.userGroupType = 0;
             GroupService.getTree(params, function (res) {
                 var result = res.data;
                 if(res.info) {
