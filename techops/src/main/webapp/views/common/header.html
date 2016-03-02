@@ -20,8 +20,9 @@
                                 <a ng-click="loginDomainsDropdown.selectOption(it)" ng-bind="it.displayName"></a>
                             </li>
                         </ul>
-                    </div>                </li>
-                <li><a href="#/">您好：<span ng-bind="getUserName()"></span></a></li>
+                    </div>
+                </li>
+                <li><a href="#/">欢迎您：<span>{{userInfo.user.email}}</span></a></li>
                 <li><a href="" ng-click="logout()">安全退出</a></li>
             </ul>
         </div>

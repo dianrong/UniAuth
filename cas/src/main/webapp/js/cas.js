@@ -18,9 +18,9 @@
  */
 
 var scripts = [ 
-    //"https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js",
-    //"https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js",
+    "http://cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
+    "http://cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js",
+    "http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js",
     //"https://rawgithub.com/cowboy/javascript-debug/master/ba-debug.min.js"
 ];
 

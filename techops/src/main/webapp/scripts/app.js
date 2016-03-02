@@ -16,13 +16,9 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             function fetchPermission() {
                 var initInjector = angular.injector(["ng"]);
                 var $http = initInjector.get("$http");
-                return $http.get(constant.apiBase + "/user/techops/domain").then(function (res) {
-                    var permissionMapping = {},
-                        userPermissions = [];
+                return $http.get(constant.apiBase + "/user/current").then(function (res) {
                     app.constant("permission", {
-                        userPermissions: userPermissions,
-                        permissionMapping: permissionMapping,
-                        loginDomainsDropdown:res.data.data
+                        userInfo : res.data.data
                     });
 
                 }, function (errorResponse) {
@@ -47,10 +43,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
 
-      $rootScope.groupSelected = {};
-      $rootScope.permissionMapping = permission.permissionMapping;
-      $rootScope.permissions = permission.userPermissions;
-      utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.loginDomainsDropdown, permission.loginDomainsDropdown[0]);
+      $rootScope.userInfo = permission.userInfo;
+      utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
       $rootScope.pageTitle = '权限运维系统 点融网-Dianrong';
 
     }]);
