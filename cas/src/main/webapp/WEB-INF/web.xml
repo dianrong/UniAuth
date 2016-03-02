@@ -48,21 +48,22 @@
         <init-param>
             <param-name>cors.allowed.origins</param-name>
             <param-value>
-                ^http(s)?://[a-z]+(\-[a-z]+)?\.dianrong\.com,
-                ^http://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,6})?
+                ^http(s)?://[a-z]+(\-[a-z]+)?\.dianrong\.com;
+                ^http://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,6})?;
+                ^http://[a-z]+(:[0-9]+)?
             </param-value>
         </init-param>
         <init-param>
             <param-name>cors.allowed.methods</param-name>
-            <param-value>GET,POST,HEAD,OPTIONS,PUT,DELETE</param-value>
+            <param-value>GET;POST;HEAD;OPTIONS;PUT;DELETE</param-value>
         </init-param>
         <init-param>
             <param-name>cors.allowed.headers</param-name>
-            <param-value>Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers</param-value>
+            <param-value>Content-Type;X-Requested-With;accept;Origin;Access-Control-Request-Method;Access-Control-Request-Headers</param-value>
         </init-param>
         <init-param>
             <param-name>cors.exposed.headers</param-name>
-            <param-value>Access-Control-Allow-Origin,Access-Control-Allow-Credentials,Access-Control-Allow-Headers</param-value>
+            <param-value>Access-Control-Allow-Origin;Access-Control-Allow-Credentials;Access-Control-Allow-Headers</param-value>
         </init-param>
         <init-param>
             <param-name>cors.support.credentials</param-name>

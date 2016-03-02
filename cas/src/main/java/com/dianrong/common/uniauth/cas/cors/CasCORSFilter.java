@@ -791,7 +791,7 @@ public class CasCORSFilter implements Filter {
         String[] splits;
 
         if (data != null && data.length() > 0) {
-            splits = data.split(",");
+            splits = data.split(";");
         } else {
             splits = new String[] {};
         }
