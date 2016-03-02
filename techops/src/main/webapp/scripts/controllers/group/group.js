@@ -4,7 +4,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * @exports controllers/User
      */
     var Controller = function ($scope, GroupService) {
-        $scope.tree = GroupService.tree;
+        $scope.treedata = GroupService.tree;
     };
 
     return {
