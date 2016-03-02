@@ -40,6 +40,10 @@
 	<b:bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">    
 		<b:property name="authenticationManager" ref="authenticationManager"/>
 		<b:property name="filterProcessesUrl" value="/login/cas"></b:property>
+		<b:property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></b:property>
+	</b:bean>
+	
+	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler">
 	</b:bean>
 	
 	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
