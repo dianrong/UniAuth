@@ -45,7 +45,8 @@
 <body id="cas">
   <div id="container">
       <header>
-      	<img alt="点融网" src="images/logo.png">
+      	<img alt="点融网" src="images/logo.png"><br>
+      	<c:if test="${not empty principal}"><font color="white">当前登录用户：${principal}</font></c:if>
       	<!-- 
         <a id="logo" href="http://www.dianrong.com" title="<spring:message code="logo.title" />">Dianrong</a>
         <h1>点融网内部统一认证系统</h1>
