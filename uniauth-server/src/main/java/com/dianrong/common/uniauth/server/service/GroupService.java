@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.security.acl.Group;
 import java.util.*;
 
 
@@ -38,6 +40,61 @@ public class GroupService {
     private UserMapper userMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
+
+    public PageDto<GroupDto> searchGroup(Integer id, String name, String code, String description, Byte status, Integer pageNumber, Integer pageSize) {
+
+        if(id != null) {
+            GroupDto groupDto = BeanConverter.convert(grpMapper.selectByPrimaryKey(id));
+            if(groupDto != null) {
+                return new PageDto<>(0, 1, 1, Arrays.asList(groupDto));
+            } else {
+                return null;
+            }
+        }
+
+        if(code != null) {
+            GrpExample grpExample = new GrpExample();
+            grpExample.createCriteria().andCodeEqualTo(code);
+            List<Grp> grps = grpMapper.selectByExample(grpExample);
+            if(!CollectionUtils.isEmpty(grps)) {
+                GroupDto groupDto = BeanConverter.convert(grps.get(0));
+                return new PageDto<>(0, 1, 1, Arrays.asList(groupDto));
+            } else {
+                return null;
+            }
+        }
+
+        if(pageNumber == null || pageSize == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
+        }
+
+        GrpExample grpExample = new GrpExample();
+        grpExample.setOrderByClause("create_date desc");
+        grpExample.setPageOffSet(pageNumber * pageSize);
+        grpExample.setPageSize(pageSize);
+        GrpExample.Criteria criteria = grpExample.createCriteria();
+        if(name != null) {
+            criteria.andNameLike("%" + name + "%");
+        }
+        if(description != null) {
+            criteria.andDescriptionLike("%" + description + "%");
+        }
+        if(status != null) {
+            criteria.andStatusEqualTo(status);
+        }
+        List<Grp> grps = grpMapper.selectByExample(grpExample);
+        if(!CollectionUtils.isEmpty(grps)) {
+            int count = grpMapper.countByExample(grpExample);
+            List<GroupDto> groupDtos = new ArrayList<>();
+            for(Grp grp : grps) {
+                groupDtos.add(BeanConverter.convert(grp));
+            }
+            return new PageDto<>(pageNumber,pageSize,count,groupDtos);
+        } else {
+            return null;
+        }
+
+    }
 
     @Transactional
     public GroupDto createDescendantGroup(GroupParam groupParam) {
@@ -93,10 +150,12 @@ public class GroupService {
 
     @Transactional
     public GroupDto updateGroup(Integer groupId, String groupCode, String groupName, Byte status, String description) {
+        Grp grp = grpMapper.selectByPrimaryKey(groupId);
         CheckEmpty.checkEmpty(groupId, "groupId");
         CheckEmpty.checkEmpty(groupCode, "groupCode");
-        ParamCheck.checkStatus(status);
-        Grp grp = grpMapper.selectByPrimaryKey(groupId);
+        if(status != null) {
+            ParamCheck.checkStatus(status);
+        }
         if(grp == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
         }
@@ -304,7 +363,8 @@ public class GroupService {
             List<HashMap<String,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
             Map<Integer, GroupDto> idGroupDtoPair = new HashMap();
             for(Grp grp : grps) {
-                GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName());
+                GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName())
+                        .setDescription(grp.getDescription());
                 idGroupDtoPair.put(groupDto.getId(), groupDto);
             }
 

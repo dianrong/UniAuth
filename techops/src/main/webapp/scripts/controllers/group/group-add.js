@@ -6,18 +6,18 @@ define(['../../utils/constant'],function(constant) {
     var Controller = function ($rootScope, $scope, GroupService) {
         var paramsCtlLevel = {};
         paramsCtlLevel.onlyShowGroup = true;
-        // params.userGroupType = 0;
+        //paramsCtlLevel.userGroupType = 0;
         $scope.getTree = GroupService.syncTree;
         $scope.getTree(paramsCtlLevel);
 
         $scope.addGroup = function () {
 
             var params = $scope.grp;
-            if(!$rootScope.groupSelected || !$rootScope.groupSelected.id){
+            if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
                 $scope.groupMessage = '请先选择一个父组, 再添加组.';
                 return;
             }
-            params.targetGroupId=$rootScope.groupSelected.id;
+            params.targetGroupId=$rootScope.shareGroup.selected.id;
 
             GroupService.add(params, function (res) {
                 $scope.groupMessage = '';

@@ -11,6 +11,8 @@ public class Node {
     private String label;
     private String code;
     private String type;
+    private String description;
+
     private List<Node> children;
 
     public String getId() {
@@ -55,6 +57,15 @@ public class Node {
 
     public Node setCode(String code) {
         this.code = code;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Node setDescription(String description) {
+        this.description = description;
         return this;
     }
 }

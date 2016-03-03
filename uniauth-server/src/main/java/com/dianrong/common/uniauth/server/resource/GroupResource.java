@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,14 @@ public class GroupResource implements IGroupRWResource {
 
 	@Autowired
 	private GroupService groupService;
+
+	@Override
+	public Response<PageDto<GroupDto>> queryGroup(GroupQuery groupQuery) {
+		PageDto<GroupDto> groupDtoPageDto = groupService.searchGroup(groupQuery.getId(),groupQuery.getName(),groupQuery.getCode(),
+				groupQuery.getDescription(),groupQuery.getStatus(),groupQuery.getPageNumber(),
+				groupQuery.getPageSize());
+		return Response.success(groupDtoPageDto);
+	}
 
 	@Override
 	public Response<GroupDto> getGroupTree(GroupParam groupParam) {

@@ -2,9 +2,11 @@ package com.dianrong.common.uniauth.common.interfaces.read;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 
 import javax.ws.rs.Consumes;
@@ -24,7 +26,11 @@ public interface IGroupResource {
     //scenario: group/member tree
     //if groupId == null then retrieve from the root tree, otherwise treat the groupId as the root tree.
     Response<GroupDto> getGroupTree(GroupParam groupParam);
-    
+
+    @POST
+    @Path("query")
+    Response<PageDto<GroupDto>> queryGroup(GroupQuery groupQuery);
+
     @POST
     @Path("groupowners")
     //scenario: get all group owners
