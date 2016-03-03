@@ -1,9 +1,9 @@
 <div style="padding: 5px 5px 5px 5px">
-    <div ng-if="groupSelected.name">
+    <div ng-if="groupSelected.label">
       <i class="fa fa-exclamation-circle font-color-info"></i>
-      被选中的组: {{groupSelected.name}}.
+      被选中的组: {{groupSelected.label}}.
     </div>
-    <div ng-if="!groupSelected.name">
+    <div ng-if="!groupSelected.label">
       <i class="fa fa-exclamation-circle font-color-info"></i>
       您没有选中任何一个组.
     </div>
@@ -22,8 +22,8 @@
     </div>
     <div class="col-md-8 col-sm-9">
         <h5><i class="fa fa-info font-color-info"></i>请选择您想要操作的组</h5>
-        <treecontrol class="tree-classic" tree-model="treedata.data" on-selection="showSelected(node)">
-            label: {{node.label}}
+        <treecontrol class="tree-classic" options="opts" tree-model="treedata.data" on-selection="showSelected(node)" expanded-nodes="treedata.expandedNodes">
+            {{node.label}}
         </treecontrol>
     </div>
 </div>
