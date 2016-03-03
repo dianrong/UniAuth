@@ -10,7 +10,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             totalCount: 0
         };
 
-        //Event listeners
         $scope.queryUser = function () {
 
             var params = $scope.userQuery;

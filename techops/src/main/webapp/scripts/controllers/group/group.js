@@ -14,8 +14,17 @@ define(['../../utils/constant'], function (constant) {
                 return node.type == constant.treeNodeType.group;
             }
         };
-        $scope.showSelected = function(selNode) {
-            $rootScope.groupSelected = selNode;
+
+        $scope.selected = $rootScope.groupSelected;
+
+        $scope.showSelected = function(node, selected) {
+            if(selected) {
+                $scope.selected = node;
+                $rootScope.groupSelected = $scope.selected;
+            } else {
+                $scope.selected = {};
+                $rootScope.groupSelected = {};
+            }
         };
     };
 

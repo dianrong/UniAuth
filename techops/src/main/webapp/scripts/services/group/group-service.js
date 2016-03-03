@@ -7,6 +7,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     method: 'tree'
                 },
                 timeout: constant.reqTimeout
+            },
+            add: {
+                method: 'POST',
+                params: {
+                    method: 'add'
+                },
+                timeout: constant.reqTimeout
             }
         });
         svc.tree = {};
@@ -15,7 +22,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 svc.tree.data = res.data;
                 var expandedNodes = [];
                 svc.tree.expandedNodes = utils.getParentNodeArray(svc.tree.data, expandedNodes);
+                svc.tree.msg = '';
             }, function (res) {
+                svc.tree.msg = '同步树查询失败.';
                 console.log('syncTree failed' + res);
             });
         };
