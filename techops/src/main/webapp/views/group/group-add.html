@@ -8,18 +8,18 @@
         <ng-form name="addGroupForm" novalidate role="form">
             <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[addGroupForm.code.$dirty && addGroupForm.code.$invalid]">
                 <label for="name">组名称:</label>
-                <input type="text" class="form-control" placeholder="组名称" id="name" ng-model="group.name" required>
+                <input type="text" class="form-control" placeholder="组名称" id="name" ng-model="grp.name" required>
                 <label for="code">组code:</label>
-                <input type="text" class="form-control" placeholder="组的唯一标识" id="code" ng-model="group.code" required>
+                <input type="text" class="form-control" placeholder="组的唯一标识" id="code" ng-model="grp.code" required>
                 <label for="description" placeholder="组描述">组描述:</label>
-                <textarea id="description" style="height:120px;resize:none" class="form-control" placeholder="组的描述" ng-model="group.description"></textarea>
+                <textarea id="description" style="height:120px;resize:none" class="form-control" placeholder="组的描述" ng-model="grp.description"></textarea>
                 <br />
-                <span class="text-danger"><strong>{{msg}}</strong></span>
+                <span class="text-danger"><strong>{{groupMessage}}</strong></span>
             </div>
         </ng-form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="addSubGroup()"
+        <button type="button" class="btn btn-primary" ng-click="addGroup()"
                 ng-disabled="(addGroupForm.$dirty && addGroupForm.$invalid) || addGroupForm.$pristine">添加</button>
     </div>
 </div>

@@ -38,4 +38,11 @@ public class GroupAction {
         }
     }
 
+    @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    Response<GroupDto> addNewGroupIntoGroup(@RequestBody GroupParam groupParam) {
+        Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().addNewGroupIntoGroup(groupParam);
+        return groupDto;
+    }
+
 }
