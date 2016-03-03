@@ -4,6 +4,16 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * @exports controllers/User
      */
     var Controller = function ($rootScope, $scope, $location, UserService, dialogs) {
+        // always cache the query user input
+        if($rootScope.userQuery) {
+            $scope.userQuery = $rootScope.userQuery;
+        }
+        if($scope.userQuery) {
+            $rootScope.userQuery = $scope.userQuery;
+        } else {
+            $scope.userQuery = {};
+            $rootScope.userQuery = $scope.userQuery;
+        }
         $scope.pagination = {
             pageSize: constant.pageSize,
             curPage: 1,
@@ -13,7 +23,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.queryUser = function () {
 
             var params = $scope.userQuery;
-
             if (!params) {
                 params = {};
             }
