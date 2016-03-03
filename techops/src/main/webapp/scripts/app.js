@@ -1,4 +1,4 @@
-require(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'ngTreeController',
+define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'ngTreeController',
     'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap',
     'ngLocalStorage'],
   function(angular, ngResource, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
@@ -50,9 +50,9 @@ require(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate
 
     }]);
 
-    app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$urlMatcherFactoryProvider',
-        function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider) {
-
+    app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$rootScopeProvider',
+        function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $rootScopeProvider) {
+        //$rootScopeProvider.digestTtl(100);
         $httpProvider.interceptors.push('HttpInterceptorService');
         $urlRouterProvider.otherwise('/');
         $stateProvider.

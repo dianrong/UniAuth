@@ -28,19 +28,11 @@ define({
         createError: '创建失败',
         loadEmpty: '暂无数据',
         loadError: '加载失败',
-        channelStatusArr: [{
-            name: '请选择',
-            value: ''
-        }, {
-            name: '开启',
-            value: 'open'
-        }, {
-            name: '未开启',
-            value: 'un_open'
-        }, {
-            name: '禁用',
-            value: 'forbidden'
-        }],
+        treeNodeType: {
+            group:'grp',
+            memberUser:'mUser',
+            ownerUser:'oUser'
+        },
         projectStatusDic: [{
             name: '新增立项中',
             value: 'creating'

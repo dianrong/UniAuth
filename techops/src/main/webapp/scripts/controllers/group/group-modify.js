@@ -32,7 +32,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             });
         }
         $scope.tree = GroupService.tree;
-        //$rootScope.groupSelected.name = "被选中的测试组.";
     };
 
     return {

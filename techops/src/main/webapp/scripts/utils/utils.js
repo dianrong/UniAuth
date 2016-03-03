@@ -1,4 +1,5 @@
-define({
+define(['utils/constant'], function (constant) {
+    return {
         generatorDropdown: function ($scope, name, items, defaultOpt) {
             $scope[name] = {};
             $scope[name].isOpen = false;
@@ -13,6 +14,21 @@ define({
                 $scope[name].option = defaultOpt;
             }
         },
+        getParentNodeArray: function recur(rootNodes, array) {
+            if(rootNodes && rootNodes.length) {
+                for (var i = 0; i < rootNodes.length; i++) {
+                    var node = rootNodes[i];
+                    if(node.type == constant.treeNodeType.group) {
+                        array.push(node);
+                    }
+                    var children = node.children;
+                    if(children && children.length) {
+                        recur(children, array);
+                    }
+                }
+            }
+            return array;
+        },
         transformResponse: function (resp) {
             if (resp && resp.respCode && resp.respCode.indexOf('_2') == 0) {
                 return resp.result;
@@ -21,22 +37,6 @@ define({
         },
         formatNumbers: function(val){
             return Math.ceil(val*10000)/1000000;
-        },
-        filterParams: function () {
-            // var args = Array.prototype.slice.call(arguments, 0);
-            // return function (data) {
-            //   if (!data) {
-            //     return data;
-            //   }
-            //   var params = angular.copy(data);
-            //   for (var i = 0, len = args.length; i < len; i++) {
-            //     delete params[args[i]];
-            //   }
-            //   return JSON.stringify(params);
-            // }
-            // return function(data){
-            //   return data;
-            // }
         },
         convertToDate: function (val) {
             if (!val) {
@@ -62,27 +62,6 @@ define({
             }
 
         },
-        /*
-         [{
-         name: '请选择',
-         value: ''
-         }, {
-         name: '增加额度',
-         value: 'increase'
-         }, {
-         name: '减少额度',
-         value: 'decrease'
-         }, {
-         name: '冻结额度',
-         value: 'freeze'
-         }, {
-         name: '恢复额度',
-         value: 'recovery'
-         }, {
-         name: '更新额度期限',
-         value: 'updateExpireDate'
-         }]
-         */
         convertToMap: function (array) {
             var result = {};
             if (!array) {
@@ -94,4 +73,5 @@ define({
             }
             return result;
         }
+    }
 });
