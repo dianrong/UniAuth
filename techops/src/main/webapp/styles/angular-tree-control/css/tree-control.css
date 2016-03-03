@@ -60,7 +60,27 @@ treecontrol.tree-classic li.tree-leaf i.tree-leaf-head {
     background: url("../images/file.png") no-repeat;
 }
 
-treecontrol.tree-classic li .tree-selected {
+treecontrol.tree-custom li .tree-selected {
+    background-color: #aaddff;
+    font-weight: bold;
+}
+
+treecontrol.tree-custom li.tree-expanded i.tree-branch-head {
+    padding: 1px 10px;
+    background: url("../images/folder.png") no-repeat;
+}
+
+treecontrol.tree-custom li.tree-collapsed i.tree-branch-head {
+    padding: 1px 10px;
+    background: url("../images/folder-closed.png") no-repeat;
+}
+
+treecontrol.tree-custom li.tree-leaf i.tree-leaf-head {
+    padding: 1px;
+    background: none no-repeat;
+}
+
+treecontrol.tree-custom li .tree-selected {
     background-color: #aaddff;
     font-weight: bold;
 }
