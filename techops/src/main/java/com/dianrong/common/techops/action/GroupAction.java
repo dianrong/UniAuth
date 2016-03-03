@@ -4,14 +4,14 @@ import com.dianrong.common.techops.bean.Node;
 import com.dianrong.common.techops.helper.CustomizeBeanConverter;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -45,4 +45,26 @@ public class GroupAction {
         return groupDto;
     }
 
+    @RequestMapping(value = "/get" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    Response<Node> getGroupDetailsById(@RequestParam("id")Integer grpId) {
+        GroupQuery groupQuery = new GroupQuery();
+        groupQuery.setId(grpId);
+        Response<PageDto<GroupDto>> pageDtoResponse = uARWFacade.getGroupRWResource().queryGroup(groupQuery);
+        GroupDto groupDto = pageDtoResponse.getData().getData().get(0);
+        Node node = new Node();
+        node.setId(groupDto.getId().toString());
+        node.setCode(groupDto.getCode());
+        node.setType(AppConstants.NODE_TYPE_GROUP);
+        node.setLabel(groupDto.getName());
+        node.setDescription(groupDto.getDescription());
+        return Response.success(node);
+    }
+
+    @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    Response<GroupDto> modifyGroup(@RequestBody GroupParam groupParam) {
+        Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().updateGroup(groupParam);
+        return groupDto;
+    }
 }

@@ -14,7 +14,21 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     method: 'add'
                 },
                 timeout: constant.reqTimeout
-            }
+            },
+            modify: {
+                method: 'POST',
+                params: {
+                    method: 'modify'
+                },
+                timeout: constant.reqTimeout
+            },
+            getGrpDetails: {
+                method: 'GET',
+                params: {
+                    method: 'get'
+                },
+                timeout: constant.reqTimeout
+            },
         });
         svc.tree = {};
         svc.syncTree = function(params) {
