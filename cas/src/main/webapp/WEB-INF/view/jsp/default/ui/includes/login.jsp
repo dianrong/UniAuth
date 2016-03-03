@@ -78,6 +78,17 @@
         <h2><spring:message code="screen.welcome.instructions" /></h2>
 
         <section class="row">
+            <label for="domain"><spring:message code="screen.welcome.label.domain" /></label>
+            <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
+            <div class="select">
+	            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
+	            	<form:option value="http://www.dianrong.com">techops</form:option>
+	            	<form:option value="http://www.dianrong.com">adminconsole</form:option>
+	            </form:select>
+            </div>
+        </section>
+        
+        <section class="row">
             <label for="username"><spring:message code="screen.welcome.label.netid" /></label>
             <c:choose>
                 <c:when test="${not empty sessionScope.openIdLocalId}">
