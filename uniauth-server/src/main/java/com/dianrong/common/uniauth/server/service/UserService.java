@@ -397,6 +397,7 @@ public class UserService {
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
         user.setPasswordSalt(Base64.encode(salt));
         user.setPasswordDate(new Date());
+        user.setFailCount(AppConstants.ZERO_Byte);
         
         userMapper.updateByPrimaryKey(user);
 	}
