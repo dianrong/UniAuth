@@ -9,6 +9,7 @@ public class Node {
 
     private String id;
     private String label;
+    private String code;
     private String type;
     private List<Node> children;
 
@@ -45,6 +46,15 @@ public class Node {
 
     public Node setChildren(List<Node> children) {
         this.children = children;
+        return this;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public Node setCode(String code) {
+        this.code = code;
         return this;
     }
 }
