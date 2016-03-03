@@ -17,7 +17,16 @@ public class DomainDto {
 	private List<StakeholderDto> stakeholderList;
 	
 	private String zkDomainUrl;
+	private String zkDomainUrlEncoded;
 	
+	public String getZkDomainUrlEncoded() {
+		return zkDomainUrlEncoded;
+	}
+
+	public void setZkDomainUrlEncoded(String zkDomainUrlEncoded) {
+		this.zkDomainUrlEncoded = zkDomainUrlEncoded;
+	}
+
 	public String getZkDomainUrl() {
 		return zkDomainUrl;
 	}

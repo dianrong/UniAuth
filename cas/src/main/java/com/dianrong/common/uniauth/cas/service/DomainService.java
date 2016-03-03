@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.cas.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,8 +49,14 @@ public class DomainService {
 			for(DomainDto domainDto :domainDtoList){
 				String domainCode = domainDto.getCode();
 				String zkDomainUrl = allZkNodeMap.get(AppConstants.ZK_DOMAIN_PREFIX + domainCode);
-				zkDomainUrl += AppConstants.SERVICE_LOGIN_POSTFIX;
+				zkDomainUrl = zkDomainUrl.endsWith("/") ? (zkDomainUrl + AppConstants.SERVICE_LOGIN_POSTFIX) : (zkDomainUrl + "/" + AppConstants.SERVICE_LOGIN_POSTFIX);
 				domainDto.setZkDomainUrl(zkDomainUrl);
+				String zkDomainUrlEncoded = null;
+				try {
+					zkDomainUrlEncoded = URLEncoder.encode(zkDomainUrl, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+				}
+				domainDto.setZkDomainUrlEncoded(zkDomainUrlEncoded);
 			}
 		}
 		

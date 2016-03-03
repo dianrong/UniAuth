@@ -14,7 +14,7 @@ public interface AppConstants {
     String DOMAIN_CODE_TECHOPS = "techops";
     
 	String ZK_DOMAIN_PREFIX = "domains.";
-	String SERVICE_LOGIN_POSTFIX = "/login/cas";
+	String SERVICE_LOGIN_POSTFIX = "login/cas";
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
 	
 	String ROLE_ADMIN = "ROLE_ADMIN";
