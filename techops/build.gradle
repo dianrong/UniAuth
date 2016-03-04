@@ -2,16 +2,26 @@ apply plugin: 'war'
 
 buildscript {
     repositories {
-        mavenCentral()
+   	 	mavenCentral()
+        maven {
+            url "https://maven.eveoh.nl/content/repositories/releases"
+        }
     }
     dependencies {
         classpath "com.eriwen:gradle-js-plugin:1.12.0"
         classpath 'com.eriwen:gradle-css-plugin:1.11.1'
+        classpath "nl.eveoh:gradle-aspectj:1.6"
     }
 }
 
+
 apply plugin: 'js'
 
+
+project.ext {
+    aspectjVersion = '1.8.8'
+}
+apply plugin: 'aspectj'
 combineJs {
     source = fileTree("src/main/webapp/scripts") {
         exclude "lib/**"
@@ -104,6 +114,9 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test:${spring_version}"
     testCompile "org.springframework:spring-web:${spring_version}"
+    compile 'org.springframework.security:spring-security-aspects:4.0.3.RELEASE'
+    
+    aspectpath 'org.springframework.security:spring-security-aspects:4.0.3.RELEASE'
 }
 
 loadConfiguration()

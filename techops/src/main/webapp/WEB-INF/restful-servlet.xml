@@ -15,7 +15,8 @@
 		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
 		http://www.springframework.org/schema/util
 		http://www.springframework.org/schema/util/spring-util-2.0.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security-4.0.xsd
 		">
@@ -46,10 +47,9 @@
 
     <!-- context -->
     <context:component-scan base-package="com.dianrong.common.techops.action" />
-    <aop:aspectj-autoproxy />
 
 	<!-- enable preAuthorize for controller -->		
-    <sec:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" jsr250-annotations="enabled" proxy-target-class="true">
+    <sec:global-method-security pre-post-annotations="enabled" proxy-target-class="true" mode="aspectj">
 		<sec:expression-handler ref="methodSecurityExpressionHandler"/>
     </sec:global-method-security>
     

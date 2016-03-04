@@ -17,8 +17,8 @@ import com.dianrong.loanbusiness.subsystem.model.TestModel;
 import com.dianrong.loanbusiness.subsystem.service.MyService;
 
 @Controller
-@RequestMapping("/main")
-public class MainController {
+@RequestMapping("/main2")
+public class MainController2 {
 	protected static Logger logger = Logger.getLogger("controller");
 	
 	@Autowired
@@ -26,8 +26,7 @@ public class MainController {
 	
 	@Autowired
 	private UniClientFacade uniClientFacade;
-
-
+	
 	@RequestMapping(value = "/common", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")   
 	public String getCommonPage() {
@@ -39,12 +38,12 @@ public class MainController {
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")   
 	public String getAadminPage() {
-		DomainParam domainParam = new DomainParam();
+/*		DomainParam domainParam = new DomainParam();
 		domainParam.setCode("techops");
 		Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
 		
 		TestModel tm = new TestModel();
-		myService.testModel(tm);
+		myService.testModel(tm);*/
 		logger.debug("Received request to show admin page");
 		return "adminpage";
 

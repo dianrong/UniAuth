@@ -93,6 +93,7 @@ project(':ss-client') {
 		compile 'org.springframework.security:spring-security-openid:4.0.3.RELEASE'
 		compile 'org.springframework.security:spring-security-taglibs:4.0.3.RELEASE'
 		
+		
 		compile 'org.hibernate:hibernate-validator:5.2.4.Final'
 	}
 
