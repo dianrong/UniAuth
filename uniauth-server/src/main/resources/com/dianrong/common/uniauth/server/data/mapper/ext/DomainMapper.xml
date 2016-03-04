@@ -8,33 +8,46 @@
 	where d.status = 0
 	and 
 	(
-		exists
+		not exists
 		(
-			select ur.role_id
-			from user_role ur, role r
-			where ur.user_id = #{userId,jdbcType=BIGINT}
-			and r.status = 0
-			and r.domain_id = d.id
-			and r.id = ur.role_id
-		)
-		or
-		exists
-		(
-			select gr.role_id
-			from grp_role gr, role r, grp_path gp, grp g, grp g1, user_grp ug
-			where gr.grp_id = gp.ancestor
-			
-			and gp.ancestor = g1.id
-			and g1.status = 0
-			
-			and gp.descendant = g.id
-			and g.status = 0
-			and g.id = ug.grp_id
+			select g.id
+			from grp_path gp, user_grp ug, grp g
+			where ug.user_id = #{userId,jdbcType=BIGINT}
+			and ug.grp_id = gp.descendant
 			and ug.type = 0
-			and ug.user_id = #{userId,jdbcType=BIGINT}
-			and r.id = gr.role_id
-			and r.domain_id = d.id
-			and r.status = 0
+			and gp.ancestor = g.id
+			and g.status = 1
+		)
+		and
+		(
+			exists
+			(
+				select ur.role_id
+				from user_role ur, role r
+				where ur.user_id = #{userId,jdbcType=BIGINT}
+				and r.status = 0
+				and r.domain_id = d.id
+				and r.id = ur.role_id
+			)
+			or
+			exists
+			(
+				select gr.role_id
+				from grp_role gr, role r, grp_path gp, grp g, grp g1, user_grp ug
+				where gr.grp_id = gp.ancestor
+				
+				and gp.ancestor = g1.id
+				and g1.status = 0
+				
+				and gp.descendant = g.id
+				and g.status = 0
+				and g.id = ug.grp_id
+				and ug.type = 0
+				and ug.user_id = #{userId,jdbcType=BIGINT}
+				and r.id = gr.role_id
+				and r.domain_id = d.id
+				and r.status = 0
+			)
 		)
 	)
   </select>

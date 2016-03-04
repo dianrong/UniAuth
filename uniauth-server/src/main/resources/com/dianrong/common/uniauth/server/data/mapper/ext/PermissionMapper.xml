@@ -14,7 +14,7 @@
 	role r, role_code rc
 	where d.status = 0
 	and d.code = #{domainCode, jdbcType=VARCHAR}
-	and (pt.type = 'URI_Pattern' or pt.type = 'PRIVILEGE')
+	and pt.type = 'URI_PATTERN'
 	and pt.id = p.perm_type_id
 	and p.status = 0
 	and p.domain_id = d.id
