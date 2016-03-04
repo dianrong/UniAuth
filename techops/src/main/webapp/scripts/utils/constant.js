@@ -19,6 +19,9 @@ define({
                 return origin + "/techops/logout/cas";
             }
         })(),
+        errorCode: {
+            LOGIN_REDIRECT_URL: 'LOGIN_REDIRECT_URL'
+        },
         // 20 seconds Time out
         reqTimeout: 20000,
         pageSize: 50,
