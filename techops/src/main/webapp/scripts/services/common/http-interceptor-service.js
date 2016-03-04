@@ -19,7 +19,6 @@ define(['../../utils/constant'], function (constant) {
     var response = function (response) {
       if (response) {
         var data = response.data;
-        debugger;
         if (data && data.info) {
           var infoArray = data.info;
           for (var i = 0; i < infoArray.length; i++) {
