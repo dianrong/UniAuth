@@ -29,11 +29,6 @@ public interface IGroupRWResource extends IGroupResource {
     Response<GroupDto> addNewGroupIntoGroup(GroupParam groupParam);
     
     @POST
-    @Path("deletegroup")
-    //scenario: delete group
-    Response<Void> deleteGroup(PrimaryKeyParam primaryKeyParam);
-    
-    @POST
     @Path("updategroup")
     //scenario: modify group info
     Response<GroupDto> updateGroup(GroupParam groupParam);

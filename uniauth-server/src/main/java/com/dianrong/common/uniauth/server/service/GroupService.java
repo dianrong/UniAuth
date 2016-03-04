@@ -127,26 +127,26 @@ public class GroupService {
         return BeanConverter.convert(grp);
     }
 
-    @Transactional
-    public void deleteGroup(Integer groupId) {
-        GrpPathExample grpPathAncestorExample = new GrpPathExample();
-        grpPathAncestorExample.createCriteria().andAncestorEqualTo(groupId);
-        int desOfDesCount = grpPathMapper.countByExample(grpPathAncestorExample);
-        if(desOfDesCount > 1) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.delgroup"));
-        }
-        // cascading delete the users in group and the roles on group.
-        UserGrpExample userGrpExample = new UserGrpExample();
-        userGrpExample.createCriteria().andGrpIdEqualTo(groupId);
-        userGrpMapper.deleteByExample(userGrpExample);
-        GrpRoleExample grpRoleExample = new GrpRoleExample();
-        grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
-        grpRoleMapper.deleteByExample(grpRoleExample);
-        GrpPathExample grpPathDescendantExample = new GrpPathExample();
-        grpPathDescendantExample.createCriteria().andDescendantEqualTo(groupId);
-        grpPathMapper.deleteByExample(grpPathDescendantExample);
-        grpMapper.deleteByPrimaryKey(groupId);
-    }
+//    @Transactional
+//    public void deleteGroup(Integer groupId) {
+//        GrpPathExample grpPathAncestorExample = new GrpPathExample();
+//        grpPathAncestorExample.createCriteria().andAncestorEqualTo(groupId);
+//        int desOfDesCount = grpPathMapper.countByExample(grpPathAncestorExample);
+//        if(desOfDesCount > 1) {
+//            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.delgroup"));
+//        }
+//        // cascading delete the users in group and the roles on group.
+//        UserGrpExample userGrpExample = new UserGrpExample();
+//        userGrpExample.createCriteria().andGrpIdEqualTo(groupId);
+//        userGrpMapper.deleteByExample(userGrpExample);
+//        GrpRoleExample grpRoleExample = new GrpRoleExample();
+//        grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
+//        grpRoleMapper.deleteByExample(grpRoleExample);
+//        GrpPathExample grpPathDescendantExample = new GrpPathExample();
+//        grpPathDescendantExample.createCriteria().andDescendantEqualTo(groupId);
+//        grpPathMapper.deleteByExample(grpPathDescendantExample);
+//        grpMapper.deleteByPrimaryKey(groupId);
+//    }
 
     @Transactional
     public GroupDto updateGroup(Integer groupId, String groupCode, String groupName, Byte status, String description) {
@@ -325,7 +325,7 @@ public class GroupService {
         Grp rootGrp;
         if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT);
+            grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT).andStatusEqualTo(AppConstants.ZERO_Byte);
             rootGrp = grpMapper.selectByExample(grpExample).get(0);
         } else if(groupCode != null && groupId != null) {
             GrpExample grpExample = new GrpExample();

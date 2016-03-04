@@ -57,12 +57,6 @@ public class GroupResource implements IGroupRWResource {
 	}
 
 	@Override
-	public Response<Void> deleteGroup(PrimaryKeyParam primaryKeyParam) {
-		groupService.deleteGroup(primaryKeyParam.getId());
-		return Response.success();
-	}
-
-	@Override
 	public Response<GroupDto> updateGroup(GroupParam groupParam) {
 		GroupDto groupDto = groupService.updateGroup(groupParam.getId(),groupParam.getCode(),
 				groupParam.getName(),groupParam.getStatus(),groupParam.getDescription());

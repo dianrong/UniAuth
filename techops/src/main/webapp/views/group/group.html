@@ -11,11 +11,11 @@
 <div class="btn-group">
     <a class="btn btn-info" ng-class="{active: $state.includes('group.add')}" ui-sref="group.add">新增组</a>
     <a class="btn btn-info" ng-class="{active: $state.includes('group.modify')}" ui-sref="group.modify">修改组</a>
-    <a class="btn btn-info">删除组</a>
-    <a class="btn btn-info">添加用户</a>
-    <a class="btn btn-info">删除用户</a>
-    <a class="btn btn-info">添加owner</a>
-    <a class="btn btn-info">删除owner</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete')}" ui-sref="group.delete">删除组</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-user')}" ui-sref="group.add-user">添加用户</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-user')}" ui-sref="group.delete-user">删除用户</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-owner')}" ui-sref="group.add-owner">添加owner</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-owner')}" ui-sref="group.delete-owner">删除owner</a>
 </div>
 <div class="row">
     <div ui-view class="col-md-4 col-sm-9">
