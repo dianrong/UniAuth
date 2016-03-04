@@ -337,7 +337,7 @@ public class UserService {
 				if(roleList != null){
 					for(Role role: roleList){
 						RoleDto roleDto = BeanConverter.convert(role);
-						roleDto.setRoleCode(roleCodeMap.get(roleDto.getId()).getCode());
+						roleDto.setRoleCode(roleCodeMap.get(role.getRoleCodeId()).getCode());
 						roleDtoList.add(roleDto);
 						
 						Map<String, Object> roleAndDomainMap = new HashMap<String, Object>();
