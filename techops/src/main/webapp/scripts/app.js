@@ -1,5 +1,5 @@
 define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'ngTreeController',
-    'controllers/main-controller', 'utils/constant', 'utils/utils','angular.ui.bootstrap',
+    'controllers/main-controller', 'utils/constant', 'utils/utils','ui-select','angular.ui.bootstrap',
     'ngLocalStorage'],
   function(angular, ngResource, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
            ngTreeController, mainController, constant, utils) {

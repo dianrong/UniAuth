@@ -1,0 +1,25 @@
+<div class="control-panel">
+    <div style="border-radius:4px;" class="modal-header dialog-header-group">
+        <h4 class="modal-title text-center">
+            <i class="fa fa-plus-square-o"></i> 添加用户
+        </h4>
+    </div>
+    <div>
+        <ui-select ng-model="users.selected"
+                   theme="bootstrap"
+                   ng-disabled="disabled"
+                   reset-search-input="false"
+                   style="width: 300px;">
+            <ui-select-match placeholder="Enter an email...">{{$select.selected.formatted_email}}</ui-select-match>
+            <ui-select-choices repeat="email in users track by $index"
+                               refresh="refreshEmails($select.search)"
+                               refresh-delay="0">
+                <div ng-bind-html="email.formatted_address | highlight: $select.search"></div>
+     Î       </ui-select-choices>
+        </ui-select>
+        <p class="text-danger"><strong>{{groupMessage}}</strong></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="addUser()">添加</button>
+    </div>
+</div>

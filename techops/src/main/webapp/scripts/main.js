@@ -16,7 +16,8 @@ require.config({
     'jQuery': 'lib/jquery/jquery-2.1.4.min',
     'datepicker': 'lib/bootstrap-datepicker/bootstrap-datepicker.min',
     'dialogs':'lib/angular-dialog-service/dist/dialogs.min',
-    'ngTreeController' : 'lib/angular-tree-control/angular-tree-control'
+    'ngTreeController':'lib/angular-tree-control/angular-tree-control',
+    'ui-select':'lib/ui-select/dist/select.min'
   },
 
   shim: {
@@ -57,6 +58,9 @@ require.config({
       deps: ['ngTranslate']
     },
     ngTreeController: {
+      deps:['angular']
+    },
+    'ui-select': {
       deps:['angular']
     },
     angular: {
