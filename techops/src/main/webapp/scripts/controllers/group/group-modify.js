@@ -31,14 +31,14 @@ define(function() {
                     $scope.groupMessage = res.info;
                     return;
                 }
-                $scope.modifidGroup = result.data;
+                $scope.modifiedGroup = result.data;
                 //sync the selected group
                 GroupService.getGrpDetails({
                     id: $rootScope.shareGroup.selected.id
                 }, function (result) {
                     $scope.selected = result.data;
                     $rootScope.shareGroup.selected = $scope.selected;
-                }, function (err) {
+                }, function (err) {e
                     console.log(err);
                 });
                 //sync the tree

@@ -8,26 +8,25 @@ define(['../../utils/constant'], function (constant) {
    * @exports controllers/login
    */
   var Service = function ($q, $location) {
+
     var responseError = function (rejection) {
       if (rejection.status === 403) {
-        $location.url('/403');
+        $location.url('/non-authorized');
       }
       return $q.reject(rejection);
     };
+
     var response = function (response) {
-      var data = null;
       if (response) {
-        data = response.data;
-        if (data && data.respCode && data.respCode == '_302') {
-          if (data.result) {
-            if (data.result.gotoUrl) {
-              window.location = data.result.gotoUrl;
-            } else {
-              window.location = data.result;
+        var data = response.data;
+        if (data && data.info) {
+          var infoArray = data.info;
+          for (var i = 0; i < infoArray.length; i++) {
+            var info = infoArray[i];
+            if(angular.equals(constant.errorCode.LOGIN_REDIRECT_URL, info.name)) {
+              window.location = info.msg;
             }
           }
-        } else if (data && data.respCode && data.respCode == '_403') {
-          $location.url('/403');
         }
       }
       return response;

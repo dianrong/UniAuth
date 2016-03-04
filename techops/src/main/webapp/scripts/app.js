@@ -76,7 +76,36 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             url: '/modify',
             controller: "GroupModifyController",
             templateUrl: 'views/group/group-modify.html'
-        })
+        }).
+        state('group.delete', {
+            url: '/delete',
+            controller: "GroupDeleteController",
+            templateUrl: 'views/group/group-delete.html'
+        }).
+        state('group.add-user', {
+            url: '/delete',
+            controller: "GroupDeleteController",
+            templateUrl: 'views/group/group-delete.html'
+        }).
+        state('group.delete-user', {
+            url: '/delete',
+            controller: "GroupDeleteController",
+            templateUrl: 'views/group/group-delete.html'
+        }).
+        state('group.add-owner', {
+            url: '/delete',
+            controller: "GroupDeleteController",
+            templateUrl: 'views/group/group-delete.html'
+        }).
+        state('group.delete-owner', {
+            url: '/delete',
+            controller: "GroupDeleteController",
+            templateUrl: 'views/group/group-delete.html'
+        }).
+        state('non-authorized', {
+            url: '/non-authorized',
+            templateUrl: 'views/common/non-authorized.html'
+        });
 
         $translateProvider.useSanitizeValueStrategy('sanitize');
         $translateProvider.translations('en-US',{

@@ -11,19 +11,20 @@
 <div class="btn-group">
     <a class="btn btn-info" ng-class="{active: $state.includes('group.add')}" ui-sref="group.add">新增组</a>
     <a class="btn btn-info" ng-class="{active: $state.includes('group.modify')}" ui-sref="group.modify">修改组</a>
-    <a class="btn btn-info">删除组</a>
-    <a class="btn btn-info">添加用户</a>
-    <a class="btn btn-info">删除用户</a>
-    <a class="btn btn-info">添加owner</a>
-    <a class="btn btn-info">删除owner</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete')}" ui-sref="group.delete">删除组</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-user')}" ui-sref="group.add-user">添加用户</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-user')}" ui-sref="group.delete-user">删除用户</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-owner')}" ui-sref="group.add-owner">添加owner</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-owner')}" ui-sref="group.delete-owner">删除owner</a>
 </div>
 <div class="row">
     <div ui-view class="col-md-4 col-sm-9">
     </div>
     <div style="padding-left: 1px" class="col-md-8 col-sm-9">
         <h5 style="padding-left: 15px"><i class="fa fa-info font-color-info"></i>请选择您想要操作的组</h5>
+        <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="过滤字符串" />
         <treecontrol class="tree-custom" options="opts" tree-model="treedata.data" selected-node="selected" expanded-nodes="treedata.expandedNodes"
-                     on-selection="showSelected(node, selected)">
+                     on-selection="showSelected(node, selected)" filter-expression="predicate" filter-comparator="comparator">
             <span ng-switch="" on="node.type">
               <i ng-switch-when="oUser" class="fa fa-user font-color-red"></i>
               <i ng-switch-when="mUser" class="fa fa-user font-color-blue"></i>
