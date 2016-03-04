@@ -58,7 +58,7 @@ public class UserAction {
     }
 
     @RequestMapping(value = "/unlock" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public Response<Void> unlock(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.UNLOCK);
         return uARWFacade.getUserRWResource().updateUser(userParam);
