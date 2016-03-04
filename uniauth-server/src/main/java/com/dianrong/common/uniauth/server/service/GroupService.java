@@ -375,12 +375,16 @@ public class GroupService {
                     Integer ancestorId = descendantAncestorPair.get("ancestor");
                     GroupDto ancestorDto = idGroupDtoPair.get(ancestorId);
                     GroupDto descendantDto = idGroupDtoPair.get(descendantId);
-                    List<GroupDto> groupDtos = ancestorDto.getGroups();
-                    if(groupDtos == null) {
-                        groupDtos = new ArrayList<>();
-                        ancestorDto.setGroups(groupDtos);
+                    if(ancestorDto != null) {
+                        List<GroupDto> groupDtos = ancestorDto.getGroups();
+                        if (groupDtos == null && descendantDto != null) {
+                            groupDtos = new ArrayList<>();
+                            ancestorDto.setGroups(groupDtos);
+                        }
+                        if(descendantDto != null) {
+                            groupDtos.add(descendantDto);
+                        }
                     }
-                    groupDtos.add(descendantDto);
                 }
             }
 
