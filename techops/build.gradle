@@ -88,8 +88,8 @@ dependencies {
     compile 'com.dianrong.platform:cfg-zk-client:1.0.0-SNAPSHOT'
 
     //Aspectj
-    compile "org.aspectj:aspectjrt:1.8.5"
-    compile "org.aspectj:aspectjtools:1.8.5"
+    compile "org.aspectj:aspectjrt:1.8.8"
+    compile "org.aspectj:aspectjtools:1.8.8"
 
     //Java EE
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
