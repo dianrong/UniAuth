@@ -12,7 +12,7 @@ define(['../../utils/constant'],function(constant) {
 
         $scope.user = {};
         $scope.refreshUsers = function(email) {
-            var params = {email: email, pageNumber:0, pageSize: 12};
+            var params = {email: email, pageNumber:0, pageSize: 30};
             return UserService.getUsers(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
                     $scope.users = response.data.data;

@@ -58,4 +58,19 @@ public class ServerExAOPHandler {
             }
         }
     }
+//    public static void main(String args[]) {
+//        String temp = "insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)" +
+//        "values('200000004', '赵文乐', 'wenle.zhao@dianrong.com', '15026682113', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());";
+//        String temp2 = "insert into user_grp(user_id, grp_id, type) values(200000001, 1, 1);";
+//        List<String> sqls = new ArrayList<>();
+//        String template = "insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)";
+//        for(int i=1;i<3001;i++) {
+//            int id = 210000004 + i;
+//            String sql = template + "values('" + id + "', '"+"名字:"+id+"', '" + id + "@test.com', '" +id+"', " + "'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());";
+//            System.out.println(sql);
+//            String sql2 = "insert into user_grp(user_id, grp_id, type) values(" + id + ", 1, 0);";
+//            System.out.println(sql2);
+//        }
+//        //System.out.println(temp);
+//    }
 }
