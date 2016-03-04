@@ -1,14 +1,6 @@
 define(['../../utils/constant'], function (constant) {
     var Service = function ($resource) {
         var svc = $resource(constant.apiBase + '/user/:method/:method2/:id/:role/:roleId', null, {
-            getLoginDomains: {
-                method: 'GET',
-                params: {
-                    method: 'techops',
-                    method2:"domain"
-                },
-                timeout: constant.reqTimeout
-            },
             getUsers: {
                 method: 'POST',
                 params: {

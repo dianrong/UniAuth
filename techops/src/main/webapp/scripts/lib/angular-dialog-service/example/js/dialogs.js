@@ -1,6 +1,6 @@
 /**
  * angular-dialog-service - A service to handle common dialog types in a web application.  Built on top of Angular-Bootstrap's modal
- * @version v5.2.11
+ * @version v5.3.0
  * @author Michael Conroy, michael.e.conroy@gmail.com
  * @license MIT, http://www.opensource.org/licenses/MIT
  */
@@ -537,7 +537,7 @@ angular.module('dialogs.main',['dialogs.services','ngSanitize']) // requires ang
 			 			// try to find css rule .fa, in case style sheet has been concatenated
 			 			_rules = _sheets[i].cssRules;
 			 			for(var x = (_rules.length - 1);x >= 0;x--){
-			 				if(_rules[x].selectorText.toLowerCase() == '.fa'){
+			 				if(typeof(_rules[x].selectorText) === 'string' && _rules[x].selectorText.toLowerCase() === '.fa'){
 			 					dialogsProvider.useFontAwesome();
 			 					break sheetLoop; // done, exit both for loops
 			 				}

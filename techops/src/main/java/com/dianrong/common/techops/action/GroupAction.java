@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
+import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ public class GroupAction {
 
     @RequestMapping(value = "/tree" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    Response<List<Node>> getGroupTree(@RequestBody GroupParam groupParam) {
+    public Response<List<Node>> getGroupTree(@RequestBody GroupParam groupParam) {
         GroupDto groupDto = uARWFacade.getGroupRWResource().getGroupTree(groupParam).getData();
         if(groupDto != null) {
             return Response.success(CustomizeBeanConverter.convert(Arrays.asList(groupDto)));
@@ -40,14 +41,14 @@ public class GroupAction {
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    Response<GroupDto> addNewGroupIntoGroup(@RequestBody GroupParam groupParam) {
+    public Response<GroupDto> addNewGroupIntoGroup(@RequestBody GroupParam groupParam) {
         Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().addNewGroupIntoGroup(groupParam);
         return groupDto;
     }
 
     @RequestMapping(value = "/get" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    Response<Node> getGroupDetailsById(@RequestParam("id")Integer grpId) {
+    public Response<Node> getGroupDetailsById(@RequestParam("id")Integer grpId) {
         GroupQuery groupQuery = new GroupQuery();
         groupQuery.setId(grpId);
         Response<PageDto<GroupDto>> pageDtoResponse = uARWFacade.getGroupRWResource().queryGroup(groupQuery);
@@ -63,8 +64,15 @@ public class GroupAction {
 
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    Response<GroupDto> modifyGroup(@RequestBody GroupParam groupParam) {
+    public Response<GroupDto> modifyGroup(@RequestBody GroupParam groupParam) {
         Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().updateGroup(groupParam);
         return groupDto;
+    }
+
+    @RequestMapping(value = "/adduser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<Void> addUserToGroup(@RequestBody UserListParam userListParam) {
+        Response<Void>  response = uARWFacade.getGroupRWResource().addUsersIntoGroup(userListParam);
+        return response;
     }
 }
