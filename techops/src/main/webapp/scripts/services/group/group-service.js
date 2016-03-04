@@ -29,6 +29,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 },
                 timeout: constant.reqTimeout
             },
+            addUser: {
+                method: 'POST',
+                params: {
+                    method: 'adduser'
+                },
+                timeout: constant.reqTimeout
+            }
         });
         svc.tree = {};
         svc.syncTree = function(params) {

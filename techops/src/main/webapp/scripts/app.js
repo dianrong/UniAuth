@@ -5,7 +5,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
            ngTreeController, mainController, constant, utils) {
     var appName = "ops";
     var app = angular.module(appName, ['ngResource', 'ui.router', 'pascalprecht.translate', 'ngSanitize',
-        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'treeControl']);
+        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'treeControl', 'ui.select']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
 
@@ -83,9 +83,9 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             templateUrl: 'views/group/group-delete.html'
         }).
         state('group.add-user', {
-            url: '/delete',
-            controller: "GroupDeleteController",
-            templateUrl: 'views/group/group-delete.html'
+            url: '/add-user',
+            controller: "GroupAddUserController",
+            templateUrl: 'views/group/group-add-user.html'
         }).
         state('group.delete-user', {
             url: '/delete',

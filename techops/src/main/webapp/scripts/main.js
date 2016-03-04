@@ -17,7 +17,7 @@ require.config({
     'datepicker': 'lib/bootstrap-datepicker/bootstrap-datepicker.min',
     'dialogs':'lib/angular-dialog-service/dist/dialogs.min',
     'ngTreeController':'lib/angular-tree-control/angular-tree-control',
-    'ui-select':'lib/ui-select/dist/select.min'
+    'ui-select':'lib/ui-select/dist/select'
   },
 
   shim: {

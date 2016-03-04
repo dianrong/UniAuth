@@ -5,21 +5,21 @@
         </h4>
     </div>
     <div>
-        <ui-select ng-model="users.selected"
+        <ui-select ng-model="user.selected"
                    theme="bootstrap"
                    ng-disabled="disabled"
                    reset-search-input="false"
-                   style="width: 300px;">
-            <ui-select-match placeholder="Enter an email...">{{$select.selected.formatted_email}}</ui-select-match>
-            <ui-select-choices repeat="email in users track by $index"
-                               refresh="refreshEmails($select.search)"
+                   style="width:100%;margin-top: 6px;">
+            <ui-select-match placeholder="Enter an email...">{{$select.selected.email}}</ui-select-match>
+            <ui-select-choices repeat="user in users track by $index"
+                               refresh="refreshUsers($select.search)"
                                refresh-delay="0">
-                <div ng-bind-html="email.formatted_address | highlight: $select.search"></div>
-     Î       </ui-select-choices>
+                <div ng-bind-html="user.email | highlight: $select.search"></div>
+     Î      </ui-select-choices>
         </ui-select>
         <p class="text-danger"><strong>{{groupMessage}}</strong></p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="addUser()">添加</button>
+        <button type="button" class="btn btn-primary" ng-click="addUserToGroup()">添加</button>
     </div>
 </div>
