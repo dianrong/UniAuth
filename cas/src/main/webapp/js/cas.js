@@ -38,6 +38,13 @@ function areCookiesEnabled() {
     return false;
 }
 
+function getUrlParam(name){  
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");  
+    var r = window.location.search.substr(1).match(reg);  
+    if (r!=null) return r[2];  
+    return null;  
+}  
+
 function resourceLoadedSuccessfully() {
     $(document).ready(function() {
         if ($(":focus").length === 0){
@@ -74,6 +81,19 @@ function resourceLoadedSuccessfully() {
         if (typeof(jqueryReady) == "function") {
             jqueryReady();
         }
+
+        $("#domain").change(function(){
+        	var selectedValue = $("#domain").val();
+        	var location = window.location.href;
+        	var pos = location.indexOf("?service=");
+        	var url = location.substring(0, pos);
+        	var redirect = url + "?service=" + selectedValue;
+        	top.window.location = redirect;
+        }); 
+        
+        var currentService = getUrlParam("service");
+        $("#domain").val(currentService);
+        
     });
 
 };

@@ -18,7 +18,15 @@
     under the License.
 
 --%>
+
+
 <jsp:directive.include file="top.jsp" />
+
+<c:if test="${not empty redirectUrl}">
+	<script>
+		top.window.location = "${redirectUrl}";
+	</script>
+</c:if>
 
 <c:if test="${not pageContext.request.secure}">
     <div id="msg" class="errors">
@@ -80,8 +88,11 @@
             <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
             <div class="select">
 	            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
-	            	<form:option value="http://www.dianrong.com">techops</form:option>
-	            	<form:option value="http://www.dianrong.com">adminconsole</form:option>
+	            	<c:if test="${not empty domains}">
+	            		<c:forEach items="${domains}" var="domain">
+  							<form:option value="${domain.zkDomainUrlEncoded}">${domain.code}</form:option>
+						</c:forEach>
+	            	</c:if>
 	            </form:select>
             </div>
         </section>

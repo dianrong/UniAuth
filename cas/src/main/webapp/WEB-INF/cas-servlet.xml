@@ -301,12 +301,14 @@
   <bean id="frontChannelLogoutAction" class="org.jasig.cas.web.flow.FrontChannelLogoutAction"
         c:logoutManager-ref="logoutManager"/>
 
-  <bean id="initialFlowSetupAction" class="org.jasig.cas.web.flow.InitialFlowSetupAction"
+  <bean id="initialFlowSetupAction" class="com.dianrong.common.uniauth.cas.action.InitialFlowSetupAction"
         p:argumentExtractors-ref="argumentExtractors"
         p:warnCookieGenerator-ref="warnCookieGenerator"
         p:ticketGrantingTicketCookieGenerator-ref="ticketGrantingTicketCookieGenerator"
         p:servicesManager-ref="servicesManager"
-        p:enableFlowOnAbsentServiceRequest="${create.sso.missing.service:true}"  />
+        p:enableFlowOnAbsentServiceRequest="${create.sso.missing.service:true}"  
+        p:domainService-ref="domainService"
+        />
 
   <bean id="genericSuccessViewAction" class="org.jasig.cas.web.flow.GenericSuccessViewAction"
         c:centralAuthenticationService-ref="centralAuthenticationService" />

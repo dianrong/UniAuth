@@ -19,7 +19,7 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
-@Service
+@Service("domainService")
 public class DomainService {
 	
 	@Resource(name="uniauthConfig")
@@ -49,7 +49,8 @@ public class DomainService {
 			for(DomainDto domainDto :domainDtoList){
 				String domainCode = domainDto.getCode();
 				String zkDomainUrl = allZkNodeMap.get(AppConstants.ZK_DOMAIN_PREFIX + domainCode);
-				zkDomainUrl = zkDomainUrl.endsWith("/") ? (zkDomainUrl + AppConstants.SERVICE_LOGIN_POSTFIX) : (zkDomainUrl + "/" + AppConstants.SERVICE_LOGIN_POSTFIX);
+				//zkDomainUrl = zkDomainUrl.endsWith("/") ? (zkDomainUrl + AppConstants.SERVICE_LOGIN_POSTFIX) : (zkDomainUrl + "/" + AppConstants.SERVICE_LOGIN_POSTFIX);
+				zkDomainUrl += AppConstants.SERVICE_LOGIN_POSTFIX;
 				domainDto.setZkDomainUrl(zkDomainUrl);
 				String zkDomainUrlEncoded = null;
 				try {

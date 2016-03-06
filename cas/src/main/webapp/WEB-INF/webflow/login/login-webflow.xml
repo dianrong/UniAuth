@@ -29,14 +29,8 @@
         <evaluate expression="initialFlowSetupAction"/>
     </on-start>
 
-	<!-- ticketGrantingTicketCheck 是状态id -->
     <action-state id="ticketGrantingTicketCheck"> 
-    	<!-- 
-    		ticketGrantingTicketCheckAction 是在 cas-servlet.xml文件中登记的Action类(extends AbstractAction)，
-    		它可以return出来transition中字符串标识的Event对象，所以on的配置是出现此类事件时，to到另外一种view-state或decision-state
-    	 -->
         <evaluate expression="ticketGrantingTicketCheckAction"/> 
-        <!-- on指明的是AbstractAction返回的事件，to指明的是view-state或decision-state -->
         <transition on="notExists" to="gatewayRequestCheck"/>
         <transition on="invalid" to="terminateSession"/>
         <transition on="valid" to="hasServiceCheck"/>
@@ -90,11 +84,8 @@
     </action-state>
 
 	<!-- 
-	view：指明的是加载的jsp文件的名称，默认位置在cas.properties中设置：
 	# Path prefix for where views are to be found
 	# cas.viewResolver.defaultViewsPathPrefix=/WEB-INF/view/jsp/default/ui/
-	model：指明的是<var name="credential" class="org.jasig.cas.authentication.UsernamePasswordCredential"/>
-	
 	 -->
     <view-state id="viewLoginForm" view="casLoginView" model="credential">
         <binder>
@@ -108,6 +99,7 @@
             <!--
             <evaluate expression="samlMetadataUIParserAction" />
             -->
+            <evaluate expression="domainService.getAllLoginPageDomains()" result="viewScope.domains"/>
         </on-entry>
         <transition on="submit" bind="true" validate="true" to="realSubmit"/>
     </view-state>
