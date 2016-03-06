@@ -12,7 +12,7 @@ define(['../../utils/constant'],function(constant) {
 
         $scope.user = {};
         $scope.refreshUsers = function(email) {
-            var params = {email: email, pageNumber:0, pageSize: 30};
+            var params = {email: email, pageNumber:0, pageSize: 16};
             return UserService.getUsers(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
                     $scope.users = response.data.data;
@@ -41,12 +41,10 @@ define(['../../utils/constant'],function(constant) {
 
             GroupService.addUser(params, function (res) {
                 $scope.groupMessage = '';
-                var result = res.data;
                 if(res.info) {
                     $scope.groupMessage = res.info;
                     return;
                 }
-                $scope.addedGroup = result.data;
                 $scope.getTree(paramsCtlLevel);
             }, function () {
                 $scope.addedGroup = {};
