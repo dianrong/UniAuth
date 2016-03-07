@@ -74,20 +74,43 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
-                        RoleService.enableDisableUser(
+                        RoleService.updateRole(
                             {
                                 'id':param.id,
+                                'name': param.name,
+                                'description': param.description,
+                                'roleCodeId':param.roleCodeId,
                                 'status':param.status?0:1
                             }
                             , function(res) {
                                 // status change successed
-                                $scope.queryUser();
+                                $scope.queryRole();
                             }, function(err) {
                                 console.log(err);
                             }
                         );
                     }, function (no) {
                         // do nothing
+                    });
+                    break;
+                case 'modify':
+                    var dlg = dialogs.create('views/role/dialogs/modify.html','ModifyRoleController',
+                        param, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        $scope.queryRole();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'add':
+                    var dlg = dialogs.create('views/role/dialogs/add.html','AddRoleController',
+                        {}, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        $scope.queryRole();
+                    }, function (dismiss) {
+                        //
                     });
                     break;
             }

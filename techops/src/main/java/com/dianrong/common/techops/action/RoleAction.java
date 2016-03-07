@@ -29,7 +29,7 @@ public class RoleAction {
 
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    public Response<PageDto<RoleDto>> searchUser(@RequestBody RoleQuery roleQuery) {
+    public Response<PageDto<RoleDto>> searchRole(@RequestBody RoleQuery roleQuery) {
         return uARWFacade.getRoleRWResource().searchRole(roleQuery);
     }
 
@@ -41,6 +41,11 @@ public class RoleAction {
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Response<RoleDto>  addNewRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().addNewRole(roleParam);
+    }
+
+    @RequestMapping(value = "/update" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response<Void> updateRole(@RequestBody RoleParam roleParam) {
+        return uARWFacade.getRoleRWResource().updateRole(roleParam);
     }
 
 }
