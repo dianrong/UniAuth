@@ -1,11 +1,15 @@
 package com.dianrong.loanbusiness.subsystem.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
 
+import com.dianrong.loanbusiness.subsystem.MyInterface;
 import com.dianrong.loanbusiness.subsystem.model.TestModel;
 
 public class MyService {
+	
+	@Autowired(required = false)
+	private MyInterface myInterface;
 	
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public void testService(){

@@ -21,8 +21,7 @@
     	<expression-handler ref="methodSecurityExpressionHandler"/>
     </global-method-security>
     
-	<b:bean id="methodSecurityExpressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
-		<b:property name="permissionEvaluator" ref="uniauthPermissionEvaluator" />
+	<b:bean id="methodSecurityExpressionHandler" class="com.dianrong.common.uniauth.client.custom.SSMethodSecurityExpressionHandler">
 	</b:bean>
     
     <!--

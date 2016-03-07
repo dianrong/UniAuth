@@ -30,5 +30,6 @@ public interface AppConstants {
 	String LOGIN_REDIRECT_URL = "LOGIN_REDIRECT_URL";
 	String NO_PRIVILEGE = "NO_PRIVILEGE";
 
+	String PERM_TYPE_DOMAIN_ID = "DOMAIN_ID";
 
 }

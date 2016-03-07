@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.dianrong.common.uniauth.client.DomainDefine;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -31,11 +32,17 @@ public class SSUserDetailService implements UserDetailsService {
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	@Value("#{domainDefine.domainCode}")
-	private String currentDomainCode;
+	@Autowired
+	private DomainDefine domainDefine;
+	
+	@Autowired(required = false)
+	private UserInfoCallBack userInfoCallBack;
 	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
+		String currentDomainCode = domainDefine.getDomainCode();
+		String userInfoClass = domainDefine.getUserInfoClass();
+		
 		CheckDomainDefine.checkDomainDefine(currentDomainCode);
 		//currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 		
@@ -103,5 +110,4 @@ public class SSUserDetailService implements UserDetailsService {
 			}
 		}
 	}
-	
 }
