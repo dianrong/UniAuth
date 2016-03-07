@@ -1,8 +1,15 @@
-define(function () {
-    var Controller = function ($scope,$uibModalInstance, RoleService) {
+define(['../../../utils/constant', '../../../utils/utils'], function (constant, utils) {
+    var Controller = function ($rootScope, $scope,$uibModalInstance, RoleService) {
         //-- Variables --//
 
         $scope.role = {};
+        function getRoleCodes() {
+            RoleService.getAllRoleCodes().$promise.then(function(res) {
+                var roleCodes = res.data;
+                utils.generatorDropdown($scope, 'roleAddRoleCodesDropdown', roleCodes, roleCodes[0]);
+            });
+        }
+        getRoleCodes();
 
         //-- Methods --//
         $scope.cancel = function(){
@@ -12,6 +19,13 @@ define(function () {
 
         $scope.save = function(){
             var addParam = {};
+
+            if($rootScope.loginDomainsDropdown && $rootScope.loginDomainsDropdown.option && $rootScope.loginDomainsDropdown.option.id){
+                addParam.domainId = $rootScope.loginDomainsDropdown.option.id;
+            }
+            addParam.name = $scope.role.name;
+            addParam.description = $scope.role.description;
+            addParam.roleCodeId = $scope.roleAddRoleCodesDropdown.option.id;
             RoleService.addRole(addParam,
                 function(res) {
                     // user add api successed
@@ -31,7 +45,7 @@ define(function () {
 
     return {
         name: "AddRoleController",
-        fn: ["$scope","$uibModalInstance", "RoleService", Controller]
+        fn: ["$rootScope", "$scope","$uibModalInstance", "RoleService", Controller]
     };
 
 });

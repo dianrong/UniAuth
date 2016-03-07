@@ -16,7 +16,24 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            addRole: {
+                method: 'POST',
+                params: {
+                    method: 'add'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            updateRole: {
+                method: 'POST',
+                params: {
+                    method: 'update'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
+
         });
         return svc;
     };
