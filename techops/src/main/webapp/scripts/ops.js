@@ -12,9 +12,11 @@ require(['app',
     'controllers/group/group-delete-user',
     'controllers/group/group-add-owner',
     'controllers/group/group-delete-owner',
+    'controllers/role/role',
     'services/common/http-interceptor-service',
     'services/user/user-service',
-    'services/group/group-service'],
+    'services/group/group-service',
+    'services/role/role-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);

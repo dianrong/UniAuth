@@ -1,0 +1,68 @@
+<form class="form-horizontal" name="roleQueryForm">
+    <div class="form-group">
+        <div class="col-md-4">
+            <span class="col-sm-4 control-label">角色名称:</span>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="角色名称" ng-model="roleQuery.name" maxlength="40">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">Code:</span>
+            <div class="col-md-8 btn-group" uib-dropdown is-open="roleCodesDropdown.isOpen">
+                <button type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+                    <span ng-bind="roleCodesDropdown.option.code"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="uib-dropdown-menu" role="menu">
+                    <li ng-repeat="it in roleCodesDropdown.items">
+                        <a ng-click="roleCodesDropdown.selectOption(it)" ng-bind="it.code"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="panel-body pull-right">
+    <a class="btn btn-default" ng-click="launch('add')" role="button">新增角色</a>
+    <button class="btn btn-default" ng-click="queryRole()">查询</button>
+</div>
+
+<div>
+    <table class="text-left table grey-border table-hover vertical-middle">
+        <thead class="text-color-c4">
+        <tr>
+            <th>角色名</th>
+            <th>角色code</th>
+            <th>角色描述</th>
+            <th>状态</th>
+            <th style="text-align: center">操作</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-c6">
+
+        <tr ng-if="rolesLoading!=''">
+            <td colspan="9" class="tc" ng-bind="rolesLoading"></td>
+        </tr>
+
+        <tr ng-repeat="d in roles">
+            <td ng-bind="d.name"></td>
+            <td ng-bind="d.roleCode"></td>
+            <td ng-bind="d.description"></td>
+            <td ng-bind="!d.status?'启用':'禁用'"></td>
+            <td class="text-color-c9" style="text-align: center">
+                <div class="btn-group">
+                    <a title="管理该角色的用户" class="btn btn-info" href="#/permission"><i class="fa fa-user"></i></a>
+                    <a title="管理该角色的组" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-users"></i></a>
+                    <a title="管理该角色的权限" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-thumbs-up"></i></a>
+                    <a title="修改角色信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+                    <a title="{{d.status?'启用该角色':'禁用该角色'}}" class="btn btn-info" ng-click="launch('status', d)">
+                        <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <uib-pagination ng-if="roles && roles.length" boundary-links="true" ng-change="queryRole()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+</div>
