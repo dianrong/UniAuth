@@ -88,19 +88,19 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             templateUrl: 'views/group/group-add-user.html'
         }).
         state('group.delete-user', {
-            url: '/delete',
-            controller: "GroupDeleteController",
-            templateUrl: 'views/group/group-delete.html'
+            url: '/delete-user',
+            controller: "GroupDeleteUserController",
+            templateUrl: 'views/group/group-delete-user.html'
         }).
         state('group.add-owner', {
-            url: '/delete',
-            controller: "GroupDeleteController",
-            templateUrl: 'views/group/group-delete.html'
+            url: '/add-owner',
+            controller: "GroupAddOwnerController",
+            templateUrl: 'views/group/group-add-owner.html'
         }).
         state('group.delete-owner', {
-            url: '/delete',
-            controller: "GroupDeleteController",
-            templateUrl: 'views/group/group-delete.html'
+            url: '/delete-owner',
+            controller: "GroupDeleteOwnerController",
+            templateUrl: 'views/group/group-delete-owner.html'
         }).
         state('non-authorized', {
             url: '/non-authorized',

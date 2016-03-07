@@ -35,6 +35,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     method: 'adduser'
                 },
                 timeout: constant.reqTimeout
+            },
+            deleteUser: {
+                method: 'POST',
+                params: {
+                    method: 'deleteuser'
+                },
+                timeout: constant.reqTimeout
             }
         });
         svc.tree = {};

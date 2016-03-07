@@ -75,4 +75,11 @@ public class GroupAction {
         Response<Void>  response = uARWFacade.getGroupRWResource().addUsersIntoGroup(userListParam);
         return response;
     }
+
+    @RequestMapping(value = "/deleteuser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<Void> removeUserFromGroup(@RequestBody UserListParam userListParam) {
+        Response<Void>  response = uARWFacade.getGroupRWResource().removeUsersFromGroup(userListParam);
+        return response;
+    }
 }
