@@ -2,7 +2,12 @@ package com.dianrong.common.uniauth.client.custom;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +66,7 @@ public class SSUserDetailService implements UserDetailsService {
 						}
 					}
 				}
+				Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
 				
 				Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 				if(currentDomainDto != null){
@@ -70,12 +76,32 @@ public class SSUserDetailService implements UserDetailsService {
 							String roleCode = roleDto.getRoleCode();
 							SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
 							authorities.add(authority);
+							
+							mergePermMap(permMap, roleDto.getPermMap());
 						}
 					}
 				}
 				
-				return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto);
+				return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
 			}
 		}
 	}
+	
+	private void mergePermMap(Map<String, Set<String>> permMap, Map<String, Set<String>> subPermMap){
+		Set<Entry<String, Set<String>>> subEntrySet = subPermMap.entrySet();
+		Iterator<Entry<String, Set<String>>> subEntryIterator = subEntrySet.iterator();
+		while(subEntryIterator.hasNext()){
+			Entry<String, Set<String>> subEntry = subEntryIterator.next();
+			String permTypeName = subEntry.getKey();
+			Set<String> permValueSet = subEntry.getValue();
+			
+			if(permMap.containsKey(permTypeName)){
+				permMap.get(permTypeName).addAll(permValueSet);
+			}
+			else{
+				permMap.put(permTypeName, permValueSet);
+			}
+		}
+	}
+	
 }

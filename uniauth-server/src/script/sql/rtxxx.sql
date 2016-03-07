@@ -340,3 +340,10 @@ insert into grp_role(grp_id, role_id)  values(2, 1);
 
 -- change the primarykey of user_grp
 ALTER TABLE `user_grp` CHANGE COLUMN `type` `type` TINYINT(3) NOT NULL ,DROP PRIMARY KEY,ADD PRIMARY KEY (`user_id`, `grp_id`, `type`);
+
+alter table `audit` add column `req_uuid` varchar(128) not null;
+alter table `audit` add column `req_url` varchar(256) not null;
+alter table `audit` add column `req_success` tinyint(3) not null;
+alter table `audit` add column `req_exp` varchar(1024);
+
+

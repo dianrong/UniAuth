@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.client.custom;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -13,23 +15,26 @@ public class UserExtInfo extends User {
 	private Long id;
 	private UserDto userDto;
 	private DomainDto domainDto;
+	Map<String, Set<String>> permMap;
 	
 	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
 			Collection<? extends GrantedAuthority> authorities, 
-			Long id, UserDto userDto, DomainDto domainDto) {
+			Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		this.id = id;
 		this.userDto = userDto;
 		this.domainDto = domainDto;
+		this.permMap = permMap;
 	}
 
 	public UserExtInfo(String username, String password, Collection<? extends GrantedAuthority> authorities, 
-			Long id, UserDto userDto, DomainDto domainDto) {
+			Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
 		super(username, password, authorities);
 		this.id = id;
 		this.userDto = userDto;
 		this.domainDto = domainDto;
+		this.permMap = permMap;
 	}
 
 	public Long getId() {
