@@ -41,7 +41,7 @@ public class RoleAction {
     }
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("principal.permMap['DOMAIN'] != null and (principal.permMap['DOMAIN'].contains('techops') or principal.permMap['DOMAIN_ID'].contains(#roleParam.domainId))")
+    @PreAuthorize("(principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId)")
     public Response<RoleDto>  addNewRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().addNewRole(roleParam);
     }

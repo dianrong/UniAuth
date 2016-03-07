@@ -24,7 +24,7 @@
 	
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
 		<property name="domainCode" value="techops"></property>
-		<property name="userInfoClass" value="com.dianrong.common.techops.sscustom.TechopsUserExtInfo"></property>
+		<property name="userInfoClass" value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
 	</bean>
 	
 	<sec:http entry-point-ref="casAuthEntryPoint"  use-expressions="true" request-matcher="ant">
@@ -42,6 +42,7 @@
 
 	</sec:http>
 	
+	<!-- trick: must be same id or name, not more than one PermissionEvaluators allowed, see AccessControlListTag.java -->
 	<bean id="uniauthPermissionEvaluator" class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
 	
 </beans>

@@ -44,4 +44,23 @@ public class ReflectionUtils {
 		}
 		return object;
 	}
+	
+	public static void setUserInfoField(Object targetObj, String fieldName, Object fieldValue){
+		Field field = null;
+		Class<?> selfClazz = targetObj.getClass();
+		while(field == null){
+			try{
+				field = selfClazz.getDeclaredField(fieldName);
+			}catch(Exception e){
+				selfClazz = selfClazz.getSuperclass();
+			}
+		}
+		field.setAccessible(true);
+		try{
+			field.set(targetObj, fieldValue);
+		}catch(Exception e){
+			
+		}
+	}
+	
 }

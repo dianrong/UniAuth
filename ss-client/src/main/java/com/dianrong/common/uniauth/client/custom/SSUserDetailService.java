@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.client.custom;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,8 +10,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,6 +39,8 @@ public class SSUserDetailService implements UserDetailsService {
 	
 	@Autowired(required = false)
 	private UserInfoCallBack userInfoCallBack;
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(SSUserDetailService.class);
 	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
@@ -89,7 +93,24 @@ public class SSUserDetailService implements UserDetailsService {
 					}
 				}
 				
-				return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
+				if(userInfoClass == null || "".equals(userInfoClass.trim())){
+					return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
+				}
+				else{
+					try{
+						Class<?> clazz = Class.forName(userInfoClass);
+						Constructor<?> construct = clazz.getConstructor(String.class, String.class, Boolean.TYPE, Boolean.TYPE,Boolean.TYPE,Boolean.TYPE, Collection.class, Long.class, UserDto.class, DomainDto.class, Map.class);
+						UserExtInfo userExtInfo = (UserExtInfo)construct.newInstance(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
+						
+						if(userInfoCallBack != null){
+							userInfoCallBack.fill(userExtInfo);
+						}
+						return userExtInfo;
+					}catch(Exception e){
+						LOGGER.error("Use built-in UserExtInfo, not the customized one, error reasons guess:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
+						return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
+					}
+				}
 			}
 		}
 	}

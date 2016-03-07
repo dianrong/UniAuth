@@ -28,15 +28,15 @@ public class UserExtInfo extends User {
 		this.permMap = permMap;
 	}
 
-	public UserExtInfo(String username, String password, Collection<? extends GrantedAuthority> authorities, 
+/*	public UserExtInfo(String username, String password, Collection<? extends GrantedAuthority> authorities, 
 			Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
 		super(username, password, authorities);
 		this.id = id;
 		this.userDto = userDto;
 		this.domainDto = domainDto;
 		this.permMap = permMap;
-	}
-
+	}*/
+	
 	public Long getId() {
 		return id;
 	}

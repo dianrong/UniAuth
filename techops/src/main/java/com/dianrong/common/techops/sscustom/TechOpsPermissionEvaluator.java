@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 import org.springframework.security.core.Authentication;
 
-import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluator;
+import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
 
-public class TechOpsPermissionEvaluator implements UniauthPermissionEvaluator {
+public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 
 	public TechOpsPermissionEvaluator() {
 		
