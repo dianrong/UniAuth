@@ -15,7 +15,7 @@ public class UserExtInfo extends User {
 	private Long id;
 	private UserDto userDto;
 	private DomainDto domainDto;
-	Map<String, Set<String>> permMap;
+	private Map<String, Set<String>> permMap;
 	
 	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
@@ -59,6 +59,14 @@ public class UserExtInfo extends User {
 
 	public void setDomainDto(DomainDto domainDto) {
 		this.domainDto = domainDto;
+	}
+
+	public Map<String, Set<String>> getPermMap() {
+		return permMap;
+	}
+
+	public void setPermMap(Map<String, Set<String>> permMap) {
+		this.permMap = permMap;
 	}
 	
 }
