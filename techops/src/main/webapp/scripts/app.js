@@ -112,15 +112,34 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "PermController",
             templateUrl: "views/perm/perm.html"
         }).
-        state('relation', {
-            url: "/relation",
-            controller: "RoleController",
-            templateUrl: "views/role/role.html"
+        state('rel', {
+            abstract: true,
+            url: "/rel",
+            templateUrl: "views/rel/rel.html"
+        }).
+        state('rel.role--perm', {
+            url: '',
+            templateUrl: "views/rel/rel-role--perm.html"
+        }).
+        state('rel.perm--role', {
+            url: '/rel-perm--role',
+            templateUrl: "views/common/not-found.html"
+        }).
+        state('rel.user--role', {
+            url: '/rel-user--role',
+            templateUrl: "views/common/not-found.html"
+        }).
+        state('rel.grp--role', {
+            url: '/rel-grp--role',
+            templateUrl: "views/common/not-found.html"
+        }).
+        state('rel.role--user-grp', {
+            url: '/rel-role--user-grp',
+            templateUrl: "views/common/not-found.html"
         }).
         state('domain', {
             url: "/domain",
-            controller: "RoleController",
-            templateUrl: "views/role/role.html"
+            templateUrl: "views/common/not-found.html"
         }).
         state('non-authorized', {
             url: '/non-authorized',
