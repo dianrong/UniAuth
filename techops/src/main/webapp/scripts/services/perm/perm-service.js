@@ -1,7 +1,7 @@
 define(['../../utils/constant'], function (constant) {
     var Service = function ($resource) {
-        var svc = $resource(constant.apiBase + '/role/:method', null, {
-            getRoles: {
+        var svc = $resource(constant.apiBase + '/perm/:method', null, {
+            getPerms: {
                 method: 'POST',
                 params: {
                     method: 'query'
@@ -9,15 +9,15 @@ define(['../../utils/constant'], function (constant) {
                 isArray: false,
                 timeout: constant.reqTimeout
             },
-            getAllRoleCodes: {
+            getAllPermTypes: {
                 method: 'GET',
                 params: {
-                    method: 'codes'
+                    method: 'types'
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
             },
-            addRole: {
+            addPerm: {
                 method: 'POST',
                 params: {
                     method: 'add'
@@ -25,7 +25,7 @@ define(['../../utils/constant'], function (constant) {
                 isArray: false,
                 timeout: constant.reqTimeout
             },
-            updateRole: {
+            updatePerm: {
                 method: 'POST',
                 params: {
                     method: 'update'
@@ -39,7 +39,7 @@ define(['../../utils/constant'], function (constant) {
     };
 
     return {
-        name: "RoleService",
+        name: "PermService",
         svc: ["$resource", Service]
     };
 

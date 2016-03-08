@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +71,7 @@ public class PermissionService {
 		CheckEmpty.checkEmpty(value, "权限的值");
 		
 		Permission permission = BeanConverter.convert(permissionParam, false);
+		permission.setStatus(AppConstants.ZERO_Byte);
 		permissionMapper.insert(permission);
 		
 		PermissionDto permissionDto = BeanConverter.convert(permission);

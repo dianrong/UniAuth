@@ -15,10 +15,14 @@ require(['app',
     'controllers/role/role',
     'controllers/role/dialogs/add',
     'controllers/role/dialogs/modify',
+    'controllers/perm/perm',
+    'controllers/perm/dialogs/add',
+    'controllers/perm/dialogs/modify',
     'services/common/http-interceptor-service',
     'services/user/user-service',
     'services/group/group-service',
-    'services/role/role-service'],
+    'services/role/role-service',
+    'services/perm/perm-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);
