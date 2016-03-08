@@ -21,7 +21,7 @@
     <div ui-view class="col-md-4 col-sm-9">
     </div>
     <div style="padding-left: 1px" class="col-md-8 col-sm-9">
-        <h5 style="padding-left: 15px"><i class="fa fa-info font-color-info"></i>请选择您想要操作的组</h5>
+        <h5 style="padding-left: 15px"><i class="fa fa-info font-color-blue"></i>. 请选择您想要操作的组</h5>
         <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="过滤字符串" />
         <treecontrol class="tree-custom" options="opts" tree-model="treedata.data" selected-node="selected" expanded-nodes="treedata.expandedNodes"
                      on-selection="showSelected(node, selected)" filter-expression="predicate" filter-comparator="comparator">
