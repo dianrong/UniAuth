@@ -50,3 +50,25 @@
     color:#ff3333;
     padding-right: 2px
 }
+
+@media (min-width: 992px) {
+    .col-md-29d4 {
+        float: left;
+    }
+    .col-md-29d4 {
+        width: 29.4%;
+    }
+    .col-md-70d6 {
+        float: left;
+    }
+    .col-md-70d6 {
+        width: 70.6%;
+    }
+}
+
+.col-md-29d4 .col-md-70d6 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
