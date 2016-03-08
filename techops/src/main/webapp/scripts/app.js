@@ -34,8 +34,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }());
     };
 
-    app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', 'RoleService',
-        function ($cookies, $location, $rootScope, $state, $stateParams, permission, RoleService) {
+    app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', 'RoleService', 'PermService',
+        function ($cookies, $location, $rootScope, $state, $stateParams, permission, RoleService, PermService) {
       // It's very handy to add references to $state and $stateParams to the $rootScope
       // so that you can access them from any scope within your applications.For example,
       // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
@@ -45,16 +45,6 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
-      RoleService.getAllRoleCodes(null, function(res) {
-        var roleCodes = res.data;
-        var empty = {
-          code : '请选择'
-        };
-        roleCodes.unshift(empty);
-          utils.generatorDropdown($rootScope, 'roleCodesDropdown', roleCodes, empty);
-        }, function(err){
-          console.log(err);
-      });
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
       $rootScope.pageTitle = '权限运维系统 点融网-Dianrong';
 
@@ -117,10 +107,10 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "RoleController",
             templateUrl: "views/role/role.html"
         }).
-        state('permission', {
-            url: "/permission",
-            controller: "RoleController",
-            templateUrl: "views/role/role.html"
+        state('perm', {
+            url: "/perm",
+            controller: "PermController",
+            templateUrl: "views/perm/perm.html"
         }).
         state('relation', {
             url: "/relation",

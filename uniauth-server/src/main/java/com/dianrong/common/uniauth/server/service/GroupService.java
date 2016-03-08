@@ -426,14 +426,16 @@ public class GroupService {
                     for(UserExt userExt : userExts) {
                         UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
-                        List<UserDto> userDtos = groupDto.getUsers();
-                        if(userDtos == null) {
-                            userDtos = new ArrayList<>();
-                            groupDto.setUsers(userDtos);
-                        }
-                        userDtos.add(userDto);
-                        if(userIdsOnRole != null && userIdsOnRole.contains(userDto.getId())) {
-                            userDto.setRoleChecked(Boolean.TRUE);
+                        if(groupDto != null) {
+                            List<UserDto> userDtos = groupDto.getUsers();
+                            if (userDtos == null) {
+                                userDtos = new ArrayList<>();
+                                groupDto.setUsers(userDtos);
+                            }
+                            userDtos.add(userDto);
+                            if (userIdsOnRole != null && userIdsOnRole.contains(userDto.getId())) {
+                                userDto.setRoleChecked(Boolean.TRUE);
+                            }
                         }
                     }
 
