@@ -107,7 +107,7 @@ public class SSUserDetailService implements UserDetailsService {
 						}
 						return userExtInfo;
 					}catch(Exception e){
-						LOGGER.error("Use ss-client's UserExtInfo, not the customized one, error reasons guess:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
+						LOGGER.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
 						return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
 					}
 				}
