@@ -20,8 +20,8 @@ public class UniauthPermissionEvaluatorImpl implements UniauthPermissionEvaluato
 	 * @return false always
 	 */
 	@Override
-	public boolean hasPermission(Authentication authentication, Object target, Object permission) {
-		logger.warn("Denying user " + authentication.getName() + " permission '" + permission + "' on object " + target);
+	public boolean hasPermission(Authentication authentication, Object targetObject, Object permission) {
+		logger.warn("Denying user " + authentication.getName() + " permission '" + permission + "' on object " + targetObject);
 		return false;
 	}
 

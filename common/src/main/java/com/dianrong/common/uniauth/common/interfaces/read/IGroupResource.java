@@ -40,4 +40,9 @@ public interface IGroupResource {
     @Path("domain/roles")
     //scenario: retrieve all roles connected with a group(including all other roles under a domain)
     Response<List<RoleDto>> getAllRolesToGroupAndDomain(GroupParam groupParam);
+    
+    @POST
+    @Path("checkowner")
+    //scenario: check if one user is the owner of one group by group id
+    Response<Void> checkOwner(GroupParam groupParam);
 }

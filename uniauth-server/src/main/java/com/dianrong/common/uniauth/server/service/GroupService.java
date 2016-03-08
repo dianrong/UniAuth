@@ -1,5 +1,20 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -7,18 +22,32 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserGrp;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
-import com.dianrong.common.uniauth.server.data.mapper.*;
+import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.security.acl.Group;
-import java.util.*;
+import com.dianrong.common.uniauth.server.util.BeanConverter;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ParamCheck;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 
 
 /**
@@ -444,5 +473,22 @@ public class GroupService {
         } else {
             return null;
         }
+    }
+    
+    public void checkOwner(GroupParam groupParam) {
+		Long opUserId = groupParam.getOpUserId();
+		Integer targetGroupId = groupParam.getTargetGroupId();
+		
+		CheckEmpty.checkEmpty(opUserId, "当前用户");
+		CheckEmpty.checkEmpty(targetGroupId, "添加的目标组");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", opUserId);
+		paramMap.put("targetGroupId", targetGroupId);
+		
+		Integer ownerGroupCount = grpMapper.checkOwner(paramMap);
+		if(ownerGroupCount == 0){
+			throw new AppException(InfoName.GRP_NOT_OWNER, UniBundle.getMsg("group.checkowner.not.owner", opUserId, targetGroupId));
+		}
     }
 }

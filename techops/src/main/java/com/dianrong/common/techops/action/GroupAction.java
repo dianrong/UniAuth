@@ -39,8 +39,9 @@ public class GroupAction {
         }
     }
 
+    //need
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'addNewGroupIntoGroup')")
     public Response<GroupDto> addNewGroupIntoGroup(@RequestBody GroupParam groupParam) {
         Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().addNewGroupIntoGroup(groupParam);
         return groupDto;
@@ -62,6 +63,7 @@ public class GroupAction {
         return Response.success(node);
     }
 
+    //need
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<GroupDto> modifyGroup(@RequestBody GroupParam groupParam) {
@@ -69,15 +71,18 @@ public class GroupAction {
         return groupDto;
     }
 
+    //need
     @RequestMapping(value = "/adduser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<Void> addUserToGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().addUsersIntoGroup(userListParam);
         return response;
     }
-
+    
+    //need
     @RequestMapping(value = "/deleteuser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    
     public Response<Void> removeUserFromGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().removeUsersFromGroup(userListParam);
         return response;

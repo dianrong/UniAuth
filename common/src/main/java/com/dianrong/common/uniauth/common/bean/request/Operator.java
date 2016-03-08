@@ -29,4 +29,8 @@ public class Operator {
 		} catch (Exception e) {
 		}
 	}
+
+	public Long getOpUserId() {
+		return opUserId;
+	}
 }

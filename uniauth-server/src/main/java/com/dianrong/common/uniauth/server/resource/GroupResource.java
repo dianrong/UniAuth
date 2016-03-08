@@ -81,4 +81,9 @@ public class GroupResource implements IGroupRWResource {
 		return Response.success();
 	}
 
+	@Override
+	public Response<Void> checkOwner(GroupParam groupParam) {
+		groupService.checkOwner(groupParam);
+		return Response.success();
+	}
 }

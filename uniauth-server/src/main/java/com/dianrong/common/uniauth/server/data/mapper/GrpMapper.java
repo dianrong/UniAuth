@@ -1,11 +1,13 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.GrpExample;
-
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
+
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
 
 public interface GrpMapper {
     /**
@@ -101,4 +103,6 @@ public interface GrpMapper {
     List<HashMap<String,Integer>> getGroupTreeLinks(Integer groupId);
 
     Integer selectNameCountBySameLayerGrpId(Integer groupId);
+    
+    Integer checkOwner(Map<String, Object> paramMap);
 }
