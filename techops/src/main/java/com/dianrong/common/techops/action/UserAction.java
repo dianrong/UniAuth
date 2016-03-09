@@ -47,18 +47,18 @@ public class UserAction {
         Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().addNewUser(userParam);
         UserDto userDto = userDtoResponse.getData();
         StringBuffer buffer = new StringBuffer();
-        buffer.append("====================================================\n");
+        buffer.append("====================================================<br />");
         buffer.append("            ");
-        buffer.append(" 系统管理员为您创建了点融系统账户\n");
+        buffer.append("     系统管理员为您创建了点融系统账户<br />");
         buffer.append("            ");
-        buffer.append(" 您的点融登录账号为: " + userDto.getEmail() + "        \n");
+        buffer.append(" 您的点融登录账号为: " + userDto.getEmail() + "        <br />");
         buffer.append("            ");
-        buffer.append(" 您的点融账户密码为: " + userDto.getPassword() + "        \n");
+        buffer.append(" 您的点融账户密码为: " + userDto.getPassword() + "        <br />");
         if(casServerURL != null) {
             buffer.append("            ");
-            buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       \n");
+            buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
-        buffer.append("====================================================\n");
+        buffer.append("====================================================<br />");
         techOpsService.sendEmail(userDto.getEmail(), buffer);
 
         return Response.success();
@@ -91,18 +91,18 @@ public class UserAction {
 
         UserDto userDto = userDtoResponse.getData();
         StringBuffer buffer = new StringBuffer();
-        buffer.append("====================================================\n");
+        buffer.append("====================================================<br />");
         buffer.append("            ");
-        buffer.append(" 系统管理员重置了您的点融系统账户密码\n");
+        buffer.append("      系统管理员重置了您的点融系统账户密码<br />");
         buffer.append("            ");
-        buffer.append(" 您的点融登录账号为: " + userDto.getEmail() + "        \n");
+        buffer.append(" 您的点融登录账号为: " + userDto.getEmail() + "        <br />");
         buffer.append("            ");
-        buffer.append(" 您的点融账户密码为: " + userDto.getPassword() + "        \n");
+        buffer.append(" 您的点融账户密码为: " + userDto.getPassword() + "        <br />");
         if(casServerURL != null) {
             buffer.append("            ");
-            buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       \n");
+            buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
-        buffer.append("====================================================\n");
+        buffer.append("====================================================<br />");
         techOpsService.sendEmail(userDto.getEmail(), buffer);
 
         return Response.success();
