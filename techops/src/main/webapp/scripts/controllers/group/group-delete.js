@@ -19,7 +19,8 @@ define(['../../utils/constant'], function(constant) {
             GroupService.modify({
                 "id": $rootScope.shareGroup.selected.id,
                 "code": $rootScope.shareGroup.selected.code,
-                "status": 1
+                "status": 1,
+                "targetGroupId": $rootScope.shareGroup.selected.id
             }, function (res) {
                 $scope.groupMessage = '删除成功';
                 if(res.info) {

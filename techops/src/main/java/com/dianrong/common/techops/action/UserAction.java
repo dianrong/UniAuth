@@ -58,7 +58,7 @@ public class UserAction {
     }
 
     @RequestMapping(value = "/unlock" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public Response<Void> unlock(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.UNLOCK);
         return uARWFacade.getUserRWResource().updateUser(userParam);
@@ -79,7 +79,7 @@ public class UserAction {
     }
 
     @RequestMapping(value = "/current" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response<LoginUser> getCurrentUserInfo(HttpServletRequest request, String email) {
+    public Response<LoginUser> getCurrentUserInfo() {
         LoginUser loginUser = techOpsService.getLoginUser();
     	return Response.success(loginUser);
     }

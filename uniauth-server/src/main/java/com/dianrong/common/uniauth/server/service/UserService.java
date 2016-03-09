@@ -124,9 +124,9 @@ public class UserService {
                 user.setName(name);
                 user.setEmail(email);
                 user.setPhone(phone);
-                user.setLastUpdate(new Date());
                 break;
         }
+        user.setLastUpdate(new Date());
         userMapper.updateByPrimaryKey(user);
     }
 

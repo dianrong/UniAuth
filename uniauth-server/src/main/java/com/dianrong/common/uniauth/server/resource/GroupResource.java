@@ -83,7 +83,7 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<Void> checkOwner(GroupParam groupParam) {
-		groupService.checkOwner(groupParam);
+		groupService.checkOwner(groupParam.getOpUserId(), groupParam.getTargetGroupId());
 		return Response.success();
 	}
 }

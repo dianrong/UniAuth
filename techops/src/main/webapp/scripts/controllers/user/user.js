@@ -3,7 +3,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($rootScope, $scope, $location, UserService, dialogs) {
+    var Controller = function ($rootScope, $scope, $location, UserService, dialogs, $state) {
         // always cache the query user input
         if($rootScope.userQuery) {
             $scope.userQuery = $rootScope.userQuery;
@@ -57,7 +57,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         };
 
         $scope.queryUser();
-
+        $scope.navigate = function(selectedUser) {
+            //TODO store or replace the selectedUser in user service.
+            $state.go('rel.user--role');
+        };
         $scope.launch = function(which, param) {
             switch(which) {
                 case 'status':
@@ -146,7 +149,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "UserController",
-        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", Controller]
+        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", "$state",Controller]
     };
 
 });

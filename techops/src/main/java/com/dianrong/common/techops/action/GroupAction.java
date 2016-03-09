@@ -41,7 +41,7 @@ public class GroupAction {
 
     //need
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'addNewGroupIntoGroup')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
     public Response<GroupDto> addNewGroupIntoGroup(@RequestBody GroupParam groupParam) {
         Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().addNewGroupIntoGroup(groupParam);
         return groupDto;
@@ -65,7 +65,7 @@ public class GroupAction {
 
     //need
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
     public Response<GroupDto> modifyGroup(@RequestBody GroupParam groupParam) {
         Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().updateGroup(groupParam);
         return groupDto;
@@ -73,7 +73,7 @@ public class GroupAction {
 
     //need
     @RequestMapping(value = "/adduser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
     public Response<Void> addUserToGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().addUsersIntoGroup(userListParam);
         return response;
@@ -81,8 +81,7 @@ public class GroupAction {
     
     //need
     @RequestMapping(value = "/deleteuser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
     public Response<Void> removeUserFromGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().removeUsersFromGroup(userListParam);
         return response;

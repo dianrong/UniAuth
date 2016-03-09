@@ -3,6 +3,8 @@ package com.dianrong.common.techops.sscustom;
 import java.io.Serializable;
 import java.util.List;
 
+import com.dianrong.common.uniauth.common.bean.request.UserListParam;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 
@@ -23,8 +25,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 
 	@Override
 	public boolean hasPermission(Authentication authentication, Object targetObject, Object permission) {
-		if("addNewGroupIntoGroup".equals(permission)){
-			GroupParam groupParam = (GroupParam)targetObject;
+		if(AppConstants.PERM_GROUP_OWNER.equals(permission)){
+			GroupParam groupParam = null;
+			if(targetObject instanceof GroupParam) {
+				groupParam = (GroupParam)targetObject;
+			} else if(targetObject instanceof UserListParam) {
+				UserListParam userListParam = (UserListParam)targetObject;
+				groupParam = new GroupParam().setTargetGroupId(userListParam.getGroupId());
+			} else {
+				return false;
+			}
+
 			Response<Void> response = uniClientFacade.getGroupResource().checkOwner(groupParam);
 			List<Info> infoList = response.getInfo();
 			if(infoList != null && !infoList.isEmpty()){

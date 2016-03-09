@@ -1,6 +1,6 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
 
-    var Controller = function ($rootScope, $scope, $location, PermService, dialogs) {
+    var Controller = function ($rootScope, $scope, $location, PermService, dialogs, $state) {
 
         function getAllPermTypes() {
             PermService.getAllPermTypes().$promise.then(function (res) {
@@ -80,7 +80,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         };
 
         $scope.queryPerm();
-
+        $scope.navToPermRole = function(perm) {
+            //TODO store or replace the selectedRole in role service.
+            $state.go('rel.perm--role');
+        };
         $scope.launch = function(which, param) {
             switch(which) {
                 case 'status':
@@ -138,7 +141,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "PermController",
-        fn: ["$rootScope", "$scope", "$location", "PermService", "dialogs", Controller]
+        fn: ["$rootScope", "$scope", "$location", "PermService", "dialogs", "$state", Controller]
     };
 
 });

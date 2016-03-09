@@ -1,4 +1,4 @@
-<form style="margin-left: -32px;" class="form-horizontal" name="roleQueryForm">
+<form style="margin-left: -22px;" class="form-horizontal" name="roleQueryForm">
     <div class="form-group">
         <div class="col-md-4">
             <span class="col-sm-4 control-label">角色名称:</span>
@@ -52,9 +52,8 @@
             <td ng-bind="!d.status?'启用':'禁用'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="管理该角色的用户" class="btn btn-info" href="#/permission"><i class="fa fa-user"></i></a>
-                    <a title="管理该角色的组" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-users"></i></a>
-                    <a title="管理该角色的权限" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-thumbs-up"></i></a>
+                    <a title="管理该角色的用户/组" class="btn btn-info" ng-click="navToRoleUser(d)"><i class="fa fa-users"></i></a>
+                    <a title="管理该角色的权限" class="btn btn-info" ng-click="navToRolePerm(d)"><i class="fa fa-thumbs-up"></i></a>
                     <a title="修改角色信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
                     <a title="{{d.status?'启用该角色':'禁用该角色'}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>

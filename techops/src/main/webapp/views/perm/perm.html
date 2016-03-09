@@ -1,4 +1,4 @@
-<form style="margin-left: -32px;" class="form-horizontal" name="permQueryForm">
+<form style="margin-left: -34px;" class="form-horizontal" name="permQueryForm">
     <div class="form-group">
         <div class="col-md-4">
             <span class="col-sm-4 control-label">权限值:</span>
@@ -52,7 +52,7 @@
             <td ng-bind="!d.status?'启用':'禁用'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="管理该权限对应的角色" class="btn btn-info" ng-click="goStateWithPerm()"><i class="fa fa-cog"></i></a>
+                    <a title="管理该权限对应的角色" class="btn btn-info" ng-click="navToPermRole(d)"><i class="fa fa-cog"></i></a>
                     <a title="修改权限信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
                     <a title="{{d.status?'启用该权限':'禁用该权限'}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>

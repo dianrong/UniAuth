@@ -477,9 +477,7 @@ public class GroupService {
         }
     }
     
-    public void checkOwner(GroupParam groupParam) {
-		Long opUserId = groupParam.getOpUserId();
-		Integer targetGroupId = groupParam.getTargetGroupId();
+    public void checkOwner(Long opUserId, Integer targetGroupId) {
 		
 		CheckEmpty.checkEmpty(opUserId, "当前用户");
 		CheckEmpty.checkEmpty(targetGroupId, "添加的目标组");

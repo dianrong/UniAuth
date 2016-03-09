@@ -30,7 +30,7 @@ public class RoleAction {
     private UARWFacade uARWFacade;
 
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleQuery.domainId))")
     public Response<PageDto<RoleDto>> searchRole(@RequestBody RoleQuery roleQuery) {
         return uARWFacade.getRoleRWResource().searchRole(roleQuery);
     }
@@ -41,12 +41,13 @@ public class RoleAction {
     }
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId)")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
     public Response<RoleDto>  addNewRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().addNewRole(roleParam);
     }
 
     @RequestMapping(value = "/update" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
     public Response<Void> updateRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().updateRole(roleParam);
     }
