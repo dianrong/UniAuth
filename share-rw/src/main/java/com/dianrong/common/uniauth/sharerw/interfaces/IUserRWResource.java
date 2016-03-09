@@ -1,14 +1,13 @@
 package com.dianrong.common.uniauth.sharerw.interfaces;
 
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
 /**
  * Created by Arc on 14/1/16.
@@ -23,7 +22,7 @@ public interface IUserRWResource extends IUserResource {
     @POST
     @Path("updateuser")
     //scenario: update user(including lock, disable, reset password, update profile)
-    Response<Void> updateUser(UserParam userParam);
+    Response<UserDto> updateUser(UserParam userParam);
     
     @POST
     @Path("saverolestouser")
