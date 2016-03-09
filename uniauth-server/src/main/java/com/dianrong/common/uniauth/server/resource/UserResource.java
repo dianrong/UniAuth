@@ -27,15 +27,16 @@ public class UserResource implements IUserRWResource {
 	@Override
 	public Response<UserDto> addNewUser(UserParam userParam) {
 		UserDto userDto = userService.addNewUser(userParam.getName(),userParam.getPhone(),userParam.getEmail());
+
 		return Response.success(userDto);
 	}
 
 	@Override
-	public Response<Void> updateUser(UserParam userParam) {
-		userService.updateUser(userParam.getUserActionEnum(),userParam.getId(),
+	public Response<UserDto> updateUser(UserParam userParam) {
+		UserDto userDto = userService.updateUser(userParam.getUserActionEnum(),userParam.getId(),
 				userParam.getName(),userParam.getPhone(),userParam.getEmail(),
 				userParam.getPassword(),userParam.getStatus());
-		return Response.success();
+		return Response.success(userDto);
 	}
 
 	@Override
