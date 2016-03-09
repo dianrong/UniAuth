@@ -1,5 +1,5 @@
 <div class="control-panel">
-    <div style="border-radius:4px;" class="modal-header dialog-header-group">
+    <div class="panel-header modal-header dialog-header-group">
         <h4 class="modal-title text-center">
             <i class="fa fa-plus-square-o"></i> 添加用户
         </h4>
@@ -13,7 +13,7 @@
             <ui-select-match placeholder="Enter an email...">{{$select.selected.email}}</ui-select-match>
             <ui-select-choices repeat="user in users track by $index"
                                refresh="refreshUsers($select.search)"
-                               refresh-delay="0">
+                               refresh-delay="300">
                 <div ng-bind-html="user.email | highlight: $select.search"></div>
             </ui-select-choices>
         </ui-select>

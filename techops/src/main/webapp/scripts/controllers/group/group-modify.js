@@ -1,4 +1,4 @@
-define(function() {
+define(['../../utils/constant'], function(constant) {
     /**
      * A module representing a User controller.
      * @exports controllers/User
@@ -23,7 +23,8 @@ define(function() {
                     "id": $scope.grp.selected.id,
                     "name": $scope.grp.selected.label,
                     "code": $scope.grp.selected.code,
-                    "description": $scope.grp.selected.description
+                    "description": $scope.grp.selected.description,
+                    "targetGroupId": $scope.grp.selected.id
                 }, function (res) {
                 $scope.groupMessage = '';
                 var result = res.data;

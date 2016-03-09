@@ -1,4 +1,4 @@
-<form class="form-horizontal" name="userQueryForm">
+<form style="margin-left: -20px;" class="form-horizontal" name="userQueryForm">
     <div class="form-group">
         <div class="col-md-4">
             <span class="col-sm-4 control-label">用户姓名:</span>
@@ -33,7 +33,7 @@
             <th>姓名</th>
             <th>邮箱</th>
             <th>手机号</th>
-            <th>创建日期</th>
+            <th>更新日期</th>
             <th>状态</th>
             <th style="text-align: center">操作</th>
         </tr>
@@ -48,11 +48,11 @@
             <td ng-bind="d.name"></td>
             <td ng-bind="d.email"></td>
             <td ng-bind="d.phone"></td>
-            <td>{{d.createDate | date:'yyyy-MM-dd HH:mm'}}</td>
+            <td>{{d.lastUpdate | date:'yyyy-MM-dd HH:mm'}}</td>
             <td ng-bind="!d.status?'启用':'禁用'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="管理用户的角色" class="btn btn-info" href="#/permission"><i class="fa fa-paw"></i></a>
+                    <a title="管理用户的角色" class="btn btn-info" ng-click="navigate(d)"><i class="fa fa-paw"></i></a>
                     <a title="解锁用户" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
                     <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="重置密码" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-key"></i></a>
                     <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="{{d.status?'启用该用户':'禁用该用户'}}" class="btn btn-info" ng-click="launch('status', d)">

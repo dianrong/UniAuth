@@ -143,7 +143,8 @@ public class BeanConverter {
                     .setId(user.getId())
                     .setPhone(user.getPhone())
                     .setCreateDate(user.getCreateDate())
-                    .setStatus(user.getStatus());
+                    .setStatus(user.getStatus())
+                    .setLastUpdate(user.getLastUpdate());
             return userDto;
         }
     }

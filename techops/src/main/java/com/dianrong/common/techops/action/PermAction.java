@@ -39,13 +39,13 @@ public class PermAction {
     }
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId)")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId))")
     public Response<PermissionDto>  addNewPerm(@RequestBody PermissionParam permissionParam) {
         return uARWFacade.getPermissionRWResource().addNewPerm(permissionParam);
     }
 
     @RequestMapping(value = "/update" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId)")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId))")
     public Response<Void> updatePerm(@RequestBody PermissionParam permissionParam) {
         return uARWFacade.getPermissionRWResource().updatePerm(permissionParam);
     }

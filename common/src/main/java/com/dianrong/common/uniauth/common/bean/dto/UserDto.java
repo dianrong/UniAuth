@@ -14,6 +14,7 @@ public class UserDto {
 	private String email;
 	private String phone;
 	private Date createDate;
+	private Date lastUpdate;
 	private Byte status;
 	private Byte userGroupType;
 
@@ -107,6 +108,15 @@ public class UserDto {
 
 	public UserDto setUserGroupType(Byte userGroupType) {
 		this.userGroupType = userGroupType;
+		return this;
+	}
+
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public UserDto setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
 		return this;
 	}
 }

@@ -32,4 +32,5 @@ public interface AppConstants {
 
 	String PERM_TYPE_DOMAIN_ID = "DOMAIN_ID";
 
+	String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
 }

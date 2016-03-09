@@ -10,12 +10,65 @@
 .dialog-header-group { background-color: #5BC0EE; }
 .dialog-header-group span, .dialog-header-group h4 { color: #ffffff; }
 
-.control-panel { background-color: #f0f8ff;padding: 6px 6px 6px 6px;}
+.control-panel {
+    background-color: #f0f8ff;
+    padding: 6px 6px 6px 6px;
+    font-size:16px;
+    border-radius:10px;
+    margin-top: 5px;
+}
+
+.panel-header {
+    border-radius:14px;
+    height:42px;
+    padding: 8px;
+}
+
+.panel-label {
+    padding-top: 5px;
+}
+
+.input-group-lg > .panel-input {
+    height: 35px;
+    border-radius:10px;
+    font-size: 16px;
+}
+
+.input-group-lg > .panel-textarea {
+    height: 120px;
+    resize: none;
+    border-radius:10px;
+    font-size: 16px
+}
+
 .font-color-blue {
     color:#337ab7;
     padding-right: 2px
 }
+
 .font-color-red {
     color:#ff3333;
     padding-right: 2px
+}
+
+@media (min-width: 992px) {
+    .col-md-29d4 {
+        float: left;
+    }
+    .col-md-29d4 {
+        width: 29.4%;
+    }
+    .col-md-70d6 {
+        float: left;
+    }
+    .col-md-70d6 {
+        width: 70.6%;
+    }
+}
+
+.col-md-29d4 .col-md-70d6 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
 }

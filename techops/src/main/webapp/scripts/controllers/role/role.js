@@ -1,6 +1,6 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
 
-    var Controller = function ($rootScope, $scope, $location, RoleService, dialogs) {
+    var Controller = function ($rootScope, $scope, $location, RoleService, dialogs, $state) {
 
         function bindAllRoleCodesRoleToRoot() {
             RoleService.getAllRoleCodes().$promise.then(function(res) {
@@ -81,6 +81,15 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.queryRole();
 
+        $scope.navToRoleUser = function(role) {
+            //TODO store or replace the selectedRole in role service.
+            $state.go('rel.role--user-grp');
+        };
+        $scope.navToRolePerm = function(role) {
+            //TODO store or replace the selectedRole in role service.
+            $state.go('rel.role--perm');
+        };
+
         $scope.launch = function(which, param) {
             switch(which) {
                 case 'status':
@@ -137,7 +146,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "RoleController",
-        fn: ["$rootScope", "$scope", "$location", "RoleService", "dialogs", Controller]
+        fn: ["$rootScope", "$scope", "$location", "RoleService", "dialogs", "$state", Controller]
     };
 
 });
