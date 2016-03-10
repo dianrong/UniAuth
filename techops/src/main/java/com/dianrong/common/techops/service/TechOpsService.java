@@ -160,4 +160,17 @@ public class TechOpsService {
 		logger.debug("End of sending email to : " + email);
 		logger.debug("Content: \n " + buffer);
 	}
+
+//	public static void main(String args[]) {
+//		StringBuffer buffer = new StringBuffer();
+//		buffer.append("====================================================<br />");
+//		buffer.append("            ");
+//		buffer.append(" 系统管理员为您创建了点融系统账户<br />");
+//		buffer.append("            ");
+//		buffer.append(" 您的点融登录账号为: " + "aaa@qq.com" + "        <br />");
+//		buffer.append("            ");
+//		buffer.append(" 您的点融账户密码为: " + "bbbpwd" + "        <br />");
+//		buffer.append("====================================================<br />");
+//		new TechOpsService().sendEmail("chenglong.qian@dianrong.com", buffer);
+//	}
 }
