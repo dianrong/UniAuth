@@ -1,6 +1,8 @@
 
 dependencies {
     compile project(":common")
+    //Java Mail
+    compile "javax.mail:mail:1.4.7"
 }
 
 jar {
