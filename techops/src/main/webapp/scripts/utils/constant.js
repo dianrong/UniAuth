@@ -24,7 +24,7 @@ define({
         },
         // 30 seconds Time out
         reqTimeout: 30000,
-        pageSize: 50,
+        pageSize: 20,
         hackMaxPageSize: 5e7,
         loading: '正在加载...',
         submiting: '提交中...',
