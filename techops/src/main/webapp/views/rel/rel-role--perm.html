@@ -24,5 +24,27 @@
     </div>
 </div>
 <div>
-    permissions with check box, checked for the role......
+    <table class="text-left table grey-border table-hover vertical-middle">
+        <thead class="text-color-c4">
+        <tr>
+            <th>权限值</th>
+            <th>权限类型</th>
+            <th>描述</th>
+            <th>是否关联</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-c6">
+
+        <tr ng-if="rolePermsLoading!=''">
+            <td colspan="9" class="tc" ng-bind="rolePermsLoading"></td>
+        </tr>
+
+        <tr ng-repeat="d in perms">
+            <td ng-bind="d.value"></td>
+            <td ng-bind="d.permType"></td>
+            <td ng-bind="d.description"></td>
+            <td><input type="checkbox" ng-model="d.checked"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>

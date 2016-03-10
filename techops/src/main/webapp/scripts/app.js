@@ -119,6 +119,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }).
         state('rel.role--perm', {
             url: '',
+            controller: "RelRolePermController",
             templateUrl: "views/rel/rel-role--perm.html"
         }).
         state('rel.perm--role', {
