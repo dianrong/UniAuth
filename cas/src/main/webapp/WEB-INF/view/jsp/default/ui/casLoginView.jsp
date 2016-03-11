@@ -5,8 +5,8 @@
 	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 	String reqUrl = baseUrl + request.getContextPath() + "/login?" + request.getQueryString();
 
-	String ajaxReqTypeStr = ajaxReqType == null ? "" : ajaxReqType.replaceAll("http|https", "");
-	String baseUrlStr = baseUrl.replaceAll("http|https", "");
+	String ajaxReqTypeStr = ajaxReqType == null ? "" : ajaxReqType.replaceAll("https|http", "");
+	String baseUrlStr = baseUrl.replaceAll("https|http", "");
 
 	if (ajaxReqType == null || baseUrlStr.startsWith(ajaxReqTypeStr)) {
 %>
