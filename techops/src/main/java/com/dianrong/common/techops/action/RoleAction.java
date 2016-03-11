@@ -2,6 +2,7 @@ package com.dianrong.common.techops.action;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
@@ -50,4 +51,15 @@ public class RoleAction {
         return uARWFacade.getRoleRWResource().updateRole(roleParam);
     }
 
+    @RequestMapping(value = "/replacepermstorole" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
+    public Response<Void> replacePermsToRole(@RequestBody RoleParam roleParam) {
+        return uARWFacade.getRoleRWResource().replacePermsToRole(roleParam);
+    }
+
+    @RequestMapping(value = "/query-perms-with-checked-info" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
+    public Response<List<PermissionDto>> queryPermsWithCheckedInfo(@RequestBody RoleParam roleParam) {
+        return uARWFacade.getRoleRWResource().getAllPermsToRole(roleParam);
+    }
 }

@@ -4,7 +4,7 @@
                ng-disabled="disabled"
                reset-search-input="false"
                style="width:100%;margin-top: 6px;">
-        <ui-select-match placeholder="输入角色名...">{{$select.selected.name}}</ui-select-match>
+        <ui-select-match placeholder="输入权限值...">{{$select.selected.name}}</ui-select-match>
         <ui-select-choices repeat="role in roles track by $index"
                            refresh="refreshRoles($select.search)"
                            refresh-delay="300">

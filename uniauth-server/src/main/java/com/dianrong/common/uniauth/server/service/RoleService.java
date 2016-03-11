@@ -122,7 +122,7 @@ public class RoleService {
                 dbPermIds.add(rolePermissionKey.getPermissionId());
             }
             ArrayList<Integer> intersections = ((ArrayList<Integer>)dbPermIds.clone());
-            intersections.retainAll(dbPermIds);
+            intersections.retainAll(permIds);
             List<Integer> permIdsNeedAddToDB = new ArrayList<>();
             List<Integer> permIdsNeedDeleteFromDB = new ArrayList<>();
             for(Integer permId : permIds) {
