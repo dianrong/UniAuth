@@ -3,7 +3,7 @@ define(['../../utils/constant'], function (constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, $rootScope, $location, RoleService) {
+    var Controller = function ($scope, $rootScope, RoleService) {
 
         $scope.role = RoleService.roleShared;
         $scope.refreshRoles = function(name) {
@@ -62,7 +62,6 @@ define(['../../utils/constant'], function (constant) {
             params.permIds = checkedPermIds;
             params.id = $scope.role.selected.id;
             RoleService.replacePermsToRole(params, function (res) {
-                var result = res.data;
                 if(res.info) {
                     $scope.rolePermsMsg = constant.submitFail;
                     return;
@@ -80,8 +79,8 @@ define(['../../utils/constant'], function (constant) {
             }
         }
         var watch = $scope.$watch('role.selected', $scope.getAllPermsWithCheckedInfoInDomain);
+
         $scope.$on('selected-domain-changed', function(){
-            $scope.role.selected = undefined;
             $scope.perms = [];
             $scope.refreshRoles();
             $scope.getAllPermsWithCheckedInfoInDomain();
@@ -91,7 +90,7 @@ define(['../../utils/constant'], function (constant) {
 
     return {
         name: "RelRolePermController",
-        fn: ["$scope", "$rootScope", "$location", "RoleService", Controller]
+        fn: ["$scope", "$rootScope", "RoleService", Controller]
     };
 
 });

@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
+import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
 
 public interface IPermissionRWResource extends IPermissionResource {
@@ -22,9 +23,9 @@ public interface IPermissionRWResource extends IPermissionResource {
     Response<Void> updatePerm(PermissionParam permissionParam);
     
     @POST
-    @Path("deleteperm")
+    @Path("replacerolesfromperm")
     //scenario: delete permission
-    Response<Void> deletePerm(PrimaryKeyParam primaryKeyParam);
+    Response<Void> replaceRolesToPerm(PermissionParam permissionParam);
     
     @POST
     @Path("saverolestoperm")

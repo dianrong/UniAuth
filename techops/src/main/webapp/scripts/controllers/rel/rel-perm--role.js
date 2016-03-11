@@ -3,90 +3,95 @@ define(['../../utils/constant'], function (constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, $rootScope, $location, PermService) {
+    var Controller = function ($scope, $rootScope, PermService) {
 
         $scope.perm = PermService.permShared;
         $scope.refreshPerms = function(value) {
             var params = {value: value, pageNumber:0, pageSize: 16};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
-            return RoleService.getRoles(params).$promise.then(function(response) {
+            return PermService.getPerms(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
-                    $scope.roles = response.data.data;
+                    $scope.perms = response.data.data;
                 } else {
-                    $scope.roles = [];
+                    $scope.perms = [];
                 }
             });
         };
-        $scope.rolePermsMsg = constant.loadEmpty;
-        $scope.getAllPermsWithCheckedInfoInDomain = function () {
-            $scope.rolePermsMsg = constant.loading;
+        $scope.permRolesMsg = constant.loadEmpty;
+        $scope.getAllRolesWithCheckedInfoInDomain = function () {
+            $scope.permRolesMsg = constant.loading;
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
-            if(!$scope.role.selected) {
-                $scope.rolePermsMsg = constant.loadEmpty;
+            if(!$scope.perm.selected) {
+                $scope.permRolesMsg = constant.loadEmpty;
                 return;
             }
-            params.id = $scope.role.selected.id;
+            params.id = $scope.perm.selected.id;
 
-            RoleService.queryPermsWithCheckedInfo(params, function (res) {
+            PermService.queryRolesWithCheckedInfo(params, function (res) {
                 var result = res.data;
                 if(res.info) {
-                    $scope.rolePermsMsg = constant.loadError;
+                    $scope.permRolesMsg = constant.loadError;
                     return;
                 }
                 if(!result) {
-                    $scope.rolePermsMsg = constant.loadEmpty;
-                    $scope.perms = [];
+                    $scope.permRolesMsg = constant.loadEmpty;
+                    $scope.roles = [];
                     return;
                 }
 
-                $scope.rolePermsMsg = '';
-                $scope.perms = result;
+                $scope.permRolesMsg = '';
+                $scope.roles = result;
             }, function () {
-                $scope.perms = [];
-                $scope.rolePermsMsg = constant.loadError;
+                $scope.roles = [];
+                $scope.permRolesMsg = constant.loadError;
             });
         };
-        if($scope.role.selected) {
-            $scope.getAllPermsWithCheckedInfoInDomain();
+        if($scope.perm.selected) {
+            $scope.getAllRolesWithCheckedInfoInDomain();
         }
-        $scope.replacePermsToRole = function() {
+        $scope.replaceRolesToPerm = function() {
             var params = {};
-            var checkedPermIds = [];
-            var perms = $scope.perms;
-            for(var i=0; i<perms.length;i++) {
-                if(perms[i].checked) {
-                    checkedPermIds.push(perms[i].id);
+            var checkedRoleIds = [];
+            var roles = $scope.roles;
+            for(var i=0; i<roles.length;i++) {
+                if(roles[i].checked) {
+                    checkedRoleIds.push(roles[i].id);
                 }
             }
-            params.permIds = checkedPermIds;
-            params.id = $scope.role.selected.id;
-            RoleService.replacePermsToRole(params, function (res) {
-                var result = res.data;
+            params.roleIds = checkedRoleIds;
+            params.id = $scope.perm.selected.id;
+            PermService.replacePermsToRole(params, function (res) {
                 if(res.info) {
-                    $scope.rolePermsMsg = constant.submitFail;
+                    $scope.permRolesMsg = constant.submitFail;
                     return;
                 }
-                $scope.rolePermsMsg = '';
-                $scope.getAllPermsWithCheckedInfoInDomain();
+                $scope.permRolesMsg = '';
+                $scope.getAllRolesWithCheckedInfoInDomain();
             }, function () {
-                $scope.perms = [];
-                $scope.rolePermsMsg = constant.submitFail;
+                $scope.roles = [];
+                $scope.permRolesMsg = constant.submitFail;
             });
-        }
-        var watch = $scope.$watch('role.selected', $scope.getAllPermsWithCheckedInfoInDomain);
+        };
+
+        $scope.selectAllRolesForPerm = function() {
+            for(var i=0;i<$scope.roles.length;i++) {
+                $scope.roles[i].checked = true;
+            }
+        };
+        var watch = $scope.$watch('perm.selected', $scope.getAllRolesWithCheckedInfoInDomain);
+
         $scope.$on('selected-domain-changed', function(){
-            $scope.role.selected = undefined;
-            $scope.perms = [];
-            $scope.refreshRoles();
-            $scope.getAllPermsWithCheckedInfoInDomain();
+            $scope.roles = [];
+            $scope.refreshPerms();
+            $scope.getAllRolesWithCheckedInfoInDomain();
         });
         //watch();
     };
 
     return {
         name: "RelPermRoleController",
-        fn: ["$scope", "$rootScope", "$location", "RoleService", Controller]
+        fn: ["$scope", "$rootScope", "PermService", Controller]
     };
 
 });

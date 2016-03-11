@@ -90,22 +90,6 @@ public class RoleService {
         roleMapper.updateByPrimaryKey(role);
     }
 
-    public void deleteRole(Integer roleId) {
-        CheckEmpty.checkEmpty(roleId, "roleId");
-        Role role = roleMapper.selectByPrimaryKey(roleId);
-        if(role == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleId, Role.class.getSimpleName()));
-        }
-        // cascading delete the role-user, role-permission relationships
-        UserRoleExample userRoleExample = new UserRoleExample();
-        userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
-        userRoleMapper.deleteByExample(userRoleExample);
-        RolePermissionExample rolePermissionExample = new RolePermissionExample();
-        rolePermissionExample.createCriteria().andRoleIdEqualTo(roleId);
-        rolePermissionMapper.deleteByExample(rolePermissionExample);
-        roleMapper.deleteByPrimaryKey(roleId);
-    }
-
     @Transactional
     public void replacePermsToRole(Integer roleId, List<Integer> permIds) {
         CheckEmpty.checkEmpty(roleId, "roleId");

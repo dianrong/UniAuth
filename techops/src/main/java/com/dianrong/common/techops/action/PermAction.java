@@ -55,7 +55,7 @@ public class PermAction {
     @RequestMapping(value = "/replace-roles-to-perm" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId))")
     public Response<Void> replaceRolesToPerm(@RequestBody PermissionParam permissionParam) {
-        return null;
+        return uARWFacade.getPermissionRWResource().replaceRolesToPerm(permissionParam);
     }
 
     @RequestMapping(value = "/all-roles-to-perm" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

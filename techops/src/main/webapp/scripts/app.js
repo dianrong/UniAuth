@@ -114,6 +114,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }).
         state('rel', {
             abstract: true,
+            controller: "RelController",
             url: "/rel",
             templateUrl: "views/rel/rel.html"
         }).
@@ -124,7 +125,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }).
         state('rel.perm--role', {
             url: '/rel-perm--role',
-            templateUrl: "views/common/not-found.html"
+            controller: "RelPermRoleController",
+            templateUrl: "views/rel/rel-perm--role.html"
         }).
         state('rel.user--role', {
             url: '/rel-user--role',
