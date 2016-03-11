@@ -3,6 +3,8 @@ package com.dianrong.common.uniauth.sharerw.message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -56,7 +58,7 @@ public class EmailSender {
             message.setRecipient(Message.RecipientType.TO, to);
 
             // 设置邮件标题
-            message.setSubject(subject);
+            message.setSubject(AppConstants.MAIL_PREFIX + subject);
 
             // 设置邮件的内容体
             message.setContent(buffer.toString(), "text/html;charset=UTF-8");

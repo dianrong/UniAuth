@@ -26,6 +26,19 @@
         <filter-name>CharacterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+	<filter>
+	    <filter-name>TrackFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	    <init-param>
+	        <param-name>targetBeanName</param-name>
+	        <param-value>trackFilter</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	   	<filter-name>TrackFilter</filter-name>
+	   	<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
     <!-- CXF servlet -->
     <servlet>

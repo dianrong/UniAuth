@@ -5,7 +5,10 @@
 	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 	String reqUrl = baseUrl + request.getContextPath() + "/login?" + request.getQueryString();
 	
-	if (ajaxReqType == null || baseUrl.startsWith(ajaxReqType)) {
+	String ajaxReqTypeStr = ajaxReqType == null ? "" : ajaxReqType.replaceAll("http|https", "");
+	String baseUrlStr = baseUrl.replaceAll("http|https", "");
+	
+	if (ajaxReqType == null || baseUrlStr.startsWith(ajaxReqTypeStr)) {
 %>
 		<jsp:directive.include file="includes/login.jsp" />
 <%

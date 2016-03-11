@@ -10,10 +10,17 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.aop.ServerExAOPHandler;
+
+@Component("trackFilter")
 public class TrackFilter implements Filter {
-
+	private static Logger logger = LoggerFactory.getLogger(ServerExAOPHandler.class);
 	public TrackFilter() {
 	}
 
@@ -25,10 +32,24 @@ public class TrackFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) arg0;
-        HttpServletResponse response = (HttpServletResponse) arg1;
         String ip = getIp(request);
         String reqUrl = request.getRequestURI();
         String uuid = UUID.randomUUID().toString();
+        
+        GlobalVar gv = new GlobalVar();
+        gv.setIp(ip);
+        gv.setReqUrl(reqUrl);
+        gv.setUuid(uuid);
+        gv.setSuccess(AppConstants.ONE_Byte);
+        gv.setInvokeSeq(-1L);
+        
+        RequestManager.setGlobalVar(gv);
+        try{
+        	chain.doFilter(arg0, arg1);
+        }catch(Exception e){
+        	logger.error("Unknown exception in TrackFilter.", e);
+        }
+        RequestManager.closeRequest();
 	}
 
     private String getIp(HttpServletRequest request) {
