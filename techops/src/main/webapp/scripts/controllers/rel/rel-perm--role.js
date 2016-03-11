@@ -3,11 +3,11 @@ define(['../../utils/constant'], function (constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, $rootScope, $location, RoleService) {
+    var Controller = function ($scope, $rootScope, $location, PermService) {
 
-        $scope.role = RoleService.roleShared;
-        $scope.refreshRoles = function(name) {
-            var params = {name: name, pageNumber:0, pageSize: 16};
+        $scope.perm = PermService.permShared;
+        $scope.refreshPerms = function(value) {
+            var params = {value: value, pageNumber:0, pageSize: 16};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             return RoleService.getRoles(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
@@ -74,11 +74,6 @@ define(['../../utils/constant'], function (constant) {
                 $scope.rolePermsMsg = constant.submitFail;
             });
         }
-        $scope.selectAllPermsForRole = function() {
-            for(var i=0;i<$scope.perms.length;i++) {
-                $scope.perms[i].checked = true;
-            }
-        }
         var watch = $scope.$watch('role.selected', $scope.getAllPermsWithCheckedInfoInDomain);
         $scope.$on('selected-domain-changed', function(){
             $scope.role.selected = undefined;
@@ -90,7 +85,7 @@ define(['../../utils/constant'], function (constant) {
     };
 
     return {
-        name: "RelRolePermController",
+        name: "RelPermRoleController",
         fn: ["$scope", "$rootScope", "$location", "RoleService", Controller]
     };
 

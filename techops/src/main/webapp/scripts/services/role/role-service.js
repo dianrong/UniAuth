@@ -36,7 +36,7 @@ define(['../../utils/constant'], function (constant) {
             replacePermsToRole: {
                 method: 'POST',
                 params: {
-                    method: 'replacepermstorole'
+                    method: 'replace-perms-to-role'
                 },
                 isArray: false,
                 timeout: constant.reqTimeout

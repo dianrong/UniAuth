@@ -4,29 +4,26 @@
 	String ajaxReqType = request.getHeader(AppConstants.AJAS_CROSS_HEADER);
 	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 	String reqUrl = baseUrl + request.getContextPath() + "/login?" + request.getQueryString();
-%>
 
-<script>
-	alert("<%= ajaxReqType + ":" + baseUrl%>");
-</script>
+	String ajaxReqTypeStr = ajaxReqType == null ? "" : ajaxReqType.replaceAll("http|https", "");
+	String baseUrlStr = baseUrl.replaceAll("http|https", "");
 
-<%
-	if (ajaxReqType == null || baseUrl.startsWith(ajaxReqType)) {
+	if (ajaxReqType == null || baseUrlStr.startsWith(ajaxReqTypeStr)) {
 %>
-		<jsp:directive.include file="includes/login.jsp" />
+<jsp:directive.include file="includes/login.jsp" />
 <%
-	} else {
-		response.setContentType("application/json");
-		response.addHeader("Cache-Control", "no-store");
+} else {
+	response.setContentType("application/json");
+	response.addHeader("Cache-Control", "no-store");
 %>
 {
-	"info":
-		[
-			{
-				"name": "<%=AppConstants.LOGIN_REDIRECT_URL%>",
-				"msg": "<%= reqUrl %>"
-			}
-		]
+"info":
+[
+{
+"name": "<%=AppConstants.LOGIN_REDIRECT_URL%>",
+"msg": "<%= reqUrl %>"
+}
+]
 }
 <%
 	}
