@@ -24,9 +24,8 @@ public interface IRoleRWResource extends IRoleResource {
     Response<Void> updateRole(RoleParam roleParam);
     
     @POST
-    @Path("deleterole")
-    //scenario: delete role
-    Response<Void> deleteRole(PrimaryKeyParam primaryKeyParam);
+    @Path("replacepermtorole")
+    Response<Void> replacePermsToRole(RoleParam roleParam);
     
     @POST
     @Path("savepermstorole")

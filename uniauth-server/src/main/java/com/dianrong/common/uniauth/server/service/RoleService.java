@@ -107,6 +107,60 @@ public class RoleService {
     }
 
     @Transactional
+    public void replacePermsToRole(Integer roleId, List<Integer> permIds) {
+        CheckEmpty.checkEmpty(roleId, "roleId");
+        RolePermissionExample rolePermissionExample = new RolePermissionExample();
+        rolePermissionExample.createCriteria().andRoleIdEqualTo(roleId);
+        if(CollectionUtils.isEmpty(permIds)) {
+            rolePermissionMapper.deleteByExample(rolePermissionExample);
+            return;
+        }
+        List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
+        if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
+            ArrayList<Integer> dbPermIds = new ArrayList<>();
+            for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+                dbPermIds.add(rolePermissionKey.getPermissionId());
+            }
+            ArrayList<Integer> intersections = ((ArrayList<Integer>)dbPermIds.clone());
+            intersections.retainAll(dbPermIds);
+            List<Integer> permIdsNeedAddToDB = new ArrayList<>();
+            List<Integer> permIdsNeedDeleteFromDB = new ArrayList<>();
+            for(Integer permId : permIds) {
+                if(!intersections.contains(permId)) {
+                    permIdsNeedAddToDB.add(permId);
+                }
+            }
+            for(Integer dbPermId : dbPermIds) {
+                if(!intersections.contains(dbPermId)) {
+                    permIdsNeedDeleteFromDB.add(dbPermId);
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(permIdsNeedAddToDB)) {
+                for(Integer permIdNeedAddToDB : permIdsNeedAddToDB) {
+                    RolePermissionKey rolePermissionKey = new RolePermissionKey();
+                    rolePermissionKey.setRoleId(roleId);
+                    rolePermissionKey.setPermissionId(permIdNeedAddToDB);
+                    rolePermissionMapper.insert(rolePermissionKey);
+                }
+            }
+            if(!CollectionUtils.isEmpty(permIdsNeedDeleteFromDB)) {
+                RolePermissionExample rolePermDeleteExample = new RolePermissionExample();
+                rolePermDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andPermissionIdIn(permIdsNeedDeleteFromDB);
+                rolePermissionMapper.deleteByExample(rolePermDeleteExample);
+            }
+        } else {
+            for(Integer permId : permIds) {
+                RolePermissionKey rolePermissionKey = new RolePermissionKey();
+                rolePermissionKey.setRoleId(roleId);
+                rolePermissionKey.setPermissionId(permId);
+                rolePermissionMapper.insert(rolePermissionKey);
+            }
+        }
+
+    }
+
+    @Transactional
     public void savePermsToRole(Integer roleId, List<Integer> permIds) {
         CheckEmpty.checkEmpty(roleId, "roleId");
         CheckEmpty.checkEmpty(permIds, "permIds");
