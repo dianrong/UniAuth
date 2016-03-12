@@ -32,9 +32,25 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            replacePermsToRole: {
+                method: 'POST',
+                params: {
+                    method: 'replace-perms-to-role'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            queryPermsWithCheckedInfo: {
+                method: 'POST',
+                params: {
+                    method: 'query-perms-with-checked-info'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
-
         });
+        svc.roleShared = {};
         return svc;
     };
 

@@ -24,11 +24,13 @@ define({
         },
         // 30 seconds Time out
         reqTimeout: 30000,
-        pageSize: 50,
+        pageSize: 20,
+        maxPageSize: 4999,
         hackMaxPageSize: 5e7,
         loading: '正在加载...',
         submiting: '提交中...',
         createError: '创建失败',
+        submitFail: '提交失败',
         loadEmpty: '暂无数据',
         loadError: '加载失败',
         treeNodeType: {

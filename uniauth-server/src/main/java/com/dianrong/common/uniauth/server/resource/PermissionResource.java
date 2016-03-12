@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +13,6 @@ import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
-import com.dianrong.common.uniauth.common.bean.request.DomainParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.server.service.PermissionService;
 
 @RestController
@@ -43,14 +40,14 @@ public class PermissionResource implements IPermissionRWResource {
 	}
 
 	@Override
-	public Response<Void> deletePerm(PrimaryKeyParam primaryKeyParam) {
-		permissionService.deletePerm(primaryKeyParam);
+	public Response<Void> replaceRolesToPerm(PermissionParam permissionParam) {
+		permissionService.replaceRolesToPerm(permissionParam.getId(),permissionParam.getRoleIds());
 		return Response.success();
 	}
 
 	@Override
 	public Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam) {
-		List<RoleDto> roleDtoList = permissionService.getAllRolesToPerm(permissionParam);
+		List<RoleDto> roleDtoList = permissionService.getAllRolesToPerm(permissionParam.getDomainId(),permissionParam.getId());
 		return new Response<List<RoleDto>>(roleDtoList);
 	}
 
@@ -63,7 +60,6 @@ public class PermissionResource implements IPermissionRWResource {
 	@Override
 	public Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery) {
 		PageDto<PermissionDto> pageDto = permissionService.searchPerm(permissionQuery);
-		
 		return new Response<PageDto<PermissionDto>>(pageDto);
 	}
 

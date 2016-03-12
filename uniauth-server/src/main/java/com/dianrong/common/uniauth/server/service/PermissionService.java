@@ -1,10 +1,10 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,20 +18,12 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.server.data.entity.PermType;
-import com.dianrong.common.uniauth.server.data.entity.PermTypeExample;
-import com.dianrong.common.uniauth.server.data.entity.Permission;
-import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
-import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
-import com.dianrong.common.uniauth.server.data.mapper.PermTypeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class PermissionService {
@@ -44,7 +36,8 @@ public class PermissionService {
 	private RoleMapper roleMapper;
 	@Autowired
 	private RolePermissionMapper rolePermissionMapper;
-	
+	@Autowired
+	private RoleCodeMapper roleCodeMapper;
 	@Autowired
 	private CommonService commonService;
 	
@@ -100,22 +93,104 @@ public class PermissionService {
 		permissionMapper.deleteByPrimaryKey(primaryKeyParam.getId());
 	}
 
-	public List<RoleDto> getAllRolesToPerm(PermissionParam permissionParam) {
-		Integer domainId = permissionParam.getDomainId();
-		Integer permissionId = permissionParam.getId();
-		CheckEmpty.checkEmpty(domainId, "域ID");
-		CheckEmpty.checkEmpty(permissionId, "权限ID");
-		List<RoleExt> roleExtList = roleMapper.selectAllRolesByDomainId(domainId);
-		List<RoleDto> roleDtoList = new ArrayList<RoleDto>();
-		
-		if(roleExtList != null && !roleExtList.isEmpty()){
-			for(RoleExt roleExt : roleExtList){
-				RoleDto roleDto = BeanConverter.convert(roleExt);
-				roleDto.setChecked(permissionId.equals(roleDto.getPermissionId()));
-				roleDtoList.add(roleDto);
+	@Transactional
+	public void replaceRolesToPerm(Integer permId, List<Integer> roleIds) {
+
+		CheckEmpty.checkEmpty(permId, "permId");
+
+		RolePermissionExample rolePermissionExample = new RolePermissionExample();
+		rolePermissionExample.createCriteria().andPermissionIdEqualTo(permId);
+		if(CollectionUtils.isEmpty(roleIds)) {
+			rolePermissionMapper.deleteByExample(rolePermissionExample);
+			return;
+		}
+		List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
+		if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
+			ArrayList<Integer> dbRoleIds = new ArrayList<>();
+			for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+				dbRoleIds.add(rolePermissionKey.getRoleId());
+			}
+			ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
+			intersections.retainAll(roleIds);
+			List<Integer> roleIdsNeedAddToDB = new ArrayList<>();
+			List<Integer> roleIdsNeedDeleteFromDB = new ArrayList<>();
+			for(Integer roleId : roleIds) {
+				if(!intersections.contains(roleId)) {
+					roleIdsNeedAddToDB.add(roleId);
+				}
+			}
+			for(Integer dbRoleId : dbRoleIds) {
+				if(!intersections.contains(dbRoleId)) {
+					roleIdsNeedDeleteFromDB.add(dbRoleId);
+				}
+			}
+
+			if(!CollectionUtils.isEmpty(roleIdsNeedAddToDB)) {
+				for(Integer roleIdNeedAddToDB : roleIdsNeedAddToDB) {
+					RolePermissionKey rolePermissionKey = new RolePermissionKey();
+					rolePermissionKey.setRoleId(roleIdNeedAddToDB);
+					rolePermissionKey.setPermissionId(permId);
+					rolePermissionMapper.insert(rolePermissionKey);
+				}
+			}
+			if(!CollectionUtils.isEmpty(roleIdsNeedDeleteFromDB)) {
+				RolePermissionExample rolePermDeleteExample = new RolePermissionExample();
+				rolePermDeleteExample.createCriteria().andPermissionIdEqualTo(permId).andRoleIdIn(roleIdsNeedDeleteFromDB);
+				rolePermissionMapper.deleteByExample(rolePermDeleteExample);
+			}
+		} else {
+			for(Integer roleId : roleIds) {
+				RolePermissionKey rolePermissionKey = new RolePermissionKey();
+				rolePermissionKey.setRoleId(roleId);
+				rolePermissionKey.setPermissionId(permId);
+				rolePermissionMapper.insert(rolePermissionKey);
 			}
 		}
-		return roleDtoList;
+	}
+
+	public List<RoleDto> getAllRolesToPerm(Integer domainId, Integer permissionId) {
+
+		CheckEmpty.checkEmpty(domainId, "域ID");
+		CheckEmpty.checkEmpty(permissionId, "权限ID");
+		// 1. get all roles under the domain
+		RoleExample roleExample = new RoleExample();
+		roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte);
+		List<Role> roles = roleMapper.selectByExample(roleExample);
+		if(CollectionUtils.isEmpty(roles)) {
+			return null;
+		}
+		RolePermissionExample rolePermissionExample = new RolePermissionExample();
+		rolePermissionExample.createCriteria().andPermissionIdEqualTo(permissionId);
+		List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
+
+		// 2. get the checked roleIds for the perm
+		Set<Integer> roleIds = null;
+		if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
+			roleIds = new TreeSet<>();
+			for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+				roleIds.add(rolePermissionKey.getRoleId());
+			}
+		}
+		List<RoleCode> roleCodes = roleCodeMapper.selectByExample(new RoleCodeExample());
+		// build permType index.
+		Map<Integer, String> roleCodeIdCodePairs = new TreeMap<>();
+		for(RoleCode roleCode : roleCodes) {
+			roleCodeIdCodePairs.put(roleCode.getId(), roleCode.getCode());
+		}
+
+		// 3. construct all roles linked with the perm & mark the role checked on the perm or not
+		List<RoleDto> roleDtos = new ArrayList<>();
+		for(Role role:roles) {
+			RoleDto roleDto = BeanConverter.convert(role);
+			roleDto.setRoleCode(roleCodeIdCodePairs.get(role.getRoleCodeId()));
+			if(roleIds != null && roleIds.contains(role.getId())) {
+				roleDto.setChecked(Boolean.TRUE);
+			} else {
+				roleDto.setChecked(Boolean.FALSE);
+			}
+			roleDtos.add(roleDto);
+		}
+		return roleDtos;
 	}
 
 	@Transactional
@@ -130,10 +205,9 @@ public class PermissionService {
 		
 		rolePermissionMapper.deleteByExample(example);
 		
-		List<RoleDto> roleDtoList = permissionParam.getRoleList();
-		if(roleDtoList != null && !roleDtoList.isEmpty()){
-			for(RoleDto roleDto : roleDtoList){
-				Integer roleId = roleDto.getId();
+		List<Integer> roleIds = permissionParam.getRoleIds();
+		if(roleIds != null && !roleIds.isEmpty()){
+			for(Integer roleId : roleIds){
 				RolePermissionKey rolePermissionKey = new RolePermissionKey();
 				rolePermissionKey.setRoleId(roleId);
 				rolePermissionKey.setPermissionId(permissionId);

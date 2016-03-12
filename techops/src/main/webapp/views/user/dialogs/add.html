@@ -6,6 +6,7 @@
 <div class="modal-body">
     <ng-form name="addUserDialog" novalidate role="form">
         <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[addUserDialog.email.$dirty && addUserDialog.email.$invalid]">
+            <label><i class="fa fa-exclamation-circle font-color-blue"></i>用户创建成功后系统会给该用户的email发送一封通知邮件(含密码).</label><br />
             <label class="control-label" for="username" placeholder="用户姓名">用户姓名:</label>
             <input type="text" class="form-control" name="username" id="username" ng-model="user.name">
             <label class="control-label" for="email" placeholder="用户邮箱">用户邮箱:</label>

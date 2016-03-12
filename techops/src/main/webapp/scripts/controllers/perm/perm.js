@@ -136,7 +136,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     break;
             }
         };
-
+        $scope.$on('selected-domain-changed', $scope.queryPerm);
     };
 
     return {

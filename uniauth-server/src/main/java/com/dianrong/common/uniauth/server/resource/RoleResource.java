@@ -55,8 +55,8 @@ public class RoleResource implements IRoleRWResource {
 	}
 
 	@Override
-	public Response<Void> deleteRole(PrimaryKeyParam primaryKeyParam) {
-		roleService.deleteRole(primaryKeyParam.getId());
+	public Response<Void> replacePermsToRole(RoleParam roleParam) {
+		roleService.replacePermsToRole(roleParam.getId(),roleParam.getPermIds());
 		return Response.success();
 	}
 

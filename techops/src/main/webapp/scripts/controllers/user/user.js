@@ -1,4 +1,4 @@
-define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
+define(['../../utils/constant'], function (constant) {
     /**
      * A module representing a User controller.
      * @exports controllers/User

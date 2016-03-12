@@ -1,4 +1,4 @@
-<div>
+<div style="width: 27%">
     <ui-select ng-model="role.selected"
                theme="bootstrap"
                ng-disabled="disabled"
@@ -11,18 +11,44 @@
             <div ng-bind-html="role.name | highlight: $select.search"></div>
         </ui-select-choices>
     </ui-select>
-    <p class="text-danger"><strong>{{rolePermMessage}}</strong></p>
 </div>
 <div style="padding: 5px 5px 5px 5px">
-    <div ng-if="shareGroup.selected.id">
+    <div ng-if="role.selected.id">
         <i class="fa fa-exclamation-circle font-color-blue"></i>
-        您选中的角色号: <strong>'{{shareGroup.selected.id}}'</strong> 名称: <strong>'{{shareGroup.selected.label}}'</strong> Code: <strong>'{{shareGroup.selected.code}}'</strong> .
+        您选中的角色id: <strong>'{{role.selected.id}}'</strong> 名称: <strong>'{{role.selected.name}}'</strong> Code: <strong>'{{role.selected.roleCode}}'</strong> .
     </div>
-    <div ng-if="!shareGroup.selected.id">
+    <div ng-if="!role.selected.id">
         <i class="fa fa-exclamation-circle font-color-blue"></i>
         您没有选中任何一个角色.
     </div>
 </div>
 <div>
-    permissions......
+    <table class="text-left table grey-border table-hover vertical-middle">
+        <thead class="text-color-c4">
+        <tr>
+            <th>权限值</th>
+            <th>权限类型</th>
+            <th>描述</th>
+            <th>是否关联</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-c6">
+
+        <tr ng-if="rolePermsMsg!=''">
+            <td colspan="9" class="tc" ng-bind="rolePermsMsg"></td>
+        </tr>
+
+        <tr ng-repeat="d in perms">
+            <td ng-bind="d.value"></td>
+            <td ng-bind="d.permType"></td>
+            <td ng-bind="d.description"></td>
+            <td><input type="checkbox" ng-model="d.checked"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" ng-click="selectAllPermsForRole()">全选</button>
+        <button type="button" class="btn btn-info" ng-click="replacePermsToRole()"
+                ng-disabled="role.selected == null">保存</button>
+    </div>
 </div>

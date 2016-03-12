@@ -86,7 +86,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             $state.go('rel.role--user-grp');
         };
         $scope.navToRolePerm = function(role) {
-            //TODO store or replace the selectedRole in role service.
+            RoleService.roleShared.selected = role;
             $state.go('rel.role--perm');
         };
 
@@ -141,7 +141,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     break;
             }
         };
-
+        $scope.$on('selected-domain-changed', $scope.queryRole);
     };
 
     return {

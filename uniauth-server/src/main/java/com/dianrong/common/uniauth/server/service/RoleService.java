@@ -90,20 +90,58 @@ public class RoleService {
         roleMapper.updateByPrimaryKey(role);
     }
 
-    public void deleteRole(Integer roleId) {
+    @Transactional
+    public void replacePermsToRole(Integer roleId, List<Integer> permIds) {
         CheckEmpty.checkEmpty(roleId, "roleId");
-        Role role = roleMapper.selectByPrimaryKey(roleId);
-        if(role == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleId, Role.class.getSimpleName()));
-        }
-        // cascading delete the role-user, role-permission relationships
-        UserRoleExample userRoleExample = new UserRoleExample();
-        userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
-        userRoleMapper.deleteByExample(userRoleExample);
         RolePermissionExample rolePermissionExample = new RolePermissionExample();
         rolePermissionExample.createCriteria().andRoleIdEqualTo(roleId);
-        rolePermissionMapper.deleteByExample(rolePermissionExample);
-        roleMapper.deleteByPrimaryKey(roleId);
+        if(CollectionUtils.isEmpty(permIds)) {
+            rolePermissionMapper.deleteByExample(rolePermissionExample);
+            return;
+        }
+        List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
+        if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
+            ArrayList<Integer> dbPermIds = new ArrayList<>();
+            for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+                dbPermIds.add(rolePermissionKey.getPermissionId());
+            }
+            ArrayList<Integer> intersections = ((ArrayList<Integer>)dbPermIds.clone());
+            intersections.retainAll(permIds);
+            List<Integer> permIdsNeedAddToDB = new ArrayList<>();
+            List<Integer> permIdsNeedDeleteFromDB = new ArrayList<>();
+            for(Integer permId : permIds) {
+                if(!intersections.contains(permId)) {
+                    permIdsNeedAddToDB.add(permId);
+                }
+            }
+            for(Integer dbPermId : dbPermIds) {
+                if(!intersections.contains(dbPermId)) {
+                    permIdsNeedDeleteFromDB.add(dbPermId);
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(permIdsNeedAddToDB)) {
+                for(Integer permIdNeedAddToDB : permIdsNeedAddToDB) {
+                    RolePermissionKey rolePermissionKey = new RolePermissionKey();
+                    rolePermissionKey.setRoleId(roleId);
+                    rolePermissionKey.setPermissionId(permIdNeedAddToDB);
+                    rolePermissionMapper.insert(rolePermissionKey);
+                }
+            }
+            if(!CollectionUtils.isEmpty(permIdsNeedDeleteFromDB)) {
+                RolePermissionExample rolePermDeleteExample = new RolePermissionExample();
+                rolePermDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andPermissionIdIn(permIdsNeedDeleteFromDB);
+                rolePermissionMapper.deleteByExample(rolePermDeleteExample);
+            }
+        } else {
+            for(Integer permId : permIds) {
+                RolePermissionKey rolePermissionKey = new RolePermissionKey();
+                rolePermissionKey.setRoleId(roleId);
+                rolePermissionKey.setPermissionId(permId);
+                rolePermissionMapper.insert(rolePermissionKey);
+            }
+        }
+
     }
 
     @Transactional
