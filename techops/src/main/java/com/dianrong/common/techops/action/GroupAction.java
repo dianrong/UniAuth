@@ -12,11 +12,11 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Arc on 29/2/2016.
@@ -30,8 +30,12 @@ public class GroupAction {
 
     @RequestMapping(value = "/tree" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    public Response<List<Node>> getGroupTree(@RequestBody GroupParam groupParam) {
-        GroupDto groupDto = uARWFacade.getGroupRWResource().getGroupTree(groupParam).getData();
+    public Response<?> getGroupTree(@RequestBody GroupParam groupParam) {
+        Response<GroupDto> groupDtoResponse = uARWFacade.getGroupRWResource().getGroupTree(groupParam);
+        if(!CollectionUtils.isEmpty(groupDtoResponse.getInfo())) {
+            return groupDtoResponse;
+        }
+        GroupDto groupDto = groupDtoResponse.getData();
         if(groupDto != null) {
             return Response.success(CustomizeBeanConverter.convert(Arrays.asList(groupDto)));
         } else {
