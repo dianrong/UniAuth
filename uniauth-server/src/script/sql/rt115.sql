@@ -341,9 +341,14 @@ insert into grp_role(grp_id, role_id)  values(2, 1);
 -- change the primarykey of user_grp
 ALTER TABLE `user_grp` CHANGE COLUMN `type` `type` TINYINT(3) NOT NULL ,DROP PRIMARY KEY,ADD PRIMARY KEY (`user_id`, `grp_id`, `type`);
 
-alter table `audit` add column `req_uuid` varchar(128) not null;
-alter table `audit` add column `req_url` varchar(256) not null;
-alter table `audit` add column `req_success` tinyint(3) not null;
-alter table `audit` add column `req_exp` varchar(1024);
+ALTER TABLE `uniauth`.`audit` CHANGE COLUMN `user_id` `user_id` BIGINT(20) NULL ;
+alter table `audit` add column `req_uuid` varchar(128);
+alter table `audit` add column `req_url` varchar(64);
+alter table `audit` add column `req_success` tinyint(3);
+alter table `audit` add column `req_exp` varchar(3072);
+alter table `audit` add column `req_method` varchar(64);
+alter table `audit` add column `req_elapse` BIGINT(20);
+alter table `audit` add column `req_param` varchar(256);
+alter table `audit` add column `req_result` varchar(1024);
 
 
