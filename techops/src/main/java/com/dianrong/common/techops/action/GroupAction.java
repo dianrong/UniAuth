@@ -69,6 +69,13 @@ public class GroupAction {
         return Response.success(node);
     }
 
+    @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<PageDto<GroupDto>> searchGroup(@RequestBody GroupQuery groupQuery) {
+        Response<PageDto<GroupDto>> pageDtoResponse = uARWFacade.getGroupRWResource().queryGroup(groupQuery);
+        return pageDtoResponse;
+    }
+
     //need
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")

@@ -135,7 +135,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }).
         state('rel.grp--role', {
             url: '/rel-grp--role',
-            templateUrl: "views/common/not-found.html"
+            controller: "RelGrpRoleController",
+            templateUrl: "views/rel/rel-grp--role.html"
         }).
         state('rel.role--user-grp', {
             url: '/rel-role--user-grp',

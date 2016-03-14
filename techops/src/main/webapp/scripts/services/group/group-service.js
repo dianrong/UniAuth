@@ -1,6 +1,13 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
     var Service = function ($resource) {
         var svc = $resource(constant.apiBase + '/group/:method/:method2', null, {
+            queryGroup: {
+                method: 'POST',
+                params: {
+                    method: 'query'
+                },
+                timeout: constant.reqTimeout
+            },
             getTree: {
                 method: 'POST',
                 params: {
