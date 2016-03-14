@@ -29,17 +29,15 @@
     
   <select id="checkOwner" resultType="java.lang.Integer" parameterType="java.util.Map">
 		select count(g.id)
-		from user u, user_grp ug, grp g, grp_path gp, grp g1
+		from user u, user_grp ug, grp g, grp_path gp
 		where u.status = 0
 		and u.id =#{userId,jdbcType=BIGINT}
 		and u.id = ug.user_id
 		and ug.type = 1
-		and ug.grp_id = g.id
-		and g.status = 0
-		and g.id = gp.ancestor
+		and ug.grp_id = gp.ancestor
 		and gp.descendant = #{targetGroupId,jdbcType=INTEGER}
-		and gp.descendant = g1.id
-		and g1.status = 0
+		and gp.descendant = g.id
+		and g.status = 0
   </select>
   
 </mapper>
