@@ -13,6 +13,7 @@ import com.dianrong.common.uniauth.sharerw.message.EmailSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,8 +45,11 @@ public class UserAction {
 
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-    public Response<Void> addUser(@RequestBody UserParam userParam) {
+    public Response<?> addUser(@RequestBody UserParam userParam) {
         Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().addNewUser(userParam);
+        if(!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
+            return userDtoResponse;
+        }
         UserDto userDto = userDtoResponse.getData();
         StringBuffer buffer = new StringBuffer();
         buffer.append("====================================================<br />");
@@ -60,35 +64,43 @@ public class UserAction {
             buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
         buffer.append("====================================================<br />");
-        EmailSender.sendEmail("[TechOps] -- 点融内部账号系统通知.", userDto.getEmail(), buffer);
+        EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
         return Response.success();
     }
 
     @RequestMapping(value = "/enable-disable" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    public Response<Void> enableDisableUser(@RequestBody UserParam userParam) {
+    public Response<?> enableDisableUser(@RequestBody UserParam userParam) {
         UserParam param = new UserParam();
         param.setId(userParam.getId());
         param.setStatus(userParam.getStatus());
         param.setUserActionEnum(UserActionEnum.STATUS_CHANGE);
-        uARWFacade.getUserRWResource().updateUser(param);
+        Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(param);
+        if(!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
+            return userDtoResponse;
+        }
         return Response.success();
     }
 
     @RequestMapping(value = "/unlock" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
-    public Response<Void> unlock(@RequestBody UserParam userParam) {
+    public Response<?> unlock(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.UNLOCK);
-        uARWFacade.getUserRWResource().updateUser(userParam);
+        Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(userParam);
+        if(!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
+            return userDtoResponse;
+        }
         return Response.success();
     }
 
     @RequestMapping(value = "/resetpassword" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    public Response<Void> resetPassword(@RequestBody UserParam userParam) {
+    public Response<?> resetPassword(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.RESET_PASSWORD);
         Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(userParam);
-
+        if(!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
+            return userDtoResponse;
+        }
         UserDto userDto = userDtoResponse.getData();
         StringBuffer buffer = new StringBuffer();
         buffer.append("====================================================<br />");
@@ -103,16 +115,19 @@ public class UserAction {
             buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
         buffer.append("====================================================<br />");
-        EmailSender.sendEmail("[TechOps] -- 点融内部账号系统通知.", userDto.getEmail(), buffer);
+        EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
 
         return Response.success();
     }
 
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    public Response<Void> updateUser(@RequestBody UserParam userParam) {
+    public Response<?> updateUser(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.UPDATE_INFO);
-        uARWFacade.getUserRWResource().updateUser(userParam);
+        Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(userParam);
+        if(!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
+            return userDtoResponse;
+        }
         return Response.success();
     }
 
