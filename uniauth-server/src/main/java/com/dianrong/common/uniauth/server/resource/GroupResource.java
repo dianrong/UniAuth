@@ -31,7 +31,8 @@ public class GroupResource implements IGroupRWResource {
 	@Override
 	public Response<GroupDto> getGroupTree(GroupParam groupParam) {
 		GroupDto grpDto = groupService.getGroupTree(groupParam.getId(), groupParam.getCode(),
-				groupParam.getOnlyShowGroup(), groupParam.getUserGroupType(), groupParam.getRoleId());
+				groupParam.getOnlyShowGroup(), groupParam.getUserGroupType(), groupParam.getRoleId(),
+				groupParam.getNeedOwnerMarkup(), groupParam.getOpUserId());
 		return Response.success(grpDto);
 	}
 

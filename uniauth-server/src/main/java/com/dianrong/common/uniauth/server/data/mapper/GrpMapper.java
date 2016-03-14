@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -105,4 +106,6 @@ public interface GrpMapper {
     Integer selectNameCountBySameLayerGrpId(Integer groupId);
     
     Integer checkOwner(Map<String, Object> paramMap);
+
+    Set<Integer> getOwnGrpIds(Long ownerId);
 }

@@ -9,7 +9,9 @@
 
 .dialog-header-group { background-color: #5BC0EE; }
 .dialog-header-group span, .dialog-header-group h4 { color: #ffffff; }
-
+.disabled-line-through {
+    text-decoration: line-through;
+}
 .control-panel {
     background-color: #f0f8ff;
     padding: 6px 6px 6px 6px;
