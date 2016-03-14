@@ -59,8 +59,8 @@ public class GlobalVarQueue {
 						}
 						if (gv != null) {
 							Audit audit = new Audit();
-							audit.setActionDate(gv.getReqDate());
-							audit.setClientIp(gv.getIp());
+							audit.setReqDate(gv.getReqDate());
+							audit.setReqIp(gv.getIp());
 							audit.setReqElapse(gv.getElapse());
 							String expInfo = gv.getException();
 							if(expInfo != null && expInfo.length() > AppConstants.AUDIT_INSERT_EXP_LENGTH){
@@ -78,8 +78,8 @@ public class GlobalVarQueue {
 							audit.setReqUrl(gv.getReqUrl());
 							audit.setReqUuid(gv.getUuid());
 							audit.setUserId(gv.getUserId());
-							audit.setObjName(gv.getMapper());
-							audit.setObjId(gv.getInvokeSeq());
+							audit.setReqClass(gv.getMapper());
+							audit.setReqSeq(gv.getInvokeSeq());
 							auditList.add(audit);
 						}
 					}

@@ -2,20 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.AuditMapper" >
 	<insert id="insertBatch" parameterType="com.dianrong.common.uniauth.server.data.entity.Audit">
-	    insert into audit (user_id, obj_id, 
-	      obj_name, action_date, action, 
-	      before_action, after_action, client_ip, 
-	      req_uuid, req_url, req_success, 
-	      req_exp, req_method, req_elapse, 
-	      req_param, req_result)
-	    values 
+	    insert into audit (id, user_id, req_date, 
+	      domain_id, req_ip, req_uuid, 
+	      req_url, req_seq, req_class, 
+	      req_method, req_success, req_exp, 
+	      req_elapse, req_param, req_result
+	      )
+	    values
 	    <foreach collection="list" item="item" index="index" separator="," >
-	    (#{item.userId,jdbcType=BIGINT}, #{item.objId,jdbcType=BIGINT}, 
-	      #{item.objName,jdbcType=VARCHAR}, #{item.actionDate,jdbcType=TIMESTAMP}, #{item.action,jdbcType=TINYINT}, 
-	      #{item.beforeAction,jdbcType=VARCHAR}, #{item.afterAction,jdbcType=VARCHAR}, #{item.clientIp,jdbcType=VARCHAR}, 
-	      #{item.reqUuid,jdbcType=VARCHAR}, #{item.reqUrl,jdbcType=VARCHAR}, #{item.reqSuccess,jdbcType=TINYINT}, 
-	      #{item.reqExp,jdbcType=VARCHAR}, #{item.reqMethod,jdbcType=VARCHAR}, #{item.reqElapse,jdbcType=BIGINT}, 
-	      #{item.reqParam,jdbcType=VARCHAR}, #{item.reqResult,jdbcType=VARCHAR})
+ 		(#{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=BIGINT}, #{item.reqDate,jdbcType=TIMESTAMP}, 
+      		#{item.domainId,jdbcType=INTEGER}, #{item.reqIp,jdbcType=VARCHAR}, #{item.reqUuid,jdbcType=VARCHAR}, 
+      		#{item.reqUrl,jdbcType=VARCHAR}, #{item.reqSeq,jdbcType=BIGINT}, #{item.reqClass,jdbcType=VARCHAR}, 
+      		#{item.reqMethod,jdbcType=VARCHAR}, #{item.reqSuccess,jdbcType=TINYINT}, #{item.reqExp,jdbcType=VARCHAR}, 
+      		#{item.reqElapse,jdbcType=BIGINT}, #{item.reqParam,jdbcType=VARCHAR}, #{item.reqResult,jdbcType=VARCHAR}
+      	)
 	    </foreach>
 	</insert>
 </mapper>
