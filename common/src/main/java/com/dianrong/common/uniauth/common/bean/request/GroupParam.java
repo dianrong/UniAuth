@@ -19,6 +19,8 @@ public class GroupParam extends Operator {
 	//if onlyShowGroup=false and userGroupType=0, then return members, if if onlyShowGroup=false and userGroupType=1 return owners
 	private Byte userGroupType;
 
+	private Boolean needOwnerMarkup;
+
 	private Integer roleId;
 	
 	private Integer domainId;
@@ -121,6 +123,15 @@ public class GroupParam extends Operator {
 
 	public GroupParam setUserGroupType(Byte userGroupType) {
 		this.userGroupType = userGroupType;
+		return this;
+	}
+
+	public Boolean getNeedOwnerMarkup() {
+		return needOwnerMarkup;
+	}
+
+	public GroupParam setNeedOwnerMarkup(Boolean needOwnerMarkup) {
+		this.needOwnerMarkup = needOwnerMarkup;
 		return this;
 	}
 }

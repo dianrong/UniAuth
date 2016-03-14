@@ -73,6 +73,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         svc.syncTree = function(params, roleUserGrpTreeOrTree) {
             // separate the variable that different module use.
             if(!roleUserGrpTreeOrTree) {
+                params.needOwnerMarkup = true;
                 svc.getTree(params, function (res) {
                     svc.tree.data = res.data;
                     var expandedNodes = [];
