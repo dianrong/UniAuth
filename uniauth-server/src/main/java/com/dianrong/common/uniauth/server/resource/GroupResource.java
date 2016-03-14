@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,6 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 
 @RestController
 public class GroupResource implements IGroupRWResource {
@@ -84,6 +81,12 @@ public class GroupResource implements IGroupRWResource {
 	@Override
 	public Response<Void> checkOwner(GroupParam groupParam) {
 		groupService.checkOwner(groupParam.getOpUserId(), groupParam.getTargetGroupId());
+		return Response.success();
+	}
+
+	@Override
+	public Response<Void> replaceRolesToGroup(GroupParam groupParam) {
+		groupService.replaceRolesToGroup(groupParam.getId(), groupParam.getRoleIds());
 		return Response.success();
 	}
 }

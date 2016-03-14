@@ -33,4 +33,8 @@ public interface IUserRWResource extends IUserResource {
     @Path("resetpassword")
     //scenario: save roles to user
     Response<Void> resetPassword(UserParam userParam);
+
+    @POST
+    @Path("replacerolestouser")
+    Response<Void> replaceRolesToUser(UserParam userParam);
 }

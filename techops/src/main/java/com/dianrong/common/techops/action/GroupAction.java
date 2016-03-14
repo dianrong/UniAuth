@@ -5,6 +5,7 @@ import com.dianrong.common.techops.helper.CustomizeBeanConverter;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Arc on 29/2/2016.
@@ -89,5 +91,17 @@ public class GroupAction {
     public Response<Void> removeUserFromGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().removeUsersFromGroup(userListParam);
         return response;
+    }
+
+    @RequestMapping(value = "/group-roles" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#groupParam.domainId))")
+    public Response<List<RoleDto>>  getAllRolesToGroupAndDomain(@RequestBody GroupParam groupParam) {
+        return uARWFacade.getGroupRWResource().getAllRolesToGroupAndDomain(groupParam);
+    }
+
+    @RequestMapping(value = "/replace-roles-to-group" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#groupParam.domainId))")
+    public Response<Void> replaceRolesToGroup(@RequestBody GroupParam groupParam) {
+        return uARWFacade.getGroupRWResource().replaceRolesToGroup(groupParam);
     }
 }

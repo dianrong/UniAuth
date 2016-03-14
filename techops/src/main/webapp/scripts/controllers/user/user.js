@@ -58,7 +58,7 @@ define(['../../utils/constant'], function (constant) {
 
         $scope.queryUser();
         $scope.navigate = function(selectedUser) {
-            //TODO store or replace the selectedUser in user service.
+            UserService.userShared.selected = selectedUser;
             $state.go('rel.user--role');
         };
         $scope.launch = function(which, param) {

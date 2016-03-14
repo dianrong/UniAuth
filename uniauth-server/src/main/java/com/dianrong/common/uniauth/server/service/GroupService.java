@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.dianrong.common.uniauth.server.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,19 +23,6 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.GrpExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpPath;
-import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RoleExample;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserGrp;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
@@ -490,5 +478,60 @@ public class GroupService {
 		if(ownerGroupCount == 0){
 			throw new AppException(InfoName.GRP_NOT_OWNER, UniBundle.getMsg("group.checkowner.not.owner", opUserId, targetGroupId));
 		}
+    }
+
+    @Transactional
+    public void replaceRolesToGroup(Integer grpId, List<Integer> roleIds) {
+
+        CheckEmpty.checkEmpty(grpId, "grpId");
+
+        GrpRoleExample grpRoleExample = new GrpRoleExample();
+        grpRoleExample.createCriteria().andGrpIdEqualTo(grpId);
+        if(CollectionUtils.isEmpty(roleIds)) {
+            grpRoleMapper.deleteByExample(grpRoleExample);
+            return;
+        }
+        List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
+        if(!CollectionUtils.isEmpty(grpRoleKeys)) {
+            ArrayList<Integer> dbRoleIds = new ArrayList<>();
+            for(GrpRoleKey grpRoleKey : grpRoleKeys) {
+                dbRoleIds.add(grpRoleKey.getRoleId());
+            }
+            ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
+            intersections.retainAll(roleIds);
+            List<Integer> roleIdsNeedAddToDB = new ArrayList<>();
+            List<Integer> roleIdsNeedDeleteFromDB = new ArrayList<>();
+            for(Integer roleId : roleIds) {
+                if(!intersections.contains(roleId)) {
+                    roleIdsNeedAddToDB.add(roleId);
+                }
+            }
+            for(Integer dbRoleId : dbRoleIds) {
+                if(!intersections.contains(dbRoleId)) {
+                    roleIdsNeedDeleteFromDB.add(dbRoleId);
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(roleIdsNeedAddToDB)) {
+                for(Integer roleIdNeedAddToDB : roleIdsNeedAddToDB) {
+                    GrpRoleKey grpRoleKey = new GrpRoleKey();
+                    grpRoleKey.setRoleId(roleIdNeedAddToDB);
+                    grpRoleKey.setGrpId(grpId);
+                    grpRoleMapper.insert(grpRoleKey);
+                }
+            }
+            if(!CollectionUtils.isEmpty(roleIdsNeedDeleteFromDB)) {
+                GrpRoleExample grpRoleDeleteExample = new GrpRoleExample();
+                grpRoleDeleteExample.createCriteria().andGrpIdEqualTo(grpId).andRoleIdIn(roleIdsNeedDeleteFromDB);
+                grpRoleMapper.deleteByExample(grpRoleDeleteExample);
+            }
+        } else {
+            for(Integer roleId : roleIds) {
+                GrpRoleKey grpRoleKey = new GrpRoleKey();
+                grpRoleKey.setRoleId(roleId);
+                grpRoleKey.setGrpId(grpId);
+                grpRoleMapper.insert(grpRoleKey);
+            }
+        }
     }
 }

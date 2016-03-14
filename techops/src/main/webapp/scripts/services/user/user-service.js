@@ -46,8 +46,25 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            replaceRolesToUser: {
+                method: 'POST',
+                params: {
+                    method: 'replace-roles-to-user'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            queryRolesWithCheckedInfo: {
+                method: 'POST',
+                params: {
+                    method: 'user-roles'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
         });
+        svc.userShared = {};
         return svc;
     };
 

@@ -81,7 +81,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.queryPerm();
         $scope.navToPermRole = function(perm) {
-            //TODO store or replace the selectedRole in role service.
+            PermService.permShared.selected = perm;
             $state.go('rel.perm--role');
         };
         $scope.launch = function(which, param) {

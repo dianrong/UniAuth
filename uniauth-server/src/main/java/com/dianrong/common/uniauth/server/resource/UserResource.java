@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
@@ -77,6 +78,12 @@ public class UserResource implements IUserRWResource {
 	@Override
 	public Response<Void> resetPassword(UserParam userParam) {
 		userService.resetPassword(userParam);
+		return Response.success();
+	}
+
+	@Override
+	public Response<Void> replaceRolesToUser(UserParam userParam) {
+		userService.replaceRolesToUser(userParam.getId(), userParam.getRoleIds());
 		return Response.success();
 	}
 }

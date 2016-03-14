@@ -382,6 +382,62 @@ public class UserService {
         
         userMapper.updateByPrimaryKey(user);
 	}
+
+    @Transactional
+    public void replaceRolesToUser(Long userId, List<Integer> roleIds) {
+
+        CheckEmpty.checkEmpty(userId, "userId");
+
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andUserIdEqualTo(userId);
+        if(CollectionUtils.isEmpty(roleIds)) {
+            userRoleMapper.deleteByExample(userRoleExample);
+            return;
+        }
+        List<UserRoleKey>  userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+        if(!CollectionUtils.isEmpty(userRoleKeys)) {
+            ArrayList<Integer> dbRoleIds = new ArrayList<>();
+            for(UserRoleKey userRoleKey : userRoleKeys) {
+                dbRoleIds.add(userRoleKey.getRoleId());
+            }
+            ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
+            intersections.retainAll(roleIds);
+            List<Integer> roleIdsNeedAddToDB = new ArrayList<>();
+            List<Integer> roleIdsNeedDeleteFromDB = new ArrayList<>();
+            for(Integer roleId : roleIds) {
+                if(!intersections.contains(roleId)) {
+                    roleIdsNeedAddToDB.add(roleId);
+                }
+            }
+            for(Integer dbRoleId : dbRoleIds) {
+                if(!intersections.contains(dbRoleId)) {
+                    roleIdsNeedDeleteFromDB.add(dbRoleId);
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(roleIdsNeedAddToDB)) {
+                for(Integer roleIdNeedAddToDB : roleIdsNeedAddToDB) {
+                    UserRoleKey userRoleKey = new UserRoleKey();
+                    userRoleKey.setRoleId(roleIdNeedAddToDB);
+                    userRoleKey.setUserId(userId);
+                    userRoleMapper.insert(userRoleKey);
+                }
+            }
+            if(!CollectionUtils.isEmpty(roleIdsNeedDeleteFromDB)) {
+                UserRoleExample userRoleDeleteExample = new UserRoleExample();
+                userRoleDeleteExample.createCriteria().andUserIdEqualTo(userId).andRoleIdIn(roleIdsNeedDeleteFromDB);
+                userRoleMapper.deleteByExample(userRoleDeleteExample);
+            }
+        } else {
+            for(Integer roleId : roleIds) {
+                UserRoleKey userRoleKey = new UserRoleKey();
+                userRoleKey.setRoleId(roleId);
+                userRoleKey.setUserId(userId);
+                userRoleMapper.insert(userRoleKey);
+            }
+        }
+    }
+
     private int updateLogin(Long userId, String ip, int failCount) {
         User user = new User();
         user.setId(userId);

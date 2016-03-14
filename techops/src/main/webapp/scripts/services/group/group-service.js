@@ -42,8 +42,25 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     method: 'deleteuser'
                 },
                 timeout: constant.reqTimeout
+            },
+            replaceRolesToGrp: {
+                method: 'POST',
+                params: {
+                    method: 'replace-roles-to-group'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            queryRolesWithCheckedInfo: {
+                method: 'POST',
+                params: {
+                    method: 'group-roles'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
         });
+        svc.grpShared = {};
         svc.tree = {};
         svc.syncTree = function(params) {
             svc.getTree(params, function (res) {

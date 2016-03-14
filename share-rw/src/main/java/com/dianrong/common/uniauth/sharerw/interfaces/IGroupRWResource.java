@@ -37,4 +37,8 @@ public interface IGroupRWResource extends IGroupResource {
     @Path("saverolestogroup")
     //scenario: save roles to group
     Response<Void> saveRolesToGroup(GroupParam groupParam);
+
+    @POST
+    @Path("replacerolestogroup")
+    Response<Void> replaceRolesToGroup(GroupParam groupParam);
 }
