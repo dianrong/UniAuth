@@ -69,16 +69,30 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         });
         svc.grpShared = {};
         svc.tree = {};
-        svc.syncTree = function(params) {
-            svc.getTree(params, function (res) {
-                svc.tree.data = res.data;
-                var expandedNodes = [];
-                svc.tree.expandedNodes = utils.getParentNodeArray(svc.tree.data, expandedNodes);
-                svc.tree.msg = '';
-            }, function (res) {
-                svc.tree.msg = '同步树查询失败.';
-                console.log('syncTree failed' + res);
-            });
+        svc.roleUserGrpTree = {};
+        svc.syncTree = function(params, roleUserGrpTreeOrTree) {
+            // separate the variable that different module use.
+            if(!roleUserGrpTreeOrTree) {
+                svc.getTree(params, function (res) {
+                    svc.tree.data = res.data;
+                    var expandedNodes = [];
+                    svc.tree.expandedNodes = utils.getParentNodeArray(svc.tree.data, expandedNodes);
+                    svc.tree.msg = '';
+                }, function (res) {
+                    svc.tree.msg = '同步树查询失败.';
+                    console.log('syncTree failed' + res);
+                });
+            } else {
+                svc.getTree(params, function (res) {
+                    svc.roleUserGrpTree.data = res.data;
+                    var expandedNodes = [];
+                    svc.roleUserGrpTree.expandedNodes = utils.getParentNodeArray(svc.roleUserGrpTree.data, expandedNodes);
+                    svc.roleUserGrpTree.msg = '';
+                }, function (res) {
+                    svc.roleUserGrpTree.msg = 'Role -- UserGrp 同步树查询失败.';
+                    console.log('syncTree failed' + res);
+                });
+            }
         };
         return svc;
     };

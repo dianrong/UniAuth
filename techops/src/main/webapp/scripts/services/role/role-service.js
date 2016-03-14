@@ -51,6 +51,7 @@ define(['../../utils/constant'], function (constant) {
             }
         });
         svc.roleShared = {};
+        svc.roleUserGrpShared = {};
         return svc;
     };
 

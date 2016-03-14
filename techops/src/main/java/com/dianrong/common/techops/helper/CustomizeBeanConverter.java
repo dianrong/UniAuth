@@ -40,6 +40,7 @@ public class CustomizeBeanConverter {
                 groupNode.setLabel(groupDto.getName());
                 groupNode.setCode(groupDto.getCode());
                 groupNode.setType(AppConstants.NODE_TYPE_GROUP);
+                groupNode.setChecked(groupDto.getRoleChecked());
                 nodes.add(groupNode);
                 List<UserDto> userDtos = groupDto.getUsers();
                 List<GroupDto> groupDtos = groupDto.getGroups();
@@ -65,6 +66,7 @@ public class CustomizeBeanConverter {
                 Node subUserNode = new Node();
                 subUserNode.setId(userDto.getId().toString());
                 subUserNode.setLabel(userDto.getEmail());
+                subUserNode.setChecked(userDto.getRoleChecked());
                 Byte userGroupType = userDto.getUserGroupType();
                 if(AppConstants.ZERO_Byte.equals(userGroupType)) {
                     subUserNode.setType(AppConstants.NODE_TYPE_MEMBER_USER);
@@ -82,6 +84,7 @@ public class CustomizeBeanConverter {
                 groupNode.setCode(subGroupDtoNode.getCode());
                 groupNode.setLabel(subGroupDtoNode.getName());
                 groupNode.setType(AppConstants.NODE_TYPE_GROUP);
+                groupNode.setChecked(subGroupDtoNode.getRoleChecked());
                 subNodes.add(groupNode);
 
                 List<UserDto> subSubUserDtoNodes = subGroupDtoNode.getUsers();

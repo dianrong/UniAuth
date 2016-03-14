@@ -11,6 +11,7 @@ public class Node {
     private String label;
     private String code;
     private String type;
+    private Boolean checked;
     private String description;
 
     private List<Node> children;
@@ -66,6 +67,15 @@ public class Node {
 
     public Node setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public Node setChecked(Boolean checked) {
+        this.checked = checked;
         return this;
     }
 }

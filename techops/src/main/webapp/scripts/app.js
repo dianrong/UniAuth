@@ -140,7 +140,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }).
         state('rel.role--user-grp', {
             url: '/rel-role--user-grp',
-            templateUrl: "views/common/not-found.html"
+            controller: "RelRoleUserGroupController",
+            templateUrl: "views/rel/rel-role--user-grp.html"
         }).
         state('domain', {
             url: "/domain",
