@@ -4,6 +4,7 @@ import com.dianrong.common.techops.bean.LoginUser;
 import com.dianrong.common.techops.service.TechOpsService;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by Arc on 16/2/16.
@@ -135,5 +137,17 @@ public class UserAction {
     public Response<LoginUser> getCurrentUserInfo() {
         LoginUser loginUser = techOpsService.getLoginUser();
     	return Response.success(loginUser);
+    }
+
+    @RequestMapping(value = "/user-roles" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#userParam.domainId))")
+    public Response<List<RoleDto>> getUserRolesWithCheckedInfoByDomain(@RequestBody UserParam userParam) {
+        return uARWFacade.getUserRWResource().getAllRolesToUserAndDomain(userParam);
+    }
+
+    @RequestMapping(value = "/replace-roles-to-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#userParam.domainId))")
+    public Response<Void> replaceRolesToUser(@RequestBody UserParam userParam) {
+        return uARWFacade.getUserRWResource().replaceRolesToUser(userParam);
     }
 }
