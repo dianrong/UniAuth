@@ -1,8 +1,10 @@
-package com.dianrong.common.uniauth.client;
+package com.dianrong.common.uniauth.common.client;
 
 public class DomainDefine {
 	private String domainCode;
 	private String userInfoClass;
+	
+	private static Integer domainId;
 
 	public String getDomainCode() {
 		return domainCode;

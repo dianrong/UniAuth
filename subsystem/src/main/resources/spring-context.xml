@@ -20,7 +20,7 @@
 			http://www.springframework.org/schema/security/spring-security-4.0.xsd
                         ">
 
-	<bean id="domainDefine" class="com.dianrong.common.uniauth.client.DomainDefine">
+	<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
 		<property name="domainCode" value="subsystem"></property>
 	</bean>
 	

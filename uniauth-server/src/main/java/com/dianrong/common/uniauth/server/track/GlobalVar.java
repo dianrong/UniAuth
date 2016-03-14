@@ -17,7 +17,16 @@ public class GlobalVar implements Cloneable {
 	private String reqParam;
 	private String mapper;
 	private Long invokeSeq;
+	private Integer domainId;
 	
+	public Integer getDomainId() {
+		return domainId;
+	}
+
+	public void setDomainId(Integer domainId) {
+		this.domainId = domainId;
+	}
+
 	public Long getInvokeSeq() {
 		return invokeSeq;
 	}

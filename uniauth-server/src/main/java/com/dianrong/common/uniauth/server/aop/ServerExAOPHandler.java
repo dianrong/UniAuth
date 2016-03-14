@@ -65,10 +65,17 @@ public class ServerExAOPHandler {
             		if(param != null){
                 		String jasonParam = JasonUtil.object2Jason(param);
                 		gv.setReqParam(jasonParam);
-                		Method getOpUserId = param.getClass().getMethod("getOpUserId", (Class[])null);
+                		Class<?> paramClazz = param.getClass();
+                		Method getOpUserId = paramClazz.getMethod("getOpUserId", (Class[])null);
                 		Long opUserId = (Long)getOpUserId.invoke(param, (Object[])null);
                 		gv.setUserId(opUserId);
+                		
+                		Method getOpDomainId = paramClazz.getMethod("getOpDomainId", (Class[])null);
+                		Integer opDomainId = (Integer)getOpDomainId.invoke(param, (Object[])null);
+                		gv.setDomainId(opDomainId);
+                		
                 		origin.setUserId(opUserId);
+                		origin.setDomainId(opDomainId);
             		}
             	}
         	}catch(Exception e){

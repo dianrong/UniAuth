@@ -9,6 +9,7 @@ public class ReflectionUtils {
 	}
 
 	public static Object getField(Object targetObj, String fieldName, boolean isParentField){
+		Object object = null;
 		try{
 			Class<?> targetClazz = targetObj.getClass();
 			Field field = null;
@@ -19,10 +20,11 @@ public class ReflectionUtils {
 				field = targetClazz.getDeclaredField(fieldName);
 			}
 			field.setAccessible(true);
-			return field.get(targetObj);
+			object = field.get(targetObj);
 		}catch(Exception e){
-			return null;
+			e.printStackTrace();
 		}
+		return object;
 	}
 	
 	public static Object invokeStaticMethodWithoutParam(Class<?> clazz, String methodName){
@@ -31,6 +33,7 @@ public class ReflectionUtils {
 			Method method = clazz.getMethod(methodName, new Class[0]);
 			object = method.invoke(null, new Object[0]);
 		}catch(Exception e){
+			e.printStackTrace();
 		}
 		return object;
 	}
@@ -41,6 +44,7 @@ public class ReflectionUtils {
 			Method method = targetObj.getClass().getMethod(methodName, new Class[0]);
 			object = method.invoke(targetObj, new Object[0]);
 		}catch(Exception e){
+			e.printStackTrace();
 		}
 		return object;
 	}
@@ -52,6 +56,7 @@ public class ReflectionUtils {
 			try{
 				field = selfClazz.getDeclaredField(fieldName);
 			}catch(Exception e){
+				e.printStackTrace();
 				selfClazz = selfClazz.getSuperclass();
 			}
 		}
@@ -59,8 +64,53 @@ public class ReflectionUtils {
 		try{
 			field.set(targetObj, fieldValue);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}
 	}
 	
+	public static void setStaticField(String clazzName, String fieldName, Object fieldValue){
+		try{
+			Class<?> clazz = Class.forName(clazzName);
+			Field field = clazz.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			field.set(null, fieldValue);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static Object getStaticField(String clazzName, String fieldName){
+		Object object = null;
+		try{
+			Class<?> clazz = Class.forName(clazzName);
+			Field field = clazz.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			object = field.get(null);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return object;
+	}
+	
+	public static Long getOpUserId(){
+		Long opUserId = null;
+		try {
+			// SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+			Class<?> clazz = Class.forName("org.springframework.security.core.context.SecurityContextHolder");
+			if (clazz != null) {
+				Object securityContext = ReflectionUtils.invokeStaticMethodWithoutParam(clazz, "getContext");
+				if (securityContext != null) {
+					Object authentication = ReflectionUtils.invokeMethodWithoutParam(securityContext, "getAuthentication");
+					if (authentication != null) {
+						Object principal = ReflectionUtils.invokeMethodWithoutParam(authentication, "getPrincipal");
+						if (principal != null) {
+							opUserId = (Long) ReflectionUtils.invokeMethodWithoutParam(principal, "getId");
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+		}
+		return opUserId;
+	}
 }

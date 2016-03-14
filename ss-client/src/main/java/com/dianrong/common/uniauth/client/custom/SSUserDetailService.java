@@ -20,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.dianrong.common.uniauth.client.DomainDefine;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -28,7 +27,9 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 public class SSUserDetailService implements UserDetailsService {
 	@Autowired
@@ -81,6 +82,9 @@ public class SSUserDetailService implements UserDetailsService {
 				
 				Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 				if(currentDomainDto != null){
+					Integer domainId = currentDomainDto.getId();
+					ReflectionUtils.setStaticField("com.dianrong.common.uniauth.common.client.DomainDefine", "domainId", domainId);
+					
 					List<RoleDto> roleDtoList = currentDomainDto.getRoleList();
 					if(roleDtoList != null && !roleDtoList.isEmpty()){
 						for(RoleDto roleDto: roleDtoList){

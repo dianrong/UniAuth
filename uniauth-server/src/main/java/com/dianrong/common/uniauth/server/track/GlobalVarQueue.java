@@ -80,6 +80,7 @@ public class GlobalVarQueue {
 							audit.setUserId(gv.getUserId());
 							audit.setReqClass(gv.getMapper());
 							audit.setReqSeq(gv.getInvokeSeq());
+							audit.setDomainId(gv.getDomainId());
 							auditList.add(audit);
 						}
 					}

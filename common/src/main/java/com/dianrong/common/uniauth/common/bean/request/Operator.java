@@ -10,27 +10,23 @@ public class Operator {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Long opUserId;
 
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Integer opDomainId;
+	
 	public Operator() {
-		try {
-			// SecurityContextHolder.getContext().getAuthentication().getPrincipal()
-			Class<?> clazz = Class.forName("org.springframework.security.core.context.SecurityContextHolder");
-			if (clazz != null) {
-				Object securityContext = ReflectionUtils.invokeStaticMethodWithoutParam(clazz, "getContext");
-				if (securityContext != null) {
-					Object authentication = ReflectionUtils.invokeMethodWithoutParam(securityContext, "getAuthentication");
-					if (authentication != null) {
-						Object principal = ReflectionUtils.invokeMethodWithoutParam(authentication, "getPrincipal");
-						if (principal != null) {
-							opUserId = (Long) ReflectionUtils.invokeMethodWithoutParam(principal, "getId");
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
+		opUserId = ReflectionUtils.getOpUserId();
+		opDomainId = (Integer)ReflectionUtils.getStaticField("com.dianrong.common.uniauth.common.client.DomainDefine", "domainId");
+		for(int i = 0;i < 100;i++){
+			System.out.println("Operator:--------------------------------------------" + opDomainId);
 		}
+		
 	}
 
 	public Long getOpUserId() {
 		return opUserId;
+	}
+	
+	public Integer getOpDomainId(){
+		return opDomainId;
 	}
 }
