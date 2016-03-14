@@ -64,7 +64,7 @@ public class UserAction {
             buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
         buffer.append("====================================================<br />");
-        EmailSender.sendEmail("[TechOps] -- 点融内部账号系统通知.", userDto.getEmail(), buffer);
+        EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
         return Response.success();
     }
 
@@ -115,7 +115,7 @@ public class UserAction {
             buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
         buffer.append("====================================================<br />");
-        EmailSender.sendEmail("[TechOps] -- 点融内部账号系统通知.", userDto.getEmail(), buffer);
+        EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
 
         return Response.success();
     }
