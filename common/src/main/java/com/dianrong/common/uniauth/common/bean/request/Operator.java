@@ -16,10 +16,6 @@ public class Operator {
 	public Operator() {
 		opUserId = ReflectionUtils.getOpUserId();
 		opDomainId = (Integer)ReflectionUtils.getStaticField("com.dianrong.common.uniauth.common.client.DomainDefine", "domainId");
-		for(int i = 0;i < 100;i++){
-			System.out.println("Operator:--------------------------------------------" + opDomainId);
-		}
-		
 	}
 
 	public Long getOpUserId() {
