@@ -82,7 +82,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.queryRole();
 
         $scope.navToRoleUser = function(role) {
-            //TODO store or replace the selectedRole in role service.
+            RoleService.roleUserGrpShared.selected = role;
             $state.go('rel.role--user-grp');
         };
         $scope.navToRolePerm = function(role) {

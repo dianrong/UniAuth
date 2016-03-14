@@ -338,7 +338,7 @@ public class GroupService {
         }
     }
 
-    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId) {
+    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId, Boolean needOwnerMarkup, Long ownerId) {
         Grp rootGrp;
         if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
@@ -377,11 +377,20 @@ public class GroupService {
         Integer realGroupId = rootGrp.getId();
         List<Grp> grps = grpMapper.getGroupTree(realGroupId);
         if(!CollectionUtils.isEmpty(grps)) {
+            Set<Integer> ownGrpIds = null;
+            if(needOwnerMarkup && ownerId != null) {
+                ownGrpIds = grpMapper.getOwnGrpIds(ownerId);
+            }
             List<HashMap<String,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
             Map<Integer, GroupDto> idGroupDtoPair = new HashMap();
             for(Grp grp : grps) {
                 GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName())
                         .setDescription(grp.getDescription());
+                if(!CollectionUtils.isEmpty(ownGrpIds)) {
+                    if(ownGrpIds.contains(grp.getId())) {
+                        groupDto.setOwnerMarkup(Boolean.TRUE);
+                    }
+                }
                 idGroupDtoPair.put(groupDto.getId(), groupDto);
             }
 

@@ -7,6 +7,7 @@ define(['../../utils/constant'], function (constant) {
         $scope.$on('selected-domain-changed', function(){
             PermService.permShared.selected = undefined;
             RoleService.roleShared.selected = undefined;
+            RoleService.roleUserGrpShared.selected = undefined;
             UserService.userShared.selected = undefined;
             GroupService.grpShared.selected = undefined;
         });

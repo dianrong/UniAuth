@@ -39,5 +39,14 @@
 		and gp.descendant = g.id
 		and g.status = 0
   </select>
-  
+
+    <select id="getOwnGrpIds" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        select distinct(gp.descendant) from grp_path gp
+        join (SELECT ug.grp_id as p_grp_id FROM user_grp ug
+            join grp on grp.id = ug.grp_id
+            where ug.type=1 and ug.user_id=#{ownerId,jdbcType=BIGINT} and grp.status =0) pgid
+        on gp.ancestor = pgid.p_grp_id
+        join grp on grp.id = gp.descendant where grp.status=0
+    </select>
+
 </mapper>

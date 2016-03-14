@@ -11,8 +11,17 @@ define(['../../utils/constant'], function (constant) {
                 var isLeaf = node.type !== constant.treeNodeType.group;
                 return isLeaf;
             },
+            injectClasses : {
+                labelUnselectable : "disabled-line-through"
+            },
             isSelectable: function(node) {
-                return node.type == constant.treeNodeType.group;
+                if(node.type !== constant.treeNodeType.group) {
+                    return false;
+                } else if(!node.ownerMarkup) {
+                    return false;
+                } else {
+                    return true;
+                }
             },
             equality: function(node1, node2) {
                 if(node1 && node2) {
