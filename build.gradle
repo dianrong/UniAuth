@@ -65,11 +65,11 @@ allprojects {
 
 }
 
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '2.6'
-//    archiveBase = 'PROJECT'
-//    archivePath = 'gradle/dists'
-//}
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.6'
+    archiveBase = 'PROJECT'
+    archivePath = 'gradle/dists'
+}
 
 project(':common') {
 	dependencies {
@@ -173,9 +173,9 @@ project(':cas') {
 	}
 
 	ext {
-		tomcatUsername = 'admin'        //Tomcat用户
-		tomcatPassword = 'admin'        //Tomcat密码
-		tomcatHost = '192.168.56.101:8080'        //
+		tomcatUsername = 'tomcat'        //Tomcat用户
+		tomcatPassword = 'tomcat'        //Tomcat密码
+		tomcatHost = 'localhost:8080'        //
 		tomcatWarFile = 'build/libs/' + project.name + '.war'
 	}
 
@@ -228,7 +228,7 @@ project(':cas') {
 		}
 	}
 
-	task tomcatDeploy(type: JavaExec, dependsOn: warCas) {
+	task tomcatDeployCas(type: JavaExec, dependsOn: warCas) {
 		doFirst {
 			println "deploying war file " + tomcatWarFile + " to Tomcat."
 		}
