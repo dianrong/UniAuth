@@ -3,7 +3,7 @@ define(['../../utils/constant'], function (constant) {
     var Controller = function ($scope, $rootScope, RoleService, GroupService) {
         $scope.role = RoleService.roleUserGrpShared;
         $scope.refreshRoles = function(name) {
-            var params = {name: name, pageNumber:0, pageSize: 16};
+            var params = {name: name, status:0, pageNumber:0, pageSize: 16};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             return RoleService.getRoles(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
@@ -48,7 +48,8 @@ define(['../../utils/constant'], function (constant) {
                 return;
             }
             params.roleId = $scope.role.selected.id;
-            GroupService.syncTree(params, true)
+            GroupService.syncTree(params, true);
+            $scope.roleUserGrpMsg = '';
         }
         $scope.getRoleUserGrpTree();
 

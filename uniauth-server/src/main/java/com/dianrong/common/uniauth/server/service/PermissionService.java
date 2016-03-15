@@ -222,7 +222,6 @@ public class PermissionService {
 		
 	    Integer pageOffset = permissionQuery.getPageNumber();
 	    Integer pageSize = permissionQuery.getPageSize();
-	    CheckEmpty.checkEmpty(pageOffset, "ageOffset");
 		CheckEmpty.checkEmpty(pageOffset, "pageSize");
 		
 		Integer startIndex = pageOffset * pageSize;

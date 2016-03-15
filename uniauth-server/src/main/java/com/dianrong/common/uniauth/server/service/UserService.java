@@ -185,7 +185,7 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(String name, String phone, String email, Integer pageNumber, Integer pageSize) {
+    public PageDto<UserDto> searchUser(String name, String phone, String email, Byte status, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
@@ -202,6 +202,9 @@ public class UserService {
         }
         if(email != null) {
             criteria.andEmailLike("%" + email + "%");
+        }
+        if(status != null) {
+            criteria.andStatusEqualTo(status);
         }
         List<User> users = userMapper.selectByExample(userExample);
         if(!CollectionUtils.isEmpty(users)) {

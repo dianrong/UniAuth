@@ -7,7 +7,7 @@ define(['../../utils/constant'], function (constant) {
 
         $scope.perm = PermService.permShared;
         $scope.refreshPerms = function(value) {
-            var params = {value: value, pageNumber:0, pageSize: 16};
+            var params = {value: value, status:0, pageNumber:0, pageSize: 16};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             return PermService.getPerms(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {

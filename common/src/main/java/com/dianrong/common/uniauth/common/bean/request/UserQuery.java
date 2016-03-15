@@ -8,6 +8,7 @@ public class UserQuery extends PageParam {
     private String name;
     private String phone;
     private String email;
+    private Byte status;
 
     public String getName() {
         return name;
@@ -33,6 +34,15 @@ public class UserQuery extends PageParam {
 
     public UserQuery setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public UserQuery setStatus(Byte status) {
+        this.status = status;
         return this;
     }
 }
