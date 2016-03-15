@@ -29,6 +29,22 @@ define(['utils/constant'], function (constant) {
             }
             return array;
         },
+        extractCheckedGrpAndUserIds: function extractCheckedGrpAndUserIds(node, checkedGroupIds, checkedUserIds) {
+            if(node) {
+                if(node.checked) {
+                    if(constant.treeNodeType.group == node.type) {
+                        checkedGroupIds.push(node.id);
+                    } else if(constant.treeNodeType.memberUser == node.type) {
+                        checkedUserIds.push(node.id);
+                    }
+                }
+                if(node.children && node.children && node.children.length>0) {
+                    for(var i=0;i<node.children.length;i++) {
+                        extractCheckedGrpAndUserIds(node.children[i], checkedGroupIds, checkedUserIds);
+                    }
+                }
+            }
+        },
         transformResponse: function (resp) {
             if (resp && resp.respCode && resp.respCode.indexOf('_2') == 0) {
                 return resp.result;

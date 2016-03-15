@@ -62,4 +62,10 @@ public class RoleAction {
     public Response<List<PermissionDto>> queryPermsWithCheckedInfo(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().getAllPermsToRole(roleParam);
     }
+
+    @RequestMapping(value = "/replace-grps-users-to-role" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#roleParam, 'PERM_ROLEID_CHECK')")
+    public Response<Void> replaceGroupsAndUsersToRole(@RequestBody RoleParam roleParam) {
+        return uARWFacade.getRoleRWResource().replaceGroupsAndUsersToRole(roleParam);
+    }
 }

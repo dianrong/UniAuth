@@ -32,7 +32,7 @@
             </div>
             <div class="modal-body" ng-bind-html="roleUserGrpMsg"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" ng-click="saveRolesToUserAndGrp()">确认保存</button>
+                <button type="button" ng-disabled="role.selected == null" class="btn btn-info" ng-click="saveRolesToUserAndGrp()">确认保存</button>
             </div>
         </div>
     </div>

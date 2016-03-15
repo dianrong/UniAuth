@@ -31,5 +31,9 @@ public interface IRoleRWResource extends IRoleResource {
     @Path("savepermstorole")
     //scenario: save permissions to a role
     Response<Void> savePermsToRole(RoleParam roleParam);
+
+    @POST
+    @Path("replace-grps-users-to-role")
+    Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam);
     
 }

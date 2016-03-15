@@ -33,10 +33,9 @@ public class RoleResource implements IRoleRWResource {
 		return Response.success(permissionDtos);
 	}
 
-
 	@Override
 	public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
-		PageDto<RoleDto> roleDtos = roleService.searchRole(roleQuery.getDomainId(),roleQuery.getName(),
+		PageDto<RoleDto> roleDtos = roleService.searchRole(roleQuery.getId(), roleQuery.getDomainId(),roleQuery.getName(),
 				roleQuery.getRoleCodeId(),roleQuery.getStatus(),roleQuery.getPageNumber(),roleQuery.getPageSize());
 		return Response.success(roleDtos);
 	}
@@ -57,6 +56,12 @@ public class RoleResource implements IRoleRWResource {
 	@Override
 	public Response<Void> replacePermsToRole(RoleParam roleParam) {
 		roleService.replacePermsToRole(roleParam.getId(),roleParam.getPermIds());
+		return Response.success();
+	}
+
+	@Override
+	public Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam) {
+		roleService.replaceGroupsAndUsersToRole(roleParam.getId(),roleParam.getGrpIds(),roleParam.getUserIds());
 		return Response.success();
 	}
 
