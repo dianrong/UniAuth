@@ -55,7 +55,7 @@
 					  	</div>
 					  </div>
 					  <div class="form-group">
-					  	<div class="col-md-offset-4 col-md-4 showwarninfo">
+					  	<div class="col-md-offset-4 col-md-8 showwarninfo">
 					  		<label for="emailverfycode" id="emailverfywarn"></label>
 					  	</div>
 					  </div>
