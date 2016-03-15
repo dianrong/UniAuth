@@ -4,7 +4,7 @@ define(['../../utils/constant'], function (constant) {
 
         $scope.grp = GroupService.grpShared;
         $scope.refreshGrps = function(name) {
-            var params = {name: name, pageNumber:0, pageSize: 16};
+            var params = {name: name, status:0, pageNumber:0, pageSize: 16};
             return GroupService.queryGroup(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
                     $scope.grps = response.data.data;

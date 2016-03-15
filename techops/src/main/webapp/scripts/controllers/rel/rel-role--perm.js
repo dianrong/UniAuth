@@ -11,7 +11,7 @@ define(['../../utils/constant'], function (constant) {
                 $scope.rolePermsMsg = constant.loadEmpty;
                 return;
             }
-            var params = {name: name, pageNumber:0, pageSize: 16};
+            var params = {name: name, status:0, pageNumber:0, pageSize: 16};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             return RoleService.getRoles(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
