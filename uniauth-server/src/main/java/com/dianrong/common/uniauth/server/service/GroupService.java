@@ -378,7 +378,7 @@ public class GroupService {
         List<Grp> grps = grpMapper.getGroupTree(realGroupId);
         if(!CollectionUtils.isEmpty(grps)) {
             Set<Integer> ownGrpIds = null;
-            if(needOwnerMarkup && ownerId != null) {
+            if(needOwnerMarkup != null && needOwnerMarkup && ownerId != null) {
                 ownGrpIds = grpMapper.getOwnGrpIds(ownerId);
             }
             List<HashMap<String,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
