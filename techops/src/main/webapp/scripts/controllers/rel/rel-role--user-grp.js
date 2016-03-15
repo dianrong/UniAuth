@@ -60,10 +60,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             }
             var params = {};
             params.id = $scope.role.selected.id;
-            var nodeArray = GroupService.roleUserGrpTree;
+            var nodeArray = $scope.treedata.data;
             var checkedGroupIds = [];
             var checkedUserIds = [];
-            utils.extractCheckedGrpAndUserIds(nodeArray.data[0], checkedGroupIds, checkedUserIds);
+            utils.extractCheckedGrpAndUserIds(nodeArray[0], checkedGroupIds, checkedUserIds);
             params.grpIds = checkedGroupIds;
             params.userIds = checkedUserIds;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {
