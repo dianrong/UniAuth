@@ -16,6 +16,7 @@ public interface AppConstants {
     String GRP_ROOT = "GRP_ROOT";
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
+	Integer MAX_PAGE_SIZE = 5000;
     String DOMAIN_CODE_TECHOPS = "techops";
     
 	String ZK_DOMAIN_PREFIX = "domains.";
@@ -30,35 +31,37 @@ public interface AppConstants {
 	String NO_PRIVILEGE = "NO_PRIVILEGE";
 
 	String PERM_TYPE_DOMAIN_ID = "DOMAIN_ID";
-	
-	
+
+
 	//constants for password forget
-	
+
 	//dispatcher parameter
 	String PWDFORGET_DISPATCHER_STEP_KEY = "step";
 	String PWDFORGET_DISPATCHER_CONTEXTURL_KEY = "savedLoginContext";
 	String CAS_CAPTCHA_SESSION_TYPE_KEY = "captchaType";
-	
+
 	//request
 	String PWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
 	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
 	String PWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
 	String PWDFORGET_NEW_PASSWORD_KEY = "newPassword";
-	
+
 	//session
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
 	String PWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
 	String PWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
 	String PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
-	
+
 	//60 secondes
 	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 2L * 60L * 1000L;
 	//5 minitues
 	long PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
 
 	String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
-	
+
+	String PERM_ROLEID_CHECK = "PERM_ROLEID_CHECK";
+
 	String MAIL_PREFIX = "[TechOps]";
 	int GLOBALVAR_QUEUE_SIZE = 2048;
 	int AUDIT_INSERT_LIST_SIZE = 10;

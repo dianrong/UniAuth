@@ -48,6 +48,14 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            replaceGroupsAndUsersToRole: {
+                method: 'POST',
+                params: {
+                    method: 'replace-grps-users-to-role'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
         });
         svc.roleShared = {};

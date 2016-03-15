@@ -4,14 +4,11 @@ import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
+import com.dianrong.common.uniauth.common.interfaces.read.*;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
 import com.dianrong.common.uniauth.common.util.CheckZkConfig;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
@@ -25,6 +22,7 @@ public class UniClientFacade {
 	private IGroupResource groupResource;
 	private IPermissionResource permissionResource;
 	private IUserResource userResource;
+	private IRoleResource roleResource;
 	
 	@PostConstruct
 	public void init(){
@@ -34,6 +32,7 @@ public class UniClientFacade {
 		groupResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupResource.class, Arrays.asList(jacksonJsonProvider));
 		permissionResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, Arrays.asList(jacksonJsonProvider));
 		userResource = JAXRSClientFactory.create(uniWsEndpoint, IUserResource.class, Arrays.asList(jacksonJsonProvider));
+		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, Arrays.asList(jacksonJsonProvider));
 	}
 
 	public IDomainResource getDomainResource() {
@@ -54,5 +53,9 @@ public class UniClientFacade {
 
 	public IUserResource getUserResource() {
 		return userResource;
+	}
+
+	public IRoleResource getRoleResource() {
+		return roleResource;
 	}
 }
