@@ -35,13 +35,14 @@ public class ForgetPasswordController extends AbstractBaseController {
 			return null;
 		}
 
+		// step0
+		if ("0".equals(step)) {
+			return toStep1(request, response);
+		}
+
 		// step1
 		if ("1".equals(step)) {
-			if ("get".equalsIgnoreCase(method)) {
-				return toStep1(request, response);
-			} else {
-				handleStep1(request, response);
-			}
+			handleStep1(request, response);
 		}
 
 		// step2
@@ -61,10 +62,10 @@ public class ForgetPasswordController extends AbstractBaseController {
 				handleStep3(request, response);
 			}
 		}
-		
+
 		// step4
 		if ("4".equals(step)) {
-			//所有method全部提供一样实现
+			// 所有method全部提供一样实现
 			return toStep4(request, response);
 		}
 
@@ -85,6 +86,14 @@ public class ForgetPasswordController extends AbstractBaseController {
 		HttpSession session = request.getSession(false);
 		// clear session
 		clearAllSessionVal(session);
+
+		// 记录跳转的上下文url
+		String savedLoginContext = getParamFromRequest(request, AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_KEY);
+		if (!StringUtil.strIsNullOrEmpty(savedLoginContext)) {
+			// 默认跳转路径
+			putValToSession(session, AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY, savedLoginContext);
+		}
+		// refresh or set
 		return getPwdForgetStep1Page();
 	}
 
@@ -152,11 +161,16 @@ public class ForgetPasswordController extends AbstractBaseController {
 	 */
 	private ModelAndView toStep4(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession(false);
+
+		String email = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VAL_KEY, String.class);
 		// clear session
 		clearAllSessionVal(session);
+
+		// 保存一下当前修改完成密码的邮箱地址到session中
+		putValToSession(session, AppConstants.PWDFORGET_MAIL_VAL_KEY, StringUtil.strIsNullOrEmpty(email) ? "" : email);
 		return getPwdForgetStep4Page();
 	}
-	
+
 	/**
 	 * . process step 1
 	 * 
@@ -257,11 +271,20 @@ public class ForgetPasswordController extends AbstractBaseController {
 
 			}
 		}
-
 		// 验证没通过 需要继续验证
 		setResponseResultJson(response, "3");
 	}
 
+	/**
+	 * . step3 process, update password
+	 * 
+	 * @param request
+	 *            request
+	 * @param response
+	 *            response
+	 * @throws Exception
+	 *             Exception
+	 */
 	private void handleStep3(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession(false);
 		// 必须要有邮箱
@@ -296,7 +319,6 @@ public class ForgetPasswordController extends AbstractBaseController {
 				return;
 			}
 		}
-
 		// 验证已过期
 		setResponseResultJson(response, "4");
 	}
@@ -328,7 +350,7 @@ public class ForgetPasswordController extends AbstractBaseController {
 	private ModelAndView getPwdForgetStep3Page() {
 		return new ModelAndView("dianrong/forgetpwd/resetPasswordView");
 	}
-	
+
 	/**
 	 * . get pwdforget step 4 page
 	 * 
@@ -353,6 +375,9 @@ public class ForgetPasswordController extends AbstractBaseController {
 			session.removeAttribute(AppConstants.PWDFORGET_MAIL_VERIFY_CODE_KEY);
 
 			session.removeAttribute(AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY);
+
+			// 回跳地址不能删 只能更新
+			// session.removeAttribute(AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY);
 		}
 	}
 
