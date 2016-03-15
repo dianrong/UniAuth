@@ -36,7 +36,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         };
 
         $scope.queryRole = function () {
-
+            if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
+                $scope.rolesLoading = constant.loadEmpty;
+                return;
+            }
             var params = $scope.roleQuery;
             if (!params) {
                 params = {};
@@ -46,9 +49,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
             $scope.roles = [];
             $scope.rolesLoading = constant.loading;
-            if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
-                $location.url('/non-authorized');
-            }
+
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             if($rootScope.roleCodesDropdown && $rootScope.roleCodesDropdown.option && $rootScope.roleCodesDropdown.option.id) {
                 params.roleCodeId = $rootScope.roleCodesDropdown.option.id;
