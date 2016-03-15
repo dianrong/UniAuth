@@ -1,10 +1,10 @@
 <div>
-    <ul class="nav nav-pills nav-stacked">
+    <ul ng-if="selectedDomain.option" class="nav nav-pills nav-stacked">
         <li role="presentation" ng-class="{active: $state.is('user')}" class="text-left"><a ui-sref="user">用户管理</a></li>
         <li role="presentation" ng-class="{active: $state.includes('group')}" class="text-left"><a ui-sref="group.add">组管理</a></li>
         <li role="presentation" ng-class="{active: $state.is('role')}" class="text-left"><a ui-sref="role">角色管理</a></li>
         <li role="presentation" ng-class="{active: $state.is('perm')}" class="text-left"><a ui-sref="perm">权限管理</a></li>
         <li role="presentation" ng-class="{active: $state.includes('rel')}" class="text-left"><a ui-sref="rel.role--perm">关联管理</a></li>
-        <li role="presentation" ng-class="{active: $state.is('domain')}" class="text-left"><a ui-sref="domain">域管理</a></li>
+        <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('domain')}" class="text-left"><a ui-sref="domain">域管理</a></li>
     </ul>
 </div>

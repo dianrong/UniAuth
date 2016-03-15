@@ -37,6 +37,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.queryPerm = function () {
 
+            if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
+                $scope.permsLoading = constant.loadEmpty;
+                return;
+            }
             var params = $scope.permQuery;
             if (!params) {
                 params = {};
@@ -46,9 +50,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
             $scope.perms = [];
             $scope.permsLoading = constant.loading;
-            if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
-                $location.url('/non-authorized');
-            }
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             if($rootScope.permTypesDropdown && $rootScope.permTypesDropdown.option && $rootScope.permTypesDropdown.option.id) {
                 params.permTypeId = $rootScope.permTypesDropdown.option.id;
