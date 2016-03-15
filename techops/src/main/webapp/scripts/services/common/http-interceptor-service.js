@@ -7,7 +7,7 @@ define(['../../utils/constant'], function (constant) {
    * A module representing a login controller.
    * @exports controllers/login
    */
-  var Service = function ($q, $location, $rootScope) {
+  var Service = function ($q, $location) {
 
     var responseError = function (rejection) {
       if (rejection.status === 403) {
@@ -44,7 +44,7 @@ define(['../../utils/constant'], function (constant) {
 
   return {
     name: "HttpInterceptorService",
-    svc: ["$q", "$location", "$rootScope", Service]
+    svc: ["$q", "$location", Service]
   }
 
 

@@ -86,6 +86,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             } else {
                 svc.getTree(params, function (res) {
                     svc.roleUserGrpTree.data = res.data;
+                    //this is for force the tree to update data.
+                    svc.roleUserGrpTree.data[0].date = new Date();
                     var expandedNodes = [];
                     svc.roleUserGrpTree.expandedNodes = utils.getParentNodeArray(svc.roleUserGrpTree.data, expandedNodes);
                     svc.roleUserGrpTree.msg = '';
