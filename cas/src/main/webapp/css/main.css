@@ -9,7 +9,7 @@
 	height:560px;
 	background:#FFF;
 	margin:30px auto;
-	width: 85%;
+	width: 70%;
 	border-radius: 10px
 }
 .find-pwd-container .find-pwd-content header {
@@ -58,7 +58,7 @@
 	margin-top:1px;
 	margin-left:-20px; 
 	border:1px #F00; 
-	width: 110px;
+	width: 80px;
 	height: 43px;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .find-pwd-container .find-pwd-content .steps .reset-success-notice img{
-	height: 150px;
+	height: auto;
 	display: block;
     text-align: center;
 }

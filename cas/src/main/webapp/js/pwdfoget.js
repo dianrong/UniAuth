@@ -1,9 +1,11 @@
 (function(win) {
 	win.onload = function(){
-		// base url
-		win.casBaseUrl = $('#hiddenBaseUrl').val();
-		win.processUrl = casBaseUrl + "/uniauth/forgetPassword";
-		win.captchaUrl = casBaseUrl + "/uniauth/captcha";
+		win.context_path = $('#hidden_path_input').val();
+		win.processUrl = context_path+"/uniauth/forgetPassword";
+		win.captchaUrl = context_path+"/uniauth/captcha";
+		
+		//添加跳转页面事件
+		$('#to_reset_pwd_btn').bind('click', jump_to_step1_page);
 		
 		// 刷新验证码
 		$('#verfypic').click(refresh_verfypic);
@@ -33,6 +35,18 @@
 		// 第三步的请求
 		$('#btn_step3').click(processStep3);
 	};
+	
+	//jump to reset pwd
+	win.jump_to_step1_page = function() {
+		//copy current url
+		var current_url = win.location;
+		//通过隐藏表单设置背景url
+		$('#hidden_savedLoginContext').val(current_url);
+		var hidden_to_step1_form = $('#hidden_to_step1');
+		hidden_to_step1_form.submit();
+		//防止多点
+		$(this).unbind('click');
+	}
 	
 	// step1 btn show
 	win.process_step1_btn = function(){
@@ -99,7 +113,7 @@
 	win.step3rpwdvalidate = function(unshow){
 		var show = false;
 		if(unshow === true || unshow == 'true'){
-			setWarnLabel($('.find-pwd-container .steps #rnewpwdwarn'), '');
+			setWarnLabel($('.find-pwd-container .steps #newpwdwarn'), '');
 		} else {
 			show = true;
 		}
@@ -111,7 +125,7 @@
 			}
 		} 
 		if(show){
-			setWarnLabel($('.find-pwd-container .steps #rnewpwdwarn'), '两次输入的密码不一致');
+			setWarnLabel($('.find-pwd-container .steps #newpwdwarn'), '两次输入的密码不一致');
 		}
 		return false;
 	}
@@ -135,7 +149,7 @@
 		var btn_showval = send_email_btn.attr('showval');
 		if(!btn_showval || isNaN(btn_showval)){
 			//init 60s
-			refresh_send_email_btn_val(send_email_btn, '60');
+			refresh_send_email_btn_val(send_email_btn, '120');
 			//disable 按钮
 			send_email_btn.attr("disabled","disabled"); 
 			send_email_btn.addClass('cursordefault').addClass('balckfont');
@@ -163,7 +177,7 @@
 	
 	// refresh verifycode
 	win.refresh_verfypic = function() {
-		$('#verfypic').attr('src', casBaseUrl + '/uniauth/captcha?rnd=' + Math.random());
+		$('#verfypic').attr('src', context_path + '/uniauth/captcha?rnd=' + Math.random());
 	}
 	
 	
@@ -227,7 +241,6 @@
             beforeSend : function () {
             	//清空提示信息
             	setWarnLabel($('#temailwarn'), '');
-            	setWarnLabel($('#verfycodewarn'), '');
             },
             success : function(result) {// 返回数据根据结果进行相应的处理
                 if (result.issuccess == 'true') {  
@@ -237,12 +250,12 @@
                     	return;
                     }
                     if(result.code == '1') {
-                    	setWarnLabel($('#verfycodewarn'), '验证码不能为空');
+                    	setWarnLabel($('#temailwarn'), '验证码不能为空');
                     	return;
                     }
                     
                     if(result.code == '2') {
-                    	setWarnLabel($('#verfycodewarn'), '验证码错误');
+                    	setWarnLabel($('#temailwarn'), '验证码错误');
                     	return;
                     }
                     
@@ -341,7 +354,6 @@
             beforeSend : function () {
             	//清空提示信息
             	setWarnLabel($('#newpwdwarn'), '');
-            	setWarnLabel($('#newrpwdwarn'), '');
             },
             success : function(result) {// 返回数据根据结果进行相应的处理
                 if (result.issuccess == 'true') {  
