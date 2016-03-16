@@ -32,6 +32,8 @@ public class UserAction {
 
     @Value("#{uniauthConfig['cas_server']}")
     private String casServerURL;
+    @Value("#{uniauthConfig['email_switch']}")
+    private String emailSwitch;
 
     @Resource
     private UARWFacade uARWFacade;
@@ -68,8 +70,12 @@ public class UserAction {
             buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
         buffer.append("====================================================<br />");
-        EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
-        return Response.success();
+        if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
+            return Response.success(buffer);
+        } else {
+            EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
+            return Response.success();
+        }
     }
 
     // perm double checked
@@ -122,9 +128,12 @@ public class UserAction {
             buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
         }
         buffer.append("====================================================<br />");
-        EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
-
-        return Response.success();
+        if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
+            return Response.success(buffer);
+        } else {
+            EmailSender.sendEmail("点融内部账号系统通知.", userDto.getEmail(), buffer);
+            return Response.success();
+        }
     }
 
     // perm double checked
