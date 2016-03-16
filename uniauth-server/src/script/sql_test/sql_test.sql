@@ -1,28 +1,28 @@
 /**user表**/
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
-values('200000002', '许增伟', 'zengwei.xu@dianrong.com', '18190805518', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
+values('300000002', '许增伟', 'zengwei.xu@dianrong.com', '18190805518', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
-values('200000003', '钱晟龙', 'chenglong.qian@dianrong.com', '17091956416', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
+values('300000003', '钱晟龙', 'chenglong.qian@dianrong.com', '17091956416', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
-values('200000004', '赵文乐', 'wenle.zhao@dianrong.com', '15026682113', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
+values('300000004', '赵文乐', 'wenle.zhao@dianrong.com', '15026682113', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
 
 
 /**grp表**/
-insert into grp(id, name, code, description,status, create_date, last_update) values(3, 'techops上的crm域管理员组', 'GRP_TECHOPS_CRM_ADMIN','techops上的crm域管理员组，组内的人期望可以管理crm域的role，permission等资源', 0, now(), now());
-insert into grp(id, name, code, description,status, create_date, last_update) values(4, 'techops上的ams域管理员组', 'GRP_TECHOPS_AMS_ADMIN','techops上的ams域管理员组，组内的人期望可以管理ams域的role，permission等资源', 0, now(), now());
+insert into grp(id, name, code, description,status, create_date, last_update) values(100003, 'techops上的crm域管理员组', 'GRP_TECHOPS_CRM_ADMIN','techops上的crm域管理员组，组内的人期望可以管理crm域的role，permission等资源', 0, now(), now());
+insert into grp(id, name, code, description,status, create_date, last_update) values(100004, 'techops上的ams域管理员组', 'GRP_TECHOPS_AMS_ADMIN','techops上的ams域管理员组，组内的人期望可以管理ams域的role，permission等资源', 0, now(), now());
 
 /**grp_path表*/
-insert into grp_path(ancestor, descendant, deepth) values(1, 3, 1);
-insert into grp_path(ancestor, descendant, deepth) values(1, 4, 1);
+insert into grp_path(ancestor, descendant, deepth) values(100001, 100003, 1);
+insert into grp_path(ancestor, descendant, deepth) values(100001, 100004, 1);
 
-insert into grp_path(ancestor, descendant, deepth) values(3, 3, 0);
-insert into grp_path(ancestor, descendant, deepth) values(4, 4, 0);
+insert into grp_path(ancestor, descendant, deepth) values(100003, 100003, 0);
+insert into grp_path(ancestor, descendant, deepth) values(100004, 100004, 0);
 
 
 /**user_grp表*/
-insert into user_grp(user_id, grp_id, type) values(200000002, 3, 0);
-insert into user_grp(user_id, grp_id, type) values(200000003, 4, 0);
-insert into user_grp(user_id, grp_id, type) values(200000004, 3, 0);
+insert into user_grp(user_id, grp_id, type) values(300000002, 100003, 0);
+insert into user_grp(user_id, grp_id, type) values(300000003, 100004, 0);
+insert into user_grp(user_id, grp_id, type) values(300000004, 100003, 0);
 
 /**role_code表*/
 
@@ -45,12 +45,12 @@ insert into role_permission(role_id, permission_id) values(2, 2);
 insert into role_permission(role_id, permission_id) values(3, 3);
 
 /**user_role表*/
-insert into user_role(user_id, role_id) values(200000004, 3);
+insert into user_role(user_id, role_id) values(300000004, 3);
 
 
 /**grp_role表*/
-insert into grp_role(grp_id, role_id)  values(3, 2);
-insert into grp_role(grp_id, role_id)  values(4, 3);
+insert into grp_role(grp_id, role_id)  values(100003, 2);
+insert into grp_role(grp_id, role_id)  values(100004, 3);
 
 /**stakeholder*/
 insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '许增伟', 'zengwei.xu@dianrong.com', '18190805518', '开发人员', 1)
