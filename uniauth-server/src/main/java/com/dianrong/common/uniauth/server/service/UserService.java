@@ -75,7 +75,7 @@ public class UserService {
         User user = userMapper.selectByPrimaryKey(id);
         if(user == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", id, User.class.getSimpleName()));
-        } else if(user.getStatus().equals(AppConstants.ONE_Byte) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
+        } else if(AppConstants.ONE_Byte.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", id, User.class.getSimpleName()));
         }
         switch(userActionEnum) {
