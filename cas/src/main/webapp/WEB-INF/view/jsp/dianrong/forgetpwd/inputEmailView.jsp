@@ -2,7 +2,21 @@
 
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
-			<header class="find-pwd"><spring:message code="screen.password.reset.step1.title" /></header>
+			<header class="find-pwd">
+				<% 
+								Object savedLoginContext = request.getSession().getAttribute("pwdg_savedLoginContext");
+								if(savedLoginContext == null) {
+									%>
+										<a href="<%=path %>/login"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
+									<% 
+								} else {
+									%>
+										<a href="${sessionScope.pwdg_savedLoginContext}"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
+									<% 
+								}
+						%>
+				&gt;<spring:message code="screen.password.reset.step1.title" />
+			</header>
 			<div class="common-wizard password-reset-wizard ng-isolate-scope">
 				<div class="modal-header">
 					<ul class="steps-indicator steps-4">
@@ -54,7 +68,7 @@
 					  </div>
 					  <div class="form-group">
 					  	<div class="col-md-offset-4 col-md-4">
-					  		<button type="button" id="btn_step1" class="btn btn-wide btn-primary btnstep" disabled="disabled"><spring:message code="screen.password.reset.nextstep"/></button>
+					  		<button type="button" id="btn_step1" class="btn btn-wide btn-primary btnstep cursordefault" disabled="disabled"><spring:message code="screen.password.reset.nextstep"/></button>
 					  	</div>
 					  </div>
 					  <div class="form-group">
