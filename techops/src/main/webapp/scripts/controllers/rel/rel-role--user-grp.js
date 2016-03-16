@@ -1,9 +1,9 @@
-define(['../../utils/constant'], function (constant) {
+define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
 
     var Controller = function ($scope, $rootScope, RoleService, GroupService) {
         $scope.role = RoleService.roleUserGrpShared;
         $scope.refreshRoles = function(name) {
-            var params = {name: name, pageNumber:0, pageSize: 16};
+            var params = {name: name, status:0, pageNumber:0, pageSize: 16};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             return RoleService.getRoles(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
@@ -48,12 +48,35 @@ define(['../../utils/constant'], function (constant) {
                 return;
             }
             params.roleId = $scope.role.selected.id;
-            GroupService.syncTree(params, true)
+            GroupService.syncTree(params, true);
+            $scope.roleUserGrpMsg = '';
         }
         $scope.getRoleUserGrpTree();
 
         $scope.saveRolesToUserAndGrp = function() {
-
+            if(!$scope.role.selected || !$scope.role.selected.id) {
+                $scope.roleUserGrpMsg = '请先选择一个角色';
+                return;
+            }
+            var params = {};
+            params.id = $scope.role.selected.id;
+            var nodeArray = $scope.treedata.data;
+            var checkedGroupIds = [];
+            var checkedUserIds = [];
+            utils.extractCheckedGrpAndUserIds(nodeArray[0], checkedGroupIds, checkedUserIds);
+            params.grpIds = checkedGroupIds;
+            params.userIds = checkedUserIds;
+            RoleService.replaceGroupsAndUsersToRole(params, function (res) {
+                if(res.info) {
+                    $scope.roleUserGrpMsg = constant.submitFail;
+                    return;
+                }
+                $scope.roleUserGrpMsg = '';
+                $scope.getRoleUserGrpTree();
+            }, function () {
+                $scope.roles = [];
+                $scope.roleUserGrpMsg = constant.submitFail;
+            });
         };
 
         $scope.$watch('role.selected', $scope.getRoleUserGrpTree);

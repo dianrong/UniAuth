@@ -16,6 +16,8 @@ public interface AppConstants {
     String GRP_ROOT = "GRP_ROOT";
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
+	Integer MAX_PAGE_SIZE = 5000;
+	String PERM_TYPE_DOMAIN = "DOMAIN";
     String DOMAIN_CODE_TECHOPS = "techops";
     
 	String ZK_DOMAIN_PREFIX = "domains.";
@@ -33,7 +35,9 @@ public interface AppConstants {
 	String PERM_TYPE_DOMAIN_ID = "DOMAIN_ID";
 
 	String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
-	
+
+	String PERM_ROLEID_CHECK = "PERM_ROLEID_CHECK";
+
 	String MAIL_PREFIX = "[TechOps]";
 	int GLOBALVAR_QUEUE_SIZE = 2048;
 	int AUDIT_INSERT_LIST_SIZE = 10;

@@ -111,7 +111,8 @@ public class BeanConverter {
                     setId(role.getId()).
                     setStatus(role.getStatus()).
                     setName(role.getName()).
-                    setRoleCodeId(role.getRoleCodeId());
+                    setRoleCodeId(role.getRoleCodeId()).
+                    setDomainId(role.getDomainId());
             return roleDto;
         }
     }

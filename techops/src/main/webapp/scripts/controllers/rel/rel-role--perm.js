@@ -7,7 +7,11 @@ define(['../../utils/constant'], function (constant) {
 
         $scope.role = RoleService.roleShared;
         $scope.refreshRoles = function(name) {
-            var params = {name: name, pageNumber:0, pageSize: 16};
+            if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
+                $scope.rolePermsMsg = constant.loadEmpty;
+                return;
+            }
+            var params = {name: name, status:0, pageNumber:0, pageSize: 16};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             return RoleService.getRoles(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
@@ -19,6 +23,10 @@ define(['../../utils/constant'], function (constant) {
         };
         $scope.rolePermsMsg = constant.loadEmpty;
         $scope.getAllPermsWithCheckedInfoInDomain = function () {
+            if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
+                $scope.rolePermsMsg = constant.loadEmpty;
+                return;
+            }
             $scope.rolePermsMsg = constant.loading;
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;

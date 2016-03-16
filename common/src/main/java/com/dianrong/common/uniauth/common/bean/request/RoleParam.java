@@ -11,6 +11,8 @@ public class RoleParam extends Operator {
 	private Integer roleCodeId;
 	private Integer domainId;
 	private List<Integer> permIds;
+	private List<Integer> grpIds;
+	private List<Long> userIds;
 
 	public Integer getId() {
 		return id;
@@ -75,4 +77,21 @@ public class RoleParam extends Operator {
 		return this;
 	}
 
+	public List<Integer> getGrpIds() {
+		return grpIds;
+	}
+
+	public RoleParam setGrpIds(List<Integer> grpIds) {
+		this.grpIds = grpIds;
+		return this;
+	}
+
+	public List<Long> getUserIds() {
+		return userIds;
+	}
+
+	public RoleParam setUserIds(List<Long> userIds) {
+		this.userIds = userIds;
+		return this;
+	}
 }
