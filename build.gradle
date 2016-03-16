@@ -177,6 +177,10 @@ project(':cas') {
 		tomcatPassword = 'tomcat'        //Tomcat密码
 		tomcatHost = 'localhost:8080'        //
 		tomcatWarFile = 'build/libs/' + project.name + '.war'
+
+		shengLongTomcatUsername = 'admin'
+		shengLongTomcatPassword = 'admin'
+		shengLongTomcatHost = '192.168.56.101:8080'
 	}
 
 	configurations{
@@ -253,6 +257,46 @@ project(':cas') {
 				tomcatUsername,
 				tomcatPassword,
 				tomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+	task shengLongTomcatUndeploy(type: JavaExec) {
+		main = 'gradle.TomcatDeploy'
+		args = ['undeploy',
+				project.name,
+				shengLongTomcatUsername,
+				shengLongTomcatPassword,
+				shengLongTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+		doFirst {
+			println "removing war file from Tomcat."
+		}
+	}
+
+	task shengLongTomcatDeploy(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "deploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['deploy',
+				project.name,
+				tomcatWarFile,
+				shengLongTomcatUsername,
+				shengLongTomcatPassword,
+				shengLongTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task shengLongTomcatRedeploy(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "redeploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['redeploy',
+				project.name,
+				tomcatWarFile,
+				shengLongTomcatUsername,
+				shengLongTomcatPassword,
+				shengLongTomcatHost]
 		classpath = sourceSets.deployment.runtimeClasspath
 	}
 

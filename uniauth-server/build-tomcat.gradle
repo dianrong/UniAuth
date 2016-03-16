@@ -12,11 +12,16 @@ sourceSets {
 }
 
 ext {
+
     tomcatAppName = 'uniauth'  //在Tomcat访问的application名字，配置在Tomcat的根目录
     tomcatUsername = 'tomcat'        //Tomcat用户
     tomcatPassword = 'tomcat'        //Tomcat密码
     tomcatHost = 'localhost:8090'        //
     tomcatWarFile = 'build/' + tomcatAppName + '.war'
+
+    shengLongTomcatUsername = 'admin'        //Tomcat用户
+    shengLongTomcatPassword = 'admin'        //Tomcat密码
+    shengLongTomcatHost = '192.168.56.101:8080'        //
 }
 
 war {
@@ -67,5 +72,46 @@ task tomcatRedeploy(type: JavaExec, dependsOn: warUniAuthServer) {
             tomcatUsername,
             tomcatPassword,
             tomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
+
+task shengLongTomcatUndeploy(type: JavaExec) {
+    main = 'gradle.TomcatDeploy'
+    args = ['undeploy',
+            tomcatAppName,
+            shengLongTomcatUsername,
+            shengLongTomcatPassword,
+            shengLongTomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+    doFirst {
+        println "removing war file from Tomcat."
+    }
+}
+
+task shengLongTomcatDeploy(type: JavaExec, dependsOn: warUniAuthServer) {
+    doFirst {
+        println "deploying war file " + tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['deploy',
+            tomcatAppName,
+            tomcatWarFile,
+            shengLongTomcatUsername,
+            shengLongTomcatPassword,
+            shengLongTomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
+
+task shengLongTomcatRedeploy(type: JavaExec, dependsOn: warUniAuthServer) {
+    doFirst {
+        println "redeploying war file " + tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['redeploy',
+            tomcatAppName,
+            tomcatWarFile,
+            shengLongTomcatUsername,
+            shengLongTomcatPassword,
+            shengLongTomcatHost]
     classpath = sourceSets.deployment.runtimeClasspath
 }
