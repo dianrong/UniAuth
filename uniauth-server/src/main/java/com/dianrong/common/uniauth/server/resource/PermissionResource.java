@@ -47,7 +47,7 @@ public class PermissionResource implements IPermissionRWResource {
 
 	@Override
 	public Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam) {
-		List<RoleDto> roleDtoList = permissionService.getAllRolesToPerm(permissionParam.getDomainId(),permissionParam.getId());
+		List<RoleDto> roleDtoList = permissionService.getAllRolesToPermUnderADomain(permissionParam.getDomainId(),permissionParam.getId());
 		return new Response<List<RoleDto>>(roleDtoList);
 	}
 
@@ -59,7 +59,9 @@ public class PermissionResource implements IPermissionRWResource {
 
 	@Override
 	public Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery) {
-		PageDto<PermissionDto> pageDto = permissionService.searchPerm(permissionQuery);
+		PageDto<PermissionDto> pageDto = permissionService.searchPerm(permissionQuery.getPermIds(),permissionQuery.getId(),
+				permissionQuery.getDomainId(),permissionQuery.getStatus(),permissionQuery.getValue(),permissionQuery.getPermTypeId(),
+				permissionQuery.getPageNumber(),permissionQuery.getPageSize());
 		return new Response<PageDto<PermissionDto>>(pageDto);
 	}
 

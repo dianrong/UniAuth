@@ -148,7 +148,7 @@ public class PermissionService {
 		}
 	}
 
-	public List<RoleDto> getAllRolesToPerm(Integer domainId, Integer permissionId) {
+	public List<RoleDto> getAllRolesToPermUnderADomain(Integer domainId, Integer permissionId) {
 
 		CheckEmpty.checkEmpty(domainId, "域ID");
 		CheckEmpty.checkEmpty(permissionId, "权限ID");
@@ -216,44 +216,51 @@ public class PermissionService {
 		}
 	}
 
-	public PageDto<PermissionDto> searchPerm(PermissionQuery permissionQuery) {
-		Integer domainId = permissionQuery.getDomainId();
-		CheckEmpty.checkEmpty(domainId, "域ID");
+	public PageDto<PermissionDto> searchPerm(List<Integer> permIds,Integer permId, Integer domainId, Byte status, String value, Integer permTypeId, Integer pageNumber, Integer pageSize) {
+		CheckEmpty.checkEmpty(pageNumber, "pageNumber");
+		CheckEmpty.checkEmpty(pageSize, "pageSize");
+		PermissionExample permissionExample = new PermissionExample();
+		permissionExample.setPageOffSet(pageNumber*pageSize);
+		permissionExample.setPageSize(pageSize);
+		permissionExample.setOrderByClause("status asc");
+		PermissionExample.Criteria criteria = permissionExample.createCriteria();
+		if(!CollectionUtils.isEmpty(permIds)) {
+			criteria.andIdIn(permIds);
+		}
+		if(permId != null) {
+			criteria.andIdEqualTo(permId);
+		}
+		if(domainId != null) {
+			criteria.andDomainIdEqualTo(domainId);
+		}
+		if(status != null) {
+			criteria.andStatusEqualTo(status);
+		}
+		if(value != null) {
+			criteria.andValueLike("%" + value + "%");
+		}
+		if(permTypeId != null) {
+			criteria.andPermTypeIdEqualTo(permTypeId);
+		}
+		Integer totalCount = permissionMapper.countByExample(permissionExample);
 		
-	    Integer pageOffset = permissionQuery.getPageNumber();
-	    Integer pageSize = permissionQuery.getPageSize();
-		CheckEmpty.checkEmpty(pageOffset, "pageSize");
-		
-		Integer startIndex = pageOffset * pageSize;
-		
-		PermissionExt permissionExt = BeanConverter.convert(permissionQuery);
-		Integer totalCount = permissionMapper.countByExampleForSearch(permissionExt);
-		
-		permissionExt.setStartIndex(startIndex);
-		permissionExt.setWantCount(pageSize);
-		
-		List<Permission> permissionList = permissionMapper.selectByExampleForSearch(permissionExt);
-		
-		PageDto<PermissionDto> pageDto = new PageDto<PermissionDto>();
-		pageDto.setCurrentPage(pageOffset);
-		pageDto.setPageSize(pageSize);
-		pageDto.setTotalCount(totalCount);
+		List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);
 		
 		Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();
-		
-		List<PermissionDto> permissionDtoList = new ArrayList<PermissionDto>();
+
 		if(permissionList != null && !permissionList.isEmpty()){
+			List<PermissionDto> permissionDtoList = new ArrayList<PermissionDto>();
 			for(Permission permission: permissionList){
 				PermissionDto permissionDto = BeanConverter.convert(permission);
-				Integer permTypeId = permissionDto.getPermTypeId();
-				PermType permType = permTypeMap.get(permTypeId);
+				Integer permissionDtoPermTypeId = permissionDto.getPermTypeId();
+				PermType permType = permTypeMap.get(permissionDtoPermTypeId);
 				
 				permissionDto.setPermType(permType.getType());
 				permissionDtoList.add(permissionDto);
 			}
+			return new PageDto<>(pageNumber,pageSize, totalCount, permissionDtoList);
 		}
-		pageDto.setData(permissionDtoList);
-		return pageDto;
+		return null;
 	}
 
 	public List<UrlRoleMappingDto> getUrlRoleMapping(DomainParam domainParam){

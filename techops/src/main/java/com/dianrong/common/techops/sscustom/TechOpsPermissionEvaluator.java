@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
@@ -36,17 +37,13 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 			} else if(targetObject instanceof UserListParam) {
 				UserListParam userListParam = (UserListParam)targetObject;
 				groupParam = new GroupParam().setTargetGroupId(userListParam.getGroupId());
-			} else {
-				return super.hasPermission(authentication, targetObject, permission);
 			}
-
-			Response<Void> response = uniClientFacade.getGroupResource().checkOwner(groupParam);
-			List<Info> infoList = response.getInfo();
-			if(infoList != null && !infoList.isEmpty()){
-				return super.hasPermission(authentication, targetObject, permission);
-			}
-			else{
-				return true;
+			if(groupParam != null) {
+				Response<Void> response = uniClientFacade.getGroupResource().checkOwner(groupParam);
+				List<Info> infoList = response.getInfo();
+				if (CollectionUtils.isEmpty(infoList)) {
+					return true;
+				}
 			}
 		} else if(AppConstants.PERM_ROLEID_CHECK.equals(permission)) {
 			RoleParam roleParam = (RoleParam)targetObject;
@@ -62,10 +59,6 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				if(roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
 					Integer domainId = roleDtoPageDto.getData().get(0).getDomainId();
 					TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-					Set<String> domainPerms = techOpsUserExtInfo.getPermMap().get(AppConstants.PERM_TYPE_DOMAIN);
-					if(!CollectionUtils.isEmpty(domainPerms) && domainPerms.contains(AppConstants.DOMAIN_CODE_TECHOPS)) {
-						return true;
-					}
 					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 					if(domainIdSet.contains(domainId)) {
 						return true;
@@ -94,10 +87,6 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 					PageDto<RoleDto> roleDtoPageDto = pageDtoResponse.getData();
 					if(roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
 						TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-						Set<String> domainPerms = techOpsUserExtInfo.getPermMap().get(AppConstants.PERM_TYPE_DOMAIN);
-						if(!CollectionUtils.isEmpty(domainPerms) && domainPerms.contains(AppConstants.DOMAIN_CODE_TECHOPS)) {
-							return true;
-						}
 						Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 						List<RoleDto> roleDtos = roleDtoPageDto.getData();
 						for(RoleDto roleDto : roleDtos) {
@@ -105,6 +94,26 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 								return false;
 							}
 						}
+						return true;
+					}
+				}
+			}
+		} else if(AppConstants.PERM_PERMID_CHECK.equals(permission)) {
+			PermissionParam permissionParam = (PermissionParam)targetObject;
+			Integer permId = permissionParam.getId();
+			PermissionQuery permissionQuery = new PermissionQuery();
+			permissionQuery.setId(permId);
+			permissionQuery.setPageNumber(0);
+			permissionQuery.setPageSize(AppConstants.MAX_PAGE_SIZE);
+			Response<PageDto<PermissionDto>> pageDtoResponse = uniClientFacade.getPermissionResource().searchPerm(permissionQuery);
+			List<Info> infoList = pageDtoResponse.getInfo();
+			if(CollectionUtils.isEmpty(infoList)) {
+				PageDto<PermissionDto> permissionDtoPageDto = pageDtoResponse.getData();
+				if(permissionDtoPageDto != null && !CollectionUtils.isEmpty(permissionDtoPageDto.getData())) {
+					Integer domainId = permissionDtoPageDto.getData().get(0).getDomainId();
+					TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
+					if(domainIdSet.contains(domainId)) {
 						return true;
 					}
 				}

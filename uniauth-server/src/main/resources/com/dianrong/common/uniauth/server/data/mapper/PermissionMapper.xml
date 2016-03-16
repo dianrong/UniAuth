@@ -109,6 +109,9 @@
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
+    <if test="pageOffSet !=0 or pageSize!=0">
+      limit #{pageOffSet},#{pageSize}
+    </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     <!--

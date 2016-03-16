@@ -58,8 +58,10 @@ public class PermAction {
         return uARWFacade.getPermissionRWResource().replaceRolesToPerm(permissionParam);
     }
 
+    // perm double checked
     @RequestMapping(value = "/all-roles-to-perm" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#permissionParam.domainId) and hasPermission('PERM_PERMID_CHECK'))")
     public Response<List<RoleDto>> getAllRolesToPerm(@RequestBody PermissionParam permissionParam) {
         return uARWFacade.getPermissionRWResource().getAllRolesToPerm(permissionParam);
     }

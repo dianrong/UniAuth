@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
 public class PermissionQuery extends PageParam {
 	private Integer id;
 	private String value;
@@ -7,6 +9,7 @@ public class PermissionQuery extends PageParam {
 	private Byte status;
 	private Integer permTypeId;
 	private Integer domainId;
+	private List<Integer> permIds;
 
 	public Integer getId() {
 		return id;
@@ -59,6 +62,15 @@ public class PermissionQuery extends PageParam {
 
 	public PermissionQuery setDomainId(Integer domainId) {
 		this.domainId = domainId;
+		return this;
+	}
+
+	public List<Integer> getPermIds() {
+		return permIds;
+	}
+
+	public PermissionQuery setPermIds(List<Integer> permIds) {
+		this.permIds = permIds;
 		return this;
 	}
 }
