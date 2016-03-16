@@ -17,6 +17,7 @@ public interface AppConstants {
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
 	Integer MAX_PAGE_SIZE = 5000;
+	String PERM_TYPE_DOMAIN = "DOMAIN";
     String DOMAIN_CODE_TECHOPS = "techops";
     
 	String ZK_DOMAIN_PREFIX = "domains.";
