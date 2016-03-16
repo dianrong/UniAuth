@@ -43,6 +43,6 @@
 	</sec:http>
 	
     <bean id="myService" class="com.dianrong.loanbusiness.subsystem.service.MyService"></bean>
-	<bean id="uniauthPermissionEvaluator" class="com.dianrong.loanbusiness.subsystem.service.MyPermissionEvaluator"></bean>
+	<bean id="uniauthPermissionEvaluator" class="com.dianrong.loanbusiness.subsystem.service.MyPermissionEvaluator" primary="true"></bean>
 
 </beans>
