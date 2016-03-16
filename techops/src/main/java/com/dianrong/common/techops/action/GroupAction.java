@@ -101,13 +101,15 @@ public class GroupAction {
     }
 
     @RequestMapping(value = "/group-roles" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#groupParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+    		+ "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#groupParam.domainId))")
     public Response<List<RoleDto>>  getAllRolesToGroupAndDomain(@RequestBody GroupParam groupParam) {
         return uARWFacade.getGroupRWResource().getAllRolesToGroupAndDomain(groupParam);
     }
 
     @RequestMapping(value = "/replace-roles-to-group" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#groupParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+    		+ "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#groupParam.domainId))")
     public Response<Void> replaceRolesToGroup(@RequestBody GroupParam groupParam) {
         return uARWFacade.getGroupRWResource().replaceRolesToGroup(groupParam);
     }
