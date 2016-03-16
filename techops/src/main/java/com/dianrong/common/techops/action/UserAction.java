@@ -32,7 +32,7 @@ public class UserAction {
 
     @Value("#{uniauthConfig['cas_server']}")
     private String casServerURL;
-    @Value("#{uniauthConfig['email_switch']}")
+    @Value("#{uniauthConfig['domains.techops.email_switch']}")
     private String emailSwitch;
 
     @Resource
