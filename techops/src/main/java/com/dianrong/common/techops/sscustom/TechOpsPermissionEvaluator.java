@@ -66,6 +66,10 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				if(roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
 					Integer domainId = roleDtoPageDto.getData().get(0).getDomainId();
 					TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+					Set<String> domainPerms = techOpsUserExtInfo.getPermMap().get(AppConstants.PERM_TYPE_DOMAIN);
+					if(!CollectionUtils.isEmpty(domainPerms) && domainPerms.contains(AppConstants.DOMAIN_CODE_TECHOPS)) {
+						return true;
+					}
 					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 					if(domainIdSet.contains(domainId)) {
 						return true;
