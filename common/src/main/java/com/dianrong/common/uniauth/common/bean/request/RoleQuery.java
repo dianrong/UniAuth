@@ -1,12 +1,14 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
 public class RoleQuery extends PageParam {
 	private Integer id;
 	private String name;
 	private String description;
 	private Byte status;
 	private Integer roleCodeId;
-	
+	private List<Integer> roleIds;
 	private Integer domainId;
 
 	public Integer getId() {
@@ -60,6 +62,15 @@ public class RoleQuery extends PageParam {
 
 	public RoleQuery setDomainId(Integer domainId) {
 		this.domainId = domainId;
+		return this;
+	}
+
+	public List<Integer> getRoleIds() {
+		return roleIds;
+	}
+
+	public RoleQuery setRoleIds(List<Integer> roleIds) {
+		this.roleIds = roleIds;
 		return this;
 	}
 }

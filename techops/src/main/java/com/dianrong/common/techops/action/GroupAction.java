@@ -30,6 +30,7 @@ public class GroupAction {
     @Resource
     private UARWFacade uARWFacade;
 
+    // perm double checked
     @RequestMapping(value = "/tree" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<?> getGroupTree(@RequestBody GroupParam groupParam) {
@@ -45,7 +46,7 @@ public class GroupAction {
         }
     }
 
-    //need
+    // perm double checked
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
     public Response<GroupDto> addNewGroupIntoGroup(@RequestBody GroupParam groupParam) {
@@ -53,6 +54,7 @@ public class GroupAction {
         return groupDto;
     }
 
+    // perm double checked
     @RequestMapping(value = "/get" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<Node> getGroupDetailsById(@RequestParam("id")Integer grpId) {
@@ -69,6 +71,7 @@ public class GroupAction {
         return Response.success(node);
     }
 
+    // perm double checked
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<PageDto<GroupDto>> searchGroup(@RequestBody GroupQuery groupQuery) {
@@ -76,7 +79,7 @@ public class GroupAction {
         return pageDtoResponse;
     }
 
-    //need
+    // perm double checked
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
     public Response<GroupDto> modifyGroup(@RequestBody GroupParam groupParam) {
@@ -84,15 +87,15 @@ public class GroupAction {
         return groupDto;
     }
 
-    //need
+    // perm double checked
     @RequestMapping(value = "/adduser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
     public Response<Void> addUserToGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().addUsersIntoGroup(userListParam);
         return response;
     }
-    
-    //need
+
+    // perm double checked
     @RequestMapping(value = "/deleteuser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
     public Response<Void> removeUserFromGroup(@RequestBody UserListParam userListParam) {
@@ -100,6 +103,7 @@ public class GroupAction {
         return response;
     }
 
+    // perm double checked
     @RequestMapping(value = "/group-roles" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
     		+ "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#groupParam.domainId))")
@@ -107,9 +111,10 @@ public class GroupAction {
         return uARWFacade.getGroupRWResource().getAllRolesToGroupAndDomain(groupParam);
     }
 
+    // perm double checked
     @RequestMapping(value = "/replace-roles-to-group" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
-    		+ "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#groupParam.domainId))")
+    		+ "or (hasRole('ROLE_ADMIN') and hasPermission('PERM_ROLEIDS_CHECK'))")
     public Response<Void> replaceRolesToGroup(@RequestBody GroupParam groupParam) {
         return uARWFacade.getGroupRWResource().replaceRolesToGroup(groupParam);
     }

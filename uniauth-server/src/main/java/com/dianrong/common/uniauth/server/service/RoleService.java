@@ -272,7 +272,7 @@ public class RoleService {
         }
     }
 
-    public PageDto<RoleDto> searchRole(Integer roleId, Integer domainId, String roleName, Integer roleCodeId, Byte status, Integer pageNumber, Integer pageSize) {
+    public PageDto<RoleDto> searchRole(List<Integer> roleIds, Integer roleId, Integer domainId, String roleName, Integer roleCodeId, Byte status, Integer pageNumber, Integer pageSize) {
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
         RoleExample roleExample = new RoleExample();
@@ -280,6 +280,9 @@ public class RoleService {
         roleExample.setPageSize(pageSize);
         roleExample.setOrderByClause("status asc");
         RoleExample.Criteria criteria = roleExample.createCriteria();
+        if(!CollectionUtils.isEmpty(roleIds)) {
+            criteria.andIdIn(roleIds);
+        }
         if(roleId != null) {
             criteria.andIdEqualTo(roleId);
         }

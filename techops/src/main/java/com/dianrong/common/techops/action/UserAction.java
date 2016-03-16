@@ -39,12 +39,14 @@ public class UserAction {
     @Resource
     private TechOpsService techOpsService;
 
+    // perm double checked
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<PageDto<UserDto>> searchUser(@RequestBody UserQuery userQuery) {
         return uARWFacade.getUserRWResource().searchUser(userQuery);
     }
 
+    // perm double checked
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<?> addUser(@RequestBody UserParam userParam) {
@@ -70,8 +72,9 @@ public class UserAction {
         return Response.success();
     }
 
+    // perm double checked
     @RequestMapping(value = "/enable-disable" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public Response<?> enableDisableUser(@RequestBody UserParam userParam) {
         UserParam param = new UserParam();
         param.setId(userParam.getId());
@@ -84,6 +87,7 @@ public class UserAction {
         return Response.success();
     }
 
+    // perm double checked
     @RequestMapping(value = "/unlock" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
     public Response<?> unlock(@RequestBody UserParam userParam) {
@@ -95,8 +99,9 @@ public class UserAction {
         return Response.success();
     }
 
+    // perm double checked
     @RequestMapping(value = "/resetpassword" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')")
     public Response<?> resetPassword(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.RESET_PASSWORD);
         Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(userParam);
@@ -122,8 +127,9 @@ public class UserAction {
         return Response.success();
     }
 
+    // perm double checked
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops'))")
     public Response<?> updateUser(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.UPDATE_INFO);
         Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(userParam);
@@ -139,14 +145,18 @@ public class UserAction {
     	return Response.success(loginUser);
     }
 
+    // perm double checked
     @RequestMapping(value = "/user-roles" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#userParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#userParam.domainId))")
     public Response<List<RoleDto>> getUserRolesWithCheckedInfoByDomain(@RequestBody UserParam userParam) {
         return uARWFacade.getUserRWResource().getAllRolesToUserAndDomain(userParam);
     }
 
+    // perm double checked
     @RequestMapping(value = "/replace-roles-to-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#userParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission('PERM_ROLEIDS_CHECK'))")
     public Response<Void> replaceRolesToUser(@RequestBody UserParam userParam) {
         return uARWFacade.getUserRWResource().replaceRolesToUser(userParam);
     }
