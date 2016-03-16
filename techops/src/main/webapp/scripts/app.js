@@ -145,7 +145,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }).
         state('domain', {
             url: "/domain",
-            templateUrl: "views/common/not-found.html"
+            controller: "DomainController",
+            templateUrl: "views/domain/domain.html"
         }).
         state('non-authorized', {
             url: '/non-authorized',

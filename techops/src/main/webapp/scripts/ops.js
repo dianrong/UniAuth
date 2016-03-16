@@ -24,11 +24,13 @@ require(['app',
     'controllers/rel/rel-user--role',
     'controllers/rel/rel-grp--role',
     'controllers/rel/rel-role--user-grp',
+    'controllers/domain/domain',
     'services/common/http-interceptor-service',
     'services/user/user-service',
     'services/group/group-service',
     'services/role/role-service',
-    'services/perm/perm-service'],
+    'services/perm/perm-service',
+    'services/domain/domain-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);
