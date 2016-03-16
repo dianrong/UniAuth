@@ -26,7 +26,14 @@
 		<property name="domainCode" value="techops"></property>
 		<property name="userInfoClass" value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
 	</bean>
-	
+
+	<sec:http pattern="/views/**" security="none" />
+	<sec:http pattern="/scripts/**" security="none" />
+	<sec:http pattern="/styles/**" security="none" />
+	<sec:http pattern="/i18n/**" security="none" />
+	<sec:http pattern="/images/**" security="none" />
+	<sec:http pattern="/swagger-ui/**" security="none" />
+
 	<sec:http entry-point-ref="casAuthEntryPoint"  use-expressions="true" request-matcher="ant">
       	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />

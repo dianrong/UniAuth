@@ -1,5 +1,4 @@
 <%--
-
     Licensed to Apereo under one or more contributor license
     agreements. See the NOTICE file distributed with this work
     for additional information regarding copyright ownership.
@@ -108,7 +107,7 @@
                 </c:when>
                 <c:otherwise>
                     <spring:message code="screen.welcome.label.netid.accesskey" var="userNameAccessKey" />
-                    <form:input cssClass="required" cssErrorClass="error" id="username" size="25" tabindex="1" accesskey="${userNameAccessKey}" path="username" autocomplete="off" htmlEscape="true" />
+                    <form:input cssClass="required" cssErrorClass="error" id="username" size="25" tabindex="1" accesskey="${userNameAccessKey}" path="username" autocomplete="off" htmlEscape="true" value="${sessionScope.pwdg_emailVal}"/>
                 </c:otherwise>
             </c:choose>
         </section>
@@ -148,18 +147,30 @@
 
             <input class="btn-submit" name="submit" accesskey="l" value="<spring:message code="screen.welcome.button.login" />" tabindex="6" type="submit" />
             <input class="btn-reset" name="reset" accesskey="c" value="<spring:message code="screen.welcome.button.clear" />" tabindex="7" type="reset" />
+            
+            <div class="forgetpwd-link">
+            	<a href="javascript:void(0);" title="<spring:message code="screen.welcome.link.password.forget.title"/>" id="to_reset_pwd_btn"><spring:message code="screen.welcome.link.password.forget"/></a>
+            </div>
         </section>
     </form:form>
 </div>
 
+<div style="display:none">
+	<form action="uniauth/forgetPassword" method="get" id="hidden_to_step1">
+		<input type="text" name="step" value="0">
+		<input type="text" name="savedLoginContext" value="" id="hidden_savedLoginContext">
+	</form>
+</div>
+
 <div id="sidebar">
     <div class="sidebar-content">
-    	<img alt="AD" src="images/spring_festival.jpg" width="500" height="320">
+    	<img alt="AD" src="<%=path %>/images/spring_festival.jpg" width="500" height="320">
     	<!-- 
         <p><spring:message code="screen.welcome.security" /></p>
-        <div id="list-languages">
-            <%final String queryString = request.getQueryString() == null ? "" : request.getQueryString().replaceAll("&locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]|^locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]", "");%>
-            <c:set var='query' value='<%=queryString%>' />
+        <div id="list-languages"> 
+<%--             <% final String queryString = request.getQueryString() == null ? "" : request.getQueryString().replaceAll("&locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]|^locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]", "");%> --%>
+            
+<%--             <c:set var='query' value='<%=queryString%>' /> --%>
             <c:set var="xquery" value="${fn:escapeXml(query)}" />
 
             <h3>Languages:</h3>
@@ -230,3 +241,5 @@
 </div>
 
 <jsp:directive.include file="bottom.jsp" />
+<script type="text/javascript" src="<%=path %>/jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" src="<%=path %>/js/pwdfoget.js" ></script>

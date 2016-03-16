@@ -1,26 +1,22 @@
 package com.dianrong.common.techops.sscustom;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
-
-import com.dianrong.common.uniauth.client.custom.UserExtInfo;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.request.RoleParam;
-import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
-import com.dianrong.common.uniauth.common.bean.request.UserListParam;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-
 import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 
@@ -72,6 +68,43 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 					}
 					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 					if(domainIdSet.contains(domainId)) {
+						return true;
+					}
+				}
+			}
+		} else if(AppConstants.PERM_ROLEIDS_CHECK.equals(permission)) {
+			List<Integer> roleIds = null;
+			if(targetObject instanceof GroupParam) {
+				GroupParam groupParam = (GroupParam)targetObject;
+				roleIds = groupParam.getRoleIds();
+			} else if(targetObject instanceof UserParam) {
+				UserParam userParam = (UserParam) targetObject;
+				roleIds = userParam.getRoleIds();
+			}
+			if(CollectionUtils.isEmpty(roleIds)) {
+				return true;
+			} else {
+				RoleQuery roleQuery = new RoleQuery();
+				roleQuery.setPageNumber(0);
+				roleQuery.setPageSize(AppConstants.MAX_PAGE_SIZE);
+				roleQuery.setRoleIds(roleIds);
+				Response<PageDto<RoleDto>> pageDtoResponse = uniClientFacade.getRoleResource().searchRole(roleQuery);
+				List<Info> infoList = pageDtoResponse.getInfo();
+				if(CollectionUtils.isEmpty(infoList)) {
+					PageDto<RoleDto> roleDtoPageDto = pageDtoResponse.getData();
+					if(roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
+						TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+						Set<String> domainPerms = techOpsUserExtInfo.getPermMap().get(AppConstants.PERM_TYPE_DOMAIN);
+						if(!CollectionUtils.isEmpty(domainPerms) && domainPerms.contains(AppConstants.DOMAIN_CODE_TECHOPS)) {
+							return true;
+						}
+						Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
+						List<RoleDto> roleDtos = roleDtoPageDto.getData();
+						for(RoleDto roleDto : roleDtos) {
+							if(!domainIdSet.contains(roleDto.getDomainId())) {
+								return false;
+							}
+						}
 						return true;
 					}
 				}

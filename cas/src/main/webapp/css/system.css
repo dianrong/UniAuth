@@ -1,0 +1,17 @@
+body {
+	background: #153e50;
+	text-align:center;
+}
+body .header {
+	width: 100%;
+}
+
+body .content {
+	width: 100%;
+	height: 620px;
+}
+
+body .footer {
+	width: 100%;
+	color: white;
+}
