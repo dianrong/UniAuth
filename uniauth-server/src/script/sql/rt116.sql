@@ -23,10 +23,10 @@ delete from user_grp where user_id > 0;
 delete from grp_role where grp_id > 0;
 delete from grp_path where ancestor > 0;
 
-alter table `user` AUTO_INCREMENT=300000000;
+alter table `user` AUTO_INCREMENT=300000010;
 update user set id = 300000001 where id = 200000001;
 
-alter table `grp` AUTO_INCREMENT=100000;
+alter table `grp` AUTO_INCREMENT=100010;
 update grp set id = 100001 where id = 1;
 update grp set id = 100002 where id = 2;
 
