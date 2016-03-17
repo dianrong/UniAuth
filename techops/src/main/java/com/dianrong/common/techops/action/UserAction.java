@@ -138,7 +138,7 @@ public class UserAction {
 
     // perm double checked
     @RequestMapping(value = "/modify" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops'))")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')")
     public Response<?> updateUser(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.UPDATE_INFO);
         Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(userParam);

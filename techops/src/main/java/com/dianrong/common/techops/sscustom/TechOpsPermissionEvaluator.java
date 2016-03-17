@@ -73,6 +73,9 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 			} else if(targetObject instanceof UserParam) {
 				UserParam userParam = (UserParam) targetObject;
 				roleIds = userParam.getRoleIds();
+			} else if(targetObject instanceof PermissionParam) {
+				PermissionParam permissionParam = (PermissionParam) targetObject;
+				roleIds = permissionParam.getRoleIds();
 			}
 			if(CollectionUtils.isEmpty(roleIds)) {
 				return true;
@@ -116,6 +119,29 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 					if(domainIdSet.contains(domainId)) {
 						return true;
 					}
+				}
+			}
+		} else if(AppConstants.PERM_PERMIDS_CHECK.equals(permission)) {
+			RoleParam roleParam = (RoleParam)targetObject;
+			List<Integer> permIds = roleParam.getPermIds();
+			PermissionQuery permissionQuery = new PermissionQuery();
+			permissionQuery.setPermIds(permIds);
+			permissionQuery.setPageNumber(0);
+			permissionQuery.setPageSize(AppConstants.MAX_PAGE_SIZE);
+			Response<PageDto<PermissionDto>> pageDtoResponse = uniClientFacade.getPermissionResource().searchPerm(permissionQuery);
+			List<Info> infoList = pageDtoResponse.getInfo();
+			if(CollectionUtils.isEmpty(infoList)) {
+				PageDto<PermissionDto> permissionDtoPageDto = pageDtoResponse.getData();
+				if(permissionDtoPageDto != null && !CollectionUtils.isEmpty(permissionDtoPageDto.getData())) {
+					List<PermissionDto> permissionDtos = permissionDtoPageDto.getData();
+					TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
+					for(PermissionDto permissionDto : permissionDtos) {
+						if(!domainIdSet.contains(permissionDto.getDomainId())) {
+							return false;
+						}
+					}
+					return true;
 				}
 			}
 		}

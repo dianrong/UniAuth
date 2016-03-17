@@ -114,7 +114,7 @@ public class GroupAction {
     // perm double checked
     @RequestMapping(value = "/replace-roles-to-group" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
-    		+ "or (hasRole('ROLE_ADMIN') and hasPermission('PERM_ROLEIDS_CHECK'))")
+    		+ "or (hasRole('ROLE_ADMIN') and hasPermission(#groupParam, 'PERM_ROLEIDS_CHECK'))")
     public Response<Void> replaceRolesToGroup(@RequestBody GroupParam groupParam) {
         return uARWFacade.getGroupRWResource().replaceRolesToGroup(groupParam);
     }

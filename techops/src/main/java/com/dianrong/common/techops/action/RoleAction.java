@@ -28,8 +28,10 @@ public class RoleAction {
     @Resource
     private UARWFacade uARWFacade;
 
+    //perm double checked
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleQuery.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or " +
+            "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#roleQuery.domainId))")
     public Response<PageDto<RoleDto>> searchRole(@RequestBody RoleQuery roleQuery) {
         return uARWFacade.getRoleRWResource().searchRole(roleQuery);
     }
@@ -39,32 +41,42 @@ public class RoleAction {
         return uARWFacade.getRoleRWResource().getAllRoleCodes();
     }
 
+    //perm double checked
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#roleParam.domainId))")
     public Response<RoleDto>  addNewRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().addNewRole(roleParam);
     }
 
+    //perm double checked
     @RequestMapping(value = "/update" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#roleParam, 'PERM_ROLEID_CHECK'))")
     public Response<Void> updateRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().updateRole(roleParam);
     }
 
+    //perm double checked
     @RequestMapping(value = "/replace-perms-to-role" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#roleParam, 'PERM_ROLEID_CHECK') and hasPermission(#roleParam, 'PERM_PERMIDS_CHECK'))")
     public Response<Void> replacePermsToRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().replacePermsToRole(roleParam);
     }
 
+    //perm double checked
     @RequestMapping(value = "/query-perms-with-checked-info" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#roleParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#roleParam.domainId) and hasPermission(#roleParam, 'PERM_ROLEID_CHECK'))")
     public Response<List<PermissionDto>> queryPermsWithCheckedInfo(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().getAllPermsToRole(roleParam);
     }
 
+    //perm double checked
     @RequestMapping(value = "/replace-grps-users-to-role" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#roleParam, 'PERM_ROLEID_CHECK')")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#roleParam, 'PERM_ROLEID_CHECK'))")
     public Response<Void> replaceGroupsAndUsersToRole(@RequestBody RoleParam roleParam) {
         return uARWFacade.getRoleRWResource().replaceGroupsAndUsersToRole(roleParam);
     }

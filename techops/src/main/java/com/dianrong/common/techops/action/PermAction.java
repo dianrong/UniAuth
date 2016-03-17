@@ -29,8 +29,10 @@ public class PermAction {
     @Resource
     private UARWFacade uARWFacade;
 
+    // perm double checked
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionQuery.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or " +
+            "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#permissionQuery.domainId))")
     public Response<PageDto<PermissionDto>> searchPerm(@RequestBody PermissionQuery permissionQuery) {
         return uARWFacade.getPermissionRWResource().searchPerm(permissionQuery);
     }
@@ -40,20 +42,26 @@ public class PermAction {
         return uARWFacade.getPermissionRWResource().getAllPermTypeCodes();
     }
 
+    // perm double checked
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#permissionParam.domainId))")
     public Response<PermissionDto>  addNewPerm(@RequestBody PermissionParam permissionParam) {
         return uARWFacade.getPermissionRWResource().addNewPerm(permissionParam);
     }
 
+    // perm double checked
     @RequestMapping(value = "/update" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#permissionParam, 'PERM_PERMID_CHECK'))")
     public Response<Void> updatePerm(@RequestBody PermissionParam permissionParam) {
         return uARWFacade.getPermissionRWResource().updatePerm(permissionParam);
     }
 
+    // perm double checked
     @RequestMapping(value = "/replace-roles-to-perm" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and ((principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) or principal.domainIdSet.contains(#permissionParam.domainId))")
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#permissionParam, 'PERM_ROLEIDS_CHECK') and hasPermission(#permissionParam, 'PERM_PERMID_CHECK'))")
     public Response<Void> replaceRolesToPerm(@RequestBody PermissionParam permissionParam) {
         return uARWFacade.getPermissionRWResource().replaceRolesToPerm(permissionParam);
     }
@@ -61,7 +69,7 @@ public class PermAction {
     // perm double checked
     @RequestMapping(value = "/all-roles-to-perm" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
-            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#permissionParam.domainId) and hasPermission('PERM_PERMID_CHECK'))")
+            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#permissionParam.domainId) and hasPermission(#permissionParam, 'PERM_PERMID_CHECK'))")
     public Response<List<RoleDto>> getAllRolesToPerm(@RequestBody PermissionParam permissionParam) {
         return uARWFacade.getPermissionRWResource().getAllRolesToPerm(permissionParam);
     }
