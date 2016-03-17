@@ -165,7 +165,7 @@ public class UserAction {
     // perm double checked
     @RequestMapping(value = "/replace-roles-to-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
-            + "or (hasRole('ROLE_ADMIN') and hasPermission('PERM_ROLEIDS_CHECK'))")
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#userParam, 'PERM_ROLEIDS_CHECK'))")
     public Response<Void> replaceRolesToUser(@RequestBody UserParam userParam) {
         return uARWFacade.getUserRWResource().replaceRolesToUser(userParam);
     }
