@@ -1,14 +1,8 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
@@ -24,6 +18,13 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DomainService {
@@ -48,6 +49,61 @@ public class DomainService {
 		else{
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.entity.code.duplicate", domainCode, "域"));
 		}
+	}
+
+	public PageDto<DomainDto> searchDomain(List<Integer> domainIds, Integer domainId, String domainCode, String displayName, Byte status, String description, Integer pageNumber, Integer pageSize) {
+		CheckEmpty.checkEmpty(pageNumber, "pageNumber");
+		CheckEmpty.checkEmpty(pageSize, "pageSize");
+		DomainExample domainExample = new DomainExample();
+		DomainExample.Criteria criteria = domainExample.createCriteria();
+		domainExample.setOrderByClause("status asc");
+		domainExample.setPageOffSet(pageNumber * pageSize);
+		domainExample.setPageSize(pageSize);
+		if(domainIds != null) {
+			criteria.andIdIn(domainIds);
+		}
+		if(domainId != null) {
+			criteria.andIdEqualTo(domainId);
+		}
+		if(domainCode != null) {
+			criteria.andCodeEqualTo(domainCode);
+		}
+		if(displayName != null) {
+			criteria.andDisplayNameLike("%" + displayName + "%");
+		}
+		if(status != null) {
+			criteria.andStatusEqualTo(status);
+		}
+		if(description != null) {
+			criteria.andDescriptionLike("%" + description + "%");
+		}
+		List<Domain> domains = domainMapper.selectByExample(domainExample);
+		if(!CollectionUtils.isEmpty(domains)) {
+			int count = domainMapper.countByExample(domainExample);
+			List<DomainDto> domainDtos = new ArrayList<>();
+			for(Domain domain : domains) {
+				domainDtos.add(BeanConverter.convert(domain));
+			}
+			return new PageDto<>(pageNumber,pageSize,count,domainDtos);
+		} else {
+			return null;
+		}
+	}
+
+	public List<StakeholderDto> getAllStakeHoldersInDomain(Integer domainId) {
+		if(domainId != null) {
+			StakeholderExample stakeholderExample = new StakeholderExample();
+			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId);
+			List<Stakeholder> stakeholders = stakeholderMapper.selectByExample(stakeholderExample);
+			List<StakeholderDto> stakeholderDtos = new ArrayList<>();
+			if(stakeholders != null) {
+				for(Stakeholder stakeholder:stakeholders) {
+					stakeholderDtos.add(BeanConverter.convert(stakeholder));
+				}
+			}
+			return stakeholderDtos;
+		}
+		return null;
 	}
 
 	public List<DomainDto> getAllLoginDomains(DomainParam domainParam) {

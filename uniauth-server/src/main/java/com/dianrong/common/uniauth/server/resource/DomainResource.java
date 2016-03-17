@@ -1,25 +1,39 @@
 package com.dianrong.common.uniauth.server.resource;
 
-import java.util.List;
-
-import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.server.service.DomainService;
+import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class DomainResource implements IDomainRWResource {
 
 	@Autowired
 	private DomainService domainService;
-	
+
+	@Override
+	public Response<List<StakeholderDto>> getAllStakeHoldersInDomain(DomainParam domainParam) {
+		List<StakeholderDto> stakeholderDtos = domainService.getAllStakeHoldersInDomain(domainParam.getId());
+		return Response.success(stakeholderDtos);
+	}
+
+	@Override
+	public Response<PageDto<DomainDto>> searchDomain(DomainParam domainParam) {
+		PageDto<DomainDto> pageDto = domainService.searchDomain(domainParam.getDomainIds(),domainParam.getId(),domainParam.getCode(),
+				domainParam.getDisplayName(),domainParam.getStatus(),domainParam.getDescription(),
+				domainParam.getPageNumber(),domainParam.getPageSize());
+		return Response.success(pageDto);
+	}
+
 	@Override
 	public Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam) {
 		List<DomainDto> domainDtoList = domainService.getAllLoginDomains(domainParam);

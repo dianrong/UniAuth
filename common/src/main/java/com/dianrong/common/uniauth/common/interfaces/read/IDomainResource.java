@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 
@@ -28,4 +30,11 @@ public interface IDomainResource {
     //scenario: get domain info and it's related stakeholders
     Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam);
 
+    @POST
+    @Path("query")
+    Response<PageDto<DomainDto>> searchDomain(DomainParam domainParam);
+
+    @POST
+    @Path("stakeholder/query")
+    Response<List<StakeholderDto>> getAllStakeHoldersInDomain(DomainParam domainParam);
 }

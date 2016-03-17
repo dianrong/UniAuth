@@ -2,7 +2,8 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
-public class DomainParam extends Operator {
+public class DomainParam extends PageParam {
+	private List<Integer> domainIds;
     private Integer id;
     //generally, code cann't be changed!
     private String code;
@@ -51,6 +52,15 @@ public class DomainParam extends Operator {
 	}
 	public DomainParam setStatus(Byte status) {
 		this.status = status;
+		return this;
+	}
+
+	public List<Integer> getDomainIds() {
+		return domainIds;
+	}
+
+	public DomainParam setDomainIds(List<Integer> domainIds) {
+		this.domainIds = domainIds;
 		return this;
 	}
 }
