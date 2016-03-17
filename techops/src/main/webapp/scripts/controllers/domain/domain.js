@@ -1,5 +1,5 @@
 define(['../../utils/constant','../../utils/utils'], function (constant, utils) {
-    var Controller = function ($scope, $rootScope, $state, DomainService) {
+    var Controller = function ($scope, $rootScope, $state, dialogs, DomainService) {
         $scope.status = 'init';
 
         $scope.domain = DomainService.domainShared;
@@ -70,6 +70,59 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
             });
         }
 
+
+        $scope.launch = function(which, param) {
+            switch (which) {
+                case 'addNewDomain':
+                    var dlg = dialogs.create('views/domain/dialogs/add-domain.html', 'AddDomainController',
+                        {}, {size: 'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        // add domain successed
+                        debugger;
+                        $scope.domain.selected = close;
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'status':
+                    var dlg = dialogs.create('views/common/dialogs/enable-disable.html', 'EnableDisableController',
+                        {
+                            "header": param.status ? '用户-启用' : '用户-禁用',
+                            "msg": "您确定要" + (param.status ? '启用' : '禁用') + "用户: " + param.email + "吗?"
+                        }, {size: 'md'}
+                    );
+                    dlg.result.then(function (yes) {
+                        UserService.enableDisableUser(
+                            {
+                                'id': param.id,
+                                'status': param.status ? 0 : 1
+                            }
+                            , function (res) {
+                                // status change successed
+                                $scope.queryUser();
+                            }, function (err) {
+                                console.log(err);
+                            }
+                        );
+                    }, function (no) {
+                        // do nothing
+                    });
+                    break;
+                case 'modify':
+                    var dlg = dialogs.create('views/user/dialogs/modify.html', 'ModifyUserController',
+                        param, {size: 'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        // maybe give user a friendly message.
+                        $scope.queryUser();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+            }
+        }
+
         $scope.$watch('domain.selected', function(){
             var selectedDomain = $scope.domain.selected;
             $scope.stakeholders = [];
@@ -93,7 +146,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
 
     return {
         name: "DomainController",
-        fn: ["$scope", "$rootScope", "$state", "DomainService", Controller]
+        fn: ["$scope", "$rootScope", "$state", "dialogs", "DomainService", Controller]
     };
 
 });
