@@ -29,12 +29,12 @@
                     <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[domainForm.code.$dirty && domainForm.code.$invalid]">
 
                         <label class="panel-label" for="name">名称:</label>
-                        <input type="text" class="panel-input form-control" placeholder="域名称" id="name" ng-model="domain.selected.displayName" required>
+                        <input ng-disabled="status != 'modify'" type="text" class="panel-input form-control" placeholder="域名称" id="name" ng-model="domain.selected.displayName" required>
                         <label class="panel-label" for="code">code:</label>
-                        <input type="text" class="panel-input form-control" placeholder="域的唯一标识" id="code" ng-model="domain.selected.code" required>
+                        <input ng-disabled="status != 'modify'" type="text" class="panel-input form-control" placeholder="域的唯一标识" id="code" ng-model="domain.selected.code" required>
                         <label style="padding-top: 14px;" class="panel-label" for="enabled">状态:</label>
                         <div id="enabled" style="margin-left: 8px;" class="btn-group" uib-dropdown is-open="domainStatusDropdown.isOpen">
-                            <button type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+                            <button ng-disabled="status != 'modify'" type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
                                 <span style="padding-left: 5px;padding-right: 5px;" ng-bind="domainStatusDropdown.option.name"></span>
                                 <span class="caret"></span>
                             </button>
@@ -46,15 +46,15 @@
                         </div>
                         <br />
                         <label class="panel-label" for="description" placeholder="域描述">描述:</label>
-                        <textarea id="description" class="panel-textarea form-control" placeholder="域的描述" ng-model="domain.selected.description"></textarea>
+                        <textarea ng-disabled="status != 'modify'" id="description" class="panel-textarea form-control" placeholder="域的描述" ng-model="domain.selected.description"></textarea>
                     </div>
                 </ng-form>
             </div>
             <div class="modal-footer">
-                <button ng-if="status == 'init'" type="button" class="btn btn-info" ng-click="saveRolesToUserAndGrp()">新增域</button>
-                <button ng-if="status == 'modify'" type="button" class="btn btn-info" ng-click="saveRolesToUserAndGrp()">取消</button>
-                <button ng-if="status == 'modify'" type="button" class="btn btn-info" ng-click="saveRolesToUserAndGrp()">确认</button>
-                <button ng-if="status == 'init'" type="button" class="btn btn-info" ng-click="saveRolesToUserAndGrp()">修改</button>
+                <button ng-if="status == 'init'" type="button" class="btn btn-info" ng-click="launch('addNewDomain')">新增域</button>
+                <button ng-if="status == 'modify'" type="button" class="btn btn-info" ng-click="cancelModifyDomain()">取消</button>
+                <button ng-if="status == 'modify'" type="button" class="btn btn-info" ng-click="confirmModifyDomain()">确认</button>
+                <button ng-disabled="domain.selected == null" ng-if="status == 'init'" type="button" class="btn btn-info" ng-click="modifyDomain()">修改</button>
             </div>
         </div>
     </div>
@@ -81,8 +81,8 @@
                     <td ng-bind="d.jobtitle"></td>
                     <td class="text-color-c9" style="text-align: center">
                         <div class="btn-group">
-                            <a title="修改StakeHolder信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
-                            <a title="删除该StakeHolder的信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-trash-o"></i></a>
+                            <a title="修改StakeHolder信息" class="btn btn-info" ng-click="launch('modifyStakeHolder', d)"><i class="fa fa-pencil"></i></a>
+                            <a title="删除该StakeHolder的信息" class="btn btn-info" ng-click="launch('deleteStakeHolder', d)"><i class="fa fa-trash-o"></i></a>
                         </div>
                     </td>
                 </tr>

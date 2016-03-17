@@ -22,8 +22,8 @@ define({
         errorCode: {
             LOGIN_REDIRECT_URL: 'LOGIN_REDIRECT_URL'
         },
-        // 30 seconds Time out
-        reqTimeout: 30000,
+        // 35 seconds Time out
+        reqTimeout: 35000,
         pageSize: 20,
         maxPageSize: 4999,
         hackMaxPageSize: 5e7,

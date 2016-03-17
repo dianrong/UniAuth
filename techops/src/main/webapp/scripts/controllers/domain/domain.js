@@ -41,6 +41,35 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
             }
         }
 
+        $scope.modifyDomain = function() {
+            $scope.status = 'modify';
+        }
+
+        $scope.cancelModifyDomain = function() {
+            $scope.status = 'init';
+        }
+
+        $scope.confirmModifyDomain = function() {
+            var modifyDomainParam = {};
+            modifyDomainParam.id = $scope.domain.selected.id;
+            modifyDomainParam.code = $scope.domain.selected.code;
+            modifyDomainParam.displayName = $scope.domain.selected.displayName;
+            modifyDomainParam.description = $scope.domain.selected.description;
+            modifyDomainParam.status = $scope.domainStatusDropdown.option.value;
+            DomainService.modifyDomain(modifyDomainParam, function (res) {
+
+                if(res.info) {
+                    // modify error with info.
+                    return;
+                }
+                // modify success.
+                $scope.status = 'init';
+
+            }, function (err) {
+                // modify error with api err.
+            });
+        }
+
         $scope.$watch('domain.selected', function(){
             var selectedDomain = $scope.domain.selected;
             $scope.stakeholders = [];
@@ -57,6 +86,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
         });
 
         $scope.$on('selected-domain-changed', function() {
+            DomainService.domainShared.selected = undefined;
             $state.go('user');
         });
     };
