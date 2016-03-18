@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.dianrong.common.uniauth.common.bean.Linkage;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -225,37 +226,25 @@ public class GroupService {
     }
 
     @Transactional
-    public void removeUsersFromGroup(Integer groupId, List<Long> userIds, Boolean normalMember) {
-        if(groupId == null || CollectionUtils.isEmpty(userIds)) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
+    public void removeUsersFromGroup(List<Linkage<Long, Integer>> userIdGrpIdPairs , Boolean normalMember) {
+
+        if(CollectionUtils.isEmpty(userIdGrpIdPairs)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
         }
-        UserGrpExample userGrpExample = new UserGrpExample();
-        List<UserGrpKey> userGrpKeys;
-        if(normalMember == null || normalMember) {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ZERO_byte);
-            userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
-        } else {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ONE_byte);
-            userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
-        }
-        Set<Long> userIdSet = new HashSet<>();
-        if(!CollectionUtils.isEmpty(userGrpKeys)) {
-            for (UserGrpKey userGrpKey : userGrpKeys) {
-                userIdSet.add(userGrpKey.getUserId());
+
+        for(Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
+            Long userId = linkage.getEntry1();
+            Integer grpId = linkage.getEntry2();
+            UserGrpExample userGrpExample = new UserGrpExample();
+            userGrpExample.createCriteria().andGrpIdEqualTo(grpId).andUserIdEqualTo(userId);
+            if(normalMember == null || normalMember) {
+                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ZERO_byte);
+            } else {
+                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_byte);
             }
+            userGrpMapper.deleteByExample(userGrpExample);
         }
-        for(Long userId : userIds) {
-            if(userIdSet.contains(userId)) {
-                UserGrpExample userGrpExample1 = new UserGrpExample();
-                UserGrpExample.Criteria criteria = userGrpExample1.createCriteria().andGrpIdEqualTo(groupId).andUserIdEqualTo(userId);
-                if(normalMember == null || normalMember) {
-                    criteria.andTypeEqualTo(AppConstants.ZERO_Byte);
-                } else {
-                    criteria.andTypeEqualTo(AppConstants.ONE_Byte);
-                }
-                userGrpMapper.deleteByExample(userGrpExample1);
-            }
-        }
+
     }
 
     @Transactional
@@ -474,19 +463,20 @@ public class GroupService {
         }
     }
     
-    public void checkOwner(Long opUserId, Integer targetGroupId) {
-		
+    public void checkOwner(Long opUserId, List<Integer> targetGroupIds) {
 		CheckEmpty.checkEmpty(opUserId, "当前用户");
-		CheckEmpty.checkEmpty(targetGroupId, "添加的目标组");
-		
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("userId", opUserId);
-		paramMap.put("targetGroupId", targetGroupId);
-		
-		Integer ownerGroupCount = grpMapper.checkOwner(paramMap);
-		if(ownerGroupCount == 0){
-			throw new AppException(InfoName.GRP_NOT_OWNER, UniBundle.getMsg("group.checkowner.not.owner", opUserId, targetGroupId));
-		}
+		CheckEmpty.checkEmpty(targetGroupIds, "添加的目标组(s)");
+
+        for(Integer targetGroupId : targetGroupIds) {
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("userId", opUserId);
+            paramMap.put("targetGroupId", targetGroupId);
+
+            Integer ownerGroupCount = grpMapper.checkOwner(paramMap);
+            if (ownerGroupCount == 0) {
+                throw new AppException(InfoName.GRP_NOT_OWNER, UniBundle.getMsg("group.checkowner.not.owner", opUserId, targetGroupId));
+            }
+        }
     }
 
     @Transactional

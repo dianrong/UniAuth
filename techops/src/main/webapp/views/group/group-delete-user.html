@@ -4,19 +4,14 @@
             <i class="fa fa-trash-o"></i> 删除用户
         </h4>
     </div>
-    <div>
-        <ui-select ng-model="user.selected"
-                   theme="bootstrap"
-                   ng-disabled="disabled"
-                   reset-search-input="false"
-                   style="width:100%;margin-top: 6px;">
-            <ui-select-match placeholder="Enter an email...">{{$select.selected.email}}</ui-select-match>
-            <ui-select-choices repeat="user in users track by $index"
-                               refresh="refreshUsers($select.search)"
-                               refresh-delay="300">
-                <div ng-bind-html="user.email | highlight: $select.search"></div>
-            </ui-select-choices>
-        </ui-select>
+    <div style="font-size: 13px">
+        <div ng-repeat="selectedNode in selectedNodes">
+            <div>删组:
+                <strong style="color: #337AC3">'{{selectedNode.parent.label}}'</strong>
+                中的{{$state.includes('group.delete-user')?'用户:':'Owner:'}}
+                <strong style="color: #FF338E">{{selectedNode.label}}</strong>
+            </div>
+        </div>
         <p class="text-danger"><strong>{{groupMessage}}</strong></p>
     </div>
     <div class="modal-footer">

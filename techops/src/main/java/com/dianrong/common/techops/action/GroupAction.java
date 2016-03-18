@@ -95,7 +95,6 @@ public class GroupAction {
         return response;
     }
 
-    // perm double checked
     @RequestMapping(value = "/deleteuser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
     public Response<Void> removeUserFromGroup(@RequestBody UserListParam userListParam) {

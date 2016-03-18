@@ -2,6 +2,7 @@ package com.dianrong.common.techops.sscustom;
 
 import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
 import com.dianrong.common.uniauth.common.bean.Info;
+import com.dianrong.common.uniauth.common.bean.Linkage;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
@@ -15,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -36,7 +38,14 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				groupParam = (GroupParam)targetObject;
 			} else if(targetObject instanceof UserListParam) {
 				UserListParam userListParam = (UserListParam)targetObject;
-				groupParam = new GroupParam().setTargetGroupId(userListParam.getGroupId());
+				List<Linkage<Long, Integer>> userIdGroupIdPairs = userListParam.getUserIdGroupIdPairs();
+				List<Integer> targetGroupIds = new ArrayList<>();
+				if(!CollectionUtils.isEmpty(userIdGroupIdPairs)) {
+					for(Linkage<Long, Integer> userIdGroupIdPair : userIdGroupIdPairs) {
+						targetGroupIds.add(userIdGroupIdPair.getEntry2());
+					}
+				}
+				groupParam = new GroupParam().setTargetGroupId(userListParam.getGroupId()).setTargetGroupIds(targetGroupIds);
 			}
 			if(groupParam != null) {
 				Response<Void> response = uniClientFacade.getGroupResource().checkOwner(groupParam);

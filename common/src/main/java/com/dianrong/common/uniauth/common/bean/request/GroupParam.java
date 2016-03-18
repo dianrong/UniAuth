@@ -2,9 +2,8 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-
 public class GroupParam extends Operator {
+
 	private Integer id;
 	private String code;
 	private String name;
@@ -13,6 +12,8 @@ public class GroupParam extends Operator {
 
 	//when add
 	private Integer targetGroupId;
+	//when delete
+	private List<Integer> targetGroupIds;
 	//if true only group, ignore members under each group
 	//if false, both group and members returned
 	private Boolean onlyShowGroup;
@@ -132,6 +133,15 @@ public class GroupParam extends Operator {
 
 	public GroupParam setNeedOwnerMarkup(Boolean needOwnerMarkup) {
 		this.needOwnerMarkup = needOwnerMarkup;
+		return this;
+	}
+
+	public List<Integer> getTargetGroupIds() {
+		return targetGroupIds;
+	}
+
+	public GroupParam setTargetGroupIds(List<Integer> targetGroupIds) {
+		this.targetGroupIds = targetGroupIds;
 		return this;
 	}
 }

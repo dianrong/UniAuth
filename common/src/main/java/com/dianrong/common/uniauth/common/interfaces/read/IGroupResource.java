@@ -43,6 +43,6 @@ public interface IGroupResource {
     
     @POST
     @Path("checkowner")
-    //scenario: check if one user is the owner of one group by group id
+    //scenario: check if one user is the owner of one group by groupIds
     Response<Void> checkOwner(GroupParam groupParam);
 }

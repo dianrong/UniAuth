@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -7,6 +8,7 @@ import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -44,7 +46,7 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<Void> removeUsersFromGroup(UserListParam userListParam) {
-		groupService.removeUsersFromGroup(userListParam.getGroupId(),userListParam.getUserIds(),userListParam.getNormalMember());
+		groupService.removeUsersFromGroup(userListParam.getUserIdGroupIdPairs(),userListParam.getNormalMember());
 		return Response.success();
 	}
 
@@ -81,7 +83,15 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<Void> checkOwner(GroupParam groupParam) {
-		groupService.checkOwner(groupParam.getOpUserId(), groupParam.getTargetGroupId());
+		Long opUserId = groupParam.getOpUserId();
+		List<Integer> grpIds = groupParam.getTargetGroupIds();
+		if(CollectionUtils.isEmpty(grpIds) && groupParam.getTargetGroupId() != null) {
+			grpIds = new ArrayList<>();
+			grpIds.add(groupParam.getTargetGroupId());
+		} else if(!CollectionUtils.isEmpty(grpIds) && groupParam.getTargetGroupId() != null) {
+			grpIds.add(groupParam.getTargetGroupId());
+		}
+		groupService.checkOwner(opUserId, grpIds);
 		return Response.success();
 	}
 

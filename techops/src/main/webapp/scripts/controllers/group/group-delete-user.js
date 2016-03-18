@@ -10,35 +10,23 @@ define(['../../utils/constant'],function(constant) {
         $scope.getTree = GroupService.syncTree;
         $scope.getTree(paramsCtlLevel);
 
-        $scope.user = {};
-        $scope.refreshUsers = function(email) {
-            var params = {email: email, pageNumber:0, pageSize: 16};
-            return UserService.getUsers(params).$promise.then(function(response) {
-                if(response.data && response.data.data) {
-                    $scope.users = response.data.data;
-                } else {
-                    $scope.users = [];
-                }
-            });
-        }
-
         $scope.removeUserFromGroup = function () {
 
-            if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
-                $scope.groupMessage = '请先选择一个父组, 再删除用户.';
+            if(!$scope.selectedNodes || $scope.selectedNodes.length == 0){
+                $scope.groupMessage = '请先选择您要删除的用户.';
                 return;
             }
-            if(!$scope.user.selected || !$scope.user.selected.id) {
-                $scope.groupMessage = '请先选择一个用户, 再删除用户.';
-                return;
+            var nodes = $scope.selectedNodes;
+            var userIdGroupIdPairs = [];
+            for(var i=0;i<nodes.length;i++) {
+                var linkage = {};
+                linkage.entry1 = nodes[i].id;
+                linkage.entry2 = nodes[i].parent.id;
+                userIdGroupIdPairs.push(linkage);
             }
-
             var params = {};
-            params.groupId=$rootScope.shareGroup.selected.id;
+            params.userIdGroupIdPairs = userIdGroupIdPairs;
             params.normalMember=true;
-            params.userIds = [];
-            params.userIds.push($scope.user.selected.id);
-
             GroupService.deleteUser(params, function (res) {
                 $scope.groupMessage = '';
                 if(res.info) {
@@ -46,6 +34,7 @@ define(['../../utils/constant'],function(constant) {
                     return;
                 }
                 $scope.getTree(paramsCtlLevel);
+                $scope.selectedNodes = [];
             }, function () {
                 $scope.addedGroup = {};
                 $scope.groupMessage = constant.loadError;

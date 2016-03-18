@@ -57,6 +57,35 @@ define(['../../utils/constant'], function (constant) {
                 $rootScope.shareGroup.selected = {};
             }
         };
+
+        // for delete users and delete owners
+        $scope.treeOptions = {
+            isLeaf: function(node) {
+                var isLeaf = node.type !== constant.treeNodeType.group;
+                return isLeaf;
+            },
+            injectClasses : {
+                labelUnselectable : "disabled-line-through"
+            },
+            isSelectable: function(node) {
+                if(node.type == constant.treeNodeType.group) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            multiSelection: true
+        };
+        $scope.selectedNodes = [];
+        $scope.showSelectedNodes = function(node, selected, parent) {
+            node.parent = parent;
+        };
+
+        $scope.$state = $rootScope.$state;
+        $scope.$watch('$state.current.name', function(){
+            $scope.selectedNodes = [];
+        });
+
     };
 
     return {
