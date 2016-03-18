@@ -44,6 +44,7 @@ public final class InitialFlowSetupAction extends AbstractAction {
     @NotNull
     private ServicesManager servicesManager;
 
+
     /** CookieGenerator for the Warnings. */
     @NotNull
     private CookieRetrievingCookieGenerator warnCookieGenerator;
