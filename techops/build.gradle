@@ -72,11 +72,11 @@ configurations.all {
 
 dependencies {
 
-//    compile "com.dianrong.common.uniauth:share-rw:1.0.4-SNAPSHOT"
-//    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.4-SNAPSHOT"
+    compile "com.dianrong.common.uniauth:share-rw:1.0.5"
+    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.5"
     
-    compile project(":ss-client")
-    compile project(":share-rw")
+//    compile project(":ss-client")
+//    compile project(":share-rw")
 
     //Spring
     def spring_version = '4.1.6.RELEASE'

@@ -36,5 +36,5 @@ public interface IDomainResource {
 
     @POST
     @Path("stakeholder/query")
-    Response<List<StakeholderDto>> getAllStakeHoldersInDomain(DomainParam domainParam);
+    Response<List<StakeholderDto>> getAllStakeholdersInDomain(DomainParam domainParam);
 }

@@ -90,7 +90,7 @@ public class DomainService {
 		}
 	}
 
-	public List<StakeholderDto> getAllStakeHoldersInDomain(Integer domainId) {
+	public List<StakeholderDto> getAllStakeholdersInDomain(Integer domainId) {
 		if(domainId != null) {
 			StakeholderExample stakeholderExample = new StakeholderExample();
 			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId);

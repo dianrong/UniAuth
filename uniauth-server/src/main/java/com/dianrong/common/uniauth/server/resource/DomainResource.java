@@ -21,8 +21,8 @@ public class DomainResource implements IDomainRWResource {
 	private DomainService domainService;
 
 	@Override
-	public Response<List<StakeholderDto>> getAllStakeHoldersInDomain(DomainParam domainParam) {
-		List<StakeholderDto> stakeholderDtos = domainService.getAllStakeHoldersInDomain(domainParam.getId());
+	public Response<List<StakeholderDto>> getAllStakeholdersInDomain(DomainParam domainParam) {
+		List<StakeholderDto> stakeholderDtos = domainService.getAllStakeholdersInDomain(domainParam.getId());
 		return Response.success(stakeholderDtos);
 	}
 

@@ -1,6 +1,5 @@
 package com.dianrong.common.techops.action;
 
-import com.dianrong.common.techops.service.TechOpsService;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -51,7 +49,7 @@ public class DomainAction {
     @RequestMapping(value = "/stakeholder-query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')")
     public Response<List<StakeholderDto>> searchStakeholders(@RequestBody DomainParam domainParam) {
-        return uARWFacade.getDomainRWResource().getAllStakeHoldersInDomain(domainParam);
+        return uARWFacade.getDomainRWResource().getAllStakeholdersInDomain(domainParam);
     }
 
     @RequestMapping(value = "/stakeholder-add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

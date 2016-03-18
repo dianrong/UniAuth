@@ -16,7 +16,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
 
         utils.generatorDropdown($scope, 'domainStatusDropdown', constant.commonStatus);
 
-        function refreshStakeHolders() {
+        $scope.refreshStakeholders = function refreshStakeholders() {
             if($scope.domain.selected) {
                 var stakeHolderParam = {};
                 stakeHolderParam.id = $scope.domain.selected.id;
@@ -78,46 +78,56 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                         {}, {size: 'md'}
                     );
                     dlg.result.then(function (close) {
-                        // add domain successed
-                        debugger;
+                        // add domain success
                         $scope.domain.selected = close;
                     }, function (dismiss) {
                         //
                     });
                     break;
-                case 'status':
+                case 'addStakeholder':
+                    var dlg = dialogs.create('views/domain/dialogs/add-stakeholder.html', 'AddStakeholderController',
+                        param, {size: 'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        // addStakeholder success
+                        $scope.refreshStakeholders();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'modifyStakeholder':
+                    var dlg = dialogs.create('views/domain/dialogs/modify-stakeholder.html', 'ModifyStakeholderController',
+                        param, {size: 'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        // maybe give user a friendly message.
+                        $scope.refreshStakeholders();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'deleteStakeholder':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html', 'EnableDisableController',
                         {
-                            "header": param.status ? '用户-启用' : '用户-禁用',
-                            "msg": "您确定要" + (param.status ? '启用' : '禁用') + "用户: " + param.email + "吗?"
+                            "header": '删除Stakeholder',
+                            "msg": "您确定要删除Stakeholder: " + param.email + "吗?"
                         }, {size: 'md'}
                     );
                     dlg.result.then(function (yes) {
-                        UserService.enableDisableUser(
+                        DomainService.deleteStakeholder(
                             {
-                                'id': param.id,
-                                'status': param.status ? 0 : 1
+                                'id': param.id
                             }
                             , function (res) {
                                 // status change successed
-                                $scope.queryUser();
+                                $scope.stakeholders = [];
+                                $scope.refreshStakeholders();
                             }, function (err) {
                                 console.log(err);
                             }
                         );
                     }, function (no) {
                         // do nothing
-                    });
-                    break;
-                case 'modify':
-                    var dlg = dialogs.create('views/user/dialogs/modify.html', 'ModifyUserController',
-                        param, {size: 'md'}
-                    );
-                    dlg.result.then(function (close) {
-                        // maybe give user a friendly message.
-                        $scope.queryUser();
-                    }, function (dismiss) {
-                        //
                     });
                     break;
             }
@@ -135,7 +145,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                     }
                 }
             }
-            refreshStakeHolders();
+            $scope.refreshStakeholders();
         });
 
         $scope.$on('selected-domain-changed', function() {

@@ -59,7 +59,10 @@
         </div>
     </div>
     <div style="padding-left: 1px" class="col-md-70d6 col-sm-9">
-        <div class="col-md-10" style="padding-left:2px;padding-top:4px;color: #337AD8;font-size:19px">Stake holders:</div><div class="col-md-2"><button style="width: 68px;" type="button" class="btn btn-info" ng-click="addStakeHolder()">新增</button></span></div>
+        <div class="col-md-10" style="padding-left:2px;padding-top:4px;color: #337AD8;font-size:19px">Stake holders:</div>
+        <div class="col-md-2">
+            <button ng-disabled="domain.selected == null" style="width: 68px;" type="button" class="btn btn-info" ng-click="launch('addStakeholder', domain.selected)">新增</button>
+        </div>
         <table class="text-left table grey-border table-hover vertical-middle">
             <thead class="text-color-c4">
             <tr>
@@ -81,8 +84,8 @@
                     <td ng-bind="d.jobtitle"></td>
                     <td class="text-color-c9" style="text-align: center">
                         <div class="btn-group">
-                            <a title="修改StakeHolder信息" class="btn btn-info" ng-click="launch('modifyStakeHolder', d)"><i class="fa fa-pencil"></i></a>
-                            <a title="删除该StakeHolder的信息" class="btn btn-info" ng-click="launch('deleteStakeHolder', d)"><i class="fa fa-trash-o"></i></a>
+                            <a title="修改Stakeholder信息" class="btn btn-info" ng-click="launch('modifyStakeholder', d)"><i class="fa fa-pencil"></i></a>
+                            <a title="删除该Stakeholder的信息" class="btn btn-info" ng-click="launch('deleteStakeholder', d)"><i class="fa fa-trash-o"></i></a>
                         </div>
                     </td>
                 </tr>
