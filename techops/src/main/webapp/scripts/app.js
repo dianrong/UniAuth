@@ -16,8 +16,6 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             function fetchPermission() {
                 var initInjector = angular.injector(["ng"]);
                 var $http = initInjector.get("$http");
-                $http.defaults.useXDomain = true;
-                $http.defaults.withCredentials = true;
                 return $http.get(constant.apiBase + "/user/current").then(function (res) {
                     app.constant("permission", {
                         userInfo : res.data.data
@@ -55,6 +53,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
     app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$rootScopeProvider',
         function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $rootScopeProvider) {
         //$rootScopeProvider.digestTtl(100);
+        $httpProvider.defaults.useXDomain = true;
+        $httpProvider.defaults.withCredentials = true;
         $httpProvider.interceptors.push('HttpInterceptorService');
         $urlRouterProvider.otherwise('/');
         $stateProvider.
