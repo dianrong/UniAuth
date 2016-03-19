@@ -69,17 +69,19 @@ public final class InitialFlowSetupAction extends AbstractAction {
     protected Event doExecute(final RequestContext context) throws Exception {
         final HttpServletRequest request = WebUtils.getHttpServletRequest(context);
         
+        String queryStr = request.getQueryString();
+        queryStr = queryStr == null ? "" : "&" + queryStr;
         String reqService = request.getParameter("service");
         if(reqService == null || "".equals(reqService.trim())){
         	 List<DomainDto> domainDtoList = domainService.getAllLoginPageDomains();
         	 if(domainDtoList != null && !domainDtoList.isEmpty()){
         		 DomainDto domainDto = domainDtoList.get(0);
         		 String redirectUrl = domainDto.getZkDomainUrlEncoded();
-        		 String makeUpService = request.getRequestURL().append("?service=").append(redirectUrl).toString();
+        		 String makeUpService = request.getRequestURL().append("?service=").append(redirectUrl).append(queryStr).toString();
         		 context.getFlowScope().put("redirectUrl", makeUpService);
         	 }
         }
-        
+
         if (!this.pathPopulated) {
             final String contextPath = context.getExternalContext().getContextPath();
             final String cookiePath = StringUtils.hasText(contextPath) ? contextPath + '/' : "/";

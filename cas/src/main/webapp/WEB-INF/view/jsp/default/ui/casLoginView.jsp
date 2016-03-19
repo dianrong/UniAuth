@@ -1,14 +1,17 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
 <%
-	String ajaxReqType = request.getHeader(AppConstants.AJAS_CROSS_HEADER);
+	String ajax = request.getHeader(AppConstants.AJAS_HEADER);
+	String ajaxCross = request.getHeader(AppConstants.AJAS_CROSS_HEADER);
 	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
-	String reqUrl = baseUrl + request.getContextPath() + "/login?" + request.getQueryString();
+	String queryStr =  request.getQueryString();
+	queryStr = queryStr == null ? "" : "?" + queryStr;
+	String reqUrl = baseUrl + request.getContextPath() + "/login" + queryStr;
 
-	String ajaxReqTypeStr = ajaxReqType == null ? "" : ajaxReqType.replaceAll("https|http", "");
+	String ajaxCrossStr = ajaxCross == null ? "" : ajaxCross.replaceAll("https|http", "");
 	String baseUrlStr = baseUrl.replaceAll("https|http", "");
 
-	if (ajaxReqType == null || baseUrlStr.startsWith(ajaxReqTypeStr)) {
+	if ((ajaxCross == null && ajax == null) || (!"".equals(ajaxCrossStr) && baseUrlStr.startsWith(ajaxCrossStr))) {
 %>
 <jsp:directive.include file="includes/login.jsp" />
 <%

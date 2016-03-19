@@ -81,7 +81,9 @@
     <form:form method="post" id="fm1" commandName="${commandName}" htmlEscape="true">
 
         <form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false" />
-
+		<c:if test="${not empty param.dupsession}">
+			<font color="red"></font><spring:message code="screen.tips.session.dup" /></font><br>
+		</c:if>
         <h2><spring:message code="screen.welcome.instructions" /></h2>
 
         <section class="row">
