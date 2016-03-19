@@ -20,7 +20,7 @@
 	
 	<bean id="uniauthConfig" class="com.dianrong.platform.cfg.CfgGroup">
 		<property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/uniauth" />
-		<property name="needKeepAlive" value="false" />
+		<property name="needKeepAlive" value="true" />
 	</bean>
     
 </beans>

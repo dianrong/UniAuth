@@ -40,7 +40,10 @@
       	<sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
       	<sec:access-denied-handler error-page="/errors/403.jsp"/>
       	<sec:csrf disabled="true"/>
-      	      	
+      	
+		<sec:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+		<sec:session-management session-authentication-strategy-ref="sas" invalid-session-url="#{uniauthConfig['cas_server']}/logout?dupsession=true"/>
+		<sec:logout delete-cookies="JSESSIONID" />
       	<!-- 
       		the following part is customized intercept-url element definition for subsystem
       		note: conflict with the judgment of regular expression, so the priority problem MUST be resolved.
@@ -49,6 +52,36 @@
 
 	</sec:http>
 	
+	<!-- do not change: start -->
+	<bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+		<constructor-arg name="sessionRegistry" ref="sessionRegistry"></constructor-arg>
+		<constructor-arg name="expiredUrl" value="#{uniauthConfig['cas_server']}/logout?dupsession=true"></constructor-arg>
+	</bean>
+	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+	
+	<bean id="sas" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+		<constructor-arg>
+			<list>
+				<bean class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+					<constructor-arg ref="sessionRegistry"/>
+				</bean>
+				<bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+					<constructor-arg ref="sessionRegistry"/>
+					<property name="maximumSessions" value="1" />
+					<property name="exceptionIfMaximumExceeded" value="false" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+		
+	<bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">    
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="filterProcessesUrl" value="/login/cas"></property>
+		<property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
+		<property name="sessionAuthenticationStrategy" ref="sas" />
+	</bean>
+	<!-- do not change: end -->
+		
 	<!-- trick: must be same id or name, not more than one PermissionEvaluators allowed, see AccessControlListTag.java -->
 	<bean id="uniauthPermissionEvaluator" class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
 	

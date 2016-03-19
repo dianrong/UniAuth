@@ -95,7 +95,7 @@
         p:prefix="${cas.viewResolver.defaultViewsPathPrefix:/WEB-INF/view/jsp/default/ui/}"
         p:suffix=".jsp"
         p:order="3"/>
-
+        
   <!-- Locale Resolver -->
   <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" p:defaultLocale="en" />
 
@@ -143,6 +143,11 @@
   </bean>
   <bean id="forgetPasswordController" class="com.dianrong.common.uniauth.cas.controller.ForgetPasswordController">
   		<property name="forgetPasswordService" ref="forgetPasswordService"></property>
+  </bean>
+  
+  <bean id="personalInfoManageController" class="com.dianrong.common.uniauth.cas.controller.PersonalInfoManageController">
+  		<property name="userInfoManageService" ref="userInfoManageService"></property>
+  		<property name="genericSuccessViewAction" ref="genericSuccessViewAction"></property>
   </bean>
   
   <bean id="passThroughController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>

@@ -23,6 +23,18 @@ public class StringUtil {
 	}
 	
 	/**.
+	 * 获取对象的字符串表示方式
+	 * @param obj 对象
+	 * @return 字符串结果
+	 */
+	public static String getObjectStr(Object obj){
+		if(obj == null){
+			return "";
+		}
+		return obj.toString();
+	}
+	
+	/**.
 	 * 生成目标长度的数字字符串
 	 * @param length 
 	 * @return
@@ -37,5 +49,23 @@ public class StringUtil {
 			sb.append(r.nextInt(10));
 		}
 		return sb.toString();
+	}
+	
+	/**.
+	 * 获取异常信息的第一行简单信息 
+	 * @param detailMessage detailMessage
+	 * @return 返回信息
+	 */
+	public static String getExceptionSimpleMessage(String detailMessage){
+		if(strIsNullOrEmpty(detailMessage)){
+			return "";
+		}
+		int firstIndex = detailMessage.indexOf('\r');
+		int tfirstIndex = detailMessage.indexOf('\n');
+		firstIndex = firstIndex < tfirstIndex ? firstIndex:tfirstIndex;
+		if(firstIndex < 0){
+			return detailMessage;
+		}
+		return detailMessage.substring(0, firstIndex);
 	}
 }
