@@ -105,6 +105,29 @@ public class UserService {
                 user.setEmail(email);
                 user.setPhone(phone);
                 break;
+            case RESET_PASSWORD_AND_CHECK:
+                if(password == null) {
+                    throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "password"));
+                } else if(!AuthUtils.validatePasswordRule(password)) {
+                    throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
+                }
+                //临时使用email字段来存储原始密码
+                if(email == null) {
+                	throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "origin password"));
+                }
+                
+                //验证原始密码是否正确
+                String origin_password_check = email;
+                
+                //原始密码验证通过
+                if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), origin_password_check, user.getPasswordSalt())){
+                	throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password wrong"));
+                }
+                byte salttemp[] = AuthUtils.createSalt();
+                user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
+                user.setPasswordSalt(Base64.encode(salttemp));
+                user.setPasswordDate(new Date());
+                break;
         }
         user.setLastUpdate(new Date());
         userMapper.updateByPrimaryKey(user);

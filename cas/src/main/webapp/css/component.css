@@ -84,13 +84,6 @@ blockquote.quote .quote-end {
 	height:20px;
 	display:block
 }
-.alert {
-	border-radius:3px!important
-}
-.alert-danger {
-	background:#F2DEDE;
-	position:relative
-}
 form .form-group .add-on,form .form-group .right-add-on {
 	position:absolute;
 	padding:9px 0
@@ -4729,10 +4722,10 @@ input[type=text].input-sm+span .btn-sm {
 	font-size:14px;
 	line-height:1.286
 }
-.modal {
+.container .modal {
 	z-index:1050
 }
-.modal-content {
+.container .modal-content {
 	background-color:#fff;
 	border:2px solid #fafafa;
 	border-radius:0;
@@ -4753,65 +4746,65 @@ input[type=text].input-sm+span .btn-sm {
 	-khtml-opacity:.85;
 	filter:alpha(opacity=85)
 }
-.modal-header {
+.container .modal-header {
 	padding:17px 19px 15px 24px;
 	border-bottom:1px solid #fafafa
 }
-.modal-header .close {
+.container .modal-header .close {
 	margin:5px 0 0;
 	padding:0;
 	font-size:19px;
 	line-height:1;
 	color:#141c26
 }
-.modal-title {
+.container .modal-title {
 	margin:0;
 	font-size:20px;
 	line-height:30px;
 	color:#333
 }
-.modal-body {
+.container .modal-body {
 	padding:20px 24px
 }
-.modal-body p {
+.container .modal-body p {
 	font-size:14px;
 	line-height:1.667
 }
-.modal-footer {
+.container .modal-footer {
 	padding:19px 22px 20px;
 	margin-top:0;
 	background-color:#f7fdfc;
 	border-top:none;
 	border-radius:0 0 3px 3px
 }
-.modal-footer .btn+.btn {
+.container .modal-footer .btn+.btn {
 	margin-left:12px
 }
 @media (max-width:767px) {
-	.modal-footer .btn {
+	.container .modal-footer .btn {
 	display:block;
 	min-width:auto;
 	margin-bottom:15px
 }
-.modal-footer .btn:last-child {
+.container .modal-footer .btn:last-child {
 	margin-bottom:0
 }
-.modal-footer .btn+.btn {
+.container .modal-footer .btn+.btn {
 	margin-left:0
 }
 }@media (min-width:768px) {
-	.modal-dialog {
+	.container .modal-dialog {
 	width:624px;
 	margin:30px auto
 }
-.modal-content {
+.container .modal-content {
 	-webkit-box-shadow:none;
 	box-shadow:none
 }
-.modal-sm {
+.container .modal-sm {
 	width:480px
 }
-.modal-lg {
+.container .modal-lg {
 	width:900px
 }
 }.dialog {

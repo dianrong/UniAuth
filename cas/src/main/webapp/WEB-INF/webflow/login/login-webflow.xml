@@ -47,7 +47,7 @@
     </decision-state>
 
     <decision-state id="hasServiceCheck">
-        <if test="flowScope.service != null" then="renewRequestCheck" else="viewGenericLoginSuccess"/>
+        <if test="flowScope.service != null" then="renewRequestCheck" else="branchToEditOrLogin"/>
     </decision-state>
 
     <decision-state id="renewRequestCheck">
@@ -168,7 +168,7 @@
     </action-state>
 
     <decision-state id="serviceCheck">
-        <if test="flowScope.service != null" then="generateServiceTicket" else="viewGenericLoginSuccess"/>
+        <if test="flowScope.service != null" then="generateServiceTicket" else="branchToEditOrLogin"/>
     </decision-state>
 
     <action-state id="generateServiceTicket">
@@ -206,8 +206,33 @@
                       result-type="org.jasig.cas.authentication.principal.Principal"/>
         </on-entry>
     </end-state>
-
-
+	
+	<!-- for user info edit, new branch  -->
+	<decision-state id="branchToEditOrLogin">
+         <if test="flowScope.edituserinfo != null and flowScope.edituserinfo != '' " then="editUserInfo" else="viewGenericLoginSuccess"/>
+    </decision-state>
+	
+	<action-state id="editUserInfo">
+        <evaluate expression="personalInfoManageController"/>
+        <transition on="query" to="editUserInfoEditPage"/>
+        <transition on="update" to="updateUserInfo"/>
+        <transition on="notfound" to="editUserInfoErrorPage"/>
+        <transition on="notExists" to="gatewayRequestCheck"/>
+    </action-state>
+    
+    <!-- edit info page-->
+    <end-state id="editUserInfoEditPage" view="infoedit">
+    </end-state>
+    
+    <!-- error page -->
+    <end-state id="editUserInfoErrorPage" view="queryUserInfoError">
+    </end-state>
+    
+    <!-- update result -->
+    <end-state id="updateUserInfo" view="updateResultInfo">
+    </end-state>
+	<!-- for user info edit, new branch  -->
+	
     <!--
     The "showWarningView" end state is the end state for when the user has requested privacy settings (to be "warned") to be turned on.  It delegates to a
     view defines in default_views.properties that display the "Please click here to go to the service." message.

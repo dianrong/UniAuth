@@ -1,9 +1,10 @@
-(function(win) {
-	win.onload = function(){
-		win.context_path = $('#hidden_path_input').val();
-		win.processUrl = context_path+"/uniauth/forgetPassword";
-		win.captchaUrl = context_path+"/uniauth/captcha";
-		
+(function() {
+	var context_path = $('#hidden_path_input').val();
+	var processUrl = context_path+"/uniauth/forgetPassword";
+	var captchaUrl = context_path+"/uniauth/captcha";
+	
+	//初始化函数
+	var init = function() {
 		//添加跳转页面事件
 		$('#to_reset_pwd_btn').bind('click', jump_to_step1_page);
 		
@@ -34,12 +35,12 @@
 		
 		// 第三步的请求
 		$('#btn_step3').click(processStep3);
-	};
+	}
 	
 	//jump to reset pwd
-	win.jump_to_step1_page = function() {
+	var jump_to_step1_page = function() {
 		//copy current url
-		var current_url = win.location;
+		var current_url = window.location;
 		//通过隐藏表单设置背景url
 		$('#hidden_savedLoginContext').val(current_url);
 		var hidden_to_step1_form = $('#hidden_to_step1');
@@ -49,7 +50,7 @@
 	}
 	
 	// step1 btn show
-	win.process_step1_btn = function(){
+	var process_step1_btn = function(){
 		var mailval = $('#temail').val();
 		var input_verifycode = $('#tverfynotice').val();
 		// filter email
@@ -65,7 +66,7 @@
 	}
 	
 	// step2 btn show
-	win.process_step2_btn = function(){
+	var process_step2_btn = function(){
 		var emailcode = $('.find-pwd-container .steps #input1').val();
 		var stepbtn = $('#btn_step2');
 		if(emailcode) {
@@ -78,7 +79,7 @@
 	}
 	
 	// step3 btn show
-	win.process_step3_btn = function(){
+	var process_step3_btn = function(){
 		var stepbtn = $('#btn_step3');
 		if(step3pwdvalidate(true) && step3rpwdvalidate(true)){
 			stepbtn.removeAttr("disabled","disabled");
@@ -90,7 +91,7 @@
 	}
 	
 	// pwd validate
-	win.step3pwdvalidate = function(unshow){
+	var step3pwdvalidate = function(unshow){
 		var show = false;
 		if(unshow === true || unshow == 'true'){
 			//清除提示
@@ -110,7 +111,7 @@
 	}
 	
 	// rpwd validate
-	win.step3rpwdvalidate = function(unshow){
+	var step3rpwdvalidate = function(unshow){
 		var show = false;
 		if(unshow === true || unshow == 'true'){
 			setWarnLabel($('.find-pwd-container .steps #newpwdwarn'), '');
@@ -131,7 +132,7 @@
 	}
 	
 	// assiat function
-	win.setWarnLabel = function(obj ,newHtml){
+	var setWarnLabel = function(obj ,newHtml){
 		if(!obj){
 			return;
 		}
@@ -143,8 +144,8 @@
 		obj.html(newHtml);
 	}
 	
-	// change verify status
-	win.changeVerifyStats = function(){
+	// change verify status  需要注册到外部  让外部的调用
+	window.changeVerifyStats = function(){
 		var send_email_btn = $('.find-pwd-container .steps #input2');
 		var btn_showval = send_email_btn.attr('showval');
 		if(!btn_showval || isNaN(btn_showval)){
@@ -170,18 +171,18 @@
 		setTimeout("changeVerifyStats()", 1000);
 	}
 	
-	win.refresh_send_email_btn_val = function(send_email_btn, showval){
+	var refresh_send_email_btn_val = function(send_email_btn, showval){
 		send_email_btn.attr('showval', showval);
 		send_email_btn.html(showval);
 	}
 	
 	// refresh verifycode
-	win.refresh_verfypic = function() {
+	var refresh_verfypic = function() {
 		$('#verfypic').attr('src', context_path + '/uniauth/captcha?rnd=' + Math.random());
 	}
 	
 	
-	win.sendEmailVerifyCode = function(){
+	var sendEmailVerifyCode = function(){
 		$.ajax({  
             type : "POST", 
             url : captchaUrl,
@@ -196,7 +197,7 @@
                     }
                     // 重新跳转到首页登录
                     if(result.code == '1') {
-                    	win.location = processUrl;
+                    	window.location = processUrl;
                     	return;
                     }
                     
@@ -214,7 +215,7 @@
         });  
 	};
 
-	win.processStep1 = function(){
+	var processStep1 = function(){
 		var temalval = $('#temail').val();
 		var tverifycode =$('#tverfynotice').val();
 		if(!temalval || !tverifycode){
@@ -246,7 +247,7 @@
                 if (result.issuccess == 'true') {  
                     if(result.code == '0'){
                     	// 跳转到第二步
-                    	win.location = processUrl + '?step=2';
+                    	window.location = processUrl + '?step=2';
                     	return;
                     }
                     if(result.code == '1') {
@@ -281,7 +282,7 @@
         });  
 	};
 	
-	win.processStep2 = function(){
+	var processStep2 = function(){
 		var verifyCode = $('.find-pwd-container .steps #input1').val();
 		if(!verifyCode){
 			return;
@@ -305,13 +306,13 @@
                 if (result.issuccess == 'true') {  
                     if(result.code == '0'){
                     	// 跳转到第三步
-                    	win.location = processUrl + '?step=3';
+                    	window.location = processUrl + '?step=3';
                     	return;
                     }
                     // 重新跳转到首页登录
                     if(result.code == '1') {
                     	// 跳转到第一步
-                    	win.location = processUrl + '?step=1';
+                    	window.location = processUrl + '?step=1';
                     	return;
                     }
                     
@@ -334,7 +335,7 @@
         });  
 	};
 	
-	win.processStep3 = function(){
+	var processStep3 = function(){
 		var newpwd = $('#newpwd').val();
 		var rnewpwd = $('#rnewpwd').val();
 		if(!newpwd || !rnewpwd){
@@ -359,13 +360,13 @@
                 if (result.issuccess == 'true') {  
                     if(result.code == '0'){
                     	// 跳转到第四步
-                    	win.location = processUrl + '?step=4';
+                    	window.location = processUrl + '?step=4';
                     	return;
                     }
                     // 重新跳转到首页登录
                     if(result.code == '1') {
                     	// 跳转到第一步
-                    	win.location = processUrl + '?step=1';
+                    	window.location = processUrl + '?step=1';
                     	return;
                     }
                     
@@ -381,7 +382,7 @@
                     
                     if(result.code == '4') {
                     	// 跳转到第一步
-                    	win.location = processUrl + '?step=2';
+                    	window.location = processUrl + '?step=2';
                     	return;
                     }
                 } else {  
@@ -393,4 +394,7 @@
             }
         });  
 	};
-})(window);
+	
+	//执行init操作
+	init();
+})();

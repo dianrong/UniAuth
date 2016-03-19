@@ -58,6 +58,23 @@ public interface AppConstants {
 	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 2L * 60L * 1000L;
 	//5 minitues
 	long PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
+	
+	//tag for userinfo edit in request
+	String CAS_USERINFO_MANAGE_EDIT_KEY = "edituserinfo";
+	String CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY = "user_mangage_flow_request_type";
+	String CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG = "user_manage_errormsg";
+	
+	//更新类型 
+	String CAS_USERINFO_MANAGE_UPDATE_METHOD_TYPE_TAG = "updatetype";
+	
+	//用户信息获取
+	String CAS_USERINFO_MANAGE_USER_ID_TAG = "id";
+	String CAS_USERINFO_MANAGE_UPDATE_EMAIL_TAG = "email";
+	String CAS_USERINFO_MANAGE_UPDATE_PHONE_TAG = "phone";
+	String CAS_USERINFO_MANAGE_UPDATE_NAME_TAG = "name";
+	String CAS_USERINFO_MANGE_UPDATE_PASSWORD_TAG = "password";
+	String CAS_USERINFO_MANGE_UPDATE_ORIGINPASSWORD_TAG = "orign_password";
+	
 
 	String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
 
