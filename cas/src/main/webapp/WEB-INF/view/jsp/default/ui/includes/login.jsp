@@ -84,19 +84,37 @@
 
         <h2><spring:message code="screen.welcome.instructions" /></h2>
 
-        <section class="row">
-            <label for="domain"><spring:message code="screen.welcome.label.domain" /></label>
-            <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
-            <div class="select">
-	            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
-	            	<c:if test="${not empty domains}">
-	            		<c:forEach items="${domains}" var="domain">
-  							<form:option value="${domain.zkDomainUrlEncoded}">${domain.code}</form:option>
-						</c:forEach>
-	            	</c:if>
-	            </form:select>
-            </div>
-        </section>
+		
+		<c:if test="${not empty edituserinfo}">
+			<div class="height68">
+				<section class="row hiddenbtn">
+		            <label for="domain"><spring:message code="screen.welcome.label.domain" /></label>
+		            <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
+		            <div class="select">
+			            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
+			            	<c:if test="${not empty domains}">
+	  							<form:option value="${domains[0].zkDomainUrlEncoded}">${domains[0].code}</form:option>
+			            	</c:if>
+			            </form:select>
+		            </div>
+		         </section>
+	         </div>
+        </c:if>
+        <c:if test="${empty edituserinfo}">
+	        <section class="row">
+		            <label for="domain"><spring:message code="screen.welcome.label.domain" /></label>
+		            <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
+		            <div class="select">
+			            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
+			            	<c:if test="${not empty domains}">
+			            		<c:forEach items="${domains}" var="domain">
+		  							<form:option value="${domain.zkDomainUrlEncoded}">${domain.code}</form:option>
+								</c:forEach>
+			            	</c:if>
+			            </form:select>
+		            </div>
+	   		 </section>
+        </c:if>
         
         <section class="row">
             <label for="username"><spring:message code="screen.welcome.label.netid" /></label>
@@ -156,7 +174,7 @@
 </div>
 
 <div style="display:none">
-	<form action="uniauth/forgetPassword" method="get" id="hidden_to_step1">
+	<form action="uniauth/forgetPassword" method="post" id="hidden_to_step1">
 		<input type="text" name="step" value="0">
 		<input type="text" name="savedLoginContext" value="" id="hidden_savedLoginContext">
 	</form>

@@ -21,22 +21,86 @@
 	text-align: left;
 }
 
-.find-pwd-container .find-pwd-content .steps {
-	padding-top: 25px;
+.top-browser {
+	position : fixed;
+	width: 100%;
+	height: 30px;
+	left: 0px;
+	top: 0px;
+}
+
+.paddingtop5{
+	padding-top: 5px;
+}
+
+.height70 {
+	height: 70px;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.paddingtop10 {
+	padding-top: 10px;
+}
+
+.paddingtop20 {
+	padding-top: 20px;
+}
+
+.paddingtop30 {
+	padding-top: 30px;
+}
+
+.paddingtop50 {
+	padding-top: 50px;
+}
+
+.paddingbottom30 {
+	padding-bottom: 30px;
+}
+
+.width80 {
+	width: 80%;
+}
+
+.hiddenbtn {
+	display: none;	
+}
+
+.cursordefault{
+	cursor: default;
 }
 
 /* warn info show div */
-.find-pwd-container .find-pwd-content .steps .showwarninfo {
+.showwarninfo {
 	text-align: left;
 	color: red;
 }
 
-.find-pwd-container .find-pwd-content .steps .btnstep{
-	width: 100%;
+.row-line {
+	border-bottom: 1px solid #ddd;
 }
 
-.find-pwd-container .find-pwd-content .steps .cursordefault{
-	cursor: default;
+.find-pwd-container .find-pwd-content .infoedit .horizontal {
+	margin: 0px;
+}
+
+.find-pwd-container .find-pwd-content .infoedit .showlabel {
+	text-align: right;
+}
+
+.find-pwd-container .find-pwd-content .infoedit .infolabel {
+	text-align: left;
+}
+
+.find-pwd-container .find-pwd-content .steps {
+	padding-top: 25px;
+}
+
+.find-pwd-container .find-pwd-content .steps .btnstep{
+	width: 100%;
 }
 
 .find-pwd-container .find-pwd-content .steps .noshow{

@@ -25,6 +25,5 @@
     <p><spring:message code="screen.logout.security" /></p>
     <br>
     <p><a href="${pageContext.request.contextPath}/login"><spring:message code="screen.logout.login.again" /></a></p>
-    
   </div>
 <jsp:directive.include file="includes/bottom.jsp" />

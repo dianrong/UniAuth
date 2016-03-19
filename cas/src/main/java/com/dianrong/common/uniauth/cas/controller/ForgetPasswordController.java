@@ -213,7 +213,7 @@ public class ForgetPasswordController extends AbstractBaseController {
 			forgetPasswordService.checkUser(email);
 		} catch (Exception ex) {
 			// 验证用户失败了
-			setResponseResultJson(response, "4", ex.getMessage());
+			setResponseResultJson(response, "4", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
 			return;
 		}
 
@@ -311,7 +311,7 @@ public class ForgetPasswordController extends AbstractBaseController {
 				try {
 					forgetPasswordService.resetPassword(email, newPwd);
 				} catch (Exception ex) {
-					setResponseResultJson(response, "3", ex.getMessage());
+					setResponseResultJson(response, "3", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
 					return;
 				}
 				// 修改成功
