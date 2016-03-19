@@ -82,7 +82,7 @@
 
         <form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false" />
 		<c:if test="${not empty param.dupsession}">
-			<font color="red"></font><spring:message code="screen.tips.session.dup" /></font><br>
+			<p><font color="red"><spring:message code="screen.tips.session.dup" /></font></p><br>
 		</c:if>
 		
         <h2><spring:message code="screen.welcome.instructions" /></h2>
