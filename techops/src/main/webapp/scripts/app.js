@@ -16,6 +16,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             function fetchPermission() {
                 var initInjector = angular.injector(["ng"]);
                 var $http = initInjector.get("$http");
+                $http.defaults.useXDomain = true;
+                $http.defaults.withCredentials = true;
                 return $http.get(constant.apiBase + "/user/current").then(function (res) {
                     app.constant("permission", {
                         userInfo : res.data.data
