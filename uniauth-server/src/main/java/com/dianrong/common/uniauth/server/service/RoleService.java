@@ -92,8 +92,11 @@ public class RoleService {
         roleMapper.updateByPrimaryKey(role);
     }
     @Transactional
-    public void replaceGroupsAndUsersToRole(Integer roleId, List<Integer> grpIds, List<Long> userIds) {
+    public void replaceGroupsAndUsersToRole(Integer roleId, List<Integer> grpIdsDup, List<Long> userIdsDup) {
         CheckEmpty.checkEmpty(roleId, "roleId");
+        // remove duplicate values;
+        List<Integer> grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
+        List<Long> userIds = new ArrayList<>(new HashSet<>(userIdsDup));
 
         GrpRoleExample grpRoleExample = new GrpRoleExample();
         grpRoleExample.createCriteria().andRoleIdEqualTo(roleId);

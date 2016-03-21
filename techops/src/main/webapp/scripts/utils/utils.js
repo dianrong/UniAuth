@@ -29,6 +29,20 @@ define(['utils/constant'], function (constant) {
             }
             return array;
         },
+        syncAllCheckBoxForTheSameRoleToUser: function recur(rootNodes, node) {
+            if(rootNodes && rootNodes.length) {
+                for (var i = 0; i < rootNodes.length; i++) {
+                    var rootNode = rootNodes[i];
+                    if(rootNode.type == node.type && rootNode.id == node.id) {
+                        rootNode.checked = node.checked;
+                    }
+                    var children = rootNode.children;
+                    if(children && children.length) {
+                        recur(children, node);
+                    }
+                }
+            }
+        },
         extractCheckedGrpAndUserIds: function extractCheckedGrpAndUserIds(node, checkedGroupIds, checkedUserIds) {
             if(node) {
                 if(node.checked) {

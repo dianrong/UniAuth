@@ -33,6 +33,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             dirSelectable: false
         };
         $scope.checkClick = function($event, node) {
+            if(node.type == constant.treeNodeType.memberUser) {
+                utils.syncAllCheckBoxForTheSameRoleToUser($scope.treedata.data, node);
+            }
             $event.stopPropagation();
         };
         $scope.predicate = '';
