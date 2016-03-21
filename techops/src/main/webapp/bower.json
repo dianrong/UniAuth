@@ -10,6 +10,7 @@
     "angular-sanitize": "1.4.8",
     "angular-resource": "1.4.8",
     "angular-cookies": "1.4.8",
+    "angular-animate":"1.4.8",
     "angular-bootstrap": "^0.14.3",
     "angular-ui-router": "0.2.18",
     "jquery": ">= 1.9.0",

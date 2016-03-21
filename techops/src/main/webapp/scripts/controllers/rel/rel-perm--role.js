@@ -3,7 +3,7 @@ define(['../../utils/constant'], function (constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, $rootScope, PermService) {
+    var Controller = function ($scope, $rootScope, PermService, AlertService) {
 
         $scope.perm = PermService.permShared;
         $scope.refreshPerms = function(value) {
@@ -63,14 +63,14 @@ define(['../../utils/constant'], function (constant) {
             params.id = $scope.perm.selected.id;
             PermService.replacePermsToRole(params, function (res) {
                 if(res.info) {
-                    $scope.permRolesMsg = constant.submitFail;
+                    AlertService.addAlert(constant.messageType.danger, res.info);
                     return;
                 }
-                $scope.permRolesMsg = '';
+                AlertService.addAutoDismissAlert(constant.messageType.info, '替换权限对应的角色成功.');
                 $scope.getAllRolesWithCheckedInfoInDomain();
             }, function () {
                 $scope.roles = [];
-                $scope.permRolesMsg = constant.submitFail;
+                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换权限对应的角色失败, 请联系系统管理员.');
             });
         };
 
@@ -91,7 +91,7 @@ define(['../../utils/constant'], function (constant) {
 
     return {
         name: "RelPermRoleController",
-        fn: ["$scope", "$rootScope", "PermService", Controller]
+        fn: ["$scope", "$rootScope", "PermService", "AlertService", Controller]
     };
 
 });

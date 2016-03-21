@@ -2,7 +2,7 @@
  * Module representing a shirt.
  * @module controllers/login
  */
-define(['../../utils/constant'], function (constant) {
+define(function () {
     /**
      * A module representing a login controller.
      * @exports controllers/login
@@ -10,11 +10,11 @@ define(['../../utils/constant'], function (constant) {
     var Service = function ($rootScope) {
         var alertService = {};
 
-        // 创建一个全局的 alert 数组
         $rootScope.alerts = [];
+        $rootScope.autoDismissAlerts = [];
 
-        alertService.add = function(type, msg) {
-            $rootScope.alerts.push({'type': type, 'msg': msg, 'close': function(){ alertService.closeAlert(this); }});
+        alertService.addAlert = function(type, msg) {
+            $rootScope.alerts.unshift({'type': type, 'msg': msg, 'close': function(){ alertService.closeAlert(this); }});
         };
 
         alertService.closeAlert = function(alert) {
@@ -23,6 +23,18 @@ define(['../../utils/constant'], function (constant) {
 
         alertService.closeAlertIdx = function(index) {
             $rootScope.alerts.splice(index, 1);
+        };
+
+        alertService.addAutoDismissAlert = function(type, msg) {
+            $rootScope.autoDismissAlerts.unshift({'type': type, 'msg': msg, 'close': function(){ alertService.closeAutoDismissAlert(this); }});
+        };
+
+        alertService.closeAutoDismissAlert = function(alert) {
+            alertService.closeAutoDismissAlertIdx($rootScope.autoDismissAlerts.indexOf(alert));
+        };
+
+        alertService.closeAutoDismissAlertIdx = function(index) {
+            $rootScope.autoDismissAlerts.splice(index, 1);
         };
 
         return alertService;

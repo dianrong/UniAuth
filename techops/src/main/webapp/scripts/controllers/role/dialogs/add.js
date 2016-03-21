@@ -1,5 +1,5 @@
 define(['../../../utils/constant', '../../../utils/utils'], function (constant, utils) {
-    var Controller = function ($rootScope, $scope,$uibModalInstance, RoleService) {
+    var Controller = function ($rootScope, $scope,$uibModalInstance, RoleService, AlertService) {
         //-- Variables --//
 
         $scope.role = {};
@@ -32,6 +32,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
+                        AlertService.addAutoDismissAlert(constant.messageType.info, '角色添加成功.');
                         $uibModalInstance.close();
                     }
                 }, function(err) {
@@ -45,7 +46,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
 
     return {
         name: "AddRoleController",
-        fn: ["$rootScope", "$scope","$uibModalInstance", "RoleService", Controller]
+        fn: ["$rootScope", "$scope","$uibModalInstance", "RoleService", "AlertService", Controller]
     };
 
 });

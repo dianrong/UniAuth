@@ -1,5 +1,5 @@
 define(['../../../utils/constant', '../../../utils/utils'], function (constant, utils) {
-    var Controller = function ($rootScope, $scope,$uibModalInstance, PermService) {
+    var Controller = function ($rootScope, $scope,$uibModalInstance, PermService, AlertService) {
         //-- Variables --//
 
         $scope.perm = {};
@@ -32,6 +32,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
+                        AlertService.addAutoDismissAlert(constant.messageType.info, '权限添加成功.');
                         $uibModalInstance.close();
                     }
                 }, function(err) {
@@ -44,7 +45,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
 
     return {
         name: "AddPermController",
-        fn: ["$rootScope", "$scope","$uibModalInstance", "PermService", Controller]
+        fn: ["$rootScope", "$scope","$uibModalInstance", "PermService", "AlertService", Controller]
     };
 
 });

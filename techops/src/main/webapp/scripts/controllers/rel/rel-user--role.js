@@ -1,9 +1,9 @@
-define(['../../utils/constant'], function (constant) {
+define(['../../utils/constant'], function (constant, AlertService) {
     /**
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, $rootScope, UserService) {
+    var Controller = function ($scope, $rootScope, UserService, AlertService) {
 
         $scope.user = UserService.userShared;
         $scope.refreshUsers = function(email) {
@@ -63,14 +63,14 @@ define(['../../utils/constant'], function (constant) {
             params.id = $scope.user.selected.id;
             UserService.replaceRolesToUser(params, function (res) {
                 if(res.info) {
-                    $scope.userRolesMsg = constant.submitFail;
+                    AlertService.addAlert(constant.messageType.danger, res.info);
                     return;
                 }
-                $scope.userRolesMsg = '';
+                AlertService.addAutoDismissAlert(constant.messageType.info, '替换用户对应的角色成功.');
                 $scope.getUserRolesWithCheckedInfo();
             }, function () {
                 $scope.roles = [];
-                $scope.userRolesMsg = constant.submitFail;
+                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换用户对应的角色失败, 请联系系统管理员.');
             });
         }
         $scope.selectAllRolesForUser = function() {
@@ -90,7 +90,7 @@ define(['../../utils/constant'], function (constant) {
 
     return {
         name: "RelUserRoleController",
-        fn: ["$scope", "$rootScope", "UserService", Controller]
+        fn: ["$scope", "$rootScope", "UserService", "AlertService", Controller]
     };
 
 });

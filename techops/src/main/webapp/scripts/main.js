@@ -12,6 +12,7 @@ require.config({
     'ngTranslate': 'lib/angular-translate/angular-translate.min',
     'ngTranslateLoad': 'lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min',
     'ngSanitize': 'lib/angular-sanitize/angular-sanitize.min',
+    'ngAnimate': 'lib/angular-animate/angular-animate.min',
     'angularFileUpload': 'lib/angular-file-upload/dist/angular-file-upload.min',
     'jQuery': 'lib/jquery/jquery-2.1.4.min',
     'datepicker': 'lib/bootstrap-datepicker/bootstrap-datepicker.min',
@@ -61,6 +62,9 @@ require.config({
       deps:['angular']
     },
     'ui-select': {
+      deps:['angular']
+    },
+    'ngAnimate': {
       deps:['angular']
     },
     angular: {

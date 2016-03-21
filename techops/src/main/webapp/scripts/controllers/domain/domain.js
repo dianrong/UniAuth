@@ -1,5 +1,5 @@
 define(['../../utils/constant','../../utils/utils'], function (constant, utils) {
-    var Controller = function ($scope, $rootScope, $state, dialogs, DomainService) {
+    var Controller = function ($scope, $rootScope, $state, dialogs, DomainService, AlertService) {
         $scope.status = 'init';
 
         $scope.domain = DomainService.domainShared;
@@ -59,10 +59,12 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
             DomainService.modifyDomain(modifyDomainParam, function (res) {
 
                 if(res.info) {
+                    AlertService.addAlert(constant.messageType.danger, res.info);
                     // modify error with info.
                     return;
                 }
                 // modify success.
+                AlertService.addAutoDismissAlert(constant.messageType.info, '域修改成功.');
                 $scope.status = 'init';
 
             }, function (err) {
@@ -100,7 +102,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                         param, {size: 'md'}
                     );
                     dlg.result.then(function (close) {
-                        // maybe give user a friendly message.
+                        AlertService.addAutoDismissAlert(constant.messageType.info, 'Stakeholder修改成功.');
                         $scope.refreshStakeholders();
                     }, function (dismiss) {
                         //
@@ -119,11 +121,11 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                                 'id': param.id
                             }
                             , function (res) {
-                                // status change successed
+                                AlertService.addAutoDismissAlert(constant.messageType.info, 'Stakeholder删除成功.');
                                 $scope.stakeholders = [];
                                 $scope.refreshStakeholders();
                             }, function (err) {
-                                console.log(err);
+                                AlertService.addAutoDismissAlert(constant.messageType.danger, 'Stakeholder删除失败, 请联系系统管理员.');
                             }
                         );
                     }, function (no) {
@@ -156,7 +158,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
 
     return {
         name: "DomainController",
-        fn: ["$scope", "$rootScope", "$state", "dialogs", "DomainService", Controller]
+        fn: ["$scope", "$rootScope", "$state", "dialogs", "DomainService", "AlertService", Controller]
     };
 
 });

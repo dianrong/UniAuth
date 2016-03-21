@@ -1,6 +1,6 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
 
-    var Controller = function ($rootScope, $scope, $location, RoleService, dialogs, $state) {
+    var Controller = function ($rootScope, $scope, $location, RoleService, dialogs, $state, AlertService) {
 
         function bindAllRoleCodesRoleToRoot() {
             RoleService.getAllRoleCodes().$promise.then(function(res) {
@@ -111,6 +111,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                             }
                             , function(res) {
                                 // status change successed
+                                AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'启用':'禁用') + "角色成功.");
                                 $scope.queryRole();
                             }, function(err) {
                                 console.log(err);
@@ -147,7 +148,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "RoleController",
-        fn: ["$rootScope", "$scope", "$location", "RoleService", "dialogs", "$state", Controller]
+        fn: ["$rootScope", "$scope", "$location", "RoleService", "dialogs", "$state", "AlertService", Controller]
     };
 
 });

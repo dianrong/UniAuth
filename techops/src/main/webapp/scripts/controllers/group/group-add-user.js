@@ -3,7 +3,7 @@ define(['../../utils/constant'],function(constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($rootScope, $scope, GroupService, UserService) {
+    var Controller = function ($rootScope, $scope, GroupService, UserService, AlertService) {
         var paramsCtlLevel = {};
         paramsCtlLevel.onlyShowGroup = false;
         paramsCtlLevel.userGroupType = 0;
@@ -25,11 +25,11 @@ define(['../../utils/constant'],function(constant) {
         $scope.addUserToGroup = function () {
 
             if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
-                $scope.groupMessage = '请先选择一个父组, 再添加用户.';
+                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个父组, 再添加用户.');
                 return;
             }
             if(!$scope.user.selected || !$scope.user.selected.id) {
-                $scope.groupMessage = '请先选择一个用户, 再添加.';
+                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个用户, 再添加.');
                 return;
             }
 
@@ -40,15 +40,15 @@ define(['../../utils/constant'],function(constant) {
             params.userIds.push($scope.user.selected.id);
 
             GroupService.addUser(params, function (res) {
-                $scope.groupMessage = '';
                 if(res.info) {
-                    $scope.groupMessage = res.info;
+                    AlertService.addAlert(constant.messageType.danger, res.info);
                     return;
                 }
+                AlertService.addAutoDismissAlert(constant.messageType.info, "用户添加成功.");
                 $scope.getTree(paramsCtlLevel);
             }, function () {
                 $scope.addedGroup = {};
-                $scope.groupMessage = constant.loadError;
+                AlertService.addAutoDismissAlert(constant.messageType.danger, '添加用户失败, 请联系系统管理员.');
             });
         };
 
@@ -56,7 +56,7 @@ define(['../../utils/constant'],function(constant) {
 
     return {
         name: "GroupAddUserController",
-        fn: ["$rootScope","$scope", "GroupService", "UserService", Controller]
+        fn: ["$rootScope","$scope", "GroupService", "UserService", "AlertService", Controller]
     };
 
 });

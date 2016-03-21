@@ -46,6 +46,12 @@ define({
         }, {
             name: '禁用',
             value: 1
-        }]
+        }],
+        messageType: {
+            info: 'info',
+            danger: 'danger',
+            success: 'success',
+            warning: 'warning'
+        }
     }
 );

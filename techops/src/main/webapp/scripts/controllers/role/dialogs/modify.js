@@ -1,5 +1,5 @@
-define(['../../../utils/utils'], function (utils) {
-    var Controller = function ($scope,$uibModalInstance, RoleService, data) {
+define(['../../../utils/utils','../../../utils/constant'], function (utils,constant) {
+    var Controller = function ($scope,$uibModalInstance, RoleService, data, AlertService) {
         //-- Variables --//
 
         $scope.role = data;
@@ -38,6 +38,7 @@ define(['../../../utils/utils'], function (utils) {
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
+                        AlertService.addAutoDismissAlert(constant.messageType.info, '角色修改成功.');
                         $uibModalInstance.close();
                     }
                 }, function(err) {
@@ -51,7 +52,7 @@ define(['../../../utils/utils'], function (utils) {
 
     return {
         name: "ModifyRoleController",
-        fn: ["$scope","$uibModalInstance", "RoleService", "data", Controller]
+        fn: ["$scope","$uibModalInstance", "RoleService", "data", "AlertService", Controller]
     };
 
 });

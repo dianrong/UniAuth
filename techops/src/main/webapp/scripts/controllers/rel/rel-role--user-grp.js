@@ -1,6 +1,6 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
 
-    var Controller = function ($scope, $rootScope, RoleService, GroupService) {
+    var Controller = function ($scope, $rootScope, RoleService, GroupService, AlertService) {
         $scope.role = RoleService.roleUserGrpShared;
         $scope.refreshRoles = function(name) {
             var params = {name: name, status:0, pageNumber:0, pageSize: 16};
@@ -55,7 +55,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.saveRolesToUserAndGrp = function() {
             if(!$scope.role.selected || !$scope.role.selected.id) {
-                $scope.roleUserGrpMsg = '请先选择一个角色';
+                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个角色');
                 return;
             }
             var params = {};
@@ -68,14 +68,14 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             params.userIds = checkedUserIds;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {
                 if(res.info) {
-                    $scope.roleUserGrpMsg = constant.submitFail;
+                    AlertService.addAlert(constant.messageType.danger, res.info);
                     return;
                 }
-                $scope.roleUserGrpMsg = '';
+                AlertService.addAutoDismissAlert(constant.messageType.info, '替换角色对应的组/用户成功.');
                 $scope.getRoleUserGrpTree();
             }, function () {
                 $scope.roles = [];
-                $scope.roleUserGrpMsg = constant.submitFail;
+                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换角色对应的组/用户失败, 请联系系统管理员.');
             });
         };
 
@@ -90,7 +90,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "RelRoleUserGroupController",
-        fn: ["$scope", "$rootScope", "RoleService", "GroupService", Controller]
+        fn: ["$scope", "$rootScope", "RoleService", "GroupService", "AlertService", Controller]
     };
 
 });

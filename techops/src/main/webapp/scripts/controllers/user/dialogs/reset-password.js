@@ -1,5 +1,5 @@
-define(function () {
-    var Controller = function ($scope,$uibModalInstance, UserService, data) {
+define(['../../../utils/constant'], function (constant) {
+    var Controller = function ($scope,$uibModalInstance, UserService, data, AlertService) {
         //-- Variables --//
 
         $scope.user = data;
@@ -25,6 +25,7 @@ define(function () {
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
+                        AlertService.addAutoDismissAlert(constant.messageType.info, '用户密码重置成功!');
                         $uibModalInstance.close();
                     }
                 }, function(err) {
@@ -38,7 +39,7 @@ define(function () {
 
     return {
         name: "ResetPasswordController",
-        fn: ["$scope","$uibModalInstance", "UserService", "data", Controller]
+        fn: ["$scope","$uibModalInstance", "UserService", "data", "AlertService", Controller]
     };
 
 });

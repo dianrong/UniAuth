@@ -1,6 +1,6 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
 
-    var Controller = function ($rootScope, $scope, $location, PermService, dialogs, $state) {
+    var Controller = function ($rootScope, $scope, $location, PermService, dialogs, $state, AlertService) {
 
         function getAllPermTypes() {
             PermService.getAllPermTypes().$promise.then(function (res) {
@@ -106,6 +106,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                             }
                             , function(res) {
                                 // status change successed
+                                AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'启用':'禁用') + "权限成功.");
                                 $scope.queryPerm();
                             }, function(err) {
                                 console.log(err);
@@ -142,7 +143,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "PermController",
-        fn: ["$rootScope", "$scope", "$location", "PermService", "dialogs", "$state", Controller]
+        fn: ["$rootScope", "$scope", "$location", "PermService", "dialogs", "$state", "AlertService", Controller]
     };
 
 });

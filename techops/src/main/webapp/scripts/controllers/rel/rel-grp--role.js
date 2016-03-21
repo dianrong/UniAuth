@@ -1,6 +1,6 @@
 define(['../../utils/constant'], function (constant) {
 
-    var Controller = function ($scope, $rootScope, GroupService) {
+    var Controller = function ($scope, $rootScope, GroupService, AlertService) {
 
         $scope.grp = GroupService.grpShared;
         $scope.refreshGrps = function(name) {
@@ -60,14 +60,14 @@ define(['../../utils/constant'], function (constant) {
             params.id = $scope.grp.selected.id;
             GroupService.replaceRolesToGrp(params, function (res) {
                 if(res.info) {
-                    $scope.grpRolesMsg = constant.submitFail;
+                    AlertService.addAlert(constant.messageType.info, res.info);
                     return;
                 }
-                $scope.grpRolesMsg = '';
+                AlertService.addAutoDismissAlert(constant.messageType.info, '成功替换group对应的角色.');
                 $scope.getGrpRolesWithCheckedInfo();
             }, function () {
                 $scope.roles = [];
-                $scope.grpRolesMsg = constant.submitFail;
+                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换group对应的角色失败, 请联系系统管理员');
             });
         }
         $scope.selectAllRolesForGrp = function() {
@@ -87,7 +87,7 @@ define(['../../utils/constant'], function (constant) {
 
     return {
         name: "RelGrpRoleController",
-        fn: ["$scope", "$rootScope", "GroupService", Controller]
+        fn: ["$scope", "$rootScope", "GroupService", "AlertService", Controller]
     };
 
 });

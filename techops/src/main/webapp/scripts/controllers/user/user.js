@@ -3,7 +3,7 @@ define(['../../utils/constant'], function (constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($rootScope, $scope, $location, UserService, dialogs, $state) {
+    var Controller = function ($rootScope, $scope, $location, UserService, dialogs, $state, AlertService) {
         // always cache the query user input
         if($rootScope.userQuery) {
             $scope.userQuery = $rootScope.userQuery;
@@ -21,7 +21,6 @@ define(['../../utils/constant'], function (constant) {
         };
 
         $scope.queryUser = function () {
-
             var params = $scope.userQuery;
             if (!params) {
                 params = {};
@@ -77,9 +76,10 @@ define(['../../utils/constant'], function (constant) {
                                 'status':param.status?0:1
                             }
                             , function(res) {
-                                // status change successed
+                                AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'用户启用':'用户禁用') + '成功!');
                                 $scope.queryUser();
                             }, function(err) {
+                                AlertService.addAutoDismissAlert(constant.messageType.danger, (param.status?'用户启用':'用户禁用') + '失败!');
                                 console.log(err);
                             }
                         );
@@ -92,7 +92,6 @@ define(['../../utils/constant'], function (constant) {
                         {}, {size:'md'}
                     );
                     dlg.result.then(function (close) {
-                        // add user successed
                         $scope.queryUser();
                     }, function (dismiss) {
                         //
@@ -111,10 +110,10 @@ define(['../../utils/constant'], function (constant) {
                                 'id':param.id
                             },
                             function(res) {
-                                $scope.queryUser();
+                                AlertService.addAutoDismissAlert(constant.messageType.info, '用户解锁成功!');
                             },
                             function(err) {
-                                console.log(err);
+                                AlertService.addAutoDismissAlert(constant.messageType.info, '用户解锁失败!');
                             }
                         );
                     }, function (no) {
@@ -126,7 +125,7 @@ define(['../../utils/constant'], function (constant) {
                         param, {size:'md'}
                     );
                     dlg.result.then(function (close) {
-                        // maybe give user a friendly message.
+                        //
                     }, function (dismiss) {
                         //
                     });
@@ -136,7 +135,6 @@ define(['../../utils/constant'], function (constant) {
                         param, {size:'md'}
                     );
                     dlg.result.then(function (close) {
-                        // maybe give user a friendly message.
                         $scope.queryUser();
                     }, function (dismiss) {
                         //
@@ -149,7 +147,7 @@ define(['../../utils/constant'], function (constant) {
 
     return {
         name: "UserController",
-        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", "$state",Controller]
+        fn: ["$rootScope", "$scope", "$location", "UserService", "dialogs", "$state", "AlertService", Controller]
     };
 
 });

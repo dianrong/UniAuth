@@ -28,6 +28,10 @@
         <div ng-show="!pageLoaded" style="padding-top: 1em;text-align: left;">正在加载...</div>
         <div ng-show="pageLoaded">
             <div ng-include="'views/common/header.html'" class="container"></div>
+            <div class="alert-container container">
+                <uib-alert ng-cloak template-url="views/common/message-box.html" class="fade" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+                <uib-alert ng-cloak template-url="views/common/message-box.html" class="fade" ng-repeat="alert in autoDismissAlerts" type="{{alert.type}}" dismiss-on-timeout="2000" close="closeDismissAlert($index)">{{alert.msg}}</uib-alert>
+            </div>
             <div class="container">
                 <div class="row">
                     <div class="col-md-2 col-sm-3">

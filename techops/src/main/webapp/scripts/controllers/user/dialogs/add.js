@@ -1,5 +1,5 @@
-define(function () {
-    var Controller = function ($scope,$uibModalInstance, UserService) {
+define(['../../../utils/constant'], function (constant) {
+    var Controller = function ($scope,$uibModalInstance, UserService, AlertService) {
         //-- Variables --//
 
         $scope.user = {};
@@ -17,6 +17,7 @@ define(function () {
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
+                        AlertService.addAutoDismissAlert(constant.messageType.info, '用户添加成功.');
                         $uibModalInstance.close();
                     }
                 }, function(err) {
@@ -30,7 +31,7 @@ define(function () {
 
     return {
         name: "AddUserController",
-        fn: ["$scope","$uibModalInstance", "UserService", Controller]
+        fn: ["$scope","$uibModalInstance", "UserService", "AlertService", Controller]
     };
 
 });

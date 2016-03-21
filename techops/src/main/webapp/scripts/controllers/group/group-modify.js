@@ -3,7 +3,7 @@ define(['../../utils/constant'], function(constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($rootScope, $scope, GroupService) {
+    var Controller = function ($rootScope, $scope, GroupService, AlertService) {
         $scope.grp = $rootScope.shareGroup;
 
         var paramsCtlLevel = {};
@@ -15,10 +15,9 @@ define(['../../utils/constant'], function(constant) {
         $scope.modifyGroup = function () {
 
             if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
-                $scope.groupMessage = '请先选择一个组, 再修改组.';
+                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个组, 再修改组.');
                 return;
             }
-
             GroupService.modify({
                     "id": $scope.grp.selected.id,
                     "name": $scope.grp.selected.label,
@@ -26,27 +25,27 @@ define(['../../utils/constant'], function(constant) {
                     "description": $scope.grp.selected.description,
                     "targetGroupId": $scope.grp.selected.id
                 }, function (res) {
-                $scope.groupMessage = '';
                 var result = res.data;
                 if(res.info) {
-                    $scope.groupMessage = res.info;
+                    AlertService.addAlert(constant.messageType.danger, res.info);
                     return;
                 }
                 $scope.modifiedGroup = result.data;
+                AlertService.addAutoDismissAlert(constant.messageType.info, '组修改成功.');
                 //sync the selected group
                 GroupService.getGrpDetails({
                     id: $rootScope.shareGroup.selected.id
                 }, function (result) {
                     $scope.selected = result.data;
                     $rootScope.shareGroup.selected = $scope.selected;
-                }, function (err) {e
+                }, function (err) {
                     console.log(err);
                 });
                 //sync the tree
                 $scope.getTree(paramsCtlLevel);
             }, function () {
                 $scope.modifidGroup = {};
-                $scope.groupMessage = constant.loadError;
+                AlertService.addAutoDismissAlert(constant.messageType.danger, '组修改失败, 请联系系统管理员.');
             });
             $scope.getTree(paramsCtlLevel);
         };
@@ -54,7 +53,7 @@ define(['../../utils/constant'], function(constant) {
 
     return {
         name: "GroupModifyController",
-        fn: ["$rootScope", "$scope", "GroupService", Controller]
+        fn: ["$rootScope", "$scope", "GroupService", "AlertService", Controller]
     };
 
 });

@@ -74,3 +74,32 @@
     padding-right: 15px;
     padding-left: 15px;
 }
+
+.alert-container {
+    position: fixed;
+    width: 518px;
+    margin-left: 279px;
+    top: 4px;
+    z-index: 1;
+}
+
+.fade {
+    opacity:1;
+}
+
+.fade.ng-enter {
+    transition:0.5s linear all;
+    opacity:0;
+}
+
+.fade.ng-enter.ng-enter-active {
+    opacity:1;
+}
+
+.fade.ng-leave {
+    transition:0.5s linear all;
+    opacity:1;
+}
+.fade.ng-leave.ng-leave-active {
+    opacity:0;
+}

@@ -3,7 +3,7 @@ define(['../../utils/constant'],function(constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($rootScope, $scope, GroupService, UserService) {
+    var Controller = function ($rootScope, $scope, GroupService, AlertService) {
         var paramsCtlLevel = {};
         paramsCtlLevel.onlyShowGroup = false;
         paramsCtlLevel.userGroupType = 1;
@@ -13,7 +13,7 @@ define(['../../utils/constant'],function(constant) {
         $scope.removeUserFromGroup = function () {
 
             if(!$scope.selectedNodes || $scope.selectedNodes.length == 0){
-                $scope.groupMessage = '请先选择您要删除的用户.';
+                AlertService.addAutoDismissAlert(constant.messageType.warning, "请先选择您要删除的Owner.");
                 return;
             }
             var nodes = $scope.selectedNodes;
@@ -29,16 +29,16 @@ define(['../../utils/constant'],function(constant) {
             params.normalMember=false;
 
             GroupService.deleteUser(params, function (res) {
-                $scope.groupMessage = '';
                 if(res.info) {
-                    $scope.groupMessage = res.info;
+                    AlertService.addAlert(constant.messageType.danger, res.info);
                     return;
                 }
+                AlertService.addAutoDismissAlert(constant.messageType.info, "Owner删除成功.");
                 $scope.getTree(paramsCtlLevel);
                 $scope.selectedNodes = [];
             }, function () {
                 $scope.addedGroup = {};
-                $scope.groupMessage = constant.loadError;
+                AlertService.addAutoDismissAlert(constant.messageType.danger, "Owner删除失败, 请联系系统管理员.");
             });
         };
 
@@ -46,7 +46,7 @@ define(['../../utils/constant'],function(constant) {
 
     return {
         name: "GroupDeleteOwnerController",
-        fn: ["$rootScope","$scope", "GroupService", "UserService", Controller]
+        fn: ["$rootScope","$scope", "GroupService", "AlertService", Controller]
     };
 
 });

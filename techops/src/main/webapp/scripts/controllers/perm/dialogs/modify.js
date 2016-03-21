@@ -1,5 +1,5 @@
-define(['../../../utils/utils'], function (utils) {
-    var Controller = function ($scope,$uibModalInstance, PermService, data) {
+define(['../../../utils/utils','../../../utils/constant'], function (utils, constant) {
+    var Controller = function ($scope,$uibModalInstance, PermService, AlertService, data) {
         //-- Variables --//
 
         $scope.perm = data;
@@ -41,6 +41,7 @@ define(['../../../utils/utils'], function (utils) {
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
+                        AlertService.addAutoDismissAlert(constant.messageType.info, '权限修改成功.');
                         $uibModalInstance.close();
                     }
                 }, function(err) {
@@ -54,7 +55,7 @@ define(['../../../utils/utils'], function (utils) {
 
     return {
         name: "ModifyPermController",
-        fn: ["$scope","$uibModalInstance", "PermService", "data", Controller]
+        fn: ["$scope","$uibModalInstance", "PermService", "AlertService", "data", Controller]
     };
 
 });

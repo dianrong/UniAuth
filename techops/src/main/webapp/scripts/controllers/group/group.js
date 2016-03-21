@@ -5,7 +5,6 @@ define(['../../utils/constant'], function (constant) {
      */
     var Controller = function ($scope, $rootScope, GroupService) {
         $scope.treedata = GroupService.tree;
-
         $scope.opts = {
             isLeaf: function(node) {
                 var isLeaf = node.type !== constant.treeNodeType.group;

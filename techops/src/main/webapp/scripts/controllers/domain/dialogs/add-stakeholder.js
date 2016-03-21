@@ -1,6 +1,6 @@
-define(function () {
+define(['../../../utils/constant'], function (constant) {
 
-    var Controller = function ($scope,$uibModalInstance, DomainService, data) {
+    var Controller = function ($scope,$uibModalInstance, DomainService, data, AlertService) {
 
         $scope.stakeholder = {};
         $scope.domain = data;
@@ -17,6 +17,7 @@ define(function () {
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
+                        AlertService.addAutoDismissAlert(constant.messageType.info, 'Stakeholder新增成功.');
                         $uibModalInstance.close(res.data);
                     }
                 }, function(err) {
@@ -30,7 +31,7 @@ define(function () {
 
     return {
         name: "AddStakeholderController",
-        fn: ["$scope","$uibModalInstance", "DomainService", "data", Controller]
+        fn: ["$scope","$uibModalInstance", "DomainService", "data", "AlertService", Controller]
     };
 
 });
