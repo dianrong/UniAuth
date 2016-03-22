@@ -35,7 +35,7 @@ public class DomainService {
 		while(iterator.hasNext()){
 			Entry<String,String> entry = iterator.next();
 			String zkNodeName = entry.getKey();
-			//String zkNodeValue = entry.getValue();
+			//String zkNodeValue = entry.getValue() ;
 			
 			if(zkNodeName.startsWith(AppConstants.ZK_DOMAIN_PREFIX)){
 				zkNodeName = zkNodeName.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
