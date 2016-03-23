@@ -20,10 +20,20 @@
 			&gt;
 			<spring:message code="screen.personal.info.edit.title" />
 		</header>
-		<div class="common-wizard infoedit paddingtop50">
+		<div class="common-wizard infoedit paddingtop10">
 				<input type="hidden" id="hidden_userinfo_keyid" value="${userinfo.id}">
 				<form action="" class="form-horizontal">
-					<div class="form-group paddingbottom30">
+					<div class="form-group">
+						<label for="inputEmail" class="col-md-3 control-label"><spring:message
+								code="screen.personal.info.edit.label.email" /></label> <label
+							id="inputEmail" class="col-md-6 control-label infolabel">${userinfo.email}</label>
+					</div>
+				
+					<div class="horizontal form-group">
+						<div class="col-md-offset-2 col-md-10 row-line" ></div>
+					</div>
+				
+					<div class="form-group">
 						<label for="inputPassword" class="col-md-3 control-label showlabel"><spring:message
 								code="screen.personal.info.edit.label.password" /></label>
 						<div class="col-md-6">
@@ -37,15 +47,10 @@
 						</div>
 					</div>
 					
-					<div class="form-group horizontal">
+					<div class="horizontal form-group">
 						<div class="col-md-offset-2 col-md-10 row-line" ></div>
 					</div>
-				
-					<div class="form-group paddingtop20">
-						<label for="inputEmail" class="col-md-3 control-label"><spring:message
-								code="screen.personal.info.edit.label.email" /></label> <label
-							id="inputEmail" class="col-md-6 control-label infolabel">${userinfo.email}</label>
-					</div>
+					
 					<div class="form-group">
 						<label for="inputName" class="col-md-3 control-label"><spring:message
 								code="screen.personal.info.edit.label.name" /></label>
@@ -94,8 +99,8 @@
 		</div>
 </div>
 
-<div class="top-browser hiddenbtn" role="alert" id="window_notice_div">
-  <div id="top_show_info" class="paddingtop5"></div>
+<div class="hiddenbtn" role="alert" id="window_notice_div">
+  <div id="top_show_info" class="showinfo"></div>
 </div>
 
 <!-- Modal -->

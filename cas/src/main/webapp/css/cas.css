@@ -492,20 +492,36 @@ footer a:link, footer a:visited {
 	}
 }
 
-.forgetpwd-link {
-	float: right;
-    margin-top: 19px;
-    margin-right: 65px;
+.personal-info-link {
+	margin-top: 10px;
 }
 
-.forgetpwd-link a {
+.personal-info-link  a {
 	text-decoration: none;
 }
 
-.height68 {
-	height: 68px;
+.personal-info-link  .forgetpwd-link {
+	float: right;
+    margin-right: 65px;
+}
+
+.personal-info-link  .gotoedit-link  {
+	float: left;
+}
+
+.height55{
+	height: 55px;
+}
+
+.padding-top20 {
+	padding-top: 20px;
 }
 
 .hiddenbtn {
 	display: none;	
+}
+
+.notice-red {
+	color: red;
+    font-size: 1.5em;
 }

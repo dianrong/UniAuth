@@ -72,7 +72,7 @@ public class CaptchaController extends AbstractBaseController {
 		String verifyCode = StringUtil.generateNumberStr(6);
 
 		// 定义发送的内容
-		String title = "uniauth重置 密码";
+		String title = "uniauth密码重置";
 		StringBuffer emailInfo = new StringBuffer("您好，本次密码修改的验证码为:" + verifyCode + "。\r\n注意：验证码将在"+AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES/1000L+"秒后过期。");
 
 		// 发送邮件

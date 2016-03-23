@@ -89,7 +89,6 @@
 
 		
 		<c:if test="${not empty edituserinfo}">
-			<div class="height68">
 				<section class="row hiddenbtn">
 		            <label for="domain"><spring:message code="screen.welcome.label.domain" /></label>
 		            <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
@@ -101,7 +100,9 @@
 			            </form:select>
 		            </div>
 		         </section>
-	         </div>
+		         <section class="row height55">
+		            <label class="notice-red padding-top20"><spring:message code="screen.personal.info.goto.edit.relogin.notice"/></label>
+		          </section>
         </c:if>
         <c:if test="${empty edituserinfo}">
 	        <section class="row">
@@ -169,15 +170,23 @@
             <input class="btn-submit" name="submit" accesskey="l" value="<spring:message code="screen.welcome.button.login" />" tabindex="6" type="submit" />
             <input class="btn-reset" name="reset" accesskey="c" value="<spring:message code="screen.welcome.button.clear" />" tabindex="7" type="reset" />
             
-            <div class="forgetpwd-link">
-            	<a href="javascript:void(0);" title="<spring:message code="screen.welcome.link.password.forget.title"/>" id="to_reset_pwd_btn"><spring:message code="screen.welcome.link.password.forget"/></a>
-            </div>
+            <c:if test="${empty edituserinfo}">
+            		<div class="personal-info-link">
+		            	<div class="gotoedit-link">
+		            		<a href="<%=path %>/login?edituserinfo=go"  title="<spring:message code="screen.welcome.link.userinfo.goedit.title"/>"><spring:message code="screen.welcome.link.userinfo.goedit"/></a>
+		            	</div>
+			            <div class="forgetpwd-link">
+			            	<a href="javascript:void(0);" title="<spring:message code="screen.welcome.link.password.forget.title"/>" id="to_reset_pwd_btn"><spring:message code="screen.welcome.link.password.forget"/></a>
+			            </div>
+		            </div>
+        	</c:if>
+            
         </section>
     </form:form>
 </div>
 
 <div style="display:none">
-	<form action="uniauth/forgetPassword" method="post" id="hidden_to_step1">
+	<form action="<%=path %>/uniauth/forgetPassword" method="post" id="hidden_to_step1">
 		<input type="text" name="step" value="0">
 		<input type="text" name="savedLoginContext" value="" id="hidden_savedLoginContext">
 	</form>

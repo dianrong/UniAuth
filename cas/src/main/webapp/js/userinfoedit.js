@@ -115,7 +115,7 @@
             dataType : 'json',
             success : function(data) {
             	if (data.code == '1') { 
-                	window.infonotice('1', "密码更新成功");
+                	window.infonotice('1', "信息更新成功");
                 } else {
                 	window.infonotice('2', data.msg);
                 }
@@ -252,6 +252,10 @@
 		show_state : "1",
 		//当前显示的提示级别
 		current_warn_class : '',
+		//信息长度管理相关class
+		info_length_class : '',
+		//定义常量  少量信息的字符串长度
+		bg_info_length:9,
 		//定义提示信息显示的时长 毫秒
 		notice_show_milles : 2000,
 		//设置settimeout返回的handle
@@ -263,8 +267,9 @@
 			}
 			return true;
 		},
-		setShowState : function(isshow, warn_class) {
+		setShowState : function(isshow, warn_class, length_class) {
 			this.current_warn_class = warn_class;
+			this.info_length_class = length_class;
 			if(isshow){
 				this.show_state = '2';
 			} else {
@@ -295,14 +300,21 @@
 		
 		var infoclass = "alert-success";
 		//异常级别
-		if(infolevel == "2"){
+		if(!!infolevel && infolevel == "2"){
 			infoclass = "alert-danger";
+		}
+		
+		var infolength_class="top-browser-bg ";
+		//信息长度定义
+		if(!!message && message.length > notice_div_state_info.bg_info_length){
+			infolength_class="top-browser-md ";
 		}
 		
 		var showmodal = $('#window_notice_div');
 		//展示处理
 		//修改class
 		showmodal.addClass(infoclass);
+		showmodal.addClass(infolength_class);
 		//添加内容
 		$('#top_show_info').html(message);
 		
@@ -310,7 +322,7 @@
 		showmodal.show();
 		
 		//设置状态
-		notice_div_state_info.setShowState(true, infoclass);
+		notice_div_state_info.setShowState(true, infoclass,infolength_class);
 	}
 	
 	window.infonotice_close = function(){
@@ -321,11 +333,12 @@
 			showmodal.toggle(false);
 			//清空状态
 			showmodal.removeClass(notice_div_state_info.current_warn_class);
+			showmodal.removeClass(notice_div_state_info.info_length_class);
 			//清空提示信息
 			$('#top_show_info').html('');
 			
 			//重置状态
-			notice_div_state_info.setShowState(false, '');
+			notice_div_state_info.setShowState(false, '','');
 		}		
 	}	
 	//初始化操作
