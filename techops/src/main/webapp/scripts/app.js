@@ -46,7 +46,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
-      $rootScope.pageTitle = '权限运维系统 点融网-Dianrong';
+      $rootScope.pageTitle = '权限运维系统';
 
     }]);
 
