@@ -12,7 +12,7 @@
 			<%
 				} else {
 			%>
-			<a href="${sessionScope.pwdg_savedLoginContext}"><spring:message
+			<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message
 					code="screen.password.reset.step.backtofirstpage" /></a>
 			<%
 				}
@@ -21,12 +21,12 @@
 			<spring:message code="screen.personal.info.edit.title" />
 		</header>
 		<div class="common-wizard infoedit paddingtop10">
-				<input type="hidden" id="hidden_userinfo_keyid" value="${userinfo.id}">
+				<input type="hidden" id="hidden_userinfo_keyid" value="${fn:escapeXml(userinfo.id)}">
 				<form action="" class="form-horizontal">
 					<div class="form-group">
 						<label for="inputEmail" class="col-md-3 control-label"><spring:message
 								code="screen.personal.info.edit.label.email" /></label> <label
-							id="inputEmail" class="col-md-6 control-label infolabel">${userinfo.email}</label>
+							id="inputEmail" class="col-md-6 control-label infolabel">${fn:escapeXml(userinfo.email)}</label>
 					</div>
 				
 					<div class="horizontal form-group">
@@ -57,7 +57,7 @@
 						<div class="col-md-6">
 							<input type="text" class="form-control" id="inputName"
 								placeholder="<spring:message code="screen.personal.info.edit.label.name"/>"
-								name="name" value="${userinfo.name}" disabled="disabled">
+								name="name" value="${fn:escapeXml(userinfo.name)}" disabled="disabled">
 						</div>
 					</div>
 					<div class="form-group">
@@ -66,7 +66,7 @@
 						<div class="col-md-6">
 							<input type="text" class="form-control" id="inputPhone"
 								placeholder="<spring:message code="screen.personal.info.edit.label.phone"/>"
-								name="phone" value="${userinfo.phone}" disabled="disabled">
+								name="phone" value="${fn:escapeXml(userinfo.phone)}" disabled="disabled">
 						</div>
 					</div>
 					<div class="form-group paddingtop20">

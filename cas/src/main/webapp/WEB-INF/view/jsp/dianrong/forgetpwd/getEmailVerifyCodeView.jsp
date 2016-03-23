@@ -11,7 +11,7 @@
 									<% 
 								} else {
 									%>
-										<a href="${sessionScope.pwdg_savedLoginContext}"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
+										<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
 									<% 
 								}
 						%>
@@ -52,7 +52,7 @@
 					<form action="../uniauth/forgetPassword" id="step2Post" class="form-horizontal">
 					 	<div class="form-group">
 							<div class="col-md-offset-4 col-md-4">
-						    <label for="emailValue" class="h6">${sessionScope.pwdg_emailVal}</label>
+						    <label for="emailValue" class="h6">${fn:escapeXml(sessionScope.pwdg_emailVal)}</label>
 						    </div>
 					  	</div>
 					  	<div class="form-group">

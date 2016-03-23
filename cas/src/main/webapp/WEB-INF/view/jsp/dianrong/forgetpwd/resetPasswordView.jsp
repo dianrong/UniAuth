@@ -11,7 +11,7 @@
 									<% 
 								} else {
 									%>
-										<a href="${sessionScope.pwdg_savedLoginContext}"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
+										<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
 									<% 
 								}
 						%>
