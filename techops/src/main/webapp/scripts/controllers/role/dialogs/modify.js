@@ -30,7 +30,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils,const
                     'id':param.id,
                     'name': param.name,
                     'description': param.description,
-                    'roleCodeId':param.roleCodeId,
+                    'roleCodeId':$scope.roleModifyRoleCodesDropdown.option.id,
                     'status':param.status
                 },
                 function(res) {
