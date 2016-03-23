@@ -32,7 +32,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils, cons
                     'id':param.id,
                     'value': param.value,
                     'description': param.description,
-                    'permTypeId':param.permTypeId,
+                    'permTypeId':$scope.permModifyPermTypesDropdown.option.id,
                     'domainId':param.domainId,
                     'status':param.status
                 },

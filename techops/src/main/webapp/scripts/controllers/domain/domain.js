@@ -66,7 +66,8 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                 // modify success.
                 AlertService.addAutoDismissAlert(constant.messageType.info, '域修改成功.');
                 $scope.status = 'init';
-
+                $scope.domains = [];
+                $scope.refreshDomains();
             }, function (err) {
                 // modify error with api err.
             });
