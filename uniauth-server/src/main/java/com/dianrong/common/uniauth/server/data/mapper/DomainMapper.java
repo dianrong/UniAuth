@@ -95,4 +95,25 @@ public interface DomainMapper {
     int updateByPrimaryKey(Domain record);
     
     List<Domain> selectUserDomainsByUserId(Long userId);
+    
+   /**.
+    * 根据id获取有效域名的数量
+    * @param id
+    * @return
+    */
+    int countDomainByIdWithStatusEffective(@Param("id") Long id);
+    
+    /**.
+     * 根据code获取有效域名的数量
+     * @param code code
+     * @return 数量
+     */
+    int countDomainByCodeWithStatusEffective(@Param("code")  String code);
+    
+    /**.
+     * 根据id获取有效域名的信息
+     * @param id id
+     * @return 信息model
+     */
+    Domain selectByIdWithStatusEffective(@Param("id") Integer id);
 }

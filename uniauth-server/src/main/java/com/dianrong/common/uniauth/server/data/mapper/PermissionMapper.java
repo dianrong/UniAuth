@@ -105,4 +105,11 @@ public interface PermissionMapper {
     List<Permission> selectByRoleAndDomainId(Map map);
     
     List<UrlRoleMappingExt> selectUrlRoleMapping(String domainCode);
+    
+    /**.
+     * 根据id获取有效组的数量
+     * @param id
+     * @return
+     */
+     int countPermissionByIdWithStatusEffective(@Param("id") Long id);
 }

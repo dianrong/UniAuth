@@ -47,4 +47,31 @@
 		)
 	)
   </select>
+  
+  <!-- 根据id获取有效域名的数量 -->
+  <select id="countDomainByIdWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.Long" >
+	SELECT  COUNT(id)
+	FROM domain 
+	WHERE 
+	id = #{id, jdbcType=BIGINT}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据code获取有效域名的数量 -->
+  <select id="countDomainByCodeWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.String" >
+	SELECT  COUNT(id)
+	FROM domain 
+	WHERE 
+	code = #{code, jdbcType=VARCHAR}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据keyid查询有效的域名信息 -->
+   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM domain
+    WHERE id = #{id, jdbcType=INTEGER}
+    AND status = 0 
+  </select>
 </mapper>

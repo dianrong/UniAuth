@@ -1,13 +1,18 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.*;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
@@ -16,14 +21,29 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
-import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.PermTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
+import com.dianrong.common.uniauth.server.data.mapper.PermTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-import org.springframework.util.CollectionUtils;
 
 @Service
 public class PermissionService {
@@ -40,6 +60,18 @@ public class PermissionService {
 	private RoleCodeMapper roleCodeMapper;
 	@Autowired
 	private CommonService commonService;
+	
+	/**.
+	 * 进行权限数据过滤的filter
+	 */
+	@Resource(name="permissionDataFilter")
+	private DataFilter dataFilter;
+	
+	/**.
+	 * 进行域名数据过滤的filter
+	 */
+	@Resource(name="domainDataFilter")
+	private DataFilter domainDataFilter;
 	
 	public List<PermTypeDto> getAllPermTypeCodes() {
 		PermTypeExample example = new PermTypeExample();
@@ -63,6 +95,9 @@ public class PermissionService {
 		CheckEmpty.checkEmpty(permTypeId, "权限类型ID");
 		CheckEmpty.checkEmpty(value, "权限的值");
 		
+		//域名id必须是有效的
+		domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+		
 		Permission permission = BeanConverter.convert(permissionParam, false);
 		permission.setStatus(AppConstants.ZERO_Byte);
 		permissionMapper.insert(permission);
@@ -83,6 +118,9 @@ public class PermissionService {
 		CheckEmpty.checkEmpty(permTypeId, "权限类型ID");
 		CheckEmpty.checkEmpty(value, "权限的值");
 		
+		//域名id必须是有效的
+		domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+
 		Permission permission = BeanConverter.convert(permissionParam, true);
 		permissionMapper.updateByPrimaryKey(permission);
 	}
@@ -95,7 +133,6 @@ public class PermissionService {
 
 	@Transactional
 	public void replaceRolesToPerm(Integer permId, List<Integer> roleIds) {
-
 		CheckEmpty.checkEmpty(permId, "permId");
 
 		RolePermissionExample rolePermissionExample = new RolePermissionExample();
@@ -278,4 +315,12 @@ public class PermissionService {
 		return urlRoleMappingDtoList;
 	}
 	
+		/**.
+	    * 根据id获取有效权限的数量
+	    * @param id
+	    * @return
+	    */
+	  public  int countPermissionByIdWithStatusEffective(Long id){
+		  return permissionMapper.countPermissionByIdWithStatusEffective(id);
+	  }
 }

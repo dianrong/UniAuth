@@ -72,4 +72,21 @@
     )
   </select>
   
+  <!-- 根据id获取有效角色的数量 -->
+  <select id="countRoleByIdWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.Long" >
+	SELECT  COUNT(id)
+	FROM role 
+	WHERE 
+	id = #{id, jdbcType=BIGINT}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据keyid查询有效的域名信息 -->
+   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMapExt" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM role
+    WHERE id = #{id, jdbcType=INTEGER}
+    AND status = 0 
+  </select>
 </mapper>

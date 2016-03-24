@@ -1,7 +1,29 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.dto.*;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -9,18 +31,30 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
-import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.*;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.*;
 
 /**
  * Created by Arc on 14/1/16.
@@ -42,6 +76,11 @@ public class UserService {
     @Autowired
     private CommonService commonService;
     
+    /**.
+	 * 进行用户数据过滤的filter
+	 */
+	@Resource(name="userDataFilter")
+	private DataFilter dataFilter;
 
     @Transactional
     public UserDto addNewUser(String name, String phone, String email) {
@@ -113,7 +152,7 @@ public class UserService {
                 }
                 //临时使用email字段来存储原始密码
                 if(email == null) {
-                	throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "origin password"));
+                	throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.origin.password.wrong"));
                 }
                 
                 //验证原始密码是否正确
@@ -250,26 +289,36 @@ public class UserService {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.email.invalid", email));
         }
         // check duplicate email
-        UserExample userExample = new UserExample();
-        UserExample.Criteria criteria1 = userExample.createCriteria().andEmailEqualTo(email);
-        if(userId != null) {
-            criteria1.andIdNotEqualTo(userId);
+        if(userId == null){
+        	dataFilter.dataFilter(FieldType.FIELD_TYPE_EMAIL, email, FilterType.FILTER_TYPE_EXSIT_DATA);
+        } else {
+        	dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_EMAIL, Integer.parseInt(userId.toString()), email);
         }
-        List<User> emailUsers =  userMapper.selectByExample(userExample);
-        if(!CollectionUtils.isEmpty(emailUsers)) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.email.dup", email));
-        }
+//        UserExample userExample = new UserExample();
+//        UserExample.Criteria criteria1 = userExample.createCriteria().andEmailEqualTo(email);
+//        if(userId != null) {
+//            criteria1.andIdNotEqualTo(userId);
+//        }
+//        List<User> emailUsers =  userMapper.selectByExample(userExample);
+//        if(!CollectionUtils.isEmpty(emailUsers)) {
+//            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.email.dup", email));
+//        }
         if(phone != null) {
             //check duplicate phone
-            UserExample userPhoneExample = new UserExample();
-            UserExample.Criteria criteria2 = userPhoneExample.createCriteria().andPhoneEqualTo(phone);
-            if(userId != null) {
-                criteria2.andIdNotEqualTo(userId);
-            }
-            List<User> phoneUsers = userMapper.selectByExample(userPhoneExample);
-            if (!CollectionUtils.isEmpty(phoneUsers)) {
-                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.phone.dup", phone));
-            }
+        	if(userId == null){
+        		dataFilter.dataFilter(FieldType.FIELD_TYPE_PHONE, phone, FilterType.FILTER_TYPE_EXSIT_DATA);
+        	} else {
+        		dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_PHONE, Integer.parseInt(userId.toString()), phone);
+        	}
+//            UserExample userPhoneExample = new UserExample();
+//            UserExample.Criteria criteria2 = userPhoneExample.createCriteria().andPhoneEqualTo(phone);
+//            if(userId != null) {
+//                criteria2.andIdNotEqualTo(userId);
+//            }
+//            List<User> phoneUsers = userMapper.selectByExample(userPhoneExample);
+//            if (!CollectionUtils.isEmpty(phoneUsers)) {
+//                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.phone.dup", phone));
+//            }
         }
     }
 
@@ -475,11 +524,13 @@ public class UserService {
     
     private User getUserByAccount(String account, boolean withPhoneChecked){
     	UserExample example = new UserExample();
+    	
+    	//加入条件必须是有效的数据
     	example.or().andEmailEqualTo(account);
     	if(withPhoneChecked){
         	example.or().andPhoneEqualTo(account);
     	}
-
+    	
         List<User> userList = userMapper.selectByExample(example);
         if(userList == null || userList.isEmpty()){
         	throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
@@ -490,5 +541,41 @@ public class UserService {
         
         User user = userList.get(0);
         return user;
+    }
+    
+    /**.
+     * 根据id获取有效用户的数量
+     * @param id
+     * @return
+     */
+    public int countUserByIdWithStatusEffective(Long id){
+    	return userMapper.countUserByIdWithStatusEffective(id);
+    }
+     
+     /**.
+      * 根据email获取有效用户的数量
+      * @param email
+      * @return
+      */
+    public int countUserByEmailWithStatusEffective(String email){
+    	return userMapper.countUserByEmailWithStatusEffective(email);
+    }
+      
+      /**.
+       * 根据phone获取有效用户的数量
+       * @param phone
+       * @return
+       */
+    public int countUserByPhoneWithStatusEffective(String phone){
+    	return userMapper.countUserByPhoneWithStatusEffective(phone);
+    }
+    
+    /**.
+     * 根据id获取有效用户的信息
+     * @param id id
+     * @return 信息model
+     */
+    public User selectByIdWithStatusEffective(Integer id){
+    	return userMapper.selectByIdWithStatusEffective(id);
     }
 }

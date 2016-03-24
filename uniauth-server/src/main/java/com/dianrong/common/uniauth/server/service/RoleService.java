@@ -1,21 +1,56 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.*;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.PermTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.*;
+import com.dianrong.common.uniauth.server.util.BeanConverter;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ParamCheck;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 
 /**
  * Created by Arc on 15/1/16.
@@ -40,6 +75,18 @@ public class RoleService {
     @Autowired
     private GrpRoleMapper grpRoleMapper;
 
+    /**.
+	 * 进行角色数据过滤的filter
+	 */
+	@Resource(name="roleDataFilter")
+	private DataFilter dataFilter;
+	
+	/**.
+	 * 进行域名数据过滤的filter
+	 */
+	@Resource(name="domainDataFilter")
+	private DataFilter domainDataFilter;
+    
     public List<RoleCodeDto> getAllRoleCodes() {
         RoleCodeExample example = new RoleCodeExample();
         List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
@@ -57,9 +104,12 @@ public class RoleService {
         CheckEmpty.checkEmpty(roleCodeId, "roleCodeId");
         CheckEmpty.checkEmpty(name, "name");
 
-        if(domainMapper.selectByPrimaryKey(domainId) == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", domainId, Domain.class.getSimpleName()));
-        }
+        //domainid必须是有效的
+        domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+        
+//        if(domainMapper.selectByPrimaryKey(domainId) == null) {
+//            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", domainId, Domain.class.getSimpleName()));
+//        }
 
         Role role = new Role();
         role.setDomainId(domainId);
@@ -73,7 +123,9 @@ public class RoleService {
 
     public void updateRole(Integer roleId, Integer roleCodeId, String name, String description, Byte status) {
         CheckEmpty.checkEmpty(roleId, "roleId");
-        Role role = roleMapper.selectByPrimaryKey(roleId);
+//        Role role = roleMapper.selectByPrimaryKey(roleId);
+        Role role = roleMapper.selectByIdWithStatusEffective(roleId);
+        
         if(role == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleId, Role.class.getSimpleName()));
         }
@@ -367,4 +419,13 @@ public class RoleService {
         }
         return permissionDtos;
     }
+    
+    /**.
+	    * 根据id获取有效角色的数量
+	    * @param id
+	    * @return
+	    */
+	  public  int countRoleByIdWithStatusEffective(Long id){
+		  return roleMapper.countRoleByIdWithStatusEffective(id);
+	  }
 }

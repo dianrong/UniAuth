@@ -1,5 +1,15 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -8,23 +18,20 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
 import com.dianrong.common.uniauth.server.data.entity.StakeholderExample;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.StakeholderMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DomainService {
@@ -34,10 +41,20 @@ public class DomainService {
 	@Autowired
 	private StakeholderMapper stakeholderMapper;
 	
+	/**.
+	 * 进行域名数据过滤的filter
+	 */
+	@Resource(name="domainDataFilter")
+	private DataFilter dataFilter;
+	
 	@Transactional
 	public DomainDto addNewDomain(DomainParam domainParam) {
 		String domainCode = domainParam.getCode();
 		CheckEmpty.checkEmpty(domainCode, "域编码");
+		
+		//检查code
+		dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, domainCode, FilterType.FILTER_TYPE_EXSIT_DATA);
+		
 		DomainExample example = new DomainExample();
 		example.createCriteria().andCodeEqualTo(domainCode);
 		List<Domain> domainList = domainMapper.selectByExample(example);
@@ -131,6 +148,7 @@ public class DomainService {
 	public DomainDto getDomainInfo(PrimaryKeyParam primaryKeyParam) {
 		CheckEmpty.checkParamId(primaryKeyParam, "域ID");
 		Integer domainId = primaryKeyParam.getId();
+		
 		Domain domain = checkDomain(domainId);
 		
 		StakeholderExample stakeholderExample = new StakeholderExample();
@@ -152,6 +170,13 @@ public class DomainService {
 		if(domainParam == null || domainParam.getId() == null){
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域ID"));
 		}
+		
+		//如果需要更新code,则加入判断
+		if(!StringUtil.strIsNullOrEmpty(domainParam.getCode())){
+			//检查code
+			dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, domainParam.getId(), domainParam.getCode());
+		}
+				
 		Domain param = BeanConverter.convert(domainParam);
 		domainMapper.updateByPrimaryKey(param);
 	}
@@ -159,7 +184,12 @@ public class DomainService {
 	@Transactional
 	public StakeholderDto addNewStakeholder(StakeholderParam stakeholderParam) {
 		Integer domainId = stakeholderParam.getDomainId();
-		checkDomain(domainId);
+		
+		if(domainId != null){
+			//必须要合法的数据才能插入
+			dataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+		}
+//		checkDomain(domainId);
 		Stakeholder stakeholder = BeanConverter.convert(stakeholderParam,false);
 		stakeholderMapper.insert(stakeholder);
 		StakeholderDto stakeholderDto = BeanConverter.convert(stakeholder);
@@ -193,5 +223,31 @@ public class DomainService {
 		}
 		return domain;
 	}
-
+	
+	/**.
+	    * 根据id获取有效域名的数量
+	    * @param id
+	    * @return
+	    */
+	  public  int countDomainByIdWithStatusEffective(Long id){
+		  return domainMapper.countDomainByIdWithStatusEffective(id);
+	  }
+	    
+	    /**.
+	     * 根据code获取有效域名的数量
+	     * @param code code
+	     * @return 数量
+	     */
+	    public int countDomainByCodeWithStatusEffective( String code){
+	    	return domainMapper.countDomainByCodeWithStatusEffective(code);
+	    }
+	    
+	    /**.
+	     * 根据id获取有效的域名信息
+	     * @param id id
+	     * @return 域名信息
+	     */
+	    public Domain selectByIdWithStatusEffective(Integer id){
+	    	return domainMapper.selectByIdWithStatusEffective(id);
+	    }
 }

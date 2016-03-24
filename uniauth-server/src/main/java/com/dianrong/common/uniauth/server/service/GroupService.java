@@ -10,20 +10,34 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.dianrong.common.uniauth.common.bean.Linkage;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.Linkage;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserGrp;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
@@ -32,12 +46,14 @@ import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
 
 /**
  * Created by Arc on 14/1/16.
@@ -58,8 +74,14 @@ public class GroupService {
     private UserMapper userMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
+    
+    /**.
+	 * 进行组数据过滤的filter
+	 */
+	@Resource(name="groupDataFilter")
+	private DataFilter dataFilter;
 
-    public PageDto<GroupDto> searchGroup(Integer id, String name, String code, String description, Byte status, Integer pageNumber, Integer pageSize) {
+    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, String name, String code, String description, Byte status, Integer pageNumber, Integer pageSize) {
 
         if(id != null) {
             GroupDto groupDto = BeanConverter.convert(grpMapper.selectByPrimaryKey(id));
@@ -100,6 +122,29 @@ public class GroupService {
         if(status != null) {
             criteria.andStatusEqualTo(status);
         }
+        // join user table to find group
+        if(userId != null) {
+            UserGrpExample userGrpExample = new UserGrpExample();
+            UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
+            userGrpExampleCriteria.andUserIdEqualTo(userId);
+            if(userGroupType != null ) {
+                userGrpExampleCriteria.andTypeEqualTo(userGroupType);
+            } else {
+                userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
+            }
+            List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+            List<Integer> grpIds = new ArrayList<>();
+            if(!CollectionUtils.isEmpty(userGrpKeys)) {
+                for (UserGrpKey userGrpKey : userGrpKeys) {
+                    grpIds.add(userGrpKey.getGrpId());
+                }
+            }
+            if(grpIds.isEmpty()) {
+                return null;
+            } else {
+                criteria.andIdIn(grpIds);
+            }
+        }
         List<Grp> grps = grpMapper.selectByExample(grpExample);
         if(!CollectionUtils.isEmpty(grps)) {
             int count = grpMapper.countByExample(grpExample);
@@ -121,12 +166,17 @@ public class GroupService {
         if(targetGroupId == null || groupCode == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "targetGroupId, groupCode"));
         }
-        GrpExample grpExample = new GrpExample();
-        grpExample.createCriteria().andCodeEqualTo(groupCode);
-        List<Grp> grps = grpMapper.selectByExample(grpExample);
-        if(!CollectionUtils.isEmpty(grps)) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.code", groupCode));
-        }
+        
+        //父group需要存在
+        dataFilter.dataFilter(FieldType.FIELD_TYPE_ID, targetGroupId, FilterType.FILTER_TYPE_NO_DATA);
+        //子group不能存在
+        dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, groupCode, FilterType.FILTER_TYPE_EXSIT_DATA);
+//        GrpExample grpExample = new GrpExample();
+//        grpExample.createCriteria().andCodeEqualTo(groupCode);
+//        List<Grp> grps = grpMapper.selectByExample(grpExample);
+//        if(!CollectionUtils.isEmpty(grps)) {
+//            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.code", groupCode));
+//        }
         Grp grp = BeanConverter.convert(groupParam);
         Date now = new Date();
         grp.setStatus(AppConstants.ZERO_Byte);
@@ -177,6 +227,10 @@ public class GroupService {
         if(grp == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
         }
+        
+        //判断是否存在重复的code
+        dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, groupId, groupCode);
+        
         grp.setName(groupName);
         grp.setStatus(status);
         grp.setDescription(description);
@@ -533,4 +587,31 @@ public class GroupService {
             }
         }
     }
+    
+    /**.
+	    * 根据id获取有效组的数量
+	    * @param id
+	    * @return
+	    */
+	  public  int countGroupByIdWithStatusEffective(Long id){
+		  return grpMapper.countGroupByIdWithStatusEffective(id);
+	  }
+	    
+	    /**.
+	     * 根据code获取有效组的数量
+	     * @param code code
+	     * @return 数量
+	     */
+	    public int countGroupByCodeWithStatusEffective( String code){
+	    	return grpMapper.countGroupByCodeWithStatusEffective(code);
+	    }
+	    
+	    /**.
+	     * 根据id获取组的信息
+	     * @param id id
+	     * @return 信息
+	     */
+	    public Grp selectByIdWithStatusEffective( Integer id){
+	    	return grpMapper.selectByIdWithStatusEffective(id);
+	    }
 }
