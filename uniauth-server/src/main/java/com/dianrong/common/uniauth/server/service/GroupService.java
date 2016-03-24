@@ -59,7 +59,7 @@ public class GroupService {
     @Autowired
     private UserRoleMapper userRoleMapper;
 
-    public PageDto<GroupDto> searchGroup(Integer id, String name, String code, String description, Byte status, Integer pageNumber, Integer pageSize) {
+    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, String name, String code, String description, Byte status, Integer pageNumber, Integer pageSize) {
 
         if(id != null) {
             GroupDto groupDto = BeanConverter.convert(grpMapper.selectByPrimaryKey(id));
@@ -99,6 +99,29 @@ public class GroupService {
         }
         if(status != null) {
             criteria.andStatusEqualTo(status);
+        }
+        // join user table to find group
+        if(userId != null) {
+            UserGrpExample userGrpExample = new UserGrpExample();
+            UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
+            userGrpExampleCriteria.andUserIdEqualTo(userId);
+            if(userGroupType != null ) {
+                userGrpExampleCriteria.andTypeEqualTo(userGroupType);
+            } else {
+                userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
+            }
+            List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+            List<Integer> grpIds = new ArrayList<>();
+            if(!CollectionUtils.isEmpty(userGrpKeys)) {
+                for (UserGrpKey userGrpKey : userGrpKeys) {
+                    grpIds.add(userGrpKey.getGrpId());
+                }
+            }
+            if(grpIds.isEmpty()) {
+                return null;
+            } else {
+                criteria.andIdIn(grpIds);
+            }
         }
         List<Grp> grps = grpMapper.selectByExample(grpExample);
         if(!CollectionUtils.isEmpty(grps)) {

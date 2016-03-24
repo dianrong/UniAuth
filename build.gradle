@@ -1,6 +1,6 @@
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.6'
+    version = '1.0.7'
 
     apply plugin: 'java'
     apply plugin: 'idea'
