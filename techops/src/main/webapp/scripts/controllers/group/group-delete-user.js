@@ -34,7 +34,7 @@ define(['../../utils/constant'],function(constant) {
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, "用户删除成功");
                 $scope.getTree(paramsCtlLevel);
-                $scope.selectedNodes = [];
+                $scope.selectedNodes.splice(0, $scope.selectedNodes.length);
             }, function () {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, "用户删除失败, 请联系系统管理员.");
             });
