@@ -10,6 +10,8 @@ public class GroupQuery extends PageParam  {
     private String name;
     private String description;
     private Byte status;
+    private Byte userGroupType;
+    private Long userId;
 
     public Integer getId() {
         return id;
@@ -53,6 +55,24 @@ public class GroupQuery extends PageParam  {
 
     public GroupQuery setStatus(Byte status) {
         this.status = status;
+        return this;
+    }
+
+    public Byte getUserGroupType() {
+        return userGroupType;
+    }
+
+    public GroupQuery setUserGroupType(Byte userGroupType) {
+        this.userGroupType = userGroupType;
+        return this;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public GroupQuery setUserId(Long userId) {
+        this.userId = userId;
         return this;
     }
 }
