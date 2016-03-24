@@ -1,0 +1,54 @@
+<form style="margin-left: -20px;" class="form-horizontal" name="auditQueryForm">
+    <div class="form-group">
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">UUID</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="Transaction唯一标识" ng-model="auditQuery.reqUuid" maxlength="40">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-sm-4 control-label">minElapse</span>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="最小用时毫秒数" ng-model="auditQuery.minReqElapse" maxlength="10">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">maxElapse</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="最大用时毫秒数" ng-model="auditQuery.maxReqElapse" maxlength="10">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">userId</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="用户ID" ng-model="auditQuery.userId" maxlength="16">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">minDate</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="从该时间起查询" ng-model="auditQuery.minRequestDate" maxlength="16">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">maxDate</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="以该时间结束" ng-model="auditQuery.maxRequestDate" maxlength="16">
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="panel-body pull-right">
+    <a class="btn btn-info" ng-click="delete()" role="button">删除日志</a>
+    <button class="btn btn-info" ng-click="query()">查询日志</button>
+</div>
+<div>
+    <div style="margin-left: 14px;">根据您的查询参数, 一共有 {{totalCount ? totalCount:0}} 条日志, 最多支持显示1000条,若有需求请缩小查询范围</div>
+    <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
+    <div ng-repeat="audit in audits | filter:predicate:comparator">
+        userId:{{audit.userId}} | uuid:{{audit.reqUuid}} | url:{{audit.reqUrl}} | class:{{audit.reqClass}} | parameter:{{audit.req_param}} | date:{{audit.requestDate}} | exception:{{audit.reqException}} | elapse:{{audit.reqElapse}}
+    </div>
+</div>

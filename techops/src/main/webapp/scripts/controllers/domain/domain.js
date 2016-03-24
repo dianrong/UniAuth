@@ -59,7 +59,9 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
             DomainService.modifyDomain(modifyDomainParam, function (res) {
 
                 if(res.info) {
-                    AlertService.addAlert(constant.messageType.danger, res.info);
+                    for(var i=0; i<res.info.length;i++) {
+                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                    }
                     // modify error with info.
                     return;
                 }

@@ -71,7 +71,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             params.userIds = checkedUserIds;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {
                 if(res.info) {
-                    AlertService.addAlert(constant.messageType.danger, res.info);
+                    for(var i=0; i<res.info.length;i++) {
+                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                    }
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, '替换角色对应的组/用户成功.');

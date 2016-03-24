@@ -63,7 +63,9 @@ define(['../../utils/constant'], function (constant, AlertService) {
             params.id = $scope.user.selected.id;
             UserService.replaceRolesToUser(params, function (res) {
                 if(res.info) {
-                    AlertService.addAlert(constant.messageType.danger, res.info);
+                    for(var i=0; i<res.info.length;i++) {
+                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                    }
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, '替换用户对应的角色成功.');

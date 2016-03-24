@@ -1,27 +1,12 @@
 package com.dianrong.common.uniauth.server.util;
 
-import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
-import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
-import com.dianrong.common.uniauth.server.data.entity.Domain;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.PermType;
-import com.dianrong.common.uniauth.server.data.entity.Permission;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RoleCode;
-import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
-import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
@@ -232,5 +217,30 @@ public class BeanConverter {
     		
     		return urlRoleMappingDto;
     	}
+    }
+
+    public static AuditDto convert(Audit audit){
+        if(audit == null){
+            return null;
+        }
+        else{
+            AuditDto auditDto = new AuditDto();
+            auditDto.setDomainId(audit.getDomainId());
+            auditDto.setReqElapse(audit.getReqElapse());
+            auditDto.setReqClass(audit.getReqClass());
+            auditDto.setReqException(audit.getReqExp());
+            auditDto.setReqMethod(audit.getReqMethod())
+                    .setReqSuccess(audit.getReqSuccess())
+                    .setReqUuid(audit.getReqUuid())
+                    .setReqResult(audit.getReqResult())
+                    .setReqIp(audit.getReqIp())
+                    .setReqUrl(audit.getReqUrl())
+                    .setReqParam(audit.getReqParam())
+                    .setRequestDate(audit.getReqDate())
+                    .setReqClass(audit.getReqClass())
+                    .setUserId(audit.getUserId())
+                    .setId(audit.getId());
+            return auditDto;
+        }
     }
 }

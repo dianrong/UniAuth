@@ -28,13 +28,15 @@ require(['app',
     'controllers/domain/dialogs/add-domain',
     'controllers/domain/dialogs/add-stakeholder',
     'controllers/domain/dialogs/modify-stakeholder',
+    'controllers/audit/audit',
     'services/common/http-interceptor-service',
     'services/common/alert-service',
     'services/user/user-service',
     'services/group/group-service',
     'services/role/role-service',
     'services/perm/perm-service',
-    'services/domain/domain-service'],
+    'services/domain/domain-service',
+    'services/audit/audit-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);

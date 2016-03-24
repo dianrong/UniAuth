@@ -15,6 +15,7 @@
             <ref bean="permissionResource" />
             <ref bean="roleResource" />
             <ref bean="userResource" />
+            <ref bean="auditResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />
