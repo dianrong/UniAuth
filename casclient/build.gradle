@@ -8,8 +8,17 @@ dependencies {
 	//zoo keeper
     compile 'com.dianrong.platform:cfg-zk-client:1.0.1-SNAPSHOT'
     compile 'commons-logging:commons-logging:1.2'
+    
+    //Http Components
+    compile 'org.apache.httpcomponents:httpclient:4.4'
+    compile 'org.apache.httpcomponents:fluent-hc:4.4'
+    compile 'org.apache.httpcomponents:httpmime:4.4'
+    
+    //Log
+     compile 'ch.qos.logback:logback-classic:1.1.3'
 }
 
 war {
     archiveName = project.name + '.war'
+    destinationDir = file('build')
 }
