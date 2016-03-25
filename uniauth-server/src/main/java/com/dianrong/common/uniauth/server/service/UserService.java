@@ -475,7 +475,6 @@ public class UserService {
         }
         // Not null, otherwise it is an invalid call.
         CheckEmpty.checkEmpty(roleIdsInDomain, "roleIdsInDomain");
-
         
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(userId).andRoleIdIn(roleIdsInDomain);

@@ -9,11 +9,11 @@
         <div class="col-md-4">
             <span class="col-md-4 control-label">Code:</span>
             <div class="col-md-8 btn-group" uib-dropdown is-open="roleCodesDropdown.isOpen">
-                <button type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+                <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
                     <span ng-bind="roleCodesDropdown.option.code"></span>
                     <span class="caret"></span>
                 </button>
-                <ul class="uib-dropdown-menu" role="menu">
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
                     <li ng-repeat="it in roleCodesDropdown.items">
                         <a ng-click="roleCodesDropdown.selectOption(it)" ng-bind="it.code"></a>
                     </li>

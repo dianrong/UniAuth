@@ -20,6 +20,7 @@ define(['../../utils/constant'], function (constant) {
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             if(!$scope.grp.selected) {
+                $scope.roles = undefined;
                 $scope.grpRolesMsg = constant.loadEmpty;
                 return;
             }
@@ -58,6 +59,7 @@ define(['../../utils/constant'], function (constant) {
             }
             params.roleIds = checkedRoleIds;
             params.id = $scope.grp.selected.id;
+            params.domainId = $rootScope.loginDomainsDropdown.option.id;
             GroupService.replaceRolesToGrp(params, function (res) {
                 if(res.info) {
                     AlertService.addAlert(constant.messageType.info, res.info);

@@ -26,6 +26,6 @@ index.jsp<br><br>
 	out.println(request.getRemoteUser());
 	%>
 	<br><br>
-	<a href="http://localhost:9080/cas/logout">Single Sign Out</a>
+	<a href="http://localhost:8080/cas/logout">Single Sign Out</a>
   </body>
 </html>

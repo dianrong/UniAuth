@@ -29,12 +29,14 @@ define(['../../utils/constant'],function(constant) {
             params.normalMember=true;
             GroupService.deleteUser(params, function (res) {
                 if(res.info) {
-                    AlertService.addAlert(constant.messageType.danger, res.info);
+                    for(var i=0; i<res.info.length;i++) {
+                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                    }
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, "用户删除成功");
                 $scope.getTree(paramsCtlLevel);
-                $scope.selectedNodes = [];
+                $scope.selectedNodes.splice(0, $scope.selectedNodes.length);
             }, function () {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, "用户删除失败, 请联系系统管理员.");
             });

@@ -22,7 +22,9 @@ define(['../../utils/constant'], function(constant) {
                 "targetGroupId": $rootScope.shareGroup.selected.id
             }, function (res) {
                 if(res.info) {
-                    AlertService.addAlert(constant.messageType.danger, res.info);
+                    for(var i=0; i<res.info.length;i++) {
+                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                    }
                     return;
                 }
                 $rootScope.shareGroup.selected = {};

@@ -23,6 +23,7 @@ define(['../../utils/constant'], function (constant) {
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             if(!$scope.perm.selected) {
+                $scope.roles = undefined;
                 $scope.permRolesMsg = constant.loadEmpty;
                 return;
             }
@@ -63,7 +64,9 @@ define(['../../utils/constant'], function (constant) {
             params.id = $scope.perm.selected.id;
             PermService.replacePermsToRole(params, function (res) {
                 if(res.info) {
-                    AlertService.addAlert(constant.messageType.danger, res.info);
+                    for(var i=0; i<res.info.length;i++) {
+                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                    }
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, '替换权限对应的角色成功.');

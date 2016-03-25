@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
+import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class UARWFacade {
     private IPermissionRWResource permissionRWResource;
     private IRoleRWResource roleRWResource;
     private IUserRWResource userRWResource;
+    private IAuditResource auditResource;
 
     @PostConstruct
     public void init(){
@@ -38,6 +40,7 @@ public class UARWFacade {
         permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, Arrays.asList(jacksonJsonProvider));
         userRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, Arrays.asList(jacksonJsonProvider));
         roleRWResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, Arrays.asList(jacksonJsonProvider));
+        auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, Arrays.asList(jacksonJsonProvider));
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
@@ -63,5 +66,9 @@ public class UARWFacade {
 
     public IUserRWResource getUserRWResource() {
         return userRWResource;
+    }
+
+    public IAuditResource getAuditResource() {
+        return auditResource;
     }
 }
