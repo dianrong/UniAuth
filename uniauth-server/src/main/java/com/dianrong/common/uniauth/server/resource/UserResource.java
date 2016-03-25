@@ -84,7 +84,7 @@ public class UserResource implements IUserRWResource {
 
 	@Override
 	public Response<Void> replaceRolesToUser(UserParam userParam) {
-		userService.replaceRolesToUser(userParam.getId(), userParam.getRoleIds());
+		userService.replaceRolesToUser(userParam.getId(), userParam.getRoleIds(), userParam.getDomainId());
 		return Response.success();
 	}
 }

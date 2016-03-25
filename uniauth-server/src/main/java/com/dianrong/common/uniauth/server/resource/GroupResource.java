@@ -97,7 +97,7 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<Void> replaceRolesToGroup(GroupParam groupParam) {
-		groupService.replaceRolesToGroup(groupParam.getId(), groupParam.getRoleIds());
+		groupService.replaceRolesToGroupUnderDomain(groupParam.getId(), groupParam.getRoleIds(), groupParam.getDomainId());
 		return Response.success();
 	}
 }

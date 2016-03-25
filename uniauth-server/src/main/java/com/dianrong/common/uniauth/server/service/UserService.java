@@ -459,16 +459,36 @@ public class UserService {
 	}
 
     @Transactional
-    public void replaceRolesToUser(Long userId, List<Integer> roleIds) {
+    public void replaceRolesToUser(Long userId, List<Integer> roleIds, Integer domainId) {
 
         CheckEmpty.checkEmpty(userId, "userId");
+        CheckEmpty.checkEmpty(domainId, "domainId");
+        //step 1. get roleIds in the specific domain.
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andDomainIdEqualTo(domainId);
+        List<Role> roles = roleMapper.selectByExample(roleExample);
+        List<Integer> roleIdsInDomain = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(roles)) {
+            for(Role role:roles) {
+                roleIdsInDomain.add(role.getId());
+            }
+        }
+        // Not null, otherwise it is an invalid call.
+        CheckEmpty.checkEmpty(roleIdsInDomain, "roleIdsInDomain");
 
+        
         UserRoleExample userRoleExample = new UserRoleExample();
-        userRoleExample.createCriteria().andUserIdEqualTo(userId);
+        userRoleExample.createCriteria().andUserIdEqualTo(userId).andRoleIdIn(roleIdsInDomain);
         if(CollectionUtils.isEmpty(roleIds)) {
             userRoleMapper.deleteByExample(userRoleExample);
             return;
         }
+
+        // if the input roleIds is not under the domain, then it is an invalid call
+        if(!roleIdsInDomain.containsAll(roleIds)){
+            throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.ids.invalid", roleIds));
+        }
+
         List<UserRoleKey>  userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
         if(!CollectionUtils.isEmpty(userRoleKeys)) {
             ArrayList<Integer> dbRoleIds = new ArrayList<>();
