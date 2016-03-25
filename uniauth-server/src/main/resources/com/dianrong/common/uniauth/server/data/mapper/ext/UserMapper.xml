@@ -26,7 +26,7 @@
     </select>
     
     <!-- 根据id获取有效用户的数量 -->
-  <select id="countUserByIdWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.String" >
+  <select id="countUserByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
 	SELECT  COUNT(id)
 	FROM user 
 	WHERE 
@@ -35,7 +35,7 @@
   </select>
   
   <!-- 根据email获取有效用户的数量 -->
-  <select id="countUserByEmailWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.String" >
+  <select id="countUserByEmailWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
 	SELECT  COUNT(id)
 	FROM user 
 	WHERE 
@@ -44,7 +44,7 @@
   </select>
   
   <!-- 根据phone获取有效用户的数量 -->
-  <select id="countUserByPhoneWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.String" >
+  <select id="countUserByPhoneWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
 	SELECT  COUNT(id)
 	FROM user 
 	WHERE 

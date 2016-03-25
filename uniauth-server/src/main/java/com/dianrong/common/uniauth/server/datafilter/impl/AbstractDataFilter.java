@@ -30,7 +30,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 			return;
 		}
 		Map<FieldType, Object>  filterMap = new HashMap<FieldType, Object>();
-		filterMap.put(FieldType, ftype);
+		filterMap.put(FieldType, fieldValue);
 		doDataFilter(filterMap, ftype );
 	}
 	

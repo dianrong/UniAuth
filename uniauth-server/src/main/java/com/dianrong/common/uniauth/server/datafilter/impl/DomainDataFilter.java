@@ -29,7 +29,7 @@ public class DomainDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "domain";
+	private String processTalbeName = "域";
 	
 	/**.
 	 * 处理过滤status=0的情况

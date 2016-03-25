@@ -73,7 +73,7 @@
   </select>
   
   <!-- 根据id获取有效角色的数量 -->
-  <select id="countRoleByIdWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.Long" >
+  <select id="countRoleByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
 	SELECT  COUNT(id)
 	FROM role 
 	WHERE 
@@ -82,7 +82,7 @@
   </select>
   
   <!-- 根据keyid查询有效的域名信息 -->
-   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMapExt" parameterType="java.lang.Integer" >
+   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     SELECT 
     <include refid="Base_Column_List" />
     FROM role

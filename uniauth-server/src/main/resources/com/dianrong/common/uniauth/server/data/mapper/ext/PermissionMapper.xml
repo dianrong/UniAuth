@@ -73,7 +73,7 @@
   </select>
   
     <!-- 根据id获取有效权限的数量 -->
-  <select id="countPermissionByIdWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.Long" >
+  <select id="countPermissionByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
 	SELECT  COUNT(id)
 	FROM permission 
 	WHERE 

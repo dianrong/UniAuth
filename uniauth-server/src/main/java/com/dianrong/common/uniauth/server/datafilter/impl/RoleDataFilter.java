@@ -27,7 +27,7 @@ public class RoleDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "role";
+	private String processTalbeName = "角色";
 	
 	/**.
 	 * 处理过滤status=0的情况

@@ -18,7 +18,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * 权限的数据过滤处理实现.
  * @author wanglin
  */
-@Service("permissionDataFilter.java")
+@Service("permissionDataFilter")
 public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	
 	@Autowired
@@ -27,7 +27,7 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "permission";
+	private String processTalbeName = "权限数据";
 	
 	/**.
 	 * 处理过滤status=0的情况

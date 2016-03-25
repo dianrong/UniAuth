@@ -49,7 +49,7 @@
   </select>
   
   <!-- 根据id获取有效域名的数量 -->
-  <select id="countDomainByIdWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.Long" >
+  <select id="countDomainByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
 	SELECT  COUNT(id)
 	FROM domain 
 	WHERE 
@@ -58,7 +58,7 @@
   </select>
   
   <!-- 根据code获取有效域名的数量 -->
-  <select id="countDomainByCodeWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.String" >
+  <select id="countDomainByCodeWithStatusEffective"  resultType="java.lang.Integer" parameterType="java.lang.String" >
 	SELECT  COUNT(id)
 	FROM domain 
 	WHERE 

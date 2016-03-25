@@ -29,7 +29,7 @@ public class UserDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "user";
+	private String processTalbeName = "用户";
 	
 	/**.
 	 * 处理过滤status=0的情况

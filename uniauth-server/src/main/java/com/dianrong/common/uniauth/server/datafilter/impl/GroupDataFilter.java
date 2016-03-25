@@ -29,7 +29,7 @@ public class GroupDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "grp";
+	private String processTalbeName = "组数据";
 	
 	/**.
 	 * 处理过滤status=0的情况

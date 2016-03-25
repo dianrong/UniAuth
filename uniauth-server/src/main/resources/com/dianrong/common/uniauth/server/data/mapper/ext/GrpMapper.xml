@@ -50,7 +50,7 @@
     </select>
 
 	<!-- 根据id获取有效域组的数量 -->
-  <select id="countGroupByIdWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.Long" >
+  <select id="countGroupByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
 	SELECT  COUNT(id)
 	FROM grp 
 	WHERE 
@@ -59,7 +59,7 @@
   </select>
   
   <!-- 根据code获取有效组的数量 -->
-  <select id="countGroupByCodeWithStatusEffective"  resultMap="java.lang.Integer"  parameterType="java.lang.String" >
+  <select id="countGroupByCodeWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
 	SELECT  COUNT(id)
 	FROM grp 
 	WHERE 
