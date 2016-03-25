@@ -23,6 +23,7 @@ define(['../../utils/constant'], function (constant, AlertService) {
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             if(!$scope.user.selected) {
+                $scope.roles = undefined;
                 $scope.userRolesMsg = constant.loadEmpty;
                 return;
             }
@@ -36,14 +37,14 @@ define(['../../utils/constant'], function (constant, AlertService) {
                 }
                 if(!result) {
                     $scope.userRolesMsg = constant.loadEmpty;
-                    $scope.roles = [];
+                    $scope.roles = undefined;
                     return;
                 }
 
                 $scope.userRolesMsg = '';
                 $scope.roles = result;
             }, function () {
-                $scope.roles = [];
+                $scope.roles = undefined;
                 $scope.userRolesMsg = constant.loadError;
             });
         };
@@ -61,6 +62,7 @@ define(['../../utils/constant'], function (constant, AlertService) {
             }
             params.roleIds = checkedRoleIds;
             params.id = $scope.user.selected.id;
+            params.domainId = $rootScope.loginDomainsDropdown.option.id;
             UserService.replaceRolesToUser(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {

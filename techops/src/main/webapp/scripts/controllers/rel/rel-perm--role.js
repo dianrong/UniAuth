@@ -23,6 +23,7 @@ define(['../../utils/constant'], function (constant) {
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             if(!$scope.perm.selected) {
+                $scope.roles = undefined;
                 $scope.permRolesMsg = constant.loadEmpty;
                 return;
             }

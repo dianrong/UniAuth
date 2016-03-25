@@ -504,16 +504,37 @@ public class GroupService {
     }
 
     @Transactional
-    public void replaceRolesToGroup(Integer grpId, List<Integer> roleIds) {
+    public void replaceRolesToGroupUnderDomain(Integer grpId, List<Integer> roleIds, Integer domainId) {
 
         CheckEmpty.checkEmpty(grpId, "grpId");
+        CheckEmpty.checkEmpty(domainId, "domainId");
+        //step 1. get roleIds in the specific domain.
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andDomainIdEqualTo(domainId);
+        List<Role> roles = roleMapper.selectByExample(roleExample);
+        List<Integer> roleIdsInDomain = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(roles)) {
+            for(Role role:roles) {
+                roleIdsInDomain.add(role.getId());
+            }
+        }
+        // Not null, otherwise it is an invalid call.
+        CheckEmpty.checkEmpty(roleIdsInDomain, "roleIdsInDomain");
 
         GrpRoleExample grpRoleExample = new GrpRoleExample();
-        grpRoleExample.createCriteria().andGrpIdEqualTo(grpId);
+        GrpRoleExample.Criteria criteria = grpRoleExample.createCriteria();
+        criteria.andGrpIdEqualTo(grpId).andRoleIdIn(roleIdsInDomain);
+        // no roleIds means delete all the links of the role to group under the domain
         if(CollectionUtils.isEmpty(roleIds)) {
             grpRoleMapper.deleteByExample(grpRoleExample);
             return;
         }
+        // if the input roleIds is not under the domain, then it is an invalid call
+        if(!roleIdsInDomain.containsAll(roleIds)){
+            throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.ids.invalid", roleIds));
+        }
+
+        // step 2. get the roleIds in the specific domain and linked to group
         List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
         if(!CollectionUtils.isEmpty(grpRoleKeys)) {
             ArrayList<Integer> dbRoleIds = new ArrayList<>();
@@ -521,20 +542,23 @@ public class GroupService {
                 dbRoleIds.add(grpRoleKey.getRoleId());
             }
             ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
+            //step 3. get the intersection of param roleIds and dbRoleIds.
             intersections.retainAll(roleIds);
             List<Integer> roleIdsNeedAddToDB = new ArrayList<>();
             List<Integer> roleIdsNeedDeleteFromDB = new ArrayList<>();
+            //step 4. get the roleIds need to add
             for(Integer roleId : roleIds) {
                 if(!intersections.contains(roleId)) {
                     roleIdsNeedAddToDB.add(roleId);
                 }
             }
+            //step 5. get the roleIds need to delete
             for(Integer dbRoleId : dbRoleIds) {
                 if(!intersections.contains(dbRoleId)) {
                     roleIdsNeedDeleteFromDB.add(dbRoleId);
                 }
             }
-
+            //step 6. add and delete them.
             if(!CollectionUtils.isEmpty(roleIdsNeedAddToDB)) {
                 for(Integer roleIdNeedAddToDB : roleIdsNeedAddToDB) {
                     GrpRoleKey grpRoleKey = new GrpRoleKey();
