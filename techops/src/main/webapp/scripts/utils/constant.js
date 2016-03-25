@@ -47,6 +47,34 @@ define({
             name: '禁用',
             value: 1
         }],
+        success: [{
+            name: '请选择'
+        }, {
+            name: '成功',
+            value: 0
+        }, {
+            name: '失败',
+            value: 1
+        }],
+        auditOrderBy: [{
+            name: '请选择'
+        }, {
+            name: '耗时',
+            value: 'req_elapse'
+        }, {
+            name: '日期',
+            value: 'req_date'
+        }, {
+            name: '顺序',
+            value: 'req_seq'
+        }],
+        ascDesc: [{
+            name: '升序',
+            value: 'asc'
+        }, {
+            name: '降序',
+            value: 'desc'
+        }],
         messageType: {
             info: 'info',
             danger: 'danger',

@@ -11,11 +11,11 @@
             <label class="control-label" for="code" placeholder="角色code">角色code:</label>
             <br />
             <div id="code" class="btn-group" uib-dropdown is-open="roleModifyRoleCodesDropdown.isOpen">
-                <button type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+                <button type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
                     <span ng-bind="roleModifyRoleCodesDropdown.option.code"></span>
                     <span class="caret"></span>
                 </button>
-                <ul class="uib-dropdown-menu" role="menu">
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
                     <li ng-repeat="it in roleModifyRoleCodesDropdown.items">
                         <a ng-click="roleModifyRoleCodesDropdown.selectOption(it)" ng-bind="it.code"></a>
                     </li>

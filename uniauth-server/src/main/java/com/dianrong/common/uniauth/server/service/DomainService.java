@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,16 +66,16 @@ public class DomainService {
 		if(domainId != null) {
 			criteria.andIdEqualTo(domainId);
 		}
-		if(domainCode != null) {
+		if(!StringUtils.isEmpty(domainCode)) {
 			criteria.andCodeEqualTo(domainCode);
 		}
-		if(displayName != null) {
+		if(!StringUtils.isEmpty(displayName)) {
 			criteria.andDisplayNameLike("%" + displayName + "%");
 		}
 		if(status != null) {
 			criteria.andStatusEqualTo(status);
 		}
-		if(description != null) {
+		if(!StringUtils.isEmpty(description)) {
 			criteria.andDescriptionLike("%" + description + "%");
 		}
 		List<Domain> domains = domainMapper.selectByExample(domainExample);

@@ -29,13 +29,70 @@
         <div class="col-md-4">
             <span class="col-md-4 control-label">minDate</span>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="从该时间起查询" ng-model="auditQuery.minRequestDate" maxlength="16">
+                <p class="input-group">
+                    <input type="text" class="form-control" placeholder="从该时间起" uib-datepicker-popup ng-model="auditQuery.minRequestDate" is-open="popupFrom.opened" datepicker-options="fromDateOptions" close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openFrom()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </p>
             </div>
         </div>
         <div class="col-md-4">
             <span class="col-md-4 control-label">maxDate</span>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="以该时间结束" ng-model="auditQuery.maxRequestDate" maxlength="16">
+                <p class="input-group">
+                    <input type="text" class="form-control" placeholder="以该时间结束" uib-datepicker-popup ng-model="auditQuery.maxRequestDate" is-open="popupEnd.opened" datepicker-options="endDateOptions" close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openEnd()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">param</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="请求参数[%模糊%]" ng-model="auditQuery.reqParam" maxlength="30">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">success</span>
+            <div style="margin-left: 8px;" class="btn-group" uib-dropdown is-open="successDropdown.isOpen">
+                <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+                    <span style="padding-left: 5px;padding-right: 5px;" ng-bind="successDropdown.option.name"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="it in successDropdown.items">
+                        <a ng-click="successDropdown.selectOption(it)" ng-bind="it.name"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">orderBy</span>
+            <div class="btn-group" uib-dropdown is-open="orderByDropdown.isOpen">
+                <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+                    <span style="padding-left: 5px;padding-right: 5px;" ng-bind="orderByDropdown.option.name"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="it in orderByDropdown.items">
+                        <a ng-click="orderByDropdown.selectOption(it)" ng-bind="it.name"></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group" uib-dropdown is-open="ascDescDropdown.isOpen">
+                <button type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="orderByDropdown.option == null || orderByDropdown.option.value == null">
+                    <span style="padding-left: 5px;padding-right: 5px;" ng-bind="ascDescDropdown.option.name"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="it in ascDescDropdown.items">
+                        <a ng-click="ascDescDropdown.selectOption(it)" ng-bind="it.name"></a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -46,9 +103,11 @@
     <button class="btn btn-info" ng-click="query()">查询日志</button>
 </div>
 <div>
-    <div style="margin-left: 14px;">根据您的查询参数, 一共有 {{totalCount ? totalCount:0}} 条日志, 最多支持显示1000条,若有需求请缩小查询范围</div>
-    <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
+    <div style="padding-top: 8px;margin-left: 14px;">根据您的查询参数, 一共有 {{totalCount ? totalCount:0}} 条日志, 最多支持显示1000条,若有需求请缩小查询范围</div>
+    <input style="margin-left: 14px;width: 24%;margin-bottom: 4px;" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
     <div ng-repeat="audit in audits | filter:predicate:comparator">
-        userId:{{audit.userId}} | uuid:{{audit.reqUuid}} | url:{{audit.reqUrl}} | class:{{audit.reqClass}} | parameter:{{audit.req_param}} | date:{{audit.requestDate}} | exception:{{audit.reqException}} | elapse:{{audit.reqElapse}}
+        uuid:{{audit.reqUuid}} | userId:{{audit.userId}} | url:{{audit.reqUrl}} | class:{{audit.reqClass}} | param:{{audit.reqParam}} |
+        date: {{audit.requestDate | date:'yyyy-MM-dd HH:mm'}} | exception:{{audit.reqException}} | elapse:{{audit.reqElapse}} | success:{{audit.reqSuccess}} |
+        method: {{audit.reqMethod}} | ip: {{audit.reqIp}} | seq: {{audit.reqSequence}}
     </div>
 </div>

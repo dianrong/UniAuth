@@ -34,11 +34,11 @@
                         <input ng-disabled="status != 'modify'" type="text" class="panel-input form-control" placeholder="域的唯一标识" id="code" ng-model="domain.selected.code" required>
                         <label style="padding-top: 14px;" class="panel-label" for="enabled">状态:</label>
                         <div id="enabled" style="margin-left: 8px;" class="btn-group" uib-dropdown is-open="domainStatusDropdown.isOpen">
-                            <button ng-disabled="status != 'modify'" type="button" class="btn btn-primary uib-dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+                            <button ng-disabled="status != 'modify'" type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
                                 <span style="padding-left: 5px;padding-right: 5px;" ng-bind="domainStatusDropdown.option.name"></span>
                                 <span class="caret"></span>
                             </button>
-                            <ul class="uib-dropdown-menu" role="menu">
+                            <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
                                 <li ng-repeat="it in domainStatusDropdown.items">
                                     <a ng-click="domainStatusDropdown.selectOption(it)" ng-bind="it.name"></a>
                                 </li>
