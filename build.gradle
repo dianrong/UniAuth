@@ -1,6 +1,6 @@
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.6'
+    version = '1.0.9-SNAPSHOT'
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -24,6 +24,15 @@ allprojects {
 	}
 	
     publishing {
+		publications.all {
+			pom.withXml {
+				asNode().dependencies.'*'.findAll() {
+					it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+						dep.name == it.artifactId.text()
+					}
+				}.each { it.scope*.value = 'compile'}
+			}
+		}
         repositories {
             maven {
                 url 'http://archiva.dianrong.com/repository/mirror'
@@ -48,7 +57,6 @@ allprojects {
             }
         }
     }
-
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
