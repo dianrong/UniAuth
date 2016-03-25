@@ -20,9 +20,9 @@
     "angular-file-upload": "~2.2.0",
     "angular-translate": "2.8.1",
     "angular-translate-loader-static-files": "2.8.1",
-    "angular-dialog-service": "^5.2.11",
-    "angular-tree-control": "0.2.23",
-    "ui-select":"0.13.2"
+    "angular-dialog-service": "^5.2.11"
+//    "angular-tree-control": "0.2.23", customized some css for the tree, so comment out.
+//    "ui-select":"0.13.2" download the select from internet, so comment out.
   },
   "devDependencies": {
     "angular": "1.4.8",
