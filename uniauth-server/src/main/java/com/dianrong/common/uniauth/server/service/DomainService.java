@@ -32,6 +32,7 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import org.springframework.util.StringUtils;
 
 @Service
 public class DomainService {
@@ -82,16 +83,16 @@ public class DomainService {
 		if(domainId != null) {
 			criteria.andIdEqualTo(domainId);
 		}
-		if(domainCode != null) {
+		if(!StringUtils.isEmpty(domainCode)) {
 			criteria.andCodeEqualTo(domainCode);
 		}
-		if(displayName != null) {
+		if(!StringUtils.isEmpty(displayName)) {
 			criteria.andDisplayNameLike("%" + displayName + "%");
 		}
 		if(status != null) {
 			criteria.andStatusEqualTo(status);
 		}
-		if(description != null) {
+		if(!StringUtils.isEmpty(description)) {
 			criteria.andDescriptionLike("%" + description + "%");
 		}
 		List<Domain> domains = domainMapper.selectByExample(domainExample);
@@ -148,7 +149,6 @@ public class DomainService {
 	public DomainDto getDomainInfo(PrimaryKeyParam primaryKeyParam) {
 		CheckEmpty.checkParamId(primaryKeyParam, "域ID");
 		Integer domainId = primaryKeyParam.getId();
-		
 		Domain domain = checkDomain(domainId);
 		
 		StakeholderExample stakeholderExample = new StakeholderExample();
@@ -188,6 +188,8 @@ public class DomainService {
 		if(domainId != null){
 			//必须要合法的数据才能插入
 			dataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+		} else {
+			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域相关人ID"));
 		}
 //		checkDomain(domainId);
 		Stakeholder stakeholder = BeanConverter.convert(stakeholderParam,false);
