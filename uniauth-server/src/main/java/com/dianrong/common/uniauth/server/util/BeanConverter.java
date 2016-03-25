@@ -239,7 +239,8 @@ public class BeanConverter {
                     .setRequestDate(audit.getReqDate())
                     .setReqClass(audit.getReqClass())
                     .setUserId(audit.getUserId())
-                    .setId(audit.getId());
+                    .setId(audit.getId())
+                    .setReqSequence(audit.getReqSeq());
             return auditDto;
         }
     }

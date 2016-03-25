@@ -82,10 +82,10 @@ public class AuditService {
         }
 
         if(!StringUtils.isEmpty(reqParam)) {
-            criteria.andReqParamLike(reqParam + "%");
+            criteria.andReqParamLike("%" + reqParam + "%");
         }
         if(!StringUtils.isEmpty(reqResult)) {
-            criteria.andReqResultLike(reqResult + "%");
+            criteria.andReqResultLike("%" + reqResult + "%");
         }
         if(userId != null) {
             criteria.andUserIdEqualTo(userId);
@@ -106,7 +106,7 @@ public class AuditService {
             criteria.andReqUuidEqualTo(reqUuid);
         }
         if(!StringUtils.isEmpty(reqUrl)) {
-            criteria.andReqUrlLike(reqUrl + "%");
+            criteria.andReqUrlLike("%" + reqUrl + "%");
         }
         if(reqSequence != null) {
             criteria.andReqSeqEqualTo(reqSequence);
@@ -121,7 +121,7 @@ public class AuditService {
             criteria.andReqSuccessEqualTo(reqSuccess);
         }
         if(!StringUtils.isEmpty(reqException)) {
-            criteria.andReqExpLike(reqException + "%");
+            criteria.andReqExpLike("%" + reqException + "%");
         }
     }
 }

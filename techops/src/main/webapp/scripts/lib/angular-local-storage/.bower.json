@@ -32,12 +32,12 @@
   "devDependencies": {
     "angular-mocks": "^1.x"
   },
-  "version": "0.2.5",
-  "_release": "0.2.5",
+  "version": "0.2.7",
+  "_release": "0.2.7",
   "_resolution": {
     "type": "version",
-    "tag": "0.2.5",
-    "commit": "9a781ed5e9e85a4657caa412d802c1b4d1665ed7"
+    "tag": "v0.2.7",
+    "commit": "cdd70f0d0d1846afed25d69969edd64f302705b3"
   },
   "_source": "git://github.com/grevory/angular-local-storage.git",
   "_target": "~0.2.3",
