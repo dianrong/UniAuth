@@ -37,6 +37,7 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -91,10 +92,10 @@ public class GroupService {
         grpExample.setPageOffSet(pageNumber * pageSize);
         grpExample.setPageSize(pageSize);
         GrpExample.Criteria criteria = grpExample.createCriteria();
-        if(name != null) {
+        if(!StringUtils.isEmpty(name)) {
             criteria.andNameLike("%" + name + "%");
         }
-        if(description != null) {
+        if(!StringUtils.isEmpty(description)) {
             criteria.andDescriptionLike("%" + description + "%");
         }
         if(status != null) {

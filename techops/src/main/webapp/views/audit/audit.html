@@ -46,8 +46,8 @@
     <button class="btn btn-info" ng-click="query()">查询日志</button>
 </div>
 <div>
-    <div style="margin-left: 14px;">根据您的查询参数, 一共有 {{totalCount ? totalCount:0}} 条日志, 最多支持显示1000条,若有需求请缩小查询范围</div>
-    <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
+    <div style="padding-top: 8px;margin-left: 14px;">根据您的查询参数, 一共有 {{totalCount ? totalCount:0}} 条日志, 最多支持显示1000条,若有需求请缩小查询范围</div>
+    <input style="margin-left: 14px;width: 24%;margin-bottom: 4px;" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
     <div ng-repeat="audit in audits | filter:predicate:comparator">
         userId:{{audit.userId}} | uuid:{{audit.reqUuid}} | url:{{audit.reqUrl}} | class:{{audit.reqClass}} | parameter:{{audit.req_param}} | date:{{audit.requestDate}} | exception:{{audit.reqException}} | elapse:{{audit.reqElapse}}
     </div>

@@ -1,17 +1,16 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
-import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.entity.AuditExample;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.mapper.AuditMapper;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,7 +68,10 @@ public class AuditService {
         return auditMapper.deleteByExample(auditExample);
     }
 
-    private void constructExample(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid, String reqUrl, Long reqSequence, String reqClass, String reqMethod, Byte reqSuccess, String reqException, Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult, AuditExample auditExample) {
+    private void constructExample(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp,
+                                  String reqUuid, String reqUrl, Long reqSequence, String reqClass, String reqMethod,
+                                  Byte reqSuccess, String reqException, Long minReqElapse, Long maxReqElapse, String reqParam,
+                                  String reqResult, AuditExample auditExample) {
 
         AuditExample.Criteria criteria = auditExample.createCriteria();
         if(minReqElapse != null) {
@@ -78,10 +80,11 @@ public class AuditService {
         if(maxReqElapse != null) {
             criteria.andReqElapseLessThanOrEqualTo(maxReqElapse);
         }
-        if(reqParam != null) {
+
+        if(!StringUtils.isEmpty(reqParam)) {
             criteria.andReqParamLike(reqParam + "%");
         }
-        if(reqResult != null) {
+        if(!StringUtils.isEmpty(reqResult)) {
             criteria.andReqResultLike(reqResult + "%");
         }
         if(userId != null) {
@@ -96,28 +99,28 @@ public class AuditService {
         if(domainId != null) {
             criteria.andDomainIdEqualTo(domainId);
         }
-        if(reqIp != null) {
+        if(!StringUtils.isEmpty(reqIp)) {
             criteria.andReqIpEqualTo(reqIp);
         }
-        if(reqUuid != null) {
+        if(!StringUtils.isEmpty(reqUuid)) {
             criteria.andReqUuidEqualTo(reqUuid);
         }
-        if(reqUrl != null) {
+        if(!StringUtils.isEmpty(reqUrl)) {
             criteria.andReqUrlLike(reqUrl + "%");
         }
         if(reqSequence != null) {
             criteria.andReqSeqEqualTo(reqSequence);
         }
-        if(reqClass != null) {
+        if(!StringUtils.isEmpty(reqClass)) {
             criteria.andReqClassEqualTo(reqClass);
         }
-        if(reqMethod != null) {
+        if(!StringUtils.isEmpty(reqMethod)) {
             criteria.andReqMethodEqualTo(reqMethod);
         }
         if(reqSuccess != null) {
             criteria.andReqSuccessEqualTo(reqSuccess);
         }
-        if(reqException != null) {
+        if(!StringUtils.isEmpty(reqException)) {
             criteria.andReqExpLike(reqException + "%");
         }
     }
