@@ -237,7 +237,9 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 
                     $scope.unselectableClass = function() {
                         var isThisNodeUnselectable = !$scope.options.isSelectable(this.node);
-                        var labelUnselectableClass = classIfDefined($scope.options.injectClasses.labelUnselectable, false);
+                        if(this.node.type == 'grp' && (this.node.ownerMarkup == null || !this.node.ownerMarkup)) {
+                            var labelUnselectableClass = classIfDefined($scope.options.injectClasses.labelUnselectable, false);
+                        }
                         return isThisNodeUnselectable ? "tree-unselectable " + labelUnselectableClass : "";
                     };
 
