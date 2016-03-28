@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Arc on 24/3/2016.
  */
-public class AuditParam extends PageParam{
+public class AuditParam extends PageParam {
 
     private Long userId;
     private Date minRequestDate;
