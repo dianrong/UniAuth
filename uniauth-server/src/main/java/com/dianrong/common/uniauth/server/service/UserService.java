@@ -542,15 +542,14 @@ public class UserService {
     }
     
     private User getUserByAccount(String account, boolean withPhoneChecked){
-    	UserExample example = new UserExample();
-    	
-    	//加入条件必须是有效的数据
-    	example.or().andEmailEqualTo(account);
+    	Map<String, String> map = new HashMap<String, String>();
+    	map.put("email", account);
+
     	if(withPhoneChecked){
-        	example.or().andPhoneEqualTo(account);
+    		map.put("phone", account);
     	}
     	
-        List<User> userList = userMapper.selectByExample(example);
+        List<User> userList = userMapper.selectByEmailOrPhone(map);
         if(userList == null || userList.isEmpty()){
         	throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
         }

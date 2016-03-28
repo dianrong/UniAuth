@@ -131,4 +131,7 @@ public interface UserMapper {
         * @return 信息model
         */
        User selectByIdWithStatusEffective(@Param("id") Integer id);
+       
+     List<User> selectByEmailOrPhone(Map<String, String> map);
+   
 }

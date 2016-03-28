@@ -60,4 +60,18 @@
     WHERE id = #{id, jdbcType=INTEGER}
     AND status = 0 
   </select>
+    
+  <select id="selectByEmailOrPhone" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where
+    status = 0
+    <if test="phone == null" >
+     and email = #{email, jdbcType=VARCHAR}
+    </if>
+    <if test="phone != null" >
+      and (email = #{email, jdbcType=VARCHAR} or phone = #{phone, jdbcType=VARCHAR})
+    </if>
+  </select>
 </mapper>
