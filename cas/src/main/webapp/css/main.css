@@ -64,8 +64,21 @@
 	padding-top: 50px;
 }
 
+.padding-top-120 {
+	padding-top: 120px;
+}
+
 .paddingbottom30 {
 	padding-bottom: 30px;
+}
+
+.padding-top-bottom-10 {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.text-align-left {
+	text-align: left;
 }
 
 .width80 {

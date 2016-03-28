@@ -126,6 +126,7 @@
         
         <prop key="/uniauth/captcha">captchaController</prop>
         <prop key="/uniauth/forgetPassword">forgetPasswordController</prop>
+        <prop key="/uniauth/initPassword">initPasswordController</prop>
       </util:properties>
     </property>
     <!--
@@ -148,6 +149,11 @@
   <bean id="personalInfoManageController" class="com.dianrong.common.uniauth.cas.controller.PersonalInfoManageController">
   		<property name="userInfoManageService" ref="userInfoManageService"></property>
   		<property name="genericSuccessViewAction" ref="genericSuccessViewAction"></property>
+  </bean>
+  
+  <!-- init password controller -->
+  <bean id="initPasswordController" class="com.dianrong.common.uniauth.cas.controller.InitPasswordController">
+  		<property name="userInfoManageService" ref="userInfoManageService"></property>
   </bean>
   
   <bean id="passThroughController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
