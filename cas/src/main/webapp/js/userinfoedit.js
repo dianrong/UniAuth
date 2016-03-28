@@ -54,6 +54,7 @@
 		var current_url = window.location;
 		//通过隐藏表单设置背景url
 		$('#hidden_savedLoginContext').val(current_url);
+		$('#hidden_form_method').val('get');
 		var hidden_to_edit_form = $('#hidden_post_form_for_loginurl');
 		//设置action
 		var action_url = processUrl + "?edituserinfo=go";
