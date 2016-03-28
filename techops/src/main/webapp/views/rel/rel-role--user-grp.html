@@ -37,7 +37,7 @@
         </div>
     </div>
     <div style="padding-left: 1px" class="col-md-70d6 col-sm-9">
-        <input ng-if="treedata.data != null && treedata.data[0].date != null" style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="过滤字符串" />
+        <input ng-show="treedata.data != null && treedata.data[0].date != null" style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="过滤字符串" />
         <treecontrol class="tree-custom" options="opts" tree-model="treedata.data" expanded-nodes="treedata.expandedNodes"
                      filter-expression="predicate" filter-comparator="comparator">
                 <span ng-switch="" on="node.type">

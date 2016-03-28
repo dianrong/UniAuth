@@ -1,11 +1,7 @@
 package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.common.bean.request.DomainParam;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
-import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
@@ -21,6 +17,19 @@ public class BeanConverter {
             return null;
         } else {
             return new RoleCodeDto().setCode(roleCode.getCode()).setId(roleCode.getId()).setDescription(roleCode.getDescription());
+        }
+    }
+
+    public static ConfigDto convert(Cfg cfg) {
+        if(cfg == null) {
+            return null;
+        } else {
+            return new ConfigDto()
+                    .setId(cfg.getId())
+                    .setKey(cfg.getKey())
+                    .setType(cfg.getType())
+                    .setFile(cfg.getFile())
+                    .setValue(cfg.getValue());
         }
     }
 
