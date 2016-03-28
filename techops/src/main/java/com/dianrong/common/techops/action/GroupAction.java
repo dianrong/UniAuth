@@ -6,8 +6,10 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
+import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
@@ -40,7 +42,27 @@ public class GroupAction {
         }
         GroupDto groupDto = groupDtoResponse.getData();
         if(groupDto != null) {
-            return Response.success(CustomizeBeanConverter.convert(Arrays.asList(groupDto)));
+            List<Node> nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto));
+            if(groupParam.getRoleId() != null) {
+                PrimaryKeyParam primaryKeyParam = new PrimaryKeyParam();
+                primaryKeyParam.setId(groupParam.getRoleId());
+                Response<List<UserDto>> usersWithRoleCheck = uARWFacade.getUserRWResource().searchUsersWithRoleCheck(primaryKeyParam);
+                if(!CollectionUtils.isEmpty(usersWithRoleCheck.getInfo())) {
+                    return usersWithRoleCheck;
+                }
+                List<UserDto> userDtos = usersWithRoleCheck.getData();
+                if(!CollectionUtils.isEmpty(userDtos)) {
+                    for(UserDto userDto : userDtos) {
+                        Node userNode = new Node();
+                        userNode.setId(userDto.getId().toString());
+                        userNode.setLabel(userDto.getEmail());
+                        userNode.setChecked(userDto.getRoleChecked());
+                        userNode.setType(AppConstants.NODE_TYPE_MEMBER_USER);
+                        nodes.add(userNode);
+                    }
+                }
+            }
+            return Response.success(nodes);
         } else {
             return Response.success(null);
         }

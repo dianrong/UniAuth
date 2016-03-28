@@ -18,7 +18,7 @@ public class UserDto {
 	private Byte status;
 	private Byte userGroupType;
 
-	//whether this group connected with a role
+	//whether this user directly connected with a role
 	private Boolean roleChecked;
 
 	public Long getId() {

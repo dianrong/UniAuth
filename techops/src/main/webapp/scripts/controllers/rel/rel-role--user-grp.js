@@ -32,10 +32,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             },
             dirSelectable: false
         };
-        $scope.checkClick = function($event, node) {
-            if(node.type == constant.treeNodeType.memberUser) {
-                utils.syncAllCheckBoxForTheSameRoleToUser($scope.treedata.data, node);
-            }
+        $scope.checkClick = function($event) {
             $event.stopPropagation();
         };
         $scope.predicate = '';
@@ -43,8 +40,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.getRoleUserGrpTree = function() {
             var params = {};
-            params.onlyShowGroup = false;
-            params.userGroupType = 0;
+            params.onlyShowGroup = true;
             if(!$scope.role.selected || !$scope.role.selected.id) {
                 $scope.treedata.data = undefined;
                 $scope.roleUserGrpMsg = constant.loadEmpty;
@@ -66,7 +62,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             var nodeArray = $scope.treedata.data;
             var checkedGroupIds = [];
             var checkedUserIds = [];
-            utils.extractCheckedGrpAndUserIds(nodeArray[0], checkedGroupIds, checkedUserIds);
+            utils.extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, checkedUserIds);
             params.grpIds = checkedGroupIds;
             params.userIds = checkedUserIds;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {

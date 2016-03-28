@@ -29,32 +29,19 @@ define(['utils/constant'], function (constant) {
             }
             return array;
         },
-        syncAllCheckBoxForTheSameRoleToUser: function recur(rootNodes, node) {
-            if(rootNodes && rootNodes.length) {
-                for (var i = 0; i < rootNodes.length; i++) {
-                    var rootNode = rootNodes[i];
-                    if(rootNode.type == node.type && rootNode.id == node.id) {
-                        rootNode.checked = node.checked;
+        extractCheckedGrpAndUserIds: function extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, checkedUserIds) {
+            if(nodeArray && nodeArray.length) {
+                for (var i = 0; i < nodeArray.length; i++) {
+                    var node = nodeArray[i];
+                    if(node.checked) {
+                        if(constant.treeNodeType.group == node.type) {
+                            checkedGroupIds.push(node.id);
+                        } else if(constant.treeNodeType.memberUser == node.type) {
+                            checkedUserIds.push(node.id);
+                        }
                     }
-                    var children = rootNode.children;
-                    if(children && children.length) {
-                        recur(children, node);
-                    }
-                }
-            }
-        },
-        extractCheckedGrpAndUserIds: function extractCheckedGrpAndUserIds(node, checkedGroupIds, checkedUserIds) {
-            if(node) {
-                if(node.checked) {
-                    if(constant.treeNodeType.group == node.type) {
-                        checkedGroupIds.push(node.id);
-                    } else if(constant.treeNodeType.memberUser == node.type) {
-                        checkedUserIds.push(node.id);
-                    }
-                }
-                if(node.children && node.children && node.children.length>0) {
-                    for(var i=0;i<node.children.length;i++) {
-                        extractCheckedGrpAndUserIds(node.children[i], checkedGroupIds, checkedUserIds);
+                    if(node.children && node.children && node.children.length>0) {
+                        extractCheckedGrpAndUserIds(node.children, checkedGroupIds, checkedUserIds);
                     }
                 }
             }
