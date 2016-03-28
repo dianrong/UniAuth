@@ -61,6 +61,7 @@ public interface AppConstants {
 	
 	//tag for userinfo edit in request
 	String CAS_USERINFO_MANAGE_EDIT_KEY = "edituserinfo";
+	String CAS_USERINFO_MANAGE_REQUEST_METHOD_KEY = "form_method";
 	String CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY = "user_mangage_flow_request_type";
 	String CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG = "user_manage_errormsg";
 	
