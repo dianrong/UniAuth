@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.service.DomainService;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -24,7 +24,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 public class DomainDataFilter extends CurrentAbastracDataFIleter{
 	
 	@Autowired
-	private DomainService domainService;
+	private DomainMapper domainMapper;
 	
 	/**.
 	 * 标示处理的表名
@@ -42,14 +42,14 @@ public class DomainDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 			case FIELD_TYPE_ID:
-				int countById = domainService.countDomainByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = domainMapper.countDomainByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById > 0){
 					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
 				}
 				break;
 			case FIELD_TYPE_CODE:
-				int countByCode = domainService.countDomainByCodeWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+				int countByCode = domainMapper.countDomainByCodeWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
 				if(countByCode > 0){
 					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "code" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
 				}
@@ -71,14 +71,14 @@ public class DomainDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 			case FIELD_TYPE_ID:
-				int countById = domainService.countDomainByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = domainMapper.countDomainByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById <= 0){
 					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
 				}
 				break;
 			case FIELD_TYPE_CODE:
-				int countByCode = domainService.countDomainByCodeWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+				int countByCode = domainMapper.countDomainByCodeWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
 				if(countByCode <= 0){
 					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "code" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
 				}
@@ -97,7 +97,7 @@ public class DomainDataFilter extends CurrentAbastracDataFIleter{
 		switch(type){
 			case FIELD_TYPE_CODE:
 				String newCode = TypeParseUtil.paraseToStringFromObject(fieldValue);
-				Domain domainInfo = domainService.selectByIdWithStatusEffective(id);
+				Domain domainInfo = domainMapper.selectByIdWithStatusEffective(id);
 				if(domainInfo != null){
 					//如果数据信息没有改变  则不管
 					if(newCode.equals(domainInfo.getCode())){

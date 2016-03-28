@@ -594,7 +594,7 @@ public class UserService {
      * @param id id
      * @return 信息model
      */
-    public User selectByIdWithStatusEffective(Integer id){
-    	return userMapper.selectByIdWithStatusEffective(id);
+    public UserDto selectByIdWithStatusEffective(Integer id){
+    	return BeanConverter.convert(userMapper.selectByIdWithStatusEffective(id));
     }
 }

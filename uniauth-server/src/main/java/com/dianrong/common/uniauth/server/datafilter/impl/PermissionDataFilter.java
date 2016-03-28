@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.service.PermissionService;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -22,7 +22,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	
 	@Autowired
-	private PermissionService permissionService;
+	private PermissionMapper permissionMapper;
 	
 	/**.
 	 * 标示处理的表名
@@ -39,7 +39,7 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 		//遍历
 		for(Entry<FieldType, Object> kv : entrySet){
 			if(kv.getKey() == FieldType.FIELD_TYPE_ID){
-				int countById = permissionService.countPermissionByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = permissionMapper.countPermissionByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById > 0){
 					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
@@ -58,7 +58,7 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 		//遍历
 		for(Entry<FieldType, Object> kv : entrySet){
 			if(kv.getKey() == FieldType.FIELD_TYPE_ID){
-				int countById = permissionService.countPermissionByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = permissionMapper.countPermissionByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById <= 0){
 					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Linkage;
@@ -54,7 +55,6 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import org.springframework.util.StringUtils;
 
 /**
  * Created by Arc on 14/1/16.
@@ -636,7 +636,7 @@ public class GroupService {
 	     * @param id id
 	     * @return 信息
 	     */
-	    public Grp selectByIdWithStatusEffective( Integer id){
-	    	return grpMapper.selectByIdWithStatusEffective(id);
+	    public GroupDto selectByIdWithStatusEffective( Integer id){
+	    	return BeanConverter.convert(grpMapper.selectByIdWithStatusEffective(id));
 	    }
 }

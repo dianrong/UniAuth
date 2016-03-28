@@ -249,7 +249,7 @@ public class DomainService {
 	     * @param id id
 	     * @return 域名信息
 	     */
-	    public Domain selectByIdWithStatusEffective(Integer id){
-	    	return domainMapper.selectByIdWithStatusEffective(id);
+	    public DomainDto selectByIdWithStatusEffective(Integer id){
+	    	return BeanConverter.convert(domainMapper.selectByIdWithStatusEffective(id));
 	    }
 }

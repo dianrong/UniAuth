@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -23,8 +23,8 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 @Service("userDataFilter")
 public class UserDataFilter extends CurrentAbastracDataFIleter{
 	
-	@Autowired
-	private UserService userService;
+	 @Autowired
+	 private UserMapper userMapper;
 	
 	/**.
 	 * 标示处理的表名
@@ -42,19 +42,19 @@ public class UserDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 				case FIELD_TYPE_ID:
-					int countById = userService.countUserByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+					int countById = userMapper.countUserByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
 					//有数据  就要报错
 					if(countById > 0){
 						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
 					}
 				case FIELD_TYPE_EMAIL:
-					int countByEmail = userService.countUserByEmailWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+					int countByEmail = userMapper.countUserByEmailWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
 					if(countByEmail > 0){
 						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "email" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
 					}
 					break;
 				case FIELD_TYPE_PHONE:
-					int countByPhone = userService.countUserByPhoneWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+					int countByPhone = userMapper.countUserByPhoneWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
 					if(countByPhone > 0){
 						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "phone" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
 					}
@@ -76,19 +76,19 @@ public class UserDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 				case FIELD_TYPE_ID:
-					int countById = userService.countUserByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+					int countById = userMapper.countUserByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
 					//有数据  就要报错
 					if(countById <= 0){
 						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
 					}
 				case FIELD_TYPE_EMAIL:
-					int countByEmail = userService.countUserByEmailWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+					int countByEmail = userMapper.countUserByEmailWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
 					if(countByEmail <= 0){
 						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "email" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
 					}
 					break;
 				case FIELD_TYPE_PHONE:
-					int countByPhone = userService.countUserByPhoneWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+					int countByPhone = userMapper.countUserByPhoneWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
 					if(countByPhone <= 0){
 						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "phone" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
 					}
@@ -107,7 +107,7 @@ public class UserDataFilter extends CurrentAbastracDataFIleter{
 		switch(type){
 			case FIELD_TYPE_EMAIL:
 				String newEmail = TypeParseUtil.paraseToStringFromObject(fieldValue);
-				User userInfo = userService.selectByIdWithStatusEffective(id);
+				User userInfo = userMapper.selectByIdWithStatusEffective(id);
 				if(userInfo != null){
 					//如果数据信息没有改变  则不管
 					if(newEmail.equals(userInfo.getEmail())){
@@ -122,7 +122,7 @@ public class UserDataFilter extends CurrentAbastracDataFIleter{
 				break;
 			case FIELD_TYPE_PHONE:
 				String newPhone = TypeParseUtil.paraseToStringFromObject(fieldValue);
-				userInfo = userService.selectByIdWithStatusEffective(id);
+				userInfo = userMapper.selectByIdWithStatusEffective(id);
 				if(userInfo != null){
 					//如果数据信息没有改变  则不管
 					if(newPhone.equals(userInfo.getPhone())){
