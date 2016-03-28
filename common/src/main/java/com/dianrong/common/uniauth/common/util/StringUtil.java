@@ -62,7 +62,7 @@ public class StringUtil {
 		}
 		int firstIndex = detailMessage.indexOf('\r');
 		int tfirstIndex = detailMessage.indexOf('\n');
-		firstIndex = firstIndex < tfirstIndex ? firstIndex:tfirstIndex;
+		firstIndex = firstIndex < tfirstIndex ? (firstIndex > 0 ? firstIndex :tfirstIndex) :tfirstIndex;
 		if(firstIndex < 0){
 			return detailMessage;
 		}
