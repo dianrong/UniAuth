@@ -15,6 +15,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
+import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 
@@ -30,6 +31,11 @@ public interface IUserResource {
     @Path("searchusers")
     //scenario: search user
     Response<PageDto<UserDto>> searchUser(UserQuery userQuery);
+
+    @POST
+    @Path("userswithrolechecked")
+    //scenario: search user with role checked
+    Response<List<UserDto>> searchUsersWithRoleCheck(PrimaryKeyParam primaryKeyParam);
     
     @POST
     @Path("domain/roles")

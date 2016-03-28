@@ -359,7 +359,36 @@ public class UserService {
             }
         }
 	}
-    
+
+    public List<UserDto> searchUsersWithRoleCheck(Integer roleId) {
+        CheckEmpty.checkEmpty(roleId, "roleId");
+        UserExample userExample = new UserExample();
+        List<User> allUsers = userMapper.selectByExample(userExample);
+
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+        List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+        List<UserDto> userDtos = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(userRoleKeys)) {
+            Set<Long> userIdsLinkedToRole = new HashSet<>();
+            for(UserRoleKey userRoleKey : userRoleKeys) {
+                userIdsLinkedToRole.add(userRoleKey.getUserId());
+            }
+            for(User user : allUsers) {
+                UserDto userDto = BeanConverter.convert(user);
+                if(userIdsLinkedToRole.contains(user.getId())) {
+                    userDto.setRoleChecked(Boolean.TRUE);
+                }
+                userDtos.add(userDto);
+            }
+        } else {
+            for(User user : allUsers) {
+                userDtos.add(BeanConverter.convert(user));
+            }
+        }
+        return userDtos;
+    }
+
 	public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
 		String account = loginParam.getAccount();
 		CheckEmpty.checkEmpty(account, "账号");
@@ -596,4 +625,5 @@ public class UserService {
     public UserDto selectByIdWithStatusEffective(Integer id){
     	return BeanConverter.convert(userMapper.selectByIdWithStatusEffective(id));
     }
+
 }

@@ -210,6 +210,7 @@
 <div style="display:none">
 	<form action="" method="post" id="hidden_post_form_for_loginurl">
 		<input type="text" name="savedLoginContext" value="" id="hidden_savedLoginContext">
+		<input type="text" name="form_method" value="" id="hidden_form_method">
 	</form>
 </div>
 
