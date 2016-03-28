@@ -43,7 +43,11 @@
 		var current_url = window.location;
 		//通过隐藏表单设置背景url
 		$('#hidden_savedLoginContext').val(current_url);
-		var hidden_to_step1_form = $('#hidden_to_step1');
+		
+		var hidden_to_step1_form = $('#hidden_post_form_for_loginurl');
+		//设置action
+		var action_url = processUrl +"?step=0";
+		hidden_to_step1_form.attr("action", action_url);
 		hidden_to_step1_form.submit();
 		//防止多点
 		$(this).unbind('click');

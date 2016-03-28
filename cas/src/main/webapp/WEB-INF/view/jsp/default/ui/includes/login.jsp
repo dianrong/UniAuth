@@ -85,8 +85,31 @@
 			<p><font color="red"><spring:message code="screen.tips.session.dup" /></font></p><br>
 		</c:if>
 		
-        <h2><spring:message code="screen.welcome.instructions" /></h2>
-
+		<!-- show login page title -->
+		<c:if test="${empty edituserinfo}">
+        	<h2><spring:message code="screen.welcome.instructions" /></h2>
+        </c:if>
+        <c:if test="${not empty edituserinfo}">
+        	<h2 class="text_decoration_none">
+	        	<%
+					Object savedLoginContext = request.getSession().getAttribute("pwdg_savedLoginContext");
+					if (savedLoginContext == null) {
+				%>
+				<a href="<%=path%>/login"><spring:message
+						code="screen.password.reset.step.backtofirstpage" /></a>
+				<%
+					} else {
+				%>
+				<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message
+						code="screen.password.reset.step.backtofirstpage" /></a>
+				<%
+					}
+				%>
+				&gt;
+				<spring:message code="screen.personal.info.edit.title" />
+			</h2>
+		</c:if>
+		<!-- show login page title -->
 		
 		<c:if test="${not empty edituserinfo}">
 				<section class="row hiddenbtn">
@@ -171,23 +194,21 @@
             <input class="btn-reset" name="reset" accesskey="c" value="<spring:message code="screen.welcome.button.clear" />" tabindex="7" type="reset" />
             
             <c:if test="${empty edituserinfo}">
-            		<div class="personal-info-link">
+            		<div class="personal-info-link text_decoration_none">
 		            	<div class="gotoedit-link">
-		            		<a href="<%=path %>/login?edituserinfo=go"  title="<spring:message code="screen.welcome.link.userinfo.goedit.title"/>"><spring:message code="screen.welcome.link.userinfo.goedit"/></a>
+		            		<a href="javascript:void(0);"  title="<spring:message code="screen.welcome.link.userinfo.goedit.title"/>" id="to_edit_userinfo_btn"><spring:message code="screen.welcome.link.userinfo.goedit"/></a>
 		            	</div>
 			            <div class="forgetpwd-link">
 			            	<a href="javascript:void(0);" title="<spring:message code="screen.welcome.link.password.forget.title"/>" id="to_reset_pwd_btn"><spring:message code="screen.welcome.link.password.forget"/></a>
 			            </div>
 		            </div>
         	</c:if>
-            
         </section>
     </form:form>
 </div>
 
 <div style="display:none">
-	<form action="<%=path %>/uniauth/forgetPassword" method="post" id="hidden_to_step1">
-		<input type="text" name="step" value="0">
+	<form action="" method="post" id="hidden_post_form_for_loginurl">
 		<input type="text" name="savedLoginContext" value="" id="hidden_savedLoginContext">
 	</form>
 </div>
@@ -273,3 +294,4 @@
 <jsp:directive.include file="bottom.jsp" />
 <script type="text/javascript" src="<%=path %>/jquery/jquery-1.12.1.min.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/pwdfoget.js" ></script>
+<script type="text/javascript" src="<%=path %>/js/userinfoedit.js" ></script>
