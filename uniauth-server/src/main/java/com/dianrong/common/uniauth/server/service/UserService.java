@@ -160,7 +160,7 @@ public class UserService {
                 
                 //原始密码验证通过
                 if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), origin_password_check, user.getPasswordSalt())){
-                	throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password wrong"));
+                	throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
                 }
                 byte salttemp[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
