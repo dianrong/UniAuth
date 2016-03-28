@@ -23,7 +23,10 @@
 						<div class="padding-top-bottom-10">
 						 	<div class="form-group">
 								<div class="col-md-offset-4 col-md-4 text-align-left">
-							    	<label for="emailValue" class="h6">xxxxxx@dianrong.com</label>
+							    	<label for="emailValue" class="h6">
+							    	${sessionScope.account}<br>
+							    	(account maybe email or phone, remove session attribute after finishing)
+							    	</label>
 							    	<input type="hidden" value="wanfei.wang@dianrong.com" name="email" id="user_email">
 							    </div>
 						  	</div>
