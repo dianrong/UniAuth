@@ -56,4 +56,9 @@ public interface IUserResource {
     @Path("singleuser")
     //scenario: cas login, check if the input email exists or not
     Response<UserDto> getSingleUser(UserParam userParam);
+    
+    @POST
+    @Path("userInfobytag")
+    //scenario: cas userinfo edit, check if the input email or phone exists
+    Response<UserDto> getUserInfoByUserTag(LoginParam loginParam);
 }

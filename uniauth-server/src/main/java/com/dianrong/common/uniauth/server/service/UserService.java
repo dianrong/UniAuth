@@ -625,5 +625,15 @@ public class UserService {
     public UserDto selectByIdWithStatusEffective(Integer id){
     	return BeanConverter.convert(userMapper.selectByIdWithStatusEffective(id));
     }
-
+    
+    /**.
+     * 根据email或phone获取用户信息
+     * @param userTag email或phone
+     * @return 信息model
+     */
+    public UserDto getUserByEmailOrPhone(LoginParam loginParam){
+		CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
+		User user = getUserByAccount(loginParam.getAccount(), true);
+		return BeanConverter.convert(user);
+    }
 }

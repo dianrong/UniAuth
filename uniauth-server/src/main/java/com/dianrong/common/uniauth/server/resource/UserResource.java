@@ -75,7 +75,12 @@ public class UserResource implements IUserRWResource {
 	public Response<UserDto> getSingleUser(UserParam userParam) {
 		return new Response<UserDto>(userService.getSingleUser(userParam));
 	}
-
+	
+	@Override
+	public Response<UserDto> getUserInfoByUserTag(LoginParam loginParam) {
+		return new Response<UserDto>(userService.getUserByEmailOrPhone(loginParam));
+	}
+	
 	@Override
 	public Response<Void> resetPassword(UserParam userParam) {
 		userService.resetPassword(userParam);
