@@ -5,6 +5,9 @@
 	
 	//初始化函数
 	var init = function() {
+		//添加跳转首页的刷新功能
+		$('#init_pwd_to_firstpage_a').click(refresh_page);
+		
 		//post提交
 		$('#btn_init_pwd_process').bind('click', init_pwd_process);
 		
@@ -28,6 +31,11 @@
 		$('#re_new_password').blur(function(){
 			valid_input_value(true, 3);
 		});
+	}
+	
+	//refresh page
+	var refresh_page = function(){
+		window.location = window.location;
 	}
 	
 	// refresh verifycode
@@ -122,8 +130,13 @@
 	//点击进行初始化密码操作
 	var init_pwd_process = function(){
 		var turl = processUrl;
+		
+		//设置一下跳转路径  //将跳转链接也仍进去到后台
+		$('#login_redirec_url_id').val(window.location);
+		
 		//数据
 		var data = $('#initpwd_post_form').serialize() ;
+		
 		$.ajax({  
             type : "POST", 
             url : turl,

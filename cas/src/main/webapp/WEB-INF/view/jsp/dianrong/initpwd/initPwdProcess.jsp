@@ -3,18 +3,7 @@
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
 			<header class="find-pwd">
-						<% 
-								Object savedLoginContext = request.getSession().getAttribute("pwdg_savedLoginContext");
-								if(savedLoginContext == null) {
-									%>
-										<a href="<%=path %>/login"><spring:message code="screen.init.password.navigation.firstpage"/></a>
-									<% 
-								} else {
-									%>
-										<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.init.password.navigation.firstpage"/></a>
-									<% 
-								}
-						%>
+				<a href="javascript:void(0);" id="init_pwd_to_firstpage_a"><spring:message code="screen.init.password.navigation.firstpage"/></a>
 				&gt;<spring:message code="screen.init.password.navigation.initpwd" />
 			</header>
 				<!-- content -->
@@ -27,6 +16,7 @@
 							    		${credential.username} 
 							    	</label>
 							    	<input type="hidden" value="${credential.username} " name="email" id="user_email">
+							    	<input type="hidden" name="savedLoginContext" id="login_redirec_url_id">
 							    </div>
 						  	</div>
 						  	<div class="form-group">

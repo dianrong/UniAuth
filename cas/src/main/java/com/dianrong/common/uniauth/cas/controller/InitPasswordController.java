@@ -64,6 +64,13 @@ public class InitPasswordController extends AbstractBaseController {
 	 * @param response
 	 */
 	private void processInitPassword(HttpServletRequest request, HttpServletResponse response){
+		//刷新session中的回调url
+		String savedLoginContext = request.getParameter(AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_KEY);
+		if (!StringUtil.strIsNullOrEmpty(savedLoginContext)) {
+			// 默认跳转路径
+			putValToSession(request.getSession(), AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
+		}
+		
 		//验证验证码
 		String req_verifycode = getParamFromRequest(request, "verify_code");
 		if(StringUtil.strIsNullOrEmpty(req_verifycode)){
