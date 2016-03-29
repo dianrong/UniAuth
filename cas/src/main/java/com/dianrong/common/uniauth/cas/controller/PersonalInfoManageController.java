@@ -61,16 +61,16 @@ public class PersonalInfoManageController extends AbstractAction {
 			return result(NOT_EXISTS);
 		}
 
-		// 获取用户邮箱信息
-		String userEmail = principal.getId();
+		// 获取用户账号
+		String account = principal.getId();
 		
 		String requestMethod = StringUtil.getObjectStr(context.getFlowScope().get(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY));
 		// 简单的以post和其他请求方式来区分去请求数据还是更新数据
 		if ("post".equalsIgnoreCase(requestMethod)) {
 			// 到更新数据的action去处理
-			return updateUserInfo(context, userEmail);
+			return updateUserInfo(context, account);
 		} else {
-			return queryUserInfo(context, userEmail);
+			return queryUserInfo(context, account);
 		}
 	}
 
@@ -82,11 +82,11 @@ public class PersonalInfoManageController extends AbstractAction {
 	 * @return result
 	 * @throws Exception
 	 */
-	private Event queryUserInfo(final RequestContext context, String email) throws Exception {
+	private Event queryUserInfo(final RequestContext context, String account) throws Exception {
 		UserDto userInfo = null;
 		try {
 			// 调服务获取用户信息
-			userInfo = userInfoManageService.findSingleUser(email);
+			userInfo = userInfoManageService.getUserDetailInfo(account);
 		} catch (Exception ex) {
 			// 将异常信息仍到前端去
 			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, ex.getMessage());
@@ -99,6 +99,7 @@ public class PersonalInfoManageController extends AbstractAction {
 
 		// 将信息绑定到前端使用
 		context.getFlowScope().put("userinfo", userInfo);
+		context.getFlowScope().put("userAccount", account);
 		return result(QUERY_USER_INFO);
 	}
 
@@ -110,7 +111,7 @@ public class PersonalInfoManageController extends AbstractAction {
 	 * @return result
 	 * @throws Exception
 	 */
-	private Event updateUserInfo(final RequestContext context, String cemail) throws Exception {
+	private Event updateUserInfo(final RequestContext context, String account) throws Exception {
 		// 从request请求中获取请求的数据
 		HttpServletRequest request = WebUtils.getHttpServletRequest(context);
 		String id = request.getParameter(AppConstants.CAS_USERINFO_MANAGE_USER_ID_TAG);

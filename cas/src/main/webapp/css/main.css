@@ -93,6 +93,22 @@
 	cursor: default;
 }
 
+.container .initpwd p {
+	color: #8a6d3b;
+    font-size: 17px;
+    margin-bottom: -10px;
+}
+
+/* overwrite bootstrap style */
+.container .initpwd .form-group {
+	margin-bottom: 20px;
+    margin-top: 20px;
+}
+.container .initpwd .h6 {
+	font-size: 15px;
+    font-weight: normal;
+}
+
 /* warn info show div */
 .showwarninfo {
 	text-align: left;

@@ -24,9 +24,8 @@
 				<input type="hidden" id="hidden_userinfo_keyid" value="${fn:escapeXml(userinfo.id)}">
 				<form action="" class="form-horizontal">
 					<div class="form-group">
-						<label for="inputEmail" class="col-md-3 control-label"><spring:message
-								code="screen.personal.info.edit.label.email" /></label> <label
-							id="inputEmail" class="col-md-6 control-label infolabel">${fn:escapeXml(userinfo.email)}</label>
+						<label for="inputEmail" class="col-md-3 control-label"><spring:message code="screen.personal.info.edit.label.account" /></label> <label
+							id="inputEmail" class="col-md-6 control-label infolabel">${fn:escapeXml(userAccount)}</label>
 					</div>
 				
 					<div class="horizontal form-group">

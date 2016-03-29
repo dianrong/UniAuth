@@ -34,31 +34,14 @@ public class InitPasswordController extends AbstractBaseController {
 			String method = request.getMethod();
 			if ("post".equalsIgnoreCase(method)) {
 				processInitPassword(request, response);
-			} else if ("get".equalsIgnoreCase(method)) {
-				//跳转页面
-				return toStep1(request, response);
-			}
+			} 
+			//不支持get方式的操作
 		} else {
 			// 有对应参数的 跳转到修改成功页面
 			return toStep2(request, response);
 		}
 		// 不处理
 		return null;
-	}
-
-	/**
-	 * . process step 2
-	 * 
-	 * @param request
-	 *            request
-	 * @param response
-	 *            response
-	 * @return
-	 * @throws Exception
-	 */
-	private ModelAndView toStep1(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// refresh or set
-		return getPwdForgetStep1Page();
 	}
 
 	/**
@@ -96,13 +79,13 @@ public class InitPasswordController extends AbstractBaseController {
 		}
 		
 		//获取请求的参数信息
-		String req_email = getParamFromRequest(request, "email");
+		String req_account = getParamFromRequest(request, "email");
 		String req_originpwd = getParamFromRequest(request, "originpwd");
 		String req_newpwd = getParamFromRequest(request, "newpwd");
 		
 		//后端验证
-		if(StringUtil.strIsNullOrEmpty(req_email)){
-			setResponseResultJson(response, "1" , "用户的邮箱不能为空");
+		if(StringUtil.strIsNullOrEmpty(req_account)){
+			setResponseResultJson(response, "1" , "用户账号不能为空");
 			return;
 		}
 		if(StringUtil.strIsNullOrEmpty(req_originpwd)){
@@ -117,7 +100,7 @@ public class InitPasswordController extends AbstractBaseController {
 		//根据邮箱获取用户原始信息
 		UserDto userinfo = null;
 		try{
-			userinfo = userInfoManageService.findSingleUser(req_email);
+			userinfo = userInfoManageService.getUserDetailInfo(req_account);
 		}catch(Exception ex){
 			setResponseResultJson(response, "1" ,  StringUtil.getExceptionSimpleMessage(ex.getMessage()));
 			return;
@@ -125,7 +108,7 @@ public class InitPasswordController extends AbstractBaseController {
 		
 		//用户不存在
 		if(userinfo == null) {
-			setResponseResultJson(response, "1" , req_email + "不存在");
+			setResponseResultJson(response, "1" , req_account + "不存在");
 			return;
 		}
 		
@@ -140,17 +123,7 @@ public class InitPasswordController extends AbstractBaseController {
 		//返回修改密码成功
 		setResponseResultJson(response, "0");
 	}
-
-	/**
-	 * . get initpwd step 1 page
-	 * 
-	 * @return step 1 page
-	 */
-	private ModelAndView getPwdForgetStep1Page() {
-		ModelAndView step1Page = new ModelAndView("dianrong/initpwd/initPwdProcess");
-		return step1Page;
-	}
-
+	
 	/**
 	 * . get initpwd step 2 page
 	 * 

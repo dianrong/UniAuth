@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
@@ -35,6 +36,22 @@ public class UserInfoManageService {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
 		Response<UserDto> response = uniClientFacade.getUserResource().getSingleUser(userParam);
+		List<Info> infoList = response.getInfo();
+		checkInfoList(infoList);
+		return response.getData();
+	}
+	
+	/**
+	 * . 根据用户邮箱或者电话获取用户信息
+	 * 
+	 * @param userTag 用户信息标识
+	 * @return user
+	 * @throws ResetPasswordException
+	 */
+	public UserDto getUserDetailInfo(String account) throws ResetPasswordException {
+		LoginParam loginParam = new LoginParam();
+		loginParam.setAccount(account);
+		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
 		List<Info> infoList = response.getInfo();
 		checkInfoList(infoList);
 		return response.getData();

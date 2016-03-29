@@ -1,1 +1,1 @@
-<jsp:directive.include file="../../dianrong/personalinfo/infoedit.jsp" />
+<jsp:directive.include file="../../dianrong/personalinfo/queryUserInfoError.jsp" />

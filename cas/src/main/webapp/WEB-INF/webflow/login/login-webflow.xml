@@ -253,9 +253,9 @@
     <end-state id="casBadHoursView" view="casBadHoursView"/>
     <end-state id="casBadWorkstationView" view="casBadWorkstationView"/>
     <end-state id="casFreshUserView" view="casFreshUserView">
-    	<on-entry>
-    		<set name="externalContext.sessionMap.account" value="flowScope.credential.username"></set>
-    	</on-entry>
+<!--     	<on-entry> -->
+<!--     		<set name="externalContext.sessionMap.account" value="flowScope.credential.username"></set> -->
+<!--     	</on-entry> -->
     </end-state>
 
     <end-state id="postView" view="postResponseView">
