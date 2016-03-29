@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.sharerw.interfaces;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.request.CfgParam;
+import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
 
 import javax.ws.rs.POST;
@@ -19,6 +20,6 @@ public interface IConfigRWResource extends IConfigResource {
 
     @POST
     @Path("/del")
-    Response delConfig(Integer cfgId);
+    Response delConfig(PrimaryKeyParam primaryKeyParam);
 
 }

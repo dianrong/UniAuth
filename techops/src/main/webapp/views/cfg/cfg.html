@@ -1,0 +1,58 @@
+<form style="margin-left: -20px;" class="form-horizontal" name="cfgQueryForm">
+    <div class="form-group">
+        <div class="col-md-4">
+            <span class="col-sm-4 control-label">CfgKey:</span>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="配置Key" ng-model="cfgQuery.cfgKey" maxlength="40">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">Value:</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="配置Text[%模糊%]" ng-model="cfgQuery.value" maxlength="40">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">Type</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="TestTest" ng-model="cfgQuery.phone" maxlength="16">
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="panel-body pull-right">
+    <a class="btn btn-info" ng-click="launch('add')" role="button">新增配置</a>
+    <button class="btn btn-info" ng-click="queryConfig()">查询</button>
+</div>
+
+<div>
+    <table class="text-left table grey-border table-hover vertical-middle">
+        <thead class="text-color-c4">
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Type</th>
+                <th style="text-align: center">操作</th>
+            </tr>
+        </thead>
+        <tbody class="text-color-c6">
+            <tr ng-if="cfgsLoading!=''">
+                <td colspan="9" class="tc" ng-bind="cfgsLoading"></td>
+            </tr>
+
+            <tr ng-repeat="d in cfgs">
+                <td ng-bind="d.cfgKey"></td>
+                <td ng-bind="d.value"></td>
+                <td ng-bind="d.cfgType"></td>
+                <td class="text-color-c9" style="text-align: center">
+                    <div class="btn-group">
+                        <a title="下载该配置文件" class="btn btn-info" ng-href="{{download(d)}}"><i class="fa fa-cloud-download"></i></a>
+                        <a title="上传覆盖该配置项的文件" class="btn btn-info"><i class="fa fa-cloud-upload"></i></a>
+                        <a title="修改配置信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -49,7 +49,6 @@
       		note: conflict with the judgment of regular expression, so the priority problem MUST be resolved.
       	-->
       	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
-
 	</sec:http>
 	
 	<!-- do not change: start -->

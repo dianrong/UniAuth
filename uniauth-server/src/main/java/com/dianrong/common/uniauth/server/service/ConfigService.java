@@ -4,7 +4,10 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.CfgExample;
+import com.dianrong.common.uniauth.server.data.entity.CfgType;
+import com.dianrong.common.uniauth.server.data.entity.CfgTypeExample;
 import com.dianrong.common.uniauth.server.data.mapper.CfgMapper;
+import com.dianrong.common.uniauth.server.data.mapper.CfgTypeMapper;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import org.apache.cxf.common.util.StringUtils;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Arc on 25/3/2016.
@@ -24,13 +29,16 @@ public class ConfigService {
     @Autowired
     private CfgMapper cfgMapper;
 
-    public ConfigDto addOrUpdateConfig(Integer id, String key, String type, String value, byte[] file) {
+    @Autowired
+    private CfgTypeMapper cfgTypeMapper;
+
+    public ConfigDto addOrUpdateConfig(Integer id, String cfgKey, Integer cfgTypeId, String value, byte[] file) {
         Cfg cfg = new Cfg();
         cfg.setId(id);
-        cfg.setKey(key);
+        cfg.setCfgKey(cfgKey);
         cfg.setFile(file);
         cfg.setValue(value);
-        cfg.setType(type);
+        cfg.setCfgTypeId(cfgTypeId);
         // update process.
         if(id != null) {
             if(file != null) {
@@ -45,7 +53,9 @@ public class ConfigService {
         return BeanConverter.convert(cfg);
     }
 
-    public PageDto<ConfigDto> queryConfig(Integer id, String key, String type, String value, Integer pageSize, Integer pageNumber) {
+    public PageDto<ConfigDto> queryConfig(Integer id, String cfgKey, Integer cfgTypeId, String value,
+                                          Boolean needBLOBs,Integer pageSize, Integer pageNumber) {
+
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
 
@@ -57,22 +67,32 @@ public class ConfigService {
         if(id != null) {
             criteria.andIdEqualTo(id);
         }
-        if(!StringUtils.isEmpty(key)) {
-            criteria.andKeyEqualTo(key);
+        if(!StringUtils.isEmpty(cfgKey)) {
+            criteria.andCfgKeyEqualTo(cfgKey);
         }
-        if(!StringUtils.isEmpty(type)) {
-            criteria.andTypeEqualTo(type);
+        if(cfgTypeId != null) {
+            criteria.andCfgTypeIdEqualTo(cfgTypeId);
         }
         if(!StringUtils.isEmpty(value)) {
-            criteria.andValueEqualTo(value);
+            criteria.andValueLike("%" + value + "%");
         }
-        List<Cfg> cfgs = cfgMapper.selectByExample(cfgExample);
+
+        List<Cfg> cfgs;
+        if(needBLOBs != null && needBLOBs) {
+            cfgs = cfgMapper.selectByExampleWithBLOBs(cfgExample);
+        } else {
+            cfgs = cfgMapper.selectByExample(cfgExample);
+        }
+
         if(CollectionUtils.isEmpty(cfgs)) {
             return null;
         } else {
             List<ConfigDto> configDtos = new ArrayList<>();
+            Map<Integer, String> cfgTypeIndex = this.getAllCfgTypesMap();
             for(Cfg cfg:cfgs) {
-                configDtos.add(BeanConverter.convert(cfg));
+                ConfigDto configDto = BeanConverter.convert(cfg);
+                configDto.setCfgType(cfgTypeIndex.get(cfg.getCfgTypeId()));
+                configDtos.add(configDto);
             }
             int count = cfgMapper.countByExample(cfgExample);
             return new PageDto<>(pageNumber,pageSize,count,configDtos);
@@ -81,6 +101,15 @@ public class ConfigService {
 
     public void delConfig(Integer cfgId) {
         cfgMapper.deleteByPrimaryKey(cfgId);
+    }
+
+    public Map<Integer, String> getAllCfgTypesMap() {
+        List<CfgType> cfgTypes = cfgTypeMapper.selectByExample(new CfgTypeExample());
+        Map<Integer, String> cfgTypeMap = new HashMap<>();
+        for(CfgType cfgType : cfgTypes) {
+            cfgTypeMap.put(cfgType.getId(), cfgType.getCode());
+        }
+        return cfgTypeMap;
     }
 
 }

@@ -155,6 +155,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "AuditController",
             templateUrl: "views/audit/audit.html"
         }).
+        state('sys-cfg', {
+            url: "/sys-cfg",
+            controller: "CfgController",
+            templateUrl: "views/cfg/cfg.html"
+        }).
         state('non-authorized', {
             url: '/non-authorized',
             templateUrl: 'views/common/non-authorized.html'

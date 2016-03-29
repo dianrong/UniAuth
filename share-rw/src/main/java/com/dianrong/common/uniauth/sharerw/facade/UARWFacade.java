@@ -5,15 +5,12 @@ import java.util.Arrays;
 import javax.annotation.PostConstruct;
 
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 /**
@@ -31,6 +28,7 @@ public class UARWFacade {
     private IRoleRWResource roleRWResource;
     private IUserRWResource userRWResource;
     private IAuditResource auditResource;
+    private IConfigRWResource configRWResource;
 
     @PostConstruct
     public void init(){
@@ -41,6 +39,7 @@ public class UARWFacade {
         userRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, Arrays.asList(jacksonJsonProvider));
         roleRWResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, Arrays.asList(jacksonJsonProvider));
         auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, Arrays.asList(jacksonJsonProvider));
+        configRWResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, Arrays.asList(jacksonJsonProvider));
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
@@ -70,5 +69,9 @@ public class UARWFacade {
 
     public IAuditResource getAuditResource() {
         return auditResource;
+    }
+
+    public IConfigRWResource getConfigRWResource() {
+        return configRWResource;
     }
 }

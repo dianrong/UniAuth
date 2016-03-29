@@ -7,5 +7,6 @@
         <li role="presentation" ng-class="{active: $state.includes('rel')}" class="text-left"><a ui-sref="rel.role--perm">关联管理</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('domain')}" class="text-left"><a ui-sref="domain">域管理</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('audit')}" class="text-left"><a ui-sref="audit">日志管理</a></li>
+        <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('sys-cfg')}" class="text-left"><a ui-sref="sys-cfg">系统配置</a></li>
     </ul>
 </div>
