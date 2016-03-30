@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="60 seconds">
 
     <!-- Because we are using Tomcat, it can be set as tomcat/logs folder.-->
-    <Property name="log_home" value="${catalina.base}/logs"/>
+    <Property name="log_home" value="${catalina.logs}"/>
 
     <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

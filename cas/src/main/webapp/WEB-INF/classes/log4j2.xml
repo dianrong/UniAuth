@@ -24,7 +24,7 @@
 <!-- Specify the refresh internal in seconds. -->
 <Configuration monitorInterval="60">
     <Properties>
-        <Property name="filename">${sys:catalina.base}/logs</Property>
+        <Property name="filename">${catalina.logs}</Property>
     </Properties>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
