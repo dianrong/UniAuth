@@ -51,7 +51,6 @@ public class ConfigAction {
     }
 
     @RequestMapping(value = "/download/{cfgKey}" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')")
     public Response<?>  download(@PathVariable("cfgKey") String cfgKey, HttpServletResponse response) throws IOException {
         CfgParam cfgParam = new CfgParam().setCfgKey(cfgKey);
         cfgParam.setNeedBLOBs(Boolean.TRUE);
@@ -75,6 +74,9 @@ public class ConfigAction {
                     response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName + "\""));
                     response.setContentLength(file.length);
                     response.getOutputStream().write(file);
+                } else {
+                    // return the text cfg.
+                    return Response.success(cfgDto);
                 }
             }
         }
