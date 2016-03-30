@@ -1,7 +1,5 @@
 package com.dianrong.loanbusiness.subsystem.controller;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,10 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
-import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.loanbusiness.subsystem.model.TestModel;
 import com.dianrong.loanbusiness.subsystem.service.MyService;
 
@@ -26,6 +22,9 @@ public class MainController {
 	
 	@Autowired
 	private UniClientFacade uniClientFacade;
+	
+	@Autowired
+	private ZooKeeperConfig zooKeeperConfig;
 
 
 	@RequestMapping(value = "/common", method = RequestMethod.GET)
@@ -39,9 +38,12 @@ public class MainController {
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")   
 	public String getAadminPage() {
-		DomainParam domainParam = new DomainParam();
-		domainParam.setCode("techops");
-		Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
+		for(int i = 0;i < 100;i++){
+			System.out.println("----------------------------------------------");
+		}
+		
+		System.out.println(zooKeeperConfig.getDomainUrl());
+		System.out.println(zooKeeperConfig.getCasServerUrl());
 		
 		TestModel tm = new TestModel();
 		myService.testModel(tm);
@@ -50,4 +52,16 @@ public class MainController {
 
 	}
 
+
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public String test() {
+		for(int i = 0;i < 100;i++){
+			System.out.println("----------------------------------------------");
+		}
+		
+		System.out.println(zooKeeperConfig.getDomainUrl());
+		System.out.println(zooKeeperConfig.getCasServerUrl());
+		
+		return "adminpage";
+	}
 }

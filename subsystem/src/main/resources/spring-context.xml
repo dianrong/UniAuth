@@ -26,8 +26,6 @@
 	
 	<import resource="classpath:ss-uniauth-client.xml" />
 	
-	
-	
 	<sec:http entry-point-ref="casAuthEntryPoint"  use-expressions="true" request-matcher="ant">
       	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
@@ -43,9 +41,9 @@
       		note: conflict with the judgment of regular expression, so the priority problem MUST be resolved.
       	-->
       	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
-		<sec:intercept-url pattern="/normal/normal.jsp" access="hasRole('ROLE_NORMAL')" />
+<!-- 		<sec:intercept-url pattern="/normal/normal.jsp" access="hasRole('ROLE_NORMAL')" />
       	<sec:intercept-url pattern="/user/user.jsp" access="hasRole('ROLE_ADMIN')" />
-      	<sec:intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" />
+      	<sec:intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" /> -->
 	</sec:http>
 	
 	<!-- do not change: start -->
