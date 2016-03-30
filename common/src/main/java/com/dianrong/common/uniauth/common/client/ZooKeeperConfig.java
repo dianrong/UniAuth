@@ -12,7 +12,7 @@ public class ZooKeeperConfig {
 	@Resource(name="uniauthConfig")
 	private Map<String, String> allZkNodeMap;
 	
-	@Autowired
+	@Autowired(required = false)
 	private DomainDefine domainDefine;
 	
 	public String getParam(String nodeName){
@@ -24,7 +24,10 @@ public class ZooKeeperConfig {
 	}
 	
 	public String getDomainUrl(){
-		String domainCode = domainDefine.getDomainCode();
-		return getParam("domains." + domainCode);
+		if(domainDefine != null){
+			String domainCode = domainDefine.getDomainCode();
+			return getParam("domains." + domainCode);
+		}
+		return null;
 	}
 }
