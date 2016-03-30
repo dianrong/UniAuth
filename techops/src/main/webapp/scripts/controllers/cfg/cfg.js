@@ -63,7 +63,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             removeAfterUpload: true
         });
 
-        var strs = ['id', 'cfgKey', 'cfgTypeId', 'value'];
+        var strs = ['id', 'cfgKey', 'cfgTypeId'];
         uploader.onAfterAddingFile = function(fileItem) {
             for(var index in strs) {
                 var str = strs[index];
@@ -71,6 +71,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 obj[str] = fileItem[str];
                 fileItem.formData.push(obj);
             }
+            var valueObj = {};
+            valueObj['value'] = fileItem.file.name;
+            fileItem.formData.push(valueObj);
         };
     };
 

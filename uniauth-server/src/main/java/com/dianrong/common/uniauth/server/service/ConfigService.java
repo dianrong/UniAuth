@@ -50,6 +50,8 @@ public class ConfigService {
             // add process.
             cfgMapper.insert(cfg);
         }
+        // do not need to return file after add or update.
+        cfg.setFile(null);
         return BeanConverter.convert(cfg);
     }
 

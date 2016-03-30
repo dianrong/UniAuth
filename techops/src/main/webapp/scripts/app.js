@@ -34,8 +34,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }());
     };
 
-    app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', 'RoleService', 'PermService',
-        function ($cookies, $location, $rootScope, $state, $stateParams, permission, RoleService, PermService) {
+    app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', '$http',
+        function ($cookies, $location, $rootScope, $state, $stateParams, permission, $http) {
       // It's very handy to add references to $state and $stateParams to the $rootScope
       // so that you can access them from any scope within your applications.For example,
       // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
@@ -46,8 +46,15 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
-      $rootScope.pageTitle = '权限运维系统';
-
+      $http.get(constant.apiBase + "/cfg/download/TECHOPS_TITLE").then(function (res) {
+        if(res.data && res.data.data && res.data.data.value) {
+          $rootScope.pageTitle = res.data.data.value;
+        } else {
+          $rootScope.pageTitle = '权限运维系统';
+        }
+      }, function (errorResponse) {
+          $rootScope.pageTitle = '权限运维系统';
+      });
     }]);
 
     app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$rootScopeProvider',

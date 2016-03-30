@@ -46,6 +46,6 @@ CREATE TABLE IF NOT EXISTS `cfg` (
 
 select @cfg_file_id := (select id from `cfg_type` where code='FILE');
 select @cfg_text_id := (select id from `cfg_type` where code='TEXT');
-insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('SYS_LOGO', 'logo.png', null, @cfg_file_id);
-insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('SYS_FAVICON', 'favicon.png', null, @cfg_file_id);
-insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('SYS_TITLE', '点融网-权限运维系统', null, @cfg_file_id);
+insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_LOGO', 'logo.png', null, @cfg_file_id);
+insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_ICON', 'favicon.png', null, @cfg_file_id);
+insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_TITLE', '点融网-权限运维系统', null, @cfg_file_id);
