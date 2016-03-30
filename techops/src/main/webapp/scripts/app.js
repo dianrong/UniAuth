@@ -1,11 +1,11 @@
 define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'ngTreeController',
-    'controllers/main-controller', 'utils/constant', 'utils/utils','ngAnimate', 'ui-select','angular.ui.bootstrap',
+    'controllers/main-controller', 'utils/constant', 'utils/utils', 'angularFileUpload', 'ngAnimate', 'ui-select','angular.ui.bootstrap',
     'ngLocalStorage'],
   function(angular, ngResource, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
            ngTreeController, mainController, constant, utils) {
     var appName = "ops";
     var app = angular.module(appName, ['ngResource', 'ui.router', 'pascalprecht.translate', 'ngSanitize',
-        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'treeControl', 'ngAnimate', 'ui.select']);
+        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'treeControl', 'ngAnimate', 'ui.select', 'angularFileUpload']);
     app.controller(mainController.name, mainController.fn);
     app.bootstrap = function() {
 

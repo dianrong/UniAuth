@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `cfg` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `cfg_key` VARCHAR(64) NOT NULL,
   `value` VARCHAR(512) NOT NULL,
-  `file` BLOB NULL DEFAULT NULL,
+  `file` MEDIUMBLOB NULL DEFAULT NULL,
   `cfg_type_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `cfg_key_UNIQUE` (`cfg_key` ASC),
