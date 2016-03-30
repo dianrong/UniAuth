@@ -3,7 +3,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, CfgService) {
+    var Controller = function ($scope, CfgService, FileUploader) {
 
         function getCfgTypes() {
             CfgService.getAllCfgTypes().$promise.then(function(res) {
@@ -17,7 +17,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             });
         }
         getCfgTypes();
-
 
         $scope.queryConfig = function () {
             var params = $scope.cfgQuery;
@@ -57,11 +56,27 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.download = function(cfg) {
             return constant.apiBase + "/cfg/download/" + cfg.cfgKey;
         }
+
+        var uploader = $scope.uploader = new FileUploader({
+            url: constant.apiBase + "/cfg/add-or-update",
+            autoUpload: true,
+            removeAfterUpload: true
+        });
+
+        var strs = ['id', 'cfgKey', 'cfgTypeId', 'value'];
+        uploader.onAfterAddingFile = function(fileItem) {
+            for(var index in strs) {
+                var str = strs[index];
+                var obj = {};
+                obj[str] = fileItem[str];
+                fileItem.formData.push(obj);
+            }
+        };
     };
 
     return {
         name: "CfgController",
-        fn: ["$scope", "CfgService", Controller]
+        fn: ["$scope", "CfgService", "FileUploader", Controller]
     };
 
 });
