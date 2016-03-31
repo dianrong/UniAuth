@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.client;
 public class DomainDefine {
 	private String domainCode;
 	private String userInfoClass;
+	private boolean rejectPublicInvocations;
 	
 	private static Integer domainId;
 
@@ -20,5 +21,13 @@ public class DomainDefine {
 
 	public void setUserInfoClass(String userInfoClass) {
 		this.userInfoClass = userInfoClass;
+	}
+
+	public boolean isRejectPublicInvocations() {
+		return rejectPublicInvocations;
+	}
+
+	public void setRejectPublicInvocations(boolean rejectPublicInvocations) {
+		this.rejectPublicInvocations = rejectPublicInvocations;
 	}
 }
