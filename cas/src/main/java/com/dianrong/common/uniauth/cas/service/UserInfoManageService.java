@@ -90,7 +90,7 @@ public class UserInfoManageService {
 			throws ResetPasswordException {
 		UserParam userParam = new UserParam();
 		userParam.setId(id);
-		userParam.setEmail(originPassword);
+		userParam.setOriginPassword(originPassword);
 		userParam.setPassword(newPassword);
 		userParam.setUserActionEnum(UserActionEnum.RESET_PASSWORD_AND_CHECK);
 		Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);

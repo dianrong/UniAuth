@@ -13,6 +13,11 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
     @NotNull
     @Size(min=1, message = "required.domain")
 	private String domain;
+    
+    /**.
+     * 验证码
+     */
+	private String captcha;
 	
 	public CasUsernamePasswordCredential() {
 	}
@@ -22,8 +27,13 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
 	}
 
 	public CasUsernamePasswordCredential(String userName, String password, String domain) {
+		this(userName, password, domain, "");
+	}
+	
+	public CasUsernamePasswordCredential(String userName, String password, String domain, String captcha) {
 		super(userName, password);
 		this.domain = domain;
+		this.captcha = captcha;
 	}
 
 	public String getDomain() {
@@ -42,5 +52,13 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
 	@Override
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this,obj, false);
+	}
+
+	public String getCaptcha() {
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha) {
+		this.captcha = captcha;
 	}
 }

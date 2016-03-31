@@ -156,6 +156,15 @@
   		<property name="userInfoManageService" ref="userInfoManageService"></property>
   </bean>
   
+  <!-- 进行登陆submit后台处理的拦截action -->
+  <bean id="authenticationActionInterceptor" class="com.dianrong.common.uniauth.cas.action.AuthenticationViaFormSubmitInterceptor">
+  		<property name="authenticationAction" ref="authenticationViaFormAction"></property>
+  		<property name="captchaValidHelper" ref="captchaValidHelper"></property>
+  </bean>
+  
+  <!-- 登陆验证码处理的辅助类 -->
+  <bean id="captchaValidHelper"  class="com.dianrong.common.uniauth.cas.handler.CasUserLoginCaptchaValidHelper"/>
+  
   <bean id="passThroughController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
 
   <!-- login webflow configuration -->

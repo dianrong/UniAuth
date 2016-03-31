@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
+import com.dianrong.common.uniauth.cas.util.UniBundle;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -74,14 +75,14 @@ public class InitPasswordController extends AbstractBaseController {
 		//验证验证码
 		String req_verifycode = getParamFromRequest(request, "verify_code");
 		if(StringUtil.strIsNullOrEmpty(req_verifycode)){
-			setResponseResultJson(response, "1" , "验证码为空了");
+			setResponseResultJson(response, "1" , UniBundle.getMsg("inipassword.controller.initpassword.captcha.empty"));
 			return;
 		}
 		// 判断验证码
 		String captcha = getValFromSession(request.getSession(), AppConstants.CAS_CAPTCHA_SESSION_KEY, String.class);
 		if (!req_verifycode.equals(captcha)) {
 			// 验证码不对
-			setResponseResultJson(response, "1" , "验证码错误");
+			setResponseResultJson(response, "1" , UniBundle.getMsg("inipassword.controller.initpassword.captcha.wrong"));
 			return;
 		}
 		
@@ -92,15 +93,15 @@ public class InitPasswordController extends AbstractBaseController {
 		
 		//后端验证
 		if(StringUtil.strIsNullOrEmpty(req_account)){
-			setResponseResultJson(response, "1" , "用户账号不能为空");
+			setResponseResultJson(response, "1" , UniBundle.getMsg("inipassword.controller.initpassword.userpassword.empty"));
 			return;
 		}
 		if(StringUtil.strIsNullOrEmpty(req_originpwd)){
-			setResponseResultJson(response, "1" , "原始密码不正确");
+			setResponseResultJson(response, "1" , UniBundle.getMsg("inipassword.controller.initpassword.originpassword.empty"));
 			return;
 		}
 		if(StringUtil.strIsNullOrEmpty(req_newpwd)){
-			setResponseResultJson(response, "1" , "新密码不能设置为空,长度在8-20位之间");
+			setResponseResultJson(response, "1" , UniBundle.getMsg("inipassword.controller.initpassword.newpassword.notempty"));
 			return;
 		}
 		
@@ -115,7 +116,7 @@ public class InitPasswordController extends AbstractBaseController {
 		
 		//用户不存在
 		if(userinfo == null) {
-			setResponseResultJson(response, "1" , req_account + "不存在");
+			setResponseResultJson(response, "1" , UniBundle.getMsg("inipassword.controller.initpassword.user.not.exsist", req_account));
 			return;
 		}
 		

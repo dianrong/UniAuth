@@ -92,6 +92,7 @@
         	<binding property="domain" required="true"/>
             <binding property="username" required="true"/>
             <binding property="password" required="true"/>
+            <binding property="captcha" required="false"/>
         </binder>
         <on-entry>
             <set name="viewScope.commandName" value="'credential'"/>
@@ -105,8 +106,10 @@
     </view-state>
 
     <action-state id="realSubmit">
+    
+    <!-- ps：这里将原始的action给替换代理了一下 -->
         <evaluate
-                expression="authenticationViaFormAction.submit(flowRequestContext, flowScope.credential, messageContext)"/>
+                expression="authenticationActionInterceptor.submit(flowRequestContext, flowScope.credential, messageContext)"/>
         <transition on="warn" to="warn"/>
         <!--
         To enable AUP workflows, replace the 'success' transition with the following:
@@ -116,6 +119,9 @@
         <transition on="successWithWarnings" to="showMessages"/>
         <transition on="authenticationFailure" to="handleAuthenticationFailure"/>
         <transition on="error" to="generateLoginTicket"/>
+        
+        <!-- captcha not right -->
+        <transition on="captchaValidFailed" to="generateLoginTicket"/>
     </action-state>
 
     <!-- Enable AUP flow
@@ -155,6 +161,7 @@
         <transition on="InvalidLoginTimeException" to="casBadHoursView"/>
         <transition on="FailedLoginException" to="generateLoginTicket"/>
         <transition on="AccountNotFoundException" to="generateLoginTicket"/>
+        <transition on="UserPasswordNotMatchException" to="generateLoginTicket"/>
         
         <transition on="FreshUserException" to="casFreshUserView"/>
         <transition on="MultiUsersFoundException" to="generateLoginTicket"/>
