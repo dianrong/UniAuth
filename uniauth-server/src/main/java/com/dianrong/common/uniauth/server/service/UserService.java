@@ -107,7 +107,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String name, String phone, String email, String password, Byte status) {
+    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String name, String phone, String email, String password, String orginPassword ,Byte status) {
         if(userActionEnum == null || id == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum, userId"));
         }
@@ -150,13 +150,12 @@ public class UserService {
                 } else if(!AuthUtils.validatePasswordRule(password)) {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
                 }
-                //临时使用email字段来存储原始密码
-                if(email == null) {
+                if(orginPassword == null) {
                 	throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.origin.password.wrong"));
                 }
                 
                 //验证原始密码是否正确
-                String origin_password_check = email;
+                String origin_password_check = orginPassword;
                 
                 //原始密码验证通过
                 if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), origin_password_check, user.getPasswordSalt())){
