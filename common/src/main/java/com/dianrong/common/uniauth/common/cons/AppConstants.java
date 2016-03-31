@@ -19,6 +19,7 @@ public interface AppConstants {
 	Integer MAX_PAGE_SIZE = 5000;
 	String PERM_TYPE_DOMAIN = "DOMAIN";
 	String PERM_TYPE_URIPATTERN = "URI_PATTERN";
+	String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
     String DOMAIN_CODE_TECHOPS = "techops";
     
 	String ZK_DOMAIN_PREFIX = "domains.";
