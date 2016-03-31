@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.mapper.AuditMapper;
+import com.dianrong.common.uniauth.server.util.RegExpUtil;
 
 @Component
 public class GlobalVarQueue {
@@ -73,7 +74,7 @@ public class GlobalVarQueue {
 							if(reqParam != null && reqParam.length() > AppConstants.AUDIT_INSET_PARAM_LENGTH){
 								reqParam = reqParam.substring(0, AppConstants.AUDIT_INSET_PARAM_LENGTH);
 							}
-							audit.setReqParam(gv.getReqParam());
+							audit.setReqParam(RegExpUtil.purgePassword(reqParam));
 							audit.setReqSuccess(gv.getSuccess());
 							audit.setReqUrl(gv.getReqUrl());
 							audit.setReqUuid(gv.getUuid());

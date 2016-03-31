@@ -65,7 +65,7 @@ public class ServerExAOPHandler {
             		Object param = args[0];
             		if(param != null){
                 		String jasonParam = JasonUtil.object2Jason(param);
-                		gv.setReqParam(RegExpUtil.purgePassword(jasonParam));
+                		gv.setReqParam(jasonParam);
                 		Class<?> paramClazz = param.getClass();
                 		Method getOpUserId = paramClazz.getMethod("getOpUserId", (Class[])null);
                 		Long opUserId = (Long)getOpUserId.invoke(param, (Object[])null);
