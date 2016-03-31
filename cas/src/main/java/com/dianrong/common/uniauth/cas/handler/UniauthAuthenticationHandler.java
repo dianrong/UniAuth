@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
+import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -53,6 +54,9 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 			
 			if(InfoName.LOGIN_ERROR_USER_NOT_FOUND.equals(infoName)){
 				throw new AccountNotFoundException("User " + userName + " not found in db.");
+			}
+			if(InfoName.LOGIN_ERROR.equals(infoName)){
+				throw new UserPasswordNotMatchException("User " + userName + " password not match.");
 			}
 			else if(InfoName.LOGIN_ERROR_MULTI_USER_FOUND.equals(infoName)){
 				throw new MultiUsersFoundException("Multiple " + userName + " found in db.");

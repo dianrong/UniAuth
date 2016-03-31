@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.AbstractController;
 
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -16,6 +18,11 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
  * @author R9GBP97
  */
 public abstract class AbstractBaseController extends AbstractController {
+	/**.
+	 * 日志对象
+	 */
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	/**
 	 * . get parameter from request
 	 * 
@@ -92,7 +99,7 @@ public abstract class AbstractBaseController extends AbstractController {
 		try {
 			response.getWriter().write(getAjaxJson(code));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("send ajax json exception:"+e.getMessage());
 		}
 	}
 
@@ -106,7 +113,7 @@ public abstract class AbstractBaseController extends AbstractController {
 		try {
 			response.getWriter().write(getAjaxJson(code, true, msg));
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("send ajax json exception:"+e.getMessage());
 		}
 	}
 

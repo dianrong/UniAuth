@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.model.DateSessionObjModel;
+import com.dianrong.common.uniauth.cas.util.UniBundle;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.message.EmailSender;
@@ -72,8 +73,8 @@ public class CaptchaController extends AbstractBaseController {
 		String verifyCode = StringUtil.generateNumberStr(6);
 
 		// 定义发送的内容
-		String title = "uniauth密码重置";
-		StringBuffer emailInfo = new StringBuffer("您好，本次密码修改的验证码为:" + verifyCode + "。\r\n注意：验证码将在"+AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES/1000L+"秒后过期。");
+		String title = UniBundle.getMsg("captcha.controller.captcha.email.title");
+		StringBuffer emailInfo = new StringBuffer(UniBundle.getMsg("captcha.controller.captcha.email.content", verifyCode, "\r\n",AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES/1000L));
 
 		// 发送邮件
 		try {

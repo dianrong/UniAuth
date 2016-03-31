@@ -18,8 +18,12 @@
 
 --%>
 
+<!-- include some java object -->
+<%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
+<%@ page import="com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel"%>
 
 <jsp:directive.include file="top.jsp" />
+
 
 <c:if test="${not empty redirectUrl}">
 	<script>
@@ -170,6 +174,26 @@
             <span id="capslock-on" style="display:none;"><p><img src="images/warning.png" valign="top"> <spring:message code="screen.capslock.on" /></p></span>
         </section>
 
+		<!-- captcha box -->
+		<%
+			Object casCaptchaObj = session.getAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+			if(casCaptchaObj != null){
+				CasLoginCaptchaInfoModel  tcasCaptchaObj = (CasLoginCaptchaInfoModel)casCaptchaObj;
+				if(!tcasCaptchaObj.canLoginWithouCaptcha()){
+					%>
+						<section class="row">
+				            <label for="captcha"><spring:message code="screen.welcome.label.captcha" /></label>
+				            <div class="captcha-class">
+						            <input type="text" size="12" tabindex="3" id="captcha" name="captcha">
+						    		<img alt="picture" src="<%=path %>/uniauth/captcha" title="<spring:message code="screen.init.password.step1.content.verifycode.title"/>"  id="cas_login_captcha_change_img" >
+									 <a  href="javascript:void(0);" tabindex="4"  id="cas_login_captcha_change_a"><spring:message code="screen.welcome.button.captcha.change"/></a>
+				            </div>
+				        </section>
+					<%
+				}
+			}
+		%>
+		
         <!--
         <section class="row check">
             <p>
@@ -296,3 +320,4 @@
 <script type="text/javascript" src="<%=path %>/jquery/jquery-1.12.1.min.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/pwdfoget.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/userinfoedit.js" ></script>
+<script type="text/javascript" src="<%=path %>/js/caslogincaptcha.js" ></script>

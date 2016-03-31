@@ -496,7 +496,7 @@ footer a:link, footer a:visited {
 	margin-top: 10px;
 }
 
-.text_decoration_none  a {
+.text_decoration_none  a,.captcha-class a {
 	text-decoration: none;
 }
 
@@ -524,4 +524,10 @@ footer a:link, footer a:visited {
 .notice-red {
 	color: red;
     font-size: 1.5em;
+}
+
+.captcha-class img {
+	width: 70px;
+    height: 32px;
+    vertical-align: middle;
 }
