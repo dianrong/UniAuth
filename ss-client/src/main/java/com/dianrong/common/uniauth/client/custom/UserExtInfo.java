@@ -43,6 +43,19 @@ public class UserExtInfo extends User {
 			}
 		}
 	}
+
+	public Boolean hasPrivilege(String privilegePerm) {
+		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_PRIVILEGE) == null) {
+			return Boolean.FALSE;
+		} else {
+			Set<String> privilegePerms = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
+			if(privilegePerms.contains(privilegePerm)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		}
+	}
 	
 	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,

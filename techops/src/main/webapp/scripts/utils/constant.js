@@ -79,6 +79,7 @@ define({
             danger: 'danger',
             success: 'success',
             warning: 'warning'
-        }
+        },
+        cfgFields: ['id', 'cfgKey', 'cfgTypeId']
     }
 );
