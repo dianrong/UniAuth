@@ -18,6 +18,7 @@ public interface AppConstants {
     int MAX_PASSWORD_VALID_MONTH = 2;
 	Integer MAX_PAGE_SIZE = 5000;
 	String PERM_TYPE_DOMAIN = "DOMAIN";
+	String PERM_TYPE_URIPATTERN = "URI_PATTERN";
     String DOMAIN_CODE_TECHOPS = "techops";
     
 	String ZK_DOMAIN_PREFIX = "domains.";
@@ -55,7 +56,7 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
 
 	//60 secondes
-	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 2L * 60L * 1000L;
+	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 3L * 60L * 1000L;
 	//5 minitues
 	long PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
 	
@@ -76,7 +77,9 @@ public interface AppConstants {
 	String CAS_USERINFO_MANGE_UPDATE_PASSWORD_TAG = "password";
 	String CAS_USERINFO_MANGE_UPDATE_ORIGINPASSWORD_TAG = "orign_password";
 	
-
+	//cas登陆captcha的session值的key
+	String CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY = "cas_login_captcha_validation_session_key";
+	
 	String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
 
 	String PERM_ROLEID_CHECK = "PERM_ROLEID_CHECK";

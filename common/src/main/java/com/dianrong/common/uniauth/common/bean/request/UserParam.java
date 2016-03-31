@@ -11,6 +11,7 @@ public class UserParam extends Operator {
     private String phone;
     private String email;
     private String password;
+    private String originPassword;
     private Byte status;
 
     private UserActionEnum userActionEnum;
@@ -98,5 +99,13 @@ public class UserParam extends Operator {
 	public UserParam setStatus(Byte status) {
 		this.status = status;
 		return this;
+	}
+
+	public String getOriginPassword() {
+		return originPassword;
+	}
+
+	public void setOriginPassword(String originPassword) {
+		this.originPassword = originPassword;
 	}
 }
