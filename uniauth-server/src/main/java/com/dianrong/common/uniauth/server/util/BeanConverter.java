@@ -26,8 +26,8 @@ public class BeanConverter {
         } else {
             return new ConfigDto()
                     .setId(cfg.getId())
-                    .setKey(cfg.getKey())
-                    .setType(cfg.getType())
+                    .setCfgKey(cfg.getCfgKey())
+                    .setCfgTypeId(cfg.getCfgTypeId())
                     .setFile(cfg.getFile())
                     .setValue(cfg.getValue());
         }

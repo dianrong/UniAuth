@@ -25,6 +25,7 @@
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
 		<property name="domainCode" value="techops"></property>
 		<property name="userInfoClass" value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
+		<property name="rejectPublicInvocations" value="false"></property>
 	</bean>
 
 	<sec:http pattern="/views/**" security="none" />
@@ -49,7 +50,6 @@
       		note: conflict with the judgment of regular expression, so the priority problem MUST be resolved.
       	-->
       	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
-
 	</sec:http>
 	
 	<!-- do not change: start -->

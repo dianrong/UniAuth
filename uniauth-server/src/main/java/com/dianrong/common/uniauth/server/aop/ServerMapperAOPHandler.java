@@ -17,6 +17,7 @@ import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
+import com.dianrong.common.uniauth.server.util.RegExpUtil;
 
 @Aspect
 @Component
@@ -68,7 +69,7 @@ public class ServerMapperAOPHandler {
             				sb.append("#" + i + ":" + jasonParam + " ");
             			}
             		}
-            		gv.setReqParam(sb.toString());
+            		gv.setReqParam(RegExpUtil.purgePassword(sb.toString()));
             	}
         	}catch(Exception e){
         		logger.error("Can not get param when access mapper methods.", e);

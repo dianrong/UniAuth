@@ -29,6 +29,7 @@ import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
@@ -36,9 +37,9 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 	private static Logger LOGGER = LoggerFactory.getLogger(SSBeanPostProcessor.class);
 	@Autowired
 	private UniClientFacade uniClientFacade;
-	
-	@Value("#{domainDefine.domainCode}")
-	private String currentDomainCode;
+
+	@Autowired
+	private DomainDefine domainDefine;
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -47,6 +48,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		String currentDomainCode = domainDefine.getDomainCode();
 		String beanClazzName = bean.getClass().getName();
 		
 		if(beanClazzName.equals(FilterSecurityInterceptor.class.getName())){
@@ -55,7 +57,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 			
 			FilterSecurityInterceptor filterSecurityInterceptor = (FilterSecurityInterceptor)bean;
 			//note: access public secure object is not allowed, this is a bit too overkilled if set to be true
-			//filterSecurityInterceptor.setRejectPublicInvocations(true);
+			filterSecurityInterceptor.setRejectPublicInvocations(domainDefine.isRejectPublicInvocations());
 			FilterInvocationSecurityMetadataSource securityMetadataSource = filterSecurityInterceptor.getSecurityMetadataSource();
 			if(securityMetadataSource instanceof ExpressionBasedFilterInvocationSecurityMetadataSource){
 				ExpressionBasedFilterInvocationSecurityMetadataSource expressionSecurityMetadataSource = (ExpressionBasedFilterInvocationSecurityMetadataSource)securityMetadataSource;

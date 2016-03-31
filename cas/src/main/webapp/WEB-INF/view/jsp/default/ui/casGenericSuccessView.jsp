@@ -23,7 +23,7 @@
     <h2><spring:message code="screen.success.header" /></h2>
     <p><spring:message code="screen.success.success" arguments="${principal.id}"/></p>
     <p><spring:message code="screen.success.security" /></p>
-    <p><a href="<%=path %>/login?edituserinfo=go"><spring:message code="screen.personal.info.goto.edit.label" /></a></p>
+    <p><a href="<%=path %>/login?edituserinfo=go"><spring:message code="screen.personal.info.goto.edit.label" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=path %>/logout"><spring:message code="screen.success.logout" /></a></p>
   </div>
 <jsp:directive.include file="includes/bottom.jsp" />
 

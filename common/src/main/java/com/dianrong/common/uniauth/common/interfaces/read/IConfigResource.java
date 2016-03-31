@@ -5,11 +5,9 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.request.CfgParam;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 /**
  * Created by Arc on 25/3/2016.
@@ -24,5 +22,9 @@ public interface IConfigResource {
         @POST
         @Path("/query")
         Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam);
+
+        @GET
+        @Path("/cfg-types")
+        Response<Map<Integer, String>> getAllCfgTypes();
 
 }

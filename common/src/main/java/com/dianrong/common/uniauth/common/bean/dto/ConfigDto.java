@@ -6,10 +6,29 @@ package com.dianrong.common.uniauth.common.bean.dto;
 public class ConfigDto {
 
     private Integer id;
-    private String key;
-    private String type;
+    private String cfgKey;
+    private Integer cfgTypeId;
+    private String cfgType;
     private String value;
     private byte[] file;
+
+    public Integer getCfgTypeId() {
+        return cfgTypeId;
+    }
+
+    public ConfigDto setCfgTypeId(Integer cfgTypeId) {
+        this.cfgTypeId = cfgTypeId;
+        return this;
+    }
+
+    public String getCfgType() {
+        return cfgType;
+    }
+
+    public ConfigDto setCfgType(String cfgType) {
+        this.cfgType = cfgType;
+        return this;
+    }
 
     public Integer getId() {
         return id;
@@ -20,21 +39,12 @@ public class ConfigDto {
         return this;
     }
 
-    public String getKey() {
-        return key;
+    public String getCfgKey() {
+        return cfgKey;
     }
 
-    public ConfigDto setKey(String key) {
-        this.key = key;
-        return this;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public ConfigDto setType(String type) {
-        this.type = type;
+    public ConfigDto setCfgKey(String cfgKey) {
+        this.cfgKey = cfgKey;
         return this;
     }
 

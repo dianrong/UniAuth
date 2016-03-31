@@ -6,10 +6,12 @@ package com.dianrong.common.uniauth.common.bean.request;
 public class CfgParam extends PageParam{
 
     private Integer id;
-    private String key;
-    private String type;
+    private String cfgKey;
+    private Integer cfgTypeId;
+    private String cfgTypeCode;
     private String value;
     private byte[] file;
+    private Boolean needBLOBs;
 
     public byte[] getFile() {
         return file;
@@ -29,21 +31,30 @@ public class CfgParam extends PageParam{
         return this;
     }
 
-    public String getKey() {
-        return key;
+    public Integer getCfgTypeId() {
+        return cfgTypeId;
     }
 
-    public CfgParam setKey(String key) {
-        this.key = key;
+    public CfgParam setCfgTypeId(Integer cfgTypeId) {
+        this.cfgTypeId = cfgTypeId;
         return this;
     }
 
-    public String getType() {
-        return type;
+    public String getCfgTypeCode() {
+        return cfgTypeCode;
     }
 
-    public CfgParam setType(String type) {
-        this.type = type;
+    public CfgParam setCfgTypeCode(String cfgTypeCode) {
+        this.cfgTypeCode = cfgTypeCode;
+        return this;
+    }
+
+    public String getCfgKey() {
+        return cfgKey;
+    }
+
+    public CfgParam setCfgKey(String cfgKey) {
+        this.cfgKey = cfgKey;
         return this;
     }
 
@@ -53,6 +64,15 @@ public class CfgParam extends PageParam{
 
     public CfgParam setValue(String value) {
         this.value = value;
+        return this;
+    }
+
+    public Boolean getNeedBLOBs() {
+        return needBLOBs;
+    }
+
+    public CfgParam setNeedBLOBs(Boolean needBLOBs) {
+        this.needBLOBs = needBLOBs;
         return this;
     }
 }

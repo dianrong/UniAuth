@@ -29,6 +29,7 @@ require(['app',
     'controllers/domain/dialogs/add-stakeholder',
     'controllers/domain/dialogs/modify-stakeholder',
     'controllers/audit/audit',
+    'controllers/cfg/cfg',
     'services/common/http-interceptor-service',
     'services/common/alert-service',
     'services/user/user-service',
@@ -36,7 +37,8 @@ require(['app',
     'services/role/role-service',
     'services/perm/perm-service',
     'services/domain/domain-service',
-    'services/audit/audit-service'],
+    'services/audit/audit-service',
+    'services/cfg/cfg-service'],
 
     function(app) {
         var components = Array.prototype.slice.call(arguments, 1);

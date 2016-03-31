@@ -23,6 +23,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                 }
                 if(!result) {
                     AlertService.addAutoDismissAlert(constant.messageType.info, "查询结果为空.");
+                    $scope.audits = [];
                     return;
                 }
                 $scope.audits = result.data;

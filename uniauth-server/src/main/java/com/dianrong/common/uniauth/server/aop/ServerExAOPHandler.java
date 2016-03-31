@@ -24,6 +24,7 @@ import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
+import com.dianrong.common.uniauth.server.util.RegExpUtil;
 
 /**
  * Created by Arc on 15/1/16.
@@ -64,7 +65,7 @@ public class ServerExAOPHandler {
             		Object param = args[0];
             		if(param != null){
                 		String jasonParam = JasonUtil.object2Jason(param);
-                		gv.setReqParam(jasonParam);
+                		gv.setReqParam(RegExpUtil.purgePassword(jasonParam));
                 		Class<?> paramClazz = param.getClass();
                 		Method getOpUserId = paramClazz.getMethod("getOpUserId", (Class[])null);
                 		Long opUserId = (Long)getOpUserId.invoke(param, (Object[])null);
