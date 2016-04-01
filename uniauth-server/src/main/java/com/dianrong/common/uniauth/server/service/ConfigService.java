@@ -64,6 +64,7 @@ public class ConfigService {
         CfgExample cfgExample = new CfgExample();
         cfgExample.setPageOffSet(pageNumber * pageSize);
         cfgExample.setPageSize(pageSize);
+        cfgExample.setOrderByClause("cfg_type_id asc");
         CfgExample.Criteria criteria = cfgExample.createCriteria();
 
         if(id != null) {

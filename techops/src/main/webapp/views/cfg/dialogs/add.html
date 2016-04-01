@@ -5,11 +5,11 @@
 </div>
 <div class="modal-body">
     <ng-form name="addCfgDialog" novalidate role="form">
-        <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[addCfgDialog.cfgKey.$dirty && addCfgDialog.cfgKey.$invalid]">
+        <div ng-cloak class="form-group input-group-lg" ng-class="{true: 'has-error'}[addCfgDialog.cfgKey.$dirty && addCfgDialog.cfgKey.$invalid]">
             <label class="control-label" for="cfgKey">CfgKey:</label>
             <input type="text" class="form-control" placeholder="配置主键" name="cfgKey" id="cfgKey" ng-model="cfg.cfgKey" required>
-            <label ng-if="cfgAddTypesDropdown.option.code != 'FILE'" class="control-label" for="value">Value:</label>
-            <input ng-if="cfgAddTypesDropdown.option.code != 'FILE'" placeholder="配置值" type="text" class="form-control"
+            <label class="control-label common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code == 'FILE')?'':'no'}}" for="value">Value:</label>
+            <input placeholder="配置值" type="text" class="form-control common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code == 'FILE')?'':'no'}}"
                    name="value" id="value" ng-model="cfg.value" />
 
             <label class="control-label" for="type" placeholder="配置类型">Type:</label>
@@ -25,8 +25,8 @@
                 </ul>
             </div>
             <br />
-            <label ng-if="cfgAddTypesDropdown.option.code == 'FILE'" class="control-label" for="cfgFile">Cfg文件:</label>
-            <input ng-if="cfgAddTypesDropdown.option.code == 'FILE'" id="cfgFile" type="file" nv-file-select uploader="uploader" />
+            <label class="control-label common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code != 'FILE')?'':'no'}}" for="cfgFile">Cfg文件:</label>
+            <input class="common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code != 'FILE')?'':'no'}}" id="cfgFile" type="file" nv-file-select uploader="uploader" />
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
         </div>
@@ -34,8 +34,8 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-    <button ng-show="cfgAddTypesDropdown.option.code != 'FILE'" type="button" class="btn btn-primary" ng-click="save()"
+    <button ng-show="cfgAddTypesDropdown && cfgAddTypesDropdown.option.code != 'FILE'" type="button" class="btn btn-primary" ng-click="save()"
             ng-disabled="(addCfgDialog.$dirty && addCfgDialog.$invalid) || addCfgDialog.$pristine">保存</button>
-    <button ng-show="cfgAddTypesDropdown.option.code == 'FILE'" type="button" class="btn btn-primary" ng-click="upload()"
+    <button ng-show="cfgAddTypesDropdown && cfgAddTypesDropdown.option.code == 'FILE'" type="button" class="btn btn-primary" ng-click="upload()"
             ng-disabled="(addCfgDialog.$dirty && addCfgDialog.$invalid) || addCfgDialog.$pristine">保存</button>
 </div>

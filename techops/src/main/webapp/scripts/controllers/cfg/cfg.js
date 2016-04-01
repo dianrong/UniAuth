@@ -74,11 +74,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             var valueObj = {};
             valueObj['value'] = fileItem.file.name;
             fileItem.formData.push(valueObj);
-            AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件中...');
+            fileItem.onProgress = function(progress) {
+                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传中...');
+            }
             fileItem.onComplete = function(response, status, headers) {
                 AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传成功.');
+                $scope.queryConfig();
             }
-
             fileItem.onError = function(response, status, headers) {
                 AlertService.addAlert(constant.messageType.danger, '配置文件上传失败.');
             }
@@ -91,7 +93,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         param, {size:'md'}
                     );
                     dlg.result.then(function (close) {
-                        //
+                        $scope.queryConfig();
                     }, function (dismiss) {
                         //
                     });
@@ -101,7 +103,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         {}, {size:'md'}
                     );
                     dlg.result.then(function (close) {
-                        //
+                        $scope.queryConfig();
                     }, function (dismiss) {
                         //
                     });
