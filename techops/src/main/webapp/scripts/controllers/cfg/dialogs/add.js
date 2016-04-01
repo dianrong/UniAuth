@@ -45,7 +45,12 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
         };
 
         $scope.upload = function(){
-            uploader.uploadAll();
+            var fileItems = uploader.getNotUploadedItems();
+            if(fileItems != null && fileItems.length > 0) {
+                uploader.uploadAll();
+            } else {
+                $scope.save();
+            }
         };
 
         var uploader = $scope.uploader = new FileUploader({

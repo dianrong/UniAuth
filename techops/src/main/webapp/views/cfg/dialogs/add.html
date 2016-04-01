@@ -11,9 +11,8 @@
             <label class="control-label common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code == 'FILE')?'':'no'}}" for="value">Value:</label>
             <input placeholder="配置值" type="text" class="form-control common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code == 'FILE')?'':'no'}}"
                    name="value" id="value" ng-model="cfg.value" />
-
             <label class="control-label" for="type" placeholder="配置类型">Type:</label>
-            <div id="type" class="btn-group" uib-dropdown is-open="cfgAddTypesDropdown.isOpen">
+            <div style="margin-top: 10px;margin-bottom: 10px;" id="type" class="btn-group" uib-dropdown is-open="cfgAddTypesDropdown.isOpen">
                 <button type="button" class="btn btn-primary" uib-dropdown-toggle>
                     <span ng-bind="cfgAddTypesDropdown.option.code"></span>
                     <span class="caret"></span>

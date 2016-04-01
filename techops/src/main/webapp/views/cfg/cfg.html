@@ -58,6 +58,7 @@
                         <a ng-if="d.cfgType!='TEXT'" title="下载该配置文件" class="btn btn-info" ng-href="{{download(d)}}"><i class="fa fa-cloud-download"></i></a>
                         <a ng-if="d.cfgType!='TEXT'" title="上传覆盖该配置项的文件" class="btn btn-info file" href="javascript:;"><i class="fa fa-cloud-upload"></i><input type="file" nv-file-select uploader="uploader" options="d"/></a>
                         <a title="修改配置信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+                        <a title="删除该配置信息" class="btn btn-info" ng-click="launch('del', d)"><i class="fa fa-trash"></i></a>
                     </div>
                 </td>
             </tr>

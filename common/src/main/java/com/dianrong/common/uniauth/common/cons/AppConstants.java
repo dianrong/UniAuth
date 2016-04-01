@@ -34,6 +34,8 @@ public interface AppConstants {
 	String NO_PRIVILEGE = "NO_PRIVILEGE";
 
 	String PERM_TYPE_DOMAIN_ID = "DOMAIN_ID";
+	String CFG_TYPE_TEXT = "TEXT";
+	String CFG_TYPE_FILE = "FILE";
 
 
 	//constants for password forget

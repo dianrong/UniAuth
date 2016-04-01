@@ -108,6 +108,29 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         //
                     });
                     break;
+                case 'del':
+                    var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
+                        {
+                            "header":'删除配置',
+                            "msg":"您确定要删除cfgKey为: " + param.cfgKey +" 的配置吗吗?"
+                        }, {size:'md'}
+                    );
+                    dlg.result.then(function (yes) {
+                        CfgService.delCfg(
+                            {
+                                'id':param.id,
+                            }
+                            , function(res) {
+                                AlertService.addAutoDismissAlert(constant.messageType.info, '配置删除成功!');
+                                $scope.queryConfig();
+                            }, function(err) {
+                                AlertService.addAutoDismissAlert(constant.messageType.danger, '配置删除失败!');
+                            }
+                        );
+                    }, function (no) {
+                        // do nothing
+                    });
+                    break;
             }
         };
     };

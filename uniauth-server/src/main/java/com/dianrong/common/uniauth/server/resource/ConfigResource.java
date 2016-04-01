@@ -43,7 +43,7 @@ public class ConfigResource implements IConfigRWResource {
 
     @Override
     public Response<Map<Integer, String>> getAllCfgTypes() {
-        Map<Integer, String> cfgTypesMap = configService.getAllCfgTypesMap();
+        Map<Integer, String> cfgTypesMap = configService.getAllCfgTypesIdCodePair();
         return Response.success(cfgTypesMap);
     }
 
