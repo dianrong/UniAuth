@@ -20,7 +20,7 @@ import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 @Service("domainService")
-public class DomainService {
+public class DomainService extends BaseService{
 	
 	@Resource(name="uniauthConfig")
 	private Map<String, String> allZkNodeMap;

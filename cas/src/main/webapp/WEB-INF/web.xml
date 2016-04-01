@@ -132,7 +132,12 @@
             org.jasig.cas.CasEnvironmentContextListener
         </listener-class>
     </listener>
-
+	<listener>
+		<listener-class>
+			com.dianrong.common.uniauth.cas.listener.TomcatStartupListener
+		</listener-class>
+	</listener>
+		
     <!--
       - This is the Spring dispatcher servlet which delegates all requests to the
       - Spring WebMVC controllers as configured in cas-servlet.xml.

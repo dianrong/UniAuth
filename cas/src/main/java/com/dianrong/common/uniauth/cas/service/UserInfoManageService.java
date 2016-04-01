@@ -16,7 +16,7 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 
 @Service
-public class UserInfoManageService {
+public class UserInfoManageService extends BaseService{
 
 	@Autowired
 	private UARWFacade uarwFacade;
@@ -96,14 +96,5 @@ public class UserInfoManageService {
 		Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
 		List<Info> infoList = response.getInfo();
 		checkInfoList(infoList);
-	}
-
-	private void checkInfoList(List<Info> infoList) throws ResetPasswordException {
-		if (infoList != null && !infoList.isEmpty()) {
-			for (Info info : infoList) {
-				String errorMsg = info.getMsg();
-				throw new ResetPasswordException(errorMsg);
-			}
-		}
 	}
 }

@@ -19,6 +19,7 @@ public interface AppConstants {
 	Integer MAX_PAGE_SIZE = 5000;
 	String PERM_TYPE_DOMAIN = "DOMAIN";
 	String PERM_TYPE_URIPATTERN = "URI_PATTERN";
+	String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
     String DOMAIN_CODE_TECHOPS = "techops";
     
 	String ZK_DOMAIN_PREFIX = "domains.";
@@ -33,6 +34,8 @@ public interface AppConstants {
 	String NO_PRIVILEGE = "NO_PRIVILEGE";
 
 	String PERM_TYPE_DOMAIN_ID = "DOMAIN_ID";
+	String CFG_TYPE_TEXT = "TEXT";
+	String CFG_TYPE_FILE = "FILE";
 
 
 	//constants for password forget
@@ -92,4 +95,19 @@ public interface AppConstants {
 	int AUDIT_INSERT_LIST_SIZE = 10;
 	int AUDIT_INSERT_EXP_LENGTH = 3072;
 	int AUDIT_INSET_PARAM_LENGTH = 256;
+	
+	//cas cfg refresh
+	//default 10 minitues
+	long CAS_CFG_CACHE_REFRESH_PERIOD_MILLES = 10L * 60L * 1000L;
+	
+	//cascfg cache model in application's key
+	String CAS_CFG_CACHE_MODEL_APPLICATION_KEY = "cascfg_cache_key";
+	
+	//cas cfg cfg_key list
+	String CAS_CFG_KEY_LOGO = "CAS_LOGO";
+	String CAS_CFG_KEY_ICON = "CAS_ICON";
+	String CAS_CFG_KEY_TITLE = "CAS_TITLE";
+	String CAS_CFG_KEY_ALL_RIGHT = "CAS_ALL_RIGHT";
+	String CAS_CFG_KEY_LOGIN_PAGE_IMG = "CAS_LOGIN_PAGE_IMG";
+	String CAS_CFG_KEY_BACKGROUND_COLOR = "CAS_BACKGROUND_COLOR";
 }
