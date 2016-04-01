@@ -120,3 +120,11 @@
     opacity: 0;
     cursor: pointer;
 }
+
+.common-hidden{
+    display:none !important;
+}
+
+.common-hidden.no{
+    display:block !important;
+}
