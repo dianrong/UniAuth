@@ -112,4 +112,11 @@ public interface PermissionMapper {
      * @return
      */
      int countPermissionByIdWithStatusEffective(@Param("id") Long id);
+     
+     /**.
+      * 根据id获取有效权限的信息
+      * @param id id
+      * @return 信息model
+      */
+     Permission selectByIdWithStatusEffective(@Param("id") Integer id);
 }

@@ -43,4 +43,21 @@ public abstract class CurrentAbastracDataFIleter extends AbstractDataFilter{
 	 * @param filterMap 过滤条件字段
 	 */
 	protected abstract void filterNoStatusEqual0(Map<FieldType, Object> filterMap);
+	
+
+	//默认实现都放这里 需要的自己重写
+	@Override
+	protected void doFileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue) {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	protected void doDataFilterWithCondtionsEqual(FieldType type, Object fieldValue, FilterType ftype, FieldType... equalFields) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected void doFilterFieldValueIsExsistWithCondtionsEqua(FieldType type, Integer id, Object fieldValue, FieldType... equalFields) {
+		throw new UnsupportedOperationException();
+	}
 }

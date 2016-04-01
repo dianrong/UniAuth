@@ -74,13 +74,13 @@ public class GroupDataFilter extends CurrentAbastracDataFIleter{
 				int countById = grpMapper.countGroupByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById <= 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", "grp" , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
 				}
 				break;
 			case FIELD_TYPE_CODE:
 				int countByCode = grpMapper.countGroupByCodeWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
 				if(countByCode <= 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", "grp" , "code" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "code" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
 				}
 				break;
 			default:

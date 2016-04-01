@@ -67,8 +67,4 @@ public class RoleDataFilter extends CurrentAbastracDataFIleter{
 			}
 		}
 	}
-
-	@Override
-	protected void doFileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue) {
-	}
 }

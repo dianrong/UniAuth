@@ -31,4 +31,20 @@ public interface DataFilter {
 		 * @param fieldValue 需要新加入的值
 		 */
 		void fileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue);
+		
+		/**.
+		 * 数据过滤并且伴随字段相等的情况。
+		 * @param fieldName  过滤的字段名
+		 * @param fieldValue  对应字段的值
+		 * @param ftype 过滤的方式
+		 */
+		void dataFilterWithCondtionsEqual(FieldType type, Object fieldValue, FilterType ftype, FieldType... equalFields);
+		
+		/**.
+		 * 判断数据是否重复并且伴随字段相等的情况。
+		 * @param type 字段
+		 * @param id keyid
+		 * @param fieldValue 需要新加入的值
+		 */
+		void filterFieldValueIsExsistWithCondtionsEqua(FieldType type, Integer id, Object fieldValue, FieldType... equalFields);
 }

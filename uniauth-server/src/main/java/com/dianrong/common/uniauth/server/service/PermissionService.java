@@ -98,6 +98,9 @@ public class PermissionService {
 		//域名id必须是有效的
 		domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
 		
+		//同一个域下面不能出现重复数据
+		domainDataFilter.dataFilterWithCondtionsEqual(FieldType.FIELD_TYPE_VALUE, value, FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_PERM_TYPE_ID, FieldType.FIELD_TYPE_DOMAIN_ID);
+		
 		Permission permission = BeanConverter.convert(permissionParam, false);
 		permission.setStatus(AppConstants.ZERO_Byte);
 		permissionMapper.insert(permission);
@@ -114,12 +117,16 @@ public class PermissionService {
 		Integer domainId = permissionParam.getDomainId();
 		Integer permTypeId = permissionParam.getPermTypeId();
 		String value = permissionParam.getValue();
+		CheckEmpty.checkEmpty(permissionParam.getId(), "主键ID");
 		CheckEmpty.checkEmpty(domainId, "域ID");
 		CheckEmpty.checkEmpty(permTypeId, "权限类型ID");
 		CheckEmpty.checkEmpty(value, "权限的值");
 		
 		//域名id必须是有效的
 		domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+		
+		//不能更新成重复数据
+		domainDataFilter.filterFieldValueIsExsistWithCondtionsEqua(FieldType.FIELD_TYPE_VALUE, permissionParam.getId(), value, FieldType.FIELD_TYPE_PERM_TYPE_ID, FieldType.FIELD_TYPE_DOMAIN_ID);
 
 		Permission permission = BeanConverter.convert(permissionParam, true);
 		permissionMapper.updateByPrimaryKey(permission);

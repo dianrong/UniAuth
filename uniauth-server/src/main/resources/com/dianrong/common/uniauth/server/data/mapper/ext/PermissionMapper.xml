@@ -80,4 +80,13 @@
 	id = #{id, jdbcType=BIGINT}
 	AND status = 0 
   </select>
+  
+  <!-- 根据keyid查询有效的权限信息 -->
+   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM permission
+    WHERE id = #{id, jdbcType=INTEGER}
+    AND status = 0 
+  </select>
 </mapper>
