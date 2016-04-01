@@ -52,4 +52,5 @@ select @cfg_text_id := (select id from `cfg_type` where code='TEXT');
 insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_LOGO', 'logo.png', null, @cfg_file_id);
 insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_ICON', 'favicon.png', null, @cfg_file_id);
 insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_TITLE', '点融网-权限运维系统', null, @cfg_text_id);
+insert into `perm_type`(`id`, `type`) values (3, 'PRIVILEGE');
 COMMIT;

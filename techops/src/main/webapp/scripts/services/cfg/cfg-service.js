@@ -14,6 +14,8 @@ define(['../../utils/constant'], function (constant) {
                 params: {
                     method: 'add-or-update'
                 },
+                headers : {'Content-Type': undefined},
+                transformRequest : angular.identity,
                 isArray: false,
                 timeout: constant.reqTimeout
             },

@@ -69,7 +69,7 @@ public class ServerMapperAOPHandler {
             				sb.append("#" + i + ":" + jasonParam + " ");
             			}
             		}
-            		gv.setReqParam(RegExpUtil.purgePassword(sb.toString()));
+            		gv.setReqParam(sb.toString());
             	}
         	}catch(Exception e){
         		logger.error("Can not get param when access mapper methods.", e);

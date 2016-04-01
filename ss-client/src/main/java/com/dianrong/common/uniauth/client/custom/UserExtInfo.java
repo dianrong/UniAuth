@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class UserExtInfo extends User {
 	private static final long serialVersionUID = 8347558918889027136L;
@@ -18,12 +18,12 @@ public class UserExtInfo extends User {
 	private DomainDto domainDto;
 	private Map<String, Set<String>> permMap;
 
-	public Boolean hasUriPattern(String uriPattern) {
-		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_URIPATTERN) == null) {
+	public Boolean hasDomain(String domainPerm) {
+		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
 			return Boolean.FALSE;
 		} else {
-			Set<String> uriPatterns = permMap.get(AppConstants.PERM_TYPE_URIPATTERN);
-			if(uriPatterns.contains(uriPattern)) {
+			Set<String> domainPerms = permMap.get(AppConstants.PERM_TYPE_DOMAIN);
+			if(domainPerms.contains(domainPerm)) {
 				return Boolean.TRUE;
 			} else {
 				return Boolean.FALSE;
@@ -31,12 +31,12 @@ public class UserExtInfo extends User {
 		}
 	}
 
-	public Boolean hasDomain(String domainPerm) {
-		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
+	public Boolean hasPrivilege(String privilegePerm) {
+		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_PRIVILEGE) == null) {
 			return Boolean.FALSE;
 		} else {
-			Set<String> domainPerms = permMap.get(AppConstants.PERM_TYPE_DOMAIN);
-			if(domainPerms.contains(domainPerm)) {
+			Set<String> privilegePerms = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
+			if(privilegePerms.contains(privilegePerm)) {
 				return Boolean.TRUE;
 			} else {
 				return Boolean.FALSE;

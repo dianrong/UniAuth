@@ -1,10 +1,21 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.cxf.common.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.CfgExample;
 import com.dianrong.common.uniauth.server.data.entity.CfgType;
@@ -16,17 +27,6 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-import org.apache.cxf.common.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
 
 /**
  * Created by Arc on 25/3/2016.
@@ -59,7 +59,7 @@ public class ConfigService {
         		//更新判断比较
         		dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CFG_KEY,id ,cfgKey);
         	}
-        	Map<String, Integer> cfgTypesMap = this.getAllCfgTypesCodeIdPair();
+            Map<String, Integer> cfgTypesMap = this.getAllCfgTypesCodeIdPair();
             if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file != null) {
                 // when create new file cfg or update the old file
                 cfgMapper.updateByPrimaryKeyWithBLOBs(cfg);

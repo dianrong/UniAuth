@@ -3,7 +3,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, CfgService, FileUploader) {
+    var Controller = function ($scope, CfgService, FileUploader, AlertService, dialogs) {
 
         function getCfgTypes() {
             CfgService.getAllCfgTypes().$promise.then(function(res) {
@@ -63,7 +63,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             removeAfterUpload: true
         });
 
-        var strs = ['id', 'cfgKey', 'cfgTypeId'];
+        var strs = constant.cfgFields;
         uploader.onAfterAddingFile = function(fileItem) {
             for(var index in strs) {
                 var str = strs[index];
@@ -74,12 +74,70 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             var valueObj = {};
             valueObj['value'] = fileItem.file.name;
             fileItem.formData.push(valueObj);
+            fileItem.onProgress = function(progress) {
+                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传中...');
+            }
+            fileItem.onComplete = function(response, status, headers) {
+                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传成功.');
+                $scope.queryConfig();
+            }
+            fileItem.onError = function(response, status, headers) {
+                AlertService.addAlert(constant.messageType.danger, '配置文件上传失败.');
+            }
+        };
+
+        $scope.launch = function(which, param) {
+            switch(which) {
+                case 'modify':
+                    var dlg = dialogs.create('views/cfg/dialogs/modify.html','ModifyCfgController',
+                        param, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        $scope.queryConfig();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'add':
+                    var dlg = dialogs.create('views/cfg/dialogs/add.html','AddCfgController',
+                        {}, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        $scope.queryConfig();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'del':
+                    var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
+                        {
+                            "header":'删除配置',
+                            "msg":"您确定要删除cfgKey为: " + param.cfgKey +" 的配置吗吗?"
+                        }, {size:'md'}
+                    );
+                    dlg.result.then(function (yes) {
+                        CfgService.delCfg(
+                            {
+                                'id':param.id,
+                            }
+                            , function(res) {
+                                AlertService.addAutoDismissAlert(constant.messageType.info, '配置删除成功!');
+                                $scope.queryConfig();
+                            }, function(err) {
+                                AlertService.addAutoDismissAlert(constant.messageType.danger, '配置删除失败!');
+                            }
+                        );
+                    }, function (no) {
+                        // do nothing
+                    });
+                    break;
+            }
         };
     };
 
     return {
         name: "CfgController",
-        fn: ["$scope", "CfgService", "FileUploader", Controller]
+        fn: ["$scope", "CfgService", "FileUploader", "AlertService", "dialogs", Controller]
     };
 
 });
