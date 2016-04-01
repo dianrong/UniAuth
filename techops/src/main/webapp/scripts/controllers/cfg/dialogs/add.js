@@ -58,7 +58,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
             for(var index in strs) {
                 var str = strs[index];
                 var obj = {};
-                if(str == 'cfgTypeId') {
+                if(str != 'cfgTypeId') {
                     obj[str] = cfg[str];
                 } else {
                     obj[str] = $scope.cfgAddTypesDropdown.option.id;
@@ -70,12 +70,18 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
             var valueObj = {};
             valueObj['value'] = fileItem.file.name;
             fileItem.formData.push(valueObj);
-
-            fileItem.onComplete = function(response, status, headers) {
-                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传成功.');
-                $uibModalInstance.close();
+            fileItem.onProgress = function(progress) {
+                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传中...');
             }
-
+            fileItem.onComplete = function(response, status, headers) {
+                if(response.info) {
+                    $scope.msg = response.info[0].msg;
+                    return;
+                } else {
+                    AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传成功.');
+                    $uibModalInstance.close();
+                }
+            }
             fileItem.onError = function(response, status, headers) {
                 AlertService.addAlert(constant.messageType.danger, '配置文件上传失败.');
                 $uibModalInstance.close();
