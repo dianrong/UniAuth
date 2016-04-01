@@ -30,7 +30,7 @@ public class ConfigResource implements IConfigRWResource {
 
     @Override
     public Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam) {
-        PageDto<ConfigDto> configDtoPageDto = configService.queryConfig(cfgParam.getId(),cfgParam.getCfgKey(),cfgParam.getCfgTypeId(),
+        PageDto<ConfigDto> configDtoPageDto = configService.queryConfig(cfgParam.getCfgKeys(), cfgParam.getId(),cfgParam.getCfgKey(),cfgParam.getCfgTypeId(),
                 cfgParam.getValue(), cfgParam.getNeedBLOBs(), cfgParam.getPageSize(),cfgParam.getPageNumber());
         return Response.success(configDtoPageDto);
     }
@@ -43,7 +43,7 @@ public class ConfigResource implements IConfigRWResource {
 
     @Override
     public Response<Map<Integer, String>> getAllCfgTypes() {
-        Map<Integer, String> cfgTypesMap = configService.getAllCfgTypesMap();
+        Map<Integer, String> cfgTypesMap = configService.getAllCfgTypesIdCodePair();
         return Response.success(cfgTypesMap);
     }
 

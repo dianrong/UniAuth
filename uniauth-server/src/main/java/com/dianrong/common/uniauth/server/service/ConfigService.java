@@ -3,6 +3,8 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.CfgExample;
 import com.dianrong.common.uniauth.server.data.entity.CfgType;
@@ -57,10 +59,17 @@ public class ConfigService {
         		//更新判断比较
         		dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CFG_KEY,id ,cfgKey);
         	}
-            if(file != null) {
+        	Map<String, Integer> cfgTypesMap = this.getAllCfgTypesCodeIdPair();
+            if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file != null) {
+                // when create new file cfg or update the old file
                 cfgMapper.updateByPrimaryKeyWithBLOBs(cfg);
-            } else {
+            } else if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file == null) {
+                // only update the key part for the file type cfg update.
                 cfgMapper.updateByPrimaryKey(cfg);
+            } else {
+                // if cfg is not file, then update them all.
+                cfg.setFile(null);
+                cfgMapper.updateByPrimaryKeyWithBLOBs(cfg);
             }
         } else {
         	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
@@ -76,7 +85,7 @@ public class ConfigService {
         return BeanConverter.convert(cfg);
     }
 
-    public PageDto<ConfigDto> queryConfig(Integer id, String cfgKey, Integer cfgTypeId, String value,
+    public PageDto<ConfigDto> queryConfig(List<String> cfgKeys, Integer id, String cfgKey, Integer cfgTypeId, String value,
                                           Boolean needBLOBs,Integer pageSize, Integer pageNumber) {
 
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
@@ -85,6 +94,7 @@ public class ConfigService {
         CfgExample cfgExample = new CfgExample();
         cfgExample.setPageOffSet(pageNumber * pageSize);
         cfgExample.setPageSize(pageSize);
+        cfgExample.setOrderByClause("cfg_type_id asc");
         CfgExample.Criteria criteria = cfgExample.createCriteria();
 
         if(id != null) {
@@ -99,6 +109,9 @@ public class ConfigService {
         if(!StringUtils.isEmpty(value)) {
             criteria.andValueLike("%" + value + "%");
         }
+        if(!CollectionUtils.isEmpty(cfgKeys)) {
+            criteria.andCfgKeyIn(cfgKeys);
+        }
 
         List<Cfg> cfgs;
         if(needBLOBs != null && needBLOBs) {
@@ -111,7 +124,7 @@ public class ConfigService {
             return null;
         } else {
             List<ConfigDto> configDtos = new ArrayList<>();
-            Map<Integer, String> cfgTypeIndex = this.getAllCfgTypesMap();
+            Map<Integer, String> cfgTypeIndex = this.getAllCfgTypesIdCodePair();
             for(Cfg cfg:cfgs) {
                 ConfigDto configDto = BeanConverter.convert(cfg);
                 configDto.setCfgType(cfgTypeIndex.get(cfg.getCfgTypeId()));
@@ -126,11 +139,20 @@ public class ConfigService {
         cfgMapper.deleteByPrimaryKey(cfgId);
     }
 
-    public Map<Integer, String> getAllCfgTypesMap() {
+    public Map<Integer, String> getAllCfgTypesIdCodePair() {
         List<CfgType> cfgTypes = cfgTypeMapper.selectByExample(new CfgTypeExample());
         Map<Integer, String> cfgTypeMap = new HashMap<>();
         for(CfgType cfgType : cfgTypes) {
             cfgTypeMap.put(cfgType.getId(), cfgType.getCode());
+        }
+        return cfgTypeMap;
+    }
+
+    public Map<String, Integer> getAllCfgTypesCodeIdPair() {
+        List<CfgType> cfgTypes = cfgTypeMapper.selectByExample(new CfgTypeExample());
+        Map<String, Integer> cfgTypeMap = new HashMap<>();
+        for(CfgType cfgType : cfgTypes) {
+            cfgTypeMap.put(cfgType.getCode(), cfgType.getId());
         }
         return cfgTypeMap;
     }
