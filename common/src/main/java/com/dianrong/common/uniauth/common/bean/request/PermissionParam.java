@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 public class PermissionParam extends Operator {
 	private Integer id;
 	private String value;
+	private String valueExt;
 	private String description;
 	private Byte status;
 	private Integer permTypeId;
@@ -75,6 +76,15 @@ public class PermissionParam extends Operator {
 
 	public PermissionParam setRoleIds(List<Integer> roleIds) {
 		this.roleIds = roleIds;
+		return this;
+	}
+
+	public String getValueExt() {
+		return valueExt;
+	}
+
+	public PermissionParam setValueExt(String valueExt) {
+		this.valueExt = valueExt;
 		return this;
 	}
 }

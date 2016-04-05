@@ -10,6 +10,7 @@ public class PermissionQuery extends PageParam {
 	private Integer permTypeId;
 	private Integer domainId;
 	private List<Integer> permIds;
+	private String valueExt;
 
 	public Integer getId() {
 		return id;
@@ -71,6 +72,15 @@ public class PermissionQuery extends PageParam {
 
 	public PermissionQuery setPermIds(List<Integer> permIds) {
 		this.permIds = permIds;
+		return this;
+	}
+
+	public String getValueExt() {
+		return valueExt;
+	}
+
+	public PermissionQuery setValueExt(String valueExt) {
+		this.valueExt = valueExt;
 		return this;
 	}
 }

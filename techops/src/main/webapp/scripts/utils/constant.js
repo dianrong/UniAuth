@@ -80,6 +80,12 @@ define({
             success: 'success',
             warning: 'warning'
         },
-        cfgFields: ['id', 'cfgKey', 'cfgTypeId']
+        cfgFields: ['id', 'cfgKey', 'cfgTypeId'],
+        httpMethods: ['ALL', 'GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH', 'TRACE'],
+        permType: {
+            'URI_PATTERN':'URI_PATTERN',
+            'DOMAIN':'DOMAIN',
+            'PRIVILEGE':'PRIVILEGE'
+        }
     }
 );

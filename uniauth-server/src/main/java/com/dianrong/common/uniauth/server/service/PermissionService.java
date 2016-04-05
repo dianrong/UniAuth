@@ -9,6 +9,7 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -253,7 +254,8 @@ public class PermissionService {
 		}
 	}
 
-	public PageDto<PermissionDto> searchPerm(List<Integer> permIds,Integer permId, Integer domainId, Byte status, String value, Integer permTypeId, Integer pageNumber, Integer pageSize) {
+	public PageDto<PermissionDto> searchPerm(List<Integer> permIds,Integer permId, Integer domainId, Byte status, String valueExt,
+											 String value, Integer permTypeId, Integer pageNumber, Integer pageSize) {
 		CheckEmpty.checkEmpty(pageNumber, "pageNumber");
 		CheckEmpty.checkEmpty(pageSize, "pageSize");
 		PermissionExample permissionExample = new PermissionExample();
@@ -273,8 +275,11 @@ public class PermissionService {
 		if(status != null) {
 			criteria.andStatusEqualTo(status);
 		}
-		if(value != null) {
+		if(!StringUtils.isEmpty(value)) {
 			criteria.andValueLike("%" + value + "%");
+		}
+		if(!StringUtils.isEmpty(valueExt)) {
+			criteria.andValueLike("%" + valueExt + "%");
 		}
 		if(permTypeId != null) {
 			criteria.andPermTypeIdEqualTo(permTypeId);

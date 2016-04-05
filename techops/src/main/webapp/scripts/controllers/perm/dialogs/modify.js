@@ -19,6 +19,8 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils, cons
 
         }
         getPermTypes();
+        utils.generatorDropdown($scope, 'permModifyPermValueExtDropdown', constant.httpMethods, constant.httpMethods[0]);
+
         //-- Methods --//
         $scope.cancel = function(){
             $scope.msg = '';
@@ -27,15 +29,20 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils, cons
 
         $scope.save = function(){
             var param = $scope.perm;
-            PermService.updatePerm(
-                {
-                    'id':param.id,
-                    'value': param.value,
-                    'description': param.description,
-                    'permTypeId':$scope.permModifyPermTypesDropdown.option.id,
-                    'domainId':param.domainId,
-                    'status':param.status
-                },
+            var obj = {
+                'id':param.id,
+                'value': param.value,
+                'description': param.description,
+                'permTypeId':$scope.permModifyPermTypesDropdown.option.id,
+                'domainId':param.domainId,
+                'status':param.status
+            }
+            if($scope.permModifyPermTypesDropdown.option.type == constant.permType.URI_PATTERN) {
+                obj.valueExt = $scope.permModifyPermValueExtDropdown.option;
+            } else {
+                obj.valueExt = param.valueExt
+            }
+            PermService.updatePerm(obj,
                 function(res) {
                     // user add api successed
                     if(res.info) {
