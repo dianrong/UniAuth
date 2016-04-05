@@ -90,6 +90,8 @@ define(['../../utils/constant'], function (constant) {
             $scope.getAllRolesWithCheckedInfoInDomain();
         });
         //watch();
+        $scope.predicate = '';
+        $scope.comparator = false;
     };
 
     return {

@@ -90,6 +90,8 @@ define(['../../utils/constant'], function (constant, AlertService) {
             $scope.getUserRolesWithCheckedInfo();
         });
         //watch();
+        $scope.predicate = '';
+        $scope.comparator = false;
     };
 
     return {

@@ -97,6 +97,9 @@ define(['../../utils/constant'], function (constant) {
             $scope.getAllPermsWithCheckedInfoInDomain();
         });
         //watch();
+
+        $scope.predicate = '';
+        $scope.comparator = false;
     };
 
     return {

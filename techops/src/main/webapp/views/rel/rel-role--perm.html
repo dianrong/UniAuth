@@ -22,6 +22,7 @@
         您没有选中任何一个角色.
     </div>
 </div>
+<input style="padding: 5px 5px 5px 5px; width: 24%;" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
 <div>
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
@@ -38,7 +39,7 @@
             <td colspan="9" class="tc" ng-bind="rolePermsMsg"></td>
         </tr>
 
-        <tr ng-repeat="d in perms">
+        <tr ng-repeat="d in perms | filter:predicate:comparator">
             <td ng-bind="d.value"></td>
             <td ng-bind="d.permType"></td>
             <td ng-bind="d.description"></td>
