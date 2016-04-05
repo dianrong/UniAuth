@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
 /**
  * Created by Arc on 25/3/2016.
  */
@@ -7,6 +9,7 @@ public class CfgParam extends PageParam{
 
     private Integer id;
     private String cfgKey;
+    private List<String> cfgKeys;
     private Integer cfgTypeId;
     private String cfgTypeCode;
     private String value;
@@ -73,6 +76,15 @@ public class CfgParam extends PageParam{
 
     public CfgParam setNeedBLOBs(Boolean needBLOBs) {
         this.needBLOBs = needBLOBs;
+        return this;
+    }
+
+    public List<String> getCfgKeys() {
+        return cfgKeys;
+    }
+
+    public CfgParam setCfgKeys(List<String> cfgKeys) {
+        this.cfgKeys = cfgKeys;
         return this;
     }
 }
