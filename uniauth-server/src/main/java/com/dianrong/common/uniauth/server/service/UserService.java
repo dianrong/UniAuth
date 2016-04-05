@@ -246,7 +246,7 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(String name, String phone, String email, Byte status, Integer pageNumber, Integer pageSize) {
+    public PageDto<UserDto> searchUser(Long userId, List<Long> userIds, String name, String phone, String email, Byte status, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
@@ -266,6 +266,12 @@ public class UserService {
         }
         if(status != null) {
             criteria.andStatusEqualTo(status);
+        }
+        if(userId != null) {
+            criteria.andIdEqualTo(userId);
+        }
+        if(!CollectionUtils.isEmpty(userIds)) {
+            criteria.andIdIn(userIds);
         }
         List<User> users = userMapper.selectByExample(userExample);
         if(!CollectionUtils.isEmpty(users)) {
