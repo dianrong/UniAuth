@@ -19,7 +19,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils, cons
 
         }
         getPermTypes();
-        utils.generatorDropdown($scope, 'permModifyPermValueExtDropdown', constant.httpMethods, constant.httpMethods[0]);
+        utils.generatorDropdown($scope, 'permModifyPermValueExtDropdown', constant.httpMethods, $scope.perm.valueExt);
 
         //-- Methods --//
         $scope.cancel = function(){
