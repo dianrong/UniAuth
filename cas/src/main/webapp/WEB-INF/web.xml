@@ -308,20 +308,20 @@
         <location>/</location>
     </error-page>
 
-<!--     <error-page> -->
-<!--         <error-code>500</error-code> -->
-<!--         <location>/WEB-INF/view/jsp/errors.jsp</location> -->
-<!--     </error-page> -->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/view/jsp/errors.jsp</location>
+    </error-page>
 
-<!--     <error-page> -->
-<!--         <error-code>501</error-code> -->
-<!--         <location>/WEB-INF/view/jsp/errors.jsp</location> -->
-<!--     </error-page> -->
+    <error-page>
+        <error-code>501</error-code>
+        <location>/WEB-INF/view/jsp/errors.jsp</location>
+    </error-page>
 
-<!--     <error-page> -->
-<!--         <error-code>503</error-code> -->
-<!--         <location>/WEB-INF/view/jsp/errors.jsp</location> -->
-<!--     </error-page> -->
+    <error-page>
+        <error-code>503</error-code>
+        <location>/WEB-INF/view/jsp/errors.jsp</location>
+    </error-page>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

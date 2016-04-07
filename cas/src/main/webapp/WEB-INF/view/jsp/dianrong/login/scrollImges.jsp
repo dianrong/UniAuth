@@ -33,7 +33,11 @@
 	</ul>
 	<ol id="bannerCtrl" class="flex-control-nav flex-control-paging">
 		<c:forEach var="item" items="${loginImges}" varStatus="status">
-			<li><a><c:out value="${status.count}"/></a></li>
+			<li
+				<c:if test="${status.first}">
+						class="active"
+			    </c:if>
+			><a><c:out value="${status.count}"/></a></li>
 		</c:forEach> 
 	</ol>
 </div>
