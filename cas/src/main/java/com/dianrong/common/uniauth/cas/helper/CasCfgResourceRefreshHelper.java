@@ -92,6 +92,22 @@ public final class CasCfgResourceRefreshHelper {
 	 */
 	private CasCfgResourceRefreshHelper(){
 		this.cfgService =  SpringContextHolder.getBean("cfgService");
+		
+		//设置默认缓存
+		try{
+			this.casCfgCache =  new CasCfgCacheModel(
+					 getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, UniBundle.getMsg("cas.cfg.cache.default.pagetitle")),
+					 getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON, FileUtil.readFiles(getRelativePath("favicon.ico"))),
+					 getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON, FileUtil.readFiles(getRelativePath("images", "logo.png"))),
+					 getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, UniBundle.getMsg("cas.cfg.cache.default.allright")),
+					 getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, "#153e50"),
+					 Arrays.asList(new CasLoginAdConfigModel(getConfigDto(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG+"_1", 
+								AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG, FileUtil.readFiles(getRelativePath("images", "spring_festival.jpg"))), 
+								AppConstants.CAS_CFG_HREF_DEFALT_VAL))
+					);
+		}catch(Exception ex){
+			logger.error("构造cas定制化数据缓存异常");
+		}
 	}
 	
 	/**.
