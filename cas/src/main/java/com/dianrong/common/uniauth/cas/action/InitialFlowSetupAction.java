@@ -23,6 +23,7 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 
 import com.dianrong.common.uniauth.cas.service.DomainService;
+import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -90,11 +91,7 @@ public final class InitialFlowSetupAction extends AbstractAction {
 			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY,  StringUtil.strIsNullOrEmpty(smulateReqMethod) ? request.getMethod() : smulateReqMethod);
 			
 			//往session里面放入一个用于会跳的首页链接(有对应参数则刷新跳转首页链接)
-			String savedLoginContext = request.getParameter(AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_KEY);
-			if (!StringUtil.strIsNullOrEmpty(savedLoginContext)) {
-				// 默认跳转路径
-				putValToSession(request.getSession(), AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
-			}
+			FirstPageUrlProcessUtil.refreshLoginContextInsession(request);
 		} else {
 	        String queryStr = request.getQueryString();
 	        queryStr = queryStr == null ? "" : "&" + queryStr;

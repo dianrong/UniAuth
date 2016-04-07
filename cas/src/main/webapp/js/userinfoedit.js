@@ -1,5 +1,4 @@
 (function() {
-	var context_path = $('#hidden_path_input').val();
 	var processUrl = context_path+"/login";
 	
 	//初始化函数
@@ -50,10 +49,8 @@
 	
 	//jump to userinfo edit page
 	var jump_to_userinfo_edit_page = function() {
-		//copy current url
-		var current_url = window.location;
 		//通过隐藏表单设置背景url
-		$('#hidden_savedLoginContext').val(current_url);
+		$('#hidden_savedLoginContext').val(getLocationParameterStr());
 		$('#hidden_form_method').val('get');
 		var hidden_to_edit_form = $('#hidden_post_form_for_loginurl');
 		//设置action

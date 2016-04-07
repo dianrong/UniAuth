@@ -1,25 +1,32 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.cxf.common.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.CfgExample;
 import com.dianrong.common.uniauth.server.data.entity.CfgType;
 import com.dianrong.common.uniauth.server.data.entity.CfgTypeExample;
 import com.dianrong.common.uniauth.server.data.mapper.CfgMapper;
 import com.dianrong.common.uniauth.server.data.mapper.CfgTypeMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-import org.apache.cxf.common.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Arc on 25/3/2016.
@@ -32,6 +39,12 @@ public class ConfigService {
 
     @Autowired
     private CfgTypeMapper cfgTypeMapper;
+    
+    /**.
+	 * 进行配置数据过滤的filter
+	 */
+	@Resource(name="cfgDataFilter")
+	private DataFilter dataFilter;
 
     public ConfigDto addOrUpdateConfig(Integer id, String cfgKey, Integer cfgTypeId, String value, byte[] file) {
         Cfg cfg = new Cfg();
@@ -42,6 +55,10 @@ public class ConfigService {
         cfg.setCfgTypeId(cfgTypeId);
         // update process.
         if(id != null) {
+        	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
+        		//更新判断比较
+        		dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CFG_KEY,id ,cfgKey);
+        	}
             Map<String, Integer> cfgTypesMap = this.getAllCfgTypesCodeIdPair();
             if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file != null) {
                 // when create new file cfg or update the old file
@@ -55,6 +72,11 @@ public class ConfigService {
                 cfgMapper.updateByPrimaryKeyWithBLOBs(cfg);
             }
         } else {
+        	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
+        		//添加判断比较
+        		dataFilter.dataFilter(FieldType.FIELD_TYPE_CFG_KEY,cfgKey ,FilterType.FILTER_TYPE_EXSIT_DATA);
+        	}
+        	
             // add process.
             cfgMapper.insert(cfg);
         }
@@ -63,7 +85,7 @@ public class ConfigService {
         return BeanConverter.convert(cfg);
     }
 
-    public PageDto<ConfigDto> queryConfig(List<String> cfgKeys, Integer id, String cfgKey, Integer cfgTypeId, String value,
+    public PageDto<ConfigDto> queryConfig(List<String> cfgKeys, String cfgKeyLike, Integer id, String cfgKey, Integer cfgTypeId, String value,
                                           Boolean needBLOBs,Integer pageSize, Integer pageNumber) {
 
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
@@ -80,6 +102,9 @@ public class ConfigService {
         }
         if(!StringUtils.isEmpty(cfgKey)) {
             criteria.andCfgKeyEqualTo(cfgKey);
+        }
+        if(!StringUtils.isEmpty(cfgKeyLike)) {
+            criteria.andCfgKeyLike(cfgKeyLike + "%");
         }
         if(cfgTypeId != null) {
             criteria.andCfgTypeIdEqualTo(cfgTypeId);

@@ -13,6 +13,24 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
         }
         getCfgTypes();
 
+        $scope.isFileType = function() {
+            if(!$scope.cfgAddTypesDropdown || !$scope.cfgAddTypesDropdown.option) {
+                return false;
+            } else if($scope.cfgAddTypesDropdown.option.code == 'FILE'){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        $scope.isTypeEmpty = function() {
+            if(!$scope.cfgAddTypesDropdown || !$scope.cfgAddTypesDropdown.option) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         var cfg =$scope.cfg = {};
 
         $scope.cancel = function(){

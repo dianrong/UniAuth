@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
+import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 import com.dianrong.common.uniauth.cas.util.UniBundle;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -66,11 +67,7 @@ public class InitPasswordController extends AbstractBaseController {
 	 */
 	private void processInitPassword(HttpServletRequest request, HttpServletResponse response){
 		//刷新session中的回调url
-		String savedLoginContext = request.getParameter(AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_KEY);
-		if (!StringUtil.strIsNullOrEmpty(savedLoginContext)) {
-			// 默认跳转路径
-			putValToSession(request.getSession(), AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
-		}
+		FirstPageUrlProcessUtil.refreshLoginContextInsession(request);
 		
 		//验证验证码
 		String req_verifycode = getParamFromRequest(request, "verify_code");

@@ -1,5 +1,4 @@
 (function() {
-	var context_path = $('#hidden_path_input').val();
 	var processUrl = context_path+"/uniauth/initPassword";
 	var captchaUrl = context_path+"/uniauth/captcha";
 	
@@ -12,8 +11,12 @@
 		$('#btn_init_pwd_process').bind('click', init_pwd_process);
 		
 		// 刷新验证码
-		$('#init_pwd_verfypic').click(refresh_verfypic);
-		$('#init_pwd_refreshverfypic').click(refresh_verfypic);
+		$('#init_pwd_verfypic').click(function(){
+			refresh_verfypic($('#init_pwd_verfypic'));
+		});
+		$('#init_pwd_refreshverfypic').click(function(){
+			refresh_verfypic($('#init_pwd_verfypic'));
+		});
 		
 		//确定按钮的显示控制
 		$('#origin_password').keyup(btn_init_pwd_process_show);
@@ -36,11 +39,6 @@
 	//refresh page
 	var refresh_page = function(){
 		window.location = window.location;
-	}
-	
-	// refresh verifycode
-	var refresh_verfypic = function() {
-		$('#init_pwd_verfypic').attr('src', captchaUrl + '?rnd=' + Math.random());
 	}
 	
 	//控确定按钮的显示
@@ -130,9 +128,8 @@
 	//点击进行初始化密码操作
 	var init_pwd_process = function(){
 		var turl = processUrl;
-		
 		//设置一下跳转路径  //将跳转链接也仍进去到后台
-		$('#login_redirec_url_id').val(window.location);
+		$('#login_redirec_url_id').val(getLocationParameterStr());
 		
 		//数据
 		var data = $('#initpwd_post_form').serialize() ;

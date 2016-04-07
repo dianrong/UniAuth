@@ -8,8 +8,8 @@
         <div ng-cloak class="form-group input-group-lg" ng-class="{true: 'has-error'}[addCfgDialog.cfgKey.$dirty && addCfgDialog.cfgKey.$invalid]">
             <label class="control-label" for="cfgKey">CfgKey:</label>
             <input type="text" class="form-control" placeholder="配置主键" name="cfgKey" id="cfgKey" ng-model="cfg.cfgKey" required>
-            <label class="control-label common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code == 'FILE')?'':'no'}}" for="value">Value:</label>
-            <input placeholder="配置值" type="text" class="form-control common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code == 'FILE')?'':'no'}}"
+            <label class="control-label common-hidden {{isTypeEmpty()?'':(isFileType()?'':'no')}}" for="value">Value:</label>
+            <input placeholder="配置值" type="text" class="form-control common-hidden {{isTypeEmpty()?'':(isFileType()?'':'no')}}"
                    name="value" id="value" ng-model="cfg.value" />
             <label class="control-label" for="type" placeholder="配置类型">Type:</label>
             <div style="margin-top: 10px;margin-bottom: 10px;" id="type" class="btn-group" uib-dropdown is-open="cfgAddTypesDropdown.isOpen">
@@ -24,8 +24,8 @@
                 </ul>
             </div>
             <br />
-            <label class="control-label common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code != 'FILE')?'':'no'}}" for="cfgFile">Cfg文件:</label>
-            <input class="common-hidden {{(cfgAddTypesDropdown && cfgAddTypesDropdown.option.code != 'FILE')?'':'no'}}" id="cfgFile" type="file" nv-file-select uploader="uploader" />
+            <label class="control-label common-hidden {{isTypeEmpty()?'':(!isFileType()?'':'no')}}" for="cfgFile">Cfg文件:</label>
+            <input class="common-hidden {{isTypeEmpty()?'':(!isFileType()?'':'no')}}" id="cfgFile" type="file" nv-file-select uploader="uploader" />
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
         </div>

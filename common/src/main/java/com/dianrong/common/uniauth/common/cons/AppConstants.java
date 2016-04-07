@@ -50,6 +50,7 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
 	String PWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
 	String PWDFORGET_NEW_PASSWORD_KEY = "newPassword";
+	String LOGIN_SCROLL_IMAGES_MODEL_KEY = "loginImges";
 
 	//session
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
@@ -59,7 +60,7 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
 
 	//60 secondes
-	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 3L * 60L * 1000L;
+	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
 	//5 minitues
 	long PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
 	
@@ -95,4 +96,29 @@ public interface AppConstants {
 	int AUDIT_INSERT_LIST_SIZE = 10;
 	int AUDIT_INSERT_EXP_LENGTH = 3072;
 	int AUDIT_INSET_PARAM_LENGTH = 256;
+	
+	//cas cfg refresh
+	//default 10 minitues
+	long CAS_CFG_CACHE_REFRESH_PERIOD_MILLES = 10L * 60L * 1000L;
+	
+	//cascfg cache model in application's key
+	String CAS_CFG_CACHE_MODEL_APPLICATION_KEY = "cascfg_cache_key";
+	
+	//cas cfg cfg_key list
+	String CAS_CFG_KEY_LOGO = "CAS_LOGO";
+	String CAS_CFG_KEY_ICON = "CAS_ICON";
+	String CAS_CFG_KEY_TITLE = "CAS_TITLE";
+	String CAS_CFG_KEY_ALL_RIGHT = "CAS_ALL_RIGHT";
+	String CAS_CFG_KEY_LOGIN_AD_IMG = "CAS_LOGIN_AD_IMG";
+	
+	// define the cfg type id 
+	int CAS_CFG_TYPE_FILE_ID = 1;
+	int CAS_CFG_TYPE_TEXT_ID = 2;
+	
+	// 首页广告对应herf的cfg key的后缀
+	String CAS_CFG_LOGIN_AD_HREF_SUFFIX = "_HREF";
+	//默认定义的跳转url
+	String CAS_CFG_HREF_DEFALT_VAL= "#";
+	
+	String CAS_CFG_KEY_BACKGROUND_COLOR = "CAS_BACKGROUND_COLOR";
 }
