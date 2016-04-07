@@ -106,7 +106,7 @@ public final class CasCfgResourceRefreshHelper {
 								AppConstants.CAS_CFG_HREF_DEFALT_VAL))
 					);
 		}catch(Exception ex){
-			logger.error("构造cas定制化数据缓存异常");
+			logger.error("构造cas定制化数据缓存异常:"+ex.getMessage());
 		}
 	}
 	
@@ -152,7 +152,7 @@ public final class CasCfgResourceRefreshHelper {
 				);
 		return cacheModel;
 		}catch(Exception ex){
-			logger.error("构造cas定制化数据缓存异常");
+			logger.error("构造cas定制化数据缓存异常:"+ex.getMessage());
 		}
 		return null;
 	}
