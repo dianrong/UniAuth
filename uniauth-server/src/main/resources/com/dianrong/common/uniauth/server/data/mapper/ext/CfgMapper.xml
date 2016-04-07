@@ -7,7 +7,6 @@
 	FROM cfg 
 	WHERE 
 	cfg_key = #{cfgKey, jdbcType=VARCHAR}
-	AND status = 0 
   </select>
   
   <!-- 根据keyid查询有效的配置信息 -->
@@ -16,6 +15,5 @@
     <include refid="Base_Column_List" />
     FROM cfg
     WHERE id = #{id, jdbcType=INTEGER}
-    AND status = 0 
   </select>
 </mapper>
