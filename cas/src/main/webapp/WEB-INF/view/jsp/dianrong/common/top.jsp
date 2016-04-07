@@ -32,7 +32,7 @@
 </head>
 <body style="background-color: ${cascfg_cache_key.backgroundColorText.value}">
 	<header class="header">
-		<img alt="点融网" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>
+		<img alt="cas-login-logo" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>
 		<c:if test="${not empty principal}">
 			<font color="white">当前登录用户：${principal}</font>
 		</c:if>

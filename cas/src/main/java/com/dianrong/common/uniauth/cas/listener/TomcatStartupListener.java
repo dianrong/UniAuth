@@ -3,6 +3,9 @@ package com.dianrong.common.uniauth.cas.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dianrong.common.uniauth.cas.helper.thread.DeadCircleThreadManager;
 import com.dianrong.common.uniauth.cas.helper.thread.RfreshCasCfgCacheRunnable;
 import com.dianrong.common.uniauth.cas.helper.thread.SingleThreadPool;
@@ -13,8 +16,14 @@ import com.dianrong.common.uniauth.cas.helper.thread.SingleThreadPool;
  *
  */
 public class TomcatStartupListener implements ServletContextListener {
+	/**.
+	 * 日志对象
+	 */
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
+		logger.info("tomcat setup, and contextInitialized event invoked");
 		//tomcat 启动  启动起线程开始慢慢刷新缓存
 		SingleThreadPool.instance.loadTask(new RfreshCasCfgCacheRunnable(sce.getServletContext()));
 	}
