@@ -12,6 +12,16 @@ import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
  */
 public class BeanConverter {
 
+    public static TagDto convert(Tag tag) {
+        if(tag == null) {
+            return null;
+        } else {
+            return new TagDto().setCode(tag.getCode()).setCreateDate(tag.getCreateDate()).
+                    setDomainId(tag.getDomainId()).setId(tag.getId()).setLastUpdate(tag.getLastUpdate()).
+                    setStatus(tag.getStatus());
+        }
+    }
+
     public static RoleCodeDto convert(RoleCode roleCode) {
         if(roleCode == null) {
             return null;

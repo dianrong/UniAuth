@@ -425,7 +425,7 @@ public class RoleService {
 	    * @param id
 	    * @return
 	    */
-	  public  int countRoleByIdWithStatusEffective(Long id){
+	  public int countRoleByIdWithStatusEffective(Long id){
 		  return roleMapper.countRoleByIdWithStatusEffective(id);
 	  }
 }
