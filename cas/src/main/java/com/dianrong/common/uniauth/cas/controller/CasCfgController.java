@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.cas.controller;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +56,14 @@ public class CasCfgController{
 	            }
 	            response.setContentType(mimeType);
 	            response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName + "\""));
+	            
+	            //图片一般不会修改  对浏览器设置图片缓存
+	            Date now = new Date();    
+	            response.setDateHeader("Last-Modified",now.getTime()); //Last-Modified:页面的最后生成时间 
+	            response.setDateHeader("Expires",now.getTime()+AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES / 2);
+	            response.setHeader("Cache-Control", "max-age=" + AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES / 2); 
+	            response.setHeader("Pragma", "Pragma"); 
+	            
 	            response.setContentLength(file.length);
 	            try {
 					response.getOutputStream().write(file);
