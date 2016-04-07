@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
+import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ public class UARWFacade {
     private IUserRWResource userRWResource;
     private IAuditResource auditResource;
     private IConfigRWResource configRWResource;
+    private ITagResource tagResource;
 
     @PostConstruct
     public void init(){
@@ -40,6 +42,7 @@ public class UARWFacade {
         roleRWResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, Arrays.asList(jacksonJsonProvider));
         auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, Arrays.asList(jacksonJsonProvider));
         configRWResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, Arrays.asList(jacksonJsonProvider));
+        tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, Arrays.asList(jacksonJsonProvider));
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
@@ -73,5 +76,9 @@ public class UARWFacade {
 
     public IConfigRWResource getConfigRWResource() {
         return configRWResource;
+    }
+
+    public ITagResource getTagResource() {
+        return tagResource;
     }
 }
