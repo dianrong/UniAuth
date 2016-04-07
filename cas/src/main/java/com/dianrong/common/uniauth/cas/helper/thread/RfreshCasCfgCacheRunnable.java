@@ -5,7 +5,6 @@ import javax.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
 import com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper;
 import com.dianrong.common.uniauth.cas.model.CasCfgCacheModel;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -41,7 +40,7 @@ public final class RfreshCasCfgCacheRunnable extends DeadCircleRunnable{
 				//刷新缓存  不考虑线程安全的问题  因为只要是把最新的数据刷进去就OK
 				application.setAttribute(AppConstants.CAS_CFG_CACHE_MODEL_APPLICATION_KEY, cacheModel);
 			}
-		} catch (ResetPasswordException e) {
+		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
 	}

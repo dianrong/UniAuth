@@ -11,7 +11,7 @@
 									<% 
 								} else {
 									%>
-										<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.init.password.navigation.firstpage"/></a>
+										<a href="<%=path%>/login?${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.init.password.navigation.firstpage"/></a>
 									<% 
 								}
 						%>
@@ -35,7 +35,7 @@
 										<% 
 									} else {
 										%>
-											<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.init.password.navigation.firstpage"/></a>
+											<a href="<%=path%>/login?${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.init.password.navigation.firstpage"/></a>
 										<% 
 									}
 								%>

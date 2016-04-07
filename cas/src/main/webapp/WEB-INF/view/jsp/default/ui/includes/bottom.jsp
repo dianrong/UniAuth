@@ -24,7 +24,7 @@
 
 <footer>
     <div id="copyright">
-        <p><spring:message code="copyright" /></p>
+        <p>${cascfg_cache_key.bottomAllRightText.value}</p>
         <!-- <p>Powered by <a href="http://www.apereo.org/cas">Apereo Central Authentication Service <%=org.jasig.cas.CasVersion.getVersion()%></a></p> -->
     </div>
 </footer>

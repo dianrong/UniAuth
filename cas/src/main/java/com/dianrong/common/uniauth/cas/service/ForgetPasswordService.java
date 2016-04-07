@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
@@ -22,7 +21,7 @@ public class ForgetPasswordService extends BaseService{
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	public void checkUser(String email) throws ResetPasswordException {
+	public void checkUser(String email) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
 		Response<UserDto> response = uniClientFacade.getUserResource().getSingleUser(userParam);
@@ -31,7 +30,7 @@ public class ForgetPasswordService extends BaseService{
 		checkInfoList(infoList);
 	}
 	
-	public void resetPassword(String email, String password) throws ResetPasswordException {
+	public void resetPassword(String email, String password) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
 		userParam.setPassword(password);

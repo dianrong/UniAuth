@@ -50,6 +50,7 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
 	String PWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
 	String PWDFORGET_NEW_PASSWORD_KEY = "newPassword";
+	String LOGIN_SCROLL_IMAGES_MODEL_KEY = "loginImges";
 
 	//session
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
@@ -108,6 +109,16 @@ public interface AppConstants {
 	String CAS_CFG_KEY_ICON = "CAS_ICON";
 	String CAS_CFG_KEY_TITLE = "CAS_TITLE";
 	String CAS_CFG_KEY_ALL_RIGHT = "CAS_ALL_RIGHT";
-	String CAS_CFG_KEY_LOGIN_PAGE_IMG = "CAS_LOGIN_PAGE_IMG";
+	String CAS_CFG_KEY_LOGIN_AD_IMG = "CAS_LOGIN_AD_IMG";
+	
+	// define the cfg type id 
+	int CAS_CFG_TYPE_FILE_ID = 1;
+	int CAS_CFG_TYPE_TEXT_ID = 2;
+	
+	// 首页广告对应herf的cfg key的后缀
+	String CAS_CFG_LOGIN_AD_HREF_SUFFIX = "_HREF";
+	//默认定义的跳转url
+	String CAS_CFG_HREF_DEFALT_VAL= "#";
+	
 	String CAS_CFG_KEY_BACKGROUND_COLOR = "CAS_BACKGROUND_COLOR";
 }

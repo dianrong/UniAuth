@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
@@ -30,9 +29,9 @@ public class UserInfoManageService extends BaseService{
 	 * @param email
 	 *            邮箱
 	 * @return user
-	 * @throws ResetPasswordException
+	 * @throws Exception 
 	 */
-	public UserDto findSingleUser(String email) throws ResetPasswordException {
+	public UserDto findSingleUser(String email) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
 		Response<UserDto> response = uniClientFacade.getUserResource().getSingleUser(userParam);
@@ -46,9 +45,9 @@ public class UserInfoManageService extends BaseService{
 	 * 
 	 * @param userTag 用户信息标识
 	 * @return user
-	 * @throws ResetPasswordException
+	 * @throws Exception 
 	 */
-	public UserDto getUserDetailInfo(String account) throws ResetPasswordException {
+	public UserDto getUserDetailInfo(String account) throws Exception {
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(account);
 		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
@@ -63,10 +62,10 @@ public class UserInfoManageService extends BaseService{
 	 * @param email
 	 *            邮箱
 	 * @return user
-	 * @throws ResetPasswordException
+	 * @throws Exception 
 	 */
 	public void updateUserInfo(Long id, String email, String name, String phone)
-			throws ResetPasswordException {
+			throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setId(id);
 		userParam.setEmail(email);
@@ -83,11 +82,11 @@ public class UserInfoManageService extends BaseService{
 	 * 
 	 * @param email
 	 *            邮箱
-	 * @return user
-	 * @throws ResetPasswordException
+	 * @return user 
+	 * @throws Exception  Exception
 	 */
 	public void updateUserPassword(Long id, String newPassword, String originPassword)
-			throws ResetPasswordException {
+			throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setId(id);
 		userParam.setOriginPassword(originPassword);

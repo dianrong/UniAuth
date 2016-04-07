@@ -14,10 +14,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>点融网内部统一认证系统</title>
+<title>${cascfg_cache_key.pageTitle.value}</title>
 
-<link rel="icon" href="<c:url value="/favicon.ico" />"
-	type="image/x-icon" />
+<link rel="icon" href="<%=path %>/uniauth/cascfg/imges/CAS_ICON"  type="image/x-icon" />
+<!-- 	type="image/x-icon" /> -->
 <!-- Bootstrap -->
 <link href="<%=path %>/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
 
@@ -30,9 +30,9 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
   <![endif]-->
 </head>
-<body>
+<body style="background-color: ${cascfg_cache_key.backgroundColorText.value}">
 	<header class="header">
-		<img alt="点融网" src="<%=path %>/images/logo.png"><br>
+		<img alt="点融网" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>
 		<c:if test="${not empty principal}">
 			<font color="white">当前登录用户：${principal}</font>
 		</c:if>

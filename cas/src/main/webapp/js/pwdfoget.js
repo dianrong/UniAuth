@@ -1,5 +1,4 @@
 (function() {
-	var context_path = $('#hidden_path_input').val();
 	var processUrl = context_path+"/uniauth/forgetPassword";
 	var captchaUrl = context_path+"/uniauth/captcha";
 	
@@ -9,8 +8,12 @@
 		$('#to_reset_pwd_btn').bind('click', jump_to_step1_page);
 		
 		// 刷新验证码
-		$('#verfypic').click(refresh_verfypic);
-		$('#refreshverfypic').click(refresh_verfypic);
+		$('#verfypic').click(function(){
+			refresh_verfypic($('#verfypic'));
+		});
+		$('#refreshverfypic').click(function(){
+			refresh_verfypic($('#verfypic'));
+		});
 		
 		//显示step1的按钮
 		$('#temail').keyup(process_step1_btn);
@@ -39,10 +42,8 @@
 	
 	//jump to reset pwd
 	var jump_to_step1_page = function() {
-		//copy current url
-		var current_url = window.location;
 		//通过隐藏表单设置背景url
-		$('#hidden_savedLoginContext').val(current_url);
+		$('#hidden_savedLoginContext').val(getLocationParameterStr());
 		
 		var hidden_to_step1_form = $('#hidden_post_form_for_loginurl');
 		//设置action
@@ -179,12 +180,6 @@
 		send_email_btn.attr('showval', showval);
 		send_email_btn.html(showval);
 	}
-	
-	// refresh verifycode
-	var refresh_verfypic = function() {
-		$('#verfypic').attr('src', context_path + '/uniauth/captcha?rnd=' + Math.random());
-	}
-	
 	
 	var sendEmailVerifyCode = function(){
 		$.ajax({  

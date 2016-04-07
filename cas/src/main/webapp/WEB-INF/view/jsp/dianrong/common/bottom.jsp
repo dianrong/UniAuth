@@ -2,7 +2,7 @@
 
 <footer class="footer">
     <div>
-        <p><spring:message code="copyright" /></p>
+   	 <p>${cascfg_cache_key.bottomAllRightText.value}</p>
         <!-- <p>Powered by <a href="http://www.apereo.org/cas">Apereo Central Authentication Service <%=org.jasig.cas.CasVersion.getVersion()%></a></p> -->
     </div>
 </footer>
@@ -11,6 +11,7 @@
 	String bpath = request.getContextPath();
 %>
 <script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/common.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/pwdfoget.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/userinfoedit.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/initpwd.js" ></script>

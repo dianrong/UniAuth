@@ -85,7 +85,7 @@ public class ConfigService {
         return BeanConverter.convert(cfg);
     }
 
-    public PageDto<ConfigDto> queryConfig(List<String> cfgKeys, Integer id, String cfgKey, Integer cfgTypeId, String value,
+    public PageDto<ConfigDto> queryConfig(List<String> cfgKeys, String cfgKeyLike, Integer id, String cfgKey, Integer cfgTypeId, String value,
                                           Boolean needBLOBs,Integer pageSize, Integer pageNumber) {
 
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
@@ -102,6 +102,9 @@ public class ConfigService {
         }
         if(!StringUtils.isEmpty(cfgKey)) {
             criteria.andCfgKeyEqualTo(cfgKey);
+        }
+        if(!StringUtils.isEmpty(cfgKeyLike)) {
+            criteria.andCfgKeyLike(cfgKeyLike + "%");
         }
         if(cfgTypeId != null) {
             criteria.andCfgTypeIdEqualTo(cfgTypeId);

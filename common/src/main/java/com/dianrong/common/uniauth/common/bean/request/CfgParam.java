@@ -10,6 +10,7 @@ public class CfgParam extends PageParam{
     private Integer id;
     private String cfgKey;
     private List<String> cfgKeys;
+    private String cfgKeyLike;
     private Integer cfgTypeId;
     private String cfgTypeCode;
     private String value;
@@ -87,4 +88,13 @@ public class CfgParam extends PageParam{
         this.cfgKeys = cfgKeys;
         return this;
     }
+
+	public String getCfgKeyLike() {
+		return cfgKeyLike;
+	}
+
+	public CfgParam setCfgKeyLike(String cfgKeyLike) {
+		this.cfgKeyLike = cfgKeyLike;
+		 return this;
+	}
 }

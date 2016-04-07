@@ -104,7 +104,7 @@
 				<%
 					} else {
 				%>
-				<a href="${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message
+				<a href="<%=path%>/login?${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message
 						code="screen.password.reset.step.backtofirstpage" /></a>
 				<%
 					}
@@ -239,8 +239,7 @@
 </div>
 
 <div id="sidebar">
-    <div class="sidebar-content">
-    	<img alt="AD" src="<%=path %>/images/spring_festival.jpg" width="500" height="320">
+    <div class="sidebar-content cas-ad hiddenbtn" id="cas-ad-div">
     	<!-- 
         <p><spring:message code="screen.welcome.security" /></p>
         <div id="list-languages"> 
@@ -318,6 +317,7 @@
 
 <jsp:directive.include file="bottom.jsp" />
 <script type="text/javascript" src="<%=path %>/jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" src="<%=path %>/js/common.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/pwdfoget.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/userinfoedit.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/caslogincaptcha.js" ></script>

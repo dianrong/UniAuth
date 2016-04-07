@@ -37,8 +37,9 @@
   | The base-package indicates where components stored. Spring will scan this
   | folder and find out the annotated beans and register it in Spring container.
   -->
-  <context:component-scan base-package="org.jasig.cas" />
   <context:annotation-config/>
+  <context:component-scan base-package="org.jasig.cas" />
+  <context:component-scan base-package="com.dianrong.common.uniauth.cas" />
 
   <!-- Scan CAS artifacts to mvc annotations, such as controllers.
        The scan is controlled by the application context config file -->
@@ -83,19 +84,19 @@
           p:order="1"
           p:location="${cas.viewResolver.xmlFile:classpath:/META-INF/spring/saml-protocol-views.xml}" />
   -->
-
-  <bean id="urlBasedViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+  
+   <bean id="urlBasedViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"
         p:viewClass="org.springframework.web.servlet.view.InternalResourceView"
         p:prefix="/WEB-INF/view/jsp/"
         p:suffix=".jsp"
         p:order="2"/>
 
-  <bean id="internalViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+   <bean id="internalViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
         p:viewClass="org.springframework.web.servlet.view.JstlView"
         p:prefix="${cas.viewResolver.defaultViewsPathPrefix:/WEB-INF/view/jsp/default/ui/}"
         p:suffix=".jsp"
         p:order="3"/>
-        
+
   <!-- Locale Resolver -->
   <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" p:defaultLocale="en" />
 
@@ -129,15 +130,8 @@
         <prop key="/uniauth/initPassword">initPasswordController</prop>
       </util:properties>
     </property>
-    <!--
-     uncomment this to enable sending PageRequest events.
-     <property
-       name="interceptors">
-       <list>
-         <ref bean="pageRequestHandlerInterceptorAdapter" />
-       </list>
-     </property>
-      -->
+	<!-- uncomment this to enable sending PageRequest events. <property name="interceptors"> 
+		<list> <ref bean="pageRequestHandlerInterceptorAdapter" /> </list> </property> -->
   </bean>
 
   <bean id="captchaController" class="com.dianrong.common.uniauth.cas.controller.CaptchaController">

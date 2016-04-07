@@ -1,32 +1,30 @@
 package com.dianrong.common.uniauth.cas.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
-import com.dianrong.common.uniauth.cas.util.UniBundle;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**.
  * 用于缓存cas的个性化的一些设置参数
  * @author wanglin
  */
 public class CasCfgCacheModel {
-	/**.
-	 * 日志对象
-	 */
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	private final ConfigDto pageTitle;
 	
 	private final ConfigDto pageIcon;
 	
 	private final ConfigDto logo;
 	
-	private final ConfigDto loginPageImage;
-	
 	private final ConfigDto bottomAllRightText;
 	
 	private final ConfigDto backgroundColorText;
+
+	/**.
+	 * 登陆首页的图片滚动定制化
+	 */
+	private final List<CasLoginAdConfigModel> loginPageAd;
 	
 	/**.
 	 * 该资源对象生成的时间戳
@@ -38,64 +36,63 @@ public class CasCfgCacheModel {
 	 * @param pageTitle 页面 title
 	 * @param pageIcon 页面的icon
 	 * @param topImage 页面top的图片
-	 * @param loginPageImage 登陆页面的图片
 	 * @param bottomAllRightText 页面的allright字符串
 	 * @param backgroundColorText 背景颜色字符串
+	 * @param loginPageImages 登陆页面的广告图片
 	 */
-	public CasCfgCacheModel(ConfigDto pageTitle, ConfigDto pageIcon, ConfigDto logo, ConfigDto loginPageImage, ConfigDto bottomAllRightText, ConfigDto backgroundColorText){
-		if(pageTitle == null){
-			logger.warn("page title text is null");
-			pageTitle = new ConfigDto();
-			pageTitle.setValue(UniBundle.getMsg("cas.cfg.cache.default.pagetitle"));
-		}
+	public CasCfgCacheModel(ConfigDto pageTitle, ConfigDto pageIcon, ConfigDto logo, ConfigDto bottomAllRightText, ConfigDto backgroundColorText , List<CasLoginAdConfigModel> loginPageAd){
 		this.pageTitle = pageTitle;
-		
-		if(pageIcon == null) {
-			logger.warn("page icon resourcess is null");
-			throw new NullPointerException("page icon resourcess can not be null");
-		}
 		this.pageIcon = pageIcon;
-		
-		if(logo == null) {
-			logger.warn("logo image resourcess is null");
-			throw new NullPointerException("logo image resourcess can not be null");
-		}
 		this.logo = logo;
-		
-		if(loginPageImage== null){
-			logger.warn("login page image resourcess is null");
-			throw new NullPointerException("login page image resourcess can not be null");
-		}
-		this.loginPageImage = loginPageImage;
-		
-		if(bottomAllRightText == null){
-			logger.warn("all right text is null");
-			bottomAllRightText = new ConfigDto();
-			bottomAllRightText.setValue(UniBundle.getMsg("cas.cfg.cache.default.allright"));
-		}
 		this.bottomAllRightText = bottomAllRightText;
-		
-		//背景色
-		if(backgroundColorText == null){
-			logger.warn("background color value is null");
-			backgroundColorText = new ConfigDto();
-			backgroundColorText.setValue("#153e50");
-		}
 		this.backgroundColorText = backgroundColorText;
-		
+		this.loginPageAd = loginPageAd;
 		this.getResourceMilles = System.currentTimeMillis();
 	}
 	
+	
 	/**.
-	 * 单独给三个图片的构造函数
-	 * @param pageIcon 首页的icon
-	 * @param topImage top页的图片
-	 * @param loginPageImage 登陆页的图片
+	 * 根据cfg key 获取对应的dto list
+	 * @param cfgKey cfg key
+	 * @return dto
 	 */
-	public CasCfgCacheModel(ConfigDto pageIcon, ConfigDto topImage, ConfigDto loginPageImage){
-		this(null, pageIcon, topImage, loginPageImage, null, null);
+	public List<CasLoginAdConfigModel> getDtoListByCfgKey(String cfgKey){
+		if(StringUtil.strIsNullOrEmpty(cfgKey)){
+			throw new NullPointerException();
+		}
+		switch(cfgKey.trim()){
+		case AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG:
+			return this.loginPageAd;
+		default:
+			return null;
+		}
 	}
-
+	
+	/**.
+	 * 根据cfg key 获取对应的dto
+	 * @param cfgKey cfg key
+	 * @return dto
+	 */
+	public ConfigDto getDtoByCfgKey(String cfgKey){
+		if(StringUtil.strIsNullOrEmpty(cfgKey)){
+			throw new NullPointerException();
+		}
+		switch(cfgKey.trim()){
+		case AppConstants.CAS_CFG_KEY_LOGO:
+			return this.logo;
+		case AppConstants.CAS_CFG_KEY_ICON:
+			return this.pageIcon;
+		case AppConstants.CAS_CFG_KEY_TITLE:
+			return this.pageTitle;
+		case AppConstants.CAS_CFG_KEY_ALL_RIGHT:
+			return this.bottomAllRightText;
+		case AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR:
+			return this.backgroundColorText;
+		default:
+			return null;
+		}
+	}
+	
 	/**
 	 * @return the pageTitle
 	 */
@@ -108,13 +105,6 @@ public class CasCfgCacheModel {
 	 */
 	public ConfigDto getPageIcon() {
 		return pageIcon;
-	}
-
-	/**
-	 * @return the loginPageImage
-	 */
-	public ConfigDto getLoginPageImage() {
-		return loginPageImage;
 	}
 
 	/**
@@ -143,5 +133,10 @@ public class CasCfgCacheModel {
 	 */
 	public ConfigDto getLogo() {
 		return logo;
+	}
+
+
+	public List<CasLoginAdConfigModel> getLoginPageAd() {
+		return loginPageAd;
 	}
 }

@@ -531,3 +531,9 @@ footer a:link, footer a:visited {
     height: 32px;
     vertical-align: middle;
 }
+
+#cas .cas-ad{
+	width: 500px;
+    height: 320px;
+    float: right;
+}
