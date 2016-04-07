@@ -1,8 +1,6 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -35,8 +33,35 @@ public class UserExtInfo extends User {
 		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_PRIVILEGE) == null) {
 			return Boolean.FALSE;
 		} else {
-			Set<String> privilegePerms = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
-			if(privilegePerms.contains(privilegePerm)) {
+			Set<String> privilegesHave = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
+			if(privilegesHave.contains(privilegePerm)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		}
+	}
+
+	public Boolean hasAnyPrivilege(String... privilegePerms) {
+		if(privilegePerms == null || privilegePerms.length == 0) {
+			return Boolean.FALSE;
+		} else {
+			Set<String> privilegesHave = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
+			for(String privilege : privilegePerms) {
+				if(privilegesHave.contains(privilege)) {
+					return Boolean.TRUE;
+				}
+			}
+			return Boolean.FALSE;
+		}
+	}
+
+	public Boolean hasAllPrivileges(String... privilegePerms) {
+		if(privilegePerms == null || privilegePerms.length == 0) {
+			return Boolean.TRUE;
+		} else {
+			Set<String> privilegesHave = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
+			if(privilegesHave.containsAll(Arrays.asList(privilegePerms))) {
 				return Boolean.TRUE;
 			} else {
 				return Boolean.FALSE;

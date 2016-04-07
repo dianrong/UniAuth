@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
 public class PermissionDto {
 	private Integer id;
 	private String value;
+	private String valueExt;
 	private String description;
 	private Byte status;
 	private Integer permTypeId;
@@ -82,6 +83,15 @@ public class PermissionDto {
 
 	public PermissionDto setChecked(Boolean checked) {
 		this.checked = checked;
+		return this;
+	}
+
+	public String getValueExt() {
+		return valueExt;
+	}
+
+	public PermissionDto setValueExt(String valueExt) {
+		this.valueExt = valueExt;
 		return this;
 	}
 }

@@ -60,7 +60,7 @@ public class PermissionResource implements IPermissionRWResource {
 	@Override
 	public Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery) {
 		PageDto<PermissionDto> pageDto = permissionService.searchPerm(permissionQuery.getPermIds(),permissionQuery.getId(),
-				permissionQuery.getDomainId(),permissionQuery.getStatus(),permissionQuery.getValue(),permissionQuery.getPermTypeId(),
+				permissionQuery.getDomainId(),permissionQuery.getStatus(),permissionQuery.getValueExt(), permissionQuery.getValue(),permissionQuery.getPermTypeId(),
 				permissionQuery.getPageNumber(),permissionQuery.getPageSize());
 		return new Response<PageDto<PermissionDto>>(pageDto);
 	}

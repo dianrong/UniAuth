@@ -165,6 +165,7 @@ public class BeanConverter {
         	permission.setPermTypeId(permissionParam.getPermTypeId());
         	permission.setStatus(permissionParam.getStatus());
         	permission.setValue(permissionParam.getValue());
+            permission.setValueExt(permissionParam.getValueExt());
         	return permission;
         }
     }
@@ -178,7 +179,8 @@ public class BeanConverter {
                     setDomainId(permission.getDomainId()).setId(permission.getId())
                     .setPermTypeId(permission.getPermTypeId()).
                             setStatus(permission.getStatus()).
-                            setValue(permission.getValue());
+                            setValue(permission.getValue()).
+                            setValueExt(permission.getValueExt());
         }
     }
     
@@ -210,6 +212,7 @@ public class BeanConverter {
         	permissionExt.setStatus(permissionQuery.getStatus());
         	permissionExt.setValue(permissionQuery.getValue());
         	permissionExt.setPermTypeId(permissionQuery.getPermTypeId());
+            permissionExt.setValueExt(permissionQuery.getValueExt());
         	return permissionExt;
         }
     }
@@ -233,12 +236,12 @@ public class BeanConverter {
             return null;
         }
         else{
-            AuditDto auditDto = new AuditDto();
-            auditDto.setDomainId(audit.getDomainId());
-            auditDto.setReqElapse(audit.getReqElapse());
-            auditDto.setReqClass(audit.getReqClass());
-            auditDto.setReqException(audit.getReqExp());
-            auditDto.setReqMethod(audit.getReqMethod())
+            AuditDto auditDto = new AuditDto()
+                    .setDomainId(audit.getDomainId())
+                    .setReqElapse(audit.getReqElapse())
+                    .setReqClass(audit.getReqClass())
+                    .setReqException(audit.getReqExp())
+                    .setReqMethod(audit.getReqMethod())
                     .setReqSuccess(audit.getReqSuccess())
                     .setReqUuid(audit.getReqUuid())
                     .setReqResult(audit.getReqResult())

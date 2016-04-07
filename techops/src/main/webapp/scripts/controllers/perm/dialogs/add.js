@@ -10,7 +10,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
             });
         }
         getPermTypes();
-
+        utils.generatorDropdown($scope, 'permAddPermValueExtDropdown', constant.httpMethods, constant.httpMethods[0]);
         //-- Methods --//
         $scope.cancel = function(){
             $scope.msg = '';
@@ -24,6 +24,11 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                 addParam.domainId = $rootScope.loginDomainsDropdown.option.id;
             }
             addParam.value = $scope.perm.value;
+            if($scope.permAddPermTypesDropdown.option.type == constant.permType.URI_PATTERN) {
+                addParam.valueExt = $scope.permAddPermValueExtDropdown.option;
+            } else {
+                addParam.valueExt = $scope.perm.valueExt;
+            }
             addParam.description = $scope.perm.description;
             addParam.permTypeId = $scope.permAddPermTypesDropdown.option.id;
             PermService.addPerm(addParam,

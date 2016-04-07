@@ -5,6 +5,7 @@
     <resultMap id="GroupUsersResultMap" type="com.dianrong.common.uniauth.server.data.entity.ext.UserExt" >
         <id column="id" property="id" jdbcType="BIGINT" />
         <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="groupId" property="groupId" jdbcType="INTEGER" />
         <result column="type" property="userGroupType" jdbcType="TINYINT" />
     </resultMap>
@@ -17,7 +18,7 @@
     </select>
 
     <select id="getUsersByParentGrpIdByUserType" resultMap="GroupUsersResultMap" parameterType="map">
-        select t1.id, t1.email, t2.id as groupId, t2.type from user t1 join
+        select t1.id, t1.email, t1.name, t2.id as groupId, t2.type from user t1 join
           (select ug.user_id, gid.id, ug.type from user_grp ug
           join (select grp.id from grp
           join grp_path on (grp.id = grp_path.descendant)

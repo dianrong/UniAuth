@@ -33,6 +33,7 @@
         <thead class="text-color-c4">
         <tr>
             <th>权限值</th>
+            <th>扩展值</th>
             <th>权限类型</th>
             <th>描述</th>
             <th>状态</th>
@@ -47,6 +48,7 @@
 
         <tr ng-repeat="d in perms">
             <td ng-bind="d.value"></td>
+            <td ng-bind="d.valueExt"></td>
             <td ng-bind="d.permType"></td>
             <td ng-bind="d.description"></td>
             <td ng-bind="!d.status?'启用':'禁用'"></td>

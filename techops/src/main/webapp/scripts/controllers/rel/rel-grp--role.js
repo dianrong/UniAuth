@@ -85,6 +85,8 @@ define(['../../utils/constant'], function (constant) {
             $scope.getGrpRolesWithCheckedInfo();
         });
         //watch();
+        $scope.predicate = '';
+        $scope.comparator = false;
     };
 
     return {

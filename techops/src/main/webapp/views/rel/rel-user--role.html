@@ -23,6 +23,7 @@
         您没有选中任何一个用户.
     </div>
 </div>
+<input style="padding: 5px 5px 5px 5px; width: 24%;" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
 <div>
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
@@ -39,7 +40,7 @@
             <td colspan="9" class="tc" ng-bind="userRolesMsg"></td>
         </tr>
 
-        <tr ng-repeat="d in roles">
+        <tr ng-repeat="d in roles | filter:predicate:comparator">
             <td ng-bind="d.name"></td>
             <td ng-bind="d.roleCode"></td>
             <td ng-bind="d.description"></td>

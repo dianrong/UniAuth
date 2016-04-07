@@ -34,15 +34,11 @@
         </javaClientGenerator>
 
 
-        <table tableName="cfg" enableCountByExample="true"
+        <table tableName="permission" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>
 
-        <table tableName="cfg_type" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true"
-               enableSelectByExample="true" selectByExampleQueryId="true">
-        </table>
 
     </context>
 </generatorConfiguration>
