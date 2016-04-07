@@ -20,6 +20,24 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
         }
         getCfgTypes();
 
+        $scope.isFileType = function() {
+            if(!$scope.cfgModifyTypesDropdown || !$scope.cfgModifyTypesDropdown.option) {
+                return false;
+            } else if($scope.cfgModifyTypesDropdown.option.code == 'FILE'){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        $scope.isTypeEmpty = function() {
+            if(!$scope.cfgModifyTypesDropdown || !$scope.cfgModifyTypesDropdown.option) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         $scope.cancel = function(){
             $scope.msg = '';
             $uibModalInstance.dismiss();
