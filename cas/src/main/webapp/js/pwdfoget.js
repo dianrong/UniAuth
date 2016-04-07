@@ -154,8 +154,8 @@
 		var send_email_btn = $('.find-pwd-container .steps #input2');
 		var btn_showval = send_email_btn.attr('showval');
 		if(!btn_showval || isNaN(btn_showval)){
-			//init 180s
-			refresh_send_email_btn_val(send_email_btn, '180');
+			//init 120s
+			refresh_send_email_btn_val(send_email_btn, '120');
 			//disable 按钮
 			send_email_btn.attr("disabled","disabled"); 
 			send_email_btn.addClass('cursordefault').addClass('balckfont');

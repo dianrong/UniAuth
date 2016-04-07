@@ -60,7 +60,7 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
 
 	//60 secondes
-	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 3L * 60L * 1000L;
+	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
 	//5 minitues
 	long PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
 	

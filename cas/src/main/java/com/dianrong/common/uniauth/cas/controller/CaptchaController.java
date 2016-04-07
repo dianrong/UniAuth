@@ -74,7 +74,7 @@ public class CaptchaController extends AbstractBaseController {
 
 		// 定义发送的内容
 		String title = UniBundle.getMsg("captcha.controller.captcha.email.title");
-		StringBuffer emailInfo = new StringBuffer(UniBundle.getMsg("captcha.controller.captcha.email.content", verifyCode, "\r\n",AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES/1000L));
+		StringBuffer emailInfo = new StringBuffer(UniBundle.getMsg("captcha.controller.captcha.email.content", verifyCode, "\r\n",AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES/(60L * 1000L)));
 
 		// 发送邮件
 		try {
