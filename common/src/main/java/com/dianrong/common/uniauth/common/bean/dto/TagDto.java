@@ -10,8 +10,9 @@ public class TagDto {
     private Integer id;
     private String code;
     private Byte status;
-    private String domainName;
-    private Integer domainId;
+    private String description;
+    private Integer tagTypeId;
+    private String tagTypeCode;
     private Date createDate;
     private Date lastUpdate;
 
@@ -42,24 +43,6 @@ public class TagDto {
         return this;
     }
 
-    public String getDomainName() {
-        return domainName;
-    }
-
-    public TagDto setDomainName(String domainName) {
-        this.domainName = domainName;
-        return this;
-    }
-
-    public Integer getDomainId() {
-        return domainId;
-    }
-
-    public TagDto setDomainId(Integer domainId) {
-        this.domainId = domainId;
-        return this;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -78,4 +61,30 @@ public class TagDto {
         return this;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public TagDto setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Integer getTagTypeId() {
+        return tagTypeId;
+    }
+
+    public TagDto setTagTypeId(Integer tagTypeId) {
+        this.tagTypeId = tagTypeId;
+        return this;
+    }
+
+    public String getTagTypeCode() {
+        return tagTypeCode;
+    }
+
+    public TagDto setTagTypeCode(String tagTypeCode) {
+        this.tagTypeCode = tagTypeCode;
+        return this;
+    }
 }

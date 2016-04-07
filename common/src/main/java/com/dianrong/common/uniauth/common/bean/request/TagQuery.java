@@ -11,9 +11,8 @@ public class TagQuery extends PageParam {
     private List<Integer> tagIds;
     private String code;
     private Byte status;
-    private Integer domainId;
-    private Integer userId;
-    private Integer grpId;
+    private Integer tagTypeId;
+    private Long userId;
 
     public Integer getId() {
         return id;
@@ -51,30 +50,21 @@ public class TagQuery extends PageParam {
         return this;
     }
 
-    public Integer getDomainId() {
-        return domainId;
-    }
-
-    public TagQuery setDomainId(Integer domainId) {
-        this.domainId = domainId;
-        return this;
-    }
-
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public TagQuery setUserId(Integer userId) {
+    public TagQuery setUserId(Long userId) {
         this.userId = userId;
         return this;
     }
 
-    public Integer getGrpId() {
-        return grpId;
+    public Integer getTagTypeId() {
+        return tagTypeId;
     }
 
-    public TagQuery setGrpId(Integer grpId) {
-        this.grpId = grpId;
+    public TagQuery setTagTypeId(Integer tagTypeId) {
+        this.tagTypeId = tagTypeId;
         return this;
     }
 }

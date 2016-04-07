@@ -16,9 +16,25 @@ public class BeanConverter {
         if(tag == null) {
             return null;
         } else {
-            return new TagDto().setCode(tag.getCode()).setCreateDate(tag.getCreateDate()).
-                    setDomainId(tag.getDomainId()).setId(tag.getId()).setLastUpdate(tag.getLastUpdate()).
-                    setStatus(tag.getStatus());
+            return new TagDto()
+                    .setCode(tag.getCode())
+                    .setCreateDate(tag.getCreateDate())
+                    .setId(tag.getId())
+                    .setLastUpdate(tag.getLastUpdate())
+                    .setStatus(tag.getStatus())
+                    .setTagTypeId(tag.getTagTypeId())
+                    .setDescription(tag.getDescription());
+        }
+    }
+
+    public static TagTypeDto convert(TagType tagType) {
+        if(tagType == null) {
+            return null;
+        } else {
+            return new TagTypeDto()
+                    .setCode(tagType.getCode())
+                    .setDomainId(tagType.getDomainId())
+                    .setId(tagType.getId());
         }
     }
 

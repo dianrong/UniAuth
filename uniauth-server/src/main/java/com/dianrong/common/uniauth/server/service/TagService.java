@@ -3,10 +3,11 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
@@ -28,14 +29,14 @@ import java.util.List;
 @Service
 public class TagService {
     @Autowired
-    private GrpTagMapper grpTagMapper;
-    @Autowired
     private UserTagMapper userTagMapper;
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private TagTypeMapper tagTypeMapper;
 
     public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, Byte tagStatus,
-                                      Integer domainId, Long userId, Integer grpId, Integer pageNumber,
+                                      Integer tagTypeId, Long userId, Integer pageNumber,
                                       Integer pageSize) {
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
@@ -56,8 +57,8 @@ public class TagService {
         if(tagStatus != null) {
             criteria.andStatusEqualTo(tagStatus);
         }
-        if(domainId != null) {
-            criteria.andDomainIdEqualTo(domainId);
+        if(tagTypeId != null) {
+            criteria.andTagTypeIdEqualTo(tagTypeId);
         }
 
 
@@ -74,19 +75,6 @@ public class TagService {
             }
         }
 
-        if(grpId != null) {
-            GrpTagExample grpTagExample = new GrpTagExample();
-            grpTagExample.createCriteria().andGrpIdEqualTo(grpId);
-            List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-            if(!CollectionUtils.isEmpty(grpTagKeys)) {
-                List<Integer> tagIdsQueryByGrpId = new ArrayList<>();
-                for(GrpTagKey grpTagKey : grpTagKeys) {
-                    tagIdsQueryByGrpId.add(grpTagKey.getTagId());
-                }
-                criteria.andIdIn(tagIdsQueryByGrpId);
-            }
-        }
-
         List<Tag> tags = tagMapper.selectByExample(tagExample);
         if(!CollectionUtils.isEmpty(tags)) {
             int count = tagMapper.countByExample(tagExample);
@@ -100,7 +88,7 @@ public class TagService {
         }
     }
 
-    public TagDto addNewTag(String code, Integer domainId) {
+    public TagDto addNewTag(String code, Integer domainId, Integer tagTypeId, String description) {
         CheckEmpty.checkEmpty(domainId, "domainId");
         CheckEmpty.checkEmpty(code, "code");
         Tag tag = new Tag();
@@ -108,16 +96,16 @@ public class TagService {
         tag.setCreateDate(now);
         tag.setLastUpdate(now);
         tag.setStatus(AppConstants.ZERO_Byte);
-        tag.setDomainId(domainId);
+        tag.setTagTypeId(tagTypeId);
+        tag.setDescription(description);
         tag.setCode(code);
         tagMapper.insert(tag);
         return BeanConverter.convert(tag);
     }
 
-    public void updateTag(Integer tagId, String code, Byte status) {
+    public void updateTag(Integer tagId, String code, Byte status, Integer tagTypeId, String description) {
         CheckEmpty.checkEmpty(tagId, "tagId");
         Tag tag = tagMapper.selectByPrimaryKey(tagId);
-        CheckEmpty.checkEmpty(tag, "tag");
         if(tag == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagId, Tag.class.getSimpleName()));
         }
@@ -125,7 +113,66 @@ public class TagService {
         ParamCheck.checkStatus(status);
         tag.setStatus(status);
         tag.setCode(code);
-
+        tag.setTagTypeId(tagTypeId);
+        tag.setDescription(description);
         tagMapper.updateByPrimaryKey(tag);
     }
+
+    public List<TagTypeDto> getTagTypes(Integer domainId) {
+        TagTypeExample tagTypeExample = new TagTypeExample();
+        if(domainId != null) {
+            tagTypeExample.createCriteria().andDomainIdEqualTo(domainId);
+        }
+        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+        if(!CollectionUtils.isEmpty(tagTypes)) {
+            List<TagTypeDto> tagTypeDtos = new ArrayList<>();
+            for(TagType tagType : tagTypes) {
+                tagTypeDtos.add(BeanConverter.convert(tagType));
+            }
+            return tagTypeDtos;
+        } else {
+            return null;
+        }
+    }
+
+    public TagTypeDto addNewTagType(String code, Integer domainId) {
+        CheckEmpty.checkEmpty(domainId, "domainId");
+        CheckEmpty.checkEmpty(code, "code");
+        TagType tagType = new TagType();
+        tagType.setDomainId(domainId);
+        tagType.setCode(code);
+        tagTypeMapper.insert(tagType);
+        return BeanConverter.convert(tagType);
+    }
+
+    public void updateTagType(Integer tagTypeId, String code, Integer domainId) {
+        CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
+        CheckEmpty.checkEmpty(code, "code");
+        TagType tagType = tagTypeMapper.selectByPrimaryKey(tagTypeId);
+        if(tagType == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
+        }
+
+        tagType.setCode(code);
+        if(domainId != null) {
+            tagType.setDomainId(domainId);
+        }
+        tagTypeMapper.updateByPrimaryKey(tagType);
+    }
+
+    public void deleteTagType(Integer tagTypeId) {
+        CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
+        TagType tagType = tagTypeMapper.selectByPrimaryKey(tagTypeId);
+        if(tagType == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
+        }
+        TagExample tagExample = new TagExample();
+        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId);
+        int count = tagMapper.countByExample(tagExample);
+        if(count > 0) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("tagtype.delete.linked-tag.error"));
+        }
+        tagTypeMapper.deleteByPrimaryKey(tagTypeId);
+    }
+
 }

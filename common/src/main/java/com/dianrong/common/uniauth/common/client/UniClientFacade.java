@@ -23,8 +23,9 @@ public class UniClientFacade {
 	private IPermissionResource permissionResource;
 	private IUserResource userResource;
 	private IRoleResource roleResource;
+	private ITagResource tagResource;
 	private IConfigResource configResource;
-	
+
 	@PostConstruct
 	public void init(){
 		CheckZkConfig.checkZkConfig(uniWsEndpoint, "/com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint", "uniauth ws endpoint");
@@ -34,6 +35,7 @@ public class UniClientFacade {
 		permissionResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, Arrays.asList(jacksonJsonProvider));
 		userResource = JAXRSClientFactory.create(uniWsEndpoint, IUserResource.class, Arrays.asList(jacksonJsonProvider));
 		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, Arrays.asList(jacksonJsonProvider));
+		tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, Arrays.asList(jacksonJsonProvider));
 		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, Arrays.asList(jacksonJsonProvider));
 	}
 
@@ -59,6 +61,10 @@ public class UniClientFacade {
 
 	public IRoleResource getRoleResource() {
 		return roleResource;
+	}
+
+	public ITagResource getTagResource() {
+		return tagResource;
 	}
 
 	public IConfigResource getConfigResource() {
