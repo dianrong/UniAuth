@@ -83,6 +83,11 @@ public final class CasCfgResourceRefreshHelper {
 	private volatile CasCfgCacheModel casCfgCache;
 	
 	/**.
+	 * cas配置的默认实现
+	 */
+	private CasCfgCacheModel defaultCasCfg;
+	
+	/**.
 	 * 调用远程服务的service
 	 */
 	private CfgService cfgService;
@@ -95,7 +100,7 @@ public final class CasCfgResourceRefreshHelper {
 		
 		//设置默认缓存
 		try{
-			this.casCfgCache =  new CasCfgCacheModel(
+			this.defaultCasCfg =  new CasCfgCacheModel(
 					 getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, UniBundle.getMsg("cas.cfg.cache.default.pagetitle")),
 					 getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON, FileUtil.readFiles(getRelativePath("favicon.ico"))),
 					 getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON, FileUtil.readFiles(getRelativePath("images", "logo.png"))),
@@ -106,8 +111,15 @@ public final class CasCfgResourceRefreshHelper {
 								AppConstants.CAS_CFG_HREF_DEFALT_VAL))
 					);
 		}catch(Exception ex){
-			logger.error("构造cas定制化数据缓存异常:"+ex.getMessage());
+			logger.error("init default cas cfg error:"+ex.getMessage());
 		}
+		
+		if(this.defaultCasCfg == null){
+			throw new RuntimeException("load default cas cfg error");
+		}
+		
+		//设置默认值
+		this.casCfgCache = this.defaultCasCfg;
 	}
 	
 	/**.
@@ -143,11 +155,11 @@ public final class CasCfgResourceRefreshHelper {
 		}
 		try{
 		CasCfgCacheModel cacheModel = new CasCfgCacheModel(
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, UniBundle.getMsg("cas.cfg.cache.default.pagetitle"))),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON, getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON, FileUtil.readFiles(getRelativePath("favicon.ico")))),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO, getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON, FileUtil.readFiles(getRelativePath("images", "logo.png")))),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT, getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, UniBundle.getMsg("cas.cfg.cache.default.allright"))),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, "#153e50")),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, this.defaultCasCfg.getPageTitle()),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON, this.defaultCasCfg.getPageIcon()),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO, this.defaultCasCfg.getLogo()),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT, this.defaultCasCfg.getBottomAllRightText()),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, this.defaultCasCfg.getBackgroundColorText()),
 				 getLoginImges(loginImages)
 				);
 		return cacheModel;
@@ -167,9 +179,7 @@ public final class CasCfgResourceRefreshHelper {
 		List<CasLoginAdConfigModel> tdlist = getAdCfgModelList(loginImages, this.casCfgCache == null? null: this.casCfgCache.getLoginPageAd()) ;
 		
 		if(tdlist == null || tdlist.isEmpty()){
-			tdlist =  Arrays.asList(new CasLoginAdConfigModel(getConfigDto(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG+"_1", 
-					AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG, FileUtil.readFiles(getRelativePath("images", "spring_festival.jpg"))), 
-					AppConstants.CAS_CFG_HREF_DEFALT_VAL));
+			tdlist =  this.defaultCasCfg.getLoginPageAd();
 		} 
 		//按照cfg-key自然排序
 		Collections.sort(tdlist, new Comparator<CasLoginAdConfigModel>(){

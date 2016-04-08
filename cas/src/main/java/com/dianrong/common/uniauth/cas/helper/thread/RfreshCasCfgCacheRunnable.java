@@ -13,7 +13,7 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
  * 刷新cas cfg的线程
  * @author wanglin
  */
-public final class RfreshCasCfgCacheRunnable extends DeadCircleRunnable{
+public final class RfreshCasCfgCacheRunnable implements Runnable{
 	/**.
 	 * 日志对象
 	 */
@@ -33,7 +33,7 @@ public final class RfreshCasCfgCacheRunnable extends DeadCircleRunnable{
 	}
 
 	@Override
-	protected void execut() {
+	public void run() {
 		try {
 			CasCfgCacheModel cacheModel = CasCfgResourceRefreshHelper.instance.refreshCacheAndGet();
 			if(cacheModel != null){
@@ -43,10 +43,5 @@ public final class RfreshCasCfgCacheRunnable extends DeadCircleRunnable{
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
-	}
-	
-	@Override
-	protected long sleepMilles() {
-		return AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES;
 	}
 }
