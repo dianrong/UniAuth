@@ -136,6 +136,10 @@ public class UserService {
                 user.setPasswordDate(new Date());
                 break;
             case STATUS_CHANGE:
+            	// 只处理启用的情况
+            	if(status != null && status == AppConstants.ZERO_Byte){
+            		this.checkPhoneAndEmail(user.getPhone(), user.getEmail(), user.getId());
+            	}
                 user.setStatus(status);
                 break;
             case UPDATE_INFO:

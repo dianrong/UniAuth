@@ -219,18 +219,21 @@ public class GroupService {
 
     @Transactional
     public GroupDto updateGroup(Integer groupId, String groupCode, String groupName, Byte status, String description) {
+    	CheckEmpty.checkEmpty(groupId, "groupId");
         Grp grp = grpMapper.selectByPrimaryKey(groupId);
-        CheckEmpty.checkEmpty(groupId, "groupId");
         CheckEmpty.checkEmpty(groupCode, "groupCode");
         if(status != null) {
             ParamCheck.checkStatus(status);
-        }
+        } 
         if(grp == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
         }
         
-        //判断是否存在重复的code
-        dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, groupId, groupCode);
+        //启用或者启用状态的修改
+        if((status != null && status == AppConstants.ZERO_Byte) || (status == null && grp.getStatus() == AppConstants.ZERO_Byte)){
+	        //判断是否存在重复的code
+	        dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, groupId, groupCode);
+        }
         
         grp.setName(groupName);
         grp.setStatus(status);

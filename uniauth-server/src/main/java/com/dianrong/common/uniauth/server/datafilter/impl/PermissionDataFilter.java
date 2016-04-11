@@ -116,9 +116,7 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	 * 判断某几个字段是否同时存在.
 	 */
 	private boolean dataWithCondtionsEqualExsit(FieldType type, Object fieldValue ,FieldType... equalFields){
-		/**.
-		 * 默认值
-		 */
+		// 默认值
 		boolean result = false;
 		switch(type){
 		case FIELD_TYPE_VALUE:
