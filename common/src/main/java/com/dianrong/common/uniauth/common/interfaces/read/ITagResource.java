@@ -4,8 +4,8 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.TagQuery;
+import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -28,5 +28,5 @@ public interface ITagResource {
 
     @POST
     @Path("tag-types")
-    Response<List<TagTypeDto>> getTagTypes(PrimaryKeyParam domainId);
+    Response<List<TagTypeDto>> getTagTypes(TagTypeQuery tagTypeQuery);
 }

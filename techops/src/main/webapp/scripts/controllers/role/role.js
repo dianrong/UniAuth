@@ -1,6 +1,6 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
 
-    var Controller = function ($rootScope, $scope, $location, RoleService, dialogs, $state, AlertService) {
+    var Controller = function ($rootScope, $scope, RoleService, dialogs, $state, AlertService) {
 
         function bindAllRoleCodesRoleToRoot() {
             RoleService.getAllRoleCodes().$promise.then(function(res) {
@@ -148,7 +148,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "RoleController",
-        fn: ["$rootScope", "$scope", "$location", "RoleService", "dialogs", "$state", "AlertService", Controller]
+        fn: ["$rootScope", "$scope", "RoleService", "dialogs", "$state", "AlertService", Controller]
     };
 
 });

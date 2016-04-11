@@ -36,7 +36,7 @@ public class TagService {
     private TagTypeMapper tagTypeMapper;
 
     public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, Byte tagStatus,
-                                      Integer tagTypeId, Long userId, Integer pageNumber,
+                                      Integer tagTypeId, Long userId, Integer domainId, List<Integer> domainIds, Integer pageNumber,
                                       Integer pageSize) {
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
@@ -72,6 +72,30 @@ public class TagService {
                     tagIdsQueryByUserId.add(userTagKey.getTagId());
                 }
                 criteria.andIdIn(tagIdsQueryByUserId);
+            } else {
+                return null;
+            }
+        }
+
+        if(domainId != null || domainIds != null) {
+            List<Integer> unionDomainIds = new ArrayList<Integer>();
+            if(domainId != null) {
+                unionDomainIds.add(domainId);
+            }
+            if(domainIds != null) {
+                unionDomainIds.addAll(domainIds);
+            }
+            TagTypeExample tagTypeExample = new TagTypeExample();
+            tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds);
+            List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+            if(!CollectionUtils.isEmpty(tagTypes)) {
+                List<Integer> tagTypeIds = new ArrayList<>();
+                for(TagType tagType:tagTypes) {
+                    tagTypeIds.add(tagType.getId());
+                }
+                criteria.andTagTypeIdIn(tagTypeIds);
+            } else {
+                return null;
             }
         }
 

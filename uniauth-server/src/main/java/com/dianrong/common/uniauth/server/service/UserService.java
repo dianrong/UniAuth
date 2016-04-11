@@ -13,6 +13,8 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,23 +33,6 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
-import com.dianrong.common.uniauth.server.data.entity.Domain;
-import com.dianrong.common.uniauth.server.data.entity.PermType;
-import com.dianrong.common.uniauth.server.data.entity.Permission;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RoleCode;
-import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
-import com.dianrong.common.uniauth.server.data.entity.RoleExample;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
-import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
-import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -75,7 +60,8 @@ public class UserService {
     private PermissionMapper permissionMapper;
     @Autowired
     private CommonService commonService;
-    
+    @Autowired
+    private UserTagMapper userTagMapper;
     /**.
 	 * 进行用户数据过滤的filter
 	 */
@@ -246,7 +232,7 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, List<Long> userIds, String name, String phone, String email, Byte status, Integer pageNumber, Integer pageSize) {
+    public PageDto<UserDto> searchUser(Long userId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
@@ -272,6 +258,20 @@ public class UserService {
         }
         if(!CollectionUtils.isEmpty(userIds)) {
             criteria.andIdIn(userIds);
+        }
+        if(tagId != null) {
+            UserTagExample userTagExample = new UserTagExample();
+            userTagExample.createCriteria().andTagIdEqualTo(tagId);
+            List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+            if(!CollectionUtils.isEmpty(userTagKeys)) {
+                List<Long> userTagKeysUserIds = new ArrayList<>();
+                for (UserTagKey userTagKey : userTagKeys) {
+                    userTagKeysUserIds.add(userTagKey.getUserId());
+                }
+                criteria.andIdIn(userTagKeysUserIds);
+            } else {
+                return null;
+            }
         }
         List<User> users = userMapper.selectByExample(userExample);
         if(!CollectionUtils.isEmpty(users)) {
