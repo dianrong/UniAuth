@@ -252,6 +252,7 @@ public class BeanConverter {
     		urlRoleMappingDto.setPermType(urlRoleMappingExt.getPermType());
     		urlRoleMappingDto.setPermUrl(urlRoleMappingExt.getPermUrl());
     		urlRoleMappingDto.setRoleCode(urlRoleMappingExt.getRoleCode());
+    		urlRoleMappingDto.setHttpMethod(urlRoleMappingExt.getHttpMethod());
     		
     		return urlRoleMappingDto;
     	}
