@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import com.dianrong.common.uniauth.sharerw.message.EmailSender;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,8 @@ import java.util.List;
 @RequestMapping("user")
 public class UserAction {
 
+    @Autowired
+    private EmailSender emailSender;
     @Value("#{uniauthConfig['cas_server']}")
     private String casServerURL;
     @Value("#{uniauthConfig['domains.techops.email_switch']}")
@@ -73,7 +76,7 @@ public class UserAction {
         if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
             return Response.success(buffer);
         } else {
-            EmailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), buffer);
+            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), buffer);
             return Response.success();
         }
     }
@@ -131,7 +134,7 @@ public class UserAction {
         if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
             return Response.success(buffer);
         } else {
-            EmailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), buffer);
+            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), buffer);
             return Response.success();
         }
     }

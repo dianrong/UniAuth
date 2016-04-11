@@ -98,38 +98,47 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 		if(urlRoleMappingDtoList != null){
 			SpelExpressionParser spelParser = new SpelExpressionParser();
 			
-			Map<String,Set<String>> plainMap = new HashMap<String,Set<String>>();
+			Map<SSUrlAndMethod,Set<String>> plainMap = new HashMap<SSUrlAndMethod,Set<String>>();
 			
 			for(UrlRoleMappingDto urlRoleMappingDto: urlRoleMappingDtoList){
 				String permUrl = urlRoleMappingDto.getPermUrl();
 				String roleCode = urlRoleMappingDto.getRoleCode();
 				String permType = urlRoleMappingDto.getPermType();
-			
+				String httpMethod = urlRoleMappingDto.getHttpMethod();
+				
+				SSUrlAndMethod urlAndMethod = new SSUrlAndMethod();
+				urlAndMethod.setHttpMethod(httpMethod);
+				urlAndMethod.setPermUrl(permUrl);
 				/*
 				 * 
 				if(PermTypeEnum.PRIVILEGE.toString().equals(permType)){
 					permUrl = permUrl.startsWith("/") ? permUrl : "/" + permUrl;
 				}
 				*/
-				if(plainMap.containsKey(permUrl)){
-					Set<String> roleCodeSet = plainMap.get(permUrl);
+				
+				Set<String> roleCodeSet = plainMap.get(urlAndMethod);
+				if(roleCodeSet == null){
+					roleCodeSet = new HashSet<String>();
 					roleCodeSet.add(roleCode);
+					plainMap.put(urlAndMethod, roleCodeSet);
 				}
 				else{
-					Set<String> roleCodeSet = new HashSet<String>();
 					roleCodeSet.add(roleCode);
-					plainMap.put(permUrl, roleCodeSet);
 				}
 			}
 			
-			Iterator<Entry<String,Set<String>>> plainIterator = plainMap.entrySet().iterator();
+			Iterator<Entry<SSUrlAndMethod,Set<String>>> plainIterator = plainMap.entrySet().iterator();
 			while(plainIterator.hasNext()){
-				Entry<String,Set<String>> plainEntry = plainIterator.next();
-				String permUrl = plainEntry.getKey();
+				Entry<SSUrlAndMethod,Set<String>> plainEntry = plainIterator.next();
+				SSUrlAndMethod urlAndMethod = plainEntry.getKey();
+				String permUrl = urlAndMethod.getPermUrl();
+				String httpMethod = urlAndMethod.getHttpMethod();
 				Set<String> plainSet = plainEntry.getValue();
 				
-				//note: all http methods allowed
-				RegexRequestMatcher rrm = new RegexRequestMatcher(permUrl, null);
+				httpMethod = httpMethod == null || "".equals(httpMethod.trim()) ? null : httpMethod;
+				//case insensitive for url
+				RegexRequestMatcher rrm = new RegexRequestMatcher(permUrl, httpMethod);
+				
 				StringBuilder sb = new StringBuilder();
 				
 				String[] plainRoleCodes = plainSet.toArray(new String[0]);

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.model.DateSessionObjModel;
@@ -18,6 +19,9 @@ import com.google.code.kaptcha.CaptchaProducer;
 import com.google.code.kaptcha.util.Helper;
 
 public class CaptchaController extends AbstractBaseController {
+
+	@Autowired
+	private EmailSender emailSender;
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
@@ -78,7 +82,7 @@ public class CaptchaController extends AbstractBaseController {
 
 		// 发送邮件
 		try {
-			EmailSender.sendEmail(title, email, emailInfo);
+			emailSender.sendEmail(title, email, emailInfo);
 			// 将验证内容放入session
 			putValToSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_CODE_KEY,
 					new DateSessionObjModel<String>(verifyCode, AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES));
