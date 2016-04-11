@@ -153,6 +153,11 @@ public final class CasCfgResourceRefreshHelper {
 		if(loginImages == null || loginImages.isEmpty()) {
 			logger.info("没有获取到首页滚动的配置信息");
 		}
+		
+		//过滤脏数据
+		filterInvalidFileData(standardCaches, true);
+		filterInvalidFileData(loginImages, false);
+		
 		try{
 		CasCfgCacheModel cacheModel = new CasCfgCacheModel(
 				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, this.defaultCasCfg.getPageTitle()),
@@ -167,6 +172,28 @@ public final class CasCfgResourceRefreshHelper {
 			logger.error("构造cas定制化数据缓存异常:"+ex.getMessage());
 		}
 		return null;
+	}
+	
+	/**.
+	 *  过滤掉不合法的file类型的数据
+	 */
+	private void filterInvalidFileData(List<ConfigDto> filterList, boolean needMatchCfgType){
+			//进行数据过滤  过滤掉是file类型却没有byte数组的数据
+			List<ConfigDto> tempList = new ArrayList<ConfigDto>();
+			for(ConfigDto cto: filterList){
+				//过滤图片的,目前只有图片
+				if(needMatchCfgType && imgCacheCfgKeyList.contains(cto.getCfgKey())) {
+					if(cto.getFile() == null || cto.getFile().length == 0) {
+						tempList.add(cto);
+					}
+				}
+			}
+			if(tempList.size() >0 ) {
+				filterList.retainAll(tempList);
+			}
+			
+			// clear
+			tempList = null;
 	}
 	
 	/**.
