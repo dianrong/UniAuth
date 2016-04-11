@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 
 /**.
@@ -25,6 +26,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param fieldValue  对应字段的值
 	 * @param ftype 过滤的方式
 	 */
+	@Override
 	public void dataFilter(FieldType FieldType, Object fieldValue, FilterType ftype){
 		if(!isDataFilterSwitch()){
 			return;
@@ -39,6 +41,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param filterMap map包括字段名以及对应的字段值
 	 * @param ftype 过滤的方式
 	 */
+	@Override
 	public void dataFilter(Map<FieldType, Object> filterMap, FilterType ftype){
 		if(!isDataFilterSwitch()){
 			return;
@@ -56,6 +59,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param id keyid
 	 * @param fieldValue 需要新加入的值
 	 */
+	@Override
 	public void fileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue){
 		if(!isDataFilterSwitch()){
 			return;
@@ -69,46 +73,44 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	
 	/**.
 	 * 数据过滤并且伴随字段相等的情况。
-	 * @param fieldName  过滤的字段名
-	 * @param fieldValue  对应字段的值
 	 * @param ftype 过滤的方式
+	 * @param equalsField 比较的字段以及值
 	 */
-	public void dataFilterWithCondtionsEqual(FieldType type, Object fieldValue, FilterType ftype, FieldType... equalFields){
+	@Override
+	public void dataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField){
 		if(!isDataFilterSwitch()){
 			return;
 		}
-		doDataFilterWithCondtionsEqual(type,fieldValue,ftype, equalFields);
+		doDataFilterWithCondtionsEqual(ftype, equalsField);
 	}
 	
 	/**.
 	 * 判断数据是否重复并且伴随字段相等的情况。
-	 * @param type 字段
 	 * @param id keyid
-	 * @param fieldValue 需要新加入的值
+	 * @param equalsField 比较的字段以及值
 	 */
-	public void filterFieldValueIsExsistWithCondtionsEqua(FieldType type, Integer id, Object fieldValue, FieldType... equalFields){
+	@Override
+	public void filterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField){
 		if(!isDataFilterSwitch()){
 			return;
 		}
-		doFilterFieldValueIsExsistWithCondtionsEqua(type, id, fieldValue,equalFields);
+		doFilterFieldValueIsExsistWithCondtionsEqua(id, equalsField);
 	}
 	
 	
 	/**.
 	 * 数据过滤并且伴随字段相等的情况。
-	 * @param fieldName  过滤的字段名
-	 * @param fieldValue  对应字段的值
 	 * @param ftype 过滤的方式
+	 * @param  equalsField 需要比较的字段以及值
 	 */
-	protected abstract void doDataFilterWithCondtionsEqual(FieldType type, Object fieldValue, FilterType ftype, FieldType... equalFields);
+	protected abstract void doDataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField);
 	
 	/**.
 	 * 判断数据是否重复并且伴随字段相等的情况。
-	 * @param type 字段
 	 * @param id keyid
-	 * @param fieldValue 需要新加入的值
+	 * @param equalsField 需要比较的字段以及值
 	 */
-	protected abstract void doFilterFieldValueIsExsistWithCondtionsEqua(FieldType type, Integer id, Object fieldValue, FieldType... equalFields);
+	protected abstract void doFilterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField);
 	
 	/**.
 	 * 判断数据是否重复

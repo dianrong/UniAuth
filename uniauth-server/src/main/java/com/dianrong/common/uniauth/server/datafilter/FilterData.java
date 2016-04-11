@@ -39,4 +39,14 @@ public class FilterData {
 	public Object getValue() {
 		return value;
 	}
+	
+	/**.
+	 * 构造FilterData 对象
+	 * @param type type
+	 * @param value value
+	 * @return  构造完成的对象
+	 */
+	public static FilterData buildFilterData(FieldType type, Object value){
+		return new FilterData(type, value);
+	}
 }

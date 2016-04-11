@@ -15,8 +15,10 @@ import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
 import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -75,16 +77,16 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	}
 	
 	@Override
-	public void doDataFilterWithCondtionsEqual(FieldType type, Object fieldValue, FilterType ftype, FieldType... equalFields) {
+	public void doDataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField) {
 			switch(ftype){
 				case FILTER_TYPE_EXSIT_DATA:
-					if(dataWithCondtionsEqualExsit(type, fieldValue, equalFields)){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", processTalbeName, getFieldTypeKeyAndValue(type, fieldValue, equalFields)));
+					if(dataWithCondtionsEqualExsit(equalsField)){
+						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", processTalbeName, getFieldTypeKeyAndValue(equalsField)));
 					}
 					break;
 				case FILTER_TYPE_NO_DATA:
-					if(!dataWithCondtionsEqualExsit(type, fieldValue, equalFields)){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", processTalbeName , getFieldTypeKeyAndValue(type, fieldValue, equalFields)));	
+					if(!dataWithCondtionsEqualExsit(equalsField)){
+						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", processTalbeName , getFieldTypeKeyAndValue(equalsField)));	
 					}
 					break;
 				default:
@@ -93,106 +95,99 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	}
 	
 	@Override
-	public void doFilterFieldValueIsExsistWithCondtionsEqua(FieldType type, Integer id, Object fieldValue, FieldType... equalFields) {
-		switch(type){
-		case FIELD_TYPE_VALUE:
-			String newPermissionValue = TypeParseUtil.paraseToStringFromObject(fieldValue);
-			Permission permission = permissionMapper.selectByIdWithStatusEffective(id);
-			if(permission != null){
-				//如果数据信息没有改变  则不管
-				if(newPermissionValue.equals(permission.getValue())){
+	public void doFilterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField) {
+		CheckEmpty.checkEmpty(id, "permission的ID");
+		//不处理
+		if(equalsField ==  null || equalsField.length == 0) {
+			return;
+		}
+		Permission permission = permissionMapper.selectByIdWithStatusEffective(id);
+		if(permission != null){
+			// 默认是全部相等的
+			boolean isEqual = true;
+			// 如果数据信息没有改变  则不管
+			for(FilterData fd: equalsField){
+				Object  v1 =  getObjectValue(permission, fd.getType());
+				Object v2 = fd.getValue();
+				if(v1 == null && v2== null){
+					continue;
+				}
+				// 其中某个字段为空了 都不能认为是相等的
+				if(v1== null || v2 == null){
+					isEqual = false;
+					break;
+				}
+				if(!v1.equals(v2)){
+					isEqual = false;
 					break;
 				}
 			}
-			//查看是否存在其他的记录是该信息
-			doDataFilterWithCondtionsEqual(type, fieldValue, FilterType.FILTER_TYPE_EXSIT_DATA, equalFields);
-			break;
-		default:
-			break;
+			if(isEqual){
+				return;
+			}
 		}
+		
+		//查看是否存在其他的记录
+		doDataFilterWithCondtionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, equalsField) ;
 	}
 	
 	/**.
 	 * 判断某几个字段是否同时存在.
 	 */
-	private boolean dataWithCondtionsEqualExsit(FieldType type, Object fieldValue ,FieldType... equalFields){
-		// 默认值
-		boolean result = false;
-		switch(type){
-		case FIELD_TYPE_VALUE:
-			//首先根据类型和值获取到对应的model数组
-			PermissionExample condition = new PermissionExample();
-			condition.createCriteria().andValueEqualTo(TypeParseUtil.paraseToStringFromObject(fieldValue)).andStatusEqualTo(AppConstants.ZERO_Byte);
-			List<Permission> permissiones = permissionMapper.selectByExample(condition);
-			if(permissiones == null || permissiones.isEmpty()){
-				break;
-			}
-			for(int i = 0 ; i < permissiones.size() ; i++){
-				for(int j = i+1; j < permissiones.size() ; j++){
-					Permission outp = permissiones.get(i);
-					Permission innerp = permissiones.get(j);
-					//存在一个则返回
-					if(judgeTwoPermissonByFieldes(outp, innerp, equalFields)){
-						result = true;
-						break;
-					}
-				}
-			}
-			break;
-			default:
-				break;
+	private boolean dataWithCondtionsEqualExsit(FilterData... equalsField){
+		//判空处理
+		if(equalsField == null || equalsField.length == 0) {
+			return false;
 		}
-		return result;
+		//首先根据类型和值获取到对应的model数组
+		PermissionExample condition = new PermissionExample();
+		PermissionExample.Criteria criteria =  condition.createCriteria();
+		//构造查询条件
+		for(FilterData fd: equalsField){
+			switch(fd.getType()) {
+				case FIELD_TYPE_VALUE:
+					criteria.andValueEqualTo(TypeParseUtil.paraseToStringFromObject(fd.getValue()));
+					break;
+				case FIELD_TYPE_PERM_TYPE_ID:
+					criteria.andPermTypeIdEqualTo(Integer.parseInt(TypeParseUtil.paraseToLongFromObject(fd.getValue()).toString()));
+					break;
+				case FIELD_TYPE_DOMAIN_ID:
+					criteria.andDomainIdEqualTo(Integer.parseInt(TypeParseUtil.paraseToLongFromObject(fd.getValue()).toString()));
+					break;
+				default:
+					break;
+			}
+		}
+		criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+		//查询
+		List<Permission> permissiones = permissionMapper.selectByExample(condition);
+		if(permissiones != null && !permissiones.isEmpty()){
+			return true;
+		}
+		return false;
 	}
 	
 	/**.
 	 * 获取描述符
-	 * @param type 类型
-	 * @param fieldValue 类型值
- 	 * @param p 对象
-	 * @param fields 对象中的字段
+	 * @param equalsField equalsField处理的字段
 	 * @return 描述符string
 	 */
-	private String getFieldTypeKeyAndValue(FieldType type, Object fieldValue, FieldType... fields){
-		StringBuilder sb = new StringBuilder();
-		String filterKeyVal = ":";
-		String filterEle = ",";
-		if(type != null){
-			sb.append(FieldType.getTypeDes(type));
-			sb.append(filterKeyVal);
-			sb.append(StringUtil.getObjectStr(fieldValue));
-			sb.append(filterEle);
+	private String getFieldTypeKeyAndValue(FilterData... equalsField){
+		if(equalsField == null || equalsField.length == 0) {
+			return "";
 		}
-		for(FieldType tf : fields){
-			sb.append(FieldType.getTypeDes(tf));
+		StringBuilder sb = new StringBuilder();
+		String filterKeyVal = "=";
+		String filterEle = ";";
+		for(FilterData fd: equalsField){
+			if(sb.toString().length() > 0) {
+				sb.append(filterEle);
+			}
+			sb.append(FieldType.getTypeDes(fd.getType()));
 			sb.append(filterKeyVal);
+			sb.append(StringUtil.getObjectStr(fd.getValue()));
 		}
 		return sb.toString();
-	}
-	
-	/**.
-	 * 比较两个Permission在某些字段上是否一致
-	 * @param p1 p1
-	 * @param p2 p2
-	 * @param equalFields 需要比较的字段
-	 * @return 结果
-	 */
-	private boolean judgeTwoPermissonByFieldes(Permission p1, Permission p2 , FieldType... equalFields){
-		if(p1 == null || p2 == null){
-			return false;
-		}
-		for(FieldType tft: equalFields){
-			Object  v1 =  getObjectValue(p1, tft);
-			Object  v2 =  getObjectValue(p2, tft);
-			//其中某个字段为空了 都不能认为是相等的
-			if(StringUtil.strIsNullOrEmpty(StringUtil.getObjectStr(v1)) || StringUtil.strIsNullOrEmpty(StringUtil.getObjectStr(v2))){
-				return false;
-			}
-			if(!v1.equals(v2)){
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	/**.
