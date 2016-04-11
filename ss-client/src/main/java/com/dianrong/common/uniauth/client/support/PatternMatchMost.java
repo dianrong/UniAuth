@@ -62,10 +62,10 @@ public class PatternMatchMost {
 		}
 		matchMostRequestMatcher = matchMostRequestMatcher == null? matchedAnyRequestMatcher : matchMostRequestMatcher;
 		
-		if(allMatchedMap.size() > 1){
+		if(allMatchedMap.size() >= 1){
 			String url = ExtractRequestUrl.extractRequestUrl(request);
 			if(LOGGER.isWarnEnabled()){
-				LOGGER.warn("Found more than one pattern <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + ">");
+				LOGGER.warn("Found at least one pattern <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + ">");
 			}
 		}
 		

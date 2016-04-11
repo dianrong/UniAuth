@@ -28,7 +28,6 @@ public class MainController {
 
 
 	@RequestMapping(value = "/common", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ROLE_ADMIN')")   
 	public String getCommonPage() {
 		logger.debug("Received request to show common page");
 		//myService.testService();

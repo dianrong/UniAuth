@@ -22,6 +22,7 @@
 
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
 		<property name="domainCode" value="subsystem"></property>
+		<property name="rejectPublicInvocations" value="true"></property>
 	</bean>
 	
 	<import resource="classpath:ss-uniauth-client.xml" />

@@ -22,9 +22,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  	<sec:authorize access="principal.hasUriPattern('/test_url')">
-  		test_url
-  	</sec:authorize><br>
     anyone can see this page(including anonymous). <br>  
     <a href="/subsystem/user/user.jsp">role user page</a> <br>
     <a href="/subsystem/admin/admin.jsp">role admin page</a> 
