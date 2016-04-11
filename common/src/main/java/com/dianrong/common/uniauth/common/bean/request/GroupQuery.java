@@ -12,6 +12,16 @@ public class GroupQuery extends PageParam  {
     private Byte status;
     private Byte userGroupType;
     private Long userId;
+    private Integer tagId;
+
+    public Integer getTagId() {
+        return tagId;
+    }
+
+    public GroupQuery setTagId(Integer tagId) {
+        this.tagId = tagId;
+        return this;
+    }
 
     public Integer getId() {
         return id;

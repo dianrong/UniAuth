@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Arc on 13/1/16.
@@ -17,6 +18,7 @@ public class UserDto {
 	private Date lastUpdate;
 	private Byte status;
 	private Byte userGroupType;
+	private List<TagDto> tagDtos;
 
 	//whether this user directly connected with a role
 	private Boolean roleChecked;
@@ -117,6 +119,15 @@ public class UserDto {
 
 	public UserDto setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
+		return this;
+	}
+
+	public List<TagDto> getTagDtos() {
+		return tagDtos;
+	}
+
+	public UserDto setTagDtos(List<TagDto> tagDtos) {
+		this.tagDtos = tagDtos;
 		return this;
 	}
 }

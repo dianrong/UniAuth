@@ -4,7 +4,6 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.TagQuery;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import com.dianrong.common.uniauth.server.service.TagService;
@@ -25,7 +24,7 @@ public class TagResource implements ITagRWResource {
     @Override
     public Response<PageDto<TagDto>> searchTags(TagQuery tagQuery) {
         PageDto<TagDto> tagDtoPageDto = tagService.searchTags(tagQuery.getId(),tagQuery.getTagIds(),tagQuery.getCode(),tagQuery.getStatus(),
-                tagQuery.getTagTypeId(),tagQuery.getUserId(),tagQuery.getDomainId(),tagQuery.getDomainIds(),
+                tagQuery.getTagTypeId(),tagQuery.getUserId(),tagQuery.getDomainId(),tagQuery.getDomainIds(), tagQuery.getGroupId(),
                 tagQuery.getPageNumber(),tagQuery.getPageSize());
         return Response.success(tagDtoPageDto);
     }
