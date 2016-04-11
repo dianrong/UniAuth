@@ -2,10 +2,10 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 
 public class UserParam extends Operator {
+
 	private Long id;
     private String name;
     private String phone;

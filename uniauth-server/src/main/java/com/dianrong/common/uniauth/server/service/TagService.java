@@ -187,7 +187,7 @@ public class TagService {
         return BeanConverter.convert(tagType);
     }
 
-    public void updateTagType(Integer tagTypeId, String code, Integer domainId) {
+    public TagTypeDto updateTagType(Integer tagTypeId, String code, Integer domainId) {
         CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
         CheckEmpty.checkEmpty(code, "code");
         TagType tagType = tagTypeMapper.selectByPrimaryKey(tagTypeId);
@@ -200,6 +200,7 @@ public class TagService {
             tagType.setDomainId(domainId);
         }
         tagTypeMapper.updateByPrimaryKey(tagType);
+        return BeanConverter.convert(tagType);
     }
 
     public void deleteTagType(Integer tagTypeId) {
