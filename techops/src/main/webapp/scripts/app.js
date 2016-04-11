@@ -121,6 +121,22 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "PermController",
             templateUrl: "views/perm/perm.html"
         }).
+        state('tag', {
+            abstract: true,
+            url: "/tag",
+            controller: "TagController",
+            templateUrl: "views/tag/tag.html"
+        }).
+        state('tag.tag-info', {
+            url: '',
+            controller: "TagInfoController",
+            templateUrl: "views/tag/tag-info.html"
+        }).
+        state('tag.tag-type', {
+            url: '',
+            controller: "TagTypeController",
+            templateUrl: "views/tag/tag-type.html"
+        }).
         state('rel', {
             abstract: true,
             controller: "RelController",

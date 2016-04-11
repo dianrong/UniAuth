@@ -1,0 +1,33 @@
+<div class="panel-body pull-right">
+    <a class="btn btn-info" ng-click="launch('add')" role="button">新增标签类型</a>
+    <button class="btn btn-info" ng-click="queryTagTypes()">刷新</button>
+</div>
+
+<div>
+    <table class="text-left table grey-border table-hover vertical-middle">
+        <thead class="text-color-c4">
+        <tr>
+            <th>标签类型Code</th>
+            <th style="text-align: center">操作</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-c6">
+
+        <tr ng-if="tagTypesLoading!=''">
+            <td colspan="9" class="tc" ng-bind="tagTypesLoading"></td>
+        </tr>
+
+        <tr ng-repeat="d in tagTypes">
+            <td><input ng-disabled="d.editable" ng-model="d.code"></td>
+            <td class="text-color-c9" style="text-align: center">
+                <div class="btn-group">
+                    <a ng-show="!d.editable" title="修改该标签类别信息" class="btn btn-info" ng-click="initEdit(d)"><i class="fa fa-pencil"></i></a>
+                    <a ng-show="d.editable" title="确认修改该标签类别信息" class="btn btn-info" ng-click="confirmEdit(d)"><i class="fa fa-check"></i></a>
+                    <a ng-show="d.editable" title="取消修改该标签类别信息" class="btn btn-info" ng-click="cancelEdit(d)"><i class="fa fa-ban"></i></a>
+                    <a title="删除该标签类别信息" class="btn btn-info" ng-click="launch('del', d)"><i class="fa fa-trash"></i></a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

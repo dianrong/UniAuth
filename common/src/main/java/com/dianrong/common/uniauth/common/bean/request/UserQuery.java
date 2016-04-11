@@ -13,6 +13,16 @@ public class UserQuery extends PageParam {
     private String phone;
     private String email;
     private Byte status;
+    private Integer tagId;
+
+    public Integer getTagId() {
+        return tagId;
+    }
+
+    public UserQuery setTagId(Integer tagId) {
+        this.tagId = tagId;
+        return this;
+    }
 
     public Long getUserId() {
         return userId;
