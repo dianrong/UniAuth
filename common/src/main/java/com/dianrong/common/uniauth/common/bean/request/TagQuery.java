@@ -15,6 +15,7 @@ public class TagQuery extends PageParam {
     private Integer domainId;
     private List<Integer> domainIds;
     private Long userId;
+    private Integer groupId;
 
     public Integer getId() {
         return id;
@@ -85,6 +86,15 @@ public class TagQuery extends PageParam {
 
     public TagQuery setDomainIds(List<Integer> domainIds) {
         this.domainIds = domainIds;
+        return this;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public TagQuery setGroupId(Integer groupId) {
+        this.groupId = groupId;
         return this;
     }
 }

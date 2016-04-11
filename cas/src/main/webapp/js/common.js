@@ -20,7 +20,7 @@ var refresh_verfypic = function(capatchElement) {
 		return;
 	}
 	//context
-	if(!context_path){
+	if(context_path == undefined){
 		return;
 	}
 	$(capatchElement).attr('src', context_path + '/uniauth/captcha?rnd=' + Math.random());

@@ -171,10 +171,12 @@ public class DomainService {
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域ID"));
 		}
 		
-		//如果需要更新code,则加入判断
-		if(!StringUtil.strIsNullOrEmpty(domainParam.getCode())){
-			//检查code
-			dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, domainParam.getId(), domainParam.getCode());
+		if((domainParam.getStatus() != null && domainParam.getStatus() == AppConstants.ZERO_Byte)|| domainParam.getStatus() == null){
+			//如果需要更新code,则加入判断
+			if(!StringUtil.strIsNullOrEmpty(domainParam.getCode())){
+				//检查code
+				dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, domainParam.getId(), domainParam.getCode());
+			}
 		}
 				
 		Domain param = BeanConverter.convert(domainParam);

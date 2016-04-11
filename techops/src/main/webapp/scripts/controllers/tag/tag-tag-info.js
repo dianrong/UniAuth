@@ -7,6 +7,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             TagService.getTagTypes(params).$promise.then(function(res) {
                 var tagTypes = res.data;
+                if(!tagTypes) {
+                    tagTypes = [];
+                }
                 var empty = {
                     code : '请选择'
                 };

@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.datafilter.impl;
 import java.util.Map;
 
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 
 /**.
@@ -52,12 +53,12 @@ public abstract class CurrentAbastracDataFIleter extends AbstractDataFilter{
 	}
 	
 	@Override
-	protected void doDataFilterWithCondtionsEqual(FieldType type, Object fieldValue, FilterType ftype, FieldType... equalFields) {
+	protected void doDataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	protected void doFilterFieldValueIsExsistWithCondtionsEqua(FieldType type, Integer id, Object fieldValue, FieldType... equalFields) {
+	protected void doFilterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField) {
 		throw new UnsupportedOperationException();
 	}
 }

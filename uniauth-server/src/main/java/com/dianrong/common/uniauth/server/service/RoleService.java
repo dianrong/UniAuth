@@ -123,8 +123,8 @@ public class RoleService {
 
     public void updateRole(Integer roleId, Integer roleCodeId, String name, String description, Byte status) {
         CheckEmpty.checkEmpty(roleId, "roleId");
-//        Role role = roleMapper.selectByPrimaryKey(roleId);
-        Role role = roleMapper.selectByIdWithStatusEffective(roleId);
+        Role role = roleMapper.selectByPrimaryKey(roleId);
+//        Role role = roleMapper.selectByIdWithStatusEffective(roleId);
         
         if(role == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleId, Role.class.getSimpleName()));

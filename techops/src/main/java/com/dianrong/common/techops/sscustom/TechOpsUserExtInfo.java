@@ -30,4 +30,5 @@ public class TechOpsUserExtInfo extends UserExtInfo {
 	public void setDomainIdSet(Set<Integer> domainIdSet) {
 		this.domainIdSet = domainIdSet;
 	}
+
 }

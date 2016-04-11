@@ -34,17 +34,7 @@
         </javaClientGenerator>
 
 
-        <table tableName="tag" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true"
-               enableSelectByExample="true" selectByExampleQueryId="true">
-        </table>
-
-        <table tableName="user_tag" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true"
-               enableSelectByExample="true" selectByExampleQueryId="true">
-        </table>
-
-        <table tableName="tag_type" enableCountByExample="true"
+        <table tableName="grp_tag" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>
