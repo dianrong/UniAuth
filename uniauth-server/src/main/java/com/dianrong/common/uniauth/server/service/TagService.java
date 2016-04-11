@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
@@ -34,10 +35,12 @@ public class TagService {
     private TagMapper tagMapper;
     @Autowired
     private TagTypeMapper tagTypeMapper;
+    @Autowired
+    private GrpTagMapper grpTagMapper;
 
     public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, Byte tagStatus,
-                                      Integer tagTypeId, Long userId, Integer domainId, List<Integer> domainIds, Integer pageNumber,
-                                      Integer pageSize) {
+                                      Integer tagTypeId, Long userId, Integer domainId, List<Integer> domainIds, Integer grpId,
+                                      Integer pageNumber, Integer pageSize) {
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
         TagExample tagExample = new TagExample();
@@ -94,6 +97,21 @@ public class TagService {
                     tagTypeIds.add(tagType.getId());
                 }
                 criteria.andTagTypeIdIn(tagTypeIds);
+            } else {
+                return null;
+            }
+        }
+
+        if(grpId != null) {
+            GrpTagExample grpTagExample = new GrpTagExample();
+            grpTagExample.createCriteria().andGrpIdEqualTo(grpId);
+            List<GrpTagKey>  grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+            if(!CollectionUtils.isEmpty(grpTagKeys)) {
+                List<Integer> grpTagKeysTagIds = new ArrayList<>();
+                for (GrpTagKey grpTagKey : grpTagKeys) {
+                    grpTagKeysTagIds.add(grpTagKey.getTagId());
+                }
+                criteria.andIdIn(grpTagKeysTagIds);
             } else {
                 return null;
             }

@@ -12,6 +12,8 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,27 +28,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.GrpExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpPath;
-import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RoleExample;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserGrp;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
-import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -75,14 +57,18 @@ public class GroupService {
     private UserMapper userMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
-    
+    @Autowired
+    private GrpTagMapper grpTagMapper;
+
     /**.
 	 * 进行组数据过滤的filter
 	 */
 	@Resource(name="groupDataFilter")
 	private DataFilter dataFilter;
 
-    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, String name, String code, String description, Byte status, Integer pageNumber, Integer pageSize) {
+    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, String name, String code,
+                                         String description, Byte status, Integer tagId,
+                                         Integer pageNumber, Integer pageSize) {
 
         if(id != null) {
             GroupDto groupDto = BeanConverter.convert(grpMapper.selectByPrimaryKey(id));
@@ -146,6 +132,21 @@ public class GroupService {
                 criteria.andIdIn(grpIds);
             }
         }
+        if(tagId != null) {
+            GrpTagExample grpTagExample = new GrpTagExample();
+            grpTagExample.createCriteria().andTagIdEqualTo(tagId);
+            List<GrpTagKey>  grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+            if(!CollectionUtils.isEmpty(grpTagKeys)) {
+                List<Integer> grpTagKeysGrpIds = new ArrayList<>();
+                for (GrpTagKey grpTagKey : grpTagKeys) {
+                    grpTagKeysGrpIds.add(grpTagKey.getGrpId());
+                }
+                criteria.andIdIn(grpTagKeysGrpIds);
+            } else {
+                return null;
+            }
+        }
+
         List<Grp> grps = grpMapper.selectByExample(grpExample);
         if(!CollectionUtils.isEmpty(grps)) {
             int count = grpMapper.countByExample(grpExample);
