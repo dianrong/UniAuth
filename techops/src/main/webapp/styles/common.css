@@ -128,3 +128,6 @@
 .common-hidden.no{
     display:block !important;
 }
+.noborder {
+    border: 0px;
+}

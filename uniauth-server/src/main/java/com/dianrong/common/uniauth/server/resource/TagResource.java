@@ -4,7 +4,9 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.TagQuery;
+import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import com.dianrong.common.uniauth.server.service.TagService;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
@@ -18,6 +20,7 @@ import java.util.List;
  */
 @RestController
 public class TagResource implements ITagRWResource {
+
     @Autowired
     private TagService tagService;
 
@@ -30,9 +33,38 @@ public class TagResource implements ITagRWResource {
     }
 
     @Override
+    public Response<TagDto> addNewTag(TagParam tagParam) {
+        TagDto tagDto = tagService.addNewTag(tagParam.getCode(),tagParam.getDomainId(),tagParam.getTagTypeId(),tagParam.getDescription());
+        return Response.success(tagDto);
+    }
+
+    @Override
+    public Response<TagDto> updateTag(TagParam tagParam) {
+        TagDto tagDto = tagService.updateTag(tagParam.getId(),tagParam.getCode(),tagParam.getStatus(),tagParam.getTagTypeId(),tagParam.getDescription());
+        return Response.success(tagDto);
+    }
+
+    @Override
     public Response<List<TagTypeDto>> getTagTypes(TagTypeQuery tagTypeQuery) {
         List<TagTypeDto> tagTypeDtos = tagService.getTagTypes(tagTypeQuery.getDomainId());
         return Response.success(tagTypeDtos);
     }
 
+    @Override
+    public Response<TagTypeDto> addNewTagType(TagTypeParam tagTypeParam) {
+        TagTypeDto tagTypeDto = tagService.addNewTagType(tagTypeParam.getCode(),tagTypeParam.getDomainId());
+        return Response.success(tagTypeDto);
+    }
+
+    @Override
+    public Response<TagTypeDto> updateTagType(TagTypeParam tagTypeParam) {
+        TagTypeDto tagTypeDto = tagService.updateTagType(tagTypeParam.getId(),tagTypeParam.getCode(),tagTypeParam.getDomainId());
+        return Response.success(tagTypeDto);
+    }
+
+    @Override
+    public Response<Void> deleteTagType(TagTypeParam tagTypeParam) {
+        tagService.deleteTagType(tagTypeParam.getId());
+        return Response.success();
+    }
 }

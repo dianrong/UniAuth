@@ -9,6 +9,22 @@ define(['../../utils/constant'], function (constant) {
                 isArray: false,
                 timeout: constant.reqTimeout
             },
+            addNewTag: {
+                method: 'POST',
+                params: {
+                    method: 'add'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            updateTag: {
+                method: 'POST',
+                params: {
+                    method: 'update'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
             getTagTypes: {
                 method: 'POST',
                 params: {
@@ -16,7 +32,32 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            addNewTagType: {
+                method: 'POST',
+                params: {
+                    method: 'add-new-tag-type'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            updateTagType: {
+                method: 'POST',
+                params: {
+                    method: 'update-tag-type'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            deleteTagType: {
+                method: 'POST',
+                params: {
+                    method: 'delete-tag-type'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
+
         });
         svc.tagShared = {};
         return svc;

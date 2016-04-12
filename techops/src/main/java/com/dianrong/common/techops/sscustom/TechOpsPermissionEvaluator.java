@@ -7,19 +7,16 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 
@@ -32,6 +29,8 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 
 	@Override
 	public boolean hasPermission(Authentication authentication, Object targetObject, Object permission) {
+		TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)authentication.getPrincipal();
+		Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 		if(AppConstants.PERM_GROUP_OWNER.equals(permission)){
 			GroupParam groupParam = null;
 			if(targetObject instanceof GroupParam) {
@@ -67,8 +66,6 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				PageDto<RoleDto> roleDtoPageDto = pageDtoResponse.getData();
 				if(roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
 					Integer domainId = roleDtoPageDto.getData().get(0).getDomainId();
-					TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 					if(domainIdSet.contains(domainId)) {
 						return true;
 					}
@@ -98,8 +95,6 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				if(CollectionUtils.isEmpty(infoList)) {
 					PageDto<RoleDto> roleDtoPageDto = pageDtoResponse.getData();
 					if(roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
-						TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-						Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 						List<RoleDto> roleDtos = roleDtoPageDto.getData();
 						for(RoleDto roleDto : roleDtos) {
 							if(!domainIdSet.contains(roleDto.getDomainId())) {
@@ -123,8 +118,6 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				PageDto<PermissionDto> permissionDtoPageDto = pageDtoResponse.getData();
 				if(permissionDtoPageDto != null && !CollectionUtils.isEmpty(permissionDtoPageDto.getData())) {
 					Integer domainId = permissionDtoPageDto.getData().get(0).getDomainId();
-					TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 					if(domainIdSet.contains(domainId)) {
 						return true;
 					}
@@ -143,8 +136,6 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				PageDto<PermissionDto> permissionDtoPageDto = pageDtoResponse.getData();
 				if(permissionDtoPageDto != null && !CollectionUtils.isEmpty(permissionDtoPageDto.getData())) {
 					List<PermissionDto> permissionDtos = permissionDtoPageDto.getData();
-					TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-					Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
 					for(PermissionDto permissionDto : permissionDtos) {
 						if(!domainIdSet.contains(permissionDto.getDomainId())) {
 							return false;
@@ -153,6 +144,23 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 					return true;
 				}
 			}
+		} else if(AppConstants.PERM_TAGTYPEID_CHECK.equals(permission)) {
+			Set<Integer> tagTypeIdSet = new HashSet<Integer>();
+			if(!CollectionUtils.isEmpty(domainIdSet)) {
+				TagTypeQuery tagTypeQuery = new TagTypeQuery();
+				tagTypeQuery.setDomainIds(new ArrayList<Integer>(domainIdSet));
+				List<TagTypeDto> tagTypeDtos = uniClientFacade.getTagResource().getTagTypes(tagTypeQuery).getData();
+				if(!CollectionUtils.isEmpty(tagTypeDtos)) {
+					for(TagTypeDto tagTypeDto : tagTypeDtos) {
+						tagTypeIdSet.add(tagTypeDto.getId());
+					}
+				}
+				TagTypeParam tagTypeParam = (TagTypeParam)targetObject;
+				if(tagTypeIdSet.contains(tagTypeParam.getId())) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		return super.hasPermission(authentication, targetObject, permission);

@@ -1,10 +1,9 @@
 package com.dianrong.common.techops.sscustom;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +14,7 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.PermTypeEnum;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class TechOpsUserInfoCallBack implements UserInfoCallBack {
@@ -28,7 +28,7 @@ public class TechOpsUserInfoCallBack implements UserInfoCallBack {
 	@Override
 	public void fill(UserExtInfo userExtInfo) {
 		TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo)userExtInfo;
-		 Set<Integer> domainIdSet = new HashSet<Integer>();
+		Set<Integer> domainIdSet = new HashSet<Integer>();
 		 
 		Set<String> domainCodeSet = techOpsUserExtInfo.getPermMap().get(PermTypeEnum.DOMAIN.toString());
 		if(domainCodeSet != null && !domainCodeSet.isEmpty()){
@@ -45,6 +45,7 @@ public class TechOpsUserInfoCallBack implements UserInfoCallBack {
 		}
 		
 		techOpsUserExtInfo.setDomainIdSet(domainIdSet);
+
 	}
 
 }

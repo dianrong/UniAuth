@@ -27,15 +27,15 @@ public class MainController2 {
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	@RequestMapping(value = "/common", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ROLE_ADMIN')")   
+	@RequestMapping(value = "/common", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")   
 	public String getCommonPage() {
 		logger.debug("Received request to show common page");
 		//myService.testService();
 		return "commonpage";
 	}
 	
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")   
 	public String getAadminPage() {
 /*		DomainParam domainParam = new DomainParam();

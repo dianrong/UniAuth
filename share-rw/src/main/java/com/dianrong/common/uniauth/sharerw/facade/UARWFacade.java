@@ -30,7 +30,7 @@ public class UARWFacade {
     private IUserRWResource userRWResource;
     private IAuditResource auditResource;
     private IConfigRWResource configRWResource;
-    private ITagResource tagResource;
+    private ITagRWResource tagRWResource;
 
     @PostConstruct
     public void init(){
@@ -42,7 +42,7 @@ public class UARWFacade {
         roleRWResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, Arrays.asList(jacksonJsonProvider));
         auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, Arrays.asList(jacksonJsonProvider));
         configRWResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, Arrays.asList(jacksonJsonProvider));
-        tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, Arrays.asList(jacksonJsonProvider));
+        tagRWResource = JAXRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, Arrays.asList(jacksonJsonProvider));
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
@@ -78,7 +78,11 @@ public class UARWFacade {
         return configRWResource;
     }
 
-    public ITagResource getTagResource() {
-        return tagResource;
+    public String getUniWsEndpoint() {
+        return uniWsEndpoint;
+    }
+
+    public ITagRWResource getTagRWResource() {
+        return tagRWResource;
     }
 }

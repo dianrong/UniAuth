@@ -53,6 +53,7 @@
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
                     <a title="管理用户的角色" class="btn btn-info" ng-click="navigate(d)"><i class="fa fa-paw"></i></a>
+                    <a title="管理用户对应的标签Tag" class="btn btn-info" ng-click="navToTag(d)"><i class="fa fa-tags" aria-hidden="true"></i></a>
                     <a title="解锁用户" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
                     <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="重置密码" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-key"></i></a>
                     <a title="{{d.status?'启用该用户':'禁用该用户'}}" class="btn btn-info" ng-click="launch('status', d)">
