@@ -2,7 +2,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     var Controller = function ($rootScope, $scope, TagService, dialogs, $state, AlertService) {
 
-        function getTagTypes() {
+        $scope.getTagTypes = function getTagTypes() {
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             TagService.getTagTypes(params).$promise.then(function(res) {
@@ -27,7 +27,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 $scope.queryTag();
             });
         }
-        getTagTypes();
+        $scope.getTagTypes();
 
         $scope.navToTagUserGrp = function(tag) {
             TagService.tagShared.selected = tag;
