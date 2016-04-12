@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
@@ -31,6 +32,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 public class SSBeanPostProcessor implements BeanPostProcessor {
@@ -74,7 +76,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 						response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
 						break;
 					}catch(Exception e){
-						LOGGER.warn("The uniauth server not completely started yet, need sleeping for 2 seconds.");
+						LOGGER.warn("The uniauth server not completely started yet, need sleeping for 2 seconds.", e);
 						try {
 							Thread.sleep(2000L);
 						} catch (InterruptedException ie) {
@@ -135,7 +137,20 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 				String httpMethod = urlAndMethod.getHttpMethod();
 				Set<String> plainSet = plainEntry.getValue();
 				
-				httpMethod = httpMethod == null || "".equals(httpMethod.trim()) || "ALL".equals(httpMethod.trim()) ? null : httpMethod;
+				if(httpMethod != null){
+					httpMethod = httpMethod.trim();
+					if(AppConstants.HTTP_METHOD_ALL.equals(httpMethod)){
+						httpMethod = null;
+					}
+					else{
+						try{
+							HttpMethod.valueOf(httpMethod);
+						}catch(Exception e){
+							LOGGER.warn("'" + httpMethod + "' is not a valid http method.", e);
+							httpMethod = null;
+						}
+					}
+				}
 				
 				//case insensitive for url
 				RegexRequestMatcher rrm = new RegexRequestMatcher(permUrl, httpMethod);
@@ -170,4 +185,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 		return appendMap;
 	}
 
+	public static void main(String[] args) {
+		System.out.println(HttpMethod.valueOf("get"));
+	}
 }

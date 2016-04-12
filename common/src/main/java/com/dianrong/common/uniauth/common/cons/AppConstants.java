@@ -122,4 +122,6 @@ public interface AppConstants {
 	String CAS_CFG_HREF_DEFALT_VAL= "#";
 	
 	String CAS_CFG_KEY_BACKGROUND_COLOR = "CAS_BACKGROUND_COLOR";
+	
+	String HTTP_METHOD_ALL = "ALL";
 }
