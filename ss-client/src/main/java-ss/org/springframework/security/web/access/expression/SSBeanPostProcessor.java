@@ -135,7 +135,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 				String httpMethod = urlAndMethod.getHttpMethod();
 				Set<String> plainSet = plainEntry.getValue();
 				
-				httpMethod = httpMethod == null || "".equals(httpMethod.trim()) ? null : httpMethod;
+				httpMethod = httpMethod == null || "".equals(httpMethod.trim()) || "ALL".equals(httpMethod.trim()) ? null : httpMethod;
+				
 				//case insensitive for url
 				RegexRequestMatcher rrm = new RegexRequestMatcher(permUrl, httpMethod);
 				
