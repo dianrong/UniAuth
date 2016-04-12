@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.TagQuery;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
@@ -30,14 +31,28 @@ public class TagAction {
     @Resource
     private UARWFacade uARWFacade;
 
-    @RequestMapping(value = "/query", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "query", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.hasDomain('techops')) or " +
             "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#tagQuery.domainId))")
     public Response<PageDto<TagDto>> queryTags(@RequestBody TagQuery tagQuery) {
         return uARWFacade.getTagRWResource().searchTags(tagQuery);
     }
 
-    @RequestMapping(value = "/types", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "add", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.hasDomain('techops')) or " +
+            "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#tagParam.domainId))")
+    public Response<TagDto> addNewTag(@RequestBody TagParam tagParam) {
+        return uARWFacade.getTagRWResource().addNewTag(tagParam);
+    }
+
+    @RequestMapping(value = "update", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.hasDomain('techops')) or " +
+            "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#tagParam.domainId))")
+    public Response<TagDto> updateTag(@RequestBody TagParam tagParam) {
+        return uARWFacade.getTagRWResource().updateTag(tagParam);
+    }
+
+    @RequestMapping(value = "types", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.hasDomain('techops')) or " +
             "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#tagTypeQuery.domainId))")
     public Response<List<TagTypeDto>> queryTagTypes(@RequestBody TagTypeQuery tagTypeQuery) {

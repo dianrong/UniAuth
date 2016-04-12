@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.TagQuery;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
@@ -29,6 +30,18 @@ public class TagResource implements ITagRWResource {
                 tagQuery.getTagTypeId(),tagQuery.getUserId(),tagQuery.getDomainId(),tagQuery.getDomainIds(), tagQuery.getGroupId(),
                 tagQuery.getPageNumber(),tagQuery.getPageSize());
         return Response.success(tagDtoPageDto);
+    }
+
+    @Override
+    public Response<TagDto> addNewTag(TagParam tagParam) {
+        TagDto tagDto = tagService.addNewTag(tagParam.getCode(),tagParam.getDomainId(),tagParam.getTagTypeId(),tagParam.getDescription());
+        return Response.success(tagDto);
+    }
+
+    @Override
+    public Response<TagDto> updateTag(TagParam tagParam) {
+        TagDto tagDto = tagService.updateTag(tagParam.getId(),tagParam.getCode(),tagParam.getStatus(),tagParam.getTagTypeId(),tagParam.getDescription());
+        return Response.success(tagDto);
     }
 
     @Override

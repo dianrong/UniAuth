@@ -78,6 +78,59 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             });
         };
 
+        $scope.launch = function(which, param) {
+            switch(which) {
+                case 'status':
+                    var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
+                        {
+                            "header":param.status?'标签-启用':'标签-禁用',
+                            "msg":"您确定要" + (param.status?'启用':'禁用') + "标签: " + param.code + "吗?"
+                        }, {size:'md'}
+                    );
+                    dlg.result.then(function (yes) {
+                        TagService.updateTag(
+                            {
+                                'id':param.id,
+                                'code': param.code,
+                                'description': param.description,
+                                'tagTypeId':param.tagTypeId,
+                                'domainId':param.domainId,
+                                'status':param.status?0:1
+                            }
+                            , function(res) {
+                                AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'启用':'禁用') + "标签成功.");
+                                $scope.queryTag();
+                            }, function(err) {
+                                console.log(err);
+                            }
+                        );
+                    }, function (no) {
+                        // do nothing
+                    });
+                    break;
+                case 'modify':
+                    var dlg = dialogs.create('views/tag/dialogs/tag-modify.html','ModifyTagController',
+                        param, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        $scope.queryTag();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'add':
+                    var dlg = dialogs.create('views/tag/dialogs/tag-add.html','AddTagController',
+                        {}, {size:'md'}
+                    );
+                    dlg.result.then(function (close) {
+                        $scope.queryTag();
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+            }
+        };
+
         $scope.$on('selected-domain-changed', $scope.queryTag);
     };
 

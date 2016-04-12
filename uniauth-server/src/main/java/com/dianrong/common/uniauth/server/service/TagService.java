@@ -145,7 +145,7 @@ public class TagService {
         return BeanConverter.convert(tag);
     }
 
-    public void updateTag(Integer tagId, String code, Byte status, Integer tagTypeId, String description) {
+    public TagDto updateTag(Integer tagId, String code, Byte status, Integer tagTypeId, String description) {
         CheckEmpty.checkEmpty(tagId, "tagId");
         Tag tag = tagMapper.selectByPrimaryKey(tagId);
         if(tag == null) {
@@ -158,6 +158,7 @@ public class TagService {
         tag.setTagTypeId(tagTypeId);
         tag.setDescription(description);
         tagMapper.updateByPrimaryKey(tag);
+        return BeanConverter.convert(tag);
     }
 
     public List<TagTypeDto> getTagTypes(Integer domainId) {
@@ -210,11 +211,31 @@ public class TagService {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
         }
         TagExample tagExample = new TagExample();
-        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId);
+        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.ZERO_Byte);
         int count = tagMapper.countByExample(tagExample);
         if(count > 0) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("tagtype.delete.linked-tag.error"));
         }
+
+
+        TagExample tagExample2 = new TagExample();
+        tagExample2.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.ONE_Byte);
+        List<Tag> tags = tagMapper.selectByExample(tagExample2);
+        if(!CollectionUtils.isEmpty(tags)) {
+            List<Integer> tagIds = new ArrayList<>();
+            for(Tag tag : tags) {
+                tagIds.add(tag.getId());
+            }
+
+            UserTagExample userTagExample = new UserTagExample();
+            userTagExample.createCriteria().andTagIdIn(tagIds);
+            GrpTagExample grpTagExample = new GrpTagExample();
+            grpTagExample.createCriteria().andTagIdIn(tagIds);
+            userTagMapper.deleteByExample(userTagExample);
+            grpTagMapper.deleteByExample(grpTagExample);
+            tagMapper.deleteByExample(tagExample2);
+        }
+
         tagTypeMapper.deleteByPrimaryKey(tagTypeId);
     }
 
