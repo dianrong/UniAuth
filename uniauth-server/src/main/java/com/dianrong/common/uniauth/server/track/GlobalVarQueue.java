@@ -1,9 +1,11 @@
 package com.dianrong.common.uniauth.server.track;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
@@ -26,6 +28,8 @@ public class GlobalVarQueue {
 	private static Logger logger = LoggerFactory.getLogger(GlobalVarQueue.class);
 
 	private BlockingQueue<GlobalVar> GLOBALVAR_QUEUE = new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBALVAR_QUEUE_SIZE);
+	
+	private Object lock = new Object();
 
 	private GlobalVarQueue() {
 
@@ -43,35 +47,25 @@ public class GlobalVarQueue {
 		new Thread() {
 			public void run() {
 				List<Audit> auditList = new ArrayList<Audit>();
+				new SaveToDbThread(auditList).start();
+				
 				while (true) {
-					if (auditList.size() == AppConstants.AUDIT_INSERT_LIST_SIZE) {
-						try {
-							auditMapper.insertBatch(auditList);
-						} catch (Exception e) {
-							logger.error("Batch insert db error.", e);
-						}
-						auditList.clear();
-					} else {
-						GlobalVar gv = null;
-						try {
-							gv = GLOBALVAR_QUEUE.take();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+					try {
+						GlobalVar gv = GLOBALVAR_QUEUE.take();
 						if (gv != null) {
 							Audit audit = new Audit();
 							audit.setReqDate(gv.getReqDate());
 							audit.setReqIp(gv.getIp());
 							audit.setReqElapse(gv.getElapse());
 							String expInfo = gv.getException();
-							if(expInfo != null && expInfo.length() > AppConstants.AUDIT_INSERT_EXP_LENGTH){
+							if (expInfo != null && expInfo.length() > AppConstants.AUDIT_INSERT_EXP_LENGTH) {
 								expInfo = expInfo.substring(0, AppConstants.AUDIT_INSERT_EXP_LENGTH);
 							}
 							audit.setReqExp(expInfo);
 							audit.setReqMethod(gv.getMethod());
-							
+
 							String reqParam = gv.getReqParam();
-							if(reqParam != null && reqParam.length() > AppConstants.AUDIT_INSET_PARAM_LENGTH){
+							if (reqParam != null && reqParam.length() > AppConstants.AUDIT_INSET_PARAM_LENGTH) {
 								reqParam = reqParam.substring(0, AppConstants.AUDIT_INSET_PARAM_LENGTH);
 							}
 							audit.setReqParam(RegExpUtil.purgePassword(reqParam));
@@ -82,12 +76,61 @@ public class GlobalVarQueue {
 							audit.setReqClass(gv.getMapper());
 							audit.setReqSeq(gv.getInvokeSeq());
 							audit.setDomainId(gv.getDomainId());
-							auditList.add(audit);
+							synchronized(lock){
+								auditList.add(audit);
+							}
 						}
+					} catch (InterruptedException e) {
+						logger.error("Take from GLOBALVAR_QUEUE error.", e);
 					}
 				}
 			}
 		}.start();
 	}
 
+	private class SaveToDbThread extends Thread {
+		private List<Audit> toBeInsertedAuditList;
+
+		public SaveToDbThread(List<Audit> toBeInsertedAuditList) {
+			this.toBeInsertedAuditList = toBeInsertedAuditList;
+		}
+
+		public void run() {
+			List<Audit> insertAuditList = new ArrayList<Audit>();
+			while(true) {
+				try {
+					sleep(AppConstants.AUDIT_INSERT_EVERY_SECOND * 1000L);
+					synchronized(lock){
+						insertAuditList.addAll(toBeInsertedAuditList);
+						toBeInsertedAuditList.clear();
+					}
+					
+					int size = insertAuditList.size();
+					logger.debug("Size for insertAuditList:" + insertAuditList.size());
+					if(size > 0){
+						int start = 0;
+						int end = AppConstants.AUDIT_INSERT_LIST_SIZE;
+						while(true){
+							if(end > size){
+								end = size;
+							}
+							try {
+								auditMapper.insertBatch(insertAuditList.subList(start, end));
+							} catch (Exception e) {
+								logger.error("Inner:Batch insert db error.", e);
+							}
+							if(end == size){
+								break;
+							}
+							start = end;
+							end += AppConstants.AUDIT_INSERT_LIST_SIZE;
+						}
+						insertAuditList.clear();
+					}
+				} catch (Exception e) {
+					logger.error("Sleep error.", e);
+				}
+			}
+		}
+	}
 }
