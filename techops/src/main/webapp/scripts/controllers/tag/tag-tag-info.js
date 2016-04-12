@@ -133,7 +133,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             }
         };
 
-        $scope.$on('selected-domain-changed', $scope.queryTag);
+        $scope.$on('selected-domain-changed', $scope.getTagTypes);
     };
 
     return {
