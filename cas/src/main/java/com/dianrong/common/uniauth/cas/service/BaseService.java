@@ -38,9 +38,6 @@ public abstract class BaseService {
 	 * infoName与异常class的map
 	 */
 	private static Map<InfoName, Class<? extends Exception>> infoExceptionClass = new HashMap<InfoName, Class<? extends Exception>>(){
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 7320484331289180713L;
 		{
 			put(InfoName.REDIRECT, OtherException.class);

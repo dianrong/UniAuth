@@ -1,21 +1,33 @@
 package com.dianrong.common.uniauth.cas.cors;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.catalina.filters.Constants;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+import com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper;
 
 /**
  * Created by Arc on 1/3/2016.
@@ -31,7 +43,6 @@ public class CasCORSFilter implements Filter {
      * are allowed access to the resource.
      */
     private final Collection<String> allowedOrigins;
-    private Map<String, Pattern> patternCache = new ConcurrentHashMap<>(128);
 
     /**
      * Determines if any origin is allowed to make request.
@@ -138,20 +149,29 @@ public class CasCORSFilter implements Filter {
                 DEFAULT_DECORATE_REQUEST);
 
         if (filterConfig != null) {
-            String configAllowedOrigins = filterConfig
-                    .getInitParameter(PARAM_CORS_ALLOWED_ORIGINS);
-            String configAllowedHttpMethods = filterConfig
-                    .getInitParameter(PARAM_CORS_ALLOWED_METHODS);
-            String configAllowedHttpHeaders = filterConfig
-                    .getInitParameter(PARAM_CORS_ALLOWED_HEADERS);
-            String configExposedHeaders = filterConfig
-                    .getInitParameter(PARAM_CORS_EXPOSED_HEADERS);
-            String configSupportsCredentials = filterConfig
-                    .getInitParameter(PARAM_CORS_SUPPORT_CREDENTIALS);
-            String configPreflightMaxAge = filterConfig
-                    .getInitParameter(PARAM_CORS_PREFLIGHT_MAXAGE);
-            String configDecorateRequest = filterConfig
-                    .getInitParameter(PARAM_CORS_REQUEST_DECORATE);
+        	// 默认值为空
+        	 String configAllowedOrigins = "";
+             String configAllowedHttpMethods = this.getCors_allowed_methods();
+             String configAllowedHttpHeaders = this.getCors_allowed_headers();
+             String configExposedHeaders = this.getCors_exposed_headers();
+             String configSupportsCredentials = this.getCors_support_credentials();
+             String configPreflightMaxAge = this.getCors_preflight_maxage();
+             String configDecorateRequest = this.getCors_request_decorate();
+        	
+//            String configAllowedOrigins = filterConfig
+//                    .getInitParameter(PARAM_CORS_ALLOWED_ORIGINS);
+//            String configAllowedHttpMethods = filterConfig
+//                    .getInitParameter(PARAM_CORS_ALLOWED_METHODS);
+//            String configAllowedHttpHeaders = filterConfig
+//                    .getInitParameter(PARAM_CORS_ALLOWED_HEADERS);
+//            String configExposedHeaders = filterConfig
+//                    .getInitParameter(PARAM_CORS_EXPOSED_HEADERS);
+//            String configSupportsCredentials = filterConfig
+//                    .getInitParameter(PARAM_CORS_SUPPORT_CREDENTIALS);
+//            String configPreflightMaxAge = filterConfig
+//                    .getInitParameter(PARAM_CORS_PREFLIGHT_MAXAGE);
+//            String configDecorateRequest = filterConfig
+//                    .getInitParameter(PARAM_CORS_REQUEST_DECORATE);
 
             parseAndStore(configAllowedOrigins, configAllowedHttpMethods,
                     configAllowedHttpHeaders, configExposedHeaders,
@@ -671,24 +691,32 @@ public class CasCORSFilter implements Filter {
 
         // customize the isOriginAllowedLogicHere
         // return allowedOrigins.contains(origin);
-        for(String allowedOrigin : allowedOrigins) {
-            Pattern pattern = patternCache.get(allowedOrigin);
-            if (pattern == null) {
-                try {
-                    pattern = Pattern.compile(allowedOrigin);
-                    patternCache.put(allowedOrigin, pattern);
-                } catch(PatternSyntaxException pse) {
-                    log.error("invalid regular pattern : " + allowedOrigin);
-                }
-            }
-
-            if (pattern != null) {
-                Matcher matcher = pattern.matcher(origin);
-                if (matcher.matches()) {
-                    return true;
-                }
-            }
+        if(this.crossFilterCacheHelper != null) {
+        	for(Pattern pattern : this.crossFilterCacheHelper.getOriginRegularCacheSet()) {
+        		 Matcher matcher = pattern.matcher(origin);
+                 if (matcher.matches()) {
+                     return true;
+                 }
+        	}
         }
+//        for(String allowedOrigin : allowedOrigins) {
+//            Pattern pattern = patternCache.get(allowedOrigin);
+//            if (pattern == null) {
+//                try {
+//                    pattern = Pattern.compile(allowedOrigin);
+//                    patternCache.put(allowedOrigin, pattern);
+//                } catch(PatternSyntaxException pse) {
+//                    log.error("invalid regular pattern : " + allowedOrigin);
+//                }
+//            }
+//
+//            if (pattern != null) {
+//                Matcher matcher = pattern.matcher(origin);
+//                if (matcher.matches()) {
+//                    return true;
+//                }
+//            }
+//        }
         return false;
     }
 
@@ -1142,7 +1170,140 @@ public class CasCORSFilter implements Filter {
      */
     public static final String DEFAULT_DECORATE_REQUEST = "true";
 
-    // ----------------------------------------Filter Config Init param-name(s)
+    // --------------------------------------------------------cache helper
+    private CasCrossFilterCacheHelper crossFilterCacheHelper;
+    
+    /**
+	 * @return the crossFilterCacheHelper
+	 */
+	public CasCrossFilterCacheHelper getCrossFilterCacheHelper() {
+		return crossFilterCacheHelper;
+	}
+
+
+	/**
+	 * @param crossFilterCacheHelper the crossFilterCacheHelper to set
+	 */
+	public void setCrossFilterCacheHelper(CasCrossFilterCacheHelper crossFilterCacheHelper) {
+		this.crossFilterCacheHelper = crossFilterCacheHelper;
+	}
+
+	// ----------------------------------------Filter Config param-value(s)
+	/**
+     * support credentials from {@link FilterConfig}.
+     */
+    private String cors_support_credentials;
+
+    /**
+     * Key to retrieve exposed headers from {@link FilterConfig}.
+     */
+    private String cors_exposed_headers;
+
+    /**
+     * allowed headers from {@link FilterConfig}.
+     */
+    private String cors_allowed_headers;
+
+    /**
+     * allowed methods from {@link FilterConfig}.
+     */
+    private String cors_allowed_methods;
+
+    /**
+     * preflight max age from {@link FilterConfig}.
+     */
+    private String cors_preflight_maxage;
+
+    /**
+     * determine if request should be decorated.
+     */
+    private String cors_request_decorate;
+    
+	/**
+	 * @return the cors_support_credentials
+	 */
+	public String getCors_support_credentials() {
+		return cors_support_credentials;
+	}
+
+	/**
+	 * @param cors_support_credentials the cors_support_credentials to set
+	 */
+	public void setCors_support_credentials(String cors_support_credentials) {
+		this.cors_support_credentials = cors_support_credentials;
+	}
+
+	/**
+	 * @return the cors_exposed_headers
+	 */
+	public String getCors_exposed_headers() {
+		return cors_exposed_headers;
+	}
+
+	/**
+	 * @param cors_exposed_headers the cors_exposed_headers to set
+	 */
+	public void setCors_exposed_headers(String cors_exposed_headers) {
+		this.cors_exposed_headers = cors_exposed_headers;
+	}
+
+	/**
+	 * @return the cors_allowed_headers
+	 */
+	public String getCors_allowed_headers() {
+		return cors_allowed_headers;
+	}
+
+	/**
+	 * @param cors_allowed_headers the cors_allowed_headers to set
+	 */
+	public void setCors_allowed_headers(String cors_allowed_headers) {
+		this.cors_allowed_headers = cors_allowed_headers;
+	}
+
+	/**
+	 * @return the cors_allowed_methods
+	 */
+	public String getCors_allowed_methods() {
+		return cors_allowed_methods;
+	}
+
+	/**
+	 * @param cors_allowed_methods the cors_allowed_methods to set
+	 */
+	public void setCors_allowed_methods(String cors_allowed_methods) {
+		this.cors_allowed_methods = cors_allowed_methods;
+	}
+
+	/**
+	 * @return the cors_preflight_maxage
+	 */
+	public String getCors_preflight_maxage() {
+		return cors_preflight_maxage;
+	}
+
+	/**
+	 * @param cors_preflight_maxage the cors_preflight_maxage to set
+	 */
+	public void setCors_preflight_maxage(String cors_preflight_maxage) {
+		this.cors_preflight_maxage = cors_preflight_maxage;
+	}
+
+	/**
+	 * @return the cors_request_decorate
+	 */
+	public String getCors_request_decorate() {
+		return cors_request_decorate;
+	}
+
+	/**
+	 * @param cors_request_decorate the cors_request_decorate to set
+	 */
+	public void setCors_request_decorate(String cors_request_decorate) {
+		this.cors_request_decorate = cors_request_decorate;
+	}
+
+	// ----------------------------------------Filter Config Init param-name(s)
     /**
      * Key to retrieve allowed origins from {@link FilterConfig}.
      */
