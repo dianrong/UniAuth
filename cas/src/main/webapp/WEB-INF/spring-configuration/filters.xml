@@ -49,4 +49,36 @@
             </bean>
         </property>
     </bean>
+    
+    
+    <!--  cas cross filter bean -->
+    <bean id="casCrossFilterBean" class="com.dianrong.common.uniauth.cas.cors.CasCORSFilter">
+    		<property name="crossFilterCacheHelper">
+    			<bean class="com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper">
+    				<property name="defualt_cors_allowed_origins">
+    					<value>
+	    					^http(s)?://[a-z]+(\-[a-z]+)?\.(dianrong|starlinked)\.com;
+			                ^http://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,6})?;
+			                ^http://[a-z]+(:[0-9]+)?
+		                </value>
+    				</property>
+    			</bean>
+    		</property>
+    		<property name="cors_allowed_methods">
+    			<value>GET;POST;HEAD;OPTIONS;PUT;DELETE</value>
+    		</property>
+    		<property name="cors_allowed_headers">
+    			<value>Content-Type;X-Requested-With;accept;Origin;Access-Control-Request-Method;Access-Control-Request-Headers;Cookie</value>
+    		</property>
+    		<property name="cors_exposed_headers">
+    			<value>Access-Control-Allow-Origin;Access-Control-Allow-Credentials;Access-Control-Allow-Headers</value>
+    		</property>
+    		<property name="cors_support_credentials">
+    			<value>true</value>
+    		</property>
+    		<property name="cors_preflight_maxage">
+    			<value>10</value>
+    		</property>
+    </bean>
+    <!--  cas cross filter bean -->
 </beans>

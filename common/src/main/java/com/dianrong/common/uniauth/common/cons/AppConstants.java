@@ -111,6 +111,8 @@ public interface AppConstants {
 	String CAS_CFG_KEY_TITLE = "CAS_TITLE";
 	String CAS_CFG_KEY_ALL_RIGHT = "CAS_ALL_RIGHT";
 	String CAS_CFG_KEY_LOGIN_AD_IMG = "CAS_LOGIN_AD_IMG";
+	// cfg cas orgin cfg key prefix
+	String CAS_CFG_KEY_CROSS_FILTER_ORIGIN_PREFIX = "CAS_CROSS_FILTER_ORGIN";
 	
 	// define the cfg type id 
 	int CAS_CFG_TYPE_FILE_ID = 1;

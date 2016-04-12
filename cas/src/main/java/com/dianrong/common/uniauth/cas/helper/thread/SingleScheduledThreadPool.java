@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * 只服务于cas cfg的缓存更新操作
  * @author wanglin
  */
-public class SingleScheduledThreadPool {
+public final class SingleScheduledThreadPool {
 	/**.
 	 * 恶汉模式单例
 	 */
