@@ -72,7 +72,7 @@ public final class CasCrossFilterCacheModel {
 				String[] regulars = regularStr.split(splitStr.trim());
 				for(int i =0,len = regulars.length; i< len; i++) {
 					if(regulars[i].trim().length() > 0) {
-						tempSet.add(regulars[i]);
+						tempSet.add(regulars[i].trim());
 					}
 				}
 			}

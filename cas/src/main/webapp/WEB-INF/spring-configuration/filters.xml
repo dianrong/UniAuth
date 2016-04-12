@@ -65,19 +65,13 @@
     			</bean>
     		</property>
     		<property name="cors_allowed_methods">
-    			<value>
-	    			GET;POST;HEAD;OPTIONS;PUT;DELETE
-    			</value>
+    			<value>GET;POST;HEAD;OPTIONS;PUT;DELETE</value>
     		</property>
     		<property name="cors_allowed_headers">
-    			<value>
-    				Content-Type;X-Requested-With;accept;Origin;Access-Control-Request-Method;Access-Control-Request-Headers;Cookie
-    			</value>
+    			<value>Content-Type;X-Requested-With;accept;Origin;Access-Control-Request-Method;Access-Control-Request-Headers;Cookie</value>
     		</property>
     		<property name="cors_exposed_headers">
-    			<value>
-    				Access-Control-Allow-Origin;Access-Control-Allow-Credentials;Access-Control-Allow-Headers
-    			</value>
+    			<value>Access-Control-Allow-Origin;Access-Control-Allow-Credentials;Access-Control-Allow-Headers</value>
     		</property>
     		<property name="cors_support_credentials">
     			<value>true</value>
