@@ -29,7 +29,7 @@ public class CustomizeBeanConverter {
         }
     }
 
-    public static List<Node> convert(List<GroupDto> groupDtoList) {
+    public static List<Node> convert(List<GroupDto> groupDtoList, Boolean roleCheckOrTagCheck) {
         if(groupDtoList == null) {
             return null;
         } else {
@@ -40,7 +40,11 @@ public class CustomizeBeanConverter {
                 groupNode.setLabel(groupDto.getName());
                 groupNode.setCode(groupDto.getCode());
                 groupNode.setType(AppConstants.NODE_TYPE_GROUP);
-                groupNode.setChecked(groupDto.getRoleChecked());
+                if(roleCheckOrTagCheck == null || roleCheckOrTagCheck) {
+                    groupNode.setChecked(groupDto.getRoleChecked());
+                } else {
+                    groupNode.setChecked(groupDto.getTagChecked());
+                }
                 groupNode.setOwnerMarkup(groupDto.getOwnerMarkup());
                 nodes.add(groupNode);
                 List<UserDto> userDtos = groupDto.getUsers();
@@ -48,7 +52,7 @@ public class CustomizeBeanConverter {
                 if(!CollectionUtils.isEmpty(userDtos) || !CollectionUtils.isEmpty(groupDtos)) {
                     List<Node> subNodes = new ArrayList<>();
                     groupNode.setChildren(subNodes);
-                    recursiveConvertGroupDtoToNode(groupDto, subNodes);
+                    recursiveConvertGroupDtoToNode(groupDto, subNodes, roleCheckOrTagCheck);
                 }
             }
             if(!CollectionUtils.isEmpty(nodes)) {
@@ -59,7 +63,7 @@ public class CustomizeBeanConverter {
         }
     }
 
-    public static void recursiveConvertGroupDtoToNode(GroupDto groupDto, List<Node> subNodes) {
+    public static void recursiveConvertGroupDtoToNode(GroupDto groupDto, List<Node> subNodes,Boolean roleCheckOrTagCheck) {
 
         List<UserDto> subUserNodes = groupDto.getUsers();
         if(!CollectionUtils.isEmpty(subUserNodes)) {
@@ -67,7 +71,11 @@ public class CustomizeBeanConverter {
                 Node subUserNode = new Node();
                 subUserNode.setId(userDto.getId().toString());
                 subUserNode.setLabel(userDto.getEmail());
-                subUserNode.setChecked(userDto.getRoleChecked());
+                if(roleCheckOrTagCheck == null || roleCheckOrTagCheck) {
+                    subUserNode.setChecked(userDto.getRoleChecked());
+                } else {
+                    subUserNode.setChecked(userDto.getTagChecked());
+                }
                 Byte userGroupType = userDto.getUserGroupType();
                 if(AppConstants.ZERO_Byte.equals(userGroupType)) {
                     subUserNode.setType(AppConstants.NODE_TYPE_MEMBER_USER);
@@ -85,7 +93,11 @@ public class CustomizeBeanConverter {
                 groupNode.setCode(subGroupDtoNode.getCode());
                 groupNode.setLabel(subGroupDtoNode.getName());
                 groupNode.setType(AppConstants.NODE_TYPE_GROUP);
-                groupNode.setChecked(subGroupDtoNode.getRoleChecked());
+                if(roleCheckOrTagCheck == null || roleCheckOrTagCheck) {
+                    groupNode.setChecked(subGroupDtoNode.getRoleChecked());
+                } else {
+                    groupNode.setChecked(subGroupDtoNode.getTagChecked());
+                }
                 groupNode.setOwnerMarkup(subGroupDtoNode.getOwnerMarkup());
                 subNodes.add(groupNode);
 
@@ -94,7 +106,7 @@ public class CustomizeBeanConverter {
                 if(!CollectionUtils.isEmpty(subSubGroupDtoNodes) || !CollectionUtils.isEmpty(subSubUserDtoNodes)) {
                     List<Node> subSubNodes = new ArrayList<>();
                     groupNode.setChildren(subSubNodes);
-                    recursiveConvertGroupDtoToNode(subGroupDtoNode, subSubNodes);
+                    recursiveConvertGroupDtoToNode(subGroupDtoNode, subSubNodes, roleCheckOrTagCheck);
                 }
             }
         }

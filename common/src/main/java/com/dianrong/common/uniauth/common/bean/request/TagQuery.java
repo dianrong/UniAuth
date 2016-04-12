@@ -10,12 +10,22 @@ public class TagQuery extends PageParam {
     private Integer id;
     private List<Integer> tagIds;
     private String code;
+    private String fuzzyCode;
     private Byte status;
     private Integer tagTypeId;
     private Integer domainId;
     private List<Integer> domainIds;
     private Long userId;
     private Integer groupId;
+
+    public String getFuzzyCode() {
+        return fuzzyCode;
+    }
+
+    public TagQuery setFuzzyCode(String fuzzyCode) {
+        this.fuzzyCode = fuzzyCode;
+        return this;
+    }
 
     public Integer getId() {
         return id;

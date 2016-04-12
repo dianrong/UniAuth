@@ -32,4 +32,8 @@ public interface ITagRWResource extends ITagResource {
     @POST
     @Path("delete-tag-type")
     Response<Void> deleteTagType(TagTypeParam tagTypeParam);
+
+    @POST
+    @Path("replace-grps-users-to-tag")
+    Response<Void> replaceGroupsAndUsersToTag(TagParam tagParam);
 }

@@ -20,6 +20,8 @@ public class GroupDto {
 	
 	//whether this group connected with a role
 	private Boolean roleChecked;
+	//whether this group connected with a tag
+	private Boolean tagChecked;
 	private Boolean ownerMarkup;
 
 	public Integer getId() {
@@ -118,6 +120,15 @@ public class GroupDto {
 
 	public GroupDto setOwnerMarkup(Boolean ownerMarkup) {
 		this.ownerMarkup = ownerMarkup;
+		return this;
+	}
+
+	public Boolean getTagChecked() {
+		return tagChecked;
+	}
+
+	public GroupDto setTagChecked(Boolean tagChecked) {
+		this.tagChecked = tagChecked;
 		return this;
 	}
 }
