@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
 /**
  * Created by Arc on 12/4/2016.
  */
@@ -11,6 +13,8 @@ public class TagParam extends Operator {
     private Integer tagTypeId;
     private Integer domainId;
     private String description;
+    private List<Integer> grpIds;
+    private List<Long> userIds;
 
     public Integer getId() {
         return id;
@@ -63,6 +67,24 @@ public class TagParam extends Operator {
 
     public TagParam setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public List<Integer> getGrpIds() {
+        return grpIds;
+    }
+
+    public TagParam setGrpIds(List<Integer> grpIds) {
+        this.grpIds = grpIds;
+        return this;
+    }
+
+    public List<Long> getUserIds() {
+        return userIds;
+    }
+
+    public TagParam setUserIds(List<Long> userIds) {
+        this.userIds = userIds;
         return this;
     }
 }

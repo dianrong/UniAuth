@@ -4,10 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
-import com.dianrong.common.uniauth.common.bean.request.TagParam;
-import com.dianrong.common.uniauth.common.bean.request.TagQuery;
-import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
-import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import java.util.List;
 
 /**
@@ -50,6 +45,13 @@ public class TagAction {
             "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#tagParam.domainId))")
     public Response<TagDto> updateTag(@RequestBody TagParam tagParam) {
         return uARWFacade.getTagRWResource().updateTag(tagParam);
+    }
+
+    @RequestMapping(value = "/replace-grps-users-to-tag" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.hasDomain('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#tagParam, 'PERM_TAGID_CHECK'))")
+    public Response<Void> replaceGroupsAndUsersToRole(@RequestBody TagParam tagParam) {
+        return uARWFacade.getTagRWResource().replaceGroupsAndUsersToTag(tagParam);
     }
 
     @RequestMapping(value = "types", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

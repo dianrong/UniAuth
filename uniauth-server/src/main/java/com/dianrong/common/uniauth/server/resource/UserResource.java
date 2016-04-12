@@ -99,4 +99,10 @@ public class UserResource implements IUserRWResource {
 		List<UserDto> userDtos = userService.searchUsersWithRoleCheck(primaryKeyParam.getId());
 		return Response.success(userDtos);
 	}
+
+	@Override
+	public Response<List<UserDto>> searchUsersWithTagCheck(PrimaryKeyParam primaryKeyParam) {
+		List<UserDto> userDtos = userService.searchUsersWithTagCheck(primaryKeyParam.getId());
+		return Response.success(userDtos);
+	}
 }

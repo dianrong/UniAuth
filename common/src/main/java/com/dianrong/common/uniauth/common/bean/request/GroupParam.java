@@ -23,6 +23,8 @@ public class GroupParam extends Operator {
 	private Boolean needOwnerMarkup;
 
 	private Integer roleId;
+
+	private Integer tagId;
 	
 	private Integer domainId;
 	
@@ -142,6 +144,15 @@ public class GroupParam extends Operator {
 
 	public GroupParam setTargetGroupIds(List<Integer> targetGroupIds) {
 		this.targetGroupIds = targetGroupIds;
+		return this;
+	}
+
+	public Integer getTagId() {
+		return tagId;
+	}
+
+	public GroupParam setTagId(Integer tagId) {
+		this.tagId = tagId;
 		return this;
 	}
 }

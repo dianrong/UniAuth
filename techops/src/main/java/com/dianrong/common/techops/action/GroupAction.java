@@ -42,8 +42,9 @@ public class GroupAction {
         }
         GroupDto groupDto = groupDtoResponse.getData();
         if(groupDto != null) {
-            List<Node> nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto));
+            List<Node> nodes;
             if(groupParam.getRoleId() != null) {
+                nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), Boolean.TRUE);
                 PrimaryKeyParam primaryKeyParam = new PrimaryKeyParam();
                 primaryKeyParam.setId(groupParam.getRoleId());
                 Response<List<UserDto>> usersWithRoleCheck = uARWFacade.getUserRWResource().searchUsersWithRoleCheck(primaryKeyParam);
@@ -61,6 +62,27 @@ public class GroupAction {
                         nodes.add(userNode);
                     }
                 }
+            } else if(groupParam.getTagId() != null) {
+                nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), Boolean.FALSE);
+                PrimaryKeyParam primaryKeyParam = new PrimaryKeyParam();
+                primaryKeyParam.setId(groupParam.getTagId());
+                Response<List<UserDto>> usersWithTagCheck = uARWFacade.getUserRWResource().searchUsersWithTagCheck(primaryKeyParam);
+                if(!CollectionUtils.isEmpty(usersWithTagCheck.getInfo())) {
+                    return usersWithTagCheck;
+                }
+                List<UserDto> userDtos = usersWithTagCheck.getData();
+                if(!CollectionUtils.isEmpty(userDtos)) {
+                    for(UserDto userDto : userDtos) {
+                        Node userNode = new Node();
+                        userNode.setId(userDto.getId().toString());
+                        userNode.setLabel(userDto.getEmail());
+                        userNode.setChecked(userDto.getTagChecked());
+                        userNode.setType(AppConstants.NODE_TYPE_MEMBER_USER);
+                        nodes.add(userNode);
+                    }
+                }
+            } else {
+                nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), null);
             }
             return Response.success(nodes);
         } else {

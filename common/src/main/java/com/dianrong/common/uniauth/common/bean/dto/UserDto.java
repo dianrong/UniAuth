@@ -22,6 +22,17 @@ public class UserDto {
 
 	//whether this user directly connected with a role
 	private Boolean roleChecked;
+	//whether this user directly connected with a tag
+	private Boolean tagChecked;
+
+	public Boolean getTagChecked() {
+		return tagChecked;
+	}
+
+	public UserDto setTagChecked(Boolean tagChecked) {
+		this.tagChecked = tagChecked;
+		return this;
+	}
 
 	public Long getId() {
 		return id;

@@ -56,8 +56,15 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            replaceGroupsAndUsersToTag: {
+                method: 'POST',
+                params: {
+                    method: 'replace-grps-users-to-tag'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
-
         });
         svc.tagShared = {};
         return svc;

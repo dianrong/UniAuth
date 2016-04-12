@@ -53,10 +53,26 @@ insert into grp_role(grp_id, role_id)  values(100003, 2);
 insert into grp_role(grp_id, role_id)  values(100004, 3);
 
 /**stakeholder*/
-insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '许增伟', 'zengwei.xu@dianrong.com', '18190805518', '开发人员', 1)
+insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '许增伟', 'zengwei.xu@dianrong.com', '18190805518', '开发人员', 1);
 
+/**tagType*/
+INSERT INTO `tag_type` (`id`, `code`, `domain_id`) VALUES ('1', 'testTagType1', '1');
+INSERT INTO `tag_type` (`id`, `code`, `domain_id`) VALUES ('2', 'testTagType2', '1');
 
+/**tag*/
+INSERT INTO `tag` (`id`, `code`, `status`, `description`, `tag_type_id`) VALUES (1, 'testTag1', '0', 'testTag1', '1');
+INSERT INTO `tag` (`id`, `code`, `status`, `description`, `tag_type_id`) VALUES (2, 'testTag2', '0', 'testTag2', '1');
+INSERT INTO `tag` (`id`, `code`, `status`, `description`, `tag_type_id`) VALUES (3, 'testTag3', '0', 'testTag3', '2');
 
+/**user_tag*/
+INSERT INTO `user_tag` (`tag_id`, `user_id`) VALUES ('1', '300000001');
+INSERT INTO `user_tag` (`tag_id`, `user_id`) VALUES ('2', '300000001');
+INSERT INTO `user_tag` (`tag_id`, `user_id`) VALUES ('3', '300000001');
+
+/**grp_tag*/
+INSERT INTO `grp_tag` (`tag_id`, `grp_id`) VALUES ('1', '100003');
+INSERT INTO `grp_tag` (`tag_id`, `grp_id`) VALUES ('2', '100004');
+INSERT INTO `grp_tag` (`tag_id`, `grp_id`) VALUES ('3', '100003');
 
 
 
