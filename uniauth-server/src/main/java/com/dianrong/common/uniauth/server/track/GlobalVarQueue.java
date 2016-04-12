@@ -80,7 +80,7 @@ public class GlobalVarQueue {
 								auditList.add(audit);
 							}
 						}
-					} catch (InterruptedException e) {
+					} catch (Exception e) {
 						logger.error("Take from GLOBALVAR_QUEUE error.", e);
 					}
 				}
