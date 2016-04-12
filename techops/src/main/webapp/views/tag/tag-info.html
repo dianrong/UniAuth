@@ -52,7 +52,7 @@
             <td ng-bind="!d.status?'启用':'禁用'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="管理该Tag的用户" class="btn btn-info" ng-click="navToTagUser(d)"><i class="fa fa-users"></i></a>
+                    <a title="管理该Tag对应的用户/组信息" class="btn btn-info" ng-click="navToTagUser(d)"><i class="fa fa-users"></i></a>
                     <a title="修改Tag信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
                     <a title="{{d.status?'启用该Tag':'禁用该Tag'}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>

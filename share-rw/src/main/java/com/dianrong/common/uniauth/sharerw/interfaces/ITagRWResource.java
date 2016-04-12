@@ -1,7 +1,9 @@
 package com.dianrong.common.uniauth.sharerw.interfaces;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
 
@@ -12,6 +14,15 @@ import javax.ws.rs.Path;
  * Created by Arc on 7/4/2016.
  */
 public interface ITagRWResource extends ITagResource {
+
+    @POST
+    @Path("add")
+    Response<TagDto> addNewTag(TagParam tagParam);
+
+    @POST
+    @Path("update")
+    Response<TagDto> updateTag(TagParam tagParam);
+
     @POST
     @Path("add-new-tag-type")
     Response<TagTypeDto> addNewTagType(TagTypeParam tagTypeParam);

@@ -119,7 +119,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
                             "header":'删除标签类型',
-                            "msg":"您确定要删除标签类型: " + param.code + "吗?"
+                            "msg":"您确定要删除标签类型: " + param.code + "吗? 警告:该操作将级联删除其对应的呗禁用标签, 以及标签与人, 标签与组的关系."
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {

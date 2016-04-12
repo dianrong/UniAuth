@@ -9,6 +9,22 @@ define(['../../utils/constant'], function (constant) {
                 isArray: false,
                 timeout: constant.reqTimeout
             },
+            addNewTag: {
+                method: 'POST',
+                params: {
+                    method: 'add'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            updateTag: {
+                method: 'POST',
+                params: {
+                    method: 'update'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
             getTagTypes: {
                 method: 'POST',
                 params: {
