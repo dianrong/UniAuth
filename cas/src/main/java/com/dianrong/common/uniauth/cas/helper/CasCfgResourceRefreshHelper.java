@@ -155,16 +155,16 @@ public final class CasCfgResourceRefreshHelper {
 		}
 		
 		//过滤脏数据
-		filterInvalidFileData(standardCaches, true);
-		filterInvalidFileData(loginImages, false);
+		filterInvalidFileData(standardCaches);
+		filterInvalidFileData(loginImages);
 		
 		try{
 		CasCfgCacheModel cacheModel = new CasCfgCacheModel(
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, this.defaultCasCfg.getPageTitle()),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON, this.defaultCasCfg.getPageIcon()),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO, this.defaultCasCfg.getLogo()),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT, this.defaultCasCfg.getBottomAllRightText()),
-				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, this.defaultCasCfg.getBackgroundColorText()),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, this.defaultCasCfg.getPageTitle(), AppConstants.CAS_CFG_TYPE_TEXT_ID),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON, this.defaultCasCfg.getPageIcon(), AppConstants.CAS_CFG_TYPE_FILE_ID),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO, this.defaultCasCfg.getLogo(), AppConstants.CAS_CFG_TYPE_FILE_ID),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT, this.defaultCasCfg.getBottomAllRightText(), AppConstants.CAS_CFG_TYPE_TEXT_ID),
+				 getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, this.defaultCasCfg.getBackgroundColorText(), AppConstants.CAS_CFG_TYPE_TEXT_ID),
 				 getLoginImges(loginImages)
 				);
 		return cacheModel;
@@ -177,12 +177,11 @@ public final class CasCfgResourceRefreshHelper {
 	/**.
 	 *  过滤掉不合法的file类型的数据
 	 */
-	private void filterInvalidFileData(List<ConfigDto> filterList, boolean needMatchCfgType){
-			//进行数据过滤  过滤掉是file类型却没有byte数组的数据
+	private void filterInvalidFileData(List<ConfigDto> filterList){
 			List<ConfigDto> tempList = new ArrayList<ConfigDto>();
 			for(ConfigDto cto: filterList){
-				//过滤图片的,目前只有图片
-				if(needMatchCfgType && imgCacheCfgKeyList.contains(cto.getCfgKey())) {
+				//过滤文件类型但是文件内容为空的脏数据
+				if(cto.getCfgTypeId() != null && cto.getCfgTypeId() == AppConstants.CAS_CFG_TYPE_FILE_ID) {
 					if(cto.getFile() == null || cto.getFile().length == 0) {
 						tempList.add(cto);
 					}
@@ -271,15 +270,23 @@ public final class CasCfgResourceRefreshHelper {
 	 * @param infoList 数据数组
 	 * @param cfgKey 对应的cfgKey
 	 * @param defaultDto 默认结果
+	 * @param cfgType 增加一个类型判断条件
 	 * @return 结果
 	 */
-	private ConfigDto getCfgModelFromList(List<ConfigDto> infoList, String cfgKey, ConfigDto defaultDto){
+	private ConfigDto getCfgModelFromList(List<ConfigDto> infoList, String cfgKey, ConfigDto defaultDto, Integer cfgType){
 		if(infoList == null || infoList.isEmpty()) {
 			return defaultDto;
 		}
 		for(ConfigDto tcfg: infoList){
 			if(cfgKey.equals(tcfg.getCfgKey())){
-				return tcfg;
+				//判断是否需要进一步判断cfgType
+				if(cfgType != null) {
+					if(tcfg.getCfgTypeId() != null &&  tcfg.getCfgTypeId() == cfgType) {
+						return tcfg;
+					}
+				} else {
+					return tcfg;
+				}
 			}
 		}
 		return defaultDto;
