@@ -51,22 +51,22 @@
 				<div class="steps">
 					<form action="<%=path %>/uniauth/forgetPassword" id="step3Post" class="form-horizontal">
 					  	<div class="form-group">
-						  	<div class="col-md-offset-4 col-md-4">
+						  	<div class="col-sm-offset-4 col-sm-4">
 						    	<input type="password" class="form-control" id="newpwd" placeholder="<spring:message code="screen.password.reset.step3.newpwd.notice"/>">
 						  	</div>
 						</div>
 					    <div class="form-group">
-						  	<div class="col-md-offset-4 col-md-4">
+						  	<div class="col-sm-offset-4 col-sm-4">
 						    	<input type="password" class="form-control" id="rnewpwd" placeholder="<spring:message code="screen.password.reset.step3.rnewpwd.notice"/>">
 						  	</div>
 						</div>
 						<div class="form-group">
-						  	<div class="col-md-offset-4 col-md-4">
+						  	<div class="col-sm-offset-4 col-sm-4">
 					  			<button type="button" id="btn_step3" class="btn btn-wide btn-primary btnstep cursordefault" disabled="disabled"><spring:message code="screen.password.reset.step3.finish"/></button>
 						 	</div>
 						</div>
 						<div class="form-group">
-						  	<div class="col-md-offset-4 col-md-8 showwarninfo">
+						  	<div class="col-sm-offset-4 col-sm-8 showwarninfo">
 						    	<label for="showpasswordwarn" id="newpwdwarn"></label>
 						  	</div>
 						</div>
