@@ -18,6 +18,8 @@ dependencies {
     //compile "org.springframework:spring-webmvc:${spring_version}"
     compile "org.springframework:spring-context-support:${spring_version}"
     compile "org.springframework:spring-aop:${spring_version}"
+    compile "org.springframework.amqp:spring-amqp:1.5.4.RELEASE"
+    compile "org.springframework.amqp:spring-rabbit:1.5.4.RELEASE"
 
     //Aspectj
     compile "org.aspectj:aspectjrt:1.8.5"

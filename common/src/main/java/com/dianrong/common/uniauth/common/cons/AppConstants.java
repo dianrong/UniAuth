@@ -4,9 +4,13 @@ package com.dianrong.common.uniauth.common.cons;
  * Created by Arc on 26/1/16.
  */
 public interface AppConstants {
+	// 0 = 启用
     Byte ZERO_Byte = (byte)0;
+	// 1 = 禁用
     Byte ONE_Byte = (byte)1;
+	// 0 = 启用
     byte ZERO_byte = (byte)0;
+	// 1 = 禁用
     byte ONE_byte = (byte)1;
 
 	String NODE_TYPE_GROUP = "grp";
@@ -101,8 +105,8 @@ public interface AppConstants {
 	int AUDIT_INSET_PARAM_LENGTH = 256;
 	
 	//cas cfg refresh
-	//default 10 minitues
-	long CAS_CFG_CACHE_REFRESH_PERIOD_MILLES = 10L * 60L * 1000L;
+	//default 120 minitues
+	long CAS_CFG_CACHE_REFRESH_PERIOD_MILLES = 120L * 60L * 1000L;
 	
 	//cascfg cache model in application's key
 	String CAS_CFG_CACHE_MODEL_APPLICATION_KEY = "cascfg_cache_key";
