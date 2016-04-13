@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.mq.UniauthSender;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -62,12 +64,14 @@ public class UserService {
     private CommonService commonService;
     @Autowired
     private UserTagMapper userTagMapper;
+    @Autowired
+    private UniauthSender uniauthSender;
     /**.
 	 * 进行用户数据过滤的filter
 	 */
 	@Resource(name="userDataFilter")
 	private DataFilter dataFilter;
-
+	
     @Transactional
     public UserDto addNewUser(String name, String phone, String email) {
         this.checkPhoneAndEmail(phone, email, null);
@@ -89,6 +93,10 @@ public class UserService {
         user.setStatus(AppConstants.ZERO_Byte);
         userMapper.insert(user);
         UserDto userDto = BeanConverter.convert(user).setPassword(randomPassword);
+        
+        //用户添加成功后发送mq
+        uniauthSender.sendUserAdd(user);
+        
         return userDto;
     }
 
