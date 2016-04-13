@@ -51,15 +51,15 @@
 				<div class="steps">
 					<form action="<%=path %>/uniauth/forgetPassword" id="step1Post" class="form-horizontal">
 					  <div class="form-group">
-					  	<div class="col-md-offset-4 col-md-4">
+					  	<div class="col-sm-offset-4 col-sm-4">
 					    	<input type="email" class="form-control" placeholder="Email" id="temail">
 					    </div>
 					  </div>
 					  <div class="form-group">
-					  	<div class="col-md-offset-4 col-md-2">
+					  	<div class="col-sm-offset-4 col-sm-2">
 					    	<input type="text" class="form-control" id="tverfynotice" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
 					  	</div>
-					  	<div class="col-md-2">
+					  	<div class="col-sm-2">
 					  		<div class="captcha-img">
 					    		<img alt="picture" src="<%=path %>/uniauth/captcha" title="picture" id="verfypic" >
 					    		<button type="button" class="btn btn-primary glyphicon glyphicon-refresh" id="refreshverfypic"></button>
@@ -67,12 +67,12 @@
 					  	</div>
 					  </div>
 					  <div class="form-group">
-					  	<div class="col-md-offset-4 col-md-4">
+					  	<div class="col-sm-offset-4 col-sm-4">
 					  		<button type="button" id="btn_step1" class="btn btn-wide btn-primary btnstep cursordefault" disabled="disabled"><spring:message code="screen.password.reset.nextstep"/></button>
 					  	</div>
 					  </div>
 					  <div class="form-group">
-					  	<div class="col-md-offset-4 col-md-8 showwarninfo">
+					  	<div class="col-sm-offset-4 col-sm-8 showwarninfo">
 						    <label for="emailinfo" id="temailwarn"></label>
 						</div>
 					  </div>

@@ -51,25 +51,25 @@
 				<div class="steps">
 					<form action="<%=path %>/uniauth/forgetPassword" id="step2Post" class="form-horizontal">
 					 	<div class="form-group">
-							<div class="col-md-offset-4 col-md-4">
+							<div class="col-sm-offset-4 col-sm-4">
 						    <label for="emailValue" class="h6">${fn:escapeXml(sessionScope.pwdg_emailVal)}</label>
 						    </div>
 					  	</div>
 					  	<div class="form-group">
-						  	<div class="col-md-offset-4 col-md-2">
+						  	<div class="col-sm-offset-4 col-sm-2">
 						    	<input type="text" class="form-control" id="input1" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
 						  	</div>
-						  	<div class="col-md-2">
+						  	<div class="col-sm-2">
 						    		<button type="button" class="btn btn-primary btn-sendemail" id="input2"  backupstr="<spring:message code="screen.password.reset.get.verfycode"/>"><spring:message code="screen.password.reset.get.verfycode"/></button>
 						  	</div>
 					  </div>
 					  <div class="form-group">
-					  	<div class="col-md-offset-4 col-md-4">
+					  	<div class="col-sm-offset-4 col-sm-4">
 					  		<button type="button" id="btn_step2" class="btn btn-wide btn-primary btnstep cursordefault" disabled="disabled"><spring:message code="screen.password.reset.nextstep"/></button>
 					  	</div>
 					  </div>
 					  <div class="form-group">
-					  	<div class="col-md-offset-4 col-md-8 showwarninfo">
+					  	<div class="col-sm-offset-4 col-sm-8 showwarninfo">
 					  		<label for="emailverfycode" id="emailverfywarn"></label>
 					  	</div>
 					  </div>

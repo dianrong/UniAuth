@@ -24,22 +24,22 @@
 				<input type="hidden" id="hidden_userinfo_keyid" value="${fn:escapeXml(userinfo.id)}">
 				<form action="" class="form-horizontal">
 					<div class="form-group">
-						<label for="inputEmail" class="col-md-3 control-label"><spring:message code="screen.personal.info.edit.label.account" /></label> <label
-							id="inputEmail" class="col-md-6 control-label infolabel">${fn:escapeXml(userAccount)}</label>
+						<label for="inputEmail" class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.account" /></label> <label
+							id="inputEmail" class="col-sm-6 control-label infolabel">${fn:escapeXml(userAccount)}</label>
 					</div>
 				
 					<div class="horizontal form-group">
-						<div class="col-md-offset-2 col-md-10 row-line" ></div>
+						<div class="col-sm-offset-2 col-sm-10 row-line" ></div>
 					</div>
 				
 					<div class="form-group">
-						<label for="inputPassword" class="col-md-3 control-label showlabel"><spring:message
+						<label for="inputPassword" class="col-sm-3 control-label showlabel"><spring:message
 								code="screen.personal.info.edit.label.password" /></label>
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<input type="password" class="form-control" id="inputPassword"
 								placeholder="<spring:message code="screen.personal.info.edit.label.password"/>" name="password" value="xxxxxxx" disabled="disabled">
 						</div>
-						<div class="col-md-1">
+						<div class="col-sm-1">
 							<button type="button" id="go_update_password_btn" class="btn btn-wide btn-info">
 								<spring:message code="screen.personal.info.edit.update.password"/>
 							</button>
@@ -47,41 +47,41 @@
 					</div>
 					
 					<div class="horizontal form-group">
-						<div class="col-md-offset-2 col-md-10 row-line" ></div>
+						<div class="col-sm-offset-2 col-sm-10 row-line" ></div>
 					</div>
 					
 					<div class="form-group">
-						<label for="inputName" class="col-md-3 control-label"><spring:message
+						<label for="inputName" class="col-sm-3 control-label"><spring:message
 								code="screen.personal.info.edit.label.name" /></label>
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<input type="text" class="form-control" id="inputName"
 								placeholder="<spring:message code="screen.personal.info.edit.label.name"/>"
 								name="name" value="${fn:escapeXml(userinfo.name)}" disabled="disabled">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputPhone" class="col-md-3 control-label"><spring:message
+						<label for="inputPhone" class="col-sm-3 control-label"><spring:message
 								code="screen.personal.info.edit.label.phone" /></label>
-						<div class="col-md-6">
+						<div class="col-sm-6">
 							<input type="text" class="form-control" id="inputPhone"
 								placeholder="<spring:message code="screen.personal.info.edit.label.phone"/>"
 								name="phone" value="${fn:escapeXml(userinfo.phone)}" disabled="disabled">
 						</div>
 					</div>
 					<div class="form-group paddingtop20">
-						<div class="col-md-offset-3 col-md-3 mynoedit">
+						<div class="col-sm-offset-3 col-sm-3 mynoedit">
 							<button type="button" id="go_user_info_edit_btn"
 								class="btn btn-wide btn-primary">
 								<spring:message code="screen.personal.info.edit.goedit" />
 							</button>
 						</div>
-						<div class="col-md-offset-3 col-md-3 hiddenbtn myedit">
+						<div class="col-sm-offset-3 col-sm-3 hiddenbtn myedit">
 							<button type="button" id="user_info_edit_cancel_btn"
 								class="btn btn-wide btn-default">
 								<spring:message code="screen.personal.info.edit.canceledit" />
 							</button>
 						</div>
-						<div class="col-md-3 hiddenbtn myedit">
+						<div class="col-sm-3 hiddenbtn myedit">
 							<button type="button" id="user_info_edit_ok_btn"
 								class="btn btn-wide btn-primary">
 								<spring:message code="screen.personal.info.edit.editok" />
@@ -89,7 +89,7 @@
 						</div>
 					</div>
 					<div class="form-group paddingtop10">
-						<div class="col-md-offset-3 col-md-9 showwarninfo">
+						<div class="col-sm-offset-3 col-sm-9 showwarninfo">
 							<label for="warninfo" id="update_userinfo_warninfo"></label>
 						</div>
 					</div>
@@ -134,28 +134,28 @@
       <div class="modal-body">
       		<form action="" class="form-horizontal">
 					<div class="form-group">
-						<div class="col-md-offset-1 col-md-10">
+						<div class="col-sm-offset-1 col-sm-10">
 							<input type="password" class="form-control" id="orign_password"
 								placeholder="<spring:message code="screen.personal.info.edit.updatepwd.modal.content.originpwd"/>"
 								name="orign_password">
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-md-offset-1 col-md-10">
+						<div class="col-sm-offset-1 col-sm-10">
 							<input type="password" class="form-control" id="password"
 								placeholder="<spring:message code="screen.personal.info.edit.updatepwd.modal.content.newpwd"/>"
 								name="password">
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-md-offset-1 col-md-10">
+						<div class="col-sm-offset-1 col-sm-10">
 							<input type="password" class="form-control" id="repassword"
 								placeholder="<spring:message code="screen.personal.info.edit.updatepwd.modal.content.rnewpwd"/>"
 								name="repassword">
 						</div>
 					</div>
 					<div class="form-group hiddenbtn">
-						<div class="col-md-offset-1 col-md-11 showwarninfo">
+						<div class="col-sm-offset-1 col-sm-11 showwarninfo">
 							<label for="warninfo" id="update_pwd_warninfo"></label>
 						</div>
 					</div>

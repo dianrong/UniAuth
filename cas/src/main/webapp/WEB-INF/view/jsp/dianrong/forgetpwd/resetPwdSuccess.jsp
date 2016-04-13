@@ -50,12 +50,12 @@
 				<!-- content -->
 				<div class="steps">
 					<div class="row">
-					  <div class="col-md-offset-5 col-md-3 reset-success-notice">
+					  <div class="col-sm-offset-5 col-sm-3 reset-success-notice">
 						<img src="<%=path %>/images/pwdreset/icon-reset-success.png" class="img-responsive check-ok-icon" alt="Responsive image">
 					  </div>
 					</div>
 					<div class="row">
-					  <div class="col-md-offset-4 col-md-4 h6">
+					  <div class="col-sm-offset-4 col-sm-4 h6">
 						<spring:message code="screen.password.reset.step3.success.notice"/>
 								<% 
 									Object savedLoginContext1 = request.getSession().getAttribute("pwdg_savedLoginContext");
