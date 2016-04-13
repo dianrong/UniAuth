@@ -111,24 +111,6 @@
         <appender-ref ref="consoleAppender"/>
     </logger>
 
-    <logger name="com.dianrong.uniAuth.data" additivity="false">
-        <level value="DEBUG"/>
-        <appender-ref ref="dataAppender"/>
-        <appender-ref ref="consoleAppender"/>
-    </logger>
-
-    <logger name="com.dianrong.uniAuth.business" additivity="false">
-        <level value="DEBUG"/>
-        <appender-ref ref="businessAppender"/>
-        <appender-ref ref="consoleAppender"/>
-    </logger>
-
-    <logger name="com.dianrong.uniAuth.access" additivity="false">
-        <level value="DEBUG"/>
-        <appender-ref ref="accessAppender"/>
-        <appender-ref ref="consoleAppender"/>
-    </logger>
-
     <logger name="net.rubyeye.xmemcached" additivity="false">
         <level value="ERROR"/>
         <appender-ref ref="memcacheAppender"/>
