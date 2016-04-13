@@ -168,6 +168,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "RelRoleUserGroupController",
             templateUrl: "views/rel/rel-role--user-grp.html"
         }).
+        state('rel.tag--user-grp', {
+            url: '/rel-tag--user-grp',
+            controller: "RelTagUserGroupController",
+            templateUrl: "views/rel/rel-tag--user-grp.html"
+        }).
         state('domain', {
             url: "/domain",
             controller: "DomainController",

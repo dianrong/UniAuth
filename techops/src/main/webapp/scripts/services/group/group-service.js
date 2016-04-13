@@ -70,6 +70,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         svc.grpShared = {};
         svc.tree = {};
         svc.roleUserGrpTree = {};
+        svc.tagUserGrpTree = {};
         svc.syncTree = function(params, roleUserGrpTreeOrTree) {
             // separate the variable that different module use.
             if(!roleUserGrpTreeOrTree) {
@@ -96,6 +97,19 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     console.log('syncTree failed' + res);
                 });
             }
+        };
+        svc.syncTagTree = function(params) {
+            svc.getTree(params, function (res) {
+                svc.tagUserGrpTree.data = res.data;
+                //this is for force the tree to update data.
+                svc.tagUserGrpTree.data[0].date = new Date();
+                var expandedNodes = [];
+                svc.tagUserGrpTree.expandedNodes = utils.getParentNodeArray(svc.tagUserGrpTree.data, expandedNodes);
+                svc.tagUserGrpTree.msg = '';
+            }, function (res) {
+                svc.tagUserGrpTree.msg = 'Role -- UserGrp 同步树查询失败.';
+                console.log('syncTree failed' + res);
+            });
         };
         return svc;
     };

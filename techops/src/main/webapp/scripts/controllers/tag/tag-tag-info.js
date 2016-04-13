@@ -2,7 +2,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     var Controller = function ($rootScope, $scope, TagService, dialogs, $state, AlertService) {
 
-        function getTagTypes() {
+        $scope.getTagTypes = function getTagTypes() {
             var params = {};
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             TagService.getTagTypes(params).$promise.then(function(res) {
@@ -15,7 +15,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 };
                 tagTypes.unshift(empty);
                 utils.generatorDropdown($scope, 'tagTypesDropdown', tagTypes, tagTypes[0]);
-                $scope.getTagCode = function(tag) {
+                $scope.getTagTypeCode = function(tag) {
                     var items = $scope.tagTypesDropdown.items;
                     for(var i=0; i<items.length; i++) {
                         if(tag.tagTypeId == items[i].id) {
@@ -27,23 +27,25 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 $scope.queryTag();
             });
         }
-        getTagTypes();
+        $scope.getTagTypes();
+
+        $scope.navToTagUserGrp = function(tag) {
+            TagService.tagShared.selected = tag;
+            $state.go('rel.tag--user-grp');
+        };
 
         $scope.pagination = {
             pageSize: constant.pageSize,
             curPage: 1,
             totalCount: 0
         };
-
+        $scope.tagQuery = {};
         $scope.queryTag = function () {
             if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
                 $scope.tagsLoading = constant.loadEmpty;
                 return;
             }
-            var params = $scope.tagQuery;
-            if (!params) {
-                params = {};
-            }
+            var params = {};
             params.pageNumber = $scope.pagination.curPage - 1;
             params.pageSize = $scope.pagination.pageSize;
 
@@ -52,7 +54,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
             params.domainId = $rootScope.loginDomainsDropdown.option.id;
             params.tagTypeId = $scope.tagTypesDropdown.option.id;
-
+            params.fuzzyCode = $scope.tagQuery.code;
 
             TagService.getTags(params, function (res) {
                 var result = res.data;
@@ -131,7 +133,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             }
         };
 
-        $scope.$on('selected-domain-changed', $scope.queryTag);
+        $scope.$on('selected-domain-changed', $scope.getTagTypes);
     };
 
     return {

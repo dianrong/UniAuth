@@ -36,6 +36,11 @@ public interface IUserResource {
     @Path("userswithrolechecked")
     //scenario: search user with role checked
     Response<List<UserDto>> searchUsersWithRoleCheck(PrimaryKeyParam primaryKeyParam);
+
+    @POST
+    @Path("userswithtagchecked")
+        //scenario: search user with role checked
+    Response<List<UserDto>> searchUsersWithTagCheck(PrimaryKeyParam primaryKeyParam);
     
     @POST
     @Path("domain/roles")

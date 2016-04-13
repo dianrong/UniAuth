@@ -59,6 +59,8 @@ public class GroupService {
     private UserRoleMapper userRoleMapper;
     @Autowired
     private GrpTagMapper grpTagMapper;
+    @Autowired
+    private UserTagMapper userTagMapper;
 
     /**.
 	 * 进行组数据过滤的filter
@@ -196,27 +198,6 @@ public class GroupService {
         }
         return BeanConverter.convert(grp);
     }
-
-//    @Transactional
-//    public void deleteGroup(Integer groupId) {
-//        GrpPathExample grpPathAncestorExample = new GrpPathExample();
-//        grpPathAncestorExample.createCriteria().andAncestorEqualTo(groupId);
-//        int desOfDesCount = grpPathMapper.countByExample(grpPathAncestorExample);
-//        if(desOfDesCount > 1) {
-//            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.delgroup"));
-//        }
-//        // cascading delete the users in group and the roles on group.
-//        UserGrpExample userGrpExample = new UserGrpExample();
-//        userGrpExample.createCriteria().andGrpIdEqualTo(groupId);
-//        userGrpMapper.deleteByExample(userGrpExample);
-//        GrpRoleExample grpRoleExample = new GrpRoleExample();
-//        grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
-//        grpRoleMapper.deleteByExample(grpRoleExample);
-//        GrpPathExample grpPathDescendantExample = new GrpPathExample();
-//        grpPathDescendantExample.createCriteria().andDescendantEqualTo(groupId);
-//        grpPathMapper.deleteByExample(grpPathDescendantExample);
-//        grpMapper.deleteByPrimaryKey(groupId);
-//    }
 
     @Transactional
     public GroupDto updateGroup(Integer groupId, String groupCode, String groupName, Byte status, String description) {
@@ -386,7 +367,8 @@ public class GroupService {
         }
     }
 
-    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId, Boolean needOwnerMarkup, Long ownerId) {
+    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId,
+                                 Integer tagId, Boolean needOwnerMarkup, Long ownerId) {
         Grp rootGrp;
         if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
@@ -475,6 +457,17 @@ public class GroupService {
                 }
             }
 
+            if(tagId != null) {
+                GrpTagExample grpTagExample = new GrpTagExample();
+                grpTagExample.createCriteria().andTagIdEqualTo(tagId).andGrpIdIn(new ArrayList<Integer>(idGroupDtoPair.keySet()));
+                List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+                if(!CollectionUtils.isEmpty(grpTagKeys)) {
+                    for (GrpTagKey grpTagKey : grpTagKeys) {
+                        Integer checkedGroupId = grpTagKey.getGrpId();
+                        idGroupDtoPair.get(checkedGroupId).setTagChecked(Boolean.TRUE);
+                    }
+                }
+            }
 
             if(onlyShowGroup != null && !onlyShowGroup) {
                 CheckEmpty.checkEmpty(userGroupType, "users' type in the group");
@@ -497,6 +490,19 @@ public class GroupService {
                             }
                         }
                     }
+                    //tag checked on users
+                    Set<Long> userIdsOnTag = null;
+                    if(tagId != null) {
+                        UserTagExample userTagExample = new UserTagExample();
+                        userTagExample.createCriteria().andTagIdEqualTo(tagId);
+                        List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+                        if(!CollectionUtils.isEmpty(userTagKeys)) {
+                            userIdsOnTag = new TreeSet<>();
+                            for (UserTagKey userTagKey : userTagKeys) {
+                                userIdsOnTag.add(userTagKey.getUserId());
+                            }
+                        }
+                    }
                     for(UserExt userExt : userExts) {
                         UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
@@ -509,6 +515,9 @@ public class GroupService {
                             userDtos.add(userDto);
                             if (userIdsOnRole != null && userIdsOnRole.contains(userDto.getId())) {
                                 userDto.setRoleChecked(Boolean.TRUE);
+                            }
+                            if(userIdsOnTag != null && userIdsOnTag.contains(userDto.getId())) {
+                                userDto.setTagChecked(Boolean.TRUE);
                             }
                         }
                     }

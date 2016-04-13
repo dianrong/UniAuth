@@ -398,6 +398,36 @@ public class UserService {
         return userDtos;
     }
 
+    public List<UserDto> searchUsersWithTagCheck(Integer tagId) {
+        CheckEmpty.checkEmpty(tagId, "tagId");
+        UserExample userExample = new UserExample();
+        List<User> allUsers = userMapper.selectByExample(userExample);
+
+        UserTagExample userTagExample = new UserTagExample();
+        userTagExample.createCriteria().andTagIdEqualTo(tagId);
+
+        List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+        List<UserDto> userDtos = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(userTagKeys)) {
+            Set<Long> userIdsLinkedToTag = new HashSet<>();
+            for(UserTagKey userTagKey : userTagKeys) {
+                userIdsLinkedToTag.add(userTagKey.getUserId());
+            }
+            for(User user : allUsers) {
+                UserDto userDto = BeanConverter.convert(user);
+                if(userIdsLinkedToTag.contains(user.getId())) {
+                    userDto.setTagChecked(Boolean.TRUE);
+                }
+                userDtos.add(userDto);
+            }
+        } else {
+            for(User user : allUsers) {
+                userDtos.add(BeanConverter.convert(user));
+            }
+        }
+        return userDtos;
+    }
+
 	public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
 		String account = loginParam.getAccount();
 		CheckEmpty.checkEmpty(account, "账号");
@@ -637,7 +667,7 @@ public class UserService {
     
     /**.
      * 根据email或phone获取用户信息
-     * @param userTag email或phone
+     * @param loginParam email或phone
      * @return 信息model
      */
     public UserDto getUserByEmailOrPhone(LoginParam loginParam){

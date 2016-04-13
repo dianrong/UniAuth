@@ -50,26 +50,26 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="org.jasig" level="info" additivity="false">
+        <Logger name="org.jasig" level="debug" additivity="false">
             <AppenderRef ref="console"/>
             <AppenderRef ref="file"/>
         </Logger>
-        <Logger name="org.springframework" level="warn" />
-        <Logger name="org.springframework.webflow" level="warn" />
-        <Logger name="org.springframework.web" level="warn" />
-        <Logger name="org.springframework.security" level="warn" />
+        <Logger name="org.springframework" level="debug" />
+        <Logger name="org.springframework.webflow" level="debug" />
+        <Logger name="org.springframework.web" level="debug" />
+        <Logger name="org.springframework.security" level="debug" />
 
-        <Logger name="perfStatsLogger" level="info" additivity="false">
+        <Logger name="perfStatsLogger" level="debug" additivity="false">
             <AppenderRef ref="perfFileAppender"/>
         </Logger>
 
-        <Logger name="org.jasig.cas.web.flow" level="info" additivity="true">
+        <Logger name="org.jasig.cas.web.flow" level="debug" additivity="true">
             <AppenderRef ref="file"/>
         </Logger>
-        <Logger name="org.jasig.inspektr.audit.support.Slf4jLoggingAuditTrailManager" level="info">
+        <Logger name="org.jasig.inspektr.audit.support.Slf4jLoggingAuditTrailManager" level="debug">
             <AppenderRef ref="file"/>
         </Logger>
-        <Root level="error">
+        <Root level="debug">
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>
