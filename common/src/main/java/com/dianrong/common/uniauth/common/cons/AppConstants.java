@@ -4,9 +4,13 @@ package com.dianrong.common.uniauth.common.cons;
  * Created by Arc on 26/1/16.
  */
 public interface AppConstants {
+	// 0 = 启用
     Byte ZERO_Byte = (byte)0;
+	// 1 = 禁用
     Byte ONE_Byte = (byte)1;
+	// 0 = 启用
     byte ZERO_byte = (byte)0;
+	// 1 = 禁用
     byte ONE_byte = (byte)1;
 
 	String NODE_TYPE_GROUP = "grp";
