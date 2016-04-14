@@ -62,7 +62,7 @@ public class GroupService {
 	private DataFilter dataFilter;
 
     public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, String name, String code,
-                                         String description, Byte status, Integer tagId, Boolean needTag,
+                                         String description, Byte status, Integer tagId, Boolean needTag, Boolean needUser,
                                          Integer pageNumber, Integer pageSize) {
 
         if(pageNumber == null || pageSize == null) {
@@ -139,6 +139,42 @@ public class GroupService {
                 groupIdGroupDtoPair.put(grp.getId(), groupDto);
                 groupDtos.add(groupDto);
             }
+            if(needUser != null && needUser) {
+                // 1. query all userIds and index them with grpIds
+                UserGrpExample userGrpExample = new UserGrpExample();
+                userGrpExample.createCriteria().andGrpIdIn(new ArrayList<Integer>(groupIdGroupDtoPair.keySet()));
+                List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+                Map<Long, List<Integer>> userGrpIdsPair = new HashMap<>();
+                if(!CollectionUtils.isEmpty(userGrpKeys)) {
+                    for(UserGrpKey userGrpKey : userGrpKeys) {
+                        Integer grpId = userGrpKey.getGrpId();
+                        Long grpUserId = userGrpKey.getUserId();
+                        List<Integer> grpIds = userGrpIdsPair.get(grpUserId);
+                        if (grpIds == null) {
+                            grpIds = new ArrayList<>();
+                            userGrpIdsPair.put(grpUserId, grpIds);
+                        }
+                        grpIds.add(grpId);
+                    }
+                    // 2. query all users in the groups
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria().andIdIn(new ArrayList<Long>(userGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.ZERO_Byte);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    for(User user : users) {
+                        UserDto userDto = BeanConverter.convert(user);
+                        List<Integer> grpIds = userGrpIdsPair.get(user.getId());
+                        for(Integer grpId : grpIds) {
+                            GroupDto groupDto = groupIdGroupDtoPair.get(grpId);
+                            List<UserDto> userDtoList = groupDto.getUsers();
+                            if(userDtoList == null) {
+                                userDtoList = new ArrayList<>();
+                                groupDto.setUsers(userDtoList);
+                            }
+                            userDtoList.add(userDto);
+                        }
+                    }
+                }
+            }
 
             if(needTag != null && needTag) {
                 // 1. query all tagIds and index them with grpIds
@@ -185,10 +221,10 @@ public class GroupService {
                             List<Integer> grpIds = tagIdGrpIdsPair.get(tagDto.getId());
                             for(Integer grpId : grpIds) {
                                 GroupDto groupDto = groupIdGroupDtoPair.get(grpId);
-                                List<TagDto> tagDtoList = groupDto.getTagDtos();
+                                List<TagDto> tagDtoList = groupDto.getTags();
                                 if(tagDtoList == null) {
                                     tagDtoList = new ArrayList<>();
-                                    groupDto.setTagDtos(tagDtoList);
+                                    groupDto.setTags(tagDtoList);
                                 }
                                 tagDtoList.add(tagDto);
                             }

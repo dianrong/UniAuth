@@ -14,6 +14,7 @@ public class GroupQuery extends PageParam  {
     private Long userId;
     private Integer tagId;
     private Boolean needTag;
+    private Boolean needUser;
 
     public Integer getTagId() {
         return tagId;
@@ -93,6 +94,15 @@ public class GroupQuery extends PageParam  {
 
     public GroupQuery setNeedTag(Boolean needTag) {
         this.needTag = needTag;
+        return this;
+    }
+
+    public Boolean getNeedUser() {
+        return needUser;
+    }
+
+    public GroupQuery setNeedUser(Boolean needUser) {
+        this.needUser = needUser;
         return this;
     }
 }

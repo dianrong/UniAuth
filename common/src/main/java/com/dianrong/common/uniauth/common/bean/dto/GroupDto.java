@@ -11,7 +11,7 @@ public class GroupDto {
 	private Date lastUpdate;
 	private Byte status;
 	private String description;
-	private List<TagDto> tagDtos;
+	private List<TagDto> tags;
 	/**
 	private List<UserDto> ownerList;
 	**/
@@ -132,12 +132,12 @@ public class GroupDto {
 		return this;
 	}
 
-	public List<TagDto> getTagDtos() {
-		return tagDtos;
+	public List<TagDto> getTags() {
+		return tags;
 	}
 
-	public GroupDto setTagDtos(List<TagDto> tagDtos) {
-		this.tagDtos = tagDtos;
+	public GroupDto setTags(List<TagDto> tags) {
+		this.tags = tags;
 		return this;
 	}
 }
