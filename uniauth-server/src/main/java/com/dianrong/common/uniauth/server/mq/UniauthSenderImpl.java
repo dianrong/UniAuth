@@ -24,8 +24,8 @@ public class UniauthSenderImpl implements UniauthSender {
 
     private final Logger log = LoggerFactory.getLogger(UniauthSenderImpl.class);
 
-    @Autowired
-    @Qualifier("uniauth_mq_template")
+//    @Autowired
+//    @Qualifier("uniauth_mq_template")
     private RabbitTemplate template;
     
     private MQSender sender;
@@ -35,8 +35,8 @@ public class UniauthSenderImpl implements UniauthSender {
     
     @Override
     public void sendUserAdd(User user) {
-        log.info("添加用户发送mq：用户ID【" + user.getId() + '】');
-        sender.send(userAddKey, user);
+//        log.info("添加用户发送mq：用户ID【" + user.getId() + '】');
+//        sender.send(userAddKey, user);
     }
     
     @PostConstruct

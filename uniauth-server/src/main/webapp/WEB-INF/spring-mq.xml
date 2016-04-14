@@ -11,20 +11,18 @@
                 http://www.springframework.org/schema/rabbit  
     			http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd">
 
-	<!-- 连接服务配置 -->
-	<rabbit:connection-factory id="uniauth_mq_connectionFactory"
-		host="#{commonRabbitConfig['address']}"
+<!-- 	<rabbit:connection-factory id="uniauth_mq_connectionFactory"
+		host="#{commonRabbitConfig['address']}" 
 		port="#{commonRabbitConfig['port']}"
 		username="#{uniauthConfig['rabbit.username']}" 
 		password="#{uniauthConfig['rabbit.password']}"
-		virtual-host="#{uniauthConfig['rabbit.virtualHost']}" />
+		virtual-host="#{uniauthConfig['rabbit.virtualHost']}"/>
 
-	<rabbit:admin connection-factory="uniauth_mq_connectionFactory" />
+	<rabbit:admin connection-factory="uniauth_mq_connectionFactory"/>
 
-	<rabbit:queue id="user_add_queue" durable="true"
+	<rabbit:queue id="user_add_queue" durable="true" 
 		auto-delete="false" exclusive="false"
-		name="#{uniauthConfig['rabbit.user.add.queue']}" />
-
+		name="#{uniauthConfig['rabbit.user.add.queue']}"/>
 
 	<rabbit:direct-exchange id="uniauth_exchange"
 		durable="true" auto-delete="false" name="#{uniauthConfig['rabbit.exchange']}">
@@ -35,5 +33,5 @@
 	</rabbit:direct-exchange>
 
 	<rabbit:template id="uniauth_mq_template" exchange="uniauth_exchange"
-		connection-factory="uniauth_mq_connectionFactory" />
+		connection-factory="uniauth_mq_connectionFactory" /> -->
 </beans>
