@@ -30,7 +30,7 @@ public class MQSenderDefaultImpl implements MQSender {
         objectMapper.setSerializationInclusion(Include.NON_NULL);
     }
     
-    protected MQSenderDefaultImpl(RabbitTemplate template) {
+    MQSenderDefaultImpl(RabbitTemplate template){
         this.template=template;
     }
 
@@ -57,7 +57,6 @@ public class MQSenderDefaultImpl implements MQSender {
          objectMapper.writeValue(sw, obj);
          return sw.toString();
      }
-
 }
 
 

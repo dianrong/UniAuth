@@ -14,7 +14,6 @@
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd
                         ">
-
     <import resource="classpath:ss-uniauth-common.xml"/>
     <import resource="cxf-beans.xml" />
     <import resource="db-beans.xml" />

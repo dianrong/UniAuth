@@ -16,7 +16,7 @@ ext {
     tomcatAppName = 'uniauth'  //在Tomcat访问的application名字，配置在Tomcat的根目录
     tomcatUsername = 'tomcat'        //Tomcat用户
     tomcatPassword = 'tomcat'        //Tomcat密码
-    tomcatHost = 'localhost:8090'        //
+    tomcatHost = 'localhost:8080'        //
     tomcatWarFile = 'build/' + tomcatAppName + '.war'
 
     shengLongTomcatUsername = 'admin'        //Tomcat用户

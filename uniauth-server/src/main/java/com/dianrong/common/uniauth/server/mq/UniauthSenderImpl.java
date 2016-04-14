@@ -1,7 +1,5 @@
 package com.dianrong.common.uniauth.server.mq;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,10 +22,6 @@ public class UniauthSenderImpl implements UniauthSender {
 
     private final Logger log = LoggerFactory.getLogger(UniauthSenderImpl.class);
 
-//    @Autowired
-//    @Qualifier("uniauth_mq_template")
-    private RabbitTemplate template;
-    
     private MQSender sender;
 
     @Value("#{uniauthConfig['rabbit.user.add.key']}")
@@ -35,13 +29,13 @@ public class UniauthSenderImpl implements UniauthSender {
     
     @Override
     public void sendUserAdd(User user) {
-//        log.info("添加用户发送mq：用户ID【" + user.getId() + '】');
-//        sender.send(userAddKey, user);
+        log.info("添加用户发送mq：用户ID【" + user.getId() + '】');
+        sender.send(userAddKey, user);
     }
     
-    @PostConstruct
-    private void init(){
-        sender=new MQSenderDefaultImpl(template);
+    @Autowired
+    private UniauthSenderImpl(MQSenderManager manager,@Qualifier("uniauth_mq_template")RabbitTemplate template){
+        this.sender=manager.getSender(template);
     }
 }
 
