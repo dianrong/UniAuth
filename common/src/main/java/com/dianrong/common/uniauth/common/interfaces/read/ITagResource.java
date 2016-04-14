@@ -28,5 +28,5 @@ public interface ITagResource {
 
     @POST
     @Path("tag-types")
-    Response<List<TagTypeDto>> getTagTypes(TagTypeQuery tagTypeQuery);
+    Response<List<TagTypeDto>> searchTagTypes(TagTypeQuery tagTypeQuery);
 }

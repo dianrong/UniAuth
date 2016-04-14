@@ -21,6 +21,7 @@ public interface AppConstants {
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
 	Integer MAX_PAGE_SIZE = 5000;
+	Integer MIN_PAGE_NUMBER = 0;
 	String PERM_TYPE_DOMAIN = "DOMAIN";
 	String PERM_TYPE_URIPATTERN = "URI_PATTERN";
 	String PERM_TYPE_PRIVILEGE = "PRIVILEGE";

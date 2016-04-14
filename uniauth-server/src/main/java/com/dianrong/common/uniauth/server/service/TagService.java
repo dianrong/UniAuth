@@ -165,10 +165,20 @@ public class TagService {
         return BeanConverter.convert(tag);
     }
 
-    public List<TagTypeDto> getTagTypes(Integer domainId) {
+    public List<TagTypeDto> searchTagTypes(Integer tagId, List<Integer> domainIds, Integer domainId, String code) {
         TagTypeExample tagTypeExample = new TagTypeExample();
+        TagTypeExample.Criteria criteria = tagTypeExample.createCriteria();
         if(domainId != null) {
-            tagTypeExample.createCriteria().andDomainIdEqualTo(domainId);
+            criteria.andDomainIdEqualTo(domainId);
+        }
+        if(tagId != null) {
+            criteria.andIdEqualTo(tagId);
+        }
+        if(domainIds != null) {
+            criteria.andDomainIdIn(domainIds);
+        }
+        if(code != null) {
+            criteria.andCodeEqualTo(code);
         }
         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
         if(!CollectionUtils.isEmpty(tagTypes)) {
