@@ -45,8 +45,9 @@ public class TagResource implements ITagRWResource {
     }
 
     @Override
-    public Response<List<TagTypeDto>> getTagTypes(TagTypeQuery tagTypeQuery) {
-        List<TagTypeDto> tagTypeDtos = tagService.getTagTypes(tagTypeQuery.getDomainId());
+    public Response<List<TagTypeDto>> searchTagTypes(TagTypeQuery tagTypeQuery) {
+        List<TagTypeDto> tagTypeDtos = tagService.searchTagTypes(tagTypeQuery.getId(),tagTypeQuery.getDomainIds(),
+                tagTypeQuery.getDomainId(),tagTypeQuery.getCode());
         return Response.success(tagTypeDtos);
     }
 

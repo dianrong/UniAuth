@@ -58,7 +58,7 @@ public class TagAction {
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.hasDomain('techops')) or " +
             "(hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#tagTypeQuery.domainId))")
     public Response<List<TagTypeDto>> queryTagTypes(@RequestBody TagTypeQuery tagTypeQuery) {
-        return uARWFacade.getTagRWResource().getTagTypes(tagTypeQuery);
+        return uARWFacade.getTagRWResource().searchTagTypes(tagTypeQuery);
     }
 
     @RequestMapping(value = "add-new-tag-type", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -11,7 +11,7 @@ public class GroupDto {
 	private Date lastUpdate;
 	private Byte status;
 	private String description;
-
+	private List<TagDto> tagDtos;
 	/**
 	private List<UserDto> ownerList;
 	**/
@@ -129,6 +129,15 @@ public class GroupDto {
 
 	public GroupDto setTagChecked(Boolean tagChecked) {
 		this.tagChecked = tagChecked;
+		return this;
+	}
+
+	public List<TagDto> getTagDtos() {
+		return tagDtos;
+	}
+
+	public GroupDto setTagDtos(List<TagDto> tagDtos) {
+		this.tagDtos = tagDtos;
 		return this;
 	}
 }

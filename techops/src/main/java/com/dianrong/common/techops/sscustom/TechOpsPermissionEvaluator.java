@@ -158,7 +158,7 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 				if(!CollectionUtils.isEmpty(domainIdSet)) {
 					TagTypeQuery tagTypeQuery = new TagTypeQuery();
 					tagTypeQuery.setDomainIds(new ArrayList<Integer>(domainIdSet));
-					List<TagTypeDto> tagTypeDtos = uniClientFacade.getTagResource().getTagTypes(tagTypeQuery).getData();
+					List<TagTypeDto> tagTypeDtos = uniClientFacade.getTagResource().searchTagTypes(tagTypeQuery).getData();
 					if(!CollectionUtils.isEmpty(tagTypeDtos)) {
 						for(TagTypeDto tagTypeDto : tagTypeDtos) {
 							tagTypeIdSet.add(tagTypeDto.getId());
@@ -175,13 +175,13 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 			case AppConstants.PERM_TAGID_CHECK:
 				TagParam tagParam = (TagParam)targetObject;
 				TagQuery tagQuery = new TagQuery();
-				tagQuery.setId(tagParam.getId());
+				tagQuery.setId(tagParam.getId()).setPageSize(AppConstants.MAX_PAGE_SIZE).setPageNumber(AppConstants.MIN_PAGE_NUMBER);
 				List<TagDto> tagDtos = uniClientFacade.getTagResource().searchTags(tagQuery).getData().getData();
 				if(!CollectionUtils.isEmpty(tagDtos)) {
 					Integer tagTypeId = tagDtos.get(0).getTagTypeId();
 					TagTypeQuery tagTypeQuery = new TagTypeQuery();
 					tagTypeQuery.setId(tagTypeId);
-					Integer domainId = uniClientFacade.getTagResource().getTagTypes(tagTypeQuery).getData().get(0).getDomainId();
+					Integer domainId = uniClientFacade.getTagResource().searchTagTypes(tagTypeQuery).getData().get(0).getDomainId();
 					if(domainIdSet.contains(domainId)) {
 						return true;
 					}

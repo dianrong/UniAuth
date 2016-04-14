@@ -24,8 +24,9 @@ public class GroupResource implements IGroupRWResource {
 
 	@Override
 	public Response<PageDto<GroupDto>> queryGroup(GroupQuery groupQuery) {
-		PageDto<GroupDto> groupDtoPageDto = groupService.searchGroup(groupQuery.getUserGroupType(), groupQuery.getUserId(), groupQuery.getId(),groupQuery.getName(),groupQuery.getCode(),
-				groupQuery.getDescription(),groupQuery.getStatus(),groupQuery.getTagId(),groupQuery.getPageNumber(),
+		PageDto<GroupDto> groupDtoPageDto = groupService.searchGroup(groupQuery.getUserGroupType(), groupQuery.getUserId(),
+				groupQuery.getId(),groupQuery.getName(),groupQuery.getCode(), groupQuery.getDescription(),groupQuery.getStatus(),
+				groupQuery.getTagId(),groupQuery.getNeedTag(), groupQuery.getPageNumber(),
 				groupQuery.getPageSize());
 		return Response.success(groupDtoPageDto);
 	}

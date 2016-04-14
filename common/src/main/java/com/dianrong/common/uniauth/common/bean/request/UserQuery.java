@@ -14,6 +14,16 @@ public class UserQuery extends PageParam {
     private String email;
     private Byte status;
     private Integer tagId;
+    private Boolean needTag;
+
+    public Boolean getNeedTag() {
+        return needTag;
+    }
+
+    public UserQuery setNeedTag(Boolean needTag) {
+        this.needTag = needTag;
+        return this;
+    }
 
     public Integer getTagId() {
         return tagId;

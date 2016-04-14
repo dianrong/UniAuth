@@ -1,17 +1,10 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +15,6 @@ import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Linkage;
-import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
@@ -61,6 +50,10 @@ public class GroupService {
     private GrpTagMapper grpTagMapper;
     @Autowired
     private UserTagMapper userTagMapper;
+    @Autowired
+    private TagMapper tagMapper;
+    @Autowired
+    private TagTypeMapper tagTypeMapper;
 
     /**.
 	 * 进行组数据过滤的filter
@@ -69,29 +62,8 @@ public class GroupService {
 	private DataFilter dataFilter;
 
     public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, String name, String code,
-                                         String description, Byte status, Integer tagId,
+                                         String description, Byte status, Integer tagId, Boolean needTag,
                                          Integer pageNumber, Integer pageSize) {
-
-        if(id != null) {
-            GroupDto groupDto = BeanConverter.convert(grpMapper.selectByPrimaryKey(id));
-            if(groupDto != null) {
-                return new PageDto<>(0, 1, 1, Arrays.asList(groupDto));
-            } else {
-                return null;
-            }
-        }
-
-        if(code != null) {
-            GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(code);
-            List<Grp> grps = grpMapper.selectByExample(grpExample);
-            if(!CollectionUtils.isEmpty(grps)) {
-                GroupDto groupDto = BeanConverter.convert(grps.get(0));
-                return new PageDto<>(0, 1, 1, Arrays.asList(groupDto));
-            } else {
-                return null;
-            }
-        }
 
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -110,6 +82,14 @@ public class GroupService {
         }
         if(status != null) {
             criteria.andStatusEqualTo(status);
+        }
+
+        if(id != null) {
+            criteria.andIdEqualTo(id);
+        }
+
+        if(code != null) {
+            criteria.andCodeEqualTo(code);
         }
         // join user table to find group
         if(userId != null) {
@@ -153,8 +133,68 @@ public class GroupService {
         if(!CollectionUtils.isEmpty(grps)) {
             int count = grpMapper.countByExample(grpExample);
             List<GroupDto> groupDtos = new ArrayList<>();
+            Map<Integer, GroupDto> groupIdGroupDtoPair = new HashMap<>();
             for(Grp grp : grps) {
-                groupDtos.add(BeanConverter.convert(grp));
+                GroupDto groupDto = BeanConverter.convert(grp);
+                groupIdGroupDtoPair.put(grp.getId(), groupDto);
+                groupDtos.add(groupDto);
+            }
+
+            if(needTag != null && needTag) {
+                // 1. query all tagIds and index them with grpIds
+                GrpTagExample grpTagExample = new GrpTagExample();
+                grpTagExample.createCriteria().andGrpIdIn(new ArrayList<Integer>(groupIdGroupDtoPair.keySet()));
+                List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+                if(!CollectionUtils.isEmpty(grpTagKeys)) {
+                    Map<Integer, List<Integer>> tagIdGrpIdsPair = new HashMap<>();
+                    for (GrpTagKey grpTagKey:grpTagKeys) {
+                        Integer grpId = grpTagKey.getGrpId();
+                        Integer grpTagId = grpTagKey.getTagId();
+                        List<Integer> grpIds = tagIdGrpIdsPair.get(grpTagId);
+                        if(grpIds == null) {
+                            grpIds = new ArrayList<>();
+                            tagIdGrpIdsPair.put(grpTagId, grpIds);
+                        }
+                        grpIds.add(grpId);
+                    }
+                    // 2. query all tags, convert into dto and index them with tagIds
+                    TagExample tagExample = new TagExample();
+                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.ZERO_Byte);
+                    List<Tag> tags = tagMapper.selectByExample(tagExample);
+                    if(!CollectionUtils.isEmpty(tags)) {
+                        Map<Integer, TagDto> tagIdTagDtoPair = new HashMap<>();
+                        List<Integer> tagTypeIds = new ArrayList<>();
+                        for(Tag tag:tags) {
+                            tagTypeIds.add(tag.getTagTypeId());
+                            tagIdTagDtoPair.put(tag.getId(), BeanConverter.convert(tag));
+                        }
+                        // 3. query tagTypes info and index them with tagTypeId
+                        TagTypeExample tagTypeExample = new TagTypeExample();
+                        tagTypeExample.createCriteria().andIdIn(tagTypeIds);
+                        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+                        Map<Integer,String> tagTypeIdTagCodePair = new HashMap<>();
+                        for(TagType tagType : tagTypes) {
+                            tagTypeIdTagCodePair.put(tagType.getId(),tagType.getCode());
+                        }
+                        Collection<TagDto> tagDtos = tagIdTagDtoPair.values();
+                        for(TagDto tagDto : tagDtos) {
+                            //4. construct tagtype info into tagDto
+                            String tagTypeCode = tagTypeIdTagCodePair.get(tagDto.getTagTypeId());
+                            tagDto.setTagTypeCode(tagTypeCode);
+                            //5. construct tagDto into groupDto
+                            List<Integer> grpIds = tagIdGrpIdsPair.get(tagDto.getId());
+                            for(Integer grpId : grpIds) {
+                                GroupDto groupDto = groupIdGroupDtoPair.get(grpId);
+                                List<TagDto> tagDtoList = groupDto.getTagDtos();
+                                if(tagDtoList == null) {
+                                    tagDtoList = new ArrayList<>();
+                                    groupDto.setTagDtos(tagDtoList);
+                                }
+                                tagDtoList.add(tagDto);
+                            }
+                        }
+                    }
+                }
             }
             return new PageDto<>(pageNumber,pageSize,count,groupDtos);
         } else {

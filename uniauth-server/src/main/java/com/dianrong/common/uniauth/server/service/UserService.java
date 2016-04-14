@@ -1,18 +1,10 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.*;
 
@@ -22,11 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -65,13 +52,17 @@ public class UserService {
     @Autowired
     private UserTagMapper userTagMapper;
     @Autowired
+    private TagMapper tagMapper;
+    @Autowired
+    private TagTypeMapper tagTypeMapper;
+    @Autowired
     private UniauthSender uniauthSender;
     /**.
 	 * 进行用户数据过滤的filter
 	 */
 	@Resource(name="userDataFilter")
 	private DataFilter dataFilter;
-	
+
     @Transactional
     public UserDto addNewUser(String name, String phone, String email) {
         this.checkPhoneAndEmail(phone, email, null);
@@ -93,10 +84,10 @@ public class UserService {
         user.setStatus(AppConstants.ZERO_Byte);
         userMapper.insert(user);
         UserDto userDto = BeanConverter.convert(user).setPassword(randomPassword);
-        
+
         //用户添加成功后发送mq
         uniauthSender.sendUserAdd(user);
-        
+
         return userDto;
     }
 
@@ -244,7 +235,8 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId, Integer pageNumber, Integer pageSize) {
+    public PageDto<UserDto> searchUser(Long userId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
+                                       Boolean needTag, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
@@ -289,8 +281,67 @@ public class UserService {
         if(!CollectionUtils.isEmpty(users)) {
             int count = userMapper.countByExample(userExample);
             List<UserDto> userDtos = new ArrayList<>();
+            Map<Long, UserDto> userIdUserDtoPair = new HashMap<>();
             for(User user : users) {
-                userDtos.add(BeanConverter.convert(user));
+                UserDto userDto = BeanConverter.convert(user);
+                userIdUserDtoPair.put(user.getId(), userDto);
+                userDtos.add(userDto);
+            }
+            if(needTag != null && needTag) {
+                // 1. query all tagIds and index them with userIds
+                UserTagExample userTagExample = new UserTagExample();
+                userTagExample.createCriteria().andUserIdIn(new ArrayList<Long>(userIdUserDtoPair.keySet()));
+                List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+                if(!CollectionUtils.isEmpty(userTagKeys)) {
+                    Map<Integer, List<Long>> tagIdUserIdsPair = new HashMap<>();
+                    for (UserTagKey userTagKey:userTagKeys) {
+                        Long userId1 = userTagKey.getUserId();
+                        Integer userTagId = userTagKey.getTagId();
+                        List<Long> userIds1 = tagIdUserIdsPair.get(userTagId);
+                        if(userIds1 == null) {
+                            userIds1 = new ArrayList<>();
+                            tagIdUserIdsPair.put(userTagId, userIds1);
+                        }
+                        userIds1.add(userId1);
+                    }
+                    // 2. query all tags, convert into dto and index them with tagIds
+                    TagExample tagExample = new TagExample();
+                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdUserIdsPair.keySet())).andStatusEqualTo(AppConstants.ZERO_Byte);
+                    List<Tag> tags = tagMapper.selectByExample(tagExample);
+                    if(!CollectionUtils.isEmpty(tags)) {
+                        Map<Integer, TagDto> tagIdTagDtoPair = new HashMap<>();
+                        List<Integer> tagTypeIds = new ArrayList<>();
+                        for(Tag tag:tags) {
+                            tagTypeIds.add(tag.getTagTypeId());
+                            tagIdTagDtoPair.put(tag.getId(), BeanConverter.convert(tag));
+                        }
+                        // 3. query tagTypes info and index them with tagTypeId
+                        TagTypeExample tagTypeExample = new TagTypeExample();
+                        tagTypeExample.createCriteria().andIdIn(tagTypeIds);
+                        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+                        Map<Integer,String> tagTypeIdTagCodePair = new HashMap<>();
+                        for(TagType tagType : tagTypes) {
+                            tagTypeIdTagCodePair.put(tagType.getId(),tagType.getCode());
+                        }
+                        Collection<TagDto> tagDtos = tagIdTagDtoPair.values();
+                        for(TagDto tagDto : tagDtos) {
+                            //4. construct tagtype info into tagDto
+                            String tagTypeCode = tagTypeIdTagCodePair.get(tagDto.getTagTypeId());
+                            tagDto.setTagTypeCode(tagTypeCode);
+                            //5. construct tagDto into userDto
+                            List<Long> userIds1 = tagIdUserIdsPair.get(tagDto.getId());
+                            for(Long userId1 : userIds1) {
+                                UserDto userDto = userIdUserDtoPair.get(userId1);
+                                List<TagDto> tagDtoList = userDto.getTagDtos();
+                                if(tagDtoList == null) {
+                                    tagDtoList = new ArrayList<>();
+                                    userDto.setTagDtos(tagDtoList);
+                                }
+                                tagDtoList.add(tagDto);
+                            }
+                        }
+                    }
+                }
             }
             return new PageDto<>(pageNumber,pageSize,count,userDtos);
         } else {

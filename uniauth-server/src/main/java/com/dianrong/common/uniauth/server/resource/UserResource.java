@@ -9,7 +9,6 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
-import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class UserResource implements IUserRWResource {
 	@Override
 	public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
 		PageDto<UserDto> pageDto = userService.searchUser(userQuery.getUserId(), userQuery.getUserIds(), userQuery.getName(),userQuery.getPhone(),userQuery.getEmail()
-				,userQuery.getStatus(), userQuery.getTagId(), userQuery.getPageNumber(),userQuery.getPageSize());
+				,userQuery.getStatus(), userQuery.getTagId(), userQuery.getNeedTag(), userQuery.getPageNumber(),userQuery.getPageSize());
 		return Response.success(pageDto);
 	}
 
