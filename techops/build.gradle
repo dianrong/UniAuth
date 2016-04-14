@@ -132,7 +132,7 @@ task printProps << {
 }
 
 def loadConfiguration() {
-    def environment = hasProperty('profile') ? profile : 'dev'
+    def environment = hasProperty('profile') ? profile : 'local'
     project.ext.environment = environment
     println "Environment is set to $environment"
 
