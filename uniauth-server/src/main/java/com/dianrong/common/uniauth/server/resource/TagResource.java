@@ -26,9 +26,9 @@ public class TagResource implements ITagRWResource {
 
     @Override
     public Response<PageDto<TagDto>> searchTags(TagQuery tagQuery) {
-        PageDto<TagDto> tagDtoPageDto = tagService.searchTags(tagQuery.getId(),tagQuery.getTagIds(),tagQuery.getCode(),tagQuery.getFuzzyCode(), tagQuery.getStatus(),
-                tagQuery.getTagTypeId(),tagQuery.getUserId(),tagQuery.getDomainId(),tagQuery.getDomainIds(), tagQuery.getGroupId(),
-                tagQuery.getPageNumber(),tagQuery.getPageSize());
+        PageDto<TagDto> tagDtoPageDto = tagService.searchTags(tagQuery.getId(),tagQuery.getTagIds(),tagQuery.getCode(),tagQuery.getFuzzyCode(),
+                tagQuery.getStatus(), tagQuery.getTagTypeId(),tagQuery.getUserId(),tagQuery.getDomainId(),tagQuery.getCode(),
+                tagQuery.getDomainIds(), tagQuery.getGroupId(), tagQuery.getPageNumber(),tagQuery.getPageSize());
         return Response.success(tagDtoPageDto);
     }
 

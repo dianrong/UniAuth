@@ -14,9 +14,19 @@ public class TagQuery extends PageParam {
     private Byte status;
     private Integer tagTypeId;
     private Integer domainId;
+    private String domainCode;
     private List<Integer> domainIds;
     private Long userId;
     private Integer groupId;
+
+    public String getDomainCode() {
+        return domainCode;
+    }
+
+    public TagQuery setDomainCode(String domainCode) {
+        this.domainCode = domainCode;
+        return this;
+    }
 
     public String getFuzzyCode() {
         return fuzzyCode;

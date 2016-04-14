@@ -6,10 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
@@ -39,9 +36,11 @@ public class TagService {
     private TagTypeMapper tagTypeMapper;
     @Autowired
     private GrpTagMapper grpTagMapper;
+    @Autowired
+    private DomainMapper domainMapper;
 
     public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, String fuzzyTagCode, Byte tagStatus,
-                                      Integer tagTypeId, Long userId, Integer domainId, List<Integer> domainIds, Integer grpId,
+                                      Integer tagTypeId, Long userId, Integer domainId, String domainCode, List<Integer> domainIds, Integer grpId,
                                       Integer pageNumber, Integer pageSize) {
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
@@ -84,13 +83,23 @@ public class TagService {
             }
         }
 
-        if(domainId != null || domainIds != null) {
+        if(domainId != null || domainIds != null || domainCode != null) {
             List<Integer> unionDomainIds = new ArrayList<Integer>();
             if(domainId != null) {
                 unionDomainIds.add(domainId);
             }
             if(domainIds != null) {
                 unionDomainIds.addAll(domainIds);
+            }
+            if(domainCode != null) {
+                DomainExample domainExample = new DomainExample();
+                domainExample.createCriteria().andCodeEqualTo(domainCode);
+                List<Domain> domains = domainMapper.selectByExample(domainExample);
+                if(!CollectionUtils.isEmpty(domains)) {
+                    for(Domain domain : domains) {
+                        unionDomainIds.add(domain.getId());
+                    }
+                }
             }
             TagTypeExample tagTypeExample = new TagTypeExample();
             tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds);
