@@ -120,10 +120,10 @@ public class TagService {
                 return null;
             }
         }
-
+        int count = tagMapper.countByExample(tagExample);
+        ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Tag> tags = tagMapper.selectByExample(tagExample);
         if(!CollectionUtils.isEmpty(tags)) {
-            int count = tagMapper.countByExample(tagExample);
             List<TagDto> tagDtos = new ArrayList<>();
             for(Tag tag : tags) {
                 tagDtos.add(BeanConverter.convert(tag));

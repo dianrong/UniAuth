@@ -354,11 +354,11 @@ public class RoleService {
             ParamCheck.checkStatus(status);
             criteria.andStatusEqualTo(status);
         }
+        int count = roleMapper.countByExample(roleExample);
+        ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Role> roles = roleMapper.selectByExample(roleExample);
 
         if(!CollectionUtils.isEmpty(roles)) {
-            int count = roleMapper.countByExample(roleExample);
-
             List<RoleDto> roleDtos = new ArrayList<>();
             List<RoleCode> roleCodes = roleCodeMapper.selectByExample(new RoleCodeExample());
             // build roleCode index.

@@ -8,6 +8,7 @@ import com.dianrong.common.uniauth.common.bean.dto.*;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.*;
 
+import com.dianrong.common.uniauth.server.util.ParamCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -277,9 +278,10 @@ public class UserService {
                 return null;
             }
         }
+        int count = userMapper.countByExample(userExample);
+        ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<User> users = userMapper.selectByExample(userExample);
         if(!CollectionUtils.isEmpty(users)) {
-            int count = userMapper.countByExample(userExample);
             List<UserDto> userDtos = new ArrayList<>();
             Map<Long, UserDto> userIdUserDtoPair = new HashMap<>();
             for(User user : users) {

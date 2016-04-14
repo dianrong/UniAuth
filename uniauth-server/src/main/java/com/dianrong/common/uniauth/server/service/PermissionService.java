@@ -9,6 +9,7 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.server.util.ParamCheck;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -304,7 +305,7 @@ public class PermissionService {
 			criteria.andPermTypeIdEqualTo(permTypeId);
 		}
 		Integer totalCount = permissionMapper.countByExample(permissionExample);
-		
+		ParamCheck.checkPageParams(pageNumber, pageSize, totalCount);
 		List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);
 		
 		Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();

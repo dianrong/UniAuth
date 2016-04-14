@@ -1,12 +1,17 @@
 package com.dianrong.common.uniauth.server.service;
 
+import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.entity.AuditExample;
 import com.dianrong.common.uniauth.server.data.mapper.AuditMapper;
+import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ParamCheck;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -45,9 +50,10 @@ public class AuditService {
         CheckEmpty.checkEmpty(pageSize, "pageSize");
 
         this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse, maxReqElapse, reqParam, reqResult, auditExample);
+        int count = auditMapper.countByExample(auditExample);
+        ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Audit> audits = auditMapper.selectByExample(auditExample);
         if(!CollectionUtils.isEmpty(audits)) {
-            int count = auditMapper.countByExample(auditExample);
             List<AuditDto> auditDtos = new ArrayList<>();
             for(Audit audit : audits) {
                 auditDtos.add(BeanConverter.convert(audit));

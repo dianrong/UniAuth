@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.server.util.ParamCheck;
 import org.apache.cxf.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class ConfigService {
 
     @Autowired
     private CfgTypeMapper cfgTypeMapper;
-    
+
     /**.
 	 * 进行配置数据过滤的filter
 	 */
@@ -116,6 +117,8 @@ public class ConfigService {
             criteria.andCfgKeyIn(cfgKeys);
         }
 
+        int count = cfgMapper.countByExample(cfgExample);
+        ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Cfg> cfgs;
         if(needBLOBs != null && needBLOBs) {
             cfgs = cfgMapper.selectByExampleWithBLOBs(cfgExample);
@@ -133,7 +136,6 @@ public class ConfigService {
                 configDto.setCfgType(cfgTypeIndex.get(cfg.getCfgTypeId()));
                 configDtos.add(configDto);
             }
-            int count = cfgMapper.countByExample(cfgExample);
             return new PageDto<>(pageNumber,pageSize,count,configDtos);
         }
     }

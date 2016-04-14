@@ -20,7 +20,11 @@ public interface AppConstants {
     String GRP_ROOT = "GRP_ROOT";
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 2;
+	// this value can avoid the "data.query.result.number.exceed" exception when you need query as much as more.
+	Integer MAX_PAGE_SIZE_MINUS_ONE = 4999;
+	// if you don't pass pageSize parameter to the query api, it is the default value.
 	Integer MAX_PAGE_SIZE = 5000;
+	// if you don't pass pageNumber parameter to the query api, it is the default value.
 	Integer MIN_PAGE_NUMBER = 0;
 	String PERM_TYPE_DOMAIN = "DOMAIN";
 	String PERM_TYPE_URIPATTERN = "URI_PATTERN";

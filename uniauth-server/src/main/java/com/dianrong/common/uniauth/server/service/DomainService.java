@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.server.util.ParamCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,9 +96,11 @@ public class DomainService {
 		if(!StringUtils.isEmpty(description)) {
 			criteria.andDescriptionLike("%" + description + "%");
 		}
+
+		int count = domainMapper.countByExample(domainExample);
+		ParamCheck.checkPageParams(pageNumber, pageSize, count);
 		List<Domain> domains = domainMapper.selectByExample(domainExample);
 		if(!CollectionUtils.isEmpty(domains)) {
-			int count = domainMapper.countByExample(domainExample);
 			List<DomainDto> domainDtos = new ArrayList<>();
 			for(Domain domain : domains) {
 				domainDtos.add(BeanConverter.convert(domain));

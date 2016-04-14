@@ -128,10 +128,10 @@ public class GroupService {
                 return null;
             }
         }
-
+        int count = grpMapper.countByExample(grpExample);
+        ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Grp> grps = grpMapper.selectByExample(grpExample);
         if(!CollectionUtils.isEmpty(grps)) {
-            int count = grpMapper.countByExample(grpExample);
             List<GroupDto> groupDtos = new ArrayList<>();
             Map<Integer, GroupDto> groupIdGroupDtoPair = new HashMap<>();
             for(Grp grp : grps) {
