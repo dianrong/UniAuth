@@ -63,8 +63,6 @@
 
             options.mode == 'slide' ? wrapper.width(totalWidth) : wrapper.children().css({
                 'position': 'absolute',
-                'left': 0,
-                'top': 0
             })
                 .first().siblings().hide();
         }
