@@ -8,6 +8,7 @@ environments {
             tomcatUsername = 'tomcat'        //Tomcat用户
             tomcatPassword = 'tomcat'        //Tomcat密码
             tomcatHost = 'localhost:8100'        //
+            cwlTomcatHost = 'localhost:8082'        //
             tomcatWarFile = 'build/' + tomcatAppName + '.war'
         }
     }

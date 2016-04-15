@@ -196,3 +196,32 @@ task tomcatRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
             config.tomcat.tomcatHost]
     classpath = sourceSets.deployment.runtimeClasspath
 }
+
+
+task tomcatCWLDeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
+    doFirst {
+        println "deploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['deploy',
+            config.tomcat.tomcatAppName,
+            config.tomcat.tomcatWarFile,
+            config.tomcat.tomcatUsername,
+            config.tomcat.tomcatPassword,
+            config.tomcat.cwlTomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
+
+task tomcatCWLRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
+    doFirst {
+        println "redeploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['redeploy',
+            config.tomcat.tomcatAppName,
+            config.tomcat.tomcatWarFile,
+            config.tomcat.tomcatUsername,
+            config.tomcat.tomcatPassword,
+            config.tomcat.cwlTomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
