@@ -178,6 +178,9 @@ public final class CasCfgResourceRefreshHelper {
 	 *  过滤掉不合法的file类型的数据
 	 */
 	private void filterInvalidFileData(List<ConfigDto> filterList){
+			if(filterList == null || filterList.isEmpty()) {
+				return;
+			}
 			List<ConfigDto> tempList = new ArrayList<ConfigDto>();
 			for(ConfigDto cto: filterList){
 				//过滤文件类型但是文件内容为空的脏数据

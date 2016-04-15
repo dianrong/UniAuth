@@ -5,9 +5,6 @@
 <%
 	String path = request.getContextPath();
 %>
-<!-- Bootstrap -->
-<link href="<%=path %>/imgscroll/css/scroll.css" rel="stylesheet">
-
 <meta charset="UTF-8" />
 
   <!-- Wrapper for slides -->
