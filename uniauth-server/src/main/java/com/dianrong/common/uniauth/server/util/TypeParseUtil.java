@@ -14,9 +14,9 @@ public class TypeParseUtil {
 	 * 从object转换成Long，不然就报错抛出去
 	 * @return
 	 */
-	public static Long paraseToLongFromObject(Object val){
+	public static Long parseToLongFromObject(Object val){
 		if(val == null){
-			throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.typeparase.null.poniter","TypeParseUtil.paraseToLongFromObject"));
+			throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.typeparase.null.poniter","TypeParseUtil.parseToLongFromObject"));
 		}
 		Long result = null;
 		try{
@@ -31,9 +31,9 @@ public class TypeParseUtil {
 	 * 从object转换成String，不然就报错抛出去
 	 * @return
 	 */
-	public static String paraseToStringFromObject(Object val){
+	public static String parseToStringFromObject(Object val){
 		if(val == null){
-			throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.typeparase.null.poniter","TypeParseUtil.paraseToStringFromObject"));
+			throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.typeparase.null.poniter","TypeParseUtil.parseToStringFromObject"));
 		}
 		String result = null;
 		try{

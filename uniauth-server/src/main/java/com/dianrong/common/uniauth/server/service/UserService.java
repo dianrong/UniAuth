@@ -362,7 +362,7 @@ public class UserService {
         if(userId == null){
         	dataFilter.dataFilter(FieldType.FIELD_TYPE_EMAIL, email, FilterType.FILTER_TYPE_EXSIT_DATA);
         } else {
-        	dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_EMAIL, Integer.parseInt(userId.toString()), email);
+        	dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_EMAIL, Integer.parseInt(userId.toString()), email);
         }
 //        UserExample userExample = new UserExample();
 //        UserExample.Criteria criteria1 = userExample.createCriteria().andEmailEqualTo(email);
@@ -378,7 +378,7 @@ public class UserService {
         	if(userId == null){
         		dataFilter.dataFilter(FieldType.FIELD_TYPE_PHONE, phone, FilterType.FILTER_TYPE_EXSIT_DATA);
         	} else {
-        		dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_PHONE, Integer.parseInt(userId.toString()), phone);
+        		dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_PHONE, Integer.parseInt(userId.toString()), phone);
         	}
 //            UserExample userPhoneExample = new UserExample();
 //            UserExample.Criteria criteria2 = userPhoneExample.createCriteria().andPhoneEqualTo(phone);

@@ -7,6 +7,10 @@ import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.*;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -38,6 +43,8 @@ public class TagService {
     private GrpTagMapper grpTagMapper;
     @Autowired
     private DomainMapper domainMapper;
+    @Resource(name="tagTypeDataFilter")
+    private DataFilter dataFilter;
 
     public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, String fuzzyTagCode, Byte tagStatus,
                                       Integer tagTypeId, Long userId, Integer domainId, String domainCode, List<Integer> domainIds, Integer grpId,
@@ -204,6 +211,9 @@ public class TagService {
     public TagTypeDto addNewTagType(String code, Integer domainId) {
         CheckEmpty.checkEmpty(domainId, "domainId");
         CheckEmpty.checkEmpty(code, "code");
+        dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA,
+                FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
+                FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
         TagType tagType = new TagType();
         tagType.setDomainId(domainId);
         tagType.setCode(code);
@@ -223,6 +233,9 @@ public class TagService {
         if(domainId != null) {
             tagType.setDomainId(domainId);
         }
+        dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA,
+                FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
+                FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
         tagTypeMapper.updateByPrimaryKey(tagType);
         return BeanConverter.convert(tagType);
     }

@@ -69,6 +69,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         if($scope.tagTypes.length == 0) {
                             $scope.tagTypesLoading = constant.loadEmpty;
                         }
+                        $scope.cancelEdit(tagType);
                         return;
                     }
                     AlertService.addAutoDismissAlert(constant.messageType.info, "标签创建成功.");
@@ -83,6 +84,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         for(var i=0; i<res.info.length;i++) {
                             AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
                         }
+                        $scope.cancelEdit(tagType);
                         return;
                     }
                     AlertService.addAutoDismissAlert(constant.messageType.info, "标签更新成功.");

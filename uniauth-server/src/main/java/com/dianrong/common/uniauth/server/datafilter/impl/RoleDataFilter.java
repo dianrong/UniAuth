@@ -19,7 +19,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("roleDataFilter")
-public class RoleDataFilter extends CurrentAbastracDataFIleter{
+public class RoleDataFilter extends CurrentAbstractDataFilter {
 	
 	@Autowired
     private RoleMapper roleMapper;
@@ -27,7 +27,7 @@ public class RoleDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "角色";
+	private String processTableName = "角色";
 	
 	/**.
 	 * 处理过滤status=0的情况
@@ -39,10 +39,10 @@ public class RoleDataFilter extends CurrentAbastracDataFIleter{
 		//遍历
 		for(Entry<FieldType, Object> kv : entrySet){
 			if(kv.getKey() == FieldType.FIELD_TYPE_ID){
-				int countById = roleMapper.countRoleByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = roleMapper.countRoleByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById > 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTableName, "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
 				}
 			}
 		}
@@ -58,10 +58,10 @@ public class RoleDataFilter extends CurrentAbastracDataFIleter{
 		//遍历
 		for(Entry<FieldType, Object> kv : entrySet){
 			if(kv.getKey() == FieldType.FIELD_TYPE_ID){
-				int countById = roleMapper.countRoleByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = roleMapper.countRoleByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById <= 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTableName, "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
 				}
 				break;
 			}
