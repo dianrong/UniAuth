@@ -21,7 +21,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("groupDataFilter")
-public class GroupDataFilter extends CurrentAbastracDataFIleter{
+public class GroupDataFilter extends CurrentAbstractDataFilter {
 	
 	@Autowired
     private GrpMapper grpMapper;
@@ -42,16 +42,16 @@ public class GroupDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 			case FIELD_TYPE_ID:
-				int countById = grpMapper.countGroupByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = grpMapper.countGroupByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById > 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
 				}
 				break;
 			case FIELD_TYPE_CODE:
-				int countByCode = grpMapper.countGroupByCodeWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+				int countByCode = grpMapper.countGroupByCodeWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
 				if(countByCode > 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "code" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "code" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
 				}
 				break;
 			default:
@@ -71,16 +71,16 @@ public class GroupDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 			case FIELD_TYPE_ID:
-				int countById = grpMapper.countGroupByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = grpMapper.countGroupByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById <= 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
 				}
 				break;
 			case FIELD_TYPE_CODE:
-				int countByCode = grpMapper.countGroupByCodeWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+				int countByCode = grpMapper.countGroupByCodeWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
 				if(countByCode <= 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "code" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "code" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
 				}
 				break;
 			default:
@@ -90,10 +90,10 @@ public class GroupDataFilter extends CurrentAbastracDataFIleter{
 	}
 
 	@Override
-	protected void doFileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue) {
+	protected void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue) {
 		switch(type){
 			case FIELD_TYPE_CODE:
-					String newCode = TypeParseUtil.paraseToStringFromObject(fieldValue);
+					String newCode = TypeParseUtil.parseToStringFromObject(fieldValue);
 					Grp grpInfo = grpMapper.selectByIdWithStatusEffective(id);
 					if(grpInfo != null){
 						//如果数据信息没有改变  则不管

@@ -27,7 +27,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("permissionDataFilter")
-public class PermissionDataFilter extends CurrentAbastracDataFIleter{
+public class PermissionDataFilter extends CurrentAbstractDataFilter {
 	
 	@Autowired
 	private PermissionMapper permissionMapper;
@@ -35,7 +35,7 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "权限数据";
+	private String processTableName = "权限数据";
 	
 	/**.
 	 * 处理过滤status=0的情况
@@ -47,10 +47,10 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 		//遍历
 		for(Entry<FieldType, Object> kv : entrySet){
 			if(kv.getKey() == FieldType.FIELD_TYPE_ID){
-				int countById = permissionMapper.countPermissionByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = permissionMapper.countPermissionByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById > 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTableName, "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
 				}
 			}
 		}
@@ -66,10 +66,10 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 		//遍历
 		for(Entry<FieldType, Object> kv : entrySet){
 			if(kv.getKey() == FieldType.FIELD_TYPE_ID){
-				int countById = permissionMapper.countPermissionByIdWithStatusEffective(TypeParseUtil.paraseToLongFromObject(kv.getValue()));
+				int countById = permissionMapper.countPermissionByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById <= 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName , "id" , TypeParseUtil.paraseToLongFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTableName, "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
 				}
 				break;
 			}
@@ -77,16 +77,16 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	}
 	
 	@Override
-	public void doDataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField) {
+	public void doDataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField) {
 			switch(ftype){
 				case FILTER_TYPE_EXSIT_DATA:
 					if(dataWithCondtionsEqualExsit(equalsField)){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", processTalbeName, getFieldTypeKeyAndValue(equalsField)));
+						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", processTableName, getFieldTypeKeyAndValue(equalsField)));
 					}
 					break;
 				case FILTER_TYPE_NO_DATA:
 					if(!dataWithCondtionsEqualExsit(equalsField)){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", processTalbeName , getFieldTypeKeyAndValue(equalsField)));	
+						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", processTableName, getFieldTypeKeyAndValue(equalsField)));
 					}
 					break;
 				default:
@@ -95,7 +95,7 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 	}
 	
 	@Override
-	public void doFilterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField) {
+	public void doFilterFieldValueIsExistWithConditionsEqual(Integer id, FilterData... equalsField) {
 		CheckEmpty.checkEmpty(id, "permission的ID");
 		//不处理
 		if(equalsField ==  null || equalsField.length == 0) {
@@ -128,7 +128,7 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 		}
 		
 		//查看是否存在其他的记录
-		doDataFilterWithCondtionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, equalsField) ;
+		doDataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, equalsField) ;
 	}
 	
 	/**.
@@ -146,13 +146,13 @@ public class PermissionDataFilter extends CurrentAbastracDataFIleter{
 		for(FilterData fd: equalsField){
 			switch(fd.getType()) {
 				case FIELD_TYPE_VALUE:
-					criteria.andValueEqualTo(TypeParseUtil.paraseToStringFromObject(fd.getValue()));
+					criteria.andValueEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
 					break;
 				case FIELD_TYPE_PERM_TYPE_ID:
-					criteria.andPermTypeIdEqualTo(Integer.parseInt(TypeParseUtil.paraseToLongFromObject(fd.getValue()).toString()));
+					criteria.andPermTypeIdEqualTo(Integer.parseInt(TypeParseUtil.parseToLongFromObject(fd.getValue()).toString()));
 					break;
 				case FIELD_TYPE_DOMAIN_ID:
-					criteria.andDomainIdEqualTo(Integer.parseInt(TypeParseUtil.paraseToLongFromObject(fd.getValue()).toString()));
+					criteria.andDomainIdEqualTo(Integer.parseInt(TypeParseUtil.parseToLongFromObject(fd.getValue()).toString()));
 					break;
 				default:
 					break;

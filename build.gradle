@@ -1,3 +1,10 @@
+buildscript {
+	repositories { jcenter() }
+
+	dependencies {
+		classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
+	}
+}
 allprojects {
     group = 'com.dianrong.common.uniauth'
     version = '1.0.23-SNAPSHOT'
@@ -6,6 +13,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
+	apply plugin: 'io.spring.dependency-management'
 
     repositories {
         maven {

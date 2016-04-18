@@ -178,7 +178,7 @@ public class DomainService {
 			//如果需要更新code,则加入判断
 			if(!StringUtil.strIsNullOrEmpty(domainParam.getCode())){
 				//检查code
-				dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, domainParam.getId(), domainParam.getCode());
+				dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CODE, domainParam.getId(), domainParam.getCode());
 			}
 		}
 				

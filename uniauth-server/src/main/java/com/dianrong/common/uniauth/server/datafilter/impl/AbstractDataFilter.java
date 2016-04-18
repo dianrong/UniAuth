@@ -22,7 +22,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	
 	/**.
 	 * 过滤数据的接口.
-	 * @param fieldName  过滤的字段名
+	 * @param FieldType  过滤的字段名
 	 * @param fieldValue  对应字段的值
 	 * @param ftype 过滤的方式
 	 */
@@ -60,7 +60,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param fieldValue 需要新加入的值
 	 */
 	@Override
-	public void fileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue){
+	public void filterFieldValueIsExist(FieldType type, Integer id, Object fieldValue){
 		if(!isDataFilterSwitch()){
 			return;
 		}
@@ -68,7 +68,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 		if(fieldValue == null){
 			return;
 		}
-		doFileterFieldValueIsExsist(type, id, fieldValue);
+		doFilterFieldValueIsExist(type, id, fieldValue);
 	}
 	
 	/**.
@@ -77,11 +77,11 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param equalsField 比较的字段以及值
 	 */
 	@Override
-	public void dataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField){
+	public void dataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField){
 		if(!isDataFilterSwitch()){
 			return;
 		}
-		doDataFilterWithCondtionsEqual(ftype, equalsField);
+		doDataFilterWithConditionsEqual(ftype, equalsField);
 	}
 	
 	/**.
@@ -90,11 +90,11 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param equalsField 比较的字段以及值
 	 */
 	@Override
-	public void filterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField){
+	public void filterFieldValueIsExistWithCondtionsEqual(Integer id, FilterData... equalsField){
 		if(!isDataFilterSwitch()){
 			return;
 		}
-		doFilterFieldValueIsExsistWithCondtionsEqua(id, equalsField);
+		doFilterFieldValueIsExistWithConditionsEqual(id, equalsField);
 	}
 	
 	
@@ -103,14 +103,14 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param ftype 过滤的方式
 	 * @param  equalsField 需要比较的字段以及值
 	 */
-	protected abstract void doDataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField);
+	protected abstract void doDataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField);
 	
 	/**.
 	 * 判断数据是否重复并且伴随字段相等的情况。
 	 * @param id keyid
 	 * @param equalsField 需要比较的字段以及值
 	 */
-	protected abstract void doFilterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField);
+	protected abstract void doFilterFieldValueIsExistWithConditionsEqual(Integer id, FilterData... equalsField);
 	
 	/**.
 	 * 判断数据是否重复
@@ -118,7 +118,7 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param id keyid
 	 * @param fieldValue 需要新加入的值
 	 */
-	protected abstract void doFileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue);
+	protected abstract void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue);
 	
 	/**.
 	 * 过滤多个字段的接口（目前该模型就支持这两种）

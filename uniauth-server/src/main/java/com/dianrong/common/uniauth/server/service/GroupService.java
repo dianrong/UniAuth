@@ -290,7 +290,7 @@ public class GroupService {
         //启用或者启用状态的修改
         if((status != null && status == AppConstants.ZERO_Byte) || (status == null && grp.getStatus() == AppConstants.ZERO_Byte)){
 	        //判断是否存在重复的code
-	        dataFilter.fileterFieldValueIsExsist(FieldType.FIELD_TYPE_CODE, groupId, groupCode);
+	        dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CODE, groupId, groupCode);
         }
         
         grp.setName(groupName);

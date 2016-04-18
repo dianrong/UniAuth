@@ -8,11 +8,13 @@ import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.TagQuery;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.service.TagService;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**

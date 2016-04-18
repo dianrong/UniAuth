@@ -11,7 +11,7 @@ import com.dianrong.common.uniauth.server.datafilter.FilterType;
  * @author wanglin
  *
  */
-public abstract class CurrentAbastracDataFIleter extends AbstractDataFilter{
+public abstract class CurrentAbstractDataFilter extends AbstractDataFilter{
 	/**.
 	 * 过滤多个字段的接口（目前该模型就支持这两种）
 	 * @param filterMap map包括字段名以及对应的字段值
@@ -48,17 +48,17 @@ public abstract class CurrentAbastracDataFIleter extends AbstractDataFilter{
 
 	//默认实现都放这里 需要的自己重写
 	@Override
-	protected void doFileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue) {
+	protected void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue) {
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	protected void doDataFilterWithCondtionsEqual(FilterType ftype, FilterData... equalsField) {
+	protected void doDataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	protected void doFilterFieldValueIsExsistWithCondtionsEqua(Integer id, FilterData... equalsField) {
+	protected void doFilterFieldValueIsExistWithConditionsEqual(Integer id, FilterData... equalsField) {
 		throw new UnsupportedOperationException();
 	}
 }

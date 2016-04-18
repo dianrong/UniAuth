@@ -21,7 +21,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("cfgDataFilter")
-public class CfgDataFilter extends CurrentAbastracDataFIleter{
+public class CfgDataFilter extends CurrentAbstractDataFilter {
 	
 	@Autowired
     private CfgMapper cfgMapper;
@@ -29,7 +29,7 @@ public class CfgDataFilter extends CurrentAbastracDataFIleter{
 	/**.
 	 * 标示处理的表名
 	 */
-	private String processTalbeName = "配置数据";
+	private String processTableName = "配置数据";
 	
 	/**.
 	 * 处理过滤status=0的情况
@@ -42,10 +42,10 @@ public class CfgDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 			case FIELD_TYPE_CFG_KEY:
-				int countById = cfgMapper.countCfgByCfgKeyWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+				int countById = cfgMapper.countCfgByCfgKeyWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById > 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTalbeName , "cfg_key" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTableName, "cfg_key" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
 				}
 				break;
 			default:
@@ -65,10 +65,10 @@ public class CfgDataFilter extends CurrentAbastracDataFIleter{
 		for(Entry<FieldType, Object> kv : entrySet){
 			switch(kv.getKey()){
 			case FIELD_TYPE_CFG_KEY:
-				int countById = cfgMapper.countCfgByCfgKeyWithStatusEffective(TypeParseUtil.paraseToStringFromObject(kv.getValue()));
+				int countById = cfgMapper.countCfgByCfgKeyWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
 				//有数据  就要报错
 				if(countById <= 0){
-					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTalbeName, "cfg_key" , TypeParseUtil.paraseToStringFromObject(kv.getValue())));
+					throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTableName, "cfg_key" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
 				}
 				break;
 			default:
@@ -81,10 +81,10 @@ public class CfgDataFilter extends CurrentAbastracDataFIleter{
 	 * 判断数据是否已经重复了
 	 */
 	@Override
-	public void doFileterFieldValueIsExsist(FieldType type, Integer id, Object fieldValue){
+	public void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue){
 		switch(type){
 			case FIELD_TYPE_CFG_KEY:
-				String newCfgKey = TypeParseUtil.paraseToStringFromObject(fieldValue);
+				String newCfgKey = TypeParseUtil.parseToStringFromObject(fieldValue);
 				Cfg cfgInfo = cfgMapper.selectByIdWithStatusEffective(id);
 				if(cfgInfo != null){
 					//如果数据信息没有改变  则不管

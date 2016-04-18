@@ -102,7 +102,7 @@ public class PermissionService {
 		domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
 		
 		//同一个域下面不能出现重复数据
-		dataFilter.dataFilterWithCondtionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, 
+		dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA,
 				FilterData.buildFilterData(FieldType.FIELD_TYPE_VALUE, value),
 				FilterData.buildFilterData(FieldType.FIELD_TYPE_PERM_TYPE_ID, permTypeId),
 				FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
@@ -136,7 +136,7 @@ public class PermissionService {
         if((status != null && status == AppConstants.ZERO_Byte) || status == null){
         	//不能更新成重复数据
         	//同一个域下面不能出现重复数据
-    		dataFilter.filterFieldValueIsExsistWithCondtionsEqua(permissionParam.getId(), 
+    		dataFilter.filterFieldValueIsExistWithCondtionsEqual(permissionParam.getId(),
     				FilterData.buildFilterData(FieldType.FIELD_TYPE_VALUE, value),
     				FilterData.buildFilterData(FieldType.FIELD_TYPE_PERM_TYPE_ID, permTypeId),
     				FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
