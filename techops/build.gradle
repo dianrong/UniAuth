@@ -225,3 +225,31 @@ task tomcatCWLRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
             config.tomcat.cwlTomcatHost]
     classpath = sourceSets.deployment.runtimeClasspath
 }
+
+task tomcatWLinDeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
+    doFirst {
+        println "deploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['deploy',
+            config.tomcat.tomcatAppName,
+            config.tomcat.tomcatWarFile,
+            config.tomcat.tomcatUsername,
+            config.tomcat.tomcatPassword,
+            config.tomcat.wlinTomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
+
+task tomcatWLinRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
+    doFirst {
+        println "redeploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['redeploy',
+            config.tomcat.tomcatAppName,
+            config.tomcat.tomcatWarFile,
+            config.tomcat.tomcatUsername,
+            config.tomcat.tomcatPassword,
+            config.tomcat.wlinTomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}

@@ -192,6 +192,7 @@ project(':cas') {
 		shengLongTomcatHost = '192.168.56.101:8080'
 		
 		cwlTomcatHost = 'localhost:8080'        //
+		wlinTomcatHost = 'localhost:8080'        //
 	}
 
 	configurations{
@@ -340,4 +341,31 @@ project(':cas') {
 		classpath = sourceSets.deployment.runtimeClasspath
 	}
 
+	task tomcatWLinDeployCas(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "deploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['deploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				wlinTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task tomcatWLinRedeployCas(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "redeploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['redeploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				wlinTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
 }

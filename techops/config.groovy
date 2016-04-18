@@ -9,6 +9,7 @@ environments {
             tomcatPassword = 'tomcat'        //Tomcat密码
             tomcatHost = 'localhost:8100'        //
             cwlTomcatHost = 'localhost:8082'        //
+            wlinTomcatHost = 'localhost:8100'        //
             tomcatWarFile = 'build/' + tomcatAppName + '.war'
         }
     }
