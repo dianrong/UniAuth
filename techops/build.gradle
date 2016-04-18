@@ -233,9 +233,9 @@ task tomcatWLinDeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
     args = ['deploy',
             config.tomcat.tomcatAppName,
             config.tomcat.tomcatWarFile,
-            config.tomcat.tomcatUsername,
-            config.tomcat.tomcatPassword,
-            config.tomcat.wlinTomcatHost]
+            'tomcat',
+            'tomcat',
+            'localhost:8100']
     classpath = sourceSets.deployment.runtimeClasspath
 }
 
@@ -247,8 +247,8 @@ task tomcatWLinRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
     args = ['redeploy',
             config.tomcat.tomcatAppName,
             config.tomcat.tomcatWarFile,
-            config.tomcat.tomcatUsername,
-            config.tomcat.tomcatPassword,
-            config.tomcat.wlinTomcatHost]
+             'tomcat',
+            'tomcat',
+            'localhost:8100']
     classpath = sourceSets.deployment.runtimeClasspath
 }
