@@ -21,7 +21,7 @@ environments {
             tomcatAppName = 'techops'  //在Tomcat访问的application名字，配置在Tomcat的根目录
             tomcatUsername = 'admin'        //Tomcat用户
             tomcatPassword = 'admin'        //Tomcat密码
-            tomcatHost = '192.168.56.101:8081'        //
+            tomcatHost = '192.168.56.102:8081'        //
             tomcatWarFile = 'build/' + tomcatAppName + '.war'
         }
     }

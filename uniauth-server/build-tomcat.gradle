@@ -21,7 +21,7 @@ ext {
 
     shengLongTomcatUsername = 'admin'        //Tomcat用户
     shengLongTomcatPassword = 'admin'        //Tomcat密码
-    shengLongTomcatHost = '192.168.56.101:8080'        //
+    shengLongTomcatHost = '192.168.56.102:8080'        //
     
     cwlTomcatHost = 'localhost:8080'        //
     wlinTomcatHost = 'localhost:8090'        //
