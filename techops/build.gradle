@@ -81,12 +81,12 @@ dependencies {
     //Spring
     //def spring_version = '4.1.6.RELEASE'
 
-    compile "org.springframework:spring-context"
-    compile "org.springframework:spring-tx"
-    compile "org.springframework:spring-web"
+    compile "org.springframework:spring-context:4.1.6.RELEASE"
+    compile "org.springframework:spring-tx:4.1.6.RELEASE"
+    compile "org.springframework:spring-web:4.1.6.RELEASE"
     compile "org.springframework:spring-webmvc:4.1.6.RELEASE"
     compile "org.springframework:spring-context-support:4.1.6.RELEASE"
-    compile "org.springframework:spring-aop"
+    compile "org.springframework:spring-aop:4.1.6.RELEASE"
 
     // zookeeper util.
     compile 'com.dianrong.platform:cfg-zk-client:1.0.0-SNAPSHOT'
