@@ -102,6 +102,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                                 'description': param.description,
                                 'permTypeId':param.permTypeId,
                                 'domainId':param.domainId,
+                                'valueExt':param.valueExt,
                                 'status':param.status?0:1
                             }
                             , function(res) {
