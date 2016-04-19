@@ -1,11 +1,14 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import java.util.List;
+
 /**
  * Created by Arc on 3/3/2016.
  */
 public class GroupQuery extends PageParam  {
 
     private Integer id;
+    private List<Integer> groupIds;
     private String code;
     private String name;
     private String description;
@@ -15,6 +18,15 @@ public class GroupQuery extends PageParam  {
     private Integer tagId;
     private Boolean needTag;
     private Boolean needUser;
+
+    public List<Integer> getGroupIds() {
+        return groupIds;
+    }
+
+    public GroupQuery setGroupIds(List<Integer> groupIds) {
+        this.groupIds = groupIds;
+        return this;
+    }
 
     public Integer getTagId() {
         return tagId;

@@ -61,7 +61,7 @@ public class GroupService {
 	@Resource(name="groupDataFilter")
 	private DataFilter dataFilter;
 
-    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, String name, String code,
+    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, List<Integer> groupIds, String name, String code,
                                          String description, Byte status, Integer tagId, Boolean needTag, Boolean needUser,
                                          Integer pageNumber, Integer pageSize) {
 
@@ -90,6 +90,9 @@ public class GroupService {
 
         if(code != null) {
             criteria.andCodeEqualTo(code);
+        }
+        if(!CollectionUtils.isEmpty(groupIds)) {
+            criteria.andIdIn(groupIds);
         }
         // join user table to find group
         if(userId != null) {
