@@ -106,7 +106,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                             }
                             , function(res) {
                                 // status change successed
-                                AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'启用':'禁用') + "权限成功.");
+                                if(res.info) {
+                                    for(var i=0; i<res.info.length;i++) {
+                                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                                    }
+                                } else {
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ? '启用' : '禁用') + "权限成功.");
+                                }
                                 $scope.queryPerm();
                             }, function(err) {
                                 console.log(err);

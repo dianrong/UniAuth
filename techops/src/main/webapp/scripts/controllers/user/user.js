@@ -83,7 +83,13 @@ define(['../../utils/constant'], function (constant) {
                                 'status':param.status?0:1
                             }
                             , function(res) {
-                                AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'用户启用':'用户禁用') + '成功!');
+                                if(res.info) {
+                                    for(var i=0; i<res.info.length;i++) {
+                                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                                    }
+                                } else {
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ? '用户启用' : '用户禁用') + '成功!');
+                                }
                                 $scope.queryUser();
                             }, function(err) {
                                 AlertService.addAutoDismissAlert(constant.messageType.danger, (param.status?'用户启用':'用户禁用') + '失败!');
