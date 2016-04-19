@@ -1,7 +1,7 @@
 define(['../../utils/constant'], function (constant, AlertService) {
     /**
-     * A module representing a User controller.
-     * @exports controllers/User
+     * A module representing a rel controller.
+     * @exports controllers/rel
      */
     var Controller = function ($scope, $rootScope, UserService, AlertService) {
         $scope.user = UserService.userShared;
@@ -71,7 +71,7 @@ define(['../../utils/constant'], function (constant, AlertService) {
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, '替换用户对应的标签成功.');
-                $scope.getUserRolesWithCheckedInfo();
+                $scope.getUserTagsWithCheckedInfo();
             }, function () {
                 $scope.tags = [];
                 AlertService.addAutoDismissAlert(constant.messageType.danger, '替换用户对应的标签失败, 请联系系统管理员.');

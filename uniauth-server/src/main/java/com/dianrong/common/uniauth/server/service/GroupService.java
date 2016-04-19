@@ -1,12 +1,17 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
-import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +20,47 @@ import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Linkage;
+import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.GrpTagExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpTagKey;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrp;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
+import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
+import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -730,5 +773,85 @@ public class GroupService {
 	     */
 	    public GroupDto selectByIdWithStatusEffective( Integer id){
 	    	return BeanConverter.convert(grpMapper.selectByIdWithStatusEffective(id));
+	    }
+	    
+	    /**.
+	     * 获取所有的tags，并且根据groupId打上对应的checked标签
+	     * @param groupId 组id
+	     * @return List<TagDto>
+	     */
+	    public List<TagDto> searchTagsWithrChecked(Integer groupId) {
+	        CheckEmpty.checkEmpty(groupId, "groupId");
+	        TagExample tagConditon = new TagExample();
+	        tagConditon.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
+	        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
+	        // 优化
+	        if(allTags == null){
+	        	return null;
+	        } 
+	        if(allTags.isEmpty()) {
+	        	return new ArrayList<TagDto>();
+	        }
+	        
+	        // 查询组和tag的关联关系信息
+	        GrpTagExample grpTagExample = new GrpTagExample();
+	        grpTagExample.createCriteria().andGrpIdEqualTo(groupId);
+	        List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+	        List<TagDto> tagDtos = new ArrayList<TagDto>();
+	        
+	        Set<Integer> tagIdLinkedToGrp = new HashSet<Integer>();
+	        if(!CollectionUtils.isEmpty(grpTagKeys)) {
+	            for(GrpTagKey grpTagKey : grpTagKeys) {
+	            	tagIdLinkedToGrp.add(grpTagKey.getTagId());
+	            }
+	        }
+	        
+	        // 获取tagType信息
+	        List<TagType> tagTypes = tagTypeMapper.selectByExample(new TagTypeExample());
+	        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+	        if(!CollectionUtils.isEmpty(tagTypes)) {
+	            for(TagType tagType : tagTypes) {
+	            	tagTypeIdMap.put(tagType.getId(), tagType);
+	            }
+	        }
+	        
+	        for(Tag tag : allTags) {
+	            TagDto tagDto = BeanConverter.convert(tag);
+	            if(tagIdLinkedToGrp.contains(tagDto.getId())) {
+	            	tagDto.setTagGrouprChecked(Boolean.TRUE);
+	            }
+	            
+	            if(tagTypeIdMap.get(tagDto.getTagTypeId()) != null) {
+	            	tagDto.setTagTypeCode(tagTypeIdMap.get(tagDto.getTagTypeId()).getCode());
+	            } else {
+	            	tagDto.setTagTypeCode("UNKNOW");
+	            }
+	            tagDtos.add(tagDto);
+	        }
+	        return tagDtos;
+	    }
+	    
+	    @Transactional
+	    public void replaceTagsToGroup(Integer grpId, List<Integer> tagIds) {
+	        CheckEmpty.checkEmpty(grpId, "groupId");
+	        //step 1. delete all relationship
+	        GrpTagExample delCondtion = new GrpTagExample();
+	        delCondtion.createCriteria().andGrpIdEqualTo(grpId);
+	        grpTagMapper.deleteByExample(delCondtion);
+	        
+	        //step2 .batch insert relationship
+	        if(tagIds == null){
+	        	throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "tagIds"));
+	        }
+	        
+	        if(tagIds.isEmpty()) {
+	        	return;
+	        }
+	        
+	        List<GrpTagKey> infoes = new ArrayList<GrpTagKey>();
+	        for(Integer tagId : tagIds){
+	        	infoes.add(new GrpTagKey().setGrpId(grpId).setTagId(tagId));
+	        }
+	        grpTagMapper.bacthInsert(infoes);
 	    }
 }

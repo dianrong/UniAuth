@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
@@ -160,5 +161,21 @@ public class GroupAction {
     		+ "or (hasRole('ROLE_ADMIN') and hasPermission(#groupParam, 'PERM_ROLEIDS_CHECK'))")
     public Response<Void> replaceRolesToGroup(@RequestBody GroupParam groupParam) {
         return uARWFacade.getGroupRWResource().replaceRolesToGroup(groupParam);
+    }
+    
+    // perm double checked
+    @RequestMapping(value = "/group-tags" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+    		+ "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#groupParam.domainId))")
+    public Response<List<TagDto>>  getAllTagsToGroup(@RequestBody GroupParam groupParam) {
+        return uARWFacade.getGroupRWResource().queryTagsWithChecked(groupParam);
+    }
+    
+    // perm double checked
+    @RequestMapping(value = "/replace-tags-to-group" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+    		+ "or (hasRole('ROLE_ADMIN') and hasPermission(#groupParam, 'PERM_ROLEIDS_CHECK'))")
+    public Response<Void> replaceTagsToGroup(@RequestBody GroupParam groupParam) {
+        return uARWFacade.getGroupRWResource().replaceTagsToGrp(groupParam);
     }
 }

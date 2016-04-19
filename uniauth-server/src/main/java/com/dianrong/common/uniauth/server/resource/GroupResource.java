@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 
 @RestController
@@ -99,6 +100,18 @@ public class GroupResource implements IGroupRWResource {
 	@Override
 	public Response<Void> replaceRolesToGroup(GroupParam groupParam) {
 		groupService.replaceRolesToGroupUnderDomain(groupParam.getId(), groupParam.getRoleIds(), groupParam.getDomainId());
+		return Response.success();
+	}
+	
+	@Override
+	public Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam) {
+		List<TagDto> tagDtos = groupService.searchTagsWithrChecked(groupParam.getId());
+		return Response.success(tagDtos);
+	}
+	
+	@Override
+	public Response<Void> replaceTagsToGrp(GroupParam groupParam) {
+		groupService.replaceTagsToGroup(groupParam.getId(), groupParam.getTagIds());
 		return Response.success();
 	}
 }

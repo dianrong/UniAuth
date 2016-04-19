@@ -69,4 +69,11 @@ public interface GrpTagMapper {
      * @mbggenerated Mon Apr 11 13:45:44 CST 2016
      */
     int updateByExample(@Param("record") GrpTagKey record, @Param("example") GrpTagExample example);
+    
+    /**.
+     * batch insert GrpTagKey
+     * @param infoes List<GrpTagKey>
+     * @return int
+     */
+    int bacthInsert(@Param("infoes")List<GrpTagKey> infoes);
 }

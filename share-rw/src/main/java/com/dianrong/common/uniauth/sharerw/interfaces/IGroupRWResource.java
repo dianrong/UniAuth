@@ -6,7 +6,7 @@ import javax.ws.rs.Path;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
+import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
 
@@ -41,4 +41,9 @@ public interface IGroupRWResource extends IGroupResource {
     @POST
     @Path("replacerolestogroup")
     Response<Void> replaceRolesToGroup(GroupParam groupParam);
+    
+    @POST
+    @Path("replacetagstogroup")
+  //scenario: replace tags to group
+    Response<Void> replaceTagsToGrp(GroupParam groupParam);
 }

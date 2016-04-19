@@ -37,8 +37,9 @@ public class GrpTagKey {
      *
      * @mbggenerated Mon Apr 11 13:45:44 CST 2016
      */
-    public void setGrpId(Integer grpId) {
+    public GrpTagKey setGrpId(Integer grpId) {
         this.grpId = grpId;
+        return this;
     }
 
     /**
@@ -61,7 +62,8 @@ public class GrpTagKey {
      *
      * @mbggenerated Mon Apr 11 13:45:44 CST 2016
      */
-    public void setTagId(Integer tagId) {
+    public GrpTagKey setTagId(Integer tagId) {
         this.tagId = tagId;
+        return this;
     }
 }

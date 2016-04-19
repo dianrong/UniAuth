@@ -65,6 +65,22 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            queryTagsWithCheckedInfo: {
+                method: 'POST',
+                params: {
+                    method: 'group-tags'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            replaceTagsToGrp: {
+                method: 'POST',
+                params: {
+                    method: 'replace-tags-to-group'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
         });
         svc.grpShared = {};

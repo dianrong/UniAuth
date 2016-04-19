@@ -29,6 +29,8 @@ public class GroupParam extends Operator {
 	private Integer domainId;
 	
 	private List<Integer> roleIds;
+	
+	private List<Integer> tagIds;
 
 	public Integer getId() {
 		return id;
@@ -153,6 +155,15 @@ public class GroupParam extends Operator {
 
 	public GroupParam setTagId(Integer tagId) {
 		this.tagId = tagId;
+		return this;
+	}
+
+	public List<Integer> getTagIds() {
+		return tagIds;
+	}
+
+	public GroupParam setTagIds(List<Integer> tagIds) {
+		this.tagIds = tagIds;
 		return this;
 	}
 }

@@ -18,7 +18,7 @@ public class GroupQuery extends PageParam  {
     private Integer tagId;
     private Boolean needTag;
     private Boolean needUser;
-
+    
     public List<Integer> getGroupIds() {
         return groupIds;
     }

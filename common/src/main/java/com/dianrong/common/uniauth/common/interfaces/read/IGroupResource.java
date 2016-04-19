@@ -1,20 +1,22 @@
 package com.dianrong.common.uniauth.common.interfaces.read;
 
-import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+
+import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
+import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 
 @Path("group")
 @Produces({MediaType.APPLICATION_JSON})
@@ -45,4 +47,8 @@ public interface IGroupResource {
     @Path("checkowner")
     //scenario: check if one user is the owner of one group by groupIds
     Response<Void> checkOwner(GroupParam groupParam);
+    
+    @POST
+    @Path("querytagswithchecked")
+    Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam);
 }
