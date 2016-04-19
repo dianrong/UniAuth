@@ -438,7 +438,7 @@ public class UserService {
 		CheckEmpty.checkEmpty(password, "密码");
 		CheckEmpty.checkEmpty(ip, "IP地址");
 
-		User user = getUserByAccount(account, true);
+		User user = getUserByAccount(account.trim(), true);
         
 		if(AppConstants.ONE_Byte.equals(user.getStatus())){
 			throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
