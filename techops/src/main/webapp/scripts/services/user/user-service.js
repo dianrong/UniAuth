@@ -62,6 +62,22 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            queryTagsWithCheckedInfo: {
+                method: 'POST',
+                params: {
+                    method: 'user-tags'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
+            },
+            replaceTagsToUser : {
+            	method: 'POST',
+                params: {
+                    method: 'replace-tags-to-user'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
         });
         svc.userShared = {};

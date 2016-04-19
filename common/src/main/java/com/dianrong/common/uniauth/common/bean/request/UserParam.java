@@ -19,6 +19,17 @@ public class UserParam extends Operator {
     private Integer domainId;
     
     private List<Integer> roleIds;
+    
+    private List<Integer> tagIds;
+    
+	public List<Integer> getTagIds() {
+		return tagIds;
+	}
+
+	public UserParam setTagIds(List<Integer> tagIds) {
+		this.tagIds = tagIds;
+		return this;
+	}
 
 	public Long getId() {
 		return id;

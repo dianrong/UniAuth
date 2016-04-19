@@ -37,8 +37,9 @@ public class UserTagKey {
      *
      * @mbggenerated Thu Apr 07 16:46:03 CST 2016
      */
-    public void setTagId(Integer tagId) {
+    public UserTagKey setTagId(Integer tagId) {
         this.tagId = tagId;
+        return this;
     }
 
     /**
@@ -61,7 +62,8 @@ public class UserTagKey {
      *
      * @mbggenerated Thu Apr 07 16:46:03 CST 2016
      */
-    public void setUserId(Long userId) {
+    public UserTagKey setUserId(Long userId) {
         this.userId = userId;
+        return this;
     }
 }

@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
@@ -66,4 +67,9 @@ public interface IUserResource {
     @Path("userInfobytag")
     //scenario: cas userinfo edit, check if the input email or phone exists
     Response<UserDto> getUserInfoByUserTag(LoginParam loginParam);
+    
+    @POST
+    @Path("tagsWithUserChecked")
+    //scenario: techops user-tag 
+    Response<List<TagDto>>  getTagsWithUserCheckedInfo(UserParam userParam);
 }

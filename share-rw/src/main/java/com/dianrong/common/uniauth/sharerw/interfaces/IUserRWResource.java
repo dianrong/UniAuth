@@ -37,4 +37,10 @@ public interface IUserRWResource extends IUserResource {
     @POST
     @Path("replacerolestouser")
     Response<Void> replaceRolesToUser(UserParam userParam);
+    
+    
+    @POST
+    @Path("savetagstouser")
+    //scenario: techops user-tag 
+    Response<Void> replaceTagsToUser(UserParam userParam);
 }

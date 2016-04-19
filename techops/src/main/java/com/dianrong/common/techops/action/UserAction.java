@@ -5,6 +5,7 @@ import com.dianrong.common.techops.service.TechOpsService;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
@@ -171,5 +172,21 @@ public class UserAction {
             + "or (hasRole('ROLE_ADMIN') and hasPermission(#userParam, 'PERM_ROLEIDS_CHECK'))")
     public Response<Void> replaceRolesToUser(@RequestBody UserParam userParam) {
         return uARWFacade.getUserRWResource().replaceRolesToUser(userParam);
+    }
+    
+    // perm double checked
+    @RequestMapping(value = "/user-tags" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and principal.domainIdSet.contains(#userParam.domainId))")
+    public Response<List<TagDto>> getTagsWithUserCheckedInfo(@RequestBody UserParam userParam) {
+        return uARWFacade.getUserRWResource().getTagsWithUserCheckedInfo(userParam);
+    }
+    
+ // perm double checked
+    @RequestMapping(value = "/replace-tags-to-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
+            + "or (hasRole('ROLE_ADMIN') and hasPermission(#userParam, 'PERM_ROLEIDS_CHECK'))")
+    public Response<Void> replaceTagsToUser(@RequestBody UserParam userParam) {
+        return uARWFacade.getUserRWResource().replaceTagsToUser(userParam);
     }
 }

@@ -69,4 +69,11 @@ public interface UserTagMapper {
      * @mbggenerated Thu Apr 07 16:46:03 CST 2016
      */
     int updateByExample(@Param("record") UserTagKey record, @Param("example") UserTagExample example);
+    
+    /**.
+     * batch insert userTag
+     * @param infoes insert infoes
+     * @return result
+     */
+    int bacthInsert(@Param("infoes") List<UserTagKey> infoes);
 }

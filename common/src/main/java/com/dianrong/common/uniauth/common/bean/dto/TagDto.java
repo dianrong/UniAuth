@@ -15,8 +15,32 @@ public class TagDto {
     private String tagTypeCode;
     private Date createDate;
     private Date lastUpdate;
+    
+	//whether this tag directly connected with a user
+	private Boolean tagUserChecked;
+	
+	//whether this tag directly connected with a group
+	private Boolean tagGrouprChecked;
 
-    public Integer getId() {
+    public Boolean getTagUserChecked() {
+		return tagUserChecked;
+	}
+
+	public TagDto setTagUserChecked(Boolean tagUserChecked) {
+		this.tagUserChecked = tagUserChecked;
+		return this;
+	}
+
+	public Boolean getTagGrouprChecked() {
+		return tagGrouprChecked;
+	}
+
+	public TagDto setTagGrouprChecked(Boolean tagGrouprChecked) {
+		this.tagGrouprChecked = tagGrouprChecked;
+		return this;
+	}
+
+	public Integer getId() {
         return id;
     }
 
