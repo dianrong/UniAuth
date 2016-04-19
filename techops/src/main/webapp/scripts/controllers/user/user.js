@@ -60,6 +60,13 @@ define(['../../utils/constant'], function (constant) {
             UserService.userShared.selected = selectedUser;
             $state.go('rel.user--role');
         };
+        
+        // navigate to user - tag
+        $scope.navToTag = function(selectedUser) {
+            UserService.userShared.selected = selectedUser;
+            $state.go('rel.user--tag');
+        };
+        
         $scope.launch = function(which, param) {
             switch(which) {
                 case 'status':
