@@ -44,7 +44,12 @@ public enum FieldType {
 	/**.
 	 * domain_id
 	 */
-	FIELD_TYPE_DOMAIN_ID;
+	FIELD_TYPE_DOMAIN_ID,
+	
+	/**.
+	 * tag_type_id
+	 */
+	FIELD_TYPE_TAG_TYPE_ID;
 	
 	/**.
 	 * 获取fieldType的字符串描述符
@@ -69,6 +74,8 @@ public enum FieldType {
 			return "permissonTypeId";
 		case FIELD_TYPE_DOMAIN_ID:
 			return "domainId";
+		case FIELD_TYPE_TAG_TYPE_ID:
+			return "tagTypeId";
 			default:
 				break;
 		}

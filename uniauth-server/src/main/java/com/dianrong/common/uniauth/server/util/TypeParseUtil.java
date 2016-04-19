@@ -28,6 +28,23 @@ public class TypeParseUtil {
 	}
 	
 	/**.
+	 * 从object转换成Integer，不然就报错抛出去
+	 * @return
+	 */
+	public static Integer parseToIntegerFromObject(Object val){
+		if(val == null){
+			throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.typeparase.null.poniter","TypeParseUtil.parseToIntegerFromObject"));
+		}
+		Integer result = null;
+		try{
+			result = Integer.parseInt(val.toString());
+		} catch(Exception ex){
+			throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.typeparase.parase.error", val , "Long"));
+		}
+		return result;
+	}
+	
+	/**.
 	 * 从object转换成String，不然就报错抛出去
 	 * @return
 	 */

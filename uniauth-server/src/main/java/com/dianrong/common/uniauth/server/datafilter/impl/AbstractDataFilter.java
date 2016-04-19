@@ -1,8 +1,5 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
@@ -20,37 +17,9 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 */
 	private boolean dataFilterSwitch = true;
 	
-	/**.
-	 * 过滤数据的接口.
-	 * @param FieldType  过滤的字段名
-	 * @param fieldValue  对应字段的值
-	 * @param ftype 过滤的方式
-	 */
 	@Override
-	public void dataFilter(FieldType FieldType, Object fieldValue, FilterType ftype){
-		if(!isDataFilterSwitch()){
-			return;
-		}
-		Map<FieldType, Object>  filterMap = new HashMap<FieldType, Object>();
-		filterMap.put(FieldType, fieldValue);
-		doDataFilter(filterMap, ftype );
-	}
-	
-	/**.
-	 * 过滤多个字段的接口
-	 * @param filterMap map包括字段名以及对应的字段值
-	 * @param ftype 过滤的方式
-	 */
-	@Override
-	public void dataFilter(Map<FieldType, Object> filterMap, FilterType ftype){
-		if(!isDataFilterSwitch()){
-			return;
-		}
-		//判空处理
-		if(filterMap == null || filterMap.isEmpty()){
-			return;
-		}
-		doDataFilter(filterMap, ftype);
+	public void dataFilter(FieldType type, Object fieldValue, FilterType ftype){
+		dataFilterWithConditionsEqual(ftype, new FilterData(type, fieldValue));
 	}
 	
 	/**.
@@ -119,13 +88,6 @@ public abstract class AbstractDataFilter  implements DataFilter{
 	 * @param fieldValue 需要新加入的值
 	 */
 	protected abstract void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue);
-	
-	/**.
-	 * 过滤多个字段的接口（目前该模型就支持这两种）
-	 * @param filterMap map包括字段名以及对应的字段值
-	 * @param ftype 过滤的方式
-	 */
-	protected abstract void doDataFilter(Map<FieldType, Object> filterMap, FilterType ftype);
 	
 	public boolean isDataFilterSwitch() {
 		return dataFilterSwitch;

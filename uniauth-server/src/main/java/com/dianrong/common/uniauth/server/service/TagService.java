@@ -1,12 +1,39 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.*;
+import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.DomainExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpTagExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpTagKey;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
+import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
@@ -16,17 +43,6 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Created by Arc on 7/4/2016.
@@ -43,8 +59,12 @@ public class TagService {
     private GrpTagMapper grpTagMapper;
     @Autowired
     private DomainMapper domainMapper;
+    
     @Resource(name="tagTypeDataFilter")
     private DataFilter dataFilter;
+    
+    @Resource(name="tagDataFilter")
+    private DataFilter tagDataFilter;
 
     public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, String fuzzyTagCode, Byte tagStatus,
                                       Integer tagTypeId, Long userId, Integer domainId, String domainCode, List<Integer> domainIds, Integer grpId,
@@ -150,9 +170,15 @@ public class TagService {
         }
     }
 
-    public TagDto addNewTag(String code, Integer domainId, Integer tagTypeId, String description) {
-        CheckEmpty.checkEmpty(domainId, "domainId");
+    public TagDto addNewTag(String code, Integer tagTypeId, String description) {
         CheckEmpty.checkEmpty(code, "code");
+        CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
+        
+        // 不能存在重复的数据
+        tagDataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA , 
+        		new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId) ,
+        		new FilterData(FieldType.FIELD_TYPE_CODE, code));
+        
         Tag tag = new Tag();
         Date now = new Date();
         tag.setCreateDate(now);
@@ -167,12 +193,20 @@ public class TagService {
 
     public TagDto updateTag(Integer tagId, String code, Byte status, Integer tagTypeId, String description) {
         CheckEmpty.checkEmpty(tagId, "tagId");
+        
         Tag tag = tagMapper.selectByPrimaryKey(tagId);
         if(tag == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagId, Tag.class.getSimpleName()));
         }
 
-        ParamCheck.checkStatus(status);
+        // 除了禁用的情况
+        if(!(status != null && status != AppConstants.ZERO_Byte)) {
+	       // 过滤重复数据 启用状态的才管
+	        tagDataFilter.filterFieldValueIsExistWithCondtionsEqual(tagId, 
+	        		new FilterData(FieldType.FIELD_TYPE_CODE, StringUtil.strIsNullOrEmpty(code) ? tag.getCode() : code),
+	        		new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId == null ? tag.getTagTypeId(): tagTypeId));
+        }
+        
         tag.setStatus(status);
         tag.setCode(code);
         tag.setTagTypeId(tagTypeId);
@@ -228,14 +262,16 @@ public class TagService {
         if(tagType == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
         }
-
         tagType.setCode(code);
         if(domainId != null) {
             tagType.setDomainId(domainId);
         }
-        dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA,
+        
+        // 判断
+        dataFilter.filterFieldValueIsExistWithCondtionsEqual(tagTypeId,
                 FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
-                FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
+                FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, tagType.getDomainId()));
+        
         tagTypeMapper.updateByPrimaryKey(tagType);
         return BeanConverter.convert(tagType);
     }

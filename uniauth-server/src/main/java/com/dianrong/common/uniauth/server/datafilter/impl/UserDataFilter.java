@@ -1,20 +1,16 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
-import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
-import com.dianrong.common.uniauth.server.util.UniBundle;
 
 /**.
  * 用户的数据过滤处理实现.
@@ -26,79 +22,6 @@ public class UserDataFilter extends CurrentAbstractDataFilter {
 	 @Autowired
 	 private UserMapper userMapper;
 	
-	/**.
-	 * 标示处理的表名
-	 */
-	private String processTableName = "用户";
-	
-	/**.
-	 * 处理过滤status=0的情况
-	 * @param filterMap 过滤条件字段
-	 */
-	@Override
-	public void filterStatusEqual0(Map<FieldType, Object> filterMap){
-		Set<Entry<FieldType, Object>> entrySet = filterMap.entrySet();
-		//遍历
-		for(Entry<FieldType, Object> kv : entrySet){
-			switch(kv.getKey()){
-				case FIELD_TYPE_ID:
-					int countById = userMapper.countUserByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
-					//有数据  就要报错
-					if(countById > 0){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTableName, "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
-					}
-				case FIELD_TYPE_EMAIL:
-					int countByEmail = userMapper.countUserByEmailWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
-					if(countByEmail > 0){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTableName, "email" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
-					}
-					break;
-				case FIELD_TYPE_PHONE:
-					int countByPhone = userMapper.countUserByPhoneWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
-					if(countByPhone > 0){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.exsit.error", processTableName, "phone" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	}
-	
-	/**.
-	 * 处理过滤不能出现status=0的情况
-	 * @param filterMap 入参数据
-	 */
-	@Override
-	public void filterNoStatusEqual0(Map<FieldType, Object> filterMap){
-		Set<Entry<FieldType, Object>> entrySet = filterMap.entrySet();
-		//遍历
-		for(Entry<FieldType, Object> kv : entrySet){
-			switch(kv.getKey()){
-				case FIELD_TYPE_ID:
-					int countById = userMapper.countUserByIdWithStatusEffective(TypeParseUtil.parseToLongFromObject(kv.getValue()));
-					//有数据  就要报错
-					if(countById <= 0){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTableName, "id" , TypeParseUtil.parseToLongFromObject(kv.getValue())));
-					}
-				case FIELD_TYPE_EMAIL:
-					int countByEmail = userMapper.countUserByEmailWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
-					if(countByEmail <= 0){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTableName, "email" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
-					}
-					break;
-				case FIELD_TYPE_PHONE:
-					int countByPhone = userMapper.countUserByPhoneWithStatusEffective(TypeParseUtil.parseToStringFromObject(kv.getValue()));
-					if(countByPhone <= 0){
-						throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.notexsit.error", processTableName, "phone" , TypeParseUtil.parseToStringFromObject(kv.getValue())));
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
 	/**.
 	 * 判断数据是否已经重复了
 	 */
@@ -115,10 +38,7 @@ public class UserDataFilter extends CurrentAbstractDataFilter {
 					}
 				}
 				//查看是否存在其他的记录是该信息
-				Map<FieldType, Object> tmap = new HashMap<FieldType, Object>();
-				tmap.put(FieldType.FIELD_TYPE_EMAIL, newEmail);
-				//进行判断
-				this.filterStatusEqual0(tmap);
+				this.dataFilter(FieldType.FIELD_TYPE_EMAIL, newEmail, FilterType.FILTER_TYPE_EXSIT_DATA);
 				break;
 			case FIELD_TYPE_PHONE:
 				String newPhone = TypeParseUtil.parseToStringFromObject(fieldValue);
@@ -130,13 +50,50 @@ public class UserDataFilter extends CurrentAbstractDataFilter {
 					}
 				}
 				//查看是否存在其他的记录是该信息
-				tmap = new HashMap<FieldType, Object>();
-				tmap.put(FieldType.FIELD_TYPE_PHONE, newPhone);
-				//进行判断
-				this.filterStatusEqual0(tmap);
+				this.dataFilter(FieldType.FIELD_TYPE_PHONE, newPhone, FilterType.FILTER_TYPE_EXSIT_DATA);
 				break;
 			default:
 				break;
 			}
+	}
+
+	@Override
+	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
+		 //判空处理
+        if(equalsField == null || equalsField.length == 0) {
+            return false;
+        }
+        //首先根据类型和值获取到对应的model数组
+        UserExample condition = new UserExample();
+        UserExample.Criteria criteria =  condition.createCriteria();
+        
+        criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+        //构造查询条件
+        for(FilterData fd: equalsField){
+            switch(fd.getType()) {
+            case FIELD_TYPE_ID:
+            	criteria.andIdEqualTo(TypeParseUtil.parseToLongFromObject(fd.getValue()));
+            	break;
+			case FIELD_TYPE_EMAIL:
+				criteria.andEmailEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
+				break;
+			case FIELD_TYPE_PHONE:
+				criteria.andPhoneEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
+                    break;
+                default:
+                    break;
+            }
+        }
+        //查询
+        int count = userMapper.countByExample(condition);
+        if(count > 0){
+            return true;
+        }
+        return false;
+	}
+
+	@Override
+	protected String getProcessTableName() {
+		return "用户";
 	}
 }

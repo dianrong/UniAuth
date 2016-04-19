@@ -5,63 +5,61 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dianrong.common.uniauth.server.data.entity.TagType;
-import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
-import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 
-/**
- * Created by Arc on 15/4/2016.
+/**.
+ * tag 数据过滤的接口
+ * @author wanglin
  */
+@Service("tagDataFilter")
+public class TagDataFilter extends CurrentAbstractDataFilter {
+    @Autowired
+    private TagMapper tagMapper;
 
-@Service("tagTypeDataFilter")
-public class TagTypeDataFilter extends CurrentAbstractDataFilter {
-	/**.
-	 * tagType处理的mapper
-	 */
-	@Autowired
-    private TagTypeMapper tagTypeMapper;
-
-    /**.
-     * 判断某几个字段是否同时存在.
-     */
     @Override
-    protected boolean dataWithConditionsEqualExist(FilterData... equalsField){
-        //判空处理
+	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
+		//判空处理
         if(equalsField == null || equalsField.length == 0) {
             return false;
         }
         //首先根据类型和值获取到对应的model数组
-        TagTypeExample condition = new TagTypeExample();
-        TagTypeExample.Criteria criteria =  condition.createCriteria();
+        TagExample condition = new TagExample();
+        TagExample.Criteria criteria =  condition.createCriteria();
+        
+        criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+        
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
                 case FIELD_TYPE_CODE:
                     criteria.andCodeEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
                     break;
-                case FIELD_TYPE_DOMAIN_ID:
-                    criteria.andDomainIdEqualTo(Integer.parseInt(TypeParseUtil.parseToLongFromObject(fd.getValue()).toString()));
+                case FIELD_TYPE_TAG_TYPE_ID:
+                    criteria.andTagTypeIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
                     break;
                 default:
                     break;
             }
         }
         //查询
-        int count = tagTypeMapper.countByExample(condition);
+        int count = tagMapper.countByExample(condition);
         if(count > 0){
             return true;
         }
         return false;
-    }
+	}
 
 	@Override
 	protected String getProcessTableName() {
-		return  "标签类型";
+		return "标签";
 	}
 	
 	@Override
@@ -72,12 +70,12 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter {
 			return;
 		}
 		
-		TagTypeExample condition = new TagTypeExample();
+		TagExample condition = new TagExample();
 		condition.createCriteria().andIdEqualTo(tagId);
-		List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
+		List<Tag> selectByExample = tagMapper.selectByExample(condition);
 		
 		if(selectByExample != null && !selectByExample.isEmpty()){
-			TagType currentTag = selectByExample.get(0);
+			Tag currentTag = selectByExample.get(0);
 			// 默认是全部相等的
 			boolean isEqual = true;
 			// 如果数据信息没有改变  则不管
@@ -111,7 +109,7 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter {
 	 * @param type 结果
 	 * @return 结果
 	 */
-	private Object getObjectValue(TagType obj, FieldType type){
+	private Object getObjectValue(Tag obj, FieldType type){
 		if(obj == null){
 			return null;
 		}
@@ -119,8 +117,8 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter {
 		switch(type){
 		  case FIELD_TYPE_CODE:
 			  return obj.getCode();
-          case FIELD_TYPE_DOMAIN_ID:
-        	  return obj.getDomainId();
+          case FIELD_TYPE_TAG_TYPE_ID:
+        	  return obj.getTagTypeId();
 			default:
 				break;
 		}

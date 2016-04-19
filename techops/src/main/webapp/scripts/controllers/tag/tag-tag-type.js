@@ -64,11 +64,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         for(var i=0; i<res.info.length;i++) {
                             AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
                         }
-                        var index = $scope.tagTypes.indexOf(tagType);
-                        $scope.tagTypes.splice(index, 1);
-                        if($scope.tagTypes.length == 0) {
-                            $scope.tagTypesLoading = constant.loadEmpty;
-                        }
                         $scope.cancelEdit(tagType);
                         return;
                     }

@@ -134,7 +134,6 @@ public class PermissionService {
 		Byte status = permissionParam.getStatus();
 		//启用或者启用状态的修改
         if((status != null && status == AppConstants.ZERO_Byte) || status == null){
-        	//不能更新成重复数据
         	//同一个域下面不能出现重复数据
     		dataFilter.filterFieldValueIsExistWithCondtionsEqual(permissionParam.getId(),
     				FilterData.buildFilterData(FieldType.FIELD_TYPE_VALUE, value),
