@@ -100,7 +100,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                                 'status':param.status?0:1
                             }
                             , function(res) {
-                                AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'启用':'禁用') + "标签成功.");
+                                if(res.info) {
+                                    for(var i=0; i<res.info.length;i++) {
+                                        AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
+                                    }
+                                } else {
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'启用':'禁用') + "标签成功.");
+                                }
                                 $scope.queryTag();
                             }, function(err) {
                                 console.log(err);
