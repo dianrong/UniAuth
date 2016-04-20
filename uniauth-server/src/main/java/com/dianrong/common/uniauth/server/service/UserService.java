@@ -42,6 +42,7 @@ import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 import com.dianrong.common.uniauth.server.data.entity.Tag;
 import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.entity.User;
@@ -778,21 +779,26 @@ public class UserService {
     /**.
      * 获取所有的tags，并且根据用户id打上对应的checked标签
      * @param userId 用户id
+     * @param domainId 域名id
      * @return List<TagDto>
      */
-    public List<TagDto> searchTagsWithUserChecked(Long userId) {
+    public List<TagDto> searchTagsWithUserChecked(Long userId, Integer domainId) {
         CheckEmpty.checkEmpty(userId, "userId");
+        CheckEmpty.checkEmpty(domainId, "domainId");
         
-        TagExample tagConditon = new TagExample();
-        tagConditon.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
-        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
-        
-        // 优化
-        if(allTags == null){
-        	return null;
-        } 
-        if(allTags.isEmpty()) {
+        // 获取tagType信息
+        TagTypeExample tagTypeExample = new TagTypeExample();
+        //添加查询条件
+        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId);
+        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+        if(tagTypes == null || tagTypes.isEmpty()){
         	return new ArrayList<TagDto>();
+        }
+        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+        if(!CollectionUtils.isEmpty(tagTypes)) {
+            for(TagType tagType : tagTypes) {
+            	tagTypeIdMap.put(tagType.getId(), tagType);
+            }
         }
         
         // 查询用户和tag的关联关系信息
@@ -800,7 +806,6 @@ public class UserService {
         userTagExample.createCriteria().andUserIdEqualTo(userId);
         List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
         List<TagDto> tagDtos = new ArrayList<TagDto>();
-        
         Set<Integer> tagIdLinkedToUser = new HashSet<Integer>();
         if(!CollectionUtils.isEmpty(userTagKeys)) {
             for(UserTagKey userTagKey : userTagKeys) {
@@ -808,13 +813,18 @@ public class UserService {
             }
         }
         
-        // 获取tagType信息
-        List<TagType> tagTypes = tagTypeMapper.selectByExample(new TagTypeExample());
-        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
-        if(!CollectionUtils.isEmpty(tagTypes)) {
-            for(TagType tagType : tagTypes) {
-            	tagTypeIdMap.put(tagType.getId(), tagType);
-            }
+        // 查询tag信息
+        TagExample tagConditon = new TagExample();
+        Criteria andStatusEqualTo = tagConditon.createCriteria();
+        andStatusEqualTo.andStatusEqualTo(AppConstants.ZERO_Byte);
+        
+        // 加入domainId的限制
+        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet()));
+        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
+        
+        // 优化
+        if(allTags == null || allTags.isEmpty()) {
+        	return new ArrayList<TagDto>();
         }
         
         for(Tag tag : allTags) {

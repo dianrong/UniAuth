@@ -49,6 +49,7 @@ import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
 import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
+import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
@@ -778,19 +779,26 @@ public class GroupService {
 	    /**.
 	     * 获取所有的tags，并且根据groupId打上对应的checked标签
 	     * @param groupId 组id
+	     * @param domainId 域idd
 	     * @return List<TagDto>
 	     */
-	    public List<TagDto> searchTagsWithrChecked(Integer groupId) {
+	    public List<TagDto> searchTagsWithrChecked(Integer groupId, Integer domainId) {
 	        CheckEmpty.checkEmpty(groupId, "groupId");
-	        TagExample tagConditon = new TagExample();
-	        tagConditon.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
-	        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
-	        // 优化
-	        if(allTags == null){
-	        	return null;
-	        } 
-	        if(allTags.isEmpty()) {
+	        CheckEmpty.checkEmpty(domainId, "domainId");
+	        
+	        // 获取tagType信息
+	        TagTypeExample tagTypeExample = new TagTypeExample();
+	        //添加查询条件
+	        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId);
+	        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+	        if(tagTypes == null || tagTypes.isEmpty()){
 	        	return new ArrayList<TagDto>();
+	        }
+	        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+	        if(!CollectionUtils.isEmpty(tagTypes)) {
+	            for(TagType tagType : tagTypes) {
+	            	tagTypeIdMap.put(tagType.getId(), tagType);
+	            }
 	        }
 	        
 	        // 查询组和tag的关联关系信息
@@ -806,13 +814,18 @@ public class GroupService {
 	            }
 	        }
 	        
-	        // 获取tagType信息
-	        List<TagType> tagTypes = tagTypeMapper.selectByExample(new TagTypeExample());
-	        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
-	        if(!CollectionUtils.isEmpty(tagTypes)) {
-	            for(TagType tagType : tagTypes) {
-	            	tagTypeIdMap.put(tagType.getId(), tagType);
-	            }
+	        // 查询tag信息
+	        TagExample tagConditon = new TagExample();
+	        Criteria andStatusEqualTo = tagConditon.createCriteria();
+	        andStatusEqualTo.andStatusEqualTo(AppConstants.ZERO_Byte);
+	        
+	        // 加入domainId的限制
+	        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet()));
+	        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
+	        
+	        // 优化
+	        if(allTags == null || allTags.isEmpty()) {
+	        	return new ArrayList<TagDto>();
 	        }
 	        
 	        for(Tag tag : allTags) {

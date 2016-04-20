@@ -109,7 +109,7 @@ public class UserResource implements IUserRWResource {
 	
 	@Override
 	public Response<List<TagDto>> getTagsWithUserCheckedInfo(UserParam userParam) {
-		List<TagDto> tagDtos = userService.searchTagsWithUserChecked(userParam.getId());
+		List<TagDto> tagDtos = userService.searchTagsWithUserChecked(userParam.getId(), userParam.getDomainId());
 		return Response.success(tagDtos);
 	}
 	
