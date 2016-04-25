@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.client.custom;
 
 import java.util.*;
 
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -15,6 +16,7 @@ public class UserExtInfo extends User {
 	private UserDto userDto;
 	private DomainDto domainDto;
 	private Map<String, Set<String>> permMap;
+	private Map<String, Set<PermissionDto>> permDtoMap;
 
 	public Boolean hasDomain(String domainPerm) {
 		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
@@ -70,14 +72,15 @@ public class UserExtInfo extends User {
 	}
 	
 	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
-			boolean credentialsNonExpired, boolean accountNonLocked,
-			Collection<? extends GrantedAuthority> authorities, 
-			Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
+					   boolean credentialsNonExpired, boolean accountNonLocked,
+					   Collection<? extends GrantedAuthority> authorities,
+					   Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap, Map<String, Set<PermissionDto>> permDtoMap) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		this.id = id;
 		this.userDto = userDto;
 		this.domainDto = domainDto;
 		this.permMap = permMap;
+		this.permDtoMap = permDtoMap;
 	}
 
 /*	public UserExtInfo(String username, String password, Collection<? extends GrantedAuthority> authorities, 
@@ -120,5 +123,13 @@ public class UserExtInfo extends User {
 	public void setPermMap(Map<String, Set<String>> permMap) {
 		this.permMap = permMap;
 	}
-	
+
+	public Map<String, Set<PermissionDto>> getPermDtoMap() {
+		return permDtoMap;
+	}
+
+	public UserExtInfo setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
+		this.permDtoMap = permDtoMap;
+		return this;
+	}
 }

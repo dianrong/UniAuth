@@ -21,7 +21,8 @@ public class RoleDto {
 
 	private List<GroupDto> groupList;
 	private Map<String, Set<String>> permMap;
-	
+	private Map<String, Set<PermissionDto>> permDtoMap;
+
 	//whether this role connected with this permission
 	//private boolean permChecked;
 	//whether this role connected with this user
@@ -141,4 +142,12 @@ public class RoleDto {
 		return this;
 	}
 
+	public Map<String, Set<PermissionDto>> getPermDtoMap() {
+		return permDtoMap;
+	}
+
+	public RoleDto setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
+		this.permDtoMap = permDtoMap;
+		return this;
+	}
 }

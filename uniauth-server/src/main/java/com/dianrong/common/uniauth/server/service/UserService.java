@@ -14,18 +14,13 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.TagDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -571,25 +566,31 @@ public class UserService {
 						List<Permission> permList = permissionMapper.selectByRoleAndDomainId(roleAndDomainMap);
 						
 						Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
-						
+						Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
 						if(permList != null){
 							for(Permission permission: permList){
 								Integer permTypeId = permission.getPermTypeId();
 								String permType = permTypeMap.get(permTypeId).getType();
 								String value = permission.getValue();
-								
+                                PermissionDto permissionDto = BeanConverter.convert(permission);
+
 								if(permMap.containsKey(permType)){
 									permMap.get(permType).add(value);
+                                    permDtoMap.get(permType).add(permissionDto);
 								}
 								else{
 									Set<String> set = new HashSet<>();
                                     set.add(value);
 									permMap.put(permType, set);
+                                    Set<PermissionDto> permissionDtos = new HashSet<>();
+                                    permissionDtos.add(permissionDto);
+                                    permDtoMap.put(permType, permissionDtos);
 								}
 							}
 						}
 						
 						roleDto.setPermMap(permMap);
+                        roleDto.setPermDtoMap(permDtoMap);
 					}
 				}
 			}
