@@ -83,14 +83,16 @@ public class UserExtInfo extends User {
 		this.permDtoMap = permDtoMap;
 	}
 
-/*	public UserExtInfo(String username, String password, Collection<? extends GrantedAuthority> authorities, 
-			Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
-		super(username, password, authorities);
+	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
+					   boolean credentialsNonExpired, boolean accountNonLocked,
+					   Collection<? extends GrantedAuthority> authorities,
+					   Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
+		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		this.id = id;
 		this.userDto = userDto;
 		this.domainDto = domainDto;
 		this.permMap = permMap;
-	}*/
+	}
 	
 	public Long getId() {
 		return id;
