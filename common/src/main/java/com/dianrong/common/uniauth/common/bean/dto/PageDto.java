@@ -2,9 +2,10 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PageDto<T> {
+public class PageDto<T> implements Serializable {
 
     private int currentPage;       // current page number, from 0
     private int pageSize;   // page size

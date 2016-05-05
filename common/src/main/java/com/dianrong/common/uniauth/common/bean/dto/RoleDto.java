@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,7 +8,7 @@ import java.util.Set;
 /**
  * Created by Arc on 14/1/16.
  */
-public class RoleDto {
+public class RoleDto implements Serializable {
 	private Integer id;
 	private String name;
 	private String description;

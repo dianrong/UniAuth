@@ -1,9 +1,10 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class GroupDto {
+public class GroupDto implements Serializable {
 	private Integer id;
 	private String code;
 	private String name;
