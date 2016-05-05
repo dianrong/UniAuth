@@ -11,6 +11,10 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
  * @author wanglin
  */
 public class CasLoginAdConfigModel extends ConfigDto{
+	/**
+	 */
+	private static final long serialVersionUID = -3358258604250843024L;
+
 	/**.
 	 * 广告跳转的url
 	 */

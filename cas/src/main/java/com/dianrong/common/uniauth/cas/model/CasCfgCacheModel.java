@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.cas.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
@@ -10,7 +11,11 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
  * 用于缓存cas的个性化的一些设置参数
  * @author wanglin
  */
-public class CasCfgCacheModel {
+public class CasCfgCacheModel implements Serializable{
+	/**
+	 */
+	private static final long serialVersionUID = -5416502260004426583L;
+
 	private final ConfigDto pageTitle;
 	
 	private final ConfigDto pageIcon;

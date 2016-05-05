@@ -1,12 +1,18 @@
 package com.dianrong.common.uniauth.cas.model;
 
+import java.io.Serializable;
+
 /**
  * . 用于存储某些有时间要求的model
  * 
  * @author R9GBP97
  *
  */
-public class DateSessionObjModel<T> {
+public class DateSessionObjModel<T> implements Serializable {
+	/**
+	 */
+	private static final long serialVersionUID = -5592978188308898593L;
+
 	/**
 	 * . 时间戳
 	 */
