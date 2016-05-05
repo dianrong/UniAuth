@@ -1,9 +1,11 @@
 package com.dianrong.common.uniauth.common.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Arc on 18/3/2016.
  */
-public class Linkage<E1, E2> {
+public class Linkage<E1, E2> implements Serializable {
 
     private E1 entry1;
     private E2 entry2;

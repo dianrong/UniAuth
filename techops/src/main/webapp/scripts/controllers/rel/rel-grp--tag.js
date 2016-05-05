@@ -29,6 +29,7 @@ define(['../../utils/constant'], function (constant, AlertService) {
                 return;
             }
             params.id = $scope.grp.selected.id;
+            params.domainId = $rootScope.loginDomainsDropdown.option.id;
             GroupService.queryTagsWithCheckedInfo(params, function (res) {
                 var result = res.data;
                 if(res.info) {

@@ -1,11 +1,12 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Arc on 24/3/2016.
  */
-public class AuditDto {
+public class AuditDto implements Serializable {
     private Integer id;
     private Long userId;
     private Date requestDate;

@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-public class UrlRoleMappingDto {
+import java.io.Serializable;
+
+public class UrlRoleMappingDto implements Serializable {
 
 	private String permUrl;
 	private String roleCode;

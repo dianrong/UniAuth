@@ -30,6 +30,7 @@ define(['../../utils/constant'], function (constant, AlertService) {
                 return;
             }
             params.id = $scope.user.selected.id;
+            params.domainId = $rootScope.loginDomainsDropdown.option.id;
             UserService.queryTagsWithCheckedInfo(params, function (res) {
                 var result = res.data;
                 if(res.info) {

@@ -105,7 +105,7 @@ public class GroupResource implements IGroupRWResource {
 	
 	@Override
 	public Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam) {
-		List<TagDto> tagDtos = groupService.searchTagsWithrChecked(groupParam.getId());
+		List<TagDto> tagDtos = groupService.searchTagsWithrChecked(groupParam.getId(), groupParam.getDomainId());
 		return Response.success(tagDtos);
 	}
 	

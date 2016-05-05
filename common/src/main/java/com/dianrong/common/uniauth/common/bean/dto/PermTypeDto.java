@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-public class PermTypeDto {
+import java.io.Serializable;
+
+public class PermTypeDto implements Serializable {
 	private Integer id;
 	private String type;
 

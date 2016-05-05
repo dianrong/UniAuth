@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.cas.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,7 +13,11 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
  * 用于缓存cross filter的缓存model
  * @author wanglin
  */
-public final class CasCrossFilterCacheModel {
+public final class CasCrossFilterCacheModel implements Serializable{
+	/**
+	 */
+	private static final long serialVersionUID = -5705975046679932692L;
+
 	/**.
 	 * 存储crossFilter的cache的正则表达式字符串列表
 	 */

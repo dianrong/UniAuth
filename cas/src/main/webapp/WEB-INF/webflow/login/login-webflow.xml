@@ -253,8 +253,8 @@
             <set name="flowScope.passwordPolicyUrl" value="passwordPolicy.passwordPolicyUrl"/>
         </on-entry>
     </end-state>
-    <end-state id="casExpiredPassView" view="casExpiredPassView" parent="#abstactPasswordChangeView"/>
-    <end-state id="casMustChangePassView" view="casMustChangePassView" parent="#abstactPasswordChangeView"/>
+    <end-state id="casExpiredPassView" view="casFreshUserView"/>
+    <end-state id="casMustChangePassView" view="casFreshUserView"/>
     <end-state id="casAccountDisabledView" view="casAccountDisabledView"/>
     <end-state id="casAccountLockedView" view="casAccountLockedView"/>
     <end-state id="casBadHoursView" view="casBadHoursView"/>

@@ -1,13 +1,13 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Arc on 13/1/16.
  */
-//@XmlRootElement
-public class UserDto {
+public class UserDto implements Serializable {
 	private Long id;
 	private String name;
 	private String password;

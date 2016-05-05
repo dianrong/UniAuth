@@ -1,8 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UserDetailDto {
+public class UserDetailDto implements Serializable {
 	private UserDto userDto;
 	//owner group list not considered
 	private List<DomainDto> domainList;

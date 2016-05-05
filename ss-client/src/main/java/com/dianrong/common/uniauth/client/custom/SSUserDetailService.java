@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
@@ -79,6 +76,7 @@ public class SSUserDetailService implements UserDetailsService {
 					}
 				}
 				Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
+				Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
 				
 				Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 				if(currentDomainDto != null){
@@ -91,20 +89,21 @@ public class SSUserDetailService implements UserDetailsService {
 							String roleCode = roleDto.getRoleCode();
 							SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
 							authorities.add(authority);
-							
+
 							mergePermMap(permMap, roleDto.getPermMap());
+							mergePermMap(permDtoMap, roleDto.getPermDtoMap());
 						}
 					}
 				}
 				
 				if(userInfoClass == null || "".equals(userInfoClass.trim())){
-					return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
+					return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap, permDtoMap);
 				}
 				else{
 					try{
 						Class<?> clazz = Class.forName(userInfoClass);
-						Constructor<?> construct = clazz.getConstructor(String.class, String.class, Boolean.TYPE, Boolean.TYPE,Boolean.TYPE,Boolean.TYPE, Collection.class, Long.class, UserDto.class, DomainDto.class, Map.class);
-						UserExtInfo userExtInfo = (UserExtInfo)construct.newInstance(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
+						Constructor<?> construct = clazz.getConstructor(String.class, String.class, Boolean.TYPE, Boolean.TYPE,Boolean.TYPE,Boolean.TYPE, Collection.class, Long.class, UserDto.class, DomainDto.class, Map.class, Map.class);
+						UserExtInfo userExtInfo = (UserExtInfo)construct.newInstance(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap, permDtoMap);
 						
 						if(userInfoCallBack != null){
 							userInfoCallBack.fill(userExtInfo);
@@ -112,20 +111,20 @@ public class SSUserDetailService implements UserDetailsService {
 						return userExtInfo;
 					}catch(Exception e){
 						LOGGER.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
-						return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap);
+						return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap, permDtoMap);
 					}
 				}
 			}
 		}
 	}
 	
-	private void mergePermMap(Map<String, Set<String>> permMap, Map<String, Set<String>> subPermMap){
-		Set<Entry<String, Set<String>>> subEntrySet = subPermMap.entrySet();
-		Iterator<Entry<String, Set<String>>> subEntryIterator = subEntrySet.iterator();
+	private <T> void mergePermMap(Map<String, Set<T>> permMap, Map<String, Set<T>> subPermMap){
+		Set<Entry<String, Set<T>>> subEntrySet = subPermMap.entrySet();
+		Iterator<Entry<String, Set<T>>> subEntryIterator = subEntrySet.iterator();
 		while(subEntryIterator.hasNext()){
-			Entry<String, Set<String>> subEntry = subEntryIterator.next();
+			Entry<String, Set<T>> subEntry = subEntryIterator.next();
 			String permTypeName = subEntry.getKey();
-			Set<String> permValueSet = subEntry.getValue();
+			Set<T> permValueSet = subEntry.getValue();
 			
 			if(permMap.containsKey(permTypeName)){
 				permMap.get(permTypeName).addAll(permValueSet);
@@ -135,4 +134,5 @@ public class SSUserDetailService implements UserDetailsService {
 			}
 		}
 	}
+
 }

@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.common.client;
 
-public class DomainDefine {
+import java.io.Serializable;
+
+public class DomainDefine implements Serializable {
 	private String domainCode;
 	private String userInfoClass;
 	private boolean rejectPublicInvocations;

@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,7 +8,7 @@ import java.util.Set;
 /**
  * Created by Arc on 14/1/16.
  */
-public class RoleDto {
+public class RoleDto implements Serializable {
 	private Integer id;
 	private String name;
 	private String description;
@@ -21,7 +22,8 @@ public class RoleDto {
 
 	private List<GroupDto> groupList;
 	private Map<String, Set<String>> permMap;
-	
+	private Map<String, Set<PermissionDto>> permDtoMap;
+
 	//whether this role connected with this permission
 	//private boolean permChecked;
 	//whether this role connected with this user
@@ -141,4 +143,12 @@ public class RoleDto {
 		return this;
 	}
 
+	public Map<String, Set<PermissionDto>> getPermDtoMap() {
+		return permDtoMap;
+	}
+
+	public RoleDto setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
+		this.permDtoMap = permDtoMap;
+		return this;
+	}
 }

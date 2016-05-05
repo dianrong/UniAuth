@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.cas.action;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -183,21 +182,5 @@ public final class InitialFlowSetupAction extends AbstractAction {
 
 	public void setDomainService(DomainService domainService) {
 		this.domainService = domainService;
-	}
-	
-	/**
-	 * . set object to session
-	 * 
-	 * @param session
-	 * @param key
-	 * @param val
-	 * @return
-	 */
-	private boolean putValToSession(HttpSession session, String key, Object val) {
-		if (session == null) {
-			return false;
-		}
-		session.setAttribute(key, val);
-		return true;
 	}
 }

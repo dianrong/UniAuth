@@ -14,18 +14,13 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.TagDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -42,6 +37,7 @@ import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 import com.dianrong.common.uniauth.server.data.entity.Tag;
 import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.entity.User;
@@ -570,25 +566,31 @@ public class UserService {
 						List<Permission> permList = permissionMapper.selectByRoleAndDomainId(roleAndDomainMap);
 						
 						Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
-						
+						Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
 						if(permList != null){
 							for(Permission permission: permList){
 								Integer permTypeId = permission.getPermTypeId();
 								String permType = permTypeMap.get(permTypeId).getType();
 								String value = permission.getValue();
-								
+                                PermissionDto permissionDto = BeanConverter.convert(permission);
+
 								if(permMap.containsKey(permType)){
 									permMap.get(permType).add(value);
+                                    permDtoMap.get(permType).add(permissionDto);
 								}
 								else{
 									Set<String> set = new HashSet<>();
                                     set.add(value);
 									permMap.put(permType, set);
+                                    Set<PermissionDto> permissionDtos = new HashSet<>();
+                                    permissionDtos.add(permissionDto);
+                                    permDtoMap.put(permType, permissionDtos);
 								}
 							}
 						}
 						
 						roleDto.setPermMap(permMap);
+                        roleDto.setPermDtoMap(permDtoMap);
 					}
 				}
 			}
@@ -778,21 +780,26 @@ public class UserService {
     /**.
      * 获取所有的tags，并且根据用户id打上对应的checked标签
      * @param userId 用户id
+     * @param domainId 域名id
      * @return List<TagDto>
      */
-    public List<TagDto> searchTagsWithUserChecked(Long userId) {
+    public List<TagDto> searchTagsWithUserChecked(Long userId, Integer domainId) {
         CheckEmpty.checkEmpty(userId, "userId");
+        CheckEmpty.checkEmpty(domainId, "domainId");
         
-        TagExample tagConditon = new TagExample();
-        tagConditon.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
-        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
-        
-        // 优化
-        if(allTags == null){
-        	return null;
-        } 
-        if(allTags.isEmpty()) {
+        // 获取tagType信息
+        TagTypeExample tagTypeExample = new TagTypeExample();
+        //添加查询条件
+        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId);
+        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+        if(tagTypes == null || tagTypes.isEmpty()){
         	return new ArrayList<TagDto>();
+        }
+        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+        if(!CollectionUtils.isEmpty(tagTypes)) {
+            for(TagType tagType : tagTypes) {
+            	tagTypeIdMap.put(tagType.getId(), tagType);
+            }
         }
         
         // 查询用户和tag的关联关系信息
@@ -800,7 +807,6 @@ public class UserService {
         userTagExample.createCriteria().andUserIdEqualTo(userId);
         List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
         List<TagDto> tagDtos = new ArrayList<TagDto>();
-        
         Set<Integer> tagIdLinkedToUser = new HashSet<Integer>();
         if(!CollectionUtils.isEmpty(userTagKeys)) {
             for(UserTagKey userTagKey : userTagKeys) {
@@ -808,13 +814,18 @@ public class UserService {
             }
         }
         
-        // 获取tagType信息
-        List<TagType> tagTypes = tagTypeMapper.selectByExample(new TagTypeExample());
-        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
-        if(!CollectionUtils.isEmpty(tagTypes)) {
-            for(TagType tagType : tagTypes) {
-            	tagTypeIdMap.put(tagType.getId(), tagType);
-            }
+        // 查询tag信息
+        TagExample tagConditon = new TagExample();
+        Criteria andStatusEqualTo = tagConditon.createCriteria();
+        andStatusEqualTo.andStatusEqualTo(AppConstants.ZERO_Byte);
+        
+        // 加入domainId的限制
+        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet()));
+        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
+        
+        // 优化
+        if(allTags == null || allTags.isEmpty()) {
+        	return new ArrayList<TagDto>();
         }
         
         for(Tag tag : allTags) {

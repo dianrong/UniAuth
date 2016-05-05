@@ -1,9 +1,11 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by Arc on 25/3/2016.
  */
-public class ConfigDto {
+public class ConfigDto implements Serializable {
 
     private Integer id;
     private String cfgKey;

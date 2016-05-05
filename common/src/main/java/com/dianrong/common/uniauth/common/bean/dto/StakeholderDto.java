@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-public class StakeholderDto {
+import java.io.Serializable;
+
+public class StakeholderDto implements Serializable {
 	private Integer id;
 	private String name;
 	private String email;

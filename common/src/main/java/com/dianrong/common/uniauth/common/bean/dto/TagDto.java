@@ -1,11 +1,12 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Arc on 7/4/2016.
  */
-public class TagDto {
+public class TagDto implements Serializable {
 
     private Integer id;
     private String code;

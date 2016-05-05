@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.GrantedAuthority;
 
 import com.dianrong.common.uniauth.client.custom.UserExtInfo;
@@ -18,9 +20,9 @@ public class TechOpsUserExtInfo extends UserExtInfo {
 
 	public TechOpsUserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities,
-			Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
+			Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap, Map<String, Set<PermissionDto>> permDtoMap) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id,
-				userDto, domainDto, permMap);
+				userDto, domainDto, permMap, permDtoMap);
 	}
 
 	public Set<Integer> getDomainIdSet() {

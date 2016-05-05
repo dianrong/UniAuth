@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -62,6 +63,9 @@ public class DomainService {
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		if(domainList == null || domainList.isEmpty()){
 			Domain param = BeanConverter.convert(domainParam);
+			Date now = new Date();
+			param.setCreateDate(now);
+			param.setLastUpdate(now);
 			domainMapper.insert(param);
 			return BeanConverter.convert(param);
 		}
@@ -183,6 +187,7 @@ public class DomainService {
 		}
 				
 		Domain param = BeanConverter.convert(domainParam);
+		param.setLastUpdate(new Date());
 		domainMapper.updateByPrimaryKey(param);
 	}
 

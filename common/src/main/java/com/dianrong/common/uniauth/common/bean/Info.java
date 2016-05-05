@@ -1,9 +1,11 @@
 package com.dianrong.common.uniauth.common.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Arc on 14/1/16.
  */
-public final class Info {
+public final class Info implements Serializable {
 
     private InfoName name;
     private String msg;
