@@ -2,6 +2,7 @@ package org.springframework.security.web.access.expression;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.http.HttpMethod;
@@ -65,35 +65,51 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 				ExpressionBasedFilterInvocationSecurityMetadataSource expressionSecurityMetadataSource = (ExpressionBasedFilterInvocationSecurityMetadataSource)securityMetadataSource;
 				
 				@SuppressWarnings("unchecked")
-				LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> requestMap = 
+				LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap = 
 					(LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>)ReflectionUtils.getField(expressionSecurityMetadataSource, "requestMap", true);
 
-				DomainParam domainParam = new DomainParam();
-				domainParam.setCode(currentDomainCode);
-				Response<List<UrlRoleMappingDto>> response = null;
-				while(true){
-					try{
-						response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
-						break;
-					}catch(Exception e){
-						LOGGER.warn("The uniauth server not completely started yet, need sleeping for 2 seconds.", e);
-						try {
-							Thread.sleep(2000L);
-						} catch (InterruptedException ie) {
-						}
-					}
-				}
-				List<UrlRoleMappingDto> urlRoleMappingDtoList = response.getData();
+				composeMetadataSource(filterSecurityInterceptor, originRequestMap, currentDomainCode);
 				
-				LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = convert2StandardMap(urlRoleMappingDtoList);
-				
-				requestMap.putAll(appendMap);
-				
-				filterSecurityInterceptor.setSecurityMetadataSource(new SSExpressionSecurityMetadataSource(requestMap));
+				new RefreshDomainResourceThread(filterSecurityInterceptor, originRequestMap, currentDomainCode).start();
 			}
 		}
 		return bean;
 	}
+	
+	private void composeMetadataSource(FilterSecurityInterceptor filterSecurityInterceptor, 
+			LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap, String currentDomainCode){
+		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> requestMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+		requestMap.putAll(originRequestMap);
+		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = getAppendMap(currentDomainCode);
+		requestMap.putAll(appendMap);
+		
+		filterSecurityInterceptor.setSecurityMetadataSource(new SSExpressionSecurityMetadataSource(requestMap));
+	}
+	
+	private LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> getAppendMap(String currentDomainCode){
+
+		DomainParam domainParam = new DomainParam();
+		domainParam.setCode(currentDomainCode);
+		Response<List<UrlRoleMappingDto>> response = null;
+		while(true){
+			try{
+				response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
+				break;
+			}catch(Exception e){
+				LOGGER.warn("The uniauth-server[" + uniClientFacade.getUniWsEndpoint() + "] not completely started yet, need sleeping for 2 seconds, then retry.", e);
+				try {
+					Thread.sleep(2000L);
+				} catch (InterruptedException ie) {
+				}
+			}
+		}
+		List<UrlRoleMappingDto> urlRoleMappingDtoList = response.getData();
+		
+		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = convert2StandardMap(urlRoleMappingDtoList);
+		
+		return appendMap;
+	}
+	
 	
 	private LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> convert2StandardMap(List<UrlRoleMappingDto> urlRoleMappingDtoList){
 		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
@@ -185,7 +201,28 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 		return appendMap;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(HttpMethod.valueOf("get"));
+	private class RefreshDomainResourceThread extends Thread{
+		private FilterSecurityInterceptor filterSecurityInterceptor;
+		private LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap;
+		private String currentDomainCode;
+		
+		public RefreshDomainResourceThread(FilterSecurityInterceptor filterSecurityInterceptor, 
+				LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap, String currentDomainCode){
+			this.filterSecurityInterceptor = filterSecurityInterceptor;
+			this.originRequestMap = originRequestMap;
+			this.currentDomainCode = currentDomainCode;
+		}
+		
+		public void run(){
+			while(true){
+				try {
+					sleep(10L * 60 * 1000);
+				} catch (InterruptedException e) {
+					LOGGER.error("RefreshDomainResourceThread error.", e);
+				}
+				composeMetadataSource(filterSecurityInterceptor, originRequestMap, currentDomainCode);
+				LOGGER.info("Refresh domain resource completed at " + new Date() + " .");
+			}
+		}
 	}
 }

@@ -37,10 +37,25 @@
     </description>
 
     <!-- Ticket Registry -->
-    <bean id="ticketRegistry" class="org.jasig.cas.ticket.registry.DefaultTicketRegistry"/>
+    <bean id="ticketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
+        <constructor-arg index="0" ref="redisTemplate" />
+        <constructor-arg index="1" value="7200" />
+        <constructor-arg index="2" value="10" />
+    </bean>
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <property name="maxIdle" value="200" />  
+        <property name="testOnBorrow" value="true" />  
+    </bean>  
+      
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
+        p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"   p:pool-config-ref="poolConfig"/>  
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+        p:connection-factory-ref="connectionFactory">
+    </bean>
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->
+    <!-- 
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
           c:ticketRegistry-ref="ticketRegistry"/>
@@ -55,4 +70,5 @@
           p:jobDetail-ref="jobDetailTicketRegistryCleaner"
           p:startDelay="20000"
           p:repeatInterval="5000000"/>
+    -->
 </beans>

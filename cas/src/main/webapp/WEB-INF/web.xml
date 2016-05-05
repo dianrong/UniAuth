@@ -267,10 +267,12 @@
         <url-pattern>/samlValidate</url-pattern>
     </servlet-mapping>
     -->
-
+    <!-- 
+    in servlet specification, the time unit is "minute";
+    but for tomcat redis session manager is "second" 
+    -->
     <session-config>
-        <!-- Default to 5 minute session timeouts -->
-        <session-timeout>5</session-timeout>
+        <session-timeout>300</session-timeout>
     </session-config>
 
     <error-page>
