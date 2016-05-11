@@ -191,7 +191,7 @@ public final class CasCfgResourceRefreshHelper {
 				}
 			}
 			if(tempList.size() >0 ) {
-				filterList.retainAll(tempList);
+				filterList.removeAll(tempList);
 			}
 			
 			// clear
