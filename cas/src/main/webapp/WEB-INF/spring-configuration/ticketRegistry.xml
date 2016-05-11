@@ -35,12 +35,40 @@
         Configuration for the default TicketRegistry which stores the tickets in-memory and cleans them out as specified
         intervals.
     </description>
-
+    
+    
     <!-- Ticket Registry -->
-    <bean id="ticketRegistry" class="org.jasig.cas.ticket.registry.DefaultTicketRegistry"/>
+    <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"></bean>
+    
+    <bean id="ticketRegistryFactoryBean" class="com.dianrong.common.uniauth.cas.registry.TicketRegistryFactoryBean">
+    	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"></property>
+    	<property name="redisTicketRegistry" ref="redisTicketRegistry"></property>
+    	<property name="casIsCluster" value="#{uniauthConfig['cas.iscluster']?:'false'}"></property>
+    </bean>
+    
+    <!--Default Ticket Registry -->
+    <bean id="defaultTicketRegistry" class="org.jasig.cas.ticket.registry.DefaultTicketRegistry"/>
+
+    <!--Redis Ticket Registry -->
+    <bean id="redisTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
+        <constructor-arg index="0" ref="redisTemplate" />
+        <constructor-arg index="1" value="7200" />
+        <constructor-arg index="2" value="10" />
+    </bean>
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <property name="maxIdle" value="200" />  
+        <property name="testOnBorrow" value="true" />  
+    </bean>  
+      
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
+        p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"   p:pool-config-ref="poolConfig"/>  
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+        p:connection-factory-ref="connectionFactory">
+    </bean>
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->
+    
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
           c:ticketRegistry-ref="ticketRegistry"/>
