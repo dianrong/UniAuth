@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.cas.registry;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +71,8 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
 
     @Override
     public Collection<Ticket> getTickets() {
-         throw new UnsupportedOperationException("GetTickets not supported.");
+         //throw new UnsupportedOperationException("GetTickets not supported.");
+    	return new ArrayList<Ticket>();
     }
 
     @Override

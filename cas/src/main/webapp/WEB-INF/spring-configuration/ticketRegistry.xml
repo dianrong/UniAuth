@@ -35,9 +35,22 @@
         Configuration for the default TicketRegistry which stores the tickets in-memory and cleans them out as specified
         intervals.
     </description>
-
+    
+    
     <!-- Ticket Registry -->
-    <bean id="ticketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
+    <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"></bean>
+    
+    <bean id="ticketRegistryFactoryBean" class="com.dianrong.common.uniauth.cas.registry.TicketRegistryFactoryBean">
+    	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"></property>
+    	<property name="redisTicketRegistry" ref="redisTicketRegistry"></property>
+    	<property name="casIsCluster" value="#{uniauthConfig['cas.iscluster']?:'false'}"></property>
+    </bean>
+    
+    <!--Default Ticket Registry -->
+    <bean id="defaultTicketRegistry" class="org.jasig.cas.ticket.registry.DefaultTicketRegistry"/>
+
+    <!--Redis Ticket Registry -->
+    <bean id="redisTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
         <constructor-arg index="0" ref="redisTemplate" />
         <constructor-arg index="1" value="7200" />
         <constructor-arg index="2" value="10" />
@@ -55,7 +68,7 @@
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->
-    <!-- 
+    
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
           c:ticketRegistry-ref="ticketRegistry"/>
@@ -70,5 +83,4 @@
           p:jobDetail-ref="jobDetailTicketRegistryCleaner"
           p:startDelay="20000"
           p:repeatInterval="5000000"/>
-    -->
 </beans>
