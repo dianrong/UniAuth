@@ -23,6 +23,10 @@ public class ZooKeeperConfig {
 		return getParam("cas_server");
 	}
 	
+	public String getTechOpsServerUrl(){
+		return getParam("domains.techops");
+	}
+	
 	public String getDomainUrl(){
 		if(domainDefine != null){
 			String domainCode = domainDefine.getDomainCode();

@@ -230,6 +230,7 @@ project(':cas') {
 		compile 'org.apache.httpcomponents:fluent-hc:4.4'
 		compile 'org.apache.httpcomponents:httpmime:4.4'
 		compile 'ch.qos.logback:logback-classic:1.1.3'
+		compile 'org.jasig.cas:cas-server-support-rest:4.1.3'
 		
 		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
 			exclude group: 'org.springframework', module: 'spring-aop'

@@ -53,7 +53,7 @@
     <bean id="redisTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
         <constructor-arg index="0" ref="redisTemplate" />
         <constructor-arg index="1" value="7200" />
-        <constructor-arg index="2" value="10" />
+        <constructor-arg index="2" value="60" />
     </bean>
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
         <property name="maxIdle" value="200" />  
