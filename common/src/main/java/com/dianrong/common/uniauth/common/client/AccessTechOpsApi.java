@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
+import com.dianrong.common.uniauth.common.exp.LoginFailedException;
 import com.dianrong.common.uniauth.common.exp.NetworkException;
 import com.dianrong.common.uniauth.common.exp.NotReuseSessionIdException;
+import com.dianrong.common.uniauth.common.exp.OperationForbiddenException;
 
 @Component
 public class AccessTechOpsApi {
@@ -63,10 +65,10 @@ public class AccessTechOpsApi {
 		
 		return jsessionId;
 	}
-	public String accessApi(String jsessionId, String apiPath, String method, String postBody){
+	public String accessApi(String sessionId, String apiPath, String method, String postBody){
 		HttpContent apiRequestHc = new HttpContent(); Map<String,
 		String> headers = new HashMap<String, String>();
-		headers.put("Cookie", "JSESSIONID=" + jsessionId);
+		headers.put("Cookie", "JSESSIONID=" + sessionId);
 		apiRequestHc.setHeaders(headers);
 		apiRequestHc.setBody(postBody);
 		
@@ -136,7 +138,7 @@ public class AccessTechOpsApi {
 				&& url.indexOf("cas") == -1 && url.indexOf("passport") == -1) {
 			throw new NotLoginException("No valid jsessionid, maybe timeout?");
 		} else if (statusCode == HttpStatus.SC_BAD_REQUEST && url.endsWith("/v1/tickets")) {
-			throw new LoginFailedExcption("Wrong account/password!");
+			throw new LoginFailedException("Wrong account/password!");
 		} else if (statusCode == HttpStatus.SC_FORBIDDEN && url.indexOf("techops") != -1) {
 			throw new OperationForbiddenException("Operation forbidden, maybe do not have sufficient privileges to perform this operation.");
 		}

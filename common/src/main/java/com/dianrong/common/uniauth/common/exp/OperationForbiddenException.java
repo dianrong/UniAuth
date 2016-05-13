@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.common.client;
+package com.dianrong.common.uniauth.common.exp;
 
 public class OperationForbiddenException extends RuntimeException {
 
