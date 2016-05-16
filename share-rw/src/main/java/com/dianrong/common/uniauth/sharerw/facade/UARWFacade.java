@@ -1,20 +1,15 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
-import java.util.Arrays;
-
-import javax.annotation.PostConstruct;
-
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
-import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 /**
  * Created by Arc on 14/2/16.
