@@ -131,8 +131,8 @@ public class UARWFacadeTest {
         
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setUserId(300000001l);
-        userExtendValParam.setPageNumber(1);
-        userExtendValParam.setPageSize(5);
+        userExtendValParam.setPageNumber(0);
+        userExtendValParam.setPageSize(50);
         
         userExtendValParam.setExtendCode("aa");
         Response<PageDto<UserExtendValDto>> response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
@@ -147,4 +147,3 @@ public class UARWFacadeTest {
         System.out.println(mapper.writeValueAsString(response1));
     }
 }
-
