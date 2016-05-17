@@ -65,14 +65,16 @@ treecontrol.tree-custom li .tree-selected {
     font-weight: bold;
 }
 
-treecontrol.tree-custom li.tree-expanded i.tree-branch-head {
-    padding: 1px 10px;
-    background: url("../images/folder.png") no-repeat;
+treecontrol.tree-custom li.tree-expanded i.tree-branch-head:before {
+    padding: 0px 0px;
+    content: "\f07c";
+    color: #E5B36E;
 }
 
-treecontrol.tree-custom li.tree-collapsed i.tree-branch-head {
-    padding: 1px 10px;
-    background: url("../images/folder-closed.png") no-repeat;
+treecontrol.tree-custom li.tree-collapsed i.tree-branch-head:before {
+    padding: 0px 0px;
+    content: "\f07b";
+    color: #E5B36E;
 }
 
 treecontrol.tree-custom li.tree-leaf i.tree-leaf-head {

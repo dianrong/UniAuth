@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLConnection;
@@ -51,7 +52,7 @@ public class ConfigAction {
     }
 
     @RequestMapping(value = "/download/{cfgKey}" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Response<?>  download(@PathVariable("cfgKey") String cfgKey, HttpServletResponse response) throws IOException {
+    public Response<?>  download(@PathVariable("cfgKey") String cfgKey, HttpServletResponse response, HttpServletRequest request) throws IOException {
         CfgParam cfgParam = new CfgParam().setCfgKey(cfgKey);
         cfgParam.setNeedBLOBs(Boolean.TRUE);
         cfgParam.setPageNumber(0);
@@ -61,6 +62,27 @@ public class ConfigAction {
             return Response.success(configDtoResponse);
         } else {
             List<ConfigDto> configDtos = configDtoResponse.getData().getData();
+            if(("TECHOPS_ICON".equals(cfgKey) || "TECHOPS_LOGO".equals(cfgKey))
+                    && (CollectionUtils.isEmpty(configDtos) || configDtos.get(0).getFile() == null)) {
+                // if there are no favicon and logo pictures configured, then use the default one.
+                String contextPath = request.getContextPath();
+                String staticFaviconPath;
+                String staticLogoPath;
+                if("/".equals(contextPath)) {
+                    staticFaviconPath = "/images/dianrong_favicon.ico";
+                    staticLogoPath = "/images/dianrong+logo.png";
+                } else {
+                    staticFaviconPath = contextPath + "/images/dianrong_favicon.ico";
+                    staticLogoPath = contextPath + "/images/dianrong+logo.png";
+                }
+                if("TECHOPS_ICON".equals(cfgKey)) {
+                    response.sendRedirect(staticFaviconPath);
+                } else if("TECHOPS_LOGO".equals(cfgKey)) {
+                    response.sendRedirect(staticLogoPath);
+                }
+                return Response.success();
+            }
+
             if(!CollectionUtils.isEmpty(configDtos)) {
                 ConfigDto cfgDto = configDtos.get(0);
                 byte[] file = cfgDto.getFile();
