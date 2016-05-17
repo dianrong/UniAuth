@@ -164,7 +164,7 @@
 	</logger>
 
 	<root>
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="consoleAppender" />
 		<appender-ref ref="uniAuthAppender" />
 	</root>

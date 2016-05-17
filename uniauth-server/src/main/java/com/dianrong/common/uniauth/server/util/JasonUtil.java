@@ -19,4 +19,14 @@ public class JasonUtil {
 			return null;
 		}
 	}
+	
+	/**
+	 * 将一种类型转换为新的类型
+	 * @param fromValue
+	 * @param toValueType
+	 * @return
+	 */
+	public static <T> T o2o(Object fromValue,Class<T> toValueType){
+	    return objectMapper.convertValue(fromValue, toValueType);
+	}
 }
