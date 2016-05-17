@@ -3,7 +3,7 @@
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper">
   <select id="selectByUserIdAndCode" resultType="com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt" 
   	parameterType="map">
- 	SELECT t2.id id,t2.user_id userId,t1.extend_id extendId,t2.value_ value,t2.status status,
+	SELECT * FROM(SELECT t2.id id,t2.user_id userId,t1.extend_id extendId,t2.value_ value,t2.status status,
 		t1.extend_code extendCode,t1.extend_description extendDescription FROM 
 		(SELECT id extend_id,code extend_code,description extend_description FROM user_extend 
 			WHERE 1=1
@@ -12,8 +12,8 @@
 		  	</if>
 		) t1
 	LEFT JOIN 
-		(SELECT * FROM user_extend_val WHERE user_id=#{userId} ORDER BY id DESC LIMIT 0,1)t2 
-	ON  t1.extend_id=t2.extend_id ORDER BY user_id DESC
+		(SELECT * FROM user_extend_val WHERE user_id=#{userId} ORDER BY id DESC)t2 
+	ON  t1.extend_id=t2.extend_id) tt1 GROUP BY extendId ORDER BY userId DESC
     <if test="pageNumber !=0 and pageSize!=0">
       limit ${pageNumber},${pageSize}
     </if>
