@@ -28,11 +28,15 @@ public class UARWFacade {
     private IAuditResource auditResource;
     private IConfigRWResource configRWResource;
     private ITagRWResource tagRWResource;
+    private IUserExtendRWResource userExtendRWResource;
+    private IUserExtendValRWResource userExtendValRWResource;
 
     @PostConstruct
     public void init(){
         JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
         jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, Arrays.asList(jacksonJsonProvider));
+        userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, Arrays.asList(jacksonJsonProvider));
         domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, Arrays.asList(jacksonJsonProvider));
         groupRWResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, Arrays.asList(jacksonJsonProvider));
         permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, Arrays.asList(jacksonJsonProvider));
@@ -82,5 +86,13 @@ public class UARWFacade {
 
     public ITagRWResource getTagRWResource() {
         return tagRWResource;
+    }
+
+    public IUserExtendRWResource getUserExtendRWResource() {
+        return userExtendRWResource;
+    }
+
+    public IUserExtendValRWResource getUserExtendValRWResource() {
+        return userExtendValRWResource;
     }
 }

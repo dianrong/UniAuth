@@ -9,8 +9,8 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.56.101:3306/uniauth"
-                        userId="root" password="root">
+                        connectionURL="jdbc:mysql://localhost:3306/uniauth"
+                        userId="root" password="cwl123">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -34,7 +34,11 @@
         </javaClientGenerator>
 
 
-        <table tableName="grp_tag" enableCountByExample="true"
+        <table tableName="user_extend" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="user_extend_val" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>

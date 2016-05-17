@@ -19,8 +19,17 @@ public class UserDto implements Serializable {
 	private Byte status;
 	private Byte userGroupType;
 	private List<TagDto> tagDtos;
+	private List<UserExtendValDto> userExtendValDtos;
 
-	//whether this user directly connected with a role
+	public List<UserExtendValDto> getUserExtendValDtos() {
+        return userExtendValDtos;
+    }
+
+    public void setUserExtendValDtos(List<UserExtendValDto> userExtendValDtos) {
+        this.userExtendValDtos = userExtendValDtos;
+    }
+
+    //whether this user directly connected with a role
 	private Boolean roleChecked;
 	//whether this user directly connected with a tag
 	private Boolean tagChecked;
