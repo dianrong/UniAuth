@@ -153,6 +153,26 @@ define(['../../utils/constant'], function (constant) {
                         //
                     });
                     break;
+                case 'manage-eav':
+                    var dlg = dialogs.create('views/user/dialogs/manage-eav.html','ManageEavController',
+                        {}, {size:'md', windowClass:'top-80px'}
+                    );
+                    dlg.result.then(function (close) {
+                       //
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
+                case 'user-eav':
+                    var dlg = dialogs.create('views/user/dialogs/user-eav.html','UserEavController',
+                        param, {size:'md', windowClass:'top-80px'}
+                    );
+                    dlg.result.then(function (close) {
+                       //
+                    }, function (dismiss) {
+                        //
+                    });
+                    break;
             }
         };
 
