@@ -15,7 +15,6 @@ define(['../../../utils/constant'], function (constant) {
             var params = {};
             $scope.userEvaCodes = [];
             $scope.userEavLoading = constant.loading;
-<<<<<<< HEAD
             params.extendCode = $scope.eavQuery.code;
             params.userId = $scope.user.id;
             // 分页查询参数
@@ -104,72 +103,6 @@ define(['../../../utils/constant'], function (constant) {
                         return;
                     }
                     exchangeItemToFirst($scope.userEvaCodes, userEav);
-                    
-=======
-            
-            params.extendCode = $scope.eavQuery.code;
-            params.userId = $scope.user.id;
-            // 分页查询参数
-            params.pageNumber = $scope.pagination.curPage - 1;
-            params.pageSize = $scope.pagination.pageSize;
-            
-            EvaService.queryUserEav(params, function (res) {
-                var result = res.data;
-                if(res.info) {
-                    $scope.userEavLoading = res.info[0].msg;
-                    return;
-                }
-                if(!result || !result.data || result.data.length == 0) {
-                    $scope.userEavLoading = constant.loadEmpty;
-                    return;
-                }
-                $scope.userEavLoading = '';
-                $scope.userEvaCodes = result.data;
-            }, function () {
-                $scope.userEvaCodes = [];
-                $scope.userEvaCodes = constant.loadError;
-            });
-        };
-        // init
-        $scope.queryUserEaves();
-
-        // 确定修改
-        $scope.confirmEdit = function(userEav) {
-            var param = {};
-            param.id = userEav.id;
-            param.userId = $scope.user.id;
-            param.extendId = userEav.extendId;
-            param.value=userEav.value;
-            // 添加
-            if(!userEav.id) {
-            	EvaService.addUserEav(param, function (res) {
-                    var result = res.data;
-                    if(res.info) {
-                        for(var i=0; i<res.info.length;i++) {
-                            AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
-                        }
-                        $scope.cancelEdit(userEav);
-                        return;
-                    }
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "添加成功.");
-                    userEav.id = result.id;
-                    userEav.status = '0';
-                    userEav.userId = $scope.user.id;
-                }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, "添加失败, 请联系系统管理员.");
-                });
-            } else {
-            	// 修改
-            	EvaService.modfyUserEav(param, function (res) {
-                    var result = res.data;
-                    if(res.info) {
-                        for(var i=0; i<res.info.length;i++) {
-                            AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
-                        }
-                        $scope.cancelEdit(userEav);
-                        return;
-                    }
->>>>>>> branch 'develop' of https://chenw@code.dianrong.com/scm/uniaz/uniauth.git
                     AlertService.addAutoDismissAlert(constant.messageType.info, "更新成功.");
                 }, function () {
                     AlertService.addAutoDismissAlert(constant.messageType.danger, "更新失败, 请联系系统管理员.");
