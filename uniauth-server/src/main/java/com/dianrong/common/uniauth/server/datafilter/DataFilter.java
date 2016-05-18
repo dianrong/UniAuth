@@ -21,7 +21,7 @@ public interface DataFilter {
 		 * @param ftype 过滤的方式
 		 */
 		void dataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField);
-	
+		
 		/**.
 		 * 判断数据是否重复
 		 * @param type 字段

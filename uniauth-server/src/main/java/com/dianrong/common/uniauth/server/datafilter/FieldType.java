@@ -49,7 +49,17 @@ public enum FieldType {
 	/**.
 	 * tag_type_id
 	 */
-	FIELD_TYPE_TAG_TYPE_ID;
+	FIELD_TYPE_TAG_TYPE_ID,
+	
+	/**.
+	 * user_id
+	 */
+	FIELD_TYPE_USER_ID,
+	
+	/**.
+	 * extend_id
+	 */
+	FIELD_TYPE_EXTEND_ID;
 	
 	/**.
 	 * 获取fieldType的字符串描述符
@@ -57,28 +67,46 @@ public enum FieldType {
 	 * @return 描述符
 	 */
 	public static String getTypeDes(FieldType type){
-		switch(type){
-		case FIELD_TYPE_ID:
-			return "id";
-		case FIELD_TYPE_CODE:
-			return "code";
-		case FIELD_TYPE_EMAIL:
-			return "email";
-		case FIELD_TYPE_PHONE:
-			return "phone";
-		case FIELD_TYPE_VALUE:
-			return "value";
-		case FIELD_TYPE_CFG_KEY:
-			return "cfg_key";
-		case FIELD_TYPE_PERM_TYPE_ID:
-			return "permissonTypeId";
-		case FIELD_TYPE_DOMAIN_ID:
-			return "domainId";
-		case FIELD_TYPE_TAG_TYPE_ID:
-			return "tagTypeId";
-			default:
-				break;
+		if(type == null) {
+			return "";
 		}
-		return "";
+		String value = type.toString();
+		int index = value.indexOf("FIELD_TYPE_");
+		if(index != -1) {
+			value = value.substring(index);
+		}
+		//转化为小写
+		value = value.toLowerCase();
+		//驼峰写法
+		char[] chars = value.toCharArray();
+		StringBuilder toValue = new StringBuilder();
+		if(chars != null && chars.length > 0) {
+			boolean toUpper = false;
+			for(int i = 0 ; i < chars.length ; i ++) {
+				if(chars[i] == '_') {
+					toUpper = true;
+				} else {
+					if(toUpper) {
+						toValue.append(lowerToUpper(chars[i]));
+					} else {
+						toValue.append(chars[i]);
+					}
+					toUpper = false;
+				}
+			}
+		}
+		return toValue.toString();
+	}
+	
+	/**.
+	 * 小写转大写
+	 * @param c
+	 * @return
+	 */
+	private static char lowerToUpper(char c) {
+		if(c >= 'a' && c <= 'z') {
+			return (char)(c - 32);
+		}
+		return c;
 	}
 }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,14 @@ import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample.Crite
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.datafilter.impl.UserExtendValDataFilter;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
+import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 
 /**
  * @author wenlongchen
@@ -34,6 +41,9 @@ public class UserExtendValService {
     @Autowired 
     private UserExtendMapper userExtendMapper;
     
+    @Resource(name="userExtendValDataFilter")
+    private UserExtendValDataFilter dataFilter;
+    
     /**
      * 添加一个用户扩展属性值
      * @param userId
@@ -43,6 +53,12 @@ public class UserExtendValService {
      * @return
      */
     public UserExtendValDto add(Long userId,Long extendId,String value,Byte status){
+    	CheckEmpty.checkEmpty(userId, "user_id");
+    	CheckEmpty.checkEmpty(extendId, "extend_id");
+    	
+    	// 数据过滤
+    	dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId), FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId) );
+    	
         UserExtendVal userExtendVal=new UserExtendVal();
         userExtendVal.setExtendId(extendId);
         userExtendVal.setStatus(status);
@@ -60,11 +76,9 @@ public class UserExtendValService {
      */
     public int delById(Long id){
         CheckEmpty.checkEmpty(id,"id");
-        
         UserExtendVal userExtendVal=new UserExtendVal();
         userExtendVal.setId(id);
         userExtendVal.setStatus((byte)1);
-        
         return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
     }
     
@@ -79,6 +93,18 @@ public class UserExtendValService {
      */
     public int updateById(Long id,Long userId,Long extendId,String value,Byte status){
         CheckEmpty.checkEmpty(id,"id");
+        
+        // 过滤数据
+        List<FilterData> filterFileds = new ArrayList<FilterData>();
+        if(userId != null) {
+        	filterFileds.add(FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId));
+        } 
+        if(extendId != null) {
+        	filterFileds.add(FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
+        }
+        if(filterFileds.size() > 0) {
+        	dataFilter.filterFieldValueIsExistWithCondtionsEqual(TypeParseUtil.parseToIntegerFromObject(id), filterFileds.toArray(new FilterData[filterFileds.size()]));
+        }
         
         UserExtendVal userExtendVal=new UserExtendVal();
         userExtendVal.setId(id);
