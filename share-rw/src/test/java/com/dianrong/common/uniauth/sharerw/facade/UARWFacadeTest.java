@@ -92,8 +92,6 @@ public class UARWFacadeTest {
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setId(2l);
         userExtendValParam.setValue("8");
-        userExtendValParam.setExtendId(2l);
-        userExtendValParam.setUserId(300000001l);
         
         Response<Integer> response1=userExtendResource.updateById(userExtendValParam);
         
@@ -134,10 +132,18 @@ public class UARWFacadeTest {
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setUserId(300000001l);
         userExtendValParam.setPageNumber(0);
-        userExtendValParam.setPageSize(5);
-        userExtendValParam.setQueryOnlyUsed(true);
+        userExtendValParam.setPageSize(50);
+        
+        userExtendValParam.setExtendCode("aa");
         Response<PageDto<UserExtendValDto>> response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
+        System.out.println(mapper.writeValueAsString(response1));
+        
+        userExtendValParam.setExtendCode("b");
+        response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
+        System.out.println(mapper.writeValueAsString(response1));
+        
+        userExtendValParam.setExtendCode(null);
+        response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
         System.out.println(mapper.writeValueAsString(response1));
     }
 }
-
