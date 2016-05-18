@@ -156,21 +156,21 @@ public class UserExtendValService {
      * @return
      */
     public PageDto<UserExtendValDto> searchByUserIdAndCode(Long userId,String code,
-            Integer pageNumber,Integer pageSize){
+            Integer pageNumber,Integer pageSize, boolean queryOnlyUsed){
         CheckEmpty.checkEmpty(userId,"userId");
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
         
-        Map<String,String> params=new HashMap<String,String>();
+        Map<String,String> params=new HashMap<String, String>();
         params.put("userId",userId.toString());
         params.put("extendCode", code==null?null:'%'+code+'%');
         
-        int count=userExtendValMapper.countByCode(params);
+        int count=queryOnlyUsed ? userExtendValMapper.countByUserExtend(params) : userExtendValMapper.countByCode(params);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
-        params.put("pageNumber",pageNumber.toString());
+        params.put("queryOnlyUsed", String.valueOf(queryOnlyUsed));
+        params.put("startIndex",String.valueOf(pageNumber * pageSize));
         params.put("pageSize",pageSize.toString());
         List<UserExtendValExt> userExtendValExts=userExtendValMapper.selectByUserIdAndCode(params);
-        
         //转换
         List<UserExtendValDto> userExtendDtos=new ArrayList<UserExtendValDto>();
         
@@ -179,7 +179,6 @@ public class UserExtendValService {
         }
         //生成分页对象
         PageDto<UserExtendValDto> pageDto=new PageDto<UserExtendValDto>(pageNumber,pageSize, count, userExtendDtos);
-        
         return pageDto;
     }
 }

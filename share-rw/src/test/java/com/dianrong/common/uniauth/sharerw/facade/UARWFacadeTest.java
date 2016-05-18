@@ -51,8 +51,8 @@ public class UARWFacadeTest {
         IUserExtendRWResource userExtendResource=facade.getUserExtendRWResource();
         
         UserExtendParam userExtendParam=new UserExtendParam();
-        userExtendParam.setId(2l);
-        userExtendParam.setCode("bbb");
+        userExtendParam.setId(9l);
+        userExtendParam.setCode("wwf");
         userExtendParam.setDescription("aaaaaaaaacccaaaaaaaaaaaaaa");
         Response<Integer> response1= userExtendResource.updateUserExtend(userExtendParam);
         
@@ -92,6 +92,8 @@ public class UARWFacadeTest {
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setId(2l);
         userExtendValParam.setValue("8");
+        userExtendValParam.setExtendId(2l);
+        userExtendValParam.setUserId(300000001l);
         
         Response<Integer> response1=userExtendResource.updateById(userExtendValParam);
         
@@ -131,19 +133,10 @@ public class UARWFacadeTest {
         
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setUserId(300000001l);
-        userExtendValParam.setPageNumber(1);
+        userExtendValParam.setPageNumber(0);
         userExtendValParam.setPageSize(5);
-        
-        userExtendValParam.setExtendCode("aa");
+        userExtendValParam.setQueryOnlyUsed(true);
         Response<PageDto<UserExtendValDto>> response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
-        System.out.println(mapper.writeValueAsString(response1));
-        
-        userExtendValParam.setExtendCode("b");
-        response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
-        System.out.println(mapper.writeValueAsString(response1));
-        
-        userExtendValParam.setExtendCode(null);
-        response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
         System.out.println(mapper.writeValueAsString(response1));
     }
 }

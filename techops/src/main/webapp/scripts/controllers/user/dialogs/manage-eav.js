@@ -30,6 +30,10 @@ define(['../../../utils/constant'], function (constant) {
                 }
                 $scope.eavCodesLoading = '';
                 $scope.eavCodes = result.data;
+                
+                $scope.pagination.curPage = result.currentPage + 1;
+                $scope.pagination.totalCount = result.totalCount;
+                $scope.pagination.pageSize = result.pageSize;
             }, function () {
                 $scope.eavCodes = [];
                 $scope.eavCodesLoading = constant.loadError;
@@ -44,7 +48,6 @@ define(['../../../utils/constant'], function (constant) {
             param.id = eavCode.id;
             param.code = eavCode.code;
             param.description=eavCode.description;
-            
             // 添加
             if(!eavCode.id) {
             	EvaService.addEavCode(param, function (res) {
@@ -56,8 +59,8 @@ define(['../../../utils/constant'], function (constant) {
                         $scope.cancelEdit(eavCode);
                         return;
                     }
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "EAV-CODE添加成功.");
                     eavCode.id = result.id;
+                    AlertService.addAutoDismissAlert(constant.messageType.info, "EAV-CODE添加成功.");
                 }, function () {
                     AlertService.addAutoDismissAlert(constant.messageType.danger, "EAV-CODE添加失败, 请联系系统管理员.");
                 });
@@ -72,6 +75,7 @@ define(['../../../utils/constant'], function (constant) {
                         $scope.cancelEdit(eavCode);
                         return;
                     }
+                    exchangeItemToFirst($scope.eavCodes, eavCode);
                     AlertService.addAutoDismissAlert(constant.messageType.info, "EAV-CODE更新成功.");
                 }, function () {
                     AlertService.addAutoDismissAlert(constant.messageType.danger, "EAV-CODE更新失败, 请联系系统管理员.");
@@ -93,6 +97,7 @@ define(['../../../utils/constant'], function (constant) {
                 if($scope.eavCodes.length == 0) {
                     $scope.eavCodesLoading = constant.loadEmpty;
                 }
+                ensurePageIsOk('del', 1);
                 return;
             }
             eavCode.editable = false;
@@ -105,11 +110,13 @@ define(['../../../utils/constant'], function (constant) {
                          $scope.eavCodes = [];
                      }
                      $scope.eavCodesLoading = '';
-                     $scope.eavCodes.push({
+                     // 放到最前面
+                     $scope.eavCodes.unshift({
                          code:'',
                          description:'',
                          editable: true
                      });
+                     ensurePageIsOk('add', 1);
                     break;
             }
         };
@@ -118,6 +125,60 @@ define(['../../../utils/constant'], function (constant) {
             $scope.msg = '';
             $uibModalInstance.dismiss();
         }; // end cancel
+        
+        // 操作数组 将指定item放到第一位
+        var exchangeItemToFirst = function(item,  itemArray){
+        	if(!item || !itemArray) {
+        		return;
+        	}
+        	 var index = -1;
+        	 for(var i = 0 ;i < itemArray.length; i++) {
+        		 if(itemArray[i] === item) {
+        			 index = i;
+        			 break;
+        		 }
+        	 }
+        	 if(index != -1) {
+        		 itemArray.splice(index, 1);
+        	 }
+        	 itemArray.unshift(item);
+        }
+        
+        // 保证分页的数据正确性
+        var ensurePageIsOk= function(oper, num) {
+        	 switch(oper) {
+             case 'add':
+            	 // 多余的数据保存为缓存
+            	 if($scope.eavCodes.length > constant.smallPageSize) {
+            		 if(!$scope.tempCodes) {
+            			 $scope.tempCodes = [];
+            		 }
+            		 var temps = $scope.eavCodes.splice(constant.smallPageSize , $scope.eavCodes.length - constant.smallPageSize);
+					if(temps) {
+						for(var i = 0 ; i < temps.length ; i++) {
+							$scope.tempCodes.push(temps[i]);
+						}
+					}
+            	 }
+            	 $scope.pagination.totalCount += num;
+                 break;
+             case 'del':
+            	 // 将缓存中的数据加回来
+            	 if($scope.eavCodes.length < constant.smallPageSize) {
+            		 if(!$scope.tempCodes ||$scope.tempCodes.length == 0 ) {
+            			 return;
+            		 }
+            		 for(var i = 0 ; i< (constant.smallPageSize - $scope.eavCodes.length); i++ ) {
+            			 if($scope.tempCodes.length <= 0) {
+            				 return;
+            			 }
+            			 $scope.eavCodes.push($scope.tempCodes.pop());
+            		 }
+            	 }
+            	 $scope.pagination.totalCount -= num;
+                 break;
+         }
+        }
     };
 
     return {

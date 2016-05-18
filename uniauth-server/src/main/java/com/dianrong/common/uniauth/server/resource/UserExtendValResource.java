@@ -59,7 +59,8 @@ public class UserExtendValResource implements IUserExtendValRWResource {
                 userExtendValParam.getUserId(),
                 userExtendValParam.getExtendCode(),
                 userExtendValParam.getPageNumber(),
-                userExtendValParam.getPageSize());
+                userExtendValParam.getPageSize(),
+                userExtendValParam.isQueryOnlyUsed());
         return Response.success(pageDto);
     }
     

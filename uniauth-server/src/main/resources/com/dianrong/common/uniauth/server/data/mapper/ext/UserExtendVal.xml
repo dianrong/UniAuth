@@ -12,20 +12,33 @@
 				  		AND `code` LIKE #{extendCode, jdbcType=VARCHAR}
 				  	</if>      
 		) t1  LEFT JOIN    (
-			SELECT id,user_id,value_,`status`,extend_id FROM user_extend_val WHERE id in(
-				SELECT MAX(id) FROM user_extend_val  GROUP BY user_id,extend_id  HAVING user_id=#{userId} 
-			)
+			SELECT id,user_id,value_,`status`,extend_id FROM user_extend_val WHERE user_id=#{userId} 
 		)t2   ON  t1.extend_id=t2.extend_id
-	) tt1  ORDER BY userId DESC,id DESC 
-    <if test="pageNumber !=0 and pageSize!=0">
-      limit ${pageNumber},${pageSize}
+	) tt1  
+	WHERE 1 = 1 
+	<if test="queryOnlyUsed !=null and queryOnlyUsed == 'true' ">
+			AND userId is not NULL 
+	</if>      
+	ORDER BY userId DESC,id DESC 
+    <if test="startIndex !=null  and pageSize !=null ">
+      limit ${startIndex}, ${pageSize}
     </if>
   </select>
   
   <select id="countByCode" parameterType="map" resultType="int">
-  	SELECT count(*) extend_description FROM user_extend WHERE 1=1 
+  	SELECT count(id) extend_description FROM user_extend WHERE 1=1 
   	<if test="extendCode!=null and extendCode!=''">
   		AND `code` LIKE #{extendCode, jdbcType=VARCHAR}
   	</if>
+  </select>
+  
+   <select id="countByUserExtend" parameterType="map" resultType="int"> 
+   select count(id) from user_extend_val  t1 where t1.user_id = #{userId} 
+    and  exists (
+	select id from user_extend t2 where  t2.id = t1.extend_id  
+	<if test="extendCode!=null and extendCode!=''">
+			AND `code` LIKE #{extendCode, jdbcType=VARCHAR}
+	</if>      
+	)
   </select>
 </mapper>

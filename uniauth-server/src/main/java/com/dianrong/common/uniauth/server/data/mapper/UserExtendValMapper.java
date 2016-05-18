@@ -101,4 +101,6 @@ public interface UserExtendValMapper {
     List<UserExtendValExt> selectByUserIdAndCode(Map<String,String> params);
     
     int countByCode(Map<String,String> params);
+    
+    int countByUserExtend(Map<String,String> params);
 }

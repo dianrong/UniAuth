@@ -15,7 +15,6 @@ define(['../../../utils/constant'], function (constant) {
             var params = {};
             $scope.userEvaCodes = [];
             $scope.userEavLoading = constant.loading;
-            
             params.extendCode = $scope.eavQuery.code;
             params.userId = $scope.user.id;
             // 分页查询参数
@@ -34,6 +33,11 @@ define(['../../../utils/constant'], function (constant) {
                 }
                 $scope.userEavLoading = '';
                 $scope.userEvaCodes = result.data;
+                
+                //设置分页属性
+                $scope.pagination.curPage = result.currentPage + 1;
+                $scope.pagination.totalCount = result.totalCount;
+                $scope.pagination.pageSize = result.pageSize;
             }, function () {
                 $scope.userEvaCodes = [];
                 $scope.userEvaCodes = constant.loadError;
@@ -41,7 +45,25 @@ define(['../../../utils/constant'], function (constant) {
         };
         // init
         $scope.queryUserEaves();
-
+        
+        // 操作数组 将指定item放到第一位
+        var exchangeItemToFirst = function( itemArray, item){
+        	if(!item || !itemArray) {
+        		return;
+        	}
+        	 var index = -1;
+        	 for(var i = 0 ;i < itemArray.length; i++) {
+        		 if(itemArray[i] === item) {
+        			 index = i;
+        			 break;
+        		 }
+        	 }
+        	 if(index != -1) {
+        		 itemArray.splice(index, 1);
+        	 }
+        	 itemArray.unshift(item);
+        }
+        
         // 确定修改
         $scope.confirmEdit = function(userEav) {
             var param = {};
@@ -60,10 +82,12 @@ define(['../../../utils/constant'], function (constant) {
                         $scope.cancelEdit(userEav);
                         return;
                     }
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "添加成功.");
                     userEav.id = result.id;
                     userEav.status = '0';
                     userEav.userId = $scope.user.id;
+                    
+                    exchangeItemToFirst($scope.userEvaCodes, userEav);
+                    AlertService.addAutoDismissAlert(constant.messageType.info, "添加成功.");
                 }, function () {
                     AlertService.addAutoDismissAlert(constant.messageType.danger, "添加失败, 请联系系统管理员.");
                 });
@@ -78,6 +102,8 @@ define(['../../../utils/constant'], function (constant) {
                         $scope.cancelEdit(userEav);
                         return;
                     }
+                    exchangeItemToFirst($scope.userEvaCodes, userEav);
+                    
                     AlertService.addAutoDismissAlert(constant.messageType.info, "更新成功.");
                 }, function () {
                     AlertService.addAutoDismissAlert(constant.messageType.danger, "更新失败, 请联系系统管理员.");
