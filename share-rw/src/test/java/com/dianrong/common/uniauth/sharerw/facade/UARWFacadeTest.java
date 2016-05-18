@@ -135,6 +135,8 @@ public class UARWFacadeTest {
         userExtendValParam.setPageSize(50);
         
         userExtendValParam.setExtendCode("aa");
+        userExtendValParam.setPageSize(5);
+        userExtendValParam.setQueryOnlyUsed(false);
         Response<PageDto<UserExtendValDto>> response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
         System.out.println(mapper.writeValueAsString(response1));
         
