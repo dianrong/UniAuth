@@ -1,18 +1,24 @@
 package com.dianrong.common.uniauth.common.util;
 
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Random;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Guoying on 2015/9/8.
  */
 public class AuthUtils {
 
+	/**./**.
+	 * 日志对象
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(AuthUtils.class.getClass());
+	
     private static final String SALT_GENERATION_ALGORITHM = "SHA1PRNG";
     private static final String PASSWORD_DIGEST_ALGORITHM = "SHA";
 
@@ -43,7 +49,7 @@ public class AuthUtils {
             byte[] digest = msgDigest.digest(password.getBytes());
             return digest;
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        	logger.warn("digest exception",e);
             return null;
         }
     }
