@@ -3,8 +3,16 @@ package com.dianrong.common.uniauth.common.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ReflectionUtils {
 
+	/**./**.
+	 * 日志对象
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class.getClass());
+	
 	private ReflectionUtils() {
 	}
 
@@ -22,7 +30,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			object = field.get(targetObj);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("exception", e);
 		}
 		return object;
 	}
@@ -33,7 +41,7 @@ public class ReflectionUtils {
 			Method method = clazz.getMethod(methodName, new Class[0]);
 			object = method.invoke(null, new Object[0]);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("exception", e);
 		}
 		return object;
 	}
@@ -44,7 +52,7 @@ public class ReflectionUtils {
 			Method method = targetObj.getClass().getMethod(methodName, new Class[0]);
 			object = method.invoke(targetObj, new Object[0]);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("exception", e);
 		}
 		return object;
 	}
@@ -56,7 +64,7 @@ public class ReflectionUtils {
 			try{
 				field = selfClazz.getDeclaredField(fieldName);
 			}catch(Exception e){
-				e.printStackTrace();
+				logger.warn("exception", e);
 				selfClazz = selfClazz.getSuperclass();
 			}
 		}
@@ -64,7 +72,7 @@ public class ReflectionUtils {
 		try{
 			field.set(targetObj, fieldValue);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("exception", e);
 		}
 	}
 	
@@ -75,7 +83,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			field.set(null, fieldValue);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("exception", e);
 		}
 	}
 	
@@ -87,7 +95,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			object = field.get(null);
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.warn("exception", e);
 		}
 		return object;
 	}
@@ -110,6 +118,7 @@ public class ReflectionUtils {
 				}
 			}
 		} catch (Exception e) {
+			logger.warn("exception", e);
 		}
 		return opUserId;
 	}

@@ -1,0 +1,53 @@
+<div class="modal-header dialog-header-confirm">
+    <h4 class="modal-title text-center">
+        <i class="fa fa-wrench"></i>&nbsp;&nbsp;&nbsp;  EAV-CODE管理
+    </h4>
+</div>
+<div class="modal-body">
+       <form style="margin-left: -22px;" class="form-horizontal" name="eavQueryForm">
+	    <div style="margin-top: 10px;" class="form-group">
+	        <div class="col-md-6">
+	            <span class="col-md-4 control-label">EAV-CODE:</span>
+	            <div class="col-md-8">
+	                <input type="text" class="form-control" placeholder="eav-code" ng-model="eavQuery.code" maxlength="64">
+	            </div>
+	        </div>
+	        <div class="col-md-offset-3 col-md-3">
+			    <a class="btn btn-info" ng-click="launch('add')" role="button">新增</a>
+			    <button class="btn btn-info" ng-click="queryEavCodes()">查询</button>
+			</div>
+	    </div>
+	 </form>
+	<div>
+	    <table class="text-left table grey-border table-hover vertical-middle">
+	        <thead class="text-color-c4">
+		        <tr>
+		            <th>EAV-CODE</th>
+		            <th>描述</th>
+		            <th style="text-align: center">操作</th>
+		        </tr>
+	        </thead>
+	        <tbody class="text-color-c6">
+		        <tr ng-if="eavCodesLoading !=''">
+		            <td colspan="9" class="tc" ng-bind="eavCodesLoading"></td>
+		        </tr>
+		
+		         <tr ng-repeat="d in eavCodes">
+		            <td><input ng-disabled="!d.editable || (d.editable && d.editable == false)" class="{{(!d.editable || (d.editable && d.editable == false))?'noborder':''}}" ng-model="d.code"></td>
+		            <td><input ng-disabled="!d.editable || (d.editable && d.editable == false)" class="{{(!d.editable || (d.editable && d.editable == false))?'noborder':''}}" ng-model="d.description"></td>
+		            <td class="text-color-c9" style="text-align: center">
+		                <div class="btn-group">
+		                    <a ng-show="!d.editable || (d.editable && d.editable == false)" title="修改EAV-CODE信息" class="btn btn-info" ng-click="initEdit(d)"><i class="fa fa-pencil"></i></a>
+		                    <a ng-show="d.editable && d.editable == true" title="确认修改" class="btn btn-info" ng-click="confirmEdit(d)"><i class="fa fa-check"></i></a>
+		                    <a ng-show="d.editable && d.editable == true" title="取消修改" class="btn btn-info" ng-click="cancelEdit(d)"><i class="fa fa-ban"></i></a>
+		                </div>
+		            </td>
+		        </tr>
+	        </tbody>
+	    </table>
+	    <uib-pagination ng-if="eavCodes && eavCodes.length" boundary-links="true" ng-change="queryEavCodes()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+	</div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="dialog_ok()">返回</button>
+</div>

@@ -32,12 +32,16 @@ public class UniClientFacade {
 	private IRoleResource roleResource;
 	private ITagResource tagResource;
 	private IConfigResource configResource;
+    private IUserExtendResource userExtendResource;
+    private IUserExtendValResource userExtendValResource;
 
 	@PostConstruct
 	public void init(){
 		CheckZkConfig.checkZkConfig(uniWsEndpoint, "/com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint", "uniauth ws endpoint");
 		JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
 		jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        userExtendResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, Arrays.asList(jacksonJsonProvider));
+        userExtendValResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValResource.class, Arrays.asList(jacksonJsonProvider));
 		domainResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainResource.class, Arrays.asList(jacksonJsonProvider));
 		groupResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupResource.class, Arrays.asList(jacksonJsonProvider));
 		permissionResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, Arrays.asList(jacksonJsonProvider));
@@ -79,5 +83,13 @@ public class UniClientFacade {
 	public IConfigResource getConfigResource() {
 		return configResource;
 	}
+
+    public IUserExtendResource getUserExtendResource() {
+        return userExtendResource;
+    }
+
+    public IUserExtendValResource getUserExtendValResource() {
+        return userExtendValResource;
+    }
 
 }

@@ -92,6 +92,10 @@ public class UserService {
     private TagTypeMapper tagTypeMapper;
     @Autowired
     private UniauthSender uniauthSender;
+
+    @Autowired
+    private UserExtendValService userExtendValService;
+    
     /**.
 	 * 进行用户数据过滤的filter
 	 */
@@ -530,6 +534,7 @@ public class UserService {
 		
 		UserDetailDto userDetailDto = new UserDetailDto();
 		UserDto userDto = BeanConverter.convert(user);
+		setUserExtendVal(userDto);
 		userDetailDto.setUserDto(userDto);
 		
 		Long userId = user.getId();
@@ -604,7 +609,10 @@ public class UserService {
 		CheckEmpty.checkEmpty(email, "邮件");
 		
 		User user = getUserByAccount(email, false);
-		return BeanConverter.convert(user);
+		UserDto userDto=BeanConverter.convert(user);
+		setUserExtendVal(userDto);
+		
+		return userDto;
 	}
 	
 	@Transactional
@@ -730,6 +738,11 @@ public class UserService {
         return user;
     }
     
+    private void setUserExtendVal(UserDto userDto){
+        List<UserExtendValDto> userExtendValDtos=userExtendValService.searchByUserId(userDto.getId(),(byte)0);
+        userDto.setUserExtendValDtos(userExtendValDtos);
+    }
+    
     /**.
      * 根据id获取有效用户的数量
      * @param id
@@ -774,7 +787,10 @@ public class UserService {
     public UserDto getUserByEmailOrPhone(LoginParam loginParam){
 		CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
 		User user = getUserByAccount(loginParam.getAccount(), true);
-		return BeanConverter.convert(user);
+        UserDto userDto=BeanConverter.convert(user);
+        setUserExtendVal(userDto);
+        
+        return userDto;
     }
     
     /**.

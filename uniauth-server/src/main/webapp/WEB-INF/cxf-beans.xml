@@ -18,6 +18,8 @@
             <ref bean="auditResource" />
             <ref bean="configResource" />
             <ref bean="tagResource" />
+            <ref bean="userExtendResource" />
+            <ref bean="userExtendValResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />
