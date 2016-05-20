@@ -1,0 +1,35 @@
+body {
+	background: #153e50;
+	text-align:center;
+}
+body .header {
+	width: 100%;
+}
+
+body .content {
+	width: 100%;
+	height: 580px;
+}
+
+body .footer {
+	width: 100%;
+	color: white;
+}
+
+.find-pwd-container .find-pwd-content {
+	position:relative;
+	border:1px solid #E4E4E4;
+	height:540px;
+	background:#FFF;
+	margin:30px auto;
+	width: 800px;
+	border-radius: 10px
+}
+.find-pwd-container .find-pwd-content header {
+	font-size:18px;
+	padding:25px 0 26px 40px;
+	line-height:1;
+	color:#333;
+	border-bottom:1px solid #E4E4E4;
+	text-align: left;
+}

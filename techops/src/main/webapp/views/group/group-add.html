@@ -1,0 +1,23 @@
+<div class="control-panel">
+    <div class="panel-header modal-header dialog-header-group">
+        <h4 class="modal-title text-center">
+            <i class="fa fa-plus-square-o"></i> 新增组
+        </h4>
+    </div>
+    <div>
+        <ng-form name="addGroupForm" novalidate role="form">
+            <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[addGroupForm.code.$dirty && addGroupForm.code.$invalid]">
+                <label class="panel-label" for="name">组名称:</label>
+                <input type="text" class="panel-input form-control" placeholder="组名称" id="name" ng-model="grp.name" required>
+                <label class="panel-label" for="code">组code:</label>
+                <input type="text" class="panel-input form-control" placeholder="组的唯一标识" id="code" ng-model="grp.code" required>
+                <label class="panel-label" for="description" placeholder="组描述">组描述:</label>
+                <textarea id="description" class="panel-textarea form-control" placeholder="组的描述" ng-model="grp.description"></textarea>
+            </div>
+        </ng-form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" ng-click="addGroup()"
+                ng-disabled="(addGroupForm.$dirty && addGroupForm.$invalid) || addGroupForm.$pristine">确认添加</button>
+    </div>
+</div>

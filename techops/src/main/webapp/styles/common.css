@@ -1,0 +1,141 @@
+/*.dialog-header-error { background-color: #d2322d; }*/
+/*.dialog-header-wait { background-color: #333333; }*/
+/*.dialog-header-notify { background-color: #eeeeee; }*/
+/*.dialog-header-error span, .dialog-header-error h4,*/
+/*.dialog-header-wait span, .dialog-header-wait h4,*/
+
+.dialog-header-confirm { background-color: #428bca; }
+.dialog-header-confirm span, .dialog-header-confirm h4 { color: #ffffff; }
+
+.dialog-header-group { background-color: #5BC0EE; }
+.dialog-header-group span, .dialog-header-group h4 { color: #ffffff; }
+.disabled-line-through {
+    text-decoration: line-through;
+}
+.control-panel {
+    background-color: #f0f8ff;
+    padding: 6px 6px 6px 6px;
+    font-size:16px;
+    border-radius:10px;
+    margin-top: 5px;
+}
+
+.panel-header {
+    border-radius:14px;
+    height:42px;
+    padding: 8px;
+}
+
+.panel-label {
+    padding-top: 5px;
+}
+
+.input-group-lg > .panel-input {
+    height: 35px;
+    border-radius:10px;
+    font-size: 16px;
+}
+
+.input-group-lg > .panel-textarea {
+    height: 120px;
+    resize: none;
+    border-radius:10px;
+    font-size: 16px
+}
+
+.font-color-blue {
+    color:#337ab7;
+    padding-right: 2px
+}
+
+.font-color-red {
+    color:#ff3333;
+    padding-right: 2px
+}
+
+@media (min-width: 992px) {
+    .col-md-29d4 {
+        float: left;
+    }
+    .col-md-29d4 {
+        width: 29.4%;
+    }
+    .col-md-70d6 {
+        float: left;
+    }
+    .col-md-70d6 {
+        width: 70.6%;
+    }
+}
+
+.col-md-29d4 .col-md-70d6 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.alert-container {
+    position: fixed;
+    width: 518px;
+    margin-left: 279px;
+    top: 4px;
+    z-index: 9999;
+}
+
+.fade {
+    opacity:1;
+}
+
+.fade.ng-enter {
+    transition:0.5s linear all;
+    opacity:0;
+}
+
+.fade.ng-enter.ng-enter-active {
+    opacity:1;
+}
+
+.fade.ng-leave {
+    transition:0.5s linear all;
+    opacity:1;
+}
+.fade.ng-leave.ng-leave-active {
+    opacity:0;
+}
+
+.file {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.common-hidden{
+    display:none !important;
+}
+
+.common-hidden.no{
+    display:block !important;
+}
+.noborder {
+    border: 0px;
+}
+
+.top-80px {
+	top: 80px;
+}
+
+.operation_width_7 {
+    width: 21em;
+}

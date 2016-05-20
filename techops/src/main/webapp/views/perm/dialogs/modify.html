@@ -1,0 +1,53 @@
+<div class="modal-header dialog-header-confirm">
+    <h4 class="modal-title text-center">
+        <i class="fa fa-pencil-square-o"></i>修改权限信息
+    </h4>
+</div>
+<div class="modal-body">
+    <ng-form name="modifyPermDialog" novalidate role="form">
+        <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[modifyPermDialog.code.$dirty && modifyPermDialog.code.$invalid]">
+            <label class="control-label" for="value" placeholder="权限值">权限值:</label>
+            <input type="text" class="form-control" name="value" id="value" ng-model="perm.value">
+            <label class="control-label" for="type" placeholder="权限类型">权限类型:</label>
+            <br />
+            <div id="type" class="btn-group" uib-dropdown is-open="permModifyPermTypesDropdown.isOpen">
+                <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
+                    <span ng-bind="permModifyPermTypesDropdown.option.type"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="it in permModifyPermTypesDropdown.items">
+                        <a ng-click="permModifyPermTypesDropdown.selectOption(it)" ng-bind="it.type"></a>
+                    </li>
+                </ul>
+            </div>
+            <br />
+            <label class="control-label" for="valueExt" placeholder="权限扩展值">扩展值:</label>
+            <input type="text" class="form-control common-hidden {{(permModifyPermTypesDropdown && permModifyPermTypesDropdown.option.type == 'URI_PATTERN')?'':'no'}}" name="valueExt" id="valueExt" ng-model="perm.valueExt">
+
+            <div class="common-hidden {{(permModifyPermTypesDropdown && permModifyPermTypesDropdown.option.type != 'URI_PATTERN')?'':'no'}}">
+                <div id="valueExtDropDown" class="btn-group" uib-dropdown is-open="permModifyPermValueExtDropdown.isOpen">
+                    <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
+                        <span ng-bind="permModifyPermValueExtDropdown.option"></span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                        <li ng-repeat="it in permModifyPermValueExtDropdown.items">
+                            <a ng-click="permModifyPermValueExtDropdown.selectOption(it)" ng-bind="it"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <label class="control-label" for="description" placeholder="权限描述">权限描述:</label>
+            <textarea style="height:120px;" id="description" name="description" class="form-control" placeholder="权限的描述" ng-model="perm.description"></textarea>
+            <br />
+            <span class="text-danger"><strong>{{msg}}</strong></span>
+        </div>
+    </ng-form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+    <button type="button" class="btn btn-primary" ng-click="save()"
+            ng-disabled="(modifyUserDialog.$dirty && modifyUserDialog.$invalid) || modifyUserDialog.$pristine">保存</button>
+</div>

@@ -1,0 +1,55 @@
+<div style="width: 27%">
+    <ui-select ng-model="grp.selected"
+               theme="bootstrap"
+               ng-disabled="disabled"
+               reset-search-input="false"
+               style="width:100%;margin-top: 6px;">
+        <ui-select-match placeholder="输入组名...">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="grp in grps track by $index"
+                           refresh="refreshGrps($select.search)"
+                           refresh-delay="300">
+            <div ng-bind-html="grp.name | highlight: $select.search"></div>
+        </ui-select-choices>
+    </ui-select>
+</div>
+
+<div style="padding: 5px 5px 5px 5px">
+    <div ng-if="grp.selected.id">
+        <i class="fa fa-exclamation-circle font-color-blue"></i>
+        您选中的组id: <strong>'{{grp.selected.id}}'</strong> 名称: <strong>'{{grp.selected.name}}'</strong> Code: <strong>'{{grp.selected.code}}'</strong> .
+    </div>
+   <div ng-if="!grp.selected.id">
+        <i class="fa fa-exclamation-circle font-color-blue"></i>
+        您没有选中任何一个组.
+    </div>
+</div>
+<input style="padding: 5px 5px 5px 5px; width: 24%;" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
+<div>
+    <table class="text-left table grey-border table-hover vertical-middle">
+        <thead class="text-color-c4">
+        <tr>
+            <th>标签code</th>
+            <th>类别</th>
+            <th>描述</th>
+            <th>是否关联</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-c6">
+
+        <tr ng-if="grpTagsMsg!=''">
+            <td colspan="9" class="tc" ng-bind="grpTagsMsg"></td>
+        </tr>
+
+        <tr ng-repeat="d in tags | filter:predicate:comparator">
+            <td ng-bind="d.code"></td>
+            <td ng-bind="d.tagTypeCode"></td>
+            <td ng-bind="d.description"></td>
+            <td><input type="checkbox" ng-model="d.tagGrouprChecked"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" ng-click="selectAllTagsForGrp()">全选</button>
+        <button type="button" class="btn btn-info" ng-click="replaceTagsToGroup()"  ng-disabled="grp.selected == null">保存</button>
+    </div>
+</div>

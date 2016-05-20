@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper" >
+    <insert id="bacthInsert" parameterType="java.util.List" >
+    insert into grp_tag (
+    	<include refid="Base_Column_List" />
+    )
+    values   
+    <foreach collection="infoes"  item="item" index="index" open="("  separator=") , ("   close=")">  
+         #{item.grpId,jdbcType=INTEGER}, 
+         #{item.tagId,jdbcType=INTEGER}
+    </foreach>  
+  </insert>
+</mapper>

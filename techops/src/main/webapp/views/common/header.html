@@ -1,0 +1,31 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#/"><img style="height: 100%" src="cfg/download/TECHOPS_LOGO"></a>
+            <a class="navbar-brand" href="#/" style="padding-left:5px">{{title?title: '权限运维系统'}}</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top: 8px;">
+                    域切换:
+                    <div class="btn-group" uib-dropdown is-open="loginDomainsDropdown.isopen">
+                        <button id="single-button" type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
+                            <span ng-bind="loginDomainsDropdown.option.displayName"></span><span class="caret"></span>
+                        </button>
+                        <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                            <li ng-repeat="it in loginDomainsDropdown.items">
+                                <a ng-click="loginDomainsDropdown.selectOption(it)" ng-bind="it.displayName"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="#/">欢迎您：<span>{{userInfo.user.email}}</span></a></li>
+                <li><a style="color:#337AB7" href="" ng-click="logout()"><i class="fa fa-sign-out"></i>安全退出</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>

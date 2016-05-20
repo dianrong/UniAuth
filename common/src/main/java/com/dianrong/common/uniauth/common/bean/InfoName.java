@@ -1,0 +1,21 @@
+package com.dianrong.common.uniauth.common.bean;
+
+/**
+ * Created by Arc on 14/1/16.
+ */
+public enum InfoName {
+    REDIRECT,
+    BAD_REQUEST,
+    VALIDATE_FAIL,
+    INTERNAL_ERROR,
+    STACKTRACE,
+    LOGIN_ERROR_USER_NOT_FOUND,
+    LOGIN_ERROR_MULTI_USER_FOUND,
+    LOGIN_ERROR,
+    LOGIN_ERROR_STATUS_1,
+    LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT,
+    LOGIN_ERROR_NEW_USER,
+    LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH,
+    
+    GRP_NOT_OWNER
+}

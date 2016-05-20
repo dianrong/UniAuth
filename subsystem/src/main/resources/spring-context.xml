@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        
+						http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security-4.0.xsd
+                        ">
+
+	<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
+		<property name="domainCode" value="subsystem"></property>
+		<property name="rejectPublicInvocations" value="true"></property>
+	</bean>
+	
+	<import resource="classpath:ss-uniauth-client.xml" />
+	
+	<sec:http entry-point-ref="casAuthEntryPoint"  use-expressions="true" request-matcher="ant">
+      	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
+      	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+      	<sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
+      	<sec:access-denied-handler error-page="/errors/403.jsp"/>
+      	<sec:csrf disabled="true"/>
+      	
+		<sec:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+		<sec:session-management session-authentication-strategy-ref="sas" invalid-session-url="#{uniauthConfig['cas_server']}/logout?dupsession=true"/>
+		<sec:logout delete-cookies="JSESSIONID" />
+      	<!-- 
+      		the following part is customized intercept-url element definition for subsystem
+      		note: conflict with the judgment of regular expression, so the priority problem MUST be resolved.
+      	-->
+      	<sec:intercept-url pattern="/**" access="isAuthenticated()"/>
+<!-- 		<sec:intercept-url pattern="/normal/normal.jsp" access="hasRole('ROLE_NORMAL')" />
+      	<sec:intercept-url pattern="/user/user.jsp" access="hasRole('ROLE_ADMIN')" />
+      	<sec:intercept-url pattern="/admin/admin.jsp" access="hasRole('ROLE_SUPER_ADMIN')" /> -->
+      	<sec:intercept-url pattern="/test_url" access="hasRole('ROLE_SUPER_ADMIN')" />
+	</sec:http>
+	
+	<!-- do not change: start -->
+	<bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+		<constructor-arg name="sessionRegistry" ref="sessionRegistry"></constructor-arg>
+		<constructor-arg name="expiredUrl" value="#{uniauthConfig['cas_server']}/logout?dupsession=true"></constructor-arg>
+	</bean>
+	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+	
+	<bean id="sas" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+		<constructor-arg>
+			<list>
+				<bean class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+					<constructor-arg ref="sessionRegistry"/>
+				</bean>
+				<bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+					<constructor-arg ref="sessionRegistry"/>
+					<property name="maximumSessions" value="1" />
+					<property name="exceptionIfMaximumExceeded" value="false" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+		
+	<bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">    
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="filterProcessesUrl" value="/login/cas"></property>
+		<property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
+		<property name="sessionAuthenticationStrategy" ref="sas" />
+	</bean>
+	<!-- do not change: end -->
+	
+	
+    <bean id="myService" class="com.dianrong.loanbusiness.subsystem.service.MyService"></bean>
+	<bean id="uniauthPermissionEvaluator" class="com.dianrong.loanbusiness.subsystem.service.MyPermissionEvaluator" primary="true"></bean>
+
+</beans>

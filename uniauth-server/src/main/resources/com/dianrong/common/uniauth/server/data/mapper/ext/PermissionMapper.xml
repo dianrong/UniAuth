@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.PermissionMapper" >
+
+  <resultMap id="UrlRoleMappingExtResultMap" type="com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt" >
+      <result column="perm_url" property="permUrl" jdbcType="VARCHAR" />
+      <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+      <result column="perm_type" property="permType" jdbcType="VARCHAR" />
+      <result column="http_method" property="httpMethod" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectUrlRoleMapping" resultMap="UrlRoleMappingExtResultMap" parameterType="java.lang.String" >
+	select p.value perm_url,  rc.code role_code, pt.type perm_type, p.value_ext http_method
+	from permission p, perm_type pt, role_permission rp, domain d,
+	role r, role_code rc
+	where d.status = 0
+	and d.code = #{domainCode, jdbcType=VARCHAR}
+	and pt.type = 'URI_PATTERN'
+	and pt.id = p.perm_type_id
+	and p.status = 0
+	and p.domain_id = d.id
+	and p.id = rp.permission_id
+	and rp.role_id = r.id
+	and r.status = 0
+	and r.domain_id = d.id
+	and r.role_code_id = rc.id
+  </select>
+  
+  <select id="selectByExampleForSearch" resultMap="BaseResultMap" parameterType="com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt" >
+    select
+    <include refid="Base_Column_List" />
+    from permission
+    where domain_id = #{domainId, jdbcType=INTEGER}
+    <if test="value != null and value != ''" >
+       and value like concat(concat('%', #{value, jdbcType=VARCHAR}),'%')  
+    </if>
+	<if test="status != null">
+		and status = #{status, jdbcType=TINYINT}
+	</if>
+	<if test="permTypeId != null">
+		and perm_type_id = #{permTypeId, jdbcType=INTEGER}
+	</if>
+	order by id limit #{startIndex, jdbcType=INTEGER},#{wantCount, jdbcType=INTEGER}
+  </select>
+  
+  <select id="countByExampleForSearch" resultType="java.lang.Integer" parameterType="com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt"  >
+    select
+    	count(1)
+    from permission
+    where domain_id = #{domainId, jdbcType=INTEGER}
+    <if test="value != null and value != ''" >
+       and value like concat(concat('%', #{value, jdbcType=VARCHAR}),'%')  
+    </if>
+	<if test="status != null">
+		and status = #{status, jdbcType=TINYINT}
+	</if>
+	<if test="permTypeId != null">
+		and perm_type_id = #{permTypeId, jdbcType=INTEGER}
+	</if>
+  </select>
+  
+  
+  <select id="selectByRoleAndDomainId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from permission p
+    where p.status = 0
+    and p.domain_id =  #{domainId, jdbcType=INTEGER}
+    and p.id in(
+    	select rp.permission_id
+    	from role_permission rp
+    	where rp.role_id = #{roleId, jdbcType=INTEGER}
+    )
+  </select>
+  
+    <!-- 根据id获取有效权限的数量 -->
+  <select id="countPermissionByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
+	SELECT  COUNT(id)
+	FROM permission 
+	WHERE 
+	id = #{id, jdbcType=BIGINT}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据keyid查询有效的权限信息 -->
+   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM permission
+    WHERE id = #{id, jdbcType=INTEGER}
+    AND status = 0 
+  </select>
+</mapper>

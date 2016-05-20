@@ -1,0 +1,10 @@
+rootProject.name = "uniauth"
+
+include ":ss-client"
+include ":subsystem"
+include ":common"
+include ":uniauth-server"
+include ":share-rw"
+include ":techops"
+include ":cas"
+include ":casclient"

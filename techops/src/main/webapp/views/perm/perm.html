@@ -1,0 +1,68 @@
+<form style="margin-left: -34px;" class="form-horizontal" name="permQueryForm">
+    <div class="form-group">
+        <div class="col-md-4">
+            <span class="col-sm-4 control-label">权限值:</span>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="权限值" ng-model="permQuery.value" maxlength="40">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">权限类型:</span>
+            <div class="col-md-8 btn-group" uib-dropdown is-open="permTypesDropdown.isOpen">
+                <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
+                    <span ng-bind="permTypesDropdown.option.type"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="it in permTypesDropdown.items">
+                        <a ng-click="permTypesDropdown.selectOption(it)" ng-bind="it.type"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="panel-body pull-right">
+    <a class="btn btn-info" ng-click="launch('add')" role="button">新增权限</a>
+    <button class="btn btn-info" ng-click="queryPerm()">查询</button>
+</div>
+
+<div>
+    <table class="text-left table grey-border table-hover vertical-middle">
+        <thead class="text-color-c4">
+        <tr>
+            <th>权限值</th>
+            <th style="width: 5em;">扩展值</th>
+            <th>权限类型</th>
+            <th>描述</th>
+            <th style="width: 4em">状态</th>
+            <th style="text-align: center;width: 10em;">操作</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-c6">
+
+        <tr ng-if="permsLoading!=''">
+            <td colspan="9" class="tc" ng-bind="permsLoading"></td>
+        </tr>
+
+        <tr ng-repeat="d in perms">
+            <td ng-bind="d.value"></td>
+            <td ng-bind="d.valueExt"></td>
+            <td ng-bind="d.permType"></td>
+            <td ng-bind="d.description"></td>
+            <td ng-bind="!d.status?'启用':'禁用'"></td>
+            <td class="text-color-c9" style="text-align: center">
+                <div class="btn-group">
+                    <a title="管理该权限对应的角色" class="btn btn-info" ng-click="navToPermRole(d)"><i class="fa fa-cog"></i></a>
+                    <a title="修改权限信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+                    <a title="{{d.status?'启用该权限':'禁用该权限'}}" class="btn btn-info" ng-click="launch('status', d)">
+                        <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <uib-pagination ng-if="perms && perms.length" boundary-links="true" ng-change="queryPerm()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+</div>

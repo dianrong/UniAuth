@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.DomainMapper" >
+  <select id="selectUserDomainsByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+	select 
+		<include refid="Base_Column_List" />
+	from domain d
+	where d.status = 0
+	and 
+	(
+		exists
+		(
+			select ur.role_id
+			from user_role ur, role r
+			where ur.user_id = #{userId,jdbcType=BIGINT}
+			and r.status = 0
+			and r.domain_id = d.id
+			and r.id = ur.role_id
+		)
+		or
+		exists
+		(
+			select gr.role_id
+			from grp_role gr, role r, grp_path gp, grp g, user_grp ug
+			where gr.grp_id = gp.ancestor
+			and gp.descendant = g.id
+			and g.status = 0
+			and g.id = ug.grp_id
+			and ug.type = 0
+			and ug.user_id = #{userId,jdbcType=BIGINT}
+			and r.id = gr.role_id
+			and r.domain_id = d.id
+			and r.status = 0
+			and not exists
+			(
+				select g1.id
+				from grp_path gp1, user_grp ug1, grp g1
+				where ug1.user_id = #{userId,jdbcType=BIGINT}
+				and ug1.grp_id = gp1.descendant
+				and ug1.type = 0
+				and gp1.ancestor = g1.id
+				and g1.status = 1
+			)
+		)
+	)
+  </select>
+  
+  <!-- 根据id获取有效域名的数量 -->
+  <select id="countDomainByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
+	SELECT  COUNT(id)
+	FROM domain 
+	WHERE 
+	id = #{id, jdbcType=BIGINT}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据code获取有效域名的数量 -->
+  <select id="countDomainByCodeWithStatusEffective"  resultType="java.lang.Integer" parameterType="java.lang.String" >
+	SELECT  COUNT(id)
+	FROM domain 
+	WHERE 
+	code = #{code, jdbcType=VARCHAR}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据keyid查询有效的域名信息 -->
+   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM domain
+    WHERE id = #{id, jdbcType=INTEGER}
+    AND status = 0 
+  </select>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.GrpMapper">
+    <select id="getGroupTree" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{ancestor,jdbcType=INTEGER} and grp.status=0
+    </select>
+
+    <select id="getGroupTreeLinks" resultType="hashmap" parameterType="java.lang.Integer" >
+        select t1.descendant, t1.ancestor from grp_path t1 join
+        (select
+        grp.id
+        from grp join grp_path on
+        (grp.id = grp_path.descendant)
+        where grp_path.ancestor = #{ancestor,jdbcType=INTEGER} and grp.status=0) as t2 on t1.descendant = t2.id
+        where t1.deepth=1 and t1.descendant &lt;&gt; #{ancestor,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectNameCountBySameLayerGrpId" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+        select count(grp.name) from grp join (
+        select t1.descendant from grp_path t1
+        join
+        (SELECT grp_path.ancestor as ancestor FROM grp_path
+         where descendant=#{descendant,jdbcType=INTEGER} and deepth=1) t2
+         on t1.ancestor = t2.ancestor where t1.deepth=1) t3
+         on grp.id = t3.descendant where grp.status=0 group by grp.name having count(grp.name) > 1;
+    </select>
+    
+  <select id="checkOwner" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select count(g.id)
+		from user u, user_grp ug, grp g, grp_path gp
+		where u.status = 0
+		and u.id =#{userId,jdbcType=BIGINT}
+		and u.id = ug.user_id
+		and ug.type = 1
+		and ug.grp_id = gp.ancestor
+		and gp.descendant = #{targetGroupId,jdbcType=INTEGER}
+		and gp.descendant = g.id
+		and g.status = 0
+  </select>
+
+    <select id="getOwnGrpIds" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        select distinct(gp.descendant) from grp_path gp
+        join (SELECT ug.grp_id as p_grp_id FROM user_grp ug
+            join grp on grp.id = ug.grp_id
+            where ug.type=1 and ug.user_id=#{ownerId,jdbcType=BIGINT} and grp.status =0) pgid
+        on gp.ancestor = pgid.p_grp_id
+        join grp on grp.id = gp.descendant where grp.status=0
+    </select>
+
+	<!-- 根据id获取有效域组的数量 -->
+  <select id="countGroupByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
+	SELECT  COUNT(id)
+	FROM grp 
+	WHERE 
+	id = #{id, jdbcType=BIGINT}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据code获取有效组的数量 -->
+  <select id="countGroupByCodeWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
+	SELECT  COUNT(id)
+	FROM grp 
+	WHERE 
+	code = #{code, jdbcType=VARCHAR}
+	AND status = 0 
+  </select>
+  
+  <!-- 根据keyid查询有效的组信息 -->
+   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM grp
+    WHERE id = #{id, jdbcType=INTEGER}
+    AND status = 0 
+  </select>
+</mapper>

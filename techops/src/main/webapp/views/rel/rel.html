@@ -1,0 +1,12 @@
+<div style="margin-left: -15px;margin-top: 6px" class="btn-group">
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.role--perm')}" ui-sref="rel.role--perm">角色-权限</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.perm--role')}" ui-sref="rel.perm--role">权限-角色</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.user--role')}" ui-sref="rel.user--role">用户-角色</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.grp--role')}" ui-sref="rel.grp--role">组-角色</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.role--user-grp')}" ui-sref="rel.role--user-grp">角色-用户/组</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.tag--user-grp')}" ui-sref="rel.tag--user-grp">标签-用户/组</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.user--tag')}" ui-sref="rel.user--tag">用户-标签</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('rel.grp--tag')}" ui-sref="rel.grp--tag">组-标签</a>
+</div>
+<div ui-view class="row">
+</div>

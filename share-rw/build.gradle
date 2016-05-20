@@ -1,0 +1,33 @@
+
+dependencies {
+    compile project(":common")
+    //Java Mail
+    compile "javax.mail:mail:1.4.7"
+    // compile 'org.freemarker:freemarker:2.3.23'
+    
+    //Test Suite
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile "org.springframework:spring-test:4.1.6.RELEASE"
+
+}
+
+jar {
+    baseName = "share-rw"
+}
+
+// package the sources to be a jar file.
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        common(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}

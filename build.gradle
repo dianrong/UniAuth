@@ -1,0 +1,391 @@
+//buildscript {
+//	repositories { jcenter() }
+//
+//	dependencies {
+//		classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
+//	}
+//}
+allprojects {
+    group = 'com.dianrong.common.uniauth'
+    version = '1.0.26-SNAPSHOT'
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven-publish'
+//	apply plugin: 'io.spring.dependency-management'
+
+    repositories {
+        maven {
+            url 'http://archiva.dianrong.com/repository/mirror'
+        }
+        maven {
+            url 'http://archiva.dianrong.com/repository/internal'
+        }
+        maven {
+            url 'http://archiva.dianrong.com/repository/snapshots'
+        }
+    }
+
+    repositories{
+		mavenCentral()
+	}
+	
+    publishing {
+		publications.all {
+			pom.withXml {
+				asNode().dependencies.'*'.findAll() {
+					it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+						dep.name == it.artifactId.text()
+					}
+				}.each { it.scope*.value = 'compile'}
+			}
+		}
+        repositories {
+            maven {
+                url 'http://archiva.dianrong.com/repository/mirror'
+                credentials {
+                    username = 'developer'
+                    password = '#a1GiRoKJnG'
+                }
+            }
+            maven {
+                url 'http://archiva.dianrong.com/repository/internal'
+                credentials {
+                    username = 'developer'
+                    password = '#a1GiRoKJnG'
+                }
+            }
+            maven {
+                url 'http://archiva.dianrong.com/repository/snapshots'
+                credentials {
+                    username = 'developer'
+                    password = '#a1GiRoKJnG'
+                }
+            }
+        }
+    }
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    
+//    configurations.all {
+//    	resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
+//	}
+	dependencies {
+		//Test Suite
+    	testCompile 'junit:junit:4.12'
+	}
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.6'
+    archiveBase = 'PROJECT'
+    archivePath = 'gradle/dists'
+}
+
+project(':common') {
+	dependencies {
+		compile 'org.apache.commons:commons-lang3:3.4'
+		compile 'com.google.guava:guava:18.0'
+	}
+}
+
+project(':ss-client') {
+	dependencies {
+		compile project(":common")
+		compile 'javax.servlet:javax.servlet-api:3.1.0'
+	    compile 'org.apache.curator:curator-recipes:2.9.1'
+	    compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-remoting:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-ldap:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-acl:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-cas:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-openid:4.0.3.RELEASE'
+		compile 'org.springframework.security:spring-security-taglibs:4.0.3.RELEASE'
+		
+		
+		compile 'org.hibernate:hibernate-validator:5.2.4.Final'
+	}
+
+	sourceSets {
+	    main {
+	        java {
+	            srcDirs = ['src/main/java', 'src/main/java-ss']
+	        }
+	        resources {
+	            srcDirs = ['src/main/resources']
+	        }
+	    }
+	    test {
+	        java {
+	            srcDirs = ['src/test/java', 'src/test/java-ss']
+	        }
+	        resources {
+	            srcDirs = ['src/test/resources']
+	        }
+	    }
+	}
+
+    jar {
+        baseName = 'common-uniauth-ssclient'
+    }
+
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
+
+    publishing {
+        publications {
+            client(MavenPublication) {
+                artifactId 'common-uniauth-ssclient'
+                from components.java
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+    }
+}
+
+project(':subsystem') {
+	apply plugin: 'war'
+	
+	dependencies {
+	    compile project(":ss-client")
+	    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+	    compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
+	    compile 'ch.qos.logback:logback-classic:1.1.3'
+	     
+	}
+	configurations{
+    	runtime.exclude group : 'commons-logging',module:'commons-logging'
+	}
+	
+	war {
+    	archiveName = project.name + '.war'
+	}
+}
+
+project(':cas') {
+	apply plugin: 'war'
+
+	sourceSets {
+		deployment {
+			java {
+				srcDir 'src/deployment/java'
+			}
+			resources {
+				srcDir 'src/deployment/mybatis'
+			}
+			compileClasspath += configurations.compile
+			runtimeClasspath += configurations.compile
+		}
+	}
+
+	ext {
+		tomcatUsername = 'tomcat'        //Tomcat用户
+		tomcatPassword = 'tomcat'        //Tomcat密码
+		tomcatHost = 'localhost:8080'        //
+		tomcatWarFile = 'build/libs/' + project.name + '.war'
+
+		shengLongTomcatUsername = 'admin'
+		shengLongTomcatPassword = 'admin'
+		shengLongTomcatHost = '192.168.56.101:8080'
+		
+		cwlTomcatHost = 'localhost:8080'        //
+		wlinTomcatHost = 'localhost:8080'        //
+	}
+
+	configurations{
+    	runtime.exclude group : 'commons-logging',module:'commons-logging'
+	}
+	
+	war {
+    	archiveName = project.name + '.war'
+	}
+	
+	dependencies {
+		compile(project(':share-rw')){
+			exclude group: 'org.springframework'
+			exclude group: 'org.springframework.security'
+			exclude group: 'com.fasterxml.jackson.core'
+		}
+		providedCompile "org.apache.tomcat:tomcat-catalina:7.0.63"
+		providedCompile 'javax.servlet:javax.servlet-api:3.1.0'  
+		providedCompile 'org.jasig.cas:cas-server-core:4.1.3'
+		providedCompile 'org.jasig.cas:cas-server-security-filter:2.0.4'
+		providedCompile 'org.jasig.cas:cas-server-webapp-support:4.1.3'
+		providedCompile 'org.jasig.cas:cas-server-integration-restlet:4.1.3'
+		compile 'com.dianrong.loanbusiness:kaptcha:1.1'
+
+		//Http Components for deploy on local
+		compile 'org.apache.httpcomponents:httpclient:4.4'
+		compile 'org.apache.httpcomponents:fluent-hc:4.4'
+		compile 'org.apache.httpcomponents:httpmime:4.4'
+		compile 'ch.qos.logback:logback-classic:1.1.3'
+		compile 'org.jasig.cas:cas-server-support-rest:4.1.3'
+		
+		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
+			exclude group: 'org.springframework', module: 'spring-aop'
+			exclude group: 'org.springframework', module: 'spring-beans'
+			exclude group: 'org.springframework', module: 'spring-context'
+			exclude group: 'org.springframework', module: 'spring-context-support'
+			exclude group: 'org.springframework', module: 'spring-core'
+			exclude group: 'org.springframework', module: 'spring-expression'
+			exclude group: 'org.springframework', module: 'spring-oxm'
+			exclude group: 'org.springframework', module: 'spring-tx'
+		}
+
+		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
+			//transitive = true
+			//exclude group: 'javax.xml', module: 'xmldsig'
+		//}
+	}
+	task warCas(dependsOn: war) {
+
+	}
+
+	task tomcatUndeploy(type: JavaExec) {
+		main = 'gradle.TomcatDeploy'
+		args = ['undeploy',
+				project.name,
+				tomcatUsername,
+				tomcatPassword,
+				tomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+		doFirst {
+			println "removing war file from Tomcat."
+		}
+	}
+
+	task tomcatDeployCas(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "deploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['deploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				tomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task tomcatRedeploy(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "redeploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['redeploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				tomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+	task shengLongTomcatUndeploy(type: JavaExec) {
+		main = 'gradle.TomcatDeploy'
+		args = ['undeploy',
+				project.name,
+				shengLongTomcatUsername,
+				shengLongTomcatPassword,
+				shengLongTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+		doFirst {
+			println "removing war file from Tomcat."
+		}
+	}
+
+	task shengLongTomcatDeploy(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "deploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['deploy',
+				project.name,
+				tomcatWarFile,
+				shengLongTomcatUsername,
+				shengLongTomcatPassword,
+				shengLongTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task shengLongTomcatRedeploy(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "redeploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['redeploy',
+				project.name,
+				tomcatWarFile,
+				shengLongTomcatUsername,
+				shengLongTomcatPassword,
+				shengLongTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+	
+	task tomcatCWLDeployCas(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "deploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['deploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				cwlTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task tomcatCWLRedeployCas(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "redeploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['redeploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				cwlTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task tomcatWLinDeployCas(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "deploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['deploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				wlinTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+
+	task tomcatWLinRedeployCas(type: JavaExec, dependsOn: warCas) {
+		doFirst {
+			println "redeploying war file " + tomcatWarFile + " to Tomcat."
+		}
+		main = 'gradle.TomcatDeploy'
+		args = ['redeploy',
+				project.name,
+				tomcatWarFile,
+				tomcatUsername,
+				tomcatPassword,
+				wlinTomcatHost]
+		classpath = sourceSets.deployment.runtimeClasspath
+	}
+}

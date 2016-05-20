@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans 
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security-4.0.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-4.0.xsd
+			http://www.springframework.org/schema/aop 
+			http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+			">
+    
+    <b:import resource="classpath:ss-uniauth-common.xml"/>
+
+    <global-method-security pre-post-annotations="enabled" proxy-target-class="true">
+    	<expression-handler ref="methodSecurityExpressionHandler"/>
+    </global-method-security>
+    
+	<b:bean id="methodSecurityExpressionHandler" class="com.dianrong.common.uniauth.client.custom.SSMethodSecurityExpressionHandler">
+	</b:bean>
+    
+    <!--
+    exclude the pattern which does not need protection
+	<http pattern="/index.jsp" security="none"/> 
+	 -->
+	
+	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
+	  <b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
+	  <b:property name="serviceProperties" ref="casService"/>    
+	</b:bean>  
+	
+	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
+		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>   
+		<b:property name="authenticateAllArtifacts" value="true"/>
+		<b:property name="sendRenew" value="false" />
+	</b:bean>  
+		
+	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler">
+	</b:bean>
+	
+	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
+		<b:property name="ticketValidator" ref="casTicketValidator"/>    
+		<b:property name="serviceProperties" ref="casService"/>    
+		<b:property name="key" value="dianrong-ss-uniauth-cas"/>    
+		<b:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>    
+	</b:bean>
+	
+	<b:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
+		<b:constructor-arg value="#{uniauthConfig['cas_server']}/"/>    
+	</b:bean>
+	
+	<b:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">    
+		<b:property name="userDetailsService" ref="ssUserDetailService"/>    
+	</b:bean>  
+	
+	<b:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+	
+	<b:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<b:property name="filterProcessesUrl" value="/logout/cas"></b:property>
+		<b:constructor-arg value="#{uniauthConfig['cas_server']}/logout" />
+		<b:constructor-arg>
+			<b:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+		</b:constructor-arg>
+	</b:bean>
+	
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="casAuthenticationProvider"/>
+	</authentication-manager>
+	
+	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.SSUserDetailService">
+	</b:bean>
+	
+    <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor">
+	</b:bean>
+</b:beans>

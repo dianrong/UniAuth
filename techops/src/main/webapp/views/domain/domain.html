@@ -1,0 +1,95 @@
+<ui-select ng-model="domain.selected"
+           theme="bootstrap"
+           ng-disabled="disabled"
+           reset-search-input="false"
+           style="width:29.4%;margin-top: 4px;">
+    <ui-select-match placeholder="输入域名...">{{$select.selected.displayName}}</ui-select-match>
+    <ui-select-choices repeat="domain in domains track by $index"
+                       refresh="refreshDomains($select.search)"
+                       refresh-delay="300">
+        <div ng-bind-html="domain.displayName | highlight: $select.search"></div>
+    </ui-select-choices>
+</ui-select>
+<div style="padding: 5px 5px 5px 5px">
+    <div ng-if="!domain.selected || !domain.selected.id">
+        <i class="fa fa-exclamation-circle font-color-blue"></i>
+        您没有选中任何一个域.
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-29d4 col-sm-9">
+        <div class="control-panel">
+            <div class="panel-header modal-header dialog-header-group">
+                <h4 class="modal-title text-center">
+                    <i class="fa fa-leaf"></i> 域信息
+                </h4>
+            </div>
+            <div>
+                <ng-form name="domainForm" novalidate role="form">
+                    <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[domainForm.code.$dirty && domainForm.code.$invalid]">
+
+                        <label class="panel-label" for="name">名称:</label>
+                        <input ng-disabled="status != 'modify'" type="text" class="panel-input form-control" placeholder="域名称" id="name" ng-model="domain.selected.displayName" required>
+                        <label class="panel-label" for="code">code:</label>
+                        <input ng-disabled="status != 'modify'" type="text" class="panel-input form-control" placeholder="域的唯一标识" id="code" ng-model="domain.selected.code" required>
+                        <label style="padding-top: 14px;" class="panel-label" for="enabled">状态:</label>
+                        <div id="enabled" style="margin-left: 8px;" class="btn-group" uib-dropdown is-open="domainStatusDropdown.isOpen">
+                            <button ng-disabled="status != 'modify'" type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
+                                <span style="padding-left: 5px;padding-right: 5px;" ng-bind="domainStatusDropdown.option.name"></span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                                <li ng-repeat="it in domainStatusDropdown.items">
+                                    <a ng-click="domainStatusDropdown.selectOption(it)" ng-bind="it.name"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <br />
+                        <label class="panel-label" for="description" placeholder="域描述">描述:</label>
+                        <textarea ng-disabled="status != 'modify'" id="description" class="panel-textarea form-control" placeholder="域的描述" ng-model="domain.selected.description"></textarea>
+                    </div>
+                </ng-form>
+            </div>
+            <div class="modal-footer">
+                <button ng-if="status == 'init'" type="button" class="btn btn-info" ng-click="launch('addNewDomain')">新增域</button>
+                <button ng-if="status == 'modify'" type="button" class="btn btn-info" ng-click="cancelModifyDomain()">取消</button>
+                <button ng-if="status == 'modify'" type="button" class="btn btn-info" ng-click="confirmModifyDomain()">确认</button>
+                <button ng-disabled="domain.selected == null" ng-if="status == 'init'" type="button" class="btn btn-info" ng-click="modifyDomain()">修改</button>
+            </div>
+        </div>
+    </div>
+    <div style="padding-left: 1px" class="col-md-70d6 col-sm-9">
+        <div class="col-md-10" style="padding-left:2px;padding-top:4px;color: #337AD8;font-size:19px">Stake holders:</div>
+        <div class="col-md-2">
+            <button ng-disabled="domain.selected == null" style="width: 68px;" type="button" class="btn btn-info" ng-click="launch('addStakeholder', domain.selected)">新增</button>
+        </div>
+        <table class="text-left table grey-border table-hover vertical-middle">
+            <thead class="text-color-c4">
+            <tr>
+                <th>姓名</th>
+                <th>邮箱</th>
+                <th>手机号</th>
+                <th>职位</th>
+                <th style="text-align: center">操作</th>
+            </tr>
+            </thead>
+            <tbody class="text-color-c6">
+                <tr ng-if="stakeholdersLoading != null && stakeholdersLoading!=''">
+                    <td colspan="9" class="tc" ng-bind="stakeholdersLoading"></td>
+                </tr>
+                <tr ng-repeat="d in stakeholders">
+                    <td ng-bind="d.name"></td>
+                    <td ng-bind="d.email"></td>
+                    <td ng-bind="d.phone"></td>
+                    <td ng-bind="d.jobtitle"></td>
+                    <td class="text-color-c9" style="text-align: center">
+                        <div class="btn-group">
+                            <a title="修改Stakeholder信息" class="btn btn-info" ng-click="launch('modifyStakeholder', d)"><i class="fa fa-pencil"></i></a>
+                            <a title="删除该Stakeholder的信息" class="btn btn-info" ng-click="launch('deleteStakeholder', d)"><i class="fa fa-trash-o"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
