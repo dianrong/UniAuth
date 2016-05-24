@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+	<!-- Because we are using Tomcat, it can be set as tomcat/logs folder. -->
+	<Property name="log_home" value="${catalina.logs}" />
+
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%date{ISO8601}[%thread] %-5level %logger{50} - %msg %n
+			</Pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>TRACE</level>
+		</filter>
+	</appender>
+
+	<appender name="authServerAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log_home}/auth-server.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<FileNamePattern>${log_home}/auth-server-%d{yyyy-MM-dd}.%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>30MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%date{ISO8601} [%thread] %-5level %logger{50} - %msg %n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.dianrong.common.auth.server" additivity="false">
+		<level value="error" />
+		<appender-ref ref="authServerAppender" />
+		<appender-ref ref="consoleAppender" />
+	</logger>
+
+	<logger name="org.mybatis.spring" additivity="false">
+		<level value="error" />
+		<appender-ref ref="authServerAppender" />
+		<appender-ref ref="consoleAppender" />
+	</logger>
+
+	<root>
+		<level value="error" />
+		<appender-ref ref="consoleAppender" />
+		<appender-ref ref="authServerAppender" />
+	</root>
+</configuration>

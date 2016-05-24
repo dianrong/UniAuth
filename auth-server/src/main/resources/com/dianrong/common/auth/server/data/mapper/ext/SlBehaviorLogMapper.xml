@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.auth.server.data.mapper.SlBehaviorLogMapper" >
+ 
+ <!-- 查询记录条数 -->
+  <select id="selectInfoCount" resultType="java.lang.Long" parameterType="com.dianrong.common.auth.server.data.entity.SlBehaviorLogExample" >
+    select
+    count(ID)   from SL$BEHAVIOR_LOG 
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <!-- 分页查询数据  oracle 的  注意以后修复 -->
+  <select id="selectInfoByPage_Oracle" resultMap="BaseResultMap" parameterType="com.dianrong.common.auth.server.data.entity.SlBehaviorLog" >
+  select 
+		 <include refid="Base_Column_List" />
+		from(
+			select 
+				a.*, 
+				ROWNUM rn 
+			from SL$BEHAVIOR_LOG a 
+			where 1 = 1 
+			<if test="aid != null" >
+		       and AID = #{aid,  jdbcType=DECIMAL }
+		    </if>
+		    <if test="type != null " >
+		       and TYPE = #{type,  jdbcType=DECIMAL }
+		    </if>
+		    <if test="createD != null" >
+		       and CREATE_D &gt;= #{createD,  jdbcType=TIMESTAMP }
+		    </if>
+		    <if test="ipAddr != null and ipAddr != '' " >
+		       and IP_ADDR = #{ipAddr,  jdbcType=VARCHAR }
+		    </if>
+		    <if test="pageOffSet != null and pageSize != null  " >
+		    	AND ROWNUM &lt;=  (#{pageOffSet} + #{pageSize} ) 
+		    </if>
+		    <if test="orderByClauseAsc != null" >
+		      order by ${orderByClauseAsc} asc
+		    </if>
+		    <if test="orderByClauseDesc != null" >
+		      order by ${orderByClauseDesc} desc 
+		    </if>
+		) 
+		<if test="pageOffSet != null and pageSize != null  " >
+				where rn &gt;  #{pageOffSet}
+		    </if>
+  </select>
+  
+  <select id="selectInfoByPage_MySql"  resultMap="BaseResultMap" parameterType="com.dianrong.common.auth.server.data.entity.SlBehaviorLog" >
+  		select 
+		 	<include refid="Base_Column_List" />
+		 from SL$BEHAVIOR_LOG  
+			where 1 = 1 
+			<if test="aid != null" >
+		       and AID = #{aid,  jdbcType=DECIMAL }
+		    </if>
+		    <if test="type != null " >
+		       and TYPE = #{type,  jdbcType=DECIMAL }
+		    </if>
+		    <if test="createD != null" >
+		       and CREATE_D &gt;= #{createD,  jdbcType=TIMESTAMP }
+		    </if>
+		    <if test="ipAddr != null and ipAddr != '' " >
+		       and IP_ADDR = #{ipAddr,  jdbcType=VARCHAR }
+		    </if>
+		    <if test="orderByClauseAsc != null" >
+		      order by ${orderByClauseAsc} asc
+		    </if>
+		    <if test="orderByClauseDesc != null" >
+		      order by ${orderByClauseDesc} desc 
+		    </if>
+		    <if test="pageOffSet != null and pageSize != null  " >
+		    	LIMIT    #{pageOffSet},  #{pageSize}  
+		    </if>
+  </select>
+</mapper>

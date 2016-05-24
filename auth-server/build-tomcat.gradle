@@ -1,0 +1,70 @@
+sourceSets {
+    deployment {
+        java {
+            srcDir 'src/deployment/java'
+        }
+        resources {
+            srcDir 'src/deployment/mybatis'
+        }
+        compileClasspath += configurations.compile
+        runtimeClasspath += configurations.compile
+    }
+}
+
+ext {
+    tomcatAppName = 'auth-server'  //在Tomcat访问的application名字，配置在Tomcat的根目录
+    tomcatUsername = 'tomcat'        //Tomcat用户
+    tomcatPassword = 'tomcat'        //Tomcat密码
+    tomcatHost = 'localhost:8120'        //
+    tomcatWarFile = 'build/' + tomcatAppName + '.war'
+}
+
+war {
+    baseName = tomcatAppName
+    archiveName = tomcatAppName + '.war'
+    destinationDir = file('build')
+}
+
+task warUniAuthServer(dependsOn: war) {
+}
+
+task tomcatUndeploy(type: JavaExec) {
+    main = 'gradle.TomcatDeploy'
+    args = ['undeploy',
+            tomcatAppName,
+            tomcatUsername,
+            tomcatPassword,
+            tomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+    doFirst {
+        println "removing war file from Tomcat."
+    }
+}
+
+task tomcatDeploy(type: JavaExec, dependsOn: warUniAuthServer) {
+    doFirst {
+        println "deploying war file " + tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['deploy',
+            tomcatAppName,
+            tomcatWarFile,
+            tomcatUsername,
+            tomcatPassword,
+            tomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
+
+task tomcatRedeploy(type: JavaExec, dependsOn: warUniAuthServer) {
+    doFirst {
+        println "redeploying war file " + tomcatWarFile + " to Tomcat."
+    }
+    main = 'gradle.TomcatDeploy'
+    args = ['redeploy',
+            tomcatAppName,
+            tomcatWarFile,
+            tomcatUsername,
+            tomcatPassword,
+            tomcatHost]
+    classpath = sourceSets.deployment.runtimeClasspath
+}
