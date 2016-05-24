@@ -283,4 +283,8 @@ public class BeanConverter {
             return auditDto;
         }
     }
+    
+    public static <T> T convert(Object srcObject,Class<T> toValueType){
+        return JasonUtil.o2o(srcObject, toValueType);
+    }
 }

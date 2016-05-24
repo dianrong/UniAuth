@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
-import com.dianrong.common.uniauth.common.bean.request.TagQuery;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
+import com.dianrong.common.uniauth.common.bean.request.UserExtendValParam;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 
 /**
@@ -30,38 +30,35 @@ public class EavAction {
 
     /**.
      * 查询eav-code信息
-     * @param tagQuery
+     * @param pageParam
      * @return
      */
     @RequestMapping(value = "/code/query", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
-    public Response<PageDto<UserExtendDto>> queryEavCodes(@RequestBody UserExtendPageParam param) {
-//        return uARWFacade.getTagRWResource().searchTags(tagQuery);
-    	return null;
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<PageDto<UserExtendDto>> queryEavCodes(@RequestBody UserExtendPageParam pageParam) {
+    	return uARWFacade.getUserExtendRWResource().searchUserExtend(pageParam);
     }
     
     /**.
      * 新增eav-code
-     * @param tagQuery
+     * @param param
      * @return
      */
     @RequestMapping(value = "/code/insert", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
-    public Response<Integer> addEavCode(@RequestBody UserExtendParam param) {
-    	return null;
-//        return uARWFacade.getTagRWResource().searchTags(tagQuery);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<UserExtendDto> addEavCode(@RequestBody UserExtendParam param) {
+    	return uARWFacade.getUserExtendRWResource().addUserExtend(param);
     }
     
     /**.
      * 更新eav-code信息
-     * @param tagQuery
+     * @param param
      * @return
      */
     @RequestMapping(value = "/code/modify", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<Integer> modifyEavCode(@RequestBody UserExtendParam param) {
-    	return null;
-//        return uARWFacade.getTagRWResource().searchTags(tagQuery);
+    	return uARWFacade.getUserExtendRWResource().updateUserExtend(param);
     }
     
     /**.
@@ -70,9 +67,9 @@ public class EavAction {
      * @return
      */
     @RequestMapping(value = "/user/query", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
-    public Response<PageDto<TagDto>> queryUserEavCodes(@RequestBody TagQuery tagQuery) {
-        return uARWFacade.getTagRWResource().searchTags(tagQuery);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<PageDto<UserExtendValDto>> queryUserEavCodes(@RequestBody UserExtendValParam param) {
+       return uARWFacade.getUserExtendValRWResource().searchByUserIdAndCode(param);
     }
     
     /**.
@@ -81,31 +78,31 @@ public class EavAction {
      * @return
      */
     @RequestMapping(value = "/user/modify", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
-    public Response<PageDto<TagDto>> modifyUserEavCode(@RequestBody TagQuery tagQuery) {
-        return uARWFacade.getTagRWResource().searchTags(tagQuery);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public  Response<Integer> modifyUserEavCode(@RequestBody UserExtendValParam param) {
+    	return uARWFacade.getUserExtendValRWResource().updateById(param);
     }
     
     /**.
      * 新增user-eav信息
-     * @param tagQuery
+     * @param param
      * @return
      */
     @RequestMapping(value = "/user/insert", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
-    public Response<PageDto<TagDto>> addUserEavCode(@RequestBody TagQuery tagQuery) {
-        return uARWFacade.getTagRWResource().searchTags(tagQuery);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<UserExtendValDto> addUserEavCode(@RequestBody UserExtendValParam param) {
+         return uARWFacade.getUserExtendValRWResource().add(param);
     }
     
     /**.
      * 禁用user-eav信息
-     * @param tagQuery
+     * @param param
      * @return
      */
     @RequestMapping(value = "/user/disable", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
-    public Response<PageDto<TagDto>> disableUserEavCode(@RequestBody TagQuery tagQuery) {
-        return uARWFacade.getTagRWResource().searchTags(tagQuery);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public  Response<Integer> disableUserEavCode(@RequestBody UserExtendValParam param) {
+        return uARWFacade.getUserExtendValRWResource().delById(param);
     }
     
     /**.
@@ -114,8 +111,11 @@ public class EavAction {
      * @return
      */
     @RequestMapping(value = "/user/enable", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("(hasRole('ROLE_ADMIN')")
-    public Response<PageDto<TagDto>> enableUserEavCode(@RequestBody TagQuery tagQuery) {
-        return uARWFacade.getTagRWResource().searchTags(tagQuery);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<Integer> enableUserEavCode(@RequestBody UserExtendValParam  param) {
+    	UserExtendValParam tcondtion = new UserExtendValParam();
+    	tcondtion.setId(param.getId());
+    	tcondtion.setStatus((byte)0);
+    	return uARWFacade.getUserExtendValRWResource().updateById(tcondtion);
     }
 }

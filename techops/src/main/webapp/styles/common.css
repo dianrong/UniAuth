@@ -80,7 +80,7 @@
     width: 518px;
     margin-left: 279px;
     top: 4px;
-    z-index: 101;
+    z-index: 9999;
 }
 
 .fade {
@@ -130,4 +130,12 @@
 }
 .noborder {
     border: 0px;
+}
+
+.top-80px {
+	top: 80px;
+}
+
+.operation_width_7 {
+    width: 21em;
 }

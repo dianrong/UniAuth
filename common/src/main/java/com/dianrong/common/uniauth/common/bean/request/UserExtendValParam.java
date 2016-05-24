@@ -21,13 +21,10 @@ public class UserExtendValParam extends PageParam {
     
     private String extendCode;
 
-    public String getExtendCode() {
-        return extendCode;
-    }
-
-    public void setExtendCode(String extendCode) {
-        this.extendCode = extendCode;
-    }
+    /**.
+     * 是否只查询被用户使用了的属性
+     */
+    private boolean queryOnlyUsed;
 
     public Long getId() {
         return id;
@@ -67,6 +64,22 @@ public class UserExtendValParam extends PageParam {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public String getExtendCode() {
+        return extendCode;
+    }
+
+    public void setExtendCode(String extendCode) {
+        this.extendCode = extendCode;
+    }
+
+    public boolean isQueryOnlyUsed() {
+        return queryOnlyUsed;
+    }
+
+    public void setQueryOnlyUsed(boolean queryOnlyUsed) {
+        this.queryOnlyUsed = queryOnlyUsed;
     }
 }
 

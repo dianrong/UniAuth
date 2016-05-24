@@ -1,20 +1,15 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
-import java.util.Arrays;
-
-import javax.annotation.PostConstruct;
-
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
-import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 /**
  * Created by Arc on 14/2/16.
@@ -33,11 +28,15 @@ public class UARWFacade {
     private IAuditResource auditResource;
     private IConfigRWResource configRWResource;
     private ITagRWResource tagRWResource;
+    private IUserExtendRWResource userExtendRWResource;
+    private IUserExtendValRWResource userExtendValRWResource;
 
     @PostConstruct
     public void init(){
         JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
         jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, Arrays.asList(jacksonJsonProvider));
+        userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, Arrays.asList(jacksonJsonProvider));
         domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, Arrays.asList(jacksonJsonProvider));
         groupRWResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, Arrays.asList(jacksonJsonProvider));
         permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, Arrays.asList(jacksonJsonProvider));
@@ -87,5 +86,13 @@ public class UARWFacade {
 
     public ITagRWResource getTagRWResource() {
         return tagRWResource;
+    }
+
+    public IUserExtendRWResource getUserExtendRWResource() {
+        return userExtendRWResource;
+    }
+
+    public IUserExtendValRWResource getUserExtendValRWResource() {
+        return userExtendValRWResource;
     }
 }

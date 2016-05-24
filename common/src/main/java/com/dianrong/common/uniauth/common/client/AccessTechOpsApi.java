@@ -105,34 +105,42 @@ public class AccessTechOpsApi {
 				}
 			}
 
-			if (requestBody != null && "POST".equals(method)) {
+			if (requestBody != null && !"".equals(requestBody.trim()) && "POST".equals(method)) {
 				((PostMethod) httpMethod).setRequestBody(requestBody);
 			}
 		}
 
+		int statusCode = 0;
+		String location = null;
+		String responseBody = null;
+		HttpContent responseHttpContent = new HttpContent();
+		
 		try {
 			httpClient.executeMethod(httpMethod);
-		} catch (Exception e) {
-			throw new NetworkException("Maybe network exception?", e);
-		}
-
-		int statusCode = httpMethod.getStatusCode();
-
-		String responseBody = null;
-		try {
+			statusCode = httpMethod.getStatusCode();
 			responseBody = httpMethod.getResponseBodyAsString();
+
+			Header[] responseHeaders = httpMethod.getResponseHeaders();
+			Map<String, String> responseHeaderMap = new HashMap<String, String>();
+			if (responseHeaders != null) {
+				for (Header responseHeader : responseHeaders) {
+					responseHeaderMap.put(responseHeader.getName(), responseHeader.getValue());
+				}
+			}
+			location = responseHeaderMap.get("Location");
+			location = location == null ? "" : location;
+
+			
+			responseHttpContent.setHeaders(responseHeaderMap);
+			responseHttpContent.setBody(responseBody);
+			responseHttpContent.setStatusCode(statusCode);
+			
 		} catch (Exception e) {
 			throw new NetworkException("Maybe network exception?", e);
+		} finally{
+			httpMethod.releaseConnection();
 		}
-		Header[] responseHeaders = httpMethod.getResponseHeaders();
-		Map<String, String> responseHeaderMap = new HashMap<String, String>();
-		if (responseHeaders != null) {
-			for (Header responseHeader : responseHeaders) {
-				responseHeaderMap.put(responseHeader.getName(), responseHeader.getValue());
-			}
-		}
-		String location = responseHeaderMap.get("Location");
-		location = location == null ? "" : location;
+		
 		if (statusCode == HttpStatus.SC_MOVED_TEMPORARILY
 				&& (location.indexOf("cas") != -1 || location.indexOf("passport") != -1) 
 				&& url.indexOf("cas") == -1 && url.indexOf("passport") == -1) {
@@ -142,12 +150,7 @@ public class AccessTechOpsApi {
 		} else if (statusCode == HttpStatus.SC_FORBIDDEN && url.indexOf("techops") != -1) {
 			throw new OperationForbiddenException("Operation forbidden, maybe do not have sufficient privileges to perform this operation.");
 		}
-
-		HttpContent responseHttpContent = new HttpContent();
-		responseHttpContent.setHeaders(responseHeaderMap);
-		responseHttpContent.setBody(responseBody);
-
-		httpMethod.releaseConnection();
+		
 		return responseHttpContent;
 	}
 
@@ -172,6 +175,15 @@ public class AccessTechOpsApi {
 	public class HttpContent {
 		private Map<String, String> headers;
 		private String body;
+		private int statusCode;
+
+		public int getStatusCode() {
+			return statusCode;
+		}
+
+		public void setStatusCode(int statusCode) {
+			this.statusCode = statusCode;
+		}
 
 		public Map<String, String> getHeaders() {
 			return headers;
@@ -190,7 +202,7 @@ public class AccessTechOpsApi {
 		}
 
 		public String toString() {
-			return "headers: \r\n" + headers + "\r\nbody:\r\n" + body;
+			return "\r\nstatusCode:\r\n " + statusCode+ "\r\nheaders: \r\n" + headers + "\r\nbody:\r\n" + body;
 		}
 	}
 }

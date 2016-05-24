@@ -5,9 +5,25 @@
 //		classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
 //	}
 //}
+buildscript {
+	repositories {
+		maven { url 'http://archiva.dianrong.com/repository/internal' }
+		maven { url 'http://archiva.dianrong.com/repository/snapshots' }
+		maven { url 'http://archiva.dianrong.com/repository/snapshots' }
+		jcenter()
+	}
+	dependencies {
+//		classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
+//		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
+		classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.0-snapshots'
+	}
+}
+plugins {
+	id "org.sonarqube" version "2.0.1"
+}
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.25-SNAPSHOT'
+    version = '1.0.26-SNAPSHOT'
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -79,6 +95,26 @@ allprojects {
     	testCompile 'junit:junit:4.12'
 	}
 
+	sonarqube {
+		properties {
+			property "sonar.host.url", "http://10.18.19.64:9000"
+			property "sonar.jdbc.url", "jdbc:mysql://10.18.19.43:3308/sonar?useUnicode=true&characterEncoding=utf8"
+			property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
+			property "sonar.jdbc.username", "sonar"
+			property "sonar.jdbc.password", "sonar"
+
+			property "sonar.projectKey", "dianrong:uniauth"
+			property "sonar.projectName", "uniauth"
+			property "sonar.projectVersion", version
+
+			property "sonar.exclusions", "**/*Test.java"
+			property "sonar.test.inclusions", "**/*Test.java"
+			property "sonar.java.coveragePlugin", "jacoco"
+			property "sonar.junit.reportsPath", "build/test-results/"
+			property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
+			property "sonar.jacoc.itReportPath", "build/jacoco/jacoco.exec"
+		}
+	}
 }
 
 task wrapper(type: Wrapper) {
