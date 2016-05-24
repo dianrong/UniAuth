@@ -155,19 +155,6 @@ define(['../../utils/constant'], function (constant) {
                     break;
                 case 'manage-eav':
                     var dlg = dialogs.create('views/user/dialogs/manage-eav.html','ManageEavController',
-<<<<<<< HEAD
-                        {}, {size:'md'}
-                    );
-                    dlg.result.then(function (close) {
-                       //
-                    }, function (dismiss) {
-                        //
-                    });
-                    break;
-                case 'user-eav':
-                    var dlg = dialogs.create('views/user/dialogs/user-eav.html','UserEavController',
-                        param, {size:'md'}
-=======
                         {}, {size:'lg', windowClass:'top-80px'}
                     );
                     dlg.result.then(function (close) {
@@ -179,7 +166,6 @@ define(['../../utils/constant'], function (constant) {
                 case 'user-eav':
                     var dlg = dialogs.create('views/user/dialogs/user-eav.html','UserEavController',
                         param, {size:'lg', windowClass:'top-80px'}
->>>>>>> branch 'develop' of https://wangw@code.dianrong.com/scm/uniaz/uniauth.git
                     );
                     dlg.result.then(function (close) {
                        //

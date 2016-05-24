@@ -7,42 +7,6 @@
        <form style="margin-left: -22px;" class="form-horizontal" name="evaQueryForm">
 	    <div style="margin-top: 10px;" class="form-group">
 	        <div class="col-md-6">
-<<<<<<< HEAD
-	            <span class="col-md-5 control-label">EAV-CODE:</span>
-	            <div class="col-md-7">
-	                <input type="text" class="form-control" placeholder="eav-code" ng-model="eavQuery.code" maxlength="64">
-	            </div>
-	        </div>
-	        <div class="col-md-offset-4 col-md-2">
-			    <button class="btn btn-info" ng-click="queryUserEaves()">查询</button>
-			</div>
-	    </div>
-	 </form>
-	<div>
-	    <table class="text-left table grey-border table-hover vertical-middle">
-	        <thead class="text-color-c4">
-		        <tr>
-		            <th>EAV-CODE</th>
-		            <th>描述</th>
-		            <th>扩展值</th>
-		            <th style="text-align: center">操作</th>
-		        </tr>
-	        </thead>
-	        <tbody class="text-color-c6">
-		        <tr ng-if="userEavLoading !=''">
-		            <td colspan="9" class="tc" ng-bind="userEavLoading"></td>
-		        </tr>
-		
-		         <tr ng-repeat="d in userEvaCodes">
-		         	<td ng-bind="d.code"></td>
-		         	<td ng-bind="d.description"></td>
-		            <td><input ng-disabled="!d.editable || (d.editable && d.editable == false)" class="{{(!d.editable || (d.editable && d.editable == false))?'noborder':''}}" ng-model="d.value"></td>
-		            <td class="text-color-c9" style="text-align: center">
-		                <div class="btn-group">
-		                    <a ng-show="(!d.editable || (d.editable && d.editable == false))&& (d.userId && d.userId != '')&&(!d.status || d.status == '0')" title="修改用户对应该扩展的值" class="btn btn-info" ng-click="initEdit(d)"><i class="fa fa-pencil"></i></a>
-		                    <a ng-show="(!d.editable || (d.editable && d.editable == false))&& (d.userId && d.userId != '')&&(!d.status || d.status == '0')" title="禁用用户对应该扩展属性" class="btn btn-info" ng-click="disableUserEav(d)"><i class="fa fa-times-circle"></i></a>
-		                    <a ng-show="(!d.editable || (d.editable && d.editable == false))&& (d.userId && d.userId != '')&&(d.status && d.status == '1')" title="启用用户对应该扩展属性" class="btn btn-info" ng-click="enableUserEav(d)"><i class="fa fa-check"></i></a>
-=======
 	            <span class="col-md-4 control-label">EAV-CODE:</span>
 	            <div class="col-md-8">
 	                <input type="text" class="form-control" placeholder="eav-code" ng-model="eavQuery.code" maxlength="64">
@@ -77,7 +41,6 @@
 		                    <a ng-show="(!d.editable || (d.editable && d.editable == false))&& (d.userId && d.userId != '')&&(!d.status || d.status == '0')" title="修改用户对应该扩展的值" class="btn btn-info" ng-click="initEdit(d)"><i class="fa fa-pencil"></i></a>
 		                    <a ng-show="(!d.editable || (d.editable && d.editable == false))&& (d.userId && d.userId != '')&&(!d.status || d.status == '0')" title="禁用用户对应该扩展属性" class="btn btn-info" ng-click="disableUserEav(d)"><i class="fa fa-times-circle"></i></a>
 		                    <a ng-show="(!d.editable || (d.editable && d.editable == false))&& (d.userId && d.userId != '')&&(d.status && d.status == '1')" title="启用用户对应该扩展属性" class="btn btn-info" ng-click="enableUserEav(d)"><i class="fa fa-check-square-o"></i></a>
->>>>>>> branch 'develop' of https://wangw@code.dianrong.com/scm/uniaz/uniauth.git
 		                    <a ng-show="(!d.editable || (d.editable && d.editable == false))&& (!d.userId || d.userId == '')" title="设置扩展属性值" class="btn btn-info" ng-click="initEdit(d)"><i class="fa fa-edit"></i></a>
 		                    <a ng-show="d.editable && d.editable == true" title="确认修改" class="btn btn-info" ng-click="confirmEdit(d)"><i class="fa fa-check"></i></a>
 		                    <a ng-show="d.editable && d.editable == true" title="取消修改" class="btn btn-info" ng-click="cancelEdit(d)"><i class="fa fa-ban"></i></a>

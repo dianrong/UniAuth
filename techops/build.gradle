@@ -72,16 +72,11 @@ configurations.all {
 
 dependencies {
 
-<<<<<<< HEAD
-   // compile "com.dianrong.common.uniauth:share-rw:1.0.24"
-  //  compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.24"
-=======
  //   compile "com.dianrong.common.uniauth:share-rw:1.0.25"
   //  compile "com.dianrong.common.uniauth:share-rw:1.0.25"
   //  compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.25"
   //  compile "com.dianrong.common.uniauth:share-rw:1.0.25"
   //  compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.25"
->>>>>>> branch 'develop' of https://wangw@code.dianrong.com/scm/uniaz/uniauth.git
     
     compile project(":ss-client")
     compile project(":share-rw")
