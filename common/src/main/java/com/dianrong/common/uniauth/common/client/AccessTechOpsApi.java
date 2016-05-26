@@ -25,7 +25,6 @@ import com.dianrong.common.uniauth.common.exp.OperationForbiddenException;
 
 @Component
 public class AccessTechOpsApi {
-
 	@Autowired
 	private ZooKeeperConfig zooKeeperConfig;
 	private volatile HttpClient httpClient;
@@ -34,7 +33,7 @@ public class AccessTechOpsApi {
 	public String getSessionId(String account, String password) {
 		if(lastSessionMilliSeconds != 0L){
 			long currentSessionMilliSeconds = new Date().getTime();
-			if((currentSessionMilliSeconds - lastSessionMilliSeconds)/1000 < 30L * 60 * 1000){
+			if((currentSessionMilliSeconds - lastSessionMilliSeconds) < 30L * 60 * 1000){
 				throw new NotReuseSessionIdException("Jsession id must be reused, please don't generate sessionid so frequently.");
 			}
 		}
@@ -42,24 +41,24 @@ public class AccessTechOpsApi {
 		if (account == null || password == null || "".equals(account.trim()) || "".equals(password.trim())) {
 			throw new IllegalArgumentException("Account or password is empty!");
 		}
-		String techOpsServerUrl = zooKeeperConfig.getTechOpsServerUrl(); //"http://localhost:8090/techops/"; 
-		String casServerUrl = zooKeeperConfig.getCasServerUrl(); //"http://localhost:9080/cas";  
+		String techOpsServerUrl = zooKeeperConfig.getTechOpsServerUrl(); //"https://techops-dev.dianrong.com";//zooKeeperConfig.getTechOpsServerUrl(); //"http://localhost:8090/techops/"; 
+		String casServerUrl = zooKeeperConfig.getCasServerUrl(); //"https://passport-dev.dianrong.com";//zooKeeperConfig.getCasServerUrl(); //"http://localhost:9080/cas";  
 
 		String serviceString = "service=" + techOpsServerUrl + "/login/cas";
 		String casRestBaseUrl = casServerUrl + "/v1/tickets";
 
 		HttpContent tgtRequestHc = new HttpContent();
 		tgtRequestHc.setBody("username=" + account + "&password=" + password + "&" + serviceString);
-		HttpContent tgtResponseHc = requestServer(casRestBaseUrl, "POST", tgtRequestHc);
+		HttpContent tgtResponseHc = requestServer(casRestBaseUrl, "POST", tgtRequestHc, "application/x-www-form-urlencoded");
 		String tgtRestUrl = tgtResponseHc.getHeaders().get("Location");
 		String tgt = tgtRestUrl.substring(tgtRestUrl.lastIndexOf("/"));
 
 		HttpContent stRequestHc = new HttpContent();
 		stRequestHc.setBody(serviceString);
-		HttpContent stResponseHc = requestServer(casRestBaseUrl + tgt, "POST", stRequestHc);
+		HttpContent stResponseHc = requestServer(casRestBaseUrl + tgt, "POST", stRequestHc, "application/x-www-form-urlencoded");
 		String st = stResponseHc.getBody().trim();
 
-		HttpContent sessionResponsetHc = requestServer(techOpsServerUrl + "/login/cas?ticket=" + st, "GET", null);
+		HttpContent sessionResponsetHc = requestServer(techOpsServerUrl + "/login/cas?ticket=" + st, "GET", null, null);
 		String jsessionId = sessionResponsetHc.getHeaders().get("Set-Cookie").split(";")[0].split("=")[1];
 		lastSessionMilliSeconds = new Date().getTime();
 		
@@ -72,25 +71,27 @@ public class AccessTechOpsApi {
 		apiRequestHc.setHeaders(headers);
 		apiRequestHc.setBody(postBody);
 		
-		String techOpsServerUrl = zooKeeperConfig.getTechOpsServerUrl(); //"http://localhost:8090/techops/";  
+		String techOpsServerUrl = zooKeeperConfig.getTechOpsServerUrl(); //"https://techops-dev.dianrong.com";//zooKeeperConfig.getTechOpsServerUrl(); //"http://localhost:8090/techops/";  
 		
-		if(method != null && ("GET".equals(method) || "POST".equals(method))){
-			HttpContent apiResponseHc = requestServer(techOpsServerUrl + apiPath, method, apiRequestHc);
+		if("GET".equals(method)){
+			HttpContent apiResponseHc = requestServer(techOpsServerUrl + apiPath, method, apiRequestHc, null);
 			return apiResponseHc.getBody();
 		}
-		else{
-			throw new IllegalArgumentException("Only GET or POST supported!");
+		else if("POST".equals(method)){
+			HttpContent apiResponseHc = requestServer(techOpsServerUrl + apiPath, method, apiRequestHc, "application/json");
+			return apiResponseHc.getBody();
 		}
+		throw new IllegalArgumentException("Only GET or POST supported!");
 	}
 
-	private HttpContent requestServer(String url, String method, HttpContent requestHttpContent) {
+	private HttpContent requestServer(String url, String method, HttpContent requestHttpContent, String contentType) {
 		initHttpClient();
 		HttpMethod httpMethod = null;
 		if ("GET".equals(method)) {
 			httpMethod = new GetMethod(url);
 		} else if ("POST".equals(method)) {
 			httpMethod = new PostMethod(url);
-			httpMethod.addRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			httpMethod.addRequestHeader("Content-Type", contentType);
 		}
 		httpMethod.setFollowRedirects(false);
 		if (requestHttpContent != null) {
