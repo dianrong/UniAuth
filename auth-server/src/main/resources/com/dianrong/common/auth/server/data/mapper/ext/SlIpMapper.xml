@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.auth.server.data.mapper.SlIpMapper" >
+
+<!--  分页查询数据 oracle 版本（注意后期的mysql移植）-->
+<select id="selectForPage_Oracle"  resultMap="BaseResultMap" parameterType="com.dianrong.common.auth.server.data.entity.SlIp">
+		select 
+		 <include refid="Base_Column_List" />
+		from(
+			select 
+				a.*, 
+				ROWNUM rn 
+			from SL$IP a 
+			where 1 = 1 
+			<if test="aid != null ">
+			 	AND	AID  = #{aid,  jdbcType=DECIMAL }
+			</if>
+			<if test="pageOffSet !=0  and pageSize != 0">
+				and ROWNUM &lt;=  (#{pageOffSet} + #{pageSize} )
+			</if>
+			<if test="ascClause !=null and ascClause != ''">
+				ORDER BY  ${ascClause} asc  
+			</if>
+			<if test="descClause !=null and descClause != ''">
+				ORDER BY  ${descClause} desc  
+			</if>
+		) 
+		<if test="pageOffSet !=0  and pageSize != 0">
+			where rn &gt;  #{pageOffSet}
+		</if>
+</select>
+
+<select id="selectForPage_MySql"  resultMap="BaseResultMap" parameterType="com.dianrong.common.auth.server.data.entity.SlIp">
+		select 
+		 <include refid="Base_Column_List" />
+		 from SL$IP 
+			where 1 = 1 
+			<if test="aid != null ">
+			 	AND	AID  = #{aid,  jdbcType=DECIMAL }
+			</if>
+			<if test="ascClause !=null and ascClause != ''">
+				ORDER BY  ${ascClause} asc  
+			</if>
+			<if test="descClause !=null and descClause != ''">
+				ORDER BY  ${descClause} desc  
+			</if>
+			<if test="pageOffSet !=0  and pageSize != 0">
+				 Limit #{pageOffSet} ,  #{pageSize}
+			</if>
+</select>
+</mapper>

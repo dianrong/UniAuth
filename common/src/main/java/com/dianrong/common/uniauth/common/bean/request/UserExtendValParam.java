@@ -20,7 +20,7 @@ public class UserExtendValParam extends PageParam {
     private Byte status;
     
     private String extendCode;
-    
+
     /**.
      * 是否只查询被用户使用了的属性
      */

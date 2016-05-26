@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <import resource="classpath:ss-uniauth-common.xml"/>
+    <import resource="classpath:db-beans.xml"/>
+    
+    <!-- aop -->
+    <aop:aspectj-autoproxy/>
+
+    <!-- context -->
+    <context:component-scan base-package="com.dianrong.common.auth.server" />
+
+	<!-- 配置数据库处理适配类 -->
+	<bean id="baseAdapterMapper" class="com.dianrong.common.auth.server.data.mapperAdapter.BaseMapperAdapter"  abstract="true">
+		<property name="dialect" value="dialect"/>
+	</bean>
+	
+	<!-- 配置数据库处理适配类 -->
+	<bean class="com.dianrong.common.auth.server.data.mapperAdapter.SlActorMapperAdapter"/>
+	<bean class="com.dianrong.common.auth.server.data.mapperAdapter.SlActorVirtualLoanMapperAdapter"/>
+	<bean class="com.dianrong.common.auth.server.data.mapperAdapter.SlBehaviorLogMapperAdapter"/>
+	<bean class="com.dianrong.common.auth.server.data.mapperAdapter.SlIpMapperAdapter"/>
+	<bean class="com.dianrong.common.auth.server.data.mapperAdapter.SlSequenceMapperAdapter"/>
+	<bean class="com.dianrong.common.auth.server.data.mapperAdapter.SlThirdLoginMapperAdapter"/>
+</beans>

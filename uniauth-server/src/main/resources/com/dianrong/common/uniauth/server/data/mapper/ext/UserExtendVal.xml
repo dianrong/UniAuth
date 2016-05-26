@@ -5,8 +5,8 @@
   	parameterType="map">
   	SELECT * FROM(
 		SELECT t2.id id,t2.user_id userId,t1.extend_id extendId,t2.value_ value,t2.status status,
-			t1.extend_code extendCode,t1.extend_description extendDescription FROM (
-				SELECT id extend_id,code extend_code,description extend_description FROM user_extend     
+			t1.extend_code extendCode FROM (
+				SELECT id extend_id,code extend_code FROM user_extend     
 					WHERE 1=1  
 				  	<if test="extendCode!=null and extendCode!=''">
 				  		AND `code` LIKE #{extendCode, jdbcType=VARCHAR}

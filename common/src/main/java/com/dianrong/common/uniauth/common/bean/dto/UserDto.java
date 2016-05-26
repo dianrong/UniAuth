@@ -2,13 +2,18 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Arc on 13/1/16.
  */
 public class UserDto implements Serializable {
-	private Long id;
+    
+    private static final long serialVersionUID = -1969133233179816584L;
+    
+    private Long id;
 	private String name;
 	private String password;
 	private String passwordSalt;
@@ -20,6 +25,7 @@ public class UserDto implements Serializable {
 	private Byte userGroupType;
 	private List<TagDto> tagDtos;
 	private List<UserExtendValDto> userExtendValDtos;
+	private Map<String,String> userExtendValMap;
 
 	public List<UserExtendValDto> getUserExtendValDtos() {
         return userExtendValDtos;
@@ -149,5 +155,28 @@ public class UserDto implements Serializable {
 	public UserDto setTagDtos(List<TagDto> tagDtos) {
 		this.tagDtos = tagDtos;
 		return this;
+	}
+	
+	/**
+	 * <pre>
+	 * 根据eva的code获取对应的值
+	 * 用户禁用该值或者未设置该值返回null
+	 * </pre>
+	 * @param code
+	 * @return
+	 */
+	public String getEavByCode(String code){
+	    if(userExtendValMap==null){
+	        if(userExtendValDtos==null){
+	            return null;
+	        }
+	        userExtendValMap=new HashMap<String,String>();
+	        for(UserExtendValDto userExtendValDto:userExtendValDtos){
+	            if(userExtendValDto.getStatus()==0){
+	                userExtendValMap.put(userExtendValDto.getExtendCode(),userExtendValDto.getValue());
+	            }
+	        }
+	    }
+	    return userExtendValMap.get(code);
 	}
 }
