@@ -37,6 +37,7 @@ define(['../../../utils/constant'], function (constant) {
 
                 // 对查询的数据进行处理(分类,排序)
                 filterData(result.data);
+                // 初始化选择框(新增数据的选择框)
                 initSelectEavCode();
             }, function () {
             	$scope.userEvaUsed = [];
@@ -76,8 +77,10 @@ define(['../../../utils/constant'], function (constant) {
                 // 重新计算前端的辅助值
                 computeNewData(true);
                 AlertService.addAutoDismissAlert(constant.messageType.info, "添加成功.");
-                initSelectEavCode();
+                // 关闭添加框
                 $scope.cancelAddEav();
+                // 初始化选择框
+                initSelectEavCode();
             }, function () {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, "添加失败, 请联系系统管理员.");
             });
@@ -149,6 +152,7 @@ define(['../../../utils/constant'], function (constant) {
                  }
                  AlertService.addAutoDismissAlert(constant.messageType.info, "禁用成功.");
                  userEav.status = '1';
+                 // 重新计算数据的权重值和排序
                  computeNewData(false);
              }, function () {
                  AlertService.addAutoDismissAlert(constant.messageType.danger, "禁用失败, 请联系系统管理员.");
@@ -169,6 +173,7 @@ define(['../../../utils/constant'], function (constant) {
                  }
                  AlertService.addAutoDismissAlert(constant.messageType.info, "启用成功.");
                  userEav.status = '0';
+                 // 重新计算数据的权重值和排序
                  computeNewData(false);
              }, function () {
                  AlertService.addAutoDismissAlert(constant.messageType.danger, "启用失败, 请联系系统管理员.");
@@ -290,10 +295,10 @@ define(['../../../utils/constant'], function (constant) {
         // 为已使用的数据计算显示宽度等数据
     	var setElementShowLength = function(ele) {
     		if(!ele) { return;}
-    		var min = 2,  max = 12 ,size = 5, valueWeight =1.6, valuePix = 5;
+    		var min = 2,  max = 12 ,size = 4.5, valueWeight =1.4, valuePix = 5;
     		var oprLength = 1;
-    		var codeLength = byteLength(ele.extendCode);
-    		var valueLength = Math.round(byteLength(ele.value) );
+    		var codeLength = Math.ceil(byteLength(ele.extendCode));
+    		var valueLength = Math.ceil(byteLength(ele.value) );
     		var totalLength =oprLength + codeLength + valueLength;
     		ele.totalLen =Math.round( (totalLength / size) < min ? min :  (totalLength / size)  > max ? max : (totalLength / size));
     		
