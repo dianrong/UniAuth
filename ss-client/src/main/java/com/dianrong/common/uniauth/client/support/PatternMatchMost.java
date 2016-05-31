@@ -84,7 +84,12 @@ public class PatternMatchMost {
 		if(allMatchedMap.size() >= 1){
 			String url = ExtractRequestUrl.extractRequestUrl(request);
 			if(LOGGER.isWarnEnabled()){
-				LOGGER.warn("Found at least one pattern <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + ">");
+				String pattern = "";
+				if(matchMostRequestMatcher instanceof RegexRequestMatcher){
+					pattern = ((Pattern)(ReflectionUtils.getField(matchMostRequestMatcher, "pattern", false))).pattern();
+					pattern = "(" + pattern + ")";
+				}
+				LOGGER.warn("Found at least one pattern <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + pattern + ">");
 			}
 		}
 		
