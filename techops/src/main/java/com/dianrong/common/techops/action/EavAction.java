@@ -106,7 +106,7 @@ public class EavAction {
     }
     
     /**.
-     * 器哟个user-eav信息
+     * 启用user-eav信息
      * @param tagQuery
      * @return
      */

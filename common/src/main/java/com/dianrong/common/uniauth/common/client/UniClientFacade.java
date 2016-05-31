@@ -49,7 +49,8 @@ public class UniClientFacade {
 		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, Arrays.asList(jacksonJsonProvider));
 		tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, Arrays.asList(jacksonJsonProvider));
 		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, Arrays.asList(jacksonJsonProvider));
-		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,configResource);
+		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,
+				configResource,userExtendResource,userExtendValResource);
 	}
 
 	public IDomainResource getDomainResource() {

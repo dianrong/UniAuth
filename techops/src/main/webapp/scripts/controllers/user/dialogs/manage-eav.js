@@ -75,7 +75,7 @@ define(['../../../utils/constant'], function (constant) {
                         $scope.cancelEdit(eavCode);
                         return;
                     }
-                    exchangeItemToFirst($scope.eavCodes, eavCode);
+                    exchangeItemToFirst(eavCode, $scope.eavCodes);
                     AlertService.addAutoDismissAlert(constant.messageType.info, "EAV-CODE更新成功.");
                 }, function () {
                     AlertService.addAutoDismissAlert(constant.messageType.danger, "EAV-CODE更新失败, 请联系系统管理员.");
