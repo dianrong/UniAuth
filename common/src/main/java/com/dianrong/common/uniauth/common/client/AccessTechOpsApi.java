@@ -31,12 +31,12 @@ public class AccessTechOpsApi {
 	private long lastSessionMilliSeconds;
 
 	public String getSessionId(String account, String password) {
-		if(lastSessionMilliSeconds != 0L){
-			long currentSessionMilliSeconds = new Date().getTime();
-			if((currentSessionMilliSeconds - lastSessionMilliSeconds) < 30L * 60 * 1000){
-				throw new NotReuseSessionIdException("Jsession id must be reused, please don't generate sessionid so frequently.");
-			}
-		}
+//		if(lastSessionMilliSeconds != 0L){
+//			long currentSessionMilliSeconds = new Date().getTime();
+//			if((currentSessionMilliSeconds - lastSessionMilliSeconds) < 30L * 60 * 1000){
+//				throw new NotReuseSessionIdException("Jsession id must be reused, please don't generate sessionid so frequently.");
+//			}
+//		}
 		
 		if (account == null || password == null || "".equals(account.trim()) || "".equals(password.trim())) {
 			throw new IllegalArgumentException("Account or password is empty!");
