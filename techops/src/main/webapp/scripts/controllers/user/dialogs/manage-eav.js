@@ -1,5 +1,5 @@
 define(['../../../utils/constant'], function (constant) {
-    var Controller = function ($scope, $uibModalInstance, EvaService, AlertService) {
+    var Controller = function ($rootScope, $scope, $uibModalInstance, EvaService, AlertService) {
     	// 查询条件
     	$scope.eavQuery={};
     	 $scope.pagination = {
@@ -7,6 +7,12 @@ define(['../../../utils/constant'], function (constant) {
     	            curPage: 1,
     	            totalCount: 0
     	};
+    	 
+    	// 用户角色列表
+     	$scope.userRoleCodes = [];
+     	//用户可以操作的域code
+     	$scope.userDomainCodes =[];
+    	 
     	// 分页查询
     	$scope.queryEavCodes = function () {
             var params = {};
@@ -125,7 +131,28 @@ define(['../../../utils/constant'], function (constant) {
             $scope.msg = '';
             $uibModalInstance.dismiss();
         }; // end cancel
-        
+
+        // 计算用户的各种code
+        var computeUserCodes = function(){
+    		if($rootScope.userInfo){
+    			// 角色codes
+    			if($rootScope.userInfo.roles  &&  $rootScope.userInfo.roles.length > 0) {
+    				for(var i = 0; i < $rootScope.userInfo.roles.length; i++) {
+    					$scope.userRoleCodes.push($rootScope.userInfo.roles[i].roleCode);
+    	    		}
+    			}
+    			//域codes
+    			if($rootScope.userInfo.switchableDomains  &&  $rootScope.userInfo.switchableDomains.length > 0) {
+    				for(var i = 0; i < $rootScope.userInfo.switchableDomains.length; i++) {
+    					$scope.userDomainCodes.push($rootScope.userInfo.switchableDomains[i].code);
+    	    		}
+    			}
+    		} 
+    	};
+    	
+    	// 初始化显示数据
+    	computeUserCodes();
+    	
         // 操作数组 将指定item放到第一位
         var exchangeItemToFirst = function(item,  itemArray){
         	if(!item || !itemArray) {
@@ -142,7 +169,7 @@ define(['../../../utils/constant'], function (constant) {
         		 itemArray.splice(index, 1);
         	 }
         	 itemArray.unshift(item);
-        }
+        };
         
         // 保证分页的数据正确性
         var ensurePageIsOk= function(oper, num) {
@@ -183,6 +210,6 @@ define(['../../../utils/constant'], function (constant) {
 
     return {
         name: "ManageEavController",
-        fn: ["$scope", "$uibModalInstance", "EavService", "AlertService", Controller]
+        fn: ["$rootScope", "$scope", "$uibModalInstance", "EavService", "AlertService", Controller]
     };
 });

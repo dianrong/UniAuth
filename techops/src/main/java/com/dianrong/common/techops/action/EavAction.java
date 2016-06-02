@@ -45,7 +45,7 @@ public class EavAction {
      * @return
      */
     @RequestMapping(value = "/code/insert", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops') ")
     public Response<UserExtendDto> addEavCode(@RequestBody UserExtendParam param) {
     	return uARWFacade.getUserExtendRWResource().addUserExtend(param);
     }
@@ -56,7 +56,7 @@ public class EavAction {
      * @return
      */
     @RequestMapping(value = "/code/modify", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops') ")
     public Response<Integer> modifyEavCode(@RequestBody UserExtendParam param) {
     	return uARWFacade.getUserExtendRWResource().updateUserExtend(param);
     }

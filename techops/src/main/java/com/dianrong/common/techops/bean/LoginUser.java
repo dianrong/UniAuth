@@ -17,6 +17,9 @@ public class LoginUser {
     private List<RoleDto> roles;
     private Map<String, Set<String>> permMap;
     private List<DomainDto> switchableDomains;
+    
+    // 用户更新数据的跳转url
+    private transient  String userInfoUpdateUrl;
 
     public UserDto getUser() {
         return user;
@@ -53,4 +56,12 @@ public class LoginUser {
         this.switchableDomains = switchableDomains;
         return this;
     }
+
+	public String getUserInfoUpdateUrl() {
+		return userInfoUpdateUrl;
+	}
+
+	public void setUserInfoUpdateUrl(String userInfoUpdateUrl) {
+		this.userInfoUpdateUrl = userInfoUpdateUrl;
+	}
 }

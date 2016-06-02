@@ -29,6 +29,9 @@ public class TechOpsService {
     @Resource
     private UARWFacade uARWFacade;
     
+    @Resource(name="uniauthConfig")
+	private Map<String, String> allZkNodeMap;
+    
     public UserExtInfo getLoginUserInfo(){
     	UserExtInfo userExtInfo = (UserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	return userExtInfo;
@@ -100,6 +103,10 @@ public class TechOpsService {
 		loginUser.setRoles(returnRoleList);
 		loginUser.setSwitchableDomains(domainDtoList);
 		loginUser.setUser(returnUserDto);
+		
+		// cas service url 
+		String casUrl = allZkNodeMap.get("cas_server");
+		loginUser.setUserInfoUpdateUrl(casUrl == null ?"#":casUrl.trim()+"/login?edituserinfo=go");
 		return loginUser;
 	}
 
