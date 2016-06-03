@@ -61,7 +61,8 @@
     </bean>  
       
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
-        p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"   p:pool-config-ref="poolConfig"/>  
+        p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"  p:dbIndex="#{uniauthConfig['redis.dbIndex']?:'0'}"  
+        p:pool-config-ref="poolConfig"/>  
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
         p:connection-factory-ref="connectionFactory">
     </bean>
