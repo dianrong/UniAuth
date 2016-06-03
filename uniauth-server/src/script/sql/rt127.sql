@@ -1,2 +1,2 @@
 use uniauth;
-insert into user_extend(code, description) values('cast_wechat_id','openid');
+INSERT INTO user_extend(code, description) SELECT 'cast_wechat_id','openid' FROM DUAL WHERE NOT EXISTS(SELECT id FROM user_extend WHERE code = 'cast_wechat_id');
