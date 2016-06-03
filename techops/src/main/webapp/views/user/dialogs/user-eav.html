@@ -5,6 +5,7 @@
 </div>
 <div class="modal-body">
        <form class ="user-eav-form"  name="userEavForm" >
+       				<p ng-if="(!userEvaUsed || userEvaUsed.length == 0)  &&  (!userEvaToUse ||  userEvaToUse.length ==  0)" class="text-center">还没有扩展字段，需要先添加EAV-CODE</p>
 					<div  ng-repeat="d in userEvaUsed"  ng-class="{'btn-success' : d.status == 0, 'btn-default' : d.status != 0}" class="form-group btn  eav-show-box col-md-{{d.totalLen}}">
 								<label  class="control-label eav-code col-md-{{d.codeLen}}" ng-bind="d.extendCode"></label>
 								<div  class="col-md-{{d.valueLen}}" >
@@ -18,7 +19,7 @@
 							    <span class="glyphicon glyphicon-remove-circle" title="取消" ng-click="cancelEdit(d)" ng-show="d.editable && d.editable == true"></span>
 					</div>
 					
-					<div ng-show="(!addUserEav || (addUserEav && addUserEav == false)) && (userEvaToUse && userEvaToUse.length >  0)" class="form-group btn btn-primary  col-md-1  glyphicon glyphicon-plus eav-show-box" ng-click="addEav()" title="添加扩展属性">
+					<div ng-if="(!addUserEav || (addUserEav && addUserEav == false)) && (userEvaToUse && userEvaToUse.length >  0)" class="form-group btn btn-primary  col-md-1  glyphicon glyphicon-plus eav-show-box" ng-click="addEav()" title="添加扩展属性">
 					</div>
 					
 					<div ng-show="addUserEav && addUserEav == true"  class="form-group btn btn-info  col-md-5 eav-show-box">
