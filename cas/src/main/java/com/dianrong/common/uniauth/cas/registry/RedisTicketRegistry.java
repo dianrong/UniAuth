@@ -41,6 +41,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
             reidsTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
         } catch (final Exception e) {
             logger.error("Failed adding {}", ticket, e);
+            throw e;
         }
     }
 
@@ -53,6 +54,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
                 }
             } catch (final Exception e) {
                 logger.error("Failed fetching {} ", ticketId, e);
+                throw e;
             }
             return null;
     }
@@ -65,8 +67,8 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
                  return true;
             } catch (final Exception e) {
                 logger.error("Failed deleting {}", ticketId, e);
+                throw e;
             }
-            return false;
     }
 
     @Override
@@ -83,6 +85,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
               reidsTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
         } catch (final Exception e) {
             logger.error("Failed updating {}", ticket, e);
+            throw e;
         }
     }
 
