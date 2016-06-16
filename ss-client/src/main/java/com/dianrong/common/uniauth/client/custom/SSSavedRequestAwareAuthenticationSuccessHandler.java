@@ -46,7 +46,7 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
 		clearAuthenticationAttributes(request);
 
 		// Use the DefaultSavedRequest URL
-		List<String> ajaxHeaderValueList = savedRequest.getHeaderValues(AppConstants.AJAS_HEADER);
+		List<String> ajaxHeaderValueList = savedRequest.getHeaderValues(AppConstants.AJAX_HEADER);
 		if(ajaxHeaderValueList == null || ajaxHeaderValueList.isEmpty()){
 			String targetUrl = savedRequest.getRedirectUrl();
 			logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
