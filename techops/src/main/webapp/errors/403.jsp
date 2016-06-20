@@ -1,7 +1,7 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
 <%
-	String ajaxReqType = request.getHeader(AppConstants.AJAS_HEADER);
+	String ajaxReqType = request.getHeader(AppConstants.AJAX_HEADER);
 
 	if (ajaxReqType == null) {
 		response.setContentType("text/html; charset=UTF-8");
