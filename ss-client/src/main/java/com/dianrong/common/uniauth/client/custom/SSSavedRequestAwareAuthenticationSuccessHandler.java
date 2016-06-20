@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.curator.utils.ZookeeperFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -14,10 +16,17 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
 
+import com.dianrong.common.uniauth.common.client.DomainDefine;
+import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	private RequestCache requestCache = new HttpSessionRequestCache();
+	
+	@Autowired
+	private DomainDefine domainDefine;
+	@Autowired
+	private ZooKeeperConfig zooKeeperConfig;
 	
 	public SSSavedRequestAwareAuthenticationSuccessHandler() {
 		
@@ -45,15 +54,23 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
 
 		clearAuthenticationAttributes(request);
 
-		// Use the DefaultSavedRequest URL
-		List<String> ajaxHeaderValueList = savedRequest.getHeaderValues(AppConstants.AJAX_HEADER);
-		if(ajaxHeaderValueList == null || ajaxHeaderValueList.isEmpty()){
-			String targetUrl = savedRequest.getRedirectUrl();
-			logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
-			getRedirectStrategy().sendRedirect(request, response, targetUrl);
+		//start to check saved request url
+		String customiedSavedRequestUrl= domainDefine.getCustomiedSavedRequestUrl();
+		if(StringUtils.hasText(customiedSavedRequestUrl)){
+			logger.debug("Redirecting to CustomiedSavedRequest Url: " + customiedSavedRequestUrl);
+			getRedirectStrategy().sendRedirect(request, response, zooKeeperConfig.getDomainUrl() + customiedSavedRequestUrl);
 		}
 		else{
-			super.onAuthenticationSuccess(request, response, authentication);
+			// Use the DefaultSavedRequest URL
+			List<String> ajaxHeaderValueList = savedRequest.getHeaderValues(AppConstants.AJAX_HEADER);
+			if(ajaxHeaderValueList == null || ajaxHeaderValueList.isEmpty()){
+				String targetUrl = savedRequest.getRedirectUrl();
+				logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
+				getRedirectStrategy().sendRedirect(request, response, targetUrl);
+			}
+			else{
+				super.onAuthenticationSuccess(request, response, authentication);
+			}
 		}
 	}
 }

@@ -6,6 +6,7 @@ public class DomainDefine implements Serializable {
 	private String domainCode;
 	private String userInfoClass;
 	private boolean rejectPublicInvocations;
+	private String customiedSavedRequestUrl;
 	
 	private static Integer domainId;
 
@@ -31,5 +32,13 @@ public class DomainDefine implements Serializable {
 
 	public void setRejectPublicInvocations(boolean rejectPublicInvocations) {
 		this.rejectPublicInvocations = rejectPublicInvocations;
+	}
+
+	public String getCustomiedSavedRequestUrl() {
+		return customiedSavedRequestUrl;
+	}
+
+	public void setCustomiedSavedRequestUrl(String customiedSavedRequestUrl) {
+		this.customiedSavedRequestUrl = customiedSavedRequestUrl;
 	}
 }
