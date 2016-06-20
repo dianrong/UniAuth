@@ -1,3 +1,4 @@
+apply plugin: 'war'
 
 dependencies {
 
@@ -25,6 +26,9 @@ dependencies {
 	compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.1'
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
 	compile 'commons-httpclient:commons-httpclient:3.1'
+
+    //servlet
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
 jar {

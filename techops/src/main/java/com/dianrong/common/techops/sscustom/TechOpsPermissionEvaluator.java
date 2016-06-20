@@ -32,10 +32,38 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 		GroupParam groupParam = null;
 		RoleQuery roleQuery;
 		RoleParam roleParam;
+		UserParam userParam;
 		PermissionQuery permissionQuery;
 		Response<PageDto<PermissionDto>> pageDtoPermissionResponse;
 		List<Info> infoList;
 		switch (perm) {
+			case AppConstants.PERM_USERID_CHECK:
+				userParam = (UserParam)targetObject;
+				Long beOperatoredUserId = userParam.getId();
+
+				UserDetailDto userDetailDto = uniClientFacade.getUserResource().getUserDetailInfoByUid(new UserParam().setId(beOperatoredUserId)).getData();
+				List<DomainDto> domainDtoList = userDetailDto.getDomainList();
+				if(domainDtoList != null && !domainDtoList.isEmpty()){
+					for(DomainDto domainDto : domainDtoList){
+						if(AppConstants.DOMAIN_CODE_TECHOPS.equalsIgnoreCase(domainDto.getCode())) {
+							List<RoleDto> roleDtos = domainDto.getRoleList();
+							if(!CollectionUtils.isEmpty(roleDtos)) {
+								for (RoleDto roleDto : roleDtos) {
+									Map<String, Set<String>> permMap = roleDto.getPermMap();
+									if(permMap != null) {
+										Set<String> domainPerms = permMap.get(AppConstants.PERM_TYPE_DOMAIN);
+										if(domainPerms != null) {
+											if (AppConstants.ROLE_SUPER_ADMIN.equals(roleDto.getRoleCode()) && domainPerms.contains(AppConstants.DOMAIN_CODE_TECHOPS)) {
+												return false;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				return true;
 			case AppConstants.PERM_GROUP_OWNER:
 				if(targetObject instanceof GroupParam) {
 					groupParam = (GroupParam)targetObject;
@@ -83,7 +111,7 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 					groupParam = (GroupParam)targetObject;
 					roleIds = groupParam.getRoleIds();
 				} else if(targetObject instanceof UserParam) {
-					UserParam userParam = (UserParam) targetObject;
+					userParam = (UserParam) targetObject;
 					roleIds = userParam.getRoleIds();
 				} else if(targetObject instanceof PermissionParam) {
 					PermissionParam permissionParam = (PermissionParam) targetObject;

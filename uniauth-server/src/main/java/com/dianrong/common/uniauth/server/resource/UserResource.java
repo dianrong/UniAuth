@@ -68,6 +68,12 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
+	public Response<UserDetailDto> getUserDetailInfoByUid(UserParam userParam) {
+		UserDetailDto userDetailDto = userService.getUserDetailInfoByUid(userParam.getId());
+		return new Response<UserDetailDto>(userDetailDto);
+	}
+
+	@Override
 	public Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam) {
 		UserDetailDto userDetailDto = userService.getUserDetailInfo(loginParam);
 		return new Response<UserDetailDto>(userDetailDto);

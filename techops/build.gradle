@@ -72,8 +72,8 @@ configurations.all {
 
 dependencies {
 
-    compile "com.dianrong.common.uniauth:share-rw:1.0.27"
-    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.27"
+    compile "com.dianrong.common.uniauth:share-rw:1.0.31"
+    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.31"
     
 //    compile project(":ss-client")
 //    compile project(":share-rw")

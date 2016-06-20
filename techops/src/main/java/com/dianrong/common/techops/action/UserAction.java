@@ -84,7 +84,7 @@ public class UserAction {
 
     // perm double checked
     @RequestMapping(value = "/enable-disable" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or (hasRole('ROLE_ADMIN') and hasPermission(#userParam, 'PERM_USERID_CHECK'))")
     public Response<?> enableDisableUser(@RequestBody UserParam userParam) {
         UserParam param = new UserParam();
         param.setId(userParam.getId());
