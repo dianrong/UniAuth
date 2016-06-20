@@ -1,9 +1,9 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
+<%@ page import="com.dianrong.common.uniauth.common.util.HttpRequestUtil" %>
 <%
-	String ajaxReqType = request.getHeader(AppConstants.AJAX_HEADER);
 
-	if (ajaxReqType == null) {
+	if(!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCORSRequest(request)) {
 		response.setContentType("text/html; charset=UTF-8");
 %>
 		对不起，你没有权限访问当前页面资源！
