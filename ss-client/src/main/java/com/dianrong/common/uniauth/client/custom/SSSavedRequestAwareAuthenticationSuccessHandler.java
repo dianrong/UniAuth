@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 
 public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	private RequestCache requestCache = new HttpSessionRequestCache();
@@ -62,8 +63,7 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
 		}
 		else{
 			// Use the DefaultSavedRequest URL
-			List<String> ajaxHeaderValueList = savedRequest.getHeaderValues(AppConstants.AJAX_HEADER);
-			if(ajaxHeaderValueList == null || ajaxHeaderValueList.isEmpty()){
+			if(!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCORSRequest(request)){
 				String targetUrl = savedRequest.getRedirectUrl();
 				logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
 				getRedirectStrategy().sendRedirect(request, response, targetUrl);
