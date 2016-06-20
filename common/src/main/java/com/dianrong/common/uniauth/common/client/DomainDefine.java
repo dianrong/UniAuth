@@ -6,7 +6,7 @@ public class DomainDefine implements Serializable {
 	private String domainCode;
 	private String userInfoClass;
 	private boolean rejectPublicInvocations;
-	private String customiedSavedRequestUrl;
+	private String customiedSavedRequestUrl; 
 	
 	private static Integer domainId;
 

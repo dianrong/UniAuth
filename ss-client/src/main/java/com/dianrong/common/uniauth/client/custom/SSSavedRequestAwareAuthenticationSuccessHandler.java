@@ -55,7 +55,7 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
 
 		clearAuthenticationAttributes(request);
 
-		//start to check saved request url
+		//start to check saved request url 
 		String customiedSavedRequestUrl= domainDefine.getCustomiedSavedRequestUrl();
 		if(StringUtils.hasText(customiedSavedRequestUrl)){
 			logger.debug("Redirecting to CustomiedSavedRequest Url: " + customiedSavedRequestUrl);
