@@ -23,7 +23,7 @@ plugins {
 }
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.31-SNAPSHOT'
+    version = '1.0.32-SNAPSHOT'
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -133,7 +133,6 @@ project(':common') {
 project(':ss-client') {
 	dependencies {
 		compile project(":common")
-		compile 'javax.servlet:javax.servlet-api:3.1.0'
 	    compile 'org.apache.curator:curator-recipes:2.9.1'
 	    compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
 		compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
