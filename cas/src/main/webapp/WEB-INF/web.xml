@@ -260,7 +260,12 @@
         <servlet-name>cas</servlet-name>
         <url-pattern>/uniauth/*</url-pattern>
     </servlet-mapping>
-    
+     <!-- allow login by http api -->
+     <servlet-mapping>
+        <servlet-name>cas</servlet-name>
+        <url-pattern>/customcas/*</url-pattern>
+    </servlet-mapping>
+   
     <!--
     <servlet-mapping>
         <servlet-name>cas</servlet-name>

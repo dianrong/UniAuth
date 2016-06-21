@@ -18,6 +18,7 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
 
 @Service("domainService")
 public class DomainService extends BaseService{
@@ -37,7 +38,7 @@ public class DomainService extends BaseService{
 			String zkNodeName = entry.getKey();
 			//String zkNodeValue = entry.getValue() ;
 			
-			if(zkNodeName.startsWith(AppConstants.ZK_DOMAIN_PREFIX)){
+			if(ZkNodeUtils.isDomainNode(zkNodeName)){
 				zkNodeName = zkNodeName.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 				domainCodeList.add(zkNodeName);
 			}

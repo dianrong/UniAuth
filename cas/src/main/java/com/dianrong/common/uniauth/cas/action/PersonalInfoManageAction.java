@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.cas.controller;
+package com.dianrong.common.uniauth.cas.action;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +17,7 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
 /**
  * 处理用户信息的管理分之处理
  */
-public class PersonalInfoManageController extends AbstractAction {
+public class PersonalInfoManageAction extends AbstractAction {
 	/**
 	 * . 用户信息管理服务
 	 */

@@ -58,7 +58,7 @@
     <!-- Do a service authorization check early without the need to login first -->
     <action-state id="serviceAuthorizationCheck">
         <evaluate expression="serviceAuthorizationCheck"/>
-        <transition to="generateLoginTicket"/>
+        <transition to="loginTypeDecisionAction"/>
     </action-state>
 
     <!--
@@ -220,7 +220,7 @@
     </decision-state>
 	
 	<action-state id="editUserInfo">
-        <evaluate expression="personalInfoManageController"/>
+        <evaluate expression="personalInfoManageAction"/>
         <transition on="query" to="editUserInfoEditPage"/>
         <transition on="update" to="updateUserInfo"/>
         <transition on="notfound" to="editUserInfoErrorPage"/>
@@ -239,6 +239,26 @@
     <end-state id="updateUserInfo" view="updateResultInfo">
     </end-state>
 	<!-- for user info edit, new branch  -->
+	
+	<!-- for custom system login page process, new branch  -->
+	<action-state id="loginTypeDecisionAction">
+		<evaluate expression="loginTypeDecisionAction"/>
+        <transition on="cas" to="generateLoginTicket"/>
+        <transition on="custom" to="customLoginGenerateLoginTicket"/>
+    </action-state>
+    
+     <action-state id="customLoginGenerateLoginTicket">
+        <evaluate expression="customLoginGenerateLoginTicketAction.generate(flowRequestContext)"/>
+        <transition on="generated" to="generateCustomLoginUrlAction"/>
+    </action-state>
+    
+    <action-state id="generateCustomLoginUrlAction">
+        <evaluate expression="generateCustomLoginUrlAction.generate(flowRequestContext)"/>
+        <transition on="generated" to="customLoginRedirect"/>
+    </action-state>
+    
+     <end-state id="customLoginRedirect" view="externalRedirect:#{flowScope.custom_login_url_key}"/>
+	<!-- for custom system login page process, new branch  -->
 	
     <!--
     The "showWarningView" end state is the end state for when the user has requested privacy settings (to be "warned") to be turned on.  It delegates to a

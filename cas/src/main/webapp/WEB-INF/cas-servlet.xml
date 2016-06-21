@@ -39,7 +39,7 @@
   -->
   <context:annotation-config/>
   <context:component-scan base-package="org.jasig.cas" />
-  <context:component-scan base-package="com.dianrong.common.uniauth.cas" />
+  <context:component-scan base-package="com.dianrong.common.uniauth.cas.controller" />
 
   <!-- Scan CAS artifacts to mvc annotations, such as controllers.
        The scan is controlled by the application context config file -->
@@ -140,7 +140,7 @@
   		<property name="forgetPasswordService" ref="forgetPasswordService"></property>
   </bean>
   
-  <bean id="personalInfoManageController" class="com.dianrong.common.uniauth.cas.controller.PersonalInfoManageController">
+  <bean id="personalInfoManageAction" class="com.dianrong.common.uniauth.cas.action.PersonalInfoManageAction">
   		<property name="userInfoManageService" ref="userInfoManageService"></property>
   		<property name="genericSuccessViewAction" ref="genericSuccessViewAction"></property>
   </bean>
@@ -366,6 +366,9 @@
 
   <bean id="acceptableUsagePolicyFormAction" class="org.jasig.cas.web.flow.AcceptableUsagePolicyFormAction"/>
 
+  <bean id="loginTypeDecisionAction" class="com.dianrong.common.uniauth.cas.action.LoginTypeDecisionAction"/>
+  <bean id="customLoginGenerateLoginTicketAction" class="com.dianrong.common.uniauth.cas.action.CustomLoginGenerateLoginTicketAction"/>
+  <bean id="generateCustomLoginUrlAction" class="com.dianrong.common.uniauth.cas.action.GenerateCustomLoginUrlAction"/>
   <!--
   <bean id="samlValidateController" class="org.jasig.cas.web.ServiceValidateController"
           p:validationSpecificationClass="org.jasig.cas.validation.Cas20WithoutProxyingValidationSpecification"

@@ -31,7 +31,15 @@ public interface AppConstants {
 	String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
     String DOMAIN_CODE_TECHOPS = "techops";
     
-	String ZK_DOMAIN_PREFIX = "domains.";
+	// 分隔符
+	String ZK_CFG_SPLIT= ".";
+	// 域
+	String ZK_DOMAIN = "domains";
+	// eg domains.
+	String ZK_DOMAIN_PREFIX = ZK_DOMAIN + ZK_CFG_SPLIT ;
+	// 域的登陆页属性
+	String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
+	
 	String SERVICE_LOGIN_POSTFIX = "/login/cas";
 	
 	String ROLE_ADMIN = "ROLE_ADMIN";
@@ -137,4 +145,12 @@ public interface AppConstants {
 	String CAS_CFG_KEY_BACKGROUND_COLOR = "CAS_BACKGROUND_COLOR";
 	
 	String HTTP_METHOD_ALL = "ALL";
+	
+	// login ticket prefix
+	String CAS_LOGIN_TICKET_PREFIX = "LT";
+	
+	// 用户跳转的url路径
+	String CAS_CUSTOM_LOGIN_PAGE_KEY = "custom_login_page_key";
+	String CAS_CUSTOM_LOGIN_LT_KEY = "custom_login_lt_key";
+	String CAS_CUSTOM_LOGIN_URL_KEY = "custom_login_url_key";
 }
