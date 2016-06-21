@@ -45,8 +45,9 @@ public interface AppConstants {
 	String ROLE_ADMIN = "ROLE_ADMIN";
 	String ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
 	
-	String AJAS_CROSS_HEADER = "Origin";
-	String AJAS_HEADER = "X-Requested-With";
+	String CROSS_RESOURCE_ORIGIN_HEADER = "Origin";
+	String AJAX_HEADER = "X-Requested-With";
+	String JQUERY_XMLHttpRequest_HEADER = "XMLHttpRequest";
 	String LOGIN_REDIRECT_URL = "LOGIN_REDIRECT_URL";
 	String NO_PRIVILEGE = "NO_PRIVILEGE";
 
@@ -103,6 +104,7 @@ public interface AppConstants {
 	
 	String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
 
+	String PERM_USERID_CHECK = "PERM_USERID_CHECK";
 	String PERM_ROLEID_CHECK = "PERM_ROLEID_CHECK";
 	String PERM_ROLEIDS_CHECK = "PERM_ROLEIDS_CHECK";
 	String PERM_PERMID_CHECK = "PERM_PERMID_CHECK";

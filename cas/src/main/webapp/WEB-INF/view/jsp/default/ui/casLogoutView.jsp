@@ -21,8 +21,8 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
 <%
-	String ajax = request.getHeader(AppConstants.AJAS_HEADER);
-	String ajaxCross = request.getHeader(AppConstants.AJAS_CROSS_HEADER);
+	String ajax = request.getHeader(AppConstants.AJAX_HEADER);
+	String ajaxCross = request.getHeader(AppConstants.CROSS_RESOURCE_ORIGIN_HEADER);
 	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 	String queryStr =  request.getQueryString();
 	queryStr = queryStr == null ? "" : "?" + queryStr;

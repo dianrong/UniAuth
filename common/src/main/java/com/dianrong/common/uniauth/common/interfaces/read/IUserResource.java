@@ -59,6 +59,11 @@ public interface IUserResource {
     Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam);
 
     @POST
+    @Path("usedetailinfobyid")
+    //scenario: get user detail info by userId
+    Response<UserDetailDto> getUserDetailInfoByUid(UserParam userParam);
+
+    @POST
     @Path("singleuser")
     //scenario: cas login, check if the input email exists or not
     Response<UserDto> getSingleUser(UserParam userParam);
