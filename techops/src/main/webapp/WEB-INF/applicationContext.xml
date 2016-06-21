@@ -40,10 +40,10 @@
       	<sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
       	<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
       	<sec:custom-filter ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
-      	<sec:access-denied-handler error-page="/errors/403.jsp"/>
+      	<!-- <sec:access-denied-handler error-page="/errors/403.jsp"/> -->
       	<sec:csrf disabled="true"/>
-      	
-		<sec:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+      	<sec:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+		<sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="exceptionTranslationFilter" />
 		<sec:session-management session-authentication-strategy-ref="sas" invalid-session-url="#{uniauthConfig['cas_server']}/logout?dupsession=true"/>
 		<sec:logout delete-cookies="JSESSIONID" />
       	<!-- 
@@ -54,6 +54,14 @@
 	</sec:http>
 	
 	<!-- do not change: start -->
+	<bean id="exceptionTranslationFilter" class="com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter">
+		<constructor-arg name="authenticationEntryPoint" ref="casAuthEntryPoint"></constructor-arg>
+        <property name="accessDeniedHandler">  
+            <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">  
+                <property name="errorPage" value="/errors/403.jsp" />  
+            </bean>  
+        </property>  
+    </bean>
 	<bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
 		<constructor-arg name="sessionRegistry" ref="sessionRegistry"></constructor-arg>
 		<constructor-arg name="expiredUrl" value="#{uniauthConfig['cas_server']}/logout?dupsession=true"></constructor-arg>

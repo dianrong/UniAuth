@@ -11,7 +11,7 @@ public class ReflectionUtils {
 	/**./**.
 	 * 日志对象
 	 */
-	private final static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class.getClass());
+	private final static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 	
 	private ReflectionUtils() {
 	}

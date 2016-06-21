@@ -17,7 +17,7 @@ public class AuthUtils {
 	/**./**.
 	 * 日志对象
 	 */
-	private final static Logger logger = LoggerFactory.getLogger(AuthUtils.class.getClass());
+	private final static Logger logger = LoggerFactory.getLogger(AuthUtils.class);
 	
     private static final String SALT_GENERATION_ALGORITHM = "SHA1PRNG";
     private static final String PASSWORD_DIGEST_ALGORITHM = "SHA";
