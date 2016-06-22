@@ -11,10 +11,18 @@ define(function() {
 	var form_password_id='uniauth_custom_login_form_password_id';
 	var form_service_id='uniauth_custom_login_form_service_id';
 	var form_lt_id='uniauth_custom_login_form_lt_id';
+	var form_captcha_id='uniauth_custom_login_form_lt_id';
 	
 	return {
 		// 登陆请求处理
-		login: function(account, pwd, service, lt, casUrl, customUrl, failedCallBack){
+		login: function(account, pwd, apendInfo){
+			var service = !!apendInfo?apendInfo.service : undefined;
+			var lt =!!apendInfo?apendInfo.lt : undefined;
+			var casUrl = !!apendInfo?apendInfo.casUrl : undefined;
+			var customUrl = !!apendInfo?apendInfo.customUrl : undefined;
+			var failedCallBack = !!apendInfo?apendInfo.failedCallBack : undefined;
+			var captcha =  !!apendInfo?apendInfo.captcha : '';
+			
 			var getQueryParam = function (param) {
 				if(!param) {return null};
 			     var reg = new RegExp("(^|&)"+ param +"=([^&]*)(&|$)");
@@ -64,7 +72,7 @@ define(function() {
 					//创建form表单
 					var submit_form = document.createElement('form');
 					submit_form.method = 'post';
-					submit_form.action = casUrl + '/customcas/serviceticket/customlogin';
+					submit_form.action = casUrl + '/uniauth/serviceticket/customlogin';
 					submit_form.name = form_name;
 					submit_form.id = form_id;
 					submit_form.target = iframe_name;
@@ -75,23 +83,33 @@ define(function() {
 					elementAccount.setAttribute("name", "identity");
 					elementAccount.setAttribute("type", "text");
 					elementAccount.setAttribute("value", account);
+					elementAccount.id=form_account_id;
 					var elementPassword = document.createElement('input');
 					elementPassword.setAttribute("name", "password");
 					elementPassword.setAttribute("type", "password");
 					elementPassword.setAttribute("value", pwd);
+					elementPassword.id=form_password_id;
 					var elementService = document.createElement('input');
 					elementService.setAttribute("name", "service");
 					elementService.setAttribute("type", "text");
 					elementService.setAttribute("value", service);
+					elementService.id=form_service_id;
 					var elementlt = document.createElement('input');
 					elementlt.setAttribute("name", "lt");
 					elementlt.setAttribute("type", "text");
 					elementlt.setAttribute("value", lt);
+					elementlt.id=form_lt_id;
+					var elementCaptcha = document.createElement('input');
+					elementCaptcha.setAttribute("name", "captcha");
+					elementCaptcha.setAttribute("type", "text");
+					elementCaptcha.setAttribute("value", captcha);
+					elementCaptcha.id=form_captcha_id;
 					//添加元素
 					submit_form.appendChild(elementAccount);
 					submit_form.appendChild(elementPassword);
 					submit_form.appendChild(elementService);
 					submit_form.appendChild(elementlt);
+					submit_form.appendChild(elementCaptcha);
 				}
 				// parameter assign
 				var assignValues =  function(){
@@ -99,6 +117,7 @@ define(function() {
 					document.getElementById(form_password_id).value=password;
 					document.getElementById(form_service_id).value=service;
 					document.getElementById(form_lt_id).value=lt;
+					document.getElementById(form_captcha_id).value=captcha;
 				}
 				
 				// 暴露接口
@@ -141,7 +160,7 @@ define(function() {
 					if(failedCallBack){
 						failedCallBack(generateUnknownError);
 					} else {
-						console.error('check casUrl is right or not, no response');
+						console.error('check whether casUrl is right .no response!');
 					}
 					return;
 				}
@@ -151,8 +170,15 @@ define(function() {
 					// 成功 直接跳转业务系统
 					window.location.href = redirectUrl;
 				} else {
-					// 失败  继续登陆
-					window.location.href = getBaseUrl() + "?lt="+data.lt+"&result="+data.result+"&content="+data.content+(!!data.msg ? "&msg="+data.msg : '');
+					if(failedCallBack) {
+						if(!!data.captchapath) {
+							data.captchapath = encodeURIComponent(casUrl + '/' +data.captchapath);
+						}
+						failedCallBack(data);
+					} else {
+						// 失败  继续登陆
+						window.location.href = getBaseUrl() + "?lt="+data.lt+"&result="+data.result+"&content="+data.content+(!!data.msg ? "&msg="+data.msg : '')+(!!data.captchapath ? "&captchaUrl="+encodeURIComponent(casUrl + '/' +data.captchapath) : '');
+					}
 				}
 			});
 			//提交form表单

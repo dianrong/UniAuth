@@ -40,6 +40,8 @@ import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
+import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JasonUtil;
 
@@ -97,10 +99,10 @@ public class GetServiceTicketController {
 			}
 			
 			try{
-				// 验证lt
-				String lt = getCustomLoginLoginTicketAndRemove(request);
-				if(lt == null || !lt.equals(request.getParameter("lt"))) {
-					sendLoginResult(request, response, new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_LT_VERYFY_FAILED, "verify parameter lt failed"));
+				// 校验
+				CasGetServiceTicketModel validResult = beforeLoginValidation(request, response);
+				if(validResult != null) {
+					sendLoginResult(request, response, validResult);
 					return;
 				}
 				
@@ -132,6 +134,36 @@ public class GetServiceTicketController {
 				} catch (IOException ex) {
 				}
 		    } 
+	}
+	
+	/**.
+	 * 登陆之前的校验处理
+	 * @param request HttpServletRequest
+	 * @param response HttpServletResponse
+	 * @return null:validation success;non null:validation failed
+	 */
+	private CasGetServiceTicketModel beforeLoginValidation(HttpServletRequest request, HttpServletResponse response) {
+		// 验证lt
+		String lt = getCustomLoginLoginTicketAndRemove(request);
+		if(lt == null || !lt.equals(request.getParameter("lt"))) {
+			return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_LT_VALID_FAILED, "valid parameter lt failed");
+		}
+		
+		// 校验验证码
+		CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getValFromSession(request.getSession(), AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY, CasLoginCaptchaInfoModel.class);
+		if(captchaInfo == null) {
+			WebScopeUtil.putCaptchaInfoToSession(request.getSession(), new CasLoginCaptchaInfoModel());
+		} else {
+			if(!captchaInfo.canLoginWithoutCaptcha()){
+				// 校验验证码
+				String serverCaptcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
+				String clientCaptha = request.getParameter("captcha");
+				if(serverCaptcha == null || !serverCaptcha.equals(clientCaptha)) {
+					return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED, "valid parameter captcha failed");
+				}
+			}
+		}
+		return null;
 	}
 	
 	/**.
@@ -214,7 +246,7 @@ public class GetServiceTicketController {
 	private void replaceLoginTicket(HttpServletRequest request, String newLt){
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-			session.setAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY,newLt);
+			session.setAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY, newLt);
 		}
 	}
 	
@@ -226,15 +258,24 @@ public class GetServiceTicketController {
 	 * @throws IOException
 	 */
 	private void sendLoginResult(HttpServletRequest request, HttpServletResponse response, CasGetServiceTicketModel obj) throws IOException{
+		// this obj can not be null
+		CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getCaptchaInfoFromSession(request.getSession());
 		//进行处理
 		if(!obj.getResultSuccess()) {
 			// 重新生成lt
 			final String loginTicket = this.ticketIdGenerator.getNewTicketId(AppConstants.CAS_LOGIN_TICKET_PREFIX);
 			replaceLoginTicket(request, loginTicket);
 			obj.setLt(loginTicket);
+			
+			// 判断是否需要验证码
+			if(!captchaInfo.canLoginWithouCaptchaForFailedOnce()){
+				obj.setCaptchapath(CasGetServiceTicketModel.DEFAULT_CATCHA_RELATIVE_PATH);
+			}
 		} else {
 			// remove session lt
 			getCustomLoginLoginTicketAndRemove(request);
+			// 登陆成功 验证码错误次数归0
+			captchaInfo.reInit();
 		}
 		// 设置返回的mime类型
 		response.setContentType("text/html;charset=utf-8");
