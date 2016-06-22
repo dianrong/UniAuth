@@ -30,6 +30,7 @@ public class ZooKeeperConfig {
 	public String getDomainUrl(){
 		if(domainDefine != null){
 			String domainCode = domainDefine.getDomainCode();
+
 			return getParam("domains." + domainCode);
 		}
 		return null;
