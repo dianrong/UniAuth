@@ -2,13 +2,20 @@ package com.dianrong.common.uniauth.common.util;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Arc on 20/6/2016.
  */
 public class HttpRequestUtil {
-
+	private final static Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
+	
     public static Boolean isAjaxRequest(HttpServletRequest httpServletRequest) {
         if(httpServletRequest == null) {
             return Boolean.FALSE;
@@ -41,4 +48,20 @@ public class HttpRequestUtil {
             }
         }
     }
+    
+    private HttpRequestUtil(){
+    	
+    }
+    
+    public static String encodeUrl(String originalUrl){
+    	if(originalUrl != null){
+        	try {
+    			return URLEncoder.encode(originalUrl, "utf-8");
+    		} catch (UnsupportedEncodingException e) {
+    			logger.error("Url encode error for " + originalUrl, e);
+    		}
+    	}
+    	return originalUrl;
+    }
+    
 }
