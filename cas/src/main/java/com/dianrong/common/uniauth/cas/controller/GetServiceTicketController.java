@@ -143,12 +143,6 @@ public class GetServiceTicketController {
 	 * @return null:validation success;non null:validation failed
 	 */
 	private CasGetServiceTicketModel beforeLoginValidation(HttpServletRequest request, HttpServletResponse response) {
-		// 验证lt
-		String lt = getCustomLoginLoginTicketAndRemove(request);
-		if(lt == null || !lt.equals(request.getParameter("lt"))) {
-			return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_LT_VALID_FAILED, "valid parameter lt failed");
-		}
-		
 		// 校验验证码
 		CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getValFromSession(request.getSession(), AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY, CasLoginCaptchaInfoModel.class);
 		if(captchaInfo == null) {
@@ -162,6 +156,11 @@ public class GetServiceTicketController {
 					return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED, "valid parameter captcha failed");
 				}
 			}
+		}
+		// 验证lt
+		String lt = getCustomLoginLoginTicketAndRemove(request);
+		if(lt == null || !lt.equals(request.getParameter("lt"))) {
+			return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_LT_VALID_FAILED, "valid parameter lt failed");
 		}
 		return null;
 	}
@@ -260,6 +259,10 @@ public class GetServiceTicketController {
 	private void sendLoginResult(HttpServletRequest request, HttpServletResponse response, CasGetServiceTicketModel obj) throws IOException{
 		// this obj can not be null
 		CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getCaptchaInfoFromSession(request.getSession());
+		if(captchaInfo == null) {
+			captchaInfo = new CasLoginCaptchaInfoModel();
+			WebScopeUtil.putCaptchaInfoToSession(request.getSession(), captchaInfo);
+		}
 		//进行处理
 		if(!obj.getResultSuccess()) {
 			// 重新生成lt

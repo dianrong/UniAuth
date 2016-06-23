@@ -21,7 +21,7 @@ define(function() {
 			var casUrl = !!apendInfo?apendInfo.casUrl : undefined;
 			var customUrl = !!apendInfo?apendInfo.customUrl : undefined;
 			var failedCallBack = !!apendInfo?apendInfo.failedCallBack : undefined;
-			var captcha =  !!apendInfo?apendInfo.captcha : '';
+			var captcha =  !apendInfo?'': !!apendInfo.captcha?apendInfo.captcha:'' ;
 			
 			var getQueryParam = function (param) {
 				if(!param) {return null};
