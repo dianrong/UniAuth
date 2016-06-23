@@ -13,6 +13,12 @@ requirejs(['uniauthcommon'], function(uniauthcommon){
 		var lt = document.getElementById('lt_input_id').value;
 		var casUrl = document.getElementById('casurl_input_id').value;
 		var customUrl = document.getElementById('customurl_input_id').value;
-		uniauthcommon.login(account, password, service, lt, casUrl, customUrl);
+		var appendInfo = {
+				service : service,
+				lt : lt,
+				casUrl : casUrl,
+				customUrl : customUrl
+		};
+		uniauthcommon.login(account, password, appendInfo);
 	};
 });

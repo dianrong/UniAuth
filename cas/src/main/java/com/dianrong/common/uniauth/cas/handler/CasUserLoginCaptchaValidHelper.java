@@ -17,7 +17,7 @@ import org.springframework.webflow.execution.Event;
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**.
@@ -77,16 +77,15 @@ public class CasUserLoginCaptchaValidHelper {
 	 */
 	public boolean captchaValidProcessBefore(HttpSession session, final MessageContext messageContext, String captcha){
 		if(session != null){
-			Object casCaptchaObj = session.getAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+			CasLoginCaptchaInfoModel casCaptchaObj = WebScopeUtil.getCaptchaInfoFromSession(session);
 			if(casCaptchaObj == null){
 				//新设置一个
-				session.setAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY, new CasLoginCaptchaInfoModel());
+				WebScopeUtil.putCaptchaInfoToSession(session, new CasLoginCaptchaInfoModel());
 				return true;
 			}
 			
 			//如果存在  则要判断是否需要处理验证码
-			CasLoginCaptchaInfoModel  tcasCaptchaObj = (CasLoginCaptchaInfoModel)casCaptchaObj;
-			if(tcasCaptchaObj.canLoginWithouCaptcha()){
+			if(casCaptchaObj.canLoginWithoutCaptcha()){
 				return true;
 			}
 			
@@ -98,7 +97,7 @@ public class CasUserLoginCaptchaValidHelper {
 			}
 			
 			//从session中获取后台生成的验证码
-			String serverCaptcha = getValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY, String.class);
+			String serverCaptcha = WebScopeUtil.getCaptchaFromSession(session);
 			//比较验证码
 			if(!captcha.equals(serverCaptcha)){
 				messageContext.addMessage(new MessageBuilder().error().code("screen.cas.userlogin.captcha.validation.wrong").build());
@@ -116,14 +115,14 @@ public class CasUserLoginCaptchaValidHelper {
 	 */
 	public void captchaValidAfterSubmit(HttpSession session, Event resultEvent){
 		if(session != null){
-			Object casCaptchaObj = session.getAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+			CasLoginCaptchaInfoModel casCaptchaObj = WebScopeUtil.getCaptchaInfoFromSession(session);
 			if(casCaptchaObj == null){
 				//新设置一个
-				session.setAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY, new CasLoginCaptchaInfoModel());
+				WebScopeUtil.putCaptchaInfoToSession(session, new CasLoginCaptchaInfoModel());
 			}
 			
 			//取出来用
-			CasLoginCaptchaInfoModel casLoginCaptcha = (CasLoginCaptchaInfoModel)session.getAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+			CasLoginCaptchaInfoModel casLoginCaptcha = WebScopeUtil.getCaptchaInfoFromSession(session);
 			
 			//进行异常类型判断
 			if(resultEvent != null){
@@ -155,30 +154,8 @@ public class CasUserLoginCaptchaValidHelper {
 				if(SUCCESS_EVENT_ID_LSIT.contains(eventId)){
 					//登陆成功  清空异常记录
 					casLoginCaptcha.reInit();
-					//从session中清除
-					session.removeAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
 				}
-				//其他清空不管
 			}
 		}
-	}
-	
-	/**
-	 * . get object from session
-	 * 
-	 * @param session
-	 *            HttpSession
-	 * @param key
-	 *            key
-	 * @param clsT
-	 *            classType
-	 * @return Object
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T> T getValFromSession(HttpSession session, String key, Class<T> clsT) {
-		if (session == null) {
-			return null;
-		}
-		return (T) session.getAttribute(key);
 	}
 }

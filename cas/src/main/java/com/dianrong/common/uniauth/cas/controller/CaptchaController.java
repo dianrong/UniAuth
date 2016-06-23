@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.model.DateSessionObjModel;
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.cas.util.UniBundle;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -50,9 +51,7 @@ public class CaptchaController extends AbstractBaseController {
 		props.put("cap.noise.c", "255,96,0");
 		CaptchaProducer captchaProducer = (CaptchaProducer) Helper.ThingFactory.loadImpl(6, props);
 		String capText = captchaProducer.createText();
-		putValToSession(request.getSession(), AppConstants.CAS_CAPTCHA_SESSION_KEY, capText);
-		// request.getSession().setAttribute(AppConstants.CAS_CAPTCHA_SESSION_KEY,
-		// capText);
+		WebScopeUtil.putCaptchaToSession(request.getSession(), capText);
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Cache-Control", "no-cache");
 		response.setContentType("image/jpeg");
@@ -91,7 +90,7 @@ public class CaptchaController extends AbstractBaseController {
 		try {
 			emailSender.sendEmail(title, email, emailInfo);
 			// 将验证内容放入session
-			putValToSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_CODE_KEY,
+			WebScopeUtil.putValToSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_CODE_KEY,
 					new DateSessionObjModel<String>(verifyCode, AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES));
 			// 成功
 			setResponseResultJson(response, "0");

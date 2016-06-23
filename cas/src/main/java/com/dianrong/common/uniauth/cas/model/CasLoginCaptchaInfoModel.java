@@ -14,9 +14,9 @@ public class CasLoginCaptchaInfoModel  implements Serializable{
 	private static final long serialVersionUID = -3765249768294450877L;
 
 	/**.
-	 * 失败多少次就显示验证码
+	 * 失败多少次就显示验证码的默认值
 	 */
-	public static int SHOW_CAPTCHA_FAILED_COUNT = 3;
+	public static final int DEFAULT_SHOW_CAPTCHA_FAILED_COUNT = 3;
 	
 	/**.
 	 * 重新登陆不显示验证码的等待毫秒数
@@ -34,11 +34,25 @@ public class CasLoginCaptchaInfoModel  implements Serializable{
 	private long lastLoginFailedMilles;
 	
 	/**.
+	 * 失败多少次就显示验证码
+	 */
+	private int maxFailCount;
+	
+	/**.
 	 * 构造函数
 	 */
 	public CasLoginCaptchaInfoModel(){
+		this(DEFAULT_SHOW_CAPTCHA_FAILED_COUNT);
+	}
+	
+	/**.
+	 * 构造函数
+	 * @param maxFailCount 失败次数
+	 */
+	public CasLoginCaptchaInfoModel(int maxFailCount){
 		this.failCount = 0;
 		this.lastLoginFailedMilles = System.currentTimeMillis();
+		this.maxFailCount = maxFailCount < 0 ? DEFAULT_SHOW_CAPTCHA_FAILED_COUNT : maxFailCount;
 	}
 	
 	/**.
@@ -47,7 +61,7 @@ public class CasLoginCaptchaInfoModel  implements Serializable{
 	 */
 	public boolean canLoginWithouCaptchaForFailedOnce(){
 		failedCountInc();
-		return canLoginWithouCaptcha();
+		return canLoginWithoutCaptcha();
 	}
 	
 	/**.
@@ -68,8 +82,8 @@ public class CasLoginCaptchaInfoModel  implements Serializable{
 	 * 判断是否能够不用验证码的登陆
 	 * @return 是否能够不用验证码验证来登陆
 	 */ 
-	public boolean canLoginWithouCaptcha(){
-		if(this.failCount < SHOW_CAPTCHA_FAILED_COUNT){
+	public boolean canLoginWithoutCaptcha(){
+		if(this.failCount < maxFailCount){
 			return true;
 		}
 		

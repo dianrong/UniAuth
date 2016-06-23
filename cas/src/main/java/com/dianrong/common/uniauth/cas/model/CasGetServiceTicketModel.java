@@ -34,7 +34,12 @@ public class CasGetServiceTicketModel implements Serializable{
 	public static final String LOGIN_EXCEPTION_UNKNOW = "301";
 	
 	// 验证lt不过
-	public static final String LOGIN_EXCEPTION_LT_VERYFY_FAILED = "401";
+	public static final String LOGIN_EXCEPTION_LT_VALID_FAILED = "401";
+	//验证码验证不过
+	public static final String LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED = "402";
+	
+	// captcha 获取的相对路径
+	public static final String DEFAULT_CATCHA_RELATIVE_PATH  = "/uniauth/captcha";
 	
 	
 	/**.
@@ -56,6 +61,11 @@ public class CasGetServiceTicketModel implements Serializable{
 	 * 返回结果中 有时候会带lt
 	 */
 	private String lt;
+	
+	/**.
+	 *  获取验证码的相对路径
+	 */
+	private String captchapath;
 	
 	/**.
 	 * 构造函数
@@ -110,5 +120,13 @@ public class CasGetServiceTicketModel implements Serializable{
 
 	public void setLt(String lt) {
 		this.lt = lt;
+	}
+
+	public String getCaptchapath() {
+		return captchapath;
+	}
+
+	public void setCaptchapath(String captchapath) {
+		this.captchapath = captchapath;
 	}
 }
