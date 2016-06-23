@@ -44,6 +44,7 @@ public class PatternMatchMost {
 				AntPathRequestMatcher antPathRequestMatcher = (AntPathRequestMatcher)requestMatcher;
 				String pattern = antPathRequestMatcher.getPattern();
 				
+				//ant pattern exclude the ? and querystring parts when checking request url
 				if(pattern.equals(url.subSequence(0, questionPos == -1 ? url.length() : questionPos))){
 					matchMostRequestMatcher = antPathRequestMatcher;
 					break;
