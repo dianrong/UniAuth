@@ -63,6 +63,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     public boolean deleteTicket(String ticketId) {
          logger.debug("Deleting ticket {}", ticketId);
             try {
+            	// do nothing
                  this.reidsTemplate.delete(ticketId);
                  return true;
             } catch (final Exception e) {
