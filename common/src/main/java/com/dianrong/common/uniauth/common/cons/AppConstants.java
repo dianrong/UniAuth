@@ -40,7 +40,7 @@ public interface AppConstants {
 	// 域的登陆页属性
 	String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
 	// zk 配置的node name， 是否手动删除service ticket
-	String ZK_NODE_NAME_MANUAL_DELETE_SERVICE_TICKET = "cas_manul_del_st";
+	String ZK_NODE_NAME_MANUAL_DELETE_SERVICE_TICKET = "cas.reuse_st_not_allowed";
 	
 	String SERVICE_LOGIN_POSTFIX = "/login/cas";
 	

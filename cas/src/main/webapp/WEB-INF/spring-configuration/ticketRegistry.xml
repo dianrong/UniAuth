@@ -69,7 +69,6 @@
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->
-    
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
           c:ticketRegistry-ref="ticketRegistry"/>
@@ -84,4 +83,21 @@
           p:jobDetail-ref="jobDetailTicketRegistryCleaner"
           p:startDelay="20000"
           p:repeatInterval="5000000"/>
+          
+          <!-- service ticket cleaner -->
+    <bean id="serviceTicketCleaner" class="com.dianrong.common.uniauth.cas.registry.ServiceTicketCleaner"
+          p:ticketContainer-ref="ticketRegistry"
+           p:serviceTicketExistMilles="10000"/>
+
+    <bean id="serviceTicketCleanerDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
+          p:targetObject-ref="serviceTicketCleaner"
+          p:targetMethod="clean"/>
+
+    <bean id="triggerJobServiceClean"
+          class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean"
+          p:jobDetail-ref="serviceTicketCleanerDetail"
+          p:startDelay="10000"
+          p:repeatInterval="10000"/>
+          
 </beans>

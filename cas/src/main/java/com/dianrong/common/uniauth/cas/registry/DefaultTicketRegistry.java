@@ -14,6 +14,7 @@ import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.AbstractTicketRegistry;
 import org.springframework.util.Assert;
 
+import com.dianrong.common.uniauth.cas.registry.model.ServiceTicketPackage;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 /**.
@@ -63,9 +64,12 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
     @Override
     public void addTicket(final Ticket ticket) {
         Assert.notNull(ticket, "ticket cannot be null");
-
         logger.debug("Added ticket [{}] to registry.", ticket.getId());
-        this.cache.put(ticket.getId(), ticket);
+        if(ticket instanceof ServiceTicket) {
+        	this.cache.put(ticket.getId(), new ServiceTicketPackage((ServiceTicket)ticket));
+        } else {
+        	this.cache.put(ticket.getId(), ticket);
+        }
     }
 
     @Override
@@ -80,7 +84,9 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
         if (ticket != null) {
             logger.debug("Ticket [{}] found in registry.", ticketId);
         }
-
+        if(ticket instanceof ServiceTicketPackage) {
+        	return ((ServiceTicketPackage)ticket).getSt();
+        }
         return ticket;
     }
 
@@ -128,6 +134,28 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
         }
     }
     
+    /**.
+     * 直接删除service ticket
+     * @param ticketId
+     * @return
+     */
+    public boolean deleteServiceTicket(final String ticketId) {
+        if (ticketId == null) {
+            return false;
+        }
+        
+        final Ticket ticket = getTicket(ticketId);
+        if (ticket == null) {
+            return false;
+        }
+        
+        if(ticket instanceof ServiceTicket) {
+        	logger.debug("Removing service ticket [{}] from the registry.", ticketId);
+        	return (this.cache.remove(ticketId) != null);
+        }
+        return false;
+    }
+    
     public Collection<Ticket> getTickets() {
         return Collections.unmodifiableCollection(this.cache.values());
     }
@@ -147,7 +175,7 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
     public int serviceTicketCount() {
         int count = 0;
         for (final Ticket t : this.cache.values()) {
-            if (t instanceof ServiceTicket) {
+            if (t instanceof ServiceTicketPackage) {
                 count++;
             }
         }
