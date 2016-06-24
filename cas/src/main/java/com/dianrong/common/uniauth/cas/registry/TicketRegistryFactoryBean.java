@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.cas.registry;
 
-import org.jasig.cas.ticket.registry.DefaultTicketRegistry;
 import org.jasig.cas.ticket.registry.TicketRegistry;
 
 public class TicketRegistryFactoryBean {

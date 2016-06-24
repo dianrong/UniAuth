@@ -47,7 +47,7 @@
     </bean>
     
     <!--Default Ticket Registry -->
-    <bean id="defaultTicketRegistry" class="org.jasig.cas.ticket.registry.DefaultTicketRegistry"/>
+    <bean id="defaultTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistry"/>
 
     <!--Redis Ticket Registry -->
     <bean id="redisTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
