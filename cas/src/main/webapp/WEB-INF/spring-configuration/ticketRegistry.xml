@@ -39,15 +39,19 @@
     
     <!-- Ticket Registry -->
     <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"></bean>
+    <bean id="ticketRegistryWithNoExtra" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistryWithNoExtra"></bean>
     
     <bean id="ticketRegistryFactoryBean" class="com.dianrong.common.uniauth.cas.registry.TicketRegistryFactoryBean">
     	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"></property>
     	<property name="redisTicketRegistry" ref="redisTicketRegistry"></property>
+    	<property name="defaultTicketRegistryWithNoExtra" ref="defaultTicketRegistryWithNoExtra"></property>
     	<property name="casIsCluster" value="#{uniauthConfig['cas.iscluster']?:'false'}"></property>
     </bean>
     
     <!--Default Ticket Registry -->
     <bean id="defaultTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistry"/>
+	 <bean id="defaultTicketRegistryWithNoExtra" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistryDecorateor"
+	 c:ticketRegistry-ref="defaultTicketRegistry"/>
 
     <!--Redis Ticket Registry -->
     <bean id="redisTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
@@ -71,7 +75,7 @@
     <!-- TICKET REGISTRY CLEANER -->
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
-          c:ticketRegistry-ref="ticketRegistry"/>
+          c:ticketRegistry-ref="ticketRegistryWithNoExtra"/>
 
     <bean id="jobDetailTicketRegistryCleaner"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
@@ -81,23 +85,9 @@
     <bean id="triggerJobDetailTicketRegistryCleaner"
           class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean"
           p:jobDetail-ref="jobDetailTicketRegistryCleaner"
-          p:startDelay="20000"
-          p:repeatInterval="5000000"/>
-          
-          <!-- service ticket cleaner -->
-    <bean id="serviceTicketCleaner" class="com.dianrong.common.uniauth.cas.registry.ServiceTicketCleaner"
-          p:ticketContainer-ref="ticketRegistry"
-           p:serviceTicketExistMilles="10000"/>
-
-    <bean id="serviceTicketCleanerDetail"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
-          p:targetObject-ref="serviceTicketCleaner"
-          p:targetMethod="clean"/>
-
-    <bean id="triggerJobServiceClean"
-          class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean"
-          p:jobDetail-ref="serviceTicketCleanerDetail"
           p:startDelay="10000"
           p:repeatInterval="10000"/>
+<!--           p:startDelay="20000" -->
+<!--           p:repeatInterval="5000000"/> -->
           
 </beans>

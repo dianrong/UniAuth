@@ -5,6 +5,8 @@ import org.jasig.cas.ticket.registry.TicketRegistry;
 public class TicketRegistryFactoryBean {
 	
 	private DefaultTicketRegistry defaultTicketRegistry;
+	
+	private DefaultTicketRegistry defaultTicketRegistryWithNoExtra;
 
 	private RedisTicketRegistry redisTicketRegistry;
 	
@@ -41,5 +43,22 @@ public class TicketRegistryFactoryBean {
 		else{
 			return defaultTicketRegistry;
 		}
+	}
+	
+	public TicketRegistry buildTicketRegistryWithNoExtra(){
+		if(casIsCluster != null && "true".equalsIgnoreCase(casIsCluster)){
+			return redisTicketRegistry;
+		}
+		else{
+			return defaultTicketRegistryWithNoExtra;
+		}
+	}
+
+	public DefaultTicketRegistry getDefaultTicketRegistryWithNoExtra() {
+		return defaultTicketRegistryWithNoExtra;
+	}
+
+	public void setDefaultTicketRegistryWithNoExtra(DefaultTicketRegistry defaultTicketRegistryWithNoExtra) {
+		this.defaultTicketRegistryWithNoExtra = defaultTicketRegistryWithNoExtra;
 	}
 }
