@@ -39,6 +39,8 @@ public interface AppConstants {
 	String ZK_DOMAIN_PREFIX = ZK_DOMAIN + ZK_CFG_SPLIT ;
 	// 域的登陆页属性
 	String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
+	// zk 配置的node name， 是否允许service ticket重用
+	String ZK_NODE_NAME_REUSE_ST_NOT_ALLOWED = "cas.reuse_st_not_allowed";
 	
 	String SERVICE_LOGIN_POSTFIX = "/login/cas";
 	
