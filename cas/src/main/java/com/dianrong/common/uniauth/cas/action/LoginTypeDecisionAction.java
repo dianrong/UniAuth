@@ -13,6 +13,7 @@ import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
 
@@ -50,18 +51,18 @@ public class LoginTypeDecisionAction extends AbstractAction {
         	for(String domainCode: allZkNodeMap.keySet() ){
         		if(ZkNodeUtils.isDomainNode(domainCode)) {
         			String domainUrl = allZkNodeMap.get(domainCode);
-        			if(domainUrl != null && serviceUrl.equals(domainUrl.trim())) {
-        				// 查找其登陆页面
-        				String loginPageNodeName = domainCode + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
-        				if(StringUtils.hasText(allZkNodeMap.get(loginPageNodeName))) {
-        					// 将跳转url放到flowscope备用
-        					context.getFlowScope().put(AppConstants.CAS_CUSTOM_LOGIN_PAGE_KEY, allZkNodeMap.get(loginPageNodeName));
-        					logger.debug("custom login url:" + allZkNodeMap.get(loginPageNodeName));
-        					return result(LOGIN_FROM_CUSTOM);
+        			if(WebScopeUtil.judgeTwoUrlIsEqual(domainUrl, serviceUrl)) {
+	        				// 查找其登陆页面
+	        				String loginPageNodeName = domainCode + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
+	        				if(StringUtils.hasText(allZkNodeMap.get(loginPageNodeName))) {
+	        					// 将跳转url放到flowscope备用
+	        					context.getFlowScope().put(AppConstants.CAS_CUSTOM_LOGIN_PAGE_KEY, allZkNodeMap.get(loginPageNodeName));
+	        					logger.debug("custom login url:" + allZkNodeMap.get(loginPageNodeName));
+	        					return result(LOGIN_FROM_CUSTOM);
+	        				}
         				}
         			}
         		}
-        	}
         }
         // 不处理
         return result(LOGIN_FROM_CAS);

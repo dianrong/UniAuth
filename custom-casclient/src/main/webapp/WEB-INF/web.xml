@@ -92,4 +92,9 @@
 	<session-config>
   		<session-timeout>3</session-timeout>
 	</session-config>
+	
+	<error-page>
+        <error-code>404</error-code>
+        <location>/</location>
+    </error-page>
 </web-app>

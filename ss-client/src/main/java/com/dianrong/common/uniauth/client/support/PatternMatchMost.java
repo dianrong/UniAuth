@@ -28,6 +28,9 @@ public class PatternMatchMost {
 	
 	//not perfect
 	public static RequestMatcher findMachMostRequestMatcher(HttpServletRequest request, Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap){
+		String url = ExtractRequestUrl.extractRequestUrl(request);
+		int questionPos = url.indexOf('?');
+		
 		RequestMatcher matchMostRequestMatcher = null;
 		RequestMatcher matchedAnyRequestMatcher = null;
 		int matchLength = -1;
@@ -40,6 +43,13 @@ public class PatternMatchMost {
 			if(requestMatcher instanceof AntPathRequestMatcher){
 				AntPathRequestMatcher antPathRequestMatcher = (AntPathRequestMatcher)requestMatcher;
 				String pattern = antPathRequestMatcher.getPattern();
+				
+				//ant pattern exclude the ? and querystring parts when checking request url
+				if(pattern.equals(url.subSequence(0, questionPos == -1 ? url.length() : questionPos))){
+					matchMostRequestMatcher = antPathRequestMatcher;
+					break;
+				}
+				
 				int baseOriginLength = pattern.length();
 				String baseOfPattern = EXCLUDE_CHARS_PATTERN.matcher(pattern).replaceAll("");
 				int length = baseOfPattern.length();
@@ -50,7 +60,7 @@ public class PatternMatchMost {
 						originLength = baseOriginLength;
 					}
 				}
-				if(length > matchLength){
+				else if(length > matchLength){
 					matchMostRequestMatcher = antPathRequestMatcher;
 					matchLength = length;
 					originLength = baseOriginLength;
@@ -59,6 +69,12 @@ public class PatternMatchMost {
 			else if(requestMatcher instanceof RegexRequestMatcher){
 				RegexRequestMatcher regexRequestMatcher = (RegexRequestMatcher)requestMatcher;
 				String pattern = ((Pattern)(ReflectionUtils.getField(regexRequestMatcher, "pattern", false))).pattern();
+				
+				if(pattern.equals(url)){
+					matchMostRequestMatcher = regexRequestMatcher;
+					break;
+				}
+				
 				int baseOriginLength = pattern.length();
 				String baseOfPattern = EXCLUDE_CHARS_PATTERN.matcher(pattern).replaceAll("");
 				int length = baseOfPattern.length();
@@ -69,7 +85,7 @@ public class PatternMatchMost {
 						originLength = baseOriginLength;
 					}
 				}
-				if(length > matchLength){
+				else if(length > matchLength){
 					matchMostRequestMatcher = regexRequestMatcher;
 					matchLength = length;
 					originLength = baseOriginLength;
@@ -81,15 +97,16 @@ public class PatternMatchMost {
 		}
 		matchMostRequestMatcher = matchMostRequestMatcher == null? matchedAnyRequestMatcher : matchMostRequestMatcher;
 		
-		if(allMatchedMap.size() >= 1){
-			String url = ExtractRequestUrl.extractRequestUrl(request);
+		int mapSize = allMatchedMap.size();
+		
+		if(mapSize >= 1){
 			if(LOGGER.isWarnEnabled()){
 				String pattern = "";
 				if(matchMostRequestMatcher instanceof RegexRequestMatcher){
 					pattern = ((Pattern)(ReflectionUtils.getField(matchMostRequestMatcher, "pattern", false))).pattern();
 					pattern = "(" + pattern + ")";
 				}
-				LOGGER.warn("Found at least one pattern <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + pattern + ">");
+				LOGGER.warn("Found " + mapSize + " patterns <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + pattern + ">");
 			}
 		}
 		

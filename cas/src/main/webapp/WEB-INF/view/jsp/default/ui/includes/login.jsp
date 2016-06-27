@@ -179,7 +179,7 @@
 			Object casCaptchaObj = session.getAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
 			if(casCaptchaObj != null){
 				CasLoginCaptchaInfoModel  tcasCaptchaObj = (CasLoginCaptchaInfoModel)casCaptchaObj;
-				if(!tcasCaptchaObj.canLoginWithouCaptcha()){
+				if(!tcasCaptchaObj.canLoginWithoutCaptcha()){
 					%>
 						<section class="row">
 				            <label for="captcha"><spring:message code="screen.welcome.label.captcha" /></label>
