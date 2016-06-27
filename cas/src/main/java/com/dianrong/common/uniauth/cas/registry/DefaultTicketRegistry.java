@@ -98,8 +98,8 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
             deleteChildren((TicketGrantingTicket) ticket);
         }
 
-        // if it is ServiceTicket and don't delete it manually, do nothing.
-    	if(ticket instanceof ServiceTicket && !deleteServiceTicketManaually()) {
+        // if it is ServiceTicket and don't delete it 
+    	if(ticket instanceof ServiceTicket && !notAllowedStReUsed()) {
     		return true;
     	}
         
@@ -178,8 +178,8 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
      * 动态判断是否需要主动删除service ticket
      * @return true  or false
      */
-    private boolean deleteServiceTicketManaually(){
- 	   String val = allZkNodeMap.get(AppConstants.ZK_NODE_NAME_MANUAL_DELETE_SERVICE_TICKET);
+    private boolean notAllowedStReUsed(){
+ 	   String val = allZkNodeMap.get(AppConstants.ZK_NODE_NAME_REUSE_ST_NOT_ALLOWED);
  	   if(val == null || !"true".equals(val)) {
  		   return false;
  	   } 

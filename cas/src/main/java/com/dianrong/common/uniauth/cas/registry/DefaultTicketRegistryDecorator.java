@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
  * 实现default ticket registry
  * @author wanglin
  */
-public class DefaultTicketRegistryDecorateor extends DefaultTicketRegistry {
+public class DefaultTicketRegistryDecorator extends DefaultTicketRegistry {
 	/**.
 	 * 默认的ticket registry
 	 */
@@ -27,7 +27,7 @@ public class DefaultTicketRegistryDecorateor extends DefaultTicketRegistry {
 	 * 构造函数
 	 * @param ticketRegistry
 	 */
-	public DefaultTicketRegistryDecorateor(DefaultTicketRegistry  ticketRegistry){
+	public DefaultTicketRegistryDecorator(DefaultTicketRegistry  ticketRegistry){
 		Assert.notNull(ticketRegistry, "ticket registry can not be null");
 		this.ticketRegistry = ticketRegistry;
 	}

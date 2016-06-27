@@ -39,18 +39,18 @@
     
     <!-- Ticket Registry -->
     <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"></bean>
-    <bean id="ticketRegistryWithNoExtra" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistryWithNoExtra"></bean>
+    <bean id="ticketRegistryDecorator" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistryDecorator"></bean>
     
     <bean id="ticketRegistryFactoryBean" class="com.dianrong.common.uniauth.cas.registry.TicketRegistryFactoryBean">
     	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"></property>
     	<property name="redisTicketRegistry" ref="redisTicketRegistry"></property>
-    	<property name="defaultTicketRegistryWithNoExtra" ref="defaultTicketRegistryWithNoExtra"></property>
+    	<property name="defaultTicketRegistryDecorator" ref="defaultTicketRegistryDecorator"></property>
     	<property name="casIsCluster" value="#{uniauthConfig['cas.iscluster']?:'false'}"></property>
     </bean>
     
     <!--Default Ticket Registry -->
     <bean id="defaultTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistry"/>
-	 <bean id="defaultTicketRegistryWithNoExtra" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistryDecorateor"
+	 <bean id="defaultTicketRegistryDecorator" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistryDecorator"
 	 c:ticketRegistry-ref="defaultTicketRegistry"/>
 
     <!--Redis Ticket Registry -->
@@ -75,7 +75,7 @@
     <!-- TICKET REGISTRY CLEANER -->
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
-          c:ticketRegistry-ref="ticketRegistryWithNoExtra"/>
+          c:ticketRegistry-ref="ticketRegistryDecorator"/>
 
     <bean id="jobDetailTicketRegistryCleaner"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"

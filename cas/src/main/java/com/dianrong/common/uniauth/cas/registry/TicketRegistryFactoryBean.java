@@ -6,7 +6,7 @@ public class TicketRegistryFactoryBean {
 	
 	private DefaultTicketRegistry defaultTicketRegistry;
 	
-	private DefaultTicketRegistry defaultTicketRegistryWithNoExtra;
+	private DefaultTicketRegistryDecorator defaultTicketRegistryDecorator;
 
 	private RedisTicketRegistry redisTicketRegistry;
 	
@@ -45,20 +45,21 @@ public class TicketRegistryFactoryBean {
 		}
 	}
 	
-	public TicketRegistry buildTicketRegistryWithNoExtra(){
+	public TicketRegistry buildTicketRegistryDecorator(){
 		if(casIsCluster != null && "true".equalsIgnoreCase(casIsCluster)){
 			return redisTicketRegistry;
 		}
 		else{
-			return defaultTicketRegistryWithNoExtra;
+			return defaultTicketRegistryDecorator;
 		}
 	}
 
-	public DefaultTicketRegistry getDefaultTicketRegistryWithNoExtra() {
-		return defaultTicketRegistryWithNoExtra;
+	public DefaultTicketRegistryDecorator getDefaultTicketRegistryDecorator() {
+		return defaultTicketRegistryDecorator;
 	}
 
-	public void setDefaultTicketRegistryWithNoExtra(DefaultTicketRegistry defaultTicketRegistryWithNoExtra) {
-		this.defaultTicketRegistryWithNoExtra = defaultTicketRegistryWithNoExtra;
+	public void setDefaultTicketRegistryDecorator(DefaultTicketRegistryDecorator defaultTicketRegistryDecorator) {
+		this.defaultTicketRegistryDecorator = defaultTicketRegistryDecorator;
 	}
+	
 }
