@@ -99,7 +99,7 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
         }
 
         // if it is ServiceTicket and don't delete it 
-    	if(ticket instanceof ServiceTicket && !notAllowedStReUsed()) {
+    	if(ticket instanceof ServiceTicket && !isStReusedNotAllowed()) {
     		return true;
     	}
         
@@ -178,7 +178,7 @@ public class DefaultTicketRegistry  extends AbstractTicketRegistry {
      * 动态判断是否需要主动删除service ticket
      * @return true  or false
      */
-    private boolean notAllowedStReUsed(){
+    private boolean isStReusedNotAllowed(){
  	   String val = allZkNodeMap.get(AppConstants.ZK_NODE_NAME_REUSE_ST_NOT_ALLOWED);
  	   if(val == null || !"true".equals(val)) {
  		   return false;

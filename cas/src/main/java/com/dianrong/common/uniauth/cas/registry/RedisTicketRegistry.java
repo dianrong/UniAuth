@@ -79,7 +79,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
             		deleteChildren((TicketGrantingTicket)t);
             	}
             	// if it is ServiceTicket and don't delete it 
-            	if(t instanceof ServiceTicket && !notAllowedStReUsed()) {
+            	if(t instanceof ServiceTicket && !isStReusedNotAllowed()) {
             		return true;
             	}
             	this.redisTemplate.delete(ticketId);
@@ -162,7 +162,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     * 动态判断是否需要主动删除service ticket
     * @return true  or false
     */
-   private boolean notAllowedStReUsed(){
+   private boolean isStReusedNotAllowed(){
 	   String val = allZkNodeMap.get(AppConstants.ZK_NODE_NAME_REUSE_ST_NOT_ALLOWED);
 	   if(val == null || !"true".equals(val)) {
 		   return false;
