@@ -114,7 +114,7 @@ define(function() {
 				// parameter assign
 				var assignValues =  function(){
 					document.getElementById(form_account_id).value=account;
-					document.getElementById(form_password_id).value=password;
+					document.getElementById(form_password_id).value=pwd;
 					document.getElementById(form_service_id).value=service;
 					document.getElementById(form_lt_id).value=lt;
 					document.getElementById(form_captcha_id).value=captcha;
