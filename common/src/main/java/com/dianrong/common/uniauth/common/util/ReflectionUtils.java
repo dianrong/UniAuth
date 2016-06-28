@@ -99,11 +99,11 @@ public class ReflectionUtils {
 		}
 		return object;
 	}
-	
-	public static Long getOpUserId(){
+
+	public static Long getOpUserId() {
 		Long opUserId = null;
+		// SecurityContextHolder.getContext().getAuthentication().getPrincipal()
 		try {
-			// SecurityContextHolder.getContext().getAuthentication().getPrincipal()
 			Class<?> clazz = Class.forName("org.springframework.security.core.context.SecurityContextHolder");
 			if (clazz != null) {
 				Object securityContext = ReflectionUtils.invokeStaticMethodWithoutParam(clazz, "getContext");
@@ -117,8 +117,8 @@ public class ReflectionUtils {
 					}
 				}
 			}
-		} catch (Exception e) {
-			logger.warn("exception", e);
+		} catch (ClassNotFoundException e) {
+			logger.debug("class <org.springframework.security.core.context.SecurityContextHolder> not found, maybe getOpUserId() called on the uniauth-server side?");
 		}
 		return opUserId;
 	}
