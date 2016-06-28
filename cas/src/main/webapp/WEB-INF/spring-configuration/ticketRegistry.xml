@@ -39,19 +39,15 @@
     
     <!-- Ticket Registry -->
     <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"></bean>
-    <bean id="ticketRegistryDecorator" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistryDecorator"></bean>
     
     <bean id="ticketRegistryFactoryBean" class="com.dianrong.common.uniauth.cas.registry.TicketRegistryFactoryBean">
     	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"></property>
     	<property name="redisTicketRegistry" ref="redisTicketRegistry"></property>
-    	<property name="defaultTicketRegistryDecorator" ref="defaultTicketRegistryDecorator"></property>
     	<property name="casIsCluster" value="#{uniauthConfig['cas.iscluster']?:'false'}"></property>
     </bean>
     
     <!--Default Ticket Registry -->
-    <bean id="defaultTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistry"/>
-	 <bean id="defaultTicketRegistryDecorator" class="com.dianrong.common.uniauth.cas.registry.DefaultTicketRegistryDecorator"
-	 c:ticketRegistry-ref="defaultTicketRegistry"/>
+    <bean id="defaultTicketRegistry" class="org.jasig.cas.ticket.registry.DefaultTicketRegistry"/>
 
     <!--Redis Ticket Registry -->
     <bean id="redisTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.RedisTicketRegistry">
@@ -73,9 +69,10 @@
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->
+    
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
-          c:ticketRegistry-ref="ticketRegistryDecorator"/>
+          c:ticketRegistry-ref="ticketRegistry"/>
 
     <bean id="jobDetailTicketRegistryCleaner"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
@@ -85,9 +82,6 @@
     <bean id="triggerJobDetailTicketRegistryCleaner"
           class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean"
           p:jobDetail-ref="jobDetailTicketRegistryCleaner"
-          p:startDelay="10000"
-          p:repeatInterval="10000"/>
-<!--           p:startDelay="20000" -->
-<!--           p:repeatInterval="5000000"/> -->
-          
+          p:startDelay="20000"
+          p:repeatInterval="5000000"/>
 </beans>
