@@ -9,7 +9,6 @@ buildscript {
 	repositories {
 		maven { url 'http://archiva.dianrong.com/repository/internal' }
 		maven { url 'http://archiva.dianrong.com/repository/snapshots' }
-		maven { url 'http://archiva.dianrong.com/repository/snapshots' }
 		jcenter()
 	}
 	dependencies {
