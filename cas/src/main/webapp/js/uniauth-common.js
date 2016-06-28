@@ -113,11 +113,22 @@ define(function() {
 				}
 				// parameter assign
 				var assignValues =  function(){
+					// 重设值
 					document.getElementById(form_account_id).value=account;
 					document.getElementById(form_password_id).value=pwd;
 					document.getElementById(form_service_id).value=service;
 					document.getElementById(form_lt_id).value=lt;
 					document.getElementById(form_captcha_id).value=captcha;
+					//重新新建iframe
+					var iframe_ele = document.getElementById(iframe_id);
+					if(iframe_ele) {
+						iframe_ele.parentNode.removeChild(iframe_ele);
+					}
+					// 创建iframe
+					var iframe = document.createElement('iframe');
+					iframe.name = iframe_name;
+					iframe.id = iframe_id;
+					document.getElementById(div_id).appendChild(iframe);
 				}
 				
 				// 暴露接口
