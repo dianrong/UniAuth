@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Resource;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -15,8 +14,6 @@ import org.jasig.cas.ticket.Ticket;
 import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.AbstractDistributedTicketRegistry;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     @NotNull
@@ -28,12 +25,6 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     @Min(0)
     private final int tgtTimeout;
     
-    /**.
-     * zk config map
-     */
-    @Resource(name="uniauthConfig")
-	private Map<String, String> allZkNodeMap;
-
     /**
      * ST cache entry timeout in seconds.
      */
@@ -77,10 +68,6 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
             	Ticket t = getTicket(ticketId);
             	if(t instanceof TicketGrantingTicket) {
             		deleteChildren((TicketGrantingTicket)t);
-            	}
-            	// if it is ServiceTicket and don't delete it 
-            	if(t instanceof ServiceTicket && !isStReusedNotAllowed()) {
-            		return true;
             	}
             	this.redisTemplate.delete(ticketId);
             	return true;
@@ -149,6 +136,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     protected boolean needsCallback() {
         return true;
     }
+    
    private int getTimeout(final Ticket t) {
         if (t instanceof TicketGrantingTicket) {
             return this.tgtTimeout;
@@ -157,16 +145,4 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
         }
         throw new IllegalArgumentException("Invalid ticket type");
     }
-   
-   /**.
-    * 动态判断是否需要主动删除service ticket
-    * @return true  or false
-    */
-   private boolean isStReusedNotAllowed(){
-	   String val = allZkNodeMap.get(AppConstants.ZK_NODE_NAME_REUSE_ST_NOT_ALLOWED);
-	   if(val == null || !"true".equals(val)) {
-		   return false;
-	   } 
-	   return true;
-   }
 }
