@@ -1,13 +1,12 @@
 package com.dianrong.common.uniauth.cas.registry;
 
+import org.jasig.cas.ticket.registry.DefaultTicketRegistry;
 import org.jasig.cas.ticket.registry.TicketRegistry;
 
 public class TicketRegistryFactoryBean {
 	
 	private DefaultTicketRegistry defaultTicketRegistry;
 	
-	private DefaultTicketRegistryDecorator defaultTicketRegistryDecorator;
-
 	private RedisTicketRegistry redisTicketRegistry;
 	
 	private String casIsCluster;
@@ -44,22 +43,4 @@ public class TicketRegistryFactoryBean {
 			return defaultTicketRegistry;
 		}
 	}
-	
-	public TicketRegistry buildTicketRegistryDecorator(){
-		if(casIsCluster != null && "true".equalsIgnoreCase(casIsCluster)){
-			return redisTicketRegistry;
-		}
-		else{
-			return defaultTicketRegistryDecorator;
-		}
-	}
-
-	public DefaultTicketRegistryDecorator getDefaultTicketRegistryDecorator() {
-		return defaultTicketRegistryDecorator;
-	}
-
-	public void setDefaultTicketRegistryDecorator(DefaultTicketRegistryDecorator defaultTicketRegistryDecorator) {
-		this.defaultTicketRegistryDecorator = defaultTicketRegistryDecorator;
-	}
-	
 }
