@@ -64,7 +64,7 @@ public class ReflectionUtils {
 			try{
 				field = selfClazz.getDeclaredField(fieldName);
 			}catch(Exception e){
-				logger.warn("exception", e);
+				logger.debug("exception", e);
 				selfClazz = selfClazz.getSuperclass();
 			}
 		}
