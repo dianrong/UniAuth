@@ -76,28 +76,6 @@ public class ReflectionUtils {
 		}
 	}
 	
-	public static void setSuperClassField(Object targetObj, String fieldName, Object fieldValue){
-		Field field = null;
-		Class<?> selfClazz = targetObj.getClass();
-		if(selfClazz != null && selfClazz.getSuperclass() != null) {
-			selfClazz = selfClazz.getSuperclass();
-		}
-		try{
-			field = selfClazz.getDeclaredField(fieldName);
-		}catch(Exception e){
-			logger.debug("exception", e);
-		}
-		if(field == null) {
-			return;
-		}
-		field.setAccessible(true);
-		try{
-			field.set(targetObj, fieldValue);
-		}catch(Exception e){
-			logger.warn("exception", e);
-		}
-	}
-	
 	public static void setStaticField(String clazzName, String fieldName, Object fieldValue){
 		try{
 			Class<?> clazz = Class.forName(clazzName);

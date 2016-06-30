@@ -13,10 +13,9 @@ import org.jasig.cas.ticket.ServiceTicket;
 import org.jasig.cas.ticket.Ticket;
 import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.AbstractDistributedTicketRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import com.dianrong.common.uniauth.cas.registry.support.RedisTicketRegistrySTHolder;
+import com.dianrong.common.uniauth.cas.registry.support.SerialzableTicketRegistryHolder;
 
 public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     @NotNull
@@ -34,10 +33,15 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     @Min(0)
     private final int stTimeout;
     
-    @Autowired
-    private RedisTicketRegistrySTHolder registryHolder;
+    private SerialzableTicketRegistryHolder registryHolder;
     
-    public RedisTicketRegistry(RedisTemplate<String,Object> redisTemplate,int tgtTimeout,int stTimeout){
+    public SerialzableTicketRegistryHolder getRegistryHolder() {
+		return registryHolder;
+	}
+	public void setRegistryHolder(SerialzableTicketRegistryHolder registryHolder) {
+		this.registryHolder = registryHolder;
+	}
+	public RedisTicketRegistry(RedisTemplate<String,Object> redisTemplate,int tgtTimeout,int stTimeout){
         this.redisTemplate=redisTemplate;
         this.tgtTimeout=tgtTimeout;
         this.stTimeout=stTimeout;
@@ -48,7 +52,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
         try {
         	registryHolder.beforeSerializable(ticket);
         	redisTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
-        	registryHolder.afterDserializable(ticket);
+        	registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
             logger.error("Failed adding {}", ticket, e);
             throw e;
@@ -136,7 +140,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
               this.redisTemplate.delete(ticket.getId());
               registryHolder.beforeSerializable(ticket);
               redisTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
-              registryHolder.afterDserializable(ticket);
+              registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
             logger.error("Failed updating {}", ticket, e);
             throw e;
