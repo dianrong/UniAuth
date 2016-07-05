@@ -78,6 +78,7 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
 	String PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
+	String PWDEXPIRE_SESSION_KEY = "pwdg_passwrod_expire";
 
 	//60 secondes
 	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;

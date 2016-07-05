@@ -124,7 +124,10 @@ public class InitPasswordController extends AbstractBaseController {
 			setResponseResultJson(response, "1" , StringUtil.getExceptionSimpleMessage(ex.getMessage()));
 			return;
 		}
-		
+
+		if(request.getParameter("expire") != null){
+			request.getSession().setAttribute(AppConstants.PWDEXPIRE_SESSION_KEY, request.getParameter("expire"));
+		}
 		//返回修改密码成功
 		setResponseResultJson(response, "0");
 	}

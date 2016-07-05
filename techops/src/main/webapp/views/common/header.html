@@ -20,7 +20,18 @@
                             </li>
                         </ul>
                     </div>
+
+		                    
                 </li>
+		<li style="padding-top: 8px;">
+		 <div ng-controller="Ctrl">
+	                <ul>
+	                    <li ng-repeat="it in languagesDropdown.items">
+	                        <a ng-click="changeLanguage(it.code)" ng-bind="it.name"></a>
+	                    </li>
+	                </ul>
+            </div>
+		</li>
                 <li><a href="{{userInfo.userInfoUpdateUrl}}">欢迎您：<span>{{userInfo.user.email}}</span></a></li>
                 <li><a style="color:#337AB7" href="" ng-click="logout()"><i class="fa fa-sign-out"></i>安全退出</a></li>
             </ul>
