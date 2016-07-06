@@ -317,6 +317,7 @@
 
 <jsp:directive.include file="bottom.jsp" />
 <script type="text/javascript" src="<%=path %>/jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" src="<%=path %>/jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/common.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/pwdfoget.js" ></script>
 <script type="text/javascript" src="<%=path %>/js/userinfoedit.js" ></script>

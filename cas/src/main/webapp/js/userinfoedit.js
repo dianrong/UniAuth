@@ -131,7 +131,7 @@
             dataType : 'json',
             success : function(data) {
             	if (data.code == '1') { 
-                	window.infonotice('1', "信息更新成功");
+                	window.infonotice('1', $.i18n.prop('frontpage.userinfo.edit.update.ok'));
                 } else {
                 	window.infonotice('2', data.msg);
                 }
@@ -163,7 +163,7 @@
 		//验证原始密码
 		if(!origin_pwd && (!step || (step && step == 1))) {
 			if(showinfo) {
-				warn_info_show($('#update_pwd_warninfo'), '请输入原始密码');
+				warn_info_show($('#update_pwd_warninfo'), $.i18n.prop('frontpage.userinfo.edit.need.orginalpwd'));
 			}
 			return false;
 		}
@@ -171,7 +171,7 @@
 		//验证新密码
 		if((!new_pwd || new_pwd.length < 8 || new_pwd.length > 20) && (!step || (step && step == 2))){
 			if(showinfo) {
-				warn_info_show($('#update_pwd_warninfo'), '密码长度应该在8到20位之间');
+				warn_info_show($('#update_pwd_warninfo'), $.i18n.prop('frontpage.userinfo.edit.need.pwdlength'));
 			}
 			return false;
 		}
@@ -179,7 +179,7 @@
 		//验证重复输入密码
 		if(new_pwd != renew_pwd && (!step || (step && step == 3))){
 			if(showinfo) {
-				warn_info_show($('#update_pwd_warninfo', '两次输入的密码不一致'));
+				warn_info_show($('#update_pwd_warninfo', $.i18n.prop('frontpage.userinfo.edit.need.pwdequal'));
 			}
 			return false;
 		}
@@ -243,7 +243,7 @@
             dataType : 'json',
             success : function(data) {
                 if (data.code == '1') { 
-                	window.infonotice('1', "密码更新成功");
+                	window.infonotice('1',  $.i18n.prop('frontpage.userinfo.edit.update.pwdok'));
                 } else {
                 	window.infonotice('2', data.msg);
                 }
@@ -262,7 +262,7 @@
         });  
 	}
 	
-	//必报对象,用于控制展示提示框的展示  闭包
+	//用于控制展示提示框的展示  闭包
 	var notice_div_state_info = {
 		// 1 没显示  2 显示
 		show_state : "1",
