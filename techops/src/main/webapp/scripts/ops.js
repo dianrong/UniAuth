@@ -52,6 +52,7 @@ require(['app',
     'services/domain/domain-service',
     'services/audit/audit-service',
     'services/cfg/cfg-service',
+    'services/i18n/i18n-service',
     'services/tag/tag-service'],
 
     function(app) {
