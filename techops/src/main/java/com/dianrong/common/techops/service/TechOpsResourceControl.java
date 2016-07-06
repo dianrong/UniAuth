@@ -11,9 +11,18 @@ import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class TechOpsResourceControl extends ResourceBundle.Control{
 	
-	private static final String BASE_PATH="META-INF/resources/";
+	private static String BASE_PATH="META-INF/resources/";
+	
+	public TechOpsResourceControl(String path) {
+		if(StringUtils.isNoneBlank(path)){
+			BASE_PATH = path;
+		}
+	}
+
 
 	@Override
 	public ResourceBundle newBundle(final String baseName, final Locale locale, String format, final ClassLoader loader, final boolean reload)

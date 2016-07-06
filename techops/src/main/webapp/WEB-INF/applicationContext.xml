@@ -129,6 +129,7 @@
 
 	<bean id="techopsResourceService"
 		class="com.dianrong.common.techops.service.TechOpsResourceService" >
-			<property name="appName" value="techops"/>
+			<property name="path" value="techops"/>
+			<property name="menuPath" value="menus.properties"></property>
 		</bean>
 </beans>
