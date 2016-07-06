@@ -14,17 +14,24 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.exp.LoginFailedException;
 import com.dianrong.common.uniauth.common.exp.NetworkException;
-import com.dianrong.common.uniauth.common.exp.NotReuseSessionIdException;
+import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.exp.OperationForbiddenException;
 
 @Component
 public class AccessTechOpsApi {
+    
+        /**./**.
+         * 日志对象
+         */
+        private final  Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private ZooKeeperConfig zooKeeperConfig;
 	private volatile HttpClient httpClient;
@@ -50,15 +57,18 @@ public class AccessTechOpsApi {
 		HttpContent tgtRequestHc = new HttpContent();
 		tgtRequestHc.setBody("username=" + account + "&password=" + password + "&" + serviceString);
 		HttpContent tgtResponseHc = requestServer(casRestBaseUrl, "POST", tgtRequestHc, "application/x-www-form-urlencoded");
+		logger.info("get tgt:" + tgtResponseHc.toString());
 		String tgtRestUrl = tgtResponseHc.getHeaders().get("Location");
 		String tgt = tgtRestUrl.substring(tgtRestUrl.lastIndexOf("/"));
 
 		HttpContent stRequestHc = new HttpContent();
 		stRequestHc.setBody(serviceString);
 		HttpContent stResponseHc = requestServer(casRestBaseUrl + tgt, "POST", stRequestHc, "application/x-www-form-urlencoded");
+		logger.info("get st" + stResponseHc.toString());
 		String st = stResponseHc.getBody().trim();
 
 		HttpContent sessionResponsetHc = requestServer(techOpsServerUrl + "/login/cas?ticket=" + st, "GET", null, null);
+		logger.info("st validation:" + sessionResponsetHc.toString());
 		String jsessionId = sessionResponsetHc.getHeaders().get("Set-Cookie").split(";")[0].split("=")[1];
 		lastSessionMilliSeconds = new Date().getTime();
 		
