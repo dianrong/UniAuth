@@ -108,6 +108,10 @@ public class TechOpsResourceService implements InitializingBean{
 		}
 	}
 
+	/**
+	 * 从
+	 * @throws IOException
+	 */
 	private void loadInSpi() throws IOException {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		Enumeration<URL> resources = loader.getResources(BASE_PATH + "menu.properties");
