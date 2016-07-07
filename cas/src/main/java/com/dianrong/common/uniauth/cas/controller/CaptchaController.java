@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.jasig.cas.web.view.CasReloadableMessageBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.model.DateSessionObjModel;
@@ -32,8 +32,15 @@ public class CaptchaController extends AbstractBaseController {
     @Autowired
     private EmailSender emailSender;
 
-    @Autowired
-    private CasReloadableMessageBundle messageSource;
+    private MessageSource messageSource;
+
+    public MessageSource getMessageSource() {
+        return messageSource;
+    }
+
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {

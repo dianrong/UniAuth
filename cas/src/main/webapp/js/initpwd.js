@@ -152,14 +152,14 @@
                     	setWarnLabel(result.msg, $('#init_pwd_warn_info'));
                     }
                 } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg));
+                	alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
             	alert(errorMsg);
             },
             complete: function(XMLHttpRequest, textStatus) {
-            	refresh_verfypic();
+            	refresh_verfypic($('#init_pwd_verfypic'));
             }
         });  
 	};

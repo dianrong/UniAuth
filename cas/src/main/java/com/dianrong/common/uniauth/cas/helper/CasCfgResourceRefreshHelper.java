@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jasig.cas.web.view.CasReloadableMessageBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 
 import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
 import com.dianrong.common.uniauth.cas.model.CasCfgCacheModel;
@@ -108,7 +108,7 @@ public final class CasCfgResourceRefreshHelper {
     /**.
      * 用于国际化的一个bean
      */
-    private CasReloadableMessageBundle messageSource;
+    private MessageSource messageSource;
     
     /**
      * . 私有构造函数
@@ -396,6 +396,14 @@ public final class CasCfgResourceRefreshHelper {
      */
     public CasCfgCacheModel refreshCacheAndGet() throws Exception {
         refreshCache();
-        return this.getCache();
+        CasCfgCacheModel model  =   this.getCache();
+        // 刷新两个key  不用缓存
+        return  new CasCfgCacheModel(
+                getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, UniBundleUtil.getMsg(messageSource, i18nCacheCfgKeyCodeMap.get(AppConstants.CAS_CFG_KEY_TITLE))),
+                model == null? null:model.getPageIcon(),
+                model== null? null:model.getLogo(),
+                getConfigDto(AppConstants.CAS_CFG_KEY_ALL_RIGHT, UniBundleUtil.getMsg(messageSource, i18nCacheCfgKeyCodeMap.get(AppConstants.CAS_CFG_KEY_ALL_RIGHT))),
+                model == null? null:model.getBackgroundColorText(),
+                model == null?new ArrayList<CasLoginAdConfigModel>() :model.getLoginPageAd());
     }
 }

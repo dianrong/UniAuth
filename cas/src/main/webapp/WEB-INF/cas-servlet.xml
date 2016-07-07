@@ -105,6 +105,13 @@
   <bean id="errorHandlerResolver" class="org.jasig.cas.web.FlowExecutionExceptionResolver"/>
 
   <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+  
+  <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <ref bean="localeChangeInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
   <bean  id="handlerMappingC"  class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"  p:alwaysUseFullPath="true">
     <property name="mappings">
@@ -133,6 +140,7 @@
   </bean>
   
   <bean id="captchaController" class="com.dianrong.common.uniauth.cas.controller.CaptchaController">
+  	<property name="messageSource" ref="messageSource"></property>
   </bean>
   <bean id="forgetPasswordController" class="com.dianrong.common.uniauth.cas.controller.ForgetPasswordController">
   		<property name="forgetPasswordService" ref="forgetPasswordService"></property>
@@ -146,6 +154,7 @@
   <!-- init password controller -->
   <bean id="initPasswordController" class="com.dianrong.common.uniauth.cas.controller.InitPasswordController">
   		<property name="userInfoManageService" ref="userInfoManageService"></property>
+  		<property name="messageSource" ref="messageSource"></property>
   </bean>
   
   <!-- 进行登陆submit后台处理的拦截action -->

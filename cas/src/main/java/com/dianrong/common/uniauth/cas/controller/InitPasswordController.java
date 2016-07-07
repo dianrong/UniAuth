@@ -3,8 +3,7 @@ package com.dianrong.common.uniauth.cas.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jasig.cas.web.view.CasReloadableMessageBundle;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
@@ -26,8 +25,15 @@ public class InitPasswordController extends AbstractBaseController {
      */
     private UserInfoManageService userInfoManageService;
 
-    @Autowired
-    private CasReloadableMessageBundle messageSource;
+    private MessageSource messageSource;
+
+    public MessageSource getMessageSource() {
+        return messageSource;
+    }
+
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     /**
      * . 进入第一页开始验证 清空所有的验证缓存

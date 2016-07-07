@@ -205,7 +205,7 @@
                     	return;
                     }
                 } else {  
-                    alert($.i18n.prop('frontpage.common.error.msg));
+                    alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
@@ -269,14 +269,14 @@
                     	return;
                     }
                 } else {  
-                	 alert($.i18n.prop('frontpage.common.error.msg));
+                	 alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
             	alert(errorMsg);
             },
             complete: function(XMLHttpRequest, textStatus) {
-            	refresh_verfypic();
+            	refresh_verfypic($('#verfypic'));
             }
         });  
 	};
@@ -325,7 +325,7 @@
                     	return;
                     }
                 } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg));
+                	alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
@@ -385,7 +385,7 @@
                     	return;
                     }
                 } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg));
+                	alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){

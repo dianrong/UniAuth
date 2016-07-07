@@ -33,4 +33,20 @@ public final class UniBundleUtil {
         Assert.notNull(messageSource, "get i18n msg, messageSource can not be null");
         return messageSource.getMessage(key, arguments, UniauthLocaleInfoHolder.getLocale());
     }
+    
+    /**.
+     * 判断传入的语言是当前选中的语言否
+     * @param localeStr
+     * @return
+     */
+    public static boolean isSelected(String localeStr){
+        if(localeStr == null) {
+            return false;
+        }
+        return UniauthLocaleInfoHolder.getLocale().toString().equalsIgnoreCase(localeStr);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(isSelected("zh_CN"));
+    }
 }

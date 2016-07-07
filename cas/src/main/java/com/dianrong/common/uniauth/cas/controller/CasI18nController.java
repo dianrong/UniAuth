@@ -19,7 +19,7 @@ import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
  * @author wanglin
  */
 @Controller
-@RequestMapping("/i8n")
+@RequestMapping("/i18n")
 public class CasI18nController {
     /**
      * . 日志对象

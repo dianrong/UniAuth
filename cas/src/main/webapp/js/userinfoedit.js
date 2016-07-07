@@ -179,7 +179,7 @@
 		//验证重复输入密码
 		if(new_pwd != renew_pwd && (!step || (step && step == 3))){
 			if(showinfo) {
-				warn_info_show($('#update_pwd_warninfo', $.i18n.prop('frontpage.userinfo.edit.need.pwdequal'));
+				warn_info_show($('#update_pwd_warninfo'), $.i18n.prop('frontpage.userinfo.edit.need.pwdequal'));
 			}
 			return false;
 		}
