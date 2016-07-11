@@ -11,7 +11,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     tagTypes = [];
                 }
                 var empty = {
-                    code : '请选择'
+                    code : $rootScope.translate('constant.selectplacehodler')
                 };
                 tagTypes.unshift(empty);
                 utils.generatorDropdown($scope, 'tagTypesDropdown', tagTypes, tagTypes[0]);

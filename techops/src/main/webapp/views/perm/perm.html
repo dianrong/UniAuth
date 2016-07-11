@@ -1,13 +1,13 @@
 <form style="margin-left: -34px;" class="form-horizontal" name="permQueryForm">
     <div class="form-group">
         <div class="col-md-4">
-            <span class="col-sm-4 control-label">权限值:</span>
+            <span class="col-sm-4 control-label">{{ 'permMgr.value' | translate}}:</span>
             <div class="col-sm-8">
-                <input type="text" class="form-control" placeholder="权限值" ng-model="permQuery.value" maxlength="40">
+                <input type="text" class="form-control" placeholder="{{ 'permMgr.value' | translate}}" ng-model="permQuery.value" maxlength="40">
             </div>
         </div>
         <div class="col-md-4">
-            <span class="col-md-4 control-label">权限类型:</span>
+            <span class="col-md-4 control-label">{{ 'permMgr.permType' | translate}}:</span>
             <div class="col-md-8 btn-group" uib-dropdown is-open="permTypesDropdown.isOpen">
                 <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
                     <span ng-bind="permTypesDropdown.option.type"></span>
@@ -24,20 +24,20 @@
 </form>
 
 <div class="panel-body pull-right">
-    <a class="btn btn-info" ng-click="launch('add')" role="button">新增权限</a>
-    <button class="btn btn-info" ng-click="queryPerm()">查询</button>
+    <a class="btn btn-info" ng-click="launch('add')" role="button">{{ 'permMgr.addPerm' | translate}}</a>
+    <button class="btn btn-info" ng-click="queryPerm()">{{ 'dialog.query' | translate}}</button>
 </div>
 
 <div>
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
-            <th>权限值</th>
-            <th style="width: 5em;">扩展值</th>
-            <th>权限类型</th>
-            <th>描述</th>
-            <th style="width: 4em">状态</th>
-            <th style="text-align: center;width: 10em;">操作</th>
+            <th>{{ 'permMgr.value' | translate}}</th>
+            <th style="width: 5em;">{{ 'permMgr.eavValue' | translate}}</th>
+            <th>{{ 'permMgr.permType' | translate}}</th>
+            <th>{{'permMgr.desc' | translate}}</th>
+            <th style="width: 4em">{{ 'userMgr.status' | translate}}</th>
+            <th style="text-align: center;width: 10em;">{{ 'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
         <tbody class="text-color-c6">
@@ -51,12 +51,12 @@
             <td ng-bind="d.valueExt"></td>
             <td ng-bind="d.permType"></td>
             <td ng-bind="d.description"></td>
-            <td ng-bind="!d.status?'启用':'禁用'"></td>
+            <td ng-bind="!d.status?'{{ 'userMgr.enable'| translate}}':'{{ 'userMgr.disable'| translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="管理该权限对应的角色" class="btn btn-info" ng-click="navToPermRole(d)"><i class="fa fa-cog"></i></a>
-                    <a title="修改权限信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
-                    <a title="{{d.status?'启用该权限':'禁用该权限'}}" class="btn btn-info" ng-click="launch('status', d)">
+                    <a title="{{ 'permMgr.managePerm' | translate}}" class="btn btn-info" ng-click="navToPermRole(d)"><i class="fa fa-cog"></i></a>
+                    <a title="{{ 'permMgr.modifyPermInfo' | translate}}" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+                    <a title="{{d.status?( 'permMgr.enablePerm' | translate):( 'permMgr.disablePerm' | translate)}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
                     </a>
                 </div>

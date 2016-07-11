@@ -46,11 +46,12 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }());
     };
 
-	app.controller('Ctrl', ['$translate', '$scope','$http', function ($translate, $scope,$http) {
+	app.controller('Ctrl', ['$translate', '$scope','$http','$rootScope', function ($translate, $scope,$http,$rootScope) {
 	 
 	  $scope.changeLanguage = function (langKey) {
 		  $http.get(constant.apiBase + "/i18n/changeLanguage?lang="+langKey).then(function (res) {
 			  		$translate.use(langKey);
+					$rootScope.translateConstant();
 		        }, function (errorResponse) {
 		        	console.log('change language error');
 		        	//$translate.use(langKey);
@@ -58,8 +59,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 	  };
 	}]);
 
-     app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', '$http','languages',
-        function ($cookies, $location, $rootScope, $state, $stateParams, permission, $http,languages) {
+     app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', '$http','languages','$translate',
+        function ($cookies, $location, $rootScope, $state, $stateParams, permission, $http,languages,$translate) {
       // It's very handy to add references to $state and $stateParams to the $rootScope
       // so that you can access them from any scope within your applications.For example,
       // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
@@ -69,17 +70,42 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
+      $rootScope.translate=function(msg){
+    	  return $translate.instant(msg);
+      };
+      $rootScope.translateOptions = function(options){
+    	  for( i in options){
+    		  if(options[i].code){
+    			  options[i].name= $rootScope.translate(options[i].code)
+    		  }
+    	  }
+      };
+      $rootScope.translateConstant = function(){
+    	//对constant进行翻译
+    	  constant.loadEmpty=$rootScope.translate(constant.loadEmpty_code);
+    	  constant.loading=$rootScope.translate(constant.loading_code);
+    	  constant.createError=$rootScope.translate(constant.createError_code);
+    	  constant.submitFail=$rootScope.translate(constant.submitFail_code);
+    	  constant.loadError=$rootScope.translate(constant.loadError_code);
+    	  $rootScope.translateOptions(constant.commonStatus);
+    	  $rootScope.translateOptions(constant.auditOrderBy);
+    	  $rootScope.translateOptions(constant.success);
+    	  $rootScope.translateOptions(constant.ascDesc);
+      };
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
       utils.generatorDropdown($rootScope, 'languagesDropdown', languages.langs.supportLanguages, languages.langs.supportLanguages[0]);
       $http.get(constant.apiBase + "/cfg/download/TECHOPS_TITLE").then(function (res) {
         if(res.data && res.data.data && res.data.data.value) {
           $rootScope.pageTitle = res.data.data.value;
         } else {
-          $rootScope.pageTitle = '权限运维系统';
+          $rootScope.pageTitle = $translate.instant('header.title');
         }
+        $rootScope.translateConstant();
       }, function (errorResponse) {
-          $rootScope.pageTitle = '权限运维系统';
+          $rootScope.pageTitle = $translate.instant('header.title');
+          $rootScope.translateConstant();
       });
+      
     }]);
     
     app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$rootScopeProvider','languages',
@@ -232,7 +258,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         $translateProvider.useUrlLoader('servicei18n');
         
         $translateProvider.preferredLanguage(languages.langs.current);
-        
+
     }]);
     return app;
 });

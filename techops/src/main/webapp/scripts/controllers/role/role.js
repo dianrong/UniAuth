@@ -6,7 +6,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             RoleService.getAllRoleCodes().$promise.then(function(res) {
                 var roleCodes = res.data;
                 var empty = {
-                    code : '请选择'
+                    code : $rootScope.translate('constant.selectplacehodler')
                 };
                 roleCodes.unshift(empty);
                 utils.generatorDropdown($scope, 'roleCodesDropdown', roleCodes, empty);

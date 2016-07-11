@@ -1,18 +1,18 @@
 <div class="modal-header dialog-header-confirm">
     <h4 class="modal-title text-center">
-        <i class="fa fa-plus-square-o"></i>新增Stakeholder
+        <i class="fa fa-plus-square-o"></i>{{'domainMgr.addStake.title' | translate}}
     </h4>
 </div>
 <div class="modal-body">
     <ng-form name="addStakeholderDialog" novalidate role="form">
         <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[addStakeholderDialog.email.$dirty && addStakeholderDialog.email.$invalid]">
-            <label class="control-label" for="name" placeholder="姓名">姓名:</label>
+            <label class="control-label" for="name" placeholder="{{'common.name' | translate}}">{{'common.name' | translate}}:</label>
             <input type="text" class="form-control" name="name" id="name" ng-model="stakeholder.name">
-            <label class="control-label" for="email" placeholder="邮箱">邮箱:</label>
+            <label class="control-label" for="email" placeholder="{{'common.email' | translate}}">{{'common.email' | translate}}:</label>
             <input type="text" class="form-control" name="email" id="email" ng-model="stakeholder.email">
-            <label class="control-label" for="phone" placeholder="手机号">手机号:</label>
+            <label class="control-label" for="phone" placeholder="{{'common.mobile' | translate}}">{{'common.mobile' | translate}}:</label>
             <input type="text" class="form-control" name="phone" id="phone" ng-model="stakeholder.phone">
-            <label class="control-label" for="jobtitle" placeholder="职位">职位:</label>
+            <label class="control-label" for="jobtitle" placeholder="{{'domainMgr.title' | translate}}">{{'domainMgr.title' | translate}}:</label>
             <input type="text" class="form-control" name="jobtitle" id="jobtitle" ng-model="stakeholder.jobtitle">
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
@@ -20,7 +20,7 @@
     </ng-form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">{{'dialog.cancel' | translate}}</button>
     <button type="button" class="btn btn-primary" ng-click="save()"
-            ng-disabled="(addStakeholderDialog.$dirty && addStakeholderDialog.$invalid) || addStakeholderDialog.$pristine">保存</button>
+            ng-disabled="(addStakeholderDialog.$dirty && addStakeholderDialog.$invalid) || addStakeholderDialog.$pristine">{{'dialog.save' | translate}}</button>
 </div>

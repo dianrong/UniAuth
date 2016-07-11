@@ -1,16 +1,16 @@
 <div class="modal-header dialog-header-confirm">
     <h4 class="modal-title text-center">
-        <i class="fa fa-pencil-square-o"></i>修改用户信息
+        <i class="fa fa-pencil-square-o"></i> {{'userMgr.dialog.modify.title' | translate }}
     </h4>
 </div>
 <div class="modal-body">
     <ng-form name="modifyUserDialog" novalidate role="form">
         <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[modifyUserDialog.email.$dirty && modifyUserDialog.email.$invalid]">
-            <label class="control-label" for="email" placeholder="用户邮箱">用户邮箱:</label>
+            <label class="control-label" for="email" placeholder="{{'userMgr.dialog.add.email' | translate }}">{{'userMgr.dialog.add.email' | translate }}:</label>
             <input type="text" class="form-control" name="email" id="email" ng-model="user.email">
-            <label class="control-label" for="name" placeholder="用户姓名">用户姓名:</label>
+            <label class="control-label" for="name" placeholder="{{'userMgr.dialog.add.userName' | translate }}">{{'userMgr.dialog.add.userName' | translate }}:</label>
             <input type="text" class="form-control" name="name" id="name" ng-model="user.name">
-            <label class="control-label" for="phone" placeholder="用户手机">用户手机:</label>
+            <label class="control-label" for="phone" placeholder="{{'userMgr.dialog.add.mobile' | translate }}">{{'userMgr.dialog.add.mobile' | translate }}:</label>
             <input type="text" class="form-control" name="phone" id="phone" ng-model="user.phone">
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
@@ -18,7 +18,7 @@
     </ng-form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">{{'dialog.cancel' | translate}}</button>
     <button type="button" class="btn btn-primary" ng-click="save()"
-            ng-disabled="(modifyUserDialog.$dirty && modifyUserDialog.$invalid) || modifyUserDialog.$pristine">保存</button>
+            ng-disabled="(modifyUserDialog.$dirty && modifyUserDialog.$invalid) || modifyUserDialog.$pristine">{{'dialog.save' | translate}}</button>
 </div>

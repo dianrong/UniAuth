@@ -11,7 +11,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                 if(!tagTypes) {
                     tagTypes = [];
                     var empty = {
-                        code : '请选择'
+                        code : $rootScope.translate('constant.selectplacehodler')
                     };
                     tagTypes.unshift(empty);
                 }

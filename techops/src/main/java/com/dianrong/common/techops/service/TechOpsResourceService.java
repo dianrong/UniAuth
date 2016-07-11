@@ -29,13 +29,24 @@ public class TechOpsResourceService implements InitializingBean{
 	
 	private static final String BASE_PATH="META-INF/resources/";
 	
-	private  ResourceBundle.Control control;
+	private static final ResourceBundle.Control CONTROL = new TechOpsResourceControl();
 	
-	private  List<LangDto> menuCache = Lists.newArrayList();
+	private List<LangDto> menuCache = Lists.newArrayList();
+	
+	/**
+	 * 应用名称，以语言包形式加载时必须设置（此配置与path互斥）
+	 */
 	private String appName;
 	
+	/**
+	 * 资源文件路径，普通加载时必须设置（此配置与appName互斥）
+	 */
 	private String path;
 	
+	
+	/**
+	 * 菜单配置文件的路径(语言包方式加载不需要设置)
+	 */
 	private String menuPath;
 	
 	public void setAppName(String appName) {
@@ -55,7 +66,7 @@ public class TechOpsResourceService implements InitializingBean{
 		if(StringUtils.isBlank(appName)){
 			bundle = ResourceBundle.getBundle(path, locale);
 		}else{
-			bundle = ResourceBundle.getBundle(path, locale,control);
+			bundle = ResourceBundle.getBundle(path, locale, CONTROL);
 		}
 		if(bundle != null){
 			Map<String,String> p = Maps.newHashMap();
@@ -79,9 +90,9 @@ public class TechOpsResourceService implements InitializingBean{
 				synchronized (menuCache) {
 					if(menuCache.isEmpty()){
 						if(StringUtils.isBlank(menuPath)){
-							loadInSpi();
+							loadFromSpi();
 						}else{
-							loadInLocal();
+							loadFromLocal();
 						}
 					}
 				}
@@ -92,8 +103,11 @@ public class TechOpsResourceService implements InitializingBean{
 		return menuCache;
 	}
 
-	
-	private void loadInLocal() throws IOException {
+	/**
+	 * 加载本地的菜单配置
+	 * @throws IOException
+	 */
+	private void loadFromLocal() throws IOException {
 		InputStream is = TechOpsResourceService.class.getClassLoader().getResourceAsStream(menuPath);
 		if(is != null){
 			try{
@@ -109,10 +123,10 @@ public class TechOpsResourceService implements InitializingBean{
 	}
 
 	/**
-	 * 从
+	 * 从语言包中加载菜单配置
 	 * @throws IOException
 	 */
-	private void loadInSpi() throws IOException {
+	private void loadFromSpi() throws IOException {
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		Enumeration<URL> resources = loader.getResources(BASE_PATH + "menu.properties");
 		while(resources.hasMoreElements()){
@@ -144,7 +158,6 @@ public class TechOpsResourceService implements InitializingBean{
 		if(appName == null && path == null || appName !=null && path != null){
 			throw new RuntimeException("param error!");
 		}
-		control=new TechOpsResourceControl(path);
 	}
 	
 }

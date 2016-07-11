@@ -1,24 +1,24 @@
 <div class="modal-header dialog-header-confirm">
     <h4 class="modal-title text-center">
-        <i class="fa fa-plus-square-o"></i>新增域
+        <i class="fa fa-plus-square-o"></i>{{'domainMgr.add.title' | translate}}
     </h4>
 </div>
 <div class="modal-body">
     <ng-form name="addDomainDialog" novalidate role="form">
         <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[addDomainDialog.code.$dirty && addDomainDialog.code.$invalid]">
-            <label class="control-label" for="displayName" placeholder="系统名称">域名称:</label>
+            <label class="control-label" for="displayName" placeholder="{{'domainMgr.add.systemName' | translate}}">{{'domainMgr.domainNameDetail' | translate}}:</label>
             <input type="text" class="form-control" name="displayName" id="displayName" ng-model="domain.displayName">
-            <label class="control-label" for="code" placeholder="唯一标识code">Code:</label>
+            <label class="control-label" for="code" placeholder="{{'domainMgr.domainKey' | translate}}">Code:</label>
             <input type="text" class="form-control" name="code" id="code" ng-model="domain.code" required>
-            <label class="panel-label" for="description" placeholder="域描述">域描述:</label>
-            <textarea id="description" class="panel-textarea form-control" placeholder="域的描述" ng-model="domain.description"></textarea>
+            <label class="panel-label" for="description" placeholder="{{'domainMgr.domainDesc' | translate}}">{{'domainMgr.domainDesc' | translate}}:</label>
+            <textarea id="description" class="panel-textarea form-control" placeholder="{{'domainMgr.domainDesc' | translate}}" ng-model="domain.description"></textarea>
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
         </div>
     </ng-form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">{{'dialog.cancel' | translate}}</button>
     <button type="button" class="btn btn-primary" ng-click="save()"
-            ng-disabled="(addDomainDialog.$dirty && addDomainDialog.$invalid) || addDomainDialog.$pristine">保存</button>
+            ng-disabled="(addDomainDialog.$dirty && addDomainDialog.$invalid) || addDomainDialog.$pristine">{{'dialog.sae' | translate}}</button>
 </div>

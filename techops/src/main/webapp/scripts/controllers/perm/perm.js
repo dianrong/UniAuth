@@ -6,7 +6,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             PermService.getAllPermTypes().$promise.then(function (res) {
                 var permTypes = res.data;
                 var empty = {
-                    type: '请选择'
+                    type: $rootScope.translate('constant.selectplacehodler')
                 };
                 permTypes.unshift(empty);
                 utils.generatorDropdown($scope, 'permTypesDropdown', permTypes, empty);
