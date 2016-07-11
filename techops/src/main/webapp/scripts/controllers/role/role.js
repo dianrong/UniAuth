@@ -96,8 +96,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 case 'status':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
-                            "header":param.status?'角色-启用':'角色-禁用',
-                            "msg":"您确定要" + (param.status?'启用':'禁用') + "角色: " + param.name + "吗?"
+                            "header":param.status?$rootScope.translate('roleMgr.tips.roleEnable'):$rootScope.translate('roleMgr.tips.roleDisable'),
+                            "msg":$rootScope.translate('permMgr.tips.areUsure') + (param.status?$rootScope.translate('userMgr.enable'):$rootScope.translate('userMgr.disable')) + $rootScope.translate('roleMgr.tips.role') + param.name + $rootScope.translate('permMgr.tips.ma')
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -116,7 +116,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                                         AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
                                     }
                                 } else {
-                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ? '启用' : '禁用') + "角色成功.");
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ? $rootScope.translate('userMgr.enable'):$rootScope.translate('userMgr.disable')) + $rootScope.translate('roleMgr.tips.roleSuccess'));
                                 }
                                 $scope.queryRole();
                             }, function(err) {

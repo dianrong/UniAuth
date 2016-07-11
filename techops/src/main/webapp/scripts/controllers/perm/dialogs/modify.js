@@ -48,7 +48,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils, cons
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, '权限修改成功.');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('permMgr.tips.modifyPermSuccess'));
                         $uibModalInstance.close();
                     }
                 }, function(err) {

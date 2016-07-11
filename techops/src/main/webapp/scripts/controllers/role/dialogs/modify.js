@@ -38,7 +38,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils,const
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, '角色修改成功.');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('roleMgr.tips.roleModifySuccess'));
                         $uibModalInstance.close();
                     }
                 }, function(err) {

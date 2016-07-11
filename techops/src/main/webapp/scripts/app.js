@@ -258,6 +258,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         $translateProvider.useUrlLoader('servicei18n');
         
         $translateProvider.preferredLanguage(languages.langs.current);
+        
+        //$translateProvider.fallbackLanguage('zh');
 
     }]);
     return app;
