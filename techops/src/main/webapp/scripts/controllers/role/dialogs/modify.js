@@ -1,5 +1,5 @@
 define(['../../../utils/utils','../../../utils/constant'], function (utils,constant) {
-    var Controller = function ($scope,$uibModalInstance, RoleService, data, AlertService) {
+    var Controller = function ($rootScope,$scope,$uibModalInstance, RoleService, data, AlertService) {
         //-- Variables --//
 
         $scope.role = data;
@@ -52,7 +52,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils,const
 
     return {
         name: "ModifyRoleController",
-        fn: ["$scope","$uibModalInstance", "RoleService", "data", "AlertService", Controller]
+        fn: ["$rootScope","$scope","$uibModalInstance", "RoleService", "data", "AlertService", Controller]
     };
 
 });

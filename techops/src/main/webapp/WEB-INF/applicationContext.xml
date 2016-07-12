@@ -132,4 +132,8 @@
 			<property name="path" value="techops"/>
 			<property name="menuPath" value="menus.properties"></property>
 		</bean>
+		
+		<bean id="i18nHolder" class="com.dianrong.common.techops.i18n.I18NHolder">
+				<property name="techOpsResource" ref="techopsResourceService"/>
+		</bean>
 </beans>

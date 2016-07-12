@@ -50,11 +50,11 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, '标签修改成功.');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('tagMgr.tips.modifyTagSuccess'));
                         $uibModalInstance.close();
                     }
                 }, function(err) {
-                    AlertService.addAlert(constant.messageType.danger, '标签修改失败,请联系系统管理员.');
+                    AlertService.addAlert(constant.messageType.danger, $rootScope.translate('tagMgr.tips.modifyTagFailure'));
                 }
             );
         };

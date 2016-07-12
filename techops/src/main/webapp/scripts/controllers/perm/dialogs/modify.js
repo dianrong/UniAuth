@@ -1,5 +1,5 @@
 define(['../../../utils/utils','../../../utils/constant'], function (utils, constant) {
-    var Controller = function ($scope,$uibModalInstance, PermService, AlertService, data) {
+    var Controller = function ($rootScope,$scope,$uibModalInstance, PermService, AlertService, data) {
         //-- Variables --//
 
         $scope.perm = data;
@@ -62,7 +62,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils, cons
 
     return {
         name: "ModifyPermController",
-        fn: ["$scope","$uibModalInstance", "PermService", "AlertService", "data", Controller]
+        fn: ["$rootScope","$scope","$uibModalInstance", "PermService", "AlertService", "data", Controller]
     };
 
 });
