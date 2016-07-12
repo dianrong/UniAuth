@@ -72,8 +72,8 @@ define(['../../utils/constant'], function (constant) {
                 case 'status':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
-                            "header":param.status?'用户-启用':'用户-禁用',
-                            "msg":"您确定要" + (param.status?'启用':'禁用') + "用户: " + param.email + "吗?"
+                            "header":param.status?$rootScope.translate('userMgr.tips.userEnable'):$rootScope.translate('userMgr.tips.userDisable'),
+                            "msg":$rootScope.translate('permMgr.tips.areUsure') + (param.status?$rootScope.translate('constant.enable'):$rootScope.translate('constant.disable')) + $rootScope.translate('userMgr.tips.user') + param.email + $rootScope.translate('permMgr.tips.ma')
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -88,11 +88,11 @@ define(['../../utils/constant'], function (constant) {
                                         AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
                                     }
                                 } else {
-                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ? '用户启用' : '用户禁用') + '成功!');
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ? $rootScope.translate('userMgr.tips.enableUser') :$rootScope.translate('userMgr.tips.disableUser')) + $rootScope.translate('userMgr.tips.success'));
                                 }
                                 $scope.queryUser();
                             }, function(err) {
-                                AlertService.addAutoDismissAlert(constant.messageType.danger, (param.status?'用户启用':'用户禁用') + '失败!');
+                                AlertService.addAutoDismissAlert(constant.messageType.danger, (param.status? $rootScope.translate('userMgr.tips.enableUser') :$rootScope.translate('userMgr.tips.disableUser')) + $rootScope.translate('userMgr.tips.failure'));
                                 console.log(err);
                             }
                         );
@@ -113,8 +113,8 @@ define(['../../utils/constant'], function (constant) {
                 case 'unlock':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
-                            "header":'解锁用户',
-                            "msg":"您确定要解锁用户: " + param.email + "吗?"
+                            "header":$rootScope.translate('userMgr.tips.unlockUser'),
+                            "msg":$rootScope.translate('userMgr.tips.areUsureUnlock') + param.email + $rootScope.translate('permMgr.tips.ma')
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -123,10 +123,10 @@ define(['../../utils/constant'], function (constant) {
                                 'id':param.id
                             },
                             function(res) {
-                                AlertService.addAutoDismissAlert(constant.messageType.info, '用户解锁成功!');
+                                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.unlockUserSuccess'));
                             },
                             function(err) {
-                                AlertService.addAutoDismissAlert(constant.messageType.info, '用户解锁失败!');
+                                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.unlockUserFailure'));
                             }
                         );
                     }, function (no) {

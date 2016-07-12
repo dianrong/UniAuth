@@ -13,7 +13,7 @@
 	            </div>
 	        </div>
 	        <div class="col-md-offset-3 col-md-3">
-			    <a class="btn btn-info" ng-click="launch('add')" role="button"  ng-if="(userRoleCodes.indexOf('ROLE_SUPER_ADMIN') != -1) && (userDomainCodes.indexOf('techops') != -1)">新增</a>
+			    <a class="btn btn-info" ng-click="launch('add')" role="button"  ng-if="(userRoleCodes.indexOf('ROLE_SUPER_ADMIN') != -1) && (userDomainCodes.indexOf('techops') != -1)">{{ 'domainMgr.add' | translate}}</a>
 			    <button class="btn btn-info" ng-click="queryEavCodes()">{{ 'dialog.query' | translate}}</button>
 			</div>
 	    </div>

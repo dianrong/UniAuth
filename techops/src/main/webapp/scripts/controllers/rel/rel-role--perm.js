@@ -77,7 +77,7 @@ define(['../../utils/constant'], function (constant) {
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, '替换角色对应的权限成功.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replacePermSuccess'));
                 $scope.getAllPermsWithCheckedInfoInDomain();
             }, function () {
                 $scope.perms = [];
