@@ -158,4 +158,7 @@ public interface AppConstants {
 	String CAS_CUSTOM_LOGIN_PAGE_KEY = "custom_login_page_key";
 	String CAS_CUSTOM_LOGIN_LT_KEY = "custom_login_lt_key";
 	String CAS_CUSTOM_LOGIN_URL_KEY = "custom_login_url_key";
+	
+	//cxf 传递的locale的key
+	String CAS_CXF_HEADER_LOCALE_KEY = "cas.cxf.header.locale.key";
 }

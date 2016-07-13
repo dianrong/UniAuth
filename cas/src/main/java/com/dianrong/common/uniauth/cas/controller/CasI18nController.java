@@ -40,9 +40,10 @@ public class CasI18nController {
             logger.warn("query i18n language failed");
         } ;
     }
-    
+
     /**
      * 设置当前的用户的语言信息
+     * 
      * @param request
      * @param response
      */
