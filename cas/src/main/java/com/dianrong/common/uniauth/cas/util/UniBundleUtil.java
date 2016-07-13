@@ -45,8 +45,4 @@ public final class UniBundleUtil {
         }
         return UniauthLocaleInfoHolder.getLocale().toString().equalsIgnoreCase(localeStr);
     }
-    
-    public static void main(String[] args) {
-        System.out.println(isSelected("zh_CN"));
-    }
 }

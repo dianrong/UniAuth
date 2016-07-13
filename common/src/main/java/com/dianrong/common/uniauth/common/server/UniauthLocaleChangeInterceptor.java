@@ -50,24 +50,42 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
         if (localeResolver == null) {
             throw new IllegalStateException("No LocaleResolver found: not in a DispatcherServlet request?");
         }
+        Locale newLocale = null;
         try {
+            newLocale = computeLocale(request, response);
+            // 设置新值
+            localeResolver.setLocale(request, response, newLocale);
+        } finally {
+            if(newLocale == null) {
+                return true;
+            }
+            // refresh session
+            request.getSession().setAttribute(sessionName, newLocale);
+            // refresh cookie
+            refreshLocaleCookie(request, response, newLocale == null ? "" : newLocale.toString());
+            // refresh threadLocale
+            UniauthLocaleInfoHolder.setLocale(newLocale);
+        }
+        return true;
+    }
+    
+    /**.
+     *  计算出locale对象
+     * @param request HttpServletRequest
+     * @param response  HttpServletResponse
+     * @return Locale not null
+     */
+    private Locale computeLocale(HttpServletRequest request, HttpServletResponse response) {
             // step 1: get from request parameter
             String newLocale = request.getParameter(this.paramName);
             if (newLocale != null) {
-                localeResolver.setLocale(request, response, StringUtils.parseLocaleString(newLocale));
-                return true;
+                return StringUtils.parseLocaleString(newLocale);
             }
 
             // step 2: get from cookie
             String cookieLocaleStr = getLocaleStrFromCookie(request);
             if (cookieLocaleStr != null) {
-                // 没变 就不管
-                Locale cookieLocale = localeResolver.resolveLocale(request);
-                if (cookieLocale != null && cookieLocale.toString().equals(cookieLocaleStr)) {
-                    return true;
-                }
-                localeResolver.setLocale(request, response, StringUtils.parseLocaleString(cookieLocaleStr));
-                return true;
+              return StringUtils.parseLocaleString(cookieLocaleStr);
             }
 
             // step 3: get from request parameter
@@ -75,28 +93,17 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
             if (session != null) {
                 Locale sessionLocale = (Locale) session.getAttribute(sessionName);
                 if (sessionLocale != null) {
-                    localeResolver.setLocale(request, response, sessionLocale);
-                    return true;
+                   return sessionLocale;
                 }
             }
 
             // step 4: get from request header
             Locale requestLocale = request.getLocale();
             if (requestLocale != null) {
-                localeResolver.setLocale(request, response, requestLocale);
-                return true;
+                return requestLocale;
             }
-
             // step 5: use locale.getDefault()
-            localeResolver.setLocale(request, response, Locale.getDefault());
-            return true;
-        } finally {
-            Locale newLocale = localeResolver.resolveLocale(request);
-            // refresh session
-            request.getSession().setAttribute(sessionName, newLocale);
-            // refresh cookie
-            refreshLocaleCookie(request, response, newLocale == null ? "" : newLocale.toString());
-        }
+           return Locale.getDefault();
     }
 
     /**

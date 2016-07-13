@@ -371,7 +371,7 @@ public final class CasCfgResourceRefreshHelper {
             return dto;
         }
 
-        // 过滤国家化的数据
+        // 过滤国际化的数据
         if(i18nCacheCfgKeyCodeMap.keySet().contains(cacheDtoType)) {
            return  getConfigDto(cacheDtoType, UniBundleUtil.getMsg(messageSource, i18nCacheCfgKeyCodeMap.get(cacheDtoType)));
         }
