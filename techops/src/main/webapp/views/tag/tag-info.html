@@ -1,13 +1,13 @@
 <form style="margin-left: -22px;" class="form-horizontal" name="tagQueryForm">
     <div style="margin-top: 10px;" class="form-group">
         <div class="col-md-4">
-            <span class="col-sm-4 control-label">标签code:</span>
+            <span class="col-sm-4 control-label">{{'tagMgr.tagCode' | translate}}:</span>
             <div class="col-sm-8">
-                <input type="text" class="form-control" placeholder="标签码" ng-model="tagQuery.code" maxlength="64">
+                <input type="text" class="form-control" placeholder="{{'tagMgr.tagCode' | translate}}" ng-model="tagQuery.code" maxlength="64">
             </div>
         </div>
         <div class="col-md-4">
-            <span class="col-md-4 control-label">类型:</span>
+            <span class="col-md-4 control-label">{{'tagMgr.type' | translate}}:</span>
             <div class="col-md-8 btn-group" uib-dropdown is-open="tagTypesDropdown.isOpen">
                 <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
                     <span ng-bind="tagTypesDropdown.option.code"></span>
@@ -24,19 +24,19 @@
 </form>
 
 <div class="panel-body pull-right">
-    <a class="btn btn-info" ng-click="launch('add')" role="button">新增标签</a>
-    <button class="btn btn-info" ng-click="queryTag()">查询</button>
+    <a class="btn btn-info" ng-click="launch('add')" role="button">{{'tagMgr.addTag' | translate}}</a>
+    <button class="btn btn-info" ng-click="queryTag()">{{'dialog.query' | translate}}</button>
 </div>
 
 <div>
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
-            <th>标签code</th>
-            <th>标签类别</th>
-            <th>标签描述</th>
-            <th style="width: 4em">状态</th>
-            <th style="text-align: center">操作</th>
+            <th>{{'tagMgr.tagCode' | translate}}</th>
+            <th>{{'tagMgr.tagCategory' | translate}}</th>
+            <th>{{'tagMgr.tagDesc' | translate}}</th>
+            <th style="width: 4em">{{'userMgr.status' | translate}}</th>
+            <th style="text-align: center">{{'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
         <tbody class="text-color-c6">
@@ -49,12 +49,12 @@
             <td ng-bind="d.code"></td>
             <td ng-bind="getTagTypeCode(d)"></td>
             <td ng-bind="d.description"></td>
-            <td ng-bind="!d.status?'启用':'禁用'"></td>
+            <td ng-bind="!d.status?'{{'userMgr.enable' | translate}}':'{{ 'userMgr.disable' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="管理该标签对应的用户/组信息" class="btn btn-info" ng-click="navToTagUserGrp(d)"><i class="fa fa-users"></i></a>
-                    <a title="修改标签信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
-                    <a title="{{d.status?'启用该Tag':'禁用该Tag'}}" class="btn btn-info" ng-click="launch('status', d)">
+                    <a title="{{'tagMgr.manageTag' | translate}}" class="btn btn-info" ng-click="navToTagUserGrp(d)"><i class="fa fa-users"></i></a>
+                    <a title="{{'tagMgr.editTag' | translate}}" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+                    <a title="{{d.status?('tagMgr.enableTag' | translate):( 'tagMgr.disableTag'| translate)}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
                     </a>
                 </div>

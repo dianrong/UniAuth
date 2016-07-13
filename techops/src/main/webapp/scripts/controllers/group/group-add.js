@@ -14,7 +14,7 @@ define(['../../utils/constant'],function(constant) {
 
             var params = $scope.grp;
             if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
-                AlertService.addAutoDismissAlert(constant.messageType.info, '请先选择一个父组, 再添加组.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.selectedParentGroup'));
                 return;
             }
             params.targetGroupId=$rootScope.shareGroup.selected.id;
@@ -28,11 +28,11 @@ define(['../../utils/constant'],function(constant) {
                     return;
                 }
                 $scope.addedGroup = result.data;
-                AlertService.addAutoDismissAlert(constant.messageType.info, "组添加成功.");
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.addGroupSuccess'));
                 $scope.getTree(paramsCtlLevel);
             }, function () {
                 $scope.addedGroup = {};
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "组添加失败.");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.addGroupFailure'));
             });
         };
 

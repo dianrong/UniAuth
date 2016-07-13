@@ -6,7 +6,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             PermService.getAllPermTypes().$promise.then(function (res) {
                 var permTypes = res.data;
                 var empty = {
-                    type: '请选择'
+                    type: $rootScope.translate('constant.selectplacehodler')
                 };
                 permTypes.unshift(empty);
                 utils.generatorDropdown($scope, 'permTypesDropdown', permTypes, empty);
@@ -90,8 +90,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 case 'status':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
-                            "header":param.status?'权限-启用':'权限-禁用',
-                            "msg":"您确定要" + (param.status?'启用':'禁用') + "权限: " + param.value + "吗?"
+                            "header":param.status?$rootScope.translate('permMgr.tips.permEnable'):$rootScope.translate('permMgr.tips.permDisable'),
+                            "msg":$rootScope.translate('permMgr.tips.areUsure') + (param.status?$rootScope.translate('userMgr.enable'):$rootScope.translate('userMgr.disable')) + $rootScope.translate('permMgr.tips.perm')+ param.value + $rootScope.translate('permMgr.tips.ma')
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -112,7 +112,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                                         AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
                                     }
                                 } else {
-                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ? '启用' : '禁用') + "权限成功.");
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status ?$rootScope.translate('userMgr.enable'):$rootScope.translate('userMgr.disable')) + $rootScope.translate('permMgr.tips.permSuccess'));
                                 }
                                 $scope.queryPerm();
                             }, function(err) {

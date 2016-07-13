@@ -11,7 +11,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     tagTypes = [];
                 }
                 var empty = {
-                    code : '请选择'
+                    code : $rootScope.translate('constant.selectplacehodler')
                 };
                 tagTypes.unshift(empty);
                 utils.generatorDropdown($scope, 'tagTypesDropdown', tagTypes, tagTypes[0]);
@@ -85,8 +85,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 case 'status':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
-                            "header":param.status?'标签-启用':'标签-禁用',
-                            "msg":"您确定要" + (param.status?'启用':'禁用') + "标签: " + param.code + "吗?"
+                            "header":param.status?$rootScope.translate('tagMgr.tips.tagEnable'):$rootScope.translate('tagMgr.tips.tagDisable'),
+                            "msg":$rootScope.translate('permMgr.tips.areUsure')+ (param.status?$rootScope.translate('constant.enable'):$rootScope.translate('constant.disable')) + $rootScope.translate('tagMgr.tips.tag') + param.code + $rootScope.translate('permMgr.tips.ma')
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -105,7 +105,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                                         AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
                                     }
                                 } else {
-                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?'启用':'禁用') + "标签成功.");
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, (param.status?$rootScope.translate('constant.enable'):$rootScope.translate('constant.disable')) + $rootScope.translate('tagMgr.tips.tagSuccess'));
                                 }
                                 $scope.queryTag();
                             }, function(err) {

@@ -37,7 +37,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, '权限添加成功.');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('permMgr.tips.addPermSuccess'));
                         $uibModalInstance.close();
                     }
                 }, function(err) {

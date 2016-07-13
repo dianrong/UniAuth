@@ -3,13 +3,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, CfgService, FileUploader, AlertService, dialogs) {
+    var Controller = function ($rootScope,$scope, CfgService, FileUploader, AlertService, dialogs) {
 
         function getCfgTypes() {
             CfgService.getAllCfgTypes().$promise.then(function(res) {
                 var cfgTypes = res.data;
                 var cfgTypesArray = [];
-                cfgTypesArray.push({code:'请选择'})
+                cfgTypesArray.push({code:$rootScope.translate('constant.selectplacehodler')})
                 for(var prop in cfgTypes) {
                     cfgTypesArray.push({id:prop, code:cfgTypes[prop]});
                 }
@@ -143,7 +143,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "CfgController",
-        fn: ["$scope", "CfgService", "FileUploader", "AlertService", "dialogs", Controller]
+        fn: ["$rootScope","$scope", "CfgService", "FileUploader", "AlertService", "dialogs", Controller]
     };
 
 });

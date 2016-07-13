@@ -66,7 +66,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                     return;
                 }
                 // modify success.
-                AlertService.addAutoDismissAlert(constant.messageType.info, '域修改成功.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('domainMgr.tips.modifyStakeSuccess'));
                 $scope.status = 'init';
                 $scope.domains = [];
                 $scope.refreshDomains();
@@ -105,7 +105,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                         param, {size: 'md'}
                     );
                     dlg.result.then(function (close) {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, 'Stakeholder修改成功.');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('domainMgr.tips.modifyStakeSuccess'));
                         $scope.refreshStakeholders();
                     }, function (dismiss) {
                         //
@@ -114,8 +114,8 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                 case 'deleteStakeholder':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html', 'EnableDisableController',
                         {
-                            "header": '删除Stakeholder',
-                            "msg": "您确定要删除Stakeholder: " + param.email + "吗?"
+                            "header":$rootScope.translate('domainMgr.tips.delStake'),
+                            "msg": $rootScope.translate('domainMgr.tips.areUsureDel') + param.email + $rootScope.translate('permMgr.tips.ma')
                         }, {size: 'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -124,11 +124,11 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                                 'id': param.id
                             }
                             , function (res) {
-                                AlertService.addAutoDismissAlert(constant.messageType.info, 'Stakeholder删除成功.');
+                                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('domainMgr.tips.delStakeSuccess'));
                                 $scope.stakeholders = [];
                                 $scope.refreshStakeholders();
                             }, function (err) {
-                                AlertService.addAutoDismissAlert(constant.messageType.danger, 'Stakeholder删除失败, 请联系系统管理员.');
+                                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('domainMgr.tips.delStakeFailure'));
                             }
                         );
                     }, function (no) {

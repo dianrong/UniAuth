@@ -12,7 +12,7 @@ define(['../../../utils/constant'], function (constant) {
 
         $scope.save = function(){
             if(!angular.equals($scope.user.password, $scope.user.password2)) {
-                $scope.msg = '请确保您两次输入的密码相等';
+                $scope.msg = $rootScope.translate('userMgr.tips.twoPwdEq');
                 return;
             }
             UserService.resetpassword(
@@ -25,7 +25,7 @@ define(['../../../utils/constant'], function (constant) {
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, '用户密码重置成功!');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.resetPwdSuccess'));
                         $uibModalInstance.close();
                     }
                 }, function(err) {
@@ -39,7 +39,7 @@ define(['../../../utils/constant'], function (constant) {
 
     return {
         name: "ResetPasswordController",
-        fn: ["$scope","$uibModalInstance", "UserService", "data", "AlertService", Controller]
+        fn: ["$rootScope","$scope","$uibModalInstance", "UserService", "data", "AlertService", Controller]
     };
 
 });

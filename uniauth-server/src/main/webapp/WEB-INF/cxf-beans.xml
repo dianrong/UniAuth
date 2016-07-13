@@ -25,6 +25,9 @@
             <ref bean="jacksonJsonProvider" />
             <!--<ref bean="wadlGenerator" />-->
         </jaxrs:providers>
+        <jaxrs:inInterceptors>
+        	
+        </jaxrs:inInterceptors>
     </jaxrs:server>
 
     <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">

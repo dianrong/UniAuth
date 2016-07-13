@@ -1,5 +1,5 @@
 define(['../../../utils/constant'], function (constant) {
-    var Controller = function ($scope, $uibModalInstance, DomainService, AlertService) {
+    var Controller = function ($rootScope,$scope, $uibModalInstance, DomainService, AlertService) {
 
         $scope.domain = {};
 
@@ -15,11 +15,11 @@ define(['../../../utils/constant'], function (constant) {
                     if(res.info) {
                         $scope.msg = res.info[0].msg;
                     } else {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, '域新增成功.');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('domainMgr.tips.addDomainSuccess'));
                         $uibModalInstance.close(res.data);
                     }
                 }, function(err) {
-                    $scope.msg = '新增失败,请联系系统管理员';
+                    $scope.msg = $rootScope.translate('domainMgr.tips.addDomainFailure');
                     console.log(err);
                 }
             );
@@ -29,7 +29,7 @@ define(['../../../utils/constant'], function (constant) {
 
     return {
         name: "AddDomainController",
-        fn: ["$scope", "$uibModalInstance", "DomainService", "AlertService", Controller]
+        fn: ["$rootScope","$scope", "$uibModalInstance", "DomainService", "AlertService", Controller]
     };
 
 });

@@ -1,9 +1,9 @@
 <form style="margin-left: -22px;" class="form-horizontal" name="roleQueryForm">
     <div class="form-group">
         <div class="col-md-4">
-            <span class="col-sm-4 control-label">角色名称:</span>
+            <span class="col-sm-4 control-label">{{ 'roleMgr.roleName' | translate}}:</span>
             <div class="col-sm-8">
-                <input type="text" class="form-control" placeholder="角色名称" ng-model="roleQuery.name" maxlength="40">
+                <input type="text" class="form-control" placeholder="{{ 'roleMgr.roleName' | translate}}" ng-model="roleQuery.name" maxlength="40">
             </div>
         </div>
         <div class="col-md-4">
@@ -24,19 +24,19 @@
 </form>
 
 <div class="panel-body pull-right">
-    <a class="btn btn-info" ng-click="launch('add')" role="button">新增角色</a>
-    <button class="btn btn-info" ng-click="queryRole()">查询</button>
+    <a class="btn btn-info" ng-click="launch('add')" role="button">{{ 'roleMgr.addRole' | translate}}</a>
+    <button class="btn btn-info" ng-click="queryRole()">{{ 'dialog.query' | translate}}</button>
 </div>
 
 <div>
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
-            <th>角色名</th>
-            <th>角色code</th>
-            <th>角色描述</th>
-            <th style="width: 4em">状态</th>
-            <th style="text-align: center">操作</th>
+            <th>{{ 'roleMgr.roleName' | translate}}</th>
+            <th>{{ 'roleMgr.roleCode' | translate}}</th>
+            <th>{{ 'roleMgr.roleDesc' | translate}}</th>
+            <th style="width: 4em"> {{ 'userMgr.status' | translate}}</th>
+            <th style="text-align: center">{{ 'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
         <tbody class="text-color-c6">
@@ -49,13 +49,13 @@
             <td ng-bind="d.name"></td>
             <td ng-bind="d.roleCode"></td>
             <td ng-bind="d.description"></td>
-            <td ng-bind="!d.status?'启用':'禁用'"></td>
+            <td ng-bind="!d.status?{{ 'userMgr.enable' | translate}}:{{ 'userMgr.disable' | translate}}"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="管理该角色的用户/组" class="btn btn-info" ng-click="navToRoleUser(d)"><i class="fa fa-users"></i></a>
-                    <a title="管理该角色的权限" class="btn btn-info" ng-click="navToRolePerm(d)"><i class="fa fa-thumbs-up"></i></a>
-                    <a title="修改角色信息" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
-                    <a title="{{d.status?'启用该角色':'禁用该角色'}}" class="btn btn-info" ng-click="launch('status', d)">
+                    <a title="{{ 'roleMgr.manageRole' | translate}}" class="btn btn-info" ng-click="navToRoleUser(d)"><i class="fa fa-users"></i></a>
+                    <a title="{{ 'roleMgr.managePerm' | translate}}" class="btn btn-info" ng-click="navToRolePerm(d)"><i class="fa fa-thumbs-up"></i></a>
+                    <a title="{{ 'roleMgr.editRole' | translate}}" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
+                    <a title="{{d.status?('roleMgr.enableRole' | translate):('roleMgr.disableRole' | translate)}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
                     </a>
                 </div>
