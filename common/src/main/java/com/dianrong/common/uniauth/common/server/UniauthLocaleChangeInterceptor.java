@@ -55,6 +55,8 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
             newLocale = computeLocale(request, response);
             // 设置新值
             localeResolver.setLocale(request, response, newLocale);
+            // 设置thread locale值  从localeResolver中获取
+            UniauthLocaleInfoHolder.setLocale(localeResolver.resolveLocale(request));
         } finally {
             if(newLocale == null) {
                 return true;
@@ -63,8 +65,6 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
             request.getSession().setAttribute(sessionName, newLocale);
             // refresh cookie
             refreshLocaleCookie(request, response, newLocale == null ? "" : newLocale.toString());
-            // refresh threadLocale
-            UniauthLocaleInfoHolder.setLocale(newLocale);
         }
         return true;
     }
