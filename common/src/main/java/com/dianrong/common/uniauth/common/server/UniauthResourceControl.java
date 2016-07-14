@@ -1,4 +1,4 @@
-package com.dianrong.common.techops.service;
+package com.dianrong.common.uniauth.common.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-public class TechOpsResourceControl extends ResourceBundle.Control{
+public class UniauthResourceControl extends ResourceBundle.Control{
 	
 	private static String BASE_PATH="META-INF/resources/";
 

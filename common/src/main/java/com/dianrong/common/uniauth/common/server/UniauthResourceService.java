@@ -1,4 +1,4 @@
-package com.dianrong.common.techops.service;
+package com.dianrong.common.uniauth.common.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,22 +14,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.dianrong.common.techops.bean.LangDto;
-import com.google.inject.internal.Lists;
-import com.google.inject.internal.Maps;
+import com.dianrong.common.uniauth.common.bean.LangDto;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * 
  * @author dreamlee
  *
  */
-public class TechOpsResourceService implements InitializingBean{
+public class UniauthResourceService implements InitializingBean{
 	
-	private static final Logger logger = Logger.getLogger(TechOpsResourceService.class);
+	private static final Logger logger = Logger.getLogger(UniauthResourceService.class);
 	
 	private static final String BASE_PATH="META-INF/resources/";
 	
-	private static final ResourceBundle.Control CONTROL = new TechOpsResourceControl();
+	private static final ResourceBundle.Control CONTROL = new UniauthResourceControl();
 	
 	private List<LangDto> menuCache = Lists.newArrayList();
 	
@@ -108,7 +108,7 @@ public class TechOpsResourceService implements InitializingBean{
 	 * @throws IOException
 	 */
 	private void loadFromLocal() throws IOException {
-		InputStream is = TechOpsResourceService.class.getClassLoader().getResourceAsStream(menuPath);
+		InputStream is = UniauthResourceService.class.getClassLoader().getResourceAsStream(menuPath);
 		if(is != null){
 			try{
 				Properties p = new Properties();

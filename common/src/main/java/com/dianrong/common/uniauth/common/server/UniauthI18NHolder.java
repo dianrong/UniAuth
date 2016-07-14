@@ -1,4 +1,4 @@
-package com.dianrong.common.techops.i18n;
+package com.dianrong.common.uniauth.common.server;
 
 import java.util.Locale;
 import java.util.Map;
@@ -13,11 +13,12 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.dianrong.common.techops.service.TechOpsResourceService;
+import com.dianrong.common.uniauth.common.server.UniauthResourceService;
+import com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor;
 
-public class I18NHolder implements ApplicationContextAware,InitializingBean {
+public class UniauthI18NHolder implements ApplicationContextAware,InitializingBean {
 	
-	private static TechOpsResourceService techOpsResource;
+	private static UniauthResourceService techOpsResource;
 	
 	private ApplicationContext context;
 	
@@ -28,7 +29,7 @@ public class I18NHolder implements ApplicationContextAware,InitializingBean {
 	
 	
 	public static String getProperties(HttpServletRequest request,String key){
-		String lang = (String)request.getSession().getAttribute("techops_i18n_lang");
+		String lang = (String)request.getSession().getAttribute(UniauthLocaleChangeInterceptor.sessionName);
 		Locale locale=null;
 		if(StringUtils.isNotEmpty(lang)){
 			locale=new Locale(lang);
@@ -39,8 +40,8 @@ public class I18NHolder implements ApplicationContextAware,InitializingBean {
 		return properties==null?null:properties.get(key);
 	}
 	
-	public void setTechOpsResource(TechOpsResourceService techOpsResource) {
-		I18NHolder.techOpsResource = techOpsResource;
+	public void setTechOpsResource(UniauthResourceService techOpsResource) {
+		UniauthI18NHolder.techOpsResource = techOpsResource;
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class I18NHolder implements ApplicationContextAware,InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if(techOpsResource == null){
-			I18NHolder.techOpsResource = context.getBean(TechOpsResourceService.class);
+			UniauthI18NHolder.techOpsResource = context.getBean(UniauthResourceService.class);
 		}
 	}
 

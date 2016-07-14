@@ -1,4 +1,4 @@
-package com.dianrong.common.techops.i18n;
+package com.dianrong.common.uniauth.common.server;
 
 import java.util.Locale;
 
@@ -11,12 +11,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import com.dianrong.common.techops.service.TechOpsResourceService;
+import com.dianrong.common.uniauth.common.server.UniauthResourceService;
 
-public class I18NController extends AbstractController{
+public class UniauthI18NController extends AbstractController{
 	
 	@Autowired
-	private TechOpsResourceService techOpsResourceService;
+	private UniauthResourceService techOpsResourceService;
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)

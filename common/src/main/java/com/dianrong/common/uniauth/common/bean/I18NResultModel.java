@@ -1,4 +1,4 @@
-package com.dianrong.common.techops.bean;
+package com.dianrong.common.uniauth.common.bean;
 
 import java.util.List;
 
