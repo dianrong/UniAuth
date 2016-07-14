@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,7 +42,7 @@ public class I18NAction {
 	@RequestMapping(value = "changeLanguage",produces = MediaType.APPLICATION_JSON_VALUE)
 	public Response<?> changeLanguage(@RequestParam(name = "lang", required = false)String lang){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-		request.getSession().setAttribute(UniauthLocaleChangeInterceptor.sessionName,new Locale(lang));
+		request.getSession().setAttribute(UniauthLocaleChangeInterceptor.sessionName,org.springframework.util.StringUtils.parseLocaleString(lang));
 		return Response.success();
 	}
 	
@@ -53,7 +54,7 @@ public class I18NAction {
 		if(lang == null){
 			lang = Locale.getDefault().getLanguage();
 		}
-		return Response.success(((Locale)lang).getLanguage());
+		return Response.success(String.valueOf(lang));
 	}
 
 }
