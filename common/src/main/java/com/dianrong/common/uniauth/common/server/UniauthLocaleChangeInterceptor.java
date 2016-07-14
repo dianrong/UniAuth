@@ -14,21 +14,12 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
- * . uniauth locale change interceptor get locale:
- * parameter --> cookie --> seesion --> request.getLocal() --> Locale.getDefault();
+ * . uniauth locale change interceptor get locale: session --> cookie --> request.getLocal() -->
+ * Locale.getDefault();
+ * 
  * @author wanglin
  */
 public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
-    /**
-     * Default name of the locale specification parameter: "locale".
-     */
-    public static final String DEFAULT_PARAM_NAME = "locale";
-
-    /**
-     * . 可配置的locale parameter name
-     */
-    private String paramName = DEFAULT_PARAM_NAME;
-
     /**
      * . cookie Name
      */
@@ -37,7 +28,7 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
     /**
      * . session name
      */
-    private String sessionName = this.getClass().getName() + ".sessionKey";
+    public static final  String sessionName =UniauthLocaleChangeInterceptor.class.getName()+ ".sessionKey";
 
     /**
      * . cookie max age seconds default: 30 days
@@ -55,10 +46,10 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
             newLocale = computeLocale(request, response);
             // 设置新值
             localeResolver.setLocale(request, response, newLocale);
-            // 设置thread locale值  从localeResolver中获取
+            // 设置thread locale值 从localeResolver中获取
             UniauthLocaleInfoHolder.setLocale(localeResolver.resolveLocale(request));
         } finally {
-            if(newLocale == null) {
+            if (newLocale == null) {
                 return true;
             }
             // refresh session
@@ -68,42 +59,37 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
         }
         return true;
     }
-    
-    /**.
-     *  计算出locale对象
+
+    /**
+     * . 计算出locale对象
+     * 
      * @param request HttpServletRequest
-     * @param response  HttpServletResponse
+     * @param response HttpServletResponse
      * @return Locale not null
      */
     private Locale computeLocale(HttpServletRequest request, HttpServletResponse response) {
-            // step 1: get from request parameter
-            String newLocale = request.getParameter(this.paramName);
-            if (newLocale != null) {
-                return StringUtils.parseLocaleString(newLocale);
+        // step 1: get from request parameter
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Locale sessionLocale = (Locale) session.getAttribute(sessionName);
+            if (sessionLocale != null) {
+                return sessionLocale;
             }
+        }
 
-            // step 2: get from cookie
-            String cookieLocaleStr = getLocaleStrFromCookie(request);
-            if (cookieLocaleStr != null) {
-              return StringUtils.parseLocaleString(cookieLocaleStr);
-            }
+        // step 2: get from cookie
+        String cookieLocaleStr = getLocaleStrFromCookie(request);
+        if (cookieLocaleStr != null) {
+            return StringUtils.parseLocaleString(cookieLocaleStr);
+        }
 
-            // step 3: get from request parameter
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                Locale sessionLocale = (Locale) session.getAttribute(sessionName);
-                if (sessionLocale != null) {
-                   return sessionLocale;
-                }
-            }
-
-            // step 4: get from request header
-            Locale requestLocale = request.getLocale();
-            if (requestLocale != null) {
-                return requestLocale;
-            }
-            // step 5: use locale.getDefault()
-           return Locale.getDefault();
+        // step 3: get from request header
+        Locale requestLocale = request.getLocale();
+        if (requestLocale != null) {
+            return requestLocale;
+        }
+        // step 4: use locale.getDefault()
+        return Locale.getDefault();
     }
 
     /**
@@ -149,25 +135,5 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
 
     public void setCookieMaxAge(int cookieMaxAge) {
         this.cookieMaxAge = cookieMaxAge;
-    }
-
-
-    /**
-     * Set the name of the parameter that contains a locale specification in a locale change
-     * request. Default is "locale".
-     */
-    public void setParamName(String paramName) {
-        if (paramName == null) {
-            throw new IllegalArgumentException("locale's  paramName can not be null");
-        }
-        this.paramName = paramName;
-    }
-
-    /**
-     * Return the name of the parameter that contains a locale specification in a locale change
-     * request.
-     */
-    public String getParamName() {
-        return this.paramName;
     }
 }
