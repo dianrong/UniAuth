@@ -2,10 +2,8 @@ package com.dianrong.common.uniauth.server.util;
 
 import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
-
-import org.springframework.context.i18n.LocaleContextHolder;
+import java.util.concurrent.ConcurrentMap;
 
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import com.google.common.collect.Maps;
@@ -29,7 +27,7 @@ public class UniBundle {
 	
 	
 	private static class ResourceBundlueHolder{
-		private static Map<Locale,ResourceBundle> RESOURCEBUNDLES = Maps.newConcurrentMap();
+		private static ConcurrentMap<Locale,ResourceBundle> RESOURCEBUNDLES = Maps.newConcurrentMap();
 		
 		
 		public static ResourceBundle getResource(){

@@ -8,14 +8,13 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.LocaleResolver;
 
 import com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor;
+import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 
 /**
  * . 国际化处理相关的请求处理
@@ -31,12 +30,6 @@ public class CasI18nController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     
     /**.
-     * localeResolver
-     */
-    @Autowired
-    private LocaleResolver localeResolver;
-    
-    /**.
      * 参数
      */
     private final String setLocaleParameterKey = "locale";
@@ -50,7 +43,7 @@ public class CasI18nController {
     @RequestMapping(value = "/getLanguage", method = RequestMethod.GET)
     public void getLocaleLanguage(HttpServletRequest request, HttpServletResponse response) {
         try {
-            response.getWriter().write(localeResolver.resolveLocale(request).toString());
+            response.getWriter().write(UniauthLocaleInfoHolder.getLocale().toString());
         } catch (IOException e) {
             logger.warn("query i18n language failed");
         } ;
