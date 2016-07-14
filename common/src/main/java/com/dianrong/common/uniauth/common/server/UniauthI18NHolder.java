@@ -22,13 +22,26 @@ public class UniauthI18NHolder implements ApplicationContextAware,InitializingBe
 	
 	private ApplicationContext context;
 	
+	
+	/**
+	 * 获取国际化文案（此方法只适用于spring web环境中调用）,如果不在spring web环境中请自行取到Request，然后调用{@link #getProperties(HttpServletRequest, String)}
+	 * @param key
+	 * @return
+	 */
 	public static String getProperties(String key){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		return getProperties(request,key);
 	}
 	
 	
+	/**
+	 * 获取国际化文案
+	 * @param request
+	 * @param key
+	 * @return
+	 */
 	public static String getProperties(HttpServletRequest request,String key){
+		if(request == null) return null;
 		String lang = (String)request.getSession().getAttribute(UniauthLocaleChangeInterceptor.sessionName);
 		Locale locale=null;
 		if(StringUtils.isNotEmpty(lang)){

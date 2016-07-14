@@ -13,6 +13,11 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.dianrong.common.uniauth.common.server.UniauthResourceService;
 
+/**
+ * 取得指定语言的所有文案
+ * @author dreamlee
+ *
+ */
 public class UniauthI18NController extends AbstractController{
 	
 	@Autowired

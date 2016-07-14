@@ -1,5 +1,5 @@
 define(['../../../utils/constant'], function (constant) {
-    var Controller = function ($scope,$uibModalInstance, UserService, data, AlertService) {
+    var Controller = function ($rootScope,$scope,$uibModalInstance, UserService, data, AlertService) {
         //-- Variables --//
 
         $scope.user = data;
