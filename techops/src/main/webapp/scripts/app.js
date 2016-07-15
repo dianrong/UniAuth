@@ -48,10 +48,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 
 	app.controller('Ctrl', ['$translate', '$scope','$http','$rootScope', function ($translate, $scope,$http,$rootScope) {
 	 
-	  $scope.changeLanguage = function (langKey) {
+	  $scope.changeLanguage = function (langKey,it) {
 		  $http.get(constant.apiBase + "/i18n/changeLanguage?lang="+langKey).then(function (res) {
 			  		$translate.use(langKey);
 					$rootScope.translateConstant();
+					$scope.languagesDropdown.selectOption(it)
 		        }, function (errorResponse) {
 		        	console.log('change language error');
 		        	//$translate.use(langKey);
@@ -93,7 +94,13 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
     	  $rootScope.translateOptions(constant.ascDesc);
       };
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
-      utils.generatorDropdown($rootScope, 'languagesDropdown', languages.langs.supportLanguages, languages.langs.supportLanguages[0]);
+      var currentLang ;
+      angular.forEach(languages.langs.supportLanguages,function(item){
+    	  if(item.code== languages.langs.current){
+    		  currentLang = item;
+    	  }
+      });
+      utils.generatorDropdown($rootScope, 'languagesDropdown', languages.langs.supportLanguages, currentLang || languages.langs.supportLanguages[0]);
       $http.get(constant.apiBase + "/cfg/download/TECHOPS_TITLE").then(function (res) {
         if(res.data && res.data.data && res.data.data.value) {
           $rootScope.pageTitle = res.data.data.value;

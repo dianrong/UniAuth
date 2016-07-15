@@ -33,7 +33,7 @@
 	                </button>
 		        <ul uib-dropdown-menu role="menu" aria-labelledby="lang-button">
 		            <li ng-repeat="it in languagesDropdown.items">
-		                <a ng-click="changeLanguage(it.code)" ng-bind="it.name"></a>
+		                <a ng-click="changeLanguage(it.code,it)" ng-bind="it.name" ></a>
 		            </li>
 		        </ul>
 	    	</div>
