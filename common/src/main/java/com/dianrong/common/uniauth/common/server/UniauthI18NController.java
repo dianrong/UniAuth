@@ -30,7 +30,7 @@ public class UniauthI18NController extends AbstractController{
 		Locale locale = request.getLocale();
 		
 		if(StringUtils.isNotBlank(lang)){
-			locale = new Locale(lang);
+			locale = org.springframework.util.StringUtils.parseLocaleString(lang);
 		}
 		return new ModelAndView(new MappingJackson2JsonView(),techOpsResourceService.getProperties(locale));
 	}
