@@ -90,10 +90,13 @@ function resourceLoadedSuccessfully() {
         	var redirect = url + "?service=" + selectedValue;
         	top.window.location = redirect;
         }); 
-        
-        var currentService = getUrlParam("service");
-        $("#domain").val(currentService);
-        
     });
-
 };
+
+// fix sogou browser  bug
+(function(){
+	 var currentService = getUrlParam("service");
+     $("#domain").val(currentService);
+     console.log("current selected domain:"+currentService);
+})();
+
