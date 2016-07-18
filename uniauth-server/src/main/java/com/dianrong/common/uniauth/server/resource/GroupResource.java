@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.request.*;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,24 @@ public class GroupResource implements IGroupRWResource {
 				groupParam.getName(),groupParam.getStatus(),groupParam.getDescription());
 		return Response.success(groupDto);
 	}
+	
+	@Override
+	public Response<GroupDto> deleteGroup(GroupParam groupParam) {
+		//将当前节点设置为失效
+		Response<GroupDto> resp = updateGroup(groupParam);
+		
+		//找出子节点，然后设置为失效
+		List<Grp> children = groupService.queryGroupByAncestor(groupParam.getId());
+		if(children != null && !children.isEmpty()){
+			for(Grp grp : children){
+				if(grp.getId().equals(groupParam.getId())){
+					continue;
+				}
+				groupService.updateGroup(grp.getId(), grp.getCode(), grp.getName(), AppConstants.ONE_Byte, grp.getDescription());
+			}
+		}
+		return resp;
+	}
 
 	@Override
 	public Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam) {
@@ -114,4 +134,5 @@ public class GroupResource implements IGroupRWResource {
 		groupService.replaceTagsToGroup(groupParam.getId(), groupParam.getTagIds());
 		return Response.success();
 	}
+
 }

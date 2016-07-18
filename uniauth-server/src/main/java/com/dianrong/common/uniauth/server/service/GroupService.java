@@ -70,6 +70,7 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Lists;
 
 /**
  * Created by Arc on 14/1/16.
@@ -867,4 +868,8 @@ public class GroupService {
 	        }
 	        grpTagMapper.bacthInsert(infoes);
 	    }
+
+		public List<Grp> queryGroupByAncestor(Integer id) {
+			return grpMapper.getGroupTree(id);
+		}
 }

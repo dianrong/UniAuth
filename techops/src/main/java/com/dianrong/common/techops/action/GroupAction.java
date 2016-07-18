@@ -131,6 +131,13 @@ public class GroupAction {
         Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().updateGroup(groupParam);
         return groupDto;
     }
+    
+    @RequestMapping(value = "/del" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
+    public Response<GroupDto> deleteGroup(@RequestBody GroupParam groupParam) {
+        Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().deleteGroup(groupParam);
+        return groupDto;
+    }
 
     // perm double checked
     @RequestMapping(value = "/adduser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

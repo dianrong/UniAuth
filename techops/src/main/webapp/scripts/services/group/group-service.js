@@ -22,6 +22,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 },
                 timeout: constant.reqTimeout
             },
+            del:{
+            	method: 'POST',
+                params: {
+                    method: 'del'
+                },
+                timeout: constant.reqTimeout
+            },
             modify: {
                 method: 'POST',
                 params: {
