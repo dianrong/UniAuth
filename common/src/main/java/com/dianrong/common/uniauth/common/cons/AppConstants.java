@@ -13,6 +13,8 @@ public interface AppConstants {
 	// 1 = 禁用
     byte ONE_byte = (byte)1;
 
+	String API_UUID = "api-uuid";
+
 	String NODE_TYPE_GROUP = "grp";
 	String NODE_TYPE_MEMBER_USER = "mUser";
 	String NODE_TYPE_OWNER_USER = "oUser";

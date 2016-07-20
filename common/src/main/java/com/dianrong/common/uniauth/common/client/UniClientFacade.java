@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.client;
 
 import com.dianrong.common.uniauth.common.interfaces.read.*;
-import com.dianrong.common.uniauth.common.util.CheckZkConfig;
+import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
 import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class UniClientFacade {
@@ -24,6 +25,17 @@ public class UniClientFacade {
 	@Value("#{uniauthConfig['uniauth_api_key']}")
 	private String apiKey;
 
+	public UniClientFacade(){}
+	public UniClientFacade(String uniWsEndpoint){
+		this.uniWsEndpoint = uniWsEndpoint;
+		init();
+	}
+	public UniClientFacade(String uniWsEndpoint, String apiName, String apiKey){
+		this.uniWsEndpoint = uniWsEndpoint;
+		this.apiName = apiName;
+		this.apiKey = apiKey;
+		init();
+	}
 
 	private IDomainResource domainResource;
 	private IGroupResource groupResource;
@@ -37,18 +49,20 @@ public class UniClientFacade {
 
 	@PostConstruct
 	public void init(){
-		CheckZkConfig.checkZkConfig(uniWsEndpoint, "/com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint", "uniauth ws endpoint");
+		CheckSDKCfg.checkSDKCfg(uniWsEndpoint);
 		JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
 		jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        userExtendResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, Arrays.asList(jacksonJsonProvider));
-        userExtendValResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValResource.class, Arrays.asList(jacksonJsonProvider));
-		domainResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainResource.class, Arrays.asList(jacksonJsonProvider));
-		groupResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupResource.class, Arrays.asList(jacksonJsonProvider));
-		permissionResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, Arrays.asList(jacksonJsonProvider));
-		userResource = JAXRSClientFactory.create(uniWsEndpoint, IUserResource.class, Arrays.asList(jacksonJsonProvider));
-		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, Arrays.asList(jacksonJsonProvider));
-		tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, Arrays.asList(jacksonJsonProvider));
-		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, Arrays.asList(jacksonJsonProvider));
+		UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
+		List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter);
+        userExtendResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, providers);
+        userExtendValResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValResource.class, providers);
+		domainResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainResource.class, providers);
+		groupResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupResource.class, providers);
+		permissionResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, providers);
+		userResource = JAXRSClientFactory.create(uniWsEndpoint, IUserResource.class, providers);
+		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, providers);
+		tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
+		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
 		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,
 				configResource,userExtendResource,userExtendValResource);
 	}
