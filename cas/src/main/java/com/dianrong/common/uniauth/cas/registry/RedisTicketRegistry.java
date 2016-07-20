@@ -15,6 +15,8 @@ import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.AbstractDistributedTicketRegistry;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import com.dianrong.common.uniauth.cas.registry.support.SerialzableTicketRegistryHolder;
+
 public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     @NotNull
     private final RedisTemplate<String,Object> redisTemplate;
@@ -31,7 +33,15 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     @Min(0)
     private final int stTimeout;
     
-    public RedisTicketRegistry(RedisTemplate<String,Object> redisTemplate,int tgtTimeout,int stTimeout){
+    private SerialzableTicketRegistryHolder registryHolder;
+    
+    public SerialzableTicketRegistryHolder getRegistryHolder() {
+		return registryHolder;
+	}
+	public void setRegistryHolder(SerialzableTicketRegistryHolder registryHolder) {
+		this.registryHolder = registryHolder;
+	}
+	public RedisTicketRegistry(RedisTemplate<String,Object> redisTemplate,int tgtTimeout,int stTimeout){
         this.redisTemplate=redisTemplate;
         this.tgtTimeout=tgtTimeout;
         this.stTimeout=stTimeout;
@@ -40,7 +50,9 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     public void addTicket(Ticket ticket) {
         logger.debug("Adding ticket {}", ticket);
         try {
+        	registryHolder.beforeSerializable(ticket);
         	redisTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
+        	registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
             logger.error("Failed adding {}", ticket, e);
             throw e;
@@ -51,6 +63,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     public Ticket getTicket(String ticketId) {
          try {
                 final Ticket t = (Ticket) this.redisTemplate.opsForValue().get(ticketId);
+                registryHolder.afterDserializable(t);
                 if (t != null) {
                     return getProxiedTicketInstance(t);
                 }
@@ -125,7 +138,9 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
      logger.debug("Updating ticket {}", ticket);
         try {
               this.redisTemplate.delete(ticket.getId());
+              registryHolder.beforeSerializable(ticket);
               redisTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
+              registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
             logger.error("Failed updating {}", ticket, e);
             throw e;

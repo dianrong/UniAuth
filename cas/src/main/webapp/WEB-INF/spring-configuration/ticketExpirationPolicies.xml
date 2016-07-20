@@ -37,7 +37,7 @@
     <util:constant id="SECONDS" static-field="java.util.concurrent.TimeUnit.SECONDS"/>
 
     <!-- Expiration policies -->
-    <bean id="serviceTicketExpirationPolicy" class="org.jasig.cas.ticket.support.MultiTimeUseOrTimeoutExpirationPolicy"
+    <bean id="serviceTicketExpirationPolicy" class="com.dianrong.common.uniauth.cas.registry.support.CasMultiTimeUseOrTimeoutExpirationPolicy"
           c:numberOfUses="2" c:timeToKill="${st.timeToKillInSeconds:10}" c:timeUnit-ref="SECONDS"/>
 
     <!-- TicketGrantingTicketExpirationPolicy: Default as of 3.5 -->
