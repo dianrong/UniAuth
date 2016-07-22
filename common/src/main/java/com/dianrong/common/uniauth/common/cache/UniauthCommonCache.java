@@ -11,8 +11,6 @@ import java.util.concurrent.Callable;
  */
 public class UniauthCommonCache {
 	
-//	private Map<String,CacheLine> caches = Maps.newConcurrentMap();
-	
 	@SuppressWarnings("rawtypes")
 	private CacheStore<CacheLine> cacheStore = new LocalCacheStore<>();
 	

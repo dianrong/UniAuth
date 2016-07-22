@@ -24,5 +24,14 @@
 
     <!-- context -->
     <context:component-scan base-package="com.dianrong.common.uniauth.server" />
+    
+    <bean id="switchInit" class="com.dianrong.common.uniauth.common.switches.SwitchInit">
+    	<property name="appName" value="uniauthserver"/>
+    	<property name="switchs">
+    		<list>
+                <value>com.dianrong.common.uniauth.server.util.UniauthSwitchs</value>
+              </list>
+    	</property>
+    </bean>
 
 </beans>

@@ -77,6 +77,7 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.dianrong.common.uniauth.server.util.UniauthSwitchs;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -590,72 +591,75 @@ public class UserService {
 
         logger.error("per use:"+(System.currentTimeMillis()-prestart)+"ms");
         
-//        fillInOld(domainList, userId, domainDtoList, roleCodeMap, permTypeMap);
-        Map<String, Object> userAndDomainMap = new HashMap<String, Object>();
-        userAndDomainMap.put("userId", userId);
-        userAndDomainMap.put("domains", domainList);
-        List<RolePermissionHolder> rolePermissions = loginMapper.selectRolePermission(userAndDomainMap);
-        Map<Integer,Map<Integer,List<PermissionDto>>> domainRolePermission = Maps.newHashMap();
-        Map<Integer,RoleDto> roleMap = Maps.newHashMap();
-        
-        for(RolePermissionHolder rph : rolePermissions){
-        	PermissionDto permissionDto = new PermissionDto().setDescription(rph.getPermissionDescription()).
-                    setDomainId(rph.getDomainId()).setId(rph.getPermissionId())
-                    .setPermTypeId(rph.getPermTypeId()).
-                            setStatus(rph.getPermissionStatus()).
-                            setValue(rph.getPermissionValue()).
-                            setValueExt(rph.getPermissionValueExt());
-        	if(domainRolePermission.get(rph.getDomainId())==null){
-        		domainRolePermission.put(rph.getDomainId(), new HashMap<Integer,List<PermissionDto>>());
-        	}
-        	
-        	if(domainRolePermission.get(rph.getDomainId()).get(rph.getRoleId()) == null){
-        		domainRolePermission.get(rph.getDomainId()).put(rph.getRoleId(), new ArrayList<PermissionDto>());
-        		roleMap.put(rph.getRoleId(), new RoleDto().setDescription(rph.getRoleDescription()).
-                        setId(rph.getRoleId()).
-                        setStatus(rph.getRoleStatus()).
-                        setName(rph.getRoleName()).
-                        setRoleCodeId(rph.getRoleCodeId()).
-                        setDomainId(rph.getDomainId()));
-        	}
-        	domainRolePermission.get(rph.getDomainId()).get(rph.getRoleId()).add(permissionDto);
-        }
-        
-        for(Domain domain : domainList){
-        	DomainDto domainDto = BeanConverter.convert(domain);
-        	domainDtoList.add(domainDto);
-        	Map<Integer, List<PermissionDto>> rolePermission = domainRolePermission.get(domain.getId());
-        	if(rolePermission != null){
-        		List<RoleDto> roleDtos = Lists.newArrayList();
-        		domainDto.setRoleList(roleDtos);
-        		for(Entry<Integer, List<PermissionDto>> entry:rolePermission.entrySet()){
-        			RoleDto roleDto = roleMap.get(entry.getKey());
-        			roleDto.setRoleCode(roleCodeMap.get(roleDto.getRoleCodeId()).getCode());
-        			roleDtos.add(roleDto);
-        			Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
-                    Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
-                    for(PermissionDto permissionDto : entry.getValue()){
-                    	Integer permTypeId = permissionDto.getPermTypeId();
-                    	String permType = permTypeMap.get(permTypeId).getType();
-                        String value = permissionDto.getValue();
+        if(UniauthSwitchs.useNewLoginSql){
+        	Map<String, Object> userAndDomainMap = new HashMap<String, Object>();
+            userAndDomainMap.put("userId", userId);
+            userAndDomainMap.put("domains", domainList);
+            List<RolePermissionHolder> rolePermissions = loginMapper.selectRolePermission(userAndDomainMap);
+            Map<Integer,Map<Integer,List<PermissionDto>>> domainRolePermission = Maps.newHashMap();
+            Map<Integer,RoleDto> roleMap = Maps.newHashMap();
+            
+            for(RolePermissionHolder rph : rolePermissions){
+            	PermissionDto permissionDto = new PermissionDto().setDescription(rph.getPermissionDescription()).
+                        setDomainId(rph.getDomainId()).setId(rph.getPermissionId())
+                        .setPermTypeId(rph.getPermTypeId()).
+                                setStatus(rph.getPermissionStatus()).
+                                setValue(rph.getPermissionValue()).
+                                setValueExt(rph.getPermissionValueExt());
+            	if(domainRolePermission.get(rph.getDomainId())==null){
+            		domainRolePermission.put(rph.getDomainId(), new HashMap<Integer,List<PermissionDto>>());
+            	}
+            	
+            	if(domainRolePermission.get(rph.getDomainId()).get(rph.getRoleId()) == null){
+            		domainRolePermission.get(rph.getDomainId()).put(rph.getRoleId(), new ArrayList<PermissionDto>());
+            		roleMap.put(rph.getRoleId(), new RoleDto().setDescription(rph.getRoleDescription()).
+                            setId(rph.getRoleId()).
+                            setStatus(rph.getRoleStatus()).
+                            setName(rph.getRoleName()).
+                            setRoleCodeId(rph.getRoleCodeId()).
+                            setDomainId(rph.getDomainId()));
+            	}
+            	domainRolePermission.get(rph.getDomainId()).get(rph.getRoleId()).add(permissionDto);
+            }
+            
+            for(Domain domain : domainList){
+            	DomainDto domainDto = BeanConverter.convert(domain);
+            	domainDtoList.add(domainDto);
+            	Map<Integer, List<PermissionDto>> rolePermission = domainRolePermission.get(domain.getId());
+            	if(rolePermission != null){
+            		List<RoleDto> roleDtos = Lists.newArrayList();
+            		domainDto.setRoleList(roleDtos);
+            		for(Entry<Integer, List<PermissionDto>> entry:rolePermission.entrySet()){
+            			RoleDto roleDto = roleMap.get(entry.getKey());
+            			roleDto.setRoleCode(roleCodeMap.get(roleDto.getRoleCodeId()).getCode());
+            			roleDtos.add(roleDto);
+            			Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
+                        Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
+                        for(PermissionDto permissionDto : entry.getValue()){
+                        	Integer permTypeId = permissionDto.getPermTypeId();
+                        	String permType = permTypeMap.get(permTypeId).getType();
+                            String value = permissionDto.getValue();
 
-                        if(permMap.containsKey(permType)){
-                            permMap.get(permType).add(value);
-                            permDtoMap.get(permType).add(permissionDto);
+                            if(permMap.containsKey(permType)){
+                                permMap.get(permType).add(value);
+                                permDtoMap.get(permType).add(permissionDto);
+                            }
+                            else{
+                                Set<String> set = new HashSet<>();
+                                set.add(value);
+                                permMap.put(permType, set);
+                                Set<PermissionDto> permissionDtos = new HashSet<>();
+                                permissionDtos.add(permissionDto);
+                                permDtoMap.put(permType, permissionDtos);
+                            }
                         }
-                        else{
-                            Set<String> set = new HashSet<>();
-                            set.add(value);
-                            permMap.put(permType, set);
-                            Set<PermissionDto> permissionDtos = new HashSet<>();
-                            permissionDtos.add(permissionDto);
-                            permDtoMap.put(permType, permissionDtos);
-                        }
-                    }
-                    roleDto.setPermMap(permMap);
-                    roleDto.setPermDtoMap(permDtoMap);
-        		}
-        	}
+                        roleDto.setPermMap(permMap);
+                        roleDto.setPermDtoMap(permDtoMap);
+            		}
+            	}
+            }
+        }else{
+        	fillInOld(domainList, userId, domainDtoList, roleCodeMap, permTypeMap);
         }
         
         long send = System.currentTimeMillis();
