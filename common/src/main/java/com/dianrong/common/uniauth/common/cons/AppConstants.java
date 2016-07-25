@@ -17,6 +17,8 @@ public interface AppConstants {
         byte STATUS_ENABLED= ZERO_byte;
         byte STATUS_DISABLED=ONE_byte;
 
+	String API_UUID = "api-uuid";
+
 	String NODE_TYPE_GROUP = "grp";
 	String NODE_TYPE_MEMBER_USER = "mUser";
 	String NODE_TYPE_OWNER_USER = "oUser";
