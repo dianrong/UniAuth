@@ -34,7 +34,11 @@ public class TrackFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) arg0;
         String ip = getIp(request);
         String reqUrl = request.getRequestURI();
-        String uuid = UUID.randomUUID().toString();
+
+        String uuid = request.getHeader(AppConstants.API_UUID);
+        if(uuid == null) {
+            uuid = UUID.randomUUID().toString();
+        }
         
         GlobalVar gv = new GlobalVar();
         gv.setIp(ip);
