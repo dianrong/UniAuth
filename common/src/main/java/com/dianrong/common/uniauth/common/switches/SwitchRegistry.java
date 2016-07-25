@@ -6,12 +6,11 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -20,7 +19,6 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.ACL;
@@ -41,19 +39,14 @@ public class SwitchRegistry {
 	
 	private static ZooKeeper zooKeeper;
 	
+	private static AtomicBoolean inited = new AtomicBoolean(false);
+	
 	public static void init(){
+		if(!inited.compareAndSet(false, true)){
+			return;
+		}
 		try {
-//			CountDownLatch connectedLatch = new CountDownLatch(1);
 			zooKeeper = new ZooKeeper(System.getProperty("DR_CFG_ZOOKEEPER_ENV_URL"), 200, null);
-//			zooKeeper.register(new ConnectedWatcher(connectedLatch));
-//			if (States.CONNECTING == zooKeeper.getState()) {
-//				try {
-//					connectedLatch.await();
-//				} catch (InterruptedException e) {
-//					throw new IllegalStateException(e);
-//				}
-//			}
-//			connectedLatch.await();
 			Stat exists = zooKeeper.exists(SWITCH_PATH_PREFIX, false);
 			if(exists == null){
 				zooKeeper.create(SWITCH_PATH_PREFIX, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -65,6 +58,10 @@ public class SwitchRegistry {
 	
 	
 	public static void register(String appName,Class<?> switchClass) throws Exception{
+		if(!inited.get()){
+			log.error("registry not inited,please invoke init first!");
+			return;
+		}
 		Field[] fields = switchClass.getFields();
 		String appPath = SWITCH_PATH_PREFIX+"/" +appName;
 		
@@ -158,20 +155,4 @@ public class SwitchRegistry {
 		}
 	}
 	
-	
-	
-	static class ConnectedWatcher implements Watcher {
-
-		private CountDownLatch connectedLatch;
-
-		ConnectedWatcher(CountDownLatch connectedLatch) {
-			this.connectedLatch = connectedLatch;
-		}
-
-		public void process(WatchedEvent event) {
-			if (event.getState() == KeeperState.SyncConnected) {
-				connectedLatch.countDown();
-			}
-		}
-	}
 }
