@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
+import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
+import com.dianrong.common.uniauth.common.server.UniauthCxfClientLocaleFilter;
 import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Arc on 14/2/16.
