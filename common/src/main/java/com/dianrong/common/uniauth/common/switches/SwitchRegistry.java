@@ -110,12 +110,11 @@ public class SwitchRegistry {
 
 		@Override
 		public void process(WatchedEvent event) {
-			System.out.println(event.getType());
 			try {
 				byte[] data = zooKeeper.getData(event.getPath(), this, null);
 				receiver.receive(f,new String(data));
 			} catch (Exception e) {
-				log.error("press node error", e);
+				log.error("process node error", e);
 			}
 		}
 		
