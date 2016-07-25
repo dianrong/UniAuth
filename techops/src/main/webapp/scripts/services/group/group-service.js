@@ -90,11 +90,18 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         svc.syncTree = function(params, roleUserGrpTreeOrTree) {
             // separate the variable that different module use.
             if(!roleUserGrpTreeOrTree) {
+                // only owner can operate the group in frontend.
                 params.needOwnerMarkup = true;
                 svc.getTree(params, function (res) {
                     svc.tree.data = res.data;
                     var expandedNodes = [];
-                    svc.tree.expandedNodes = utils.getParentNodeArray(svc.tree.data, expandedNodes);
+                    if(params.userGroupType != undefined && params.userGroupType == 0) {
+                      // only expand the first layer of the tree, reduce the rendering nodes for browser when add or delete normal user.
+                      expandedNodes.push(svc.tree.data[0]);
+                      svc.tree.expandedNodes = expandedNodes;
+                    } else {
+                      svc.tree.expandedNodes = utils.getParentNodeArray(svc.tree.data, expandedNodes);
+                    }
                     svc.tree.msg = '';
                 }, function (res) {
                     svc.tree.msg = '同步树查询失败.';
@@ -105,8 +112,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     svc.roleUserGrpTree.data = res.data;
                     //this is for force the tree to update data.
                     svc.roleUserGrpTree.data[0].date = new Date();
+                    // only expand the first layer of the tree, reduce the rendering nodes for browser.
                     var expandedNodes = [];
-                    svc.roleUserGrpTree.expandedNodes = utils.getParentNodeArray(svc.roleUserGrpTree.data, expandedNodes);
+                    expandedNodes.push(svc.roleUserGrpTree.data[0]);
+                    svc.roleUserGrpTree.expandedNodes = expandedNodes;
                     svc.roleUserGrpTree.msg = '';
                 }, function (res) {
                     svc.roleUserGrpTree.msg = 'Role -- UserGrp 同步树查询失败.';
@@ -119,8 +128,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 svc.tagUserGrpTree.data = res.data;
                 //this is for force the tree to update data.
                 svc.tagUserGrpTree.data[0].date = new Date();
+                // only expand the first layer of the tree, reduce the rendering nodes for browser.
                 var expandedNodes = [];
-                svc.tagUserGrpTree.expandedNodes = utils.getParentNodeArray(svc.tagUserGrpTree.data, expandedNodes);
+                expandedNodes.push(svc.tagUserGrpTree.data[0]);
+                svc.tagUserGrpTree.expandedNodes = expandedNodes;
                 svc.tagUserGrpTree.msg = '';
             }, function (res) {
                 svc.tagUserGrpTree.msg = 'Role -- UserGrp 同步树查询失败.';
