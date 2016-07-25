@@ -18,14 +18,25 @@
     under the License.
 
 --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 </div> <!-- END #content -->
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper"%>       
+<%@page import="com.dianrong.common.uniauth.cas.util.I18nLanguageConstantUtil"%> 
+<%@page import="com.dianrong.common.uniauth.cas.util.I18nLanguageConstantUtil.I18nContent"%>       
 <footer>
     <div id="copyright">
-        <p>${cascfg_cache_key.bottomAllRightText.value}</p>
-        <!-- <p>Powered by <a href="http://www.apereo.org/cas">Apereo Central Authentication Service <%=org.jasig.cas.CasVersion.getVersion()%></a></p> -->
+        <p><%=CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_ALL_RIGHT")==null?"":CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_ALL_RIGHT").getValue() %></p>
+    </div>
+    <div class="i18n-div">
+    	<%
+    	for(I18nContent i18n: I18nLanguageConstantUtil.getAllI18nLanguages()) {
+    	    %>
+    	    <span class="<%=i18n.isSelected()?"selected":"normal" %>">
+    			<a onclick="<%=i18n.isSelected()?"#":"javascrpt:i18nset('"+i18n.getLocaleStr()+"');"%>"><%=i18n.getLanguage()%></a>
+    		</span>
+    	    <%
+    	}
+    	%>
     </div>
 </footer>
 

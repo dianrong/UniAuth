@@ -4,7 +4,7 @@
                ng-disabled="disabled"
                reset-search-input="false"
                style="width:100%;margin-top: 6px;">
-        <ui-select-match placeholder="输入组名...">{{$select.selected.name}}</ui-select-match>
+        <ui-select-match placeholder="{{'relMgr.groupInputMsg' | translate}}">{{$select.selected.name}}</ui-select-match>
         <ui-select-choices repeat="grp in grps track by $index"
                            refresh="refreshGrps($select.search)"
                            refresh-delay="300">
@@ -16,22 +16,22 @@
 <div style="padding: 5px 5px 5px 5px">
     <div ng-if="grp.selected.id">
         <i class="fa fa-exclamation-circle font-color-blue"></i>
-        您选中的组id: <strong>'{{grp.selected.id}}'</strong> 名称: <strong>'{{grp.selected.name}}'</strong> Code: <strong>'{{grp.selected.code}}'</strong> .
+         {{'relMgr.selectedGroupId' | translate}}: <strong>'{{grp.selected.id}}'</strong>  {{'groupMgr.name' | translate}}: <strong>'{{grp.selected.name}}'</strong> Code: <strong>'{{grp.selected.code}}'</strong> .
     </div>
    <div ng-if="!grp.selected.id">
         <i class="fa fa-exclamation-circle font-color-blue"></i>
-        您没有选中任何一个组.
+        {{'relMgr.noGroupSelected' | translate}}
     </div>
 </div>
-<input style="padding: 5px 5px 5px 5px; width: 24%;" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
+<input style="padding: 5px 5px 5px 5px; width: 24%;" type="text" class="form-control" ng-model="predicate" placeholder="{{'auditMgr.filterInPage' | translate}}" />
 <div>
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
-            <th>标签code</th>
-            <th>类别</th>
-            <th>描述</th>
-            <th>是否关联</th>
+            <th>{{'relMgr.relCode' | translate}}</th>
+            <th>{{'relMgr.category' | translate}}</th>
+            <th>{{'common.desc' | translate}}</th>
+            <th>{{'relMgr.isRelated' | translate}}</th>
         </tr>
         </thead>
         <tbody class="text-color-c6">
@@ -49,7 +49,7 @@
         </tbody>
     </table>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="selectAllTagsForGrp()">全选</button>
-        <button type="button" class="btn btn-info" ng-click="replaceTagsToGroup()"  ng-disabled="grp.selected == null">保存</button>
+        <button type="button" class="btn btn-info" ng-click="selectAllTagsForGrp()">{{'relMgr.selectedAll' | translate}}</button>
+        <button type="button" class="btn btn-info" ng-click="replaceTagsToGroup()"  ng-disabled="grp.selected == null">{{'dialog.save' | translate}}</button>
     </div>
 </div>

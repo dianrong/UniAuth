@@ -10,7 +10,8 @@ require.config({
     'angular.ui.router': 'lib/angular-ui-router/release/angular-ui-router.min',
     'ngCookies': 'lib/angular-cookies/angular-cookies.min',
     'ngTranslate': 'lib/angular-translate/angular-translate.min',
-    'ngTranslateLoad': 'lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min',
+    'ngTranslateLoad': 'lib/angular-translate-loader-url/angular-translate-loader-url.min',
+    'ngTranslateLoadUrl':'lib/angular-translate-loader-url/angular-translate-loader-url.min',
     'ngSanitize': 'lib/angular-sanitize/angular-sanitize.min',
     'ngAnimate': 'lib/angular-animate/angular-animate.min',
     'angularFileUpload': 'lib/angular-file-upload/dist/angular-file-upload.min',
@@ -40,6 +41,9 @@ require.config({
     ngTranslateLoad: {
       deps: ['ngTranslate']
     },
+    ngTranslateLoadUrl: {
+        deps: ['ngTranslate']
+      },
     ngRoute: {
       deps: ['angular']
     },

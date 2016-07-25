@@ -13,7 +13,7 @@ define(['../../utils/constant'],function(constant) {
         $scope.removeUserFromGroup = function () {
 
             if(!$scope.selectedNodes || $scope.selectedNodes.length == 0){
-                AlertService.addAutoDismissAlert(constant.messageType.warning, "请先选择您要删除的Owner.");
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectGroupUdel'));
                 return;
             }
             var nodes = $scope.selectedNodes;
@@ -35,12 +35,12 @@ define(['../../utils/constant'],function(constant) {
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, "Owner删除成功.");
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.delOwnerSuccess'));
                 $scope.getTree(paramsCtlLevel);
                 $scope.selectedNodes.splice(0, $scope.selectedNodes.length);
             }, function () {
                 $scope.addedGroup = {};
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "Owner删除失败, 请联系系统管理员.");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.delOwnerFailure'));
             });
         };
 

@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
+import com.dianrong.common.uniauth.common.server.UniauthCxfClientLocaleFilter;
 import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
@@ -35,16 +36,17 @@ public class UARWFacade {
     public void init(){
         JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
         jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, Arrays.asList(jacksonJsonProvider));
-        userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, Arrays.asList(jacksonJsonProvider));
-        domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, Arrays.asList(jacksonJsonProvider));
-        groupRWResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, Arrays.asList(jacksonJsonProvider));
-        permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, Arrays.asList(jacksonJsonProvider));
-        userRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, Arrays.asList(jacksonJsonProvider));
-        roleRWResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, Arrays.asList(jacksonJsonProvider));
-        auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, Arrays.asList(jacksonJsonProvider));
-        configRWResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, Arrays.asList(jacksonJsonProvider));
-        tagRWResource = JAXRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, Arrays.asList(jacksonJsonProvider));
+        UniauthCxfClientLocaleFilter localeFilter = new UniauthCxfClientLocaleFilter();
+        userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        groupRWResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        userRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        roleRWResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        configRWResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
+        tagRWResource = JAXRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, Arrays.asList(jacksonJsonProvider, localeFilter));
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {

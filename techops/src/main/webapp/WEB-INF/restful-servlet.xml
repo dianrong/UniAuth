@@ -57,4 +57,13 @@
 		<sec:expression-handler ref="methodSecurityExpressionHandler"/>
     </sec:global-method-security>
     
+    <mvc:interceptors>
+    	<mvc:interceptor>
+    		<mvc:mapping path="/**"/>
+    		<bean class="com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor"/>
+    	</mvc:interceptor>
+    </mvc:interceptors>
+    
+    <bean id="localeResolver" class="com.dianrong.common.uniauth.common.server.UniauthLocaleResolver"/>
+    
 </beans>

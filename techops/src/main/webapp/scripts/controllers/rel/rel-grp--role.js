@@ -65,11 +65,11 @@ define(['../../utils/constant'], function (constant) {
                     AlertService.addAlert(constant.messageType.info, res.info);
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, '成功替换group对应的角色.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceGroupSuccess'));
                 $scope.getGrpRolesWithCheckedInfo();
             }, function () {
                 $scope.roles = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换group对应的角色失败, 请联系系统管理员');
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGroupFailure'));
             });
         }
         $scope.selectAllRolesForGrp = function() {
