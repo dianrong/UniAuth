@@ -39,8 +39,13 @@
     	%>
     </div>
 </footer>
-
 </div> <!-- END #container -->
+<%
+	String bpath = request.getContextPath();
+%>
+<script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/common.js" ></script>
 <spring:theme code="head.javascript.file" var="headJavascriptFile" text="" />
 <script type="text/javascript" src="<c:url value="${headJavascriptFile}" />"></script>
 <spring:theme code="cas.javascript.file" var="casJavascriptFile" text="" />
