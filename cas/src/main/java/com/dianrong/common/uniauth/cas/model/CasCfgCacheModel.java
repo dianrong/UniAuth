@@ -3,6 +3,8 @@ package com.dianrong.common.uniauth.cas.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.springframework.util.Assert;
+
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -143,5 +145,21 @@ public class CasCfgCacheModel implements Serializable{
 
 	public List<CasLoginAdConfigModel> getLoginPageAd() {
 		return loginPageAd;
+	}
+	
+	/**.
+	 * 根据模板生成一个新的CasCfgCacheModel
+	 * @return
+	 */
+	public static CasCfgCacheModel buildNewInstance(CasCfgCacheModel model){
+	    Assert.notNull(model, "buildNewInstance, CasCfgCacheModel can not be null");
+	    CasCfgCacheModel newModel = new CasCfgCacheModel(
+	            model.getPageTitle(),
+	            model.getPageIcon(),
+	            model.getLogo(),
+	            model.getBottomAllRightText(),
+	            model.getBackgroundColorText(),
+	            model.getLoginPageAd());
+	    return newModel;
 	}
 }

@@ -1,14 +1,14 @@
 <div class="modal-header dialog-header-confirm">
     <h4 class="modal-title text-center">
-        <i class="fa fa-pencil-square-o"></i>修改角色信息
+        <i class="fa fa-pencil-square-o"></i>{{ 'roleMgr.edit.title' | translate}}
     </h4>
 </div>
 <div class="modal-body">
     <ng-form name="modifyRoleDialog" novalidate role="form">
         <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[modifyRoleDialog.code.$dirty && modifyRoleDialog.code.$invalid]">
-            <label class="control-label" for="name" placeholder="角色名">角色名:</label>
+            <label class="control-label" for="name" placeholder="{{ 'roleMgr.roleName' | translate}}">{{ 'roleMgr.roleName' | translate}}:</label>
             <input type="text" class="form-control" name="name" id="name" ng-model="role.name">
-            <label class="control-label" for="code" placeholder="角色code">角色code:</label>
+            <label class="control-label" for="code" placeholder="{{ 'roleMgr.roleCode' | translate}}">{{ 'roleMgr.roleCode' | translate}}:</label>
             <br />
             <div id="code" class="btn-group" uib-dropdown is-open="roleModifyRoleCodesDropdown.isOpen">
                 <button type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
@@ -22,15 +22,15 @@
                 </ul>
             </div>
             <br />
-            <label class="control-label" for="description" placeholder="角色描述:">角色描述:</label>
-            <textarea style="height:120px;" id="description" name="description" class="form-control" placeholder="组的描述" ng-model="role.description"></textarea>
+            <label class="control-label" for="description" placeholder="{{ 'roleMgr.roleDesc' | translate}}:">{{ 'roleMgr.roleDesc' | translate}}:</label>
+            <textarea style="height:120px;" id="description" name="description" class="form-control" placeholder="{{ 'roleMgr.roleDesc' | translate}}" ng-model="role.description"></textarea>
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
         </div>
     </ng-form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">{{'dialog.cancel' | translate}}</button>
     <button type="button" class="btn btn-primary" ng-click="save()"
-            ng-disabled="(modifyUserDialog.$dirty && modifyUserDialog.$invalid) || modifyUserDialog.$pristine">保存</button>
+            ng-disabled="(modifyUserDialog.$dirty && modifyUserDialog.$invalid) || modifyUserDialog.$pristine">{{'dialog.save' | translate}}</button>
 </div>

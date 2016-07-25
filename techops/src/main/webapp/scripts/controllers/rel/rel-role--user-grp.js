@@ -54,7 +54,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.saveRolesToUserAndGrp = function() {
             if(!$scope.role.selected || !$scope.role.selected.id) {
-                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个角色');
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('relMgr.tips.pleaseChooseRole'));
                 return;
             }
             var params = {};
@@ -72,11 +72,11 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, '替换角色对应的组/用户成功.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceGUSuccess'));
                 $scope.getRoleUserGrpTree();
             }, function () {
                 $scope.roles = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换角色对应的组/用户失败, 请联系系统管理员.');
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGUFailure'));
             });
         };
 

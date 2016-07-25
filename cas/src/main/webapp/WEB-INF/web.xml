@@ -275,35 +275,35 @@
         <session-timeout>300</session-timeout>
     </session-config>
 
-    <error-page>
-        <error-code>401</error-code>
-        <location>/authorizationFailure.html</location>
-    </error-page>
+<!--     <error-page> -->
+<!--         <error-code>401</error-code> -->
+<!--         <location>/authorizationFailure.html</location> -->
+<!--     </error-page> -->
 
-    <error-page>
-        <error-code>403</error-code>
-        <location>/authorizationFailure.html</location>
-    </error-page>
+<!--     <error-page> -->
+<!--         <error-code>403</error-code> -->
+<!--         <location>/authorizationFailure.html</location> -->
+<!--     </error-page> -->
 
-    <error-page>
-        <error-code>404</error-code>
-        <location>/</location>
-    </error-page>
+<!--     <error-page> -->
+<!--         <error-code>404</error-code> -->
+<!--         <location>/</location> -->
+<!--     </error-page> -->
 
-    <error-page>
-        <error-code>500</error-code>
-        <location>/WEB-INF/view/jsp/errors.jsp</location>
-    </error-page>
+<!--     <error-page> -->
+<!--         <error-code>500</error-code> -->
+<!--         <location>/WEB-INF/view/jsp/errors.jsp</location> -->
+<!--     </error-page> -->
 
-    <error-page>
-        <error-code>501</error-code>
-        <location>/WEB-INF/view/jsp/errors.jsp</location>
-    </error-page>
+<!--     <error-page> -->
+<!--         <error-code>501</error-code> -->
+<!--         <location>/WEB-INF/view/jsp/errors.jsp</location> -->
+<!--     </error-page> -->
 
-    <error-page>
-        <error-code>503</error-code>
-        <location>/WEB-INF/view/jsp/errors.jsp</location>
-    </error-page>
+<!--     <error-page> -->
+<!--         <error-code>503</error-code> -->
+<!--         <location>/WEB-INF/view/jsp/errors.jsp</location> -->
+<!--     </error-page> -->
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>

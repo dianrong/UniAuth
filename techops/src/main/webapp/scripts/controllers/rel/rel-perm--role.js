@@ -69,11 +69,11 @@ define(['../../utils/constant'], function (constant) {
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, '替换权限对应的角色成功.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceRoleSuccess'));
                 $scope.getAllRolesWithCheckedInfoInDomain();
             }, function () {
                 $scope.roles = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换权限对应的角色失败, 请联系系统管理员.');
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceRoleFailure'));
             });
         };
 

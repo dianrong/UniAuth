@@ -54,14 +54,14 @@
     -->
     <bean class="com.dianrong.common.uniauth.sharerw.message.EmailSender" />
 
+	<!-- cas的国际化实现 -->
     <bean id="messageSource" class="org.jasig.cas.web.view.CasReloadableMessageBundle"
           p:basenames-ref="basenames" p:fallbackToSystemLocale="false" p:defaultEncoding="UTF-8"
           p:cacheSeconds="180" p:useCodeAsDefaultMessage="true"/>
-
     <util:list id="basenames">
-        <value>classpath:custom_messages</value>
         <value>classpath:messages</value>
     </util:list>
+    <!-- cas的国际化实现 -->
 
     <bean id="servicesManager" class="org.jasig.cas.services.DefaultServicesManagerImpl"
           c:serviceRegistryDao-ref="serviceRegistryDao"/>

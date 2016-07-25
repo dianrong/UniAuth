@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
-import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Arc on 14/2/16.
@@ -37,8 +35,9 @@ public class UARWFacade {
     public void init(){
         JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
         jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        UniauthCxfClientLocaleFilter localeFilter = new UniauthCxfClientLocaleFilter();
         UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
-        List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter);
+        List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,localeFilter);
         userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
         userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
         domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);

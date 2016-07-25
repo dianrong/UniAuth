@@ -4,14 +4,18 @@ package com.dianrong.common.uniauth.common.cons;
  * Created by Arc on 26/1/16.
  */
 public interface AppConstants {
-	// 0 = 启用
-    Byte ZERO_Byte = (byte)0;
-	// 1 = 禁用
-    Byte ONE_Byte = (byte)1;
-	// 0 = 启用
-    byte ZERO_byte = (byte)0;
-	// 1 = 禁用
-    byte ONE_byte = (byte)1;
+    	// 0 = 启用
+        Byte ZERO_Byte = (byte)0;
+    	// 1 = 禁用
+        Byte ONE_Byte = (byte)1;
+    	// 0 = 启用
+        byte ZERO_byte = (byte)0;
+    	// 1 = 禁用
+        byte ONE_byte = (byte)1;
+        
+        // 人性化设计
+        byte STATUS_ENABLED= ZERO_byte;
+        byte STATUS_DISABLED=ONE_byte;
 
 	String API_UUID = "api-uuid";
 
@@ -19,9 +23,9 @@ public interface AppConstants {
 	String NODE_TYPE_MEMBER_USER = "mUser";
 	String NODE_TYPE_OWNER_USER = "oUser";
 
-    String GRP_ROOT = "GRP_ROOT";
-    byte MAX_AUTH_FAIL_COUNT = 10;
-    int MAX_PASSWORD_VALID_MONTH = 2;
+        String GRP_ROOT = "GRP_ROOT";
+        byte MAX_AUTH_FAIL_COUNT = 10;
+        int MAX_PASSWORD_VALID_MONTH = 2;
 	// this value can avoid the "data.query.result.number.exceed" exception when you need query as much as more.
 	Integer MAX_PAGE_SIZE_MINUS_ONE = 4999;
 	// if you don't pass pageSize parameter to the query api, it is the default value.
@@ -31,7 +35,7 @@ public interface AppConstants {
 	String PERM_TYPE_DOMAIN = "DOMAIN";
 	String PERM_TYPE_URIPATTERN = "URI_PATTERN";
 	String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
-    String DOMAIN_CODE_TECHOPS = "techops";
+        String DOMAIN_CODE_TECHOPS = "techops";
     
 	// 分隔符
 	String ZK_CFG_SPLIT= ".";
@@ -80,6 +84,7 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
 	String PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
+	String PWDEXPIRE_SESSION_KEY = "pwdg_passwrod_expire";
 
 	//60 secondes
 	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
@@ -159,4 +164,7 @@ public interface AppConstants {
 	String CAS_CUSTOM_LOGIN_PAGE_KEY = "custom_login_page_key";
 	String CAS_CUSTOM_LOGIN_LT_KEY = "custom_login_lt_key";
 	String CAS_CUSTOM_LOGIN_URL_KEY = "custom_login_url_key";
+	
+	//cxf 传递的locale的key
+	String CAS_CXF_HEADER_LOCALE_KEY = "cas.cxf.header.locale.key";
 }
