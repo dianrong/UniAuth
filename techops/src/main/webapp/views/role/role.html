@@ -49,7 +49,7 @@
             <td ng-bind="d.name"></td>
             <td ng-bind="d.roleCode"></td>
             <td ng-bind="d.description"></td>
-            <td ng-bind="!d.status?{{ 'userMgr.enable' | translate}}:{{ 'userMgr.disable' | translate}}"></td>
+            <td ng-bind="!d.status?'{{ 'userMgr.enable' | translate}}':'{{ 'userMgr.disable' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
                     <a title="{{ 'roleMgr.manageRole' | translate}}" class="btn btn-info" ng-click="navToRoleUser(d)"><i class="fa fa-users"></i></a>

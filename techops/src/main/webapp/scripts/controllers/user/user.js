@@ -175,6 +175,8 @@ define(['../../utils/constant'], function (constant) {
                     break;
             }
         };
+        
+        $scope.$on('selected-language-changed', $scope.queryUser);
 
     };
 

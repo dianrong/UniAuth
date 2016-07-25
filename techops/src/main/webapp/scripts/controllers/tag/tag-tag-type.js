@@ -149,6 +149,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         };
 
         $scope.$on('selected-domain-changed', $scope.queryTagTypes);
+        $scope.$on('selected-language-changed', $scope.queryTagTypes);
+        
 
     };
 

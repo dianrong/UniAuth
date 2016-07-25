@@ -150,6 +150,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             }
         };
         $scope.$on('selected-domain-changed', $scope.queryRole);
+        $scope.$on('selected-language-changed', $scope.queryRole);
+        
     };
 
     return {

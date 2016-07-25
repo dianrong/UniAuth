@@ -146,6 +146,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             }
         };
         $scope.$on('selected-domain-changed', $scope.queryPerm);
+        $scope.$on('selected-language-changed', $scope.queryPerm);
     };
 
     return {
