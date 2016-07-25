@@ -2,8 +2,14 @@ package com.dianrong.common.uniauth.common.switches;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -121,11 +127,27 @@ public class SwitchRegistry {
 	
 	private static String getLocalAddress() {
 		try {
-			return InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			log.error("getLocalAddress error", e);
-		}
-		
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();   
+            Collection<InetAddress> addresses = new ArrayList<InetAddress>();
+            
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = networkInterfaces.nextElement();   
+                Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();   
+                while (inetAddresses.hasMoreElements()) {   
+                    InetAddress inetAddress = inetAddresses.nextElement();   
+                    addresses.add(inetAddress);   
+                }
+            }
+            
+            for (InetAddress address : addresses) {
+            	if (!address.isLoopbackAddress() &&!(address instanceof Inet6Address)){
+            		return address.getHostAddress();
+            	}
+            }
+               
+        } catch (SocketException e) {   
+        	log.error("getLocalAddress error", e);
+        }   
 		return "";
 	}
 
@@ -152,5 +174,4 @@ public class SwitchRegistry {
 			}
 		}
 	}
-
 }
