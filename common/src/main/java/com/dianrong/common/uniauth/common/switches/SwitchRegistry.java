@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,12 +20,13 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 
-import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 
 /**
  * 开关注册器
@@ -37,6 +39,8 @@ public class SwitchRegistry {
 	
 	public static final String SWITCH_PATH_PREFIX = "/com/dianrong/switch";
 	
+	private static final Map<String, Map<String,SwitchHolder>> SWITCHS = Maps.newConcurrentMap();
+	
 	private static ZooKeeper zooKeeper;
 	
 	private static AtomicBoolean inited = new AtomicBoolean(false);
@@ -47,6 +51,7 @@ public class SwitchRegistry {
 		}
 		try {
 			zooKeeper = new ZooKeeper(System.getProperty("DR_CFG_ZOOKEEPER_ENV_URL"), 200, null);
+			zooKeeper.register(new SwitchWatch());
 			Stat exists = zooKeeper.exists(SWITCH_PATH_PREFIX, false);
 			if(exists == null){
 				zooKeeper.create(SWITCH_PATH_PREFIX, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -62,6 +67,10 @@ public class SwitchRegistry {
 			log.error("registry not inited,please invoke init first!");
 			return;
 		}
+		
+		if(SWITCHS.containsKey(appName)) return;
+		Map<String,SwitchHolder> switchs = Maps.newHashMap();
+		SWITCHS.put(appName, switchs);
 		Field[] fields = switchClass.getFields();
 		String appPath = SWITCH_PATH_PREFIX+"/" +appName;
 		
@@ -77,44 +86,32 @@ public class SwitchRegistry {
 				f.setAccessible(true);
 				String filedPath = appPath +"/" +name;
 				
-				SwitchReceiver receier = (SwitchReceiver)switchDesc.recieiver().newInstance();
+				SwitchReceiver receiver = (SwitchReceiver)switchDesc.recieiver().newInstance();
 				//读取远程持久化数据，优先读取指定ip的数据
-				if(zooKeeper.exists(filedPath +"/"+getLocalAddress(), false) != null){
+				if(zooKeeper.exists(filedPath +"/"+getLocalAddress(), false) != null &&
+						zooKeeper.getData(filedPath +"/"+getLocalAddress(), false,null) != null){
 					byte[] data = zooKeeper.getData(filedPath +"/"+getLocalAddress(), false, null);
-					receier.receive(f, new String(data));
-				}else if(zooKeeper.exists(filedPath +"/ALL", false) != null){
+					try{
+						receiver.receive(f, new String(data));
+					}catch(Exception e){
+						log.error("init "+f.getName()+" error", e);
+					}
+					
+				}else if(zooKeeper.exists(filedPath +"/ALL", false) != null
+						&& zooKeeper.getData(filedPath +"/ALL", false,null) != null){
 					byte[] data = zooKeeper.getData(filedPath +"/ALL", false, null);
-					receier.receive(f, new String(data));
+					try{
+						receiver.receive(f, new String(data));
+					}catch(Exception e){
+						log.error("init "+f.getName()+" error", e);
+					}
 				}
+				switchs.put(name, new SwitchHolder(f, receiver));
 				createPathIfNecessary(filedPath, "".getBytes(), Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
-				createPathIfNecessary(filedPath +"/ALL" , JSON.toJSONString(f.get(null)).getBytes(), Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
-				createPathIfNecessary(filedPath +"/"+getLocalAddress() , JSON.toJSONString(f.get(null)).getBytes(), Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
-				SwitchWatcher watcher = new SwitchWatcher(f,receier);
-				zooKeeper.getData(filedPath+"/ALL",  watcher, null);
-				zooKeeper.getData(filedPath +"/"+getLocalAddress(),  watcher, null);
-			}
-		}
-		
-	}
-	
-	
-	private static class SwitchWatcher implements Watcher{
-		
-		private Field f;
-		private SwitchReceiver receiver;
-		
-		public SwitchWatcher(Field f, SwitchReceiver receiver) {
-			this.f = f;
-			this.receiver = receiver;
-		}
-
-		@Override
-		public void process(WatchedEvent event) {
-			try {
-				byte[] data = zooKeeper.getData(event.getPath(), this, null);
-				receiver.receive(f,new String(data));
-			} catch (Exception e) {
-				log.error("process node error", e);
+				createPathIfNecessary(filedPath +"/ALL" , null, Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+				createPathIfNecessary(filedPath +"/"+getLocalAddress() , null, Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+				zooKeeper.getData(filedPath+"/ALL",  true,null);
+				zooKeeper.getData(filedPath +"/"+getLocalAddress(),true,null);
 			}
 		}
 		
@@ -146,12 +143,56 @@ public class SwitchRegistry {
         }   
 		return "";
 	}
-
-
+	
+	
 	private static void createPathIfNecessary(String path,byte[] data,List<ACL> acl, CreateMode createMode) throws KeeperException, InterruptedException{
 		if(zooKeeper.exists(path, false) == null){
 			zooKeeper.create(path, data, acl, createMode);
 		}
 	}
 	
+	
+	private static class SwitchWatch implements Watcher{
+
+		@Override
+		public void process(WatchedEvent event) {
+			if(event.getType() == EventType.NodeDataChanged){
+				//取到节点数据并且重新监听
+				try {
+					byte[] data = zooKeeper.getData(event.getPath(), true, null);
+					String subPath = event.getPath().substring(SWITCH_PATH_PREFIX.length()+1);
+					String[] names = subPath.split("/");
+					if(names.length>1){
+						String appName = names[0];
+						String switchName = names[1];
+						Map<String, SwitchHolder> appSwitchs = SWITCHS.get(appName);
+						if(appSwitchs != null && !appSwitchs.isEmpty()){
+							SwitchHolder holder = appSwitchs.get(switchName);
+							holder.getReceiver().receive(holder.getF(), new String(data));
+						}
+					}
+				} catch (Exception e) {
+					log.error("process error,path:"+event.getPath(), e);
+				}
+			}
+		}
+		
+	}
+	
+	
+	private static class SwitchHolder{
+		private Field f;
+		private SwitchReceiver receiver;
+		public SwitchHolder(Field f, SwitchReceiver receiver) {
+			super();
+			this.f = f;
+			this.receiver = receiver;
+		}
+		public Field getF() {
+			return f;
+		}
+		public SwitchReceiver getReceiver() {
+			return receiver;
+		}
+	}
 }
