@@ -3,13 +3,13 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <a class="navbar-brand" href="#/"><img style="height: 100%" src="cfg/download/TECHOPS_LOGO"></a>
-            <a class="navbar-brand" href="#/" style="padding-left:5px">{{title?title: '权限运维系统'}}</a>
+            <a class="navbar-brand" href="#/" style="padding-left:5px">{{title?title: ('header.title' | translate)}}</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li style="padding-top: 8px;">
-                    域切换:
+                    {{'header.domainSwitch' | translate}}:
                     <div class="btn-group" uib-dropdown is-open="loginDomainsDropdown.isopen">
                         <button id="single-button" type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
                             <span ng-bind="loginDomainsDropdown.option.displayName"></span><span class="caret"></span>
@@ -20,9 +20,25 @@
                             </li>
                         </ul>
                     </div>
+
+		                    
                 </li>
-                <li><a href="{{userInfo.userInfoUpdateUrl}}">欢迎您：<span>{{userInfo.user.email}}</span></a></li>
-                <li><a style="color:#337AB7" href="" ng-click="logout()"><i class="fa fa-sign-out"></i>安全退出</a></li>
+		
+                <li><a href="{{userInfo.userInfoUpdateUrl}}">{{ 'header.welcome' | translate}}：<span>{{userInfo.user.email}}</span></a></li>
+		<li style="padding-top: 8px;">
+		{{'header.languages' | translate}}:
+		 <div ng-controller="Ctrl" class="btn-group" uib-dropdown>
+			<button id="lang-button" type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
+	                    <span ng-bind="languagesDropdown.option.name"></span><span class="caret"></span>
+	                </button>
+		        <ul uib-dropdown-menu role="menu" aria-labelledby="lang-button">
+		            <li ng-repeat="it in languagesDropdown.items">
+		                <a ng-click="changeLanguage(it.code,it)" ng-bind="it.name" ></a>
+		            </li>
+		        </ul>
+	    	</div>
+		</li>
+                <li><a style="color:#337AB7" href="" ng-click="logout()"><i class="fa fa-sign-out"></i>{{ 'header.logout' | translate}}</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

@@ -4,7 +4,7 @@
                ng-disabled="disabled"
                reset-search-input="false"
                style="width:100%;margin-top: 6px;">
-        <ui-select-match placeholder="输入权限值...">{{$select.selected.value}}</ui-select-match>
+        <ui-select-match placeholder="{{'relMgr.permInputMsg' | translate}}">{{$select.selected.value}}</ui-select-match>
         <ui-select-choices repeat="perm in perms track by $index"
                            refresh="refreshPerms($select.search)"
                            refresh-delay="300">
@@ -15,22 +15,22 @@
 <div style="padding: 5px 5px 5px 5px">
     <div ng-if="perm.selected.id">
         <i class="fa fa-exclamation-circle font-color-blue"></i>
-        您选中的权限id: <strong>'{{perm.selected.id}}'</strong> 值: <strong>'{{perm.selected.value}}'</strong> 类型: <strong>'{{perm.selected.permType}}'</strong> .
+        {{'relMgr.selectedPermId' | translate}}: <strong>'{{perm.selected.id}}'</strong> {{'common.value' | translate}}: <strong>'{{perm.selected.value}}'</strong> {{'common.type' | translate}}: <strong>'{{perm.selected.permType}}'</strong> .
     </div>
     <div ng-if="!perm.selected.id">
         <i class="fa fa-exclamation-circle font-color-blue"></i>
-        您没有选中任何一个权限.
+        {{'relMgr.noPermSelected' | translate}}
     </div>
 </div>
-<input style="padding: 5px 5px 5px 5px; width: 24%;" type="text" class="form-control" ng-model="predicate" placeholder="页面内过滤" />
+<input style="padding: 5px 5px 5px 5px; width: 24%;" type="text" class="form-control" ng-model="predicate" placeholder="{{'auditMgr.filterInPage' | translate}}" />
 <div>
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
-            <th>角色名</th>
-            <th>角色Code</th>
-            <th>描述</th>
-            <th>是否关联</th>
+            <th>{{'relMgr.roleName' | translate}}</th>
+            <th>{{'relMgr.roleCode' | translate}}</th>
+             <th>{{'common.desc' | translate}}</th>
+            <th>{{'relMgr.isRelated' | translate}}</th>
         </tr>
         </thead>
         <tbody class="text-color-c6">
@@ -48,8 +48,8 @@
         </tbody>
     </table>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="selectAllRolesForPerm()">全选</button>
+        <button type="button" class="btn btn-info" ng-click="selectAllRolesForPerm()">{{'relMgr.selectedAll' | translate}}</button>
         <button type="button" class="btn btn-info" ng-click="replaceRolesToPerm()"
-                ng-disabled="perm.selected == null">保存</button>
+                ng-disabled="perm.selected == null">{{'dialog.save' | translate}}</button>
     </div>
 </div>

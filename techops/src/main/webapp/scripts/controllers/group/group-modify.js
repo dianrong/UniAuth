@@ -15,7 +15,7 @@ define(['../../utils/constant'], function(constant) {
         $scope.modifyGroup = function () {
 
             if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
-                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个组, 再修改组.');
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectGroupUedit'));
                 return;
             }
             GroupService.modify({
@@ -33,7 +33,7 @@ define(['../../utils/constant'], function(constant) {
                     return;
                 }
                 $scope.modifiedGroup = result.data;
-                AlertService.addAutoDismissAlert(constant.messageType.info, '组修改成功.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.groupModifySuccess'));
                 //sync the selected group
                 GroupService.getGrpDetails({
                     id: $rootScope.shareGroup.selected.id
@@ -47,7 +47,7 @@ define(['../../utils/constant'], function(constant) {
                 $scope.getTree(paramsCtlLevel);
             }, function () {
                 $scope.modifidGroup = {};
-                AlertService.addAutoDismissAlert(constant.messageType.danger, '组修改失败, 请联系系统管理员.');
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.groupModifyFailure'));
             });
             $scope.getTree(paramsCtlLevel);
         };

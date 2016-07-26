@@ -21,6 +21,10 @@ define(['../utils/constant'], function (constant) {
     $scope.$watch('selectedDomain.option', function domainChangeCallBack() {
       $scope.$broadcast('selected-domain-changed', $scope.selectedDomain);
     }, true)
+    
+    $scope.$watch('languagesDropdown.option', function domainChangeCallBack() {
+      $scope.$broadcast('selected-language-changed', $scope.selectedDomain);
+    }, true)
 
     $scope.closeAlert = function(alert) {
       AlertService.closeAlert(alert);

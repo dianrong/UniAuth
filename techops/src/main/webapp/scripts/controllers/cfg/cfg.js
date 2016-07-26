@@ -3,13 +3,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, CfgService, FileUploader, AlertService, dialogs) {
+    var Controller = function ($rootScope,$scope, CfgService, FileUploader, AlertService, dialogs) {
 
         function getCfgTypes() {
             CfgService.getAllCfgTypes().$promise.then(function(res) {
                 var cfgTypes = res.data;
                 var cfgTypesArray = [];
-                cfgTypesArray.push({code:'请选择'})
+                cfgTypesArray.push({code:$rootScope.translate('constant.selectplacehodler')})
                 for(var prop in cfgTypes) {
                     cfgTypesArray.push({id:prop, code:cfgTypes[prop]});
                 }
@@ -75,14 +75,14 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             valueObj['value'] = fileItem.file.name;
             fileItem.formData.push(valueObj);
             fileItem.onProgress = function(progress) {
-                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传中...');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('cfgMgr.tips.uploading'));
             }
             fileItem.onComplete = function(response, status, headers) {
-                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传成功.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('cfgMgr.tips.uploadSuccess'));
                 $scope.queryConfig();
             }
             fileItem.onError = function(response, status, headers) {
-                AlertService.addAlert(constant.messageType.danger, '配置文件上传失败.');
+                AlertService.addAlert(constant.messageType.danger, $rootScope.translate('cfgMgr.tips.uploadFailure'));
             }
         };
 
@@ -111,8 +111,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 case 'del':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
-                            "header":'删除配置',
-                            "msg":"您确定要删除cfgKey为: " + param.cfgKey +" 的配置吗吗?"
+                            "header":$rootScope.translate('cfgMgr.tips.delCfg'),
+                            "msg":$rootScope.translate('cfgMgr.tips.confirmDel') + param.cfgKey +$rootScope.translate('cfgMgr.tips.confirmDelSuffix')
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -126,11 +126,11 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                                         AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
                                     }
                                 } else {
-                                    AlertService.addAutoDismissAlert(constant.messageType.info, '配置删除成功!');
+                                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('cfgMgr.tips.delCfgSuccess'));
                                 }
                                 $scope.queryConfig();
                             }, function(err) {
-                                AlertService.addAutoDismissAlert(constant.messageType.danger, '配置删除失败!');
+                                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('cfgMgr.tips.delCfgFailure'));
                             }
                         );
                     }, function (no) {
@@ -143,7 +143,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "CfgController",
-        fn: ["$scope", "CfgService", "FileUploader", "AlertService", "dialogs", Controller]
+        fn: ["$rootScope","$scope", "CfgService", "FileUploader", "AlertService", "dialogs", Controller]
     };
 
 });

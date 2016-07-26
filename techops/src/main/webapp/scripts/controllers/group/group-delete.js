@@ -12,7 +12,7 @@ define(['../../utils/constant'], function(constant) {
         $scope.confirm = function () {
 
             if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id || !$rootScope.shareGroup.selected.code){
-                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个组, 再删除组.');
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectGroupUdel'));
                 return;
             }
             GroupService.del({
@@ -28,10 +28,10 @@ define(['../../utils/constant'], function(constant) {
                     return;
                 }
                 $rootScope.shareGroup.selected = {};
-                AlertService.addAutoDismissAlert(constant.messageType.info, "组删除成功.");
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.groupDelSuccess'));
                 $scope.getTree(paramsCtlLevel);
             }, function () {
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "组删除失败, 请联系系统管理员.");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.groupDelFailure'));
             });
         };
     };

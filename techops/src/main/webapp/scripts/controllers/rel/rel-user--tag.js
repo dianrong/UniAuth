@@ -71,11 +71,11 @@ define(['../../utils/constant'], function (constant, AlertService) {
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, '替换用户对应的标签成功.');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceUserTagSuccess'));
                 $scope.getUserTagsWithCheckedInfo();
             }, function () {
                 $scope.tags = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, '替换用户对应的标签失败, 请联系系统管理员.');
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceUserTagFailure'));
             });
         }
         $scope.selectAllTagsForUser = function() {

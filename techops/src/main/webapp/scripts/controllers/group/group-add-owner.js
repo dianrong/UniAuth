@@ -25,11 +25,11 @@ define(['../../utils/constant'],function(constant) {
         $scope.addUserToGroup = function () {
 
             if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
-                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个父组, 再添加Owner.');
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.chooseParentGroup'));
                 return;
             }
             if(!$scope.user.selected || !$scope.user.selected.id) {
-                AlertService.addAutoDismissAlert(constant.messageType.warning, '请先选择一个用户, 再添加Owner.');
+                AlertService.addAutoDismissAlert(constant.messageType.warning,$rootScope.translate('groupMgr.tips.chooseOwner') );
                 return;
             }
 
@@ -46,11 +46,11 @@ define(['../../utils/constant'],function(constant) {
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, "已成功添加Owner.");
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.addOwnerSuccessed'));
                 $scope.getTree(paramsCtlLevel);
             }, function () {
                 $scope.addedGroup = {};
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "添加Owner失败, 请联系系统管理员.");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.addOwnerFailure'));
             });
         };
 

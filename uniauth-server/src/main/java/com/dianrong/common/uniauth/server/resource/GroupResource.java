@@ -9,6 +9,8 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +23,8 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 
 @RestController
 public class GroupResource implements IGroupRWResource {
+	
+	private static final Logger logger = Logger.getLogger(GroupResource.class);
 
 	@Autowired
 	private GroupService groupService;
@@ -73,15 +77,20 @@ public class GroupResource implements IGroupRWResource {
 		Response<GroupDto> resp = updateGroup(groupParam);
 		
 		//找出子节点，然后设置为失效
-		List<Grp> children = groupService.queryGroupByAncestor(groupParam.getId());
-		if(children != null && !children.isEmpty()){
-			for(Grp grp : children){
-				if(grp.getId().equals(groupParam.getId())){
-					continue;
+		try{
+			List<Grp> children = groupService.queryGroupByAncestor(groupParam.getId());
+			if(children != null && !children.isEmpty()){
+				for(Grp grp : children){
+					if(grp.getId().equals(groupParam.getId())){
+						continue;
+					}
+					groupService.updateGroup(grp.getId(), grp.getCode(), grp.getName(), AppConstants.ONE_Byte, grp.getDescription());
 				}
-				groupService.updateGroup(grp.getId(), grp.getCode(), grp.getName(), AppConstants.ONE_Byte, grp.getDescription());
 			}
+		}catch(Exception e){
+			logger.error("delete child group error ,groupid:"+groupParam.getId(), e);
 		}
+		
 		return resp;
 	}
 

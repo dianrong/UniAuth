@@ -12,7 +12,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
             }
             param.pageSize = 1000;
             param.pageNumber = 0;
-            AlertService.addAutoDismissAlert(constant.messageType.info, "正在查询, 请稍后..");
+            AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('auditMgr.tips.search'));
             AuditService.queryAudits(param, function (res) {
                 var result = res.data;
                 if(res.info) {
@@ -22,7 +22,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                     return;
                 }
                 if(!result) {
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "查询结果为空.");
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('auditMgr.tips.resultEmpty'));
                     $scope.audits = [];
                     return;
                 }
@@ -30,7 +30,7 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                 $scope.totalCount = result.totalCount;
             }, function () {
                 $scope.audits = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "查询失败.");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('auditMgr.tips.searchFailure'));
             });
         };
         $scope.delete = function() {
@@ -46,9 +46,9 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.warning, "一共" + result + "条日志被删除.");
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('auditMgr.tips.logSum') + result + $rootScope.translate('auditMgr.tips.logDeleted'));
             }, function () {
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "日志删除失败, 请联系系统管理员.");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('auditMgr.tips.delFailure'));
             });
         }
         $scope.predicate = '';

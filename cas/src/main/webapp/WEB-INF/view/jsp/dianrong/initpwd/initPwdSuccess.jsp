@@ -26,7 +26,18 @@
 					</div>
 					<div class="row">
 					  <div class="col-sm-offset-4 col-sm-4 h6">
-						<spring:message code="screen.init.password.step2.content.link"/>
+					  <%
+					  		Object expire = request.getSession().getAttribute("pwdg_passwrod_expire");
+					  		if(expire != null && Boolean.valueOf(String.valueOf(expire))){
+					  			%>
+					  				<spring:message code="screen.init.password.step2.content.expire.link"/>
+					  			<%
+					  		}else{
+					  			%>
+					  			<spring:message code="screen.init.password.step2.content.link"/>
+					  			<%
+					  		}
+					  %>
 								<% 
 									Object savedLoginContext1 = request.getSession().getAttribute("pwdg_savedLoginContext");
 									if(savedLoginContext1 == null) {

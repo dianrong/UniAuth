@@ -2,29 +2,29 @@
     <div ng-if="!$state.includes('group.delete-user') && !$state.includes('group.delete-owner')">
         <div ng-if="shareGroup.selected.id">
           <i class="fa fa-exclamation-circle font-color-blue"></i>
-          您选中的组id: <strong>'{{shareGroup.selected.id}}'</strong> 名称: <strong>'{{shareGroup.selected.label}}'</strong> Code: <strong>'{{shareGroup.selected.code}}'</strong> .
+          {{ 'groupMgr.selectedGroupText' | translate }} id: <strong>'{{shareGroup.selected.id}}'</strong> {{ 'groupMgr.name' | translate}}: <strong>'{{shareGroup.selected.label}}'</strong> Code: <strong>'{{shareGroup.selected.code}}'</strong> .
         </div>
         <div ng-if="!shareGroup.selected.id">
           <i class="fa fa-exclamation-circle font-color-blue"></i>
-          您没有选中任何一个组.
+          {{ 'groupMgr.noGroupSelected' | translate }}
         </div>
     </div>
 </div>
 <div class="btn-group">
-    <a class="btn btn-info" ng-class="{active: $state.includes('group.add')}" ui-sref="group.add">新增组</a>
-    <a class="btn btn-info" ng-class="{active: $state.includes('group.modify')}" ui-sref="group.modify">修改组</a>
-    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete')}" ui-sref="group.delete">删除组</a>
-    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-user')}" ui-sref="group.add-user">添加用户</a>
-    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-user')}" ui-sref="group.delete-user">删除用户</a>
-    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-owner')}" ui-sref="group.add-owner">添加Owner</a>
-    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-owner')}" ui-sref="group.delete-owner">删除Owner</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add')}" ui-sref="group.add">{{ 'groupMgr.addGroup' | translate}}</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.modify')}" ui-sref="group.modify">{{ 'groupMgr.editGroup' | translate}}</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete')}" ui-sref="group.delete">{{ 'groupMgr.delGroup' | translate}}</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-user')}" ui-sref="group.add-user">{{ 'groupMgr.addUser' | translate}}</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-user')}" ui-sref="group.delete-user">{{ 'groupMgr.delUser' | translate}}</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.add-owner')}" ui-sref="group.add-owner">{{ 'groupMgr.addOwner' | translate}}</a>
+    <a class="btn btn-info" ng-class="{active: $state.includes('group.delete-owner')}" ui-sref="group.delete-owner">{{ 'groupMgr.delOwner' | translate}}</a>
 </div>
 <div class="row">
     <div ui-view style="" class="col-md-29d4 col-sm-9">
     </div>
     <div ng-if="!$state.includes('group.delete-user') && !$state.includes('group.delete-owner')" style="padding-left: 1px" class="col-md-70d6 col-sm-9">
-        <h5 style="padding-left: 15px"><i class="fa fa-info font-color-blue"></i>.请选择您想要操作的组</h5>
-        <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="过滤字符串" />
+        <h5 style="padding-left: 15px"><i class="fa fa-info font-color-blue"></i>{{ 'groupMgr.selectInfo' | translate}}</h5>
+        <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="{{ 'groupMgr.filterString' | translate}}" />
         <treecontrol class="tree-custom" options="opts" tree-model="treedata.data" selected-node="selected" expanded-nodes="treedata.expandedNodes"
                      on-selection="showSelected(node, selected)" filter-expression="predicate" filter-comparator="comparator">
             <span ng-switch="" on="node.type">
@@ -34,8 +34,8 @@
         </treecontrol>
     </div>
     <div ng-if="$state.includes('group.delete-user') || $state.includes('group.delete-owner')" style="padding-left: 1px" class="col-md-70d6 col-sm-9">
-        <h5 style="padding-left: 15px"><i class="fa fa-info font-color-blue"></i>.请选择您想要删除的{{$state.includes('group.delete-user')?'用户':'Owner'}}</h5>
-        <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="过滤字符串" />
+        <h5 style="padding-left: 15px"><i class="fa fa-info font-color-blue"></i>{{ 'groupMgr.delInfoPre'| translate}}{{$state.includes('group.delete-user')?('common.user' | translate):'Owner'}}</h5>
+        <input style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="{{ 'groupMgr.filterString' | translate}}" />
         <treecontrol class="tree-custom" options="treeOptions" tree-model="treedata.data" selected-nodes="selectedNodes" expanded-nodes="treedata.expandedNodes"
                      on-selection="showSelectedNodes(node, selected, $parentNode)" filter-expression="predicate" filter-comparator="comparator">
             <span ng-switch="" on="node.type">
