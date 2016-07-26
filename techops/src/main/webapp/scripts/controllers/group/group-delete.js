@@ -15,7 +15,7 @@ define(['../../utils/constant'], function(constant) {
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectGroupUdel'));
                 return;
             }
-            GroupService.modify({
+            GroupService.del({
                 "id": $rootScope.shareGroup.selected.id,
                 "code": $rootScope.shareGroup.selected.code,
                 "status": 1,
