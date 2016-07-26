@@ -77,7 +77,7 @@ dependencies {
     compile "com.dianrong.common.uniauth:share-rw:1.0.37"
     compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.36"
     
-    compile project(":ss-client")
+   // compile project(":ss-client")
  //   compile project(":share-rw")
 
     //Spring
