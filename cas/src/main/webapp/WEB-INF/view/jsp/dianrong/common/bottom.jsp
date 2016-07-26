@@ -24,10 +24,10 @@
 %>
 <script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/bootstrap-3.3.5/js/bootstrap.min.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/common.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/pwdfoget.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/userinfoedit.js" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/initpwd.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/bootstrap-3.3.5/js/bootstrap.min.js" ></script>
 </html>
 

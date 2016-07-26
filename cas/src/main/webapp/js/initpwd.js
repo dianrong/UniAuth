@@ -1,4 +1,4 @@
-(function() {
+$(function() {
 	var processUrl = context_path+"/uniauth/initPassword";
 	var captchaUrl = context_path+"/uniauth/captcha";
 	
@@ -166,4 +166,4 @@
 	
 	//执行init操作
 	init();
-})();
+});

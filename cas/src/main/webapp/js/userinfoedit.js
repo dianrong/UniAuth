@@ -1,4 +1,4 @@
-(function() {
+$(function() {
 	var processUrl = context_path+"/login";
 	
 	//初始化函数
@@ -359,4 +359,4 @@
 	}	
 	//初始化操作
 	init();
-})();
+});
