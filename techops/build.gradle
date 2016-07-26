@@ -78,7 +78,7 @@ dependencies {
     compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.36"
     
     compile project(":ss-client")
-    compile project(":share-rw")
+ //   compile project(":share-rw")
 
     //Spring
     //def spring_version = '4.1.6.RELEASE'

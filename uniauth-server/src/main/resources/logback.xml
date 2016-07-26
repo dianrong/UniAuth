@@ -144,12 +144,6 @@
 		<appender-ref ref="uniAuthAppender" />
 		<appender-ref ref="consoleAppender" />
 	</logger>
-	
-	<logger name="com.dianrong.common.uniauth.server.service.t" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="uniAuthAppender" />
-		<appender-ref ref="consoleAppender" />
-	</logger>
 
 	<logger name="org.mybatis.spring" additivity="false">
 		<level value="DEBUG" />
