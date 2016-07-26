@@ -1,23 +1,3 @@
-<%--
-    Licensed to Apereo under one or more contributor license
-    agreements. See the NOTICE file distributed with this work
-    for additional information regarding copyright ownership.
-    Apereo licenses this file to you under the Apache License,
-    Version 2.0 (the "License"); you may not use this file
-    except in compliance with the License.  You may obtain a
-    copy of the License at the following location:
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
-
---%>
-
 <!-- include some java object -->
 <%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
 <%@ page import="com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel"%>
@@ -27,58 +7,15 @@
 
 <c:if test="${not empty redirectUrl}">
 	<script>
-		top.window.location = "${redirectUrl}";
+		top.window.location = "${fn:escapeXml(redirectUrl)}";
 	</script>
 </c:if>
 
-<!-- 
-<c:if test="${not pageContext.request.secure}">
-    <div id="msg" class="errors">
-        <h2><spring:message code="screen.nonsecure.title" /></h2>
-        <p><spring:message code="screen.nonsecure.message" /></p>
-    </div>
-</c:if>
- -->
- 
 <div id="cookiesDisabled" class="errors" style="display:none;">
     <h2><spring:message code="screen.cookies.disabled.title" /></h2>
     <p><spring:message code="screen.cookies.disabled.message" /></p>
 </div>
 
-<!-- 
-<c:if test="${not empty registeredService}">
-    <c:set var="registeredServiceLogo" value="images/webapp.png"/>
-    <c:set var="registeredServiceName" value="${registeredService.name}"/>
-    <c:set var="registeredServiceDescription" value="${registeredService.description}"/>
-
-    <c:choose>
-        <c:when test="${not empty mduiContext}">
-            <c:if test="${not empty mduiContext.logoUrl}">
-                <c:set var="registeredServiceLogo" value="${mduiContext.logoUrl}"/>
-            </c:if>
-            <c:set var="registeredServiceName" value="${mduiContext.displayName}"/>
-            <c:set var="registeredServiceDescription" value="${mduiContext.description}"/>
-        </c:when>
-        <c:when test="${not empty registeredService.logo}">
-            <c:set var="registeredServiceLogo" value="${registeredService.logo}"/>
-        </c:when>
-    </c:choose>
-
-    <div id="serviceui" class="serviceinfo">
-        <table>
-            <tr>
-                <td><img src="${registeredServiceLogo}"></td>
-                <td id="servicedesc">
-                    <h1>${fn:escapeXml(registeredServiceName)}</h1>
-                    <p>${fn:escapeXml(registeredServiceDescription)}</p>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <p/>
-</c:if>
- -->
- 
 <p><spring:message code="screen.welcome.security"/></p>
 
 <div class="box" id="login">
@@ -240,84 +177,9 @@
 
 <div id="sidebar">
     <div class="sidebar-content cas-ad hiddenbtn" id="cas-ad-div">
-    	<!-- 
-        <p><spring:message code="screen.welcome.security" /></p>
-        <div id="list-languages"> 
-<%--             <% final String queryString = request.getQueryString() == null ? "" : request.getQueryString().replaceAll("&locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]|^locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]", "");%> --%>
-            
-<%--             <c:set var='query' value='<%=queryString%>' /> --%>
-            <c:set var="xquery" value="${fn:escapeXml(query)}" />
-
-            <h3>Languages:</h3>
-
-            <c:choose>
-                <c:when test="${not empty requestScope['isMobile'] and not empty mobileCss}">
-                    <form method="get" action="login?${xquery}">
-                        <select name="locale">
-                            <option value="en">English</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
-                            <option value="ru">Russian</option>
-                            <option value="nl">Nederlands</option>
-                            <option value="sv">Svenska</option>
-                            <option value="it">Italiano</option>
-                            <option value="ur">Urdu</option>
-                            <option value="zh_CN">Chinese (Simplified)</option>
-                            <option value="zh_TW">Chinese (Traditional)</option>
-                            <option value="de">Deutsch</option>
-                            <option value="ja">Japanese</option>
-                            <option value="hr">Croatian</option>
-                            <option value="uk">Ukranian</option>
-                            <option value="cs">Czech</option>
-                            <option value="sl">Slovenian</option>
-                            <option value="pl">Polish</option>
-                            <option value="ca">Catalan</option>
-                            <option value="mk">Macedonian</option>
-                            <option value="fa">Farsi</option>
-                            <option value="ar">Arabic</option>
-                            <option value="pt_PT">Portuguese</option>
-                            <option value="pt_BR">Portuguese (Brazil)</option>
-                        </select>
-                        <input type="submit" value="Switch">
-                    </form>
-                </c:when>
-                <c:otherwise>
-                    <c:set var="loginUrl" value="login?${xquery}${not empty xquery ? '&' : ''}locale=" />
-                    <ul>
-                        <li class="first"><a href="${loginUrl}en">English</a></li>
-                        <li><a href="${loginUrl}es">Spanish</a></li>
-                        <li><a href="${loginUrl}fr">French</a></li>
-                        <li><a href="${loginUrl}ru">Russian</a></li>
-                        <li><a href="${loginUrl}nl">Nederlands</a></li>
-                        <li><a href="${loginUrl}sv">Svenska</a></li>
-                        <li><a href="${loginUrl}it">Italiano</a></li>
-                        <li><a href="${loginUrl}ur">Urdu</a></li>
-                        <li><a href="${loginUrl}zh_CN">Chinese (Simplified)</a></li>
-                        <li><a href="${loginUrl}zh_TW">Chinese (Traditional)</a></li>
-                        <li><a href="${loginUrl}de">Deutsch</a></li>
-                        <li><a href="${loginUrl}ja">Japanese</a></li>
-                        <li><a href="${loginUrl}hr">Croatian</a></li>
-                        <li><a href="${loginUrl}uk">Ukranian</a></li>
-                        <li><a href="${loginUrl}cs">Czech</a></li>
-                        <li><a href="${loginUrl}sl">Slovenian</a></li>
-                        <li><a href="${loginUrl}ca">Catalan</a></li>
-                        <li><a href="${loginUrl}mk">Macedonian</a></li>
-                        <li><a href="${loginUrl}fa">Farsi</a></li>
-                        <li><a href="${loginUrl}ar">Arabic</a></li>
-                        <li><a href="${loginUrl}pt_PT">Portuguese</a></li>
-                        <li><a href="${loginUrl}pt_BR">Portuguese (Brazil)</a></li>
-                        <li class="last"><a href="${loginUrl}pl">Polish</a></li>
-                    </ul>
-                </c:otherwise>
-            </c:choose>
-        </div>
-        -->
     </div>
 </div>
-<script type="text/javascript" src="<%=path %>/jquery/jquery-1.12.1.min.js" ></script>
-<script type="text/javascript" src="<%=path %>/jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
-<script type="text/javascript" src="<%=path %>/js/common.js" ></script>
-<script type="text/javascript" src="<%=path %>/js/pwdfoget.js" ></script>
-<script type="text/javascript" src="<%=path %>/js/userinfoedit.js" ></script>
-<script type="text/javascript" src="<%=path %>/js/caslogincaptcha.js" ></script>
 <jsp:directive.include file="bottom.jsp" />
+<script type="text/javascript" src="<%=bpath %>/js/loginpage.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/pwdfoget.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/userinfoedit.js" ></script>

@@ -1,22 +1,7 @@
 // common function for cas
 var context_path = $('#hidden_path_input').val();
 
-//load i18n
-(function(){
-	var url = context_path+"/uniauth/i18n/getLanguage";
-	var i18nName = "messages";
-	$.get(url, function(data){
-		var i18npath = context_path +'/i18n/';
-		 jQuery.i18n.properties({
-	         name : i18nName,
-	         path : i18npath,
-	         mode : 'map', 
-	         language : data
-		});
-  })
-})();
-
-//i18n click
+//i18n lang set
 function i18nset(localestr){
 	if(!localestr) {return};
 	var url = context_path+"/uniauth/i18n/setLanguage?locale="+localestr;
@@ -30,7 +15,6 @@ function i18nset(localestr){
 function getLocationParameterStr(){
 	// copy current url
 	var current_url = window.location.search;
-	
 	// 只取参数部分
 	var pindex =  current_url.indexOf("?");
 	if(pindex > -1) {
@@ -50,3 +34,18 @@ var refresh_verfypic = function(capatchElement) {
 	}
 	$(capatchElement).attr('src', context_path + '/uniauth/captcha?rnd=' + Math.random());
 }
+
+//load i18n
+$(function(){
+	var url = context_path+"/uniauth/i18n/getLanguage";
+	var i18nName = "messages";
+	$.get(url, function(data){
+		var i18npath = context_path +'/i18n/';
+		 jQuery.i18n.properties({
+	         name : i18nName,
+	         path : i18npath,
+	         mode : 'map', 
+	         language : data
+		});
+  })
+});
