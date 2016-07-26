@@ -1,103 +1,82 @@
-/*
- * Licensed to Apereo under one or more contributor license
- * agreements. See the NOTICE file distributed with this work
- * for additional information regarding copyright ownership.
- * Apereo licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file
- * except in compliance with the License.  You may obtain a
- * copy of the License at the following location:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+$(function() {
+	function areCookiesEnabled() {
+		$.cookie('cookiesEnabled', 'true');
+		var value = $.cookie('cookiesEnabled');
+		if (value != undefined) {
+			$.removeCookie('cookiesEnabled');
+			return true;
+		}
+		return false;
+	}
 
-var scripts = [ 
-//    "https://cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
-     context_path + "/jquery/jquery-1.12.1.min.js",
-    "https://cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js",
-    "https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js",
-    //"https://rawgithub.com/cowboy/javascript-debug/master/ba-debug.min.js"
-];
+	function getUrlParam(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return r[2];
+		return null;
+	}
 
-head.ready(document, function() {
-    head.load(scripts, resourceLoadedSuccessfully);
+	// init
+	if ($(":focus").length === 0) {
+		$("input:visible:enabled:first").focus();
+	}
+	if (areCookiesEnabled()) {
+		$('#cookiesDisabled').hide();
+	} else {
+		$('#cookiesDisabled').show();
+		$('#cookiesDisabled').animate({
+			backgroundColor : 'rgb(187,0,0)'
+		}, 30).animate({
+			backgroundColor : 'rgb(255,238,221)'
+		}, 500);
+	}
+	// flash error box
+	$('#msg.errors').animate({
+		backgroundColor : 'rgb(187,0,0)'
+	}, 30).animate({
+		backgroundColor : 'rgb(255,238,221)'
+	}, 500);
+	// flash success box
+	$('#msg.success').animate({
+		backgroundColor : 'rgb(51,204,0)'
+	}, 30).animate({
+		backgroundColor : 'rgb(221,255,170)'
+	}, 500);
+
+	// flash confirm box
+	$('#msg.question').animate({
+		backgroundColor : 'rgb(51,204,0)'
+	}, 30).animate({
+		backgroundColor : 'rgb(221,255,170)'
+	}, 500);
+
+	$('#capslock-on').hide();
+	$('#password').keypress(function(e) {
+		var s = String.fromCharCode(e.which);
+		if (s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey) {
+			$('#capslock-on').show();
+		} else {
+			$('#capslock-on').hide();
+		}
+	});
+
+	var currentService = getUrlParam("service");
+	$("#domain").val(currentService);
+	if (console && console.log) {
+		console.log("current selected domain:" + currentService);
+	}
+
+	if (typeof (jqueryReady) == "function") {
+		jqueryReady();
+	}
+
+	$("#domain").change(function() {
+		var selectedValue = $("#domain").val();
+		var location = window.location.href;
+		var pos = location.indexOf("?service=");
+		var url = location.substring(0, pos);
+		var redirect = url + "?service=" + selectedValue;
+		top.window.location = redirect;
+	});
 });
-
-function areCookiesEnabled() {
-    $.cookie('cookiesEnabled', 'true');
-    var value = $.cookie('cookiesEnabled');
-    if (value != undefined) {
-        $.removeCookie('cookiesEnabled');
-        return true;
-    }
-    return false;
-}
-
-function getUrlParam(name){  
-    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");  
-    var r = window.location.search.substr(1).match(reg);  
-    if (r!=null) return r[2];  
-    return null;  
-}  
-
-function resourceLoadedSuccessfully() {
-    $(document).ready(function() {
-        if ($(":focus").length === 0){
-            $("input:visible:enabled:first").focus();
-        }
-
-
-        if (areCookiesEnabled()) {
-           $('#cookiesDisabled').hide();
-        } else {
-           $('#cookiesDisabled').show();   
-           $('#cookiesDisabled').animate({ backgroundColor: 'rgb(187,0,0)' }, 30).animate({ backgroundColor: 'rgb(255,238,221)' }, 500);
-        }
-            
-        //flash error box
-        $('#msg.errors').animate({ backgroundColor: 'rgb(187,0,0)' }, 30).animate({ backgroundColor: 'rgb(255,238,221)' }, 500);
-
-        //flash success box
-        $('#msg.success').animate({ backgroundColor: 'rgb(51,204,0)' }, 30).animate({ backgroundColor: 'rgb(221,255,170)' }, 500);
-
-        //flash confirm box
-        $('#msg.question').animate({ backgroundColor: 'rgb(51,204,0)' }, 30).animate({ backgroundColor: 'rgb(221,255,170)' }, 500);
-
-        $('#capslock-on').hide();
-        $('#password').keypress(function(e) {
-            var s = String.fromCharCode( e.which );
-            if ( s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey ) {
-                $('#capslock-on').show();
-            } else {
-                $('#capslock-on').hide();
-            }
-        });
-
-        if (typeof(jqueryReady) == "function") {
-            jqueryReady();
-        }
-
-        $("#domain").change(function(){
-        	var selectedValue = $("#domain").val();
-        	var location = window.location.href;
-        	var pos = location.indexOf("?service=");
-        	var url = location.substring(0, pos);
-        	var redirect = url + "?service=" + selectedValue;
-        	top.window.location = redirect;
-        }); 
-    });
-};
-
-// fix sogou browser  bug
-(function(){
-	 var currentService = getUrlParam("service");
-     $("#domain").val(currentService);
-     console.log("current selected domain:"+currentService);
-})();
-
