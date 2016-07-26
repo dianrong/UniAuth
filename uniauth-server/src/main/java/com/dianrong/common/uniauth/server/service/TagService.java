@@ -110,12 +110,12 @@ public class TagService {
             }
         }
 
-        if(domainId != null || domainIds != null || domainCode != null) {
+        if(domainId != null || !CollectionUtils.isEmpty(domainIds) || domainCode != null) {
             List<Integer> unionDomainIds = new ArrayList<Integer>();
             if(domainId != null) {
                 unionDomainIds.add(domainId);
             }
-            if(domainIds != null) {
+            if(!CollectionUtils.isEmpty(domainIds)) {
                 unionDomainIds.addAll(domainIds);
             }
             if(domainCode != null) {
@@ -126,14 +126,16 @@ public class TagService {
                     for(Domain domain : domains) {
                         unionDomainIds.add(domain.getId());
                     }
+                } else {
+                    return null;
                 }
             }
             TagTypeExample tagTypeExample = new TagTypeExample();
             tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds);
             List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
-            if(!CollectionUtils.isEmpty(tagTypes)) {
+            if (!CollectionUtils.isEmpty(tagTypes)) {
                 List<Integer> tagTypeIds = new ArrayList<>();
-                for(TagType tagType:tagTypes) {
+                for (TagType tagType : tagTypes) {
                     tagTypeIds.add(tagType.getId());
                 }
                 criteria.andTagTypeIdIn(tagTypeIds);
