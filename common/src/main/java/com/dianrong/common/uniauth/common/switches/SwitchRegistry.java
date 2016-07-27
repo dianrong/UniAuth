@@ -57,7 +57,7 @@ public class SwitchRegistry {
 			zooKeeper.register(new SwitchWatch());
 			Stat exists = zooKeeper.exists(SWITCH_PATH_PREFIX, false);
 			if(exists == null){
-				zooKeeper.create(SWITCH_PATH_PREFIX, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+				zooKeeper.create(SWITCH_PATH_PREFIX, null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			}
 		} catch (Exception e) {
 			log.error("init SwitchRegistry error", e);
@@ -73,11 +73,8 @@ public class SwitchRegistry {
 	 */
 	public static void register(String appName,Class<?> switchClass) throws Exception{
 		if(!inited.get()){
-			log.error("registry not inited,please invoke init first!");
-			return;
+			init();
 		}
-		
-		
 		
 		Map<String,SwitchHolder> switchs = SWITCHS.get(appName);
 		if(switchs == null){
