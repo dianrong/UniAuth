@@ -45,6 +45,9 @@ public class SwitchRegistry {
 	
 	private static AtomicBoolean inited = new AtomicBoolean(false);
 	
+	/**
+	 * 初始化开关注册中心
+	 */
 	public static void init(){
 		if(!inited.compareAndSet(false, true)){
 			return;
@@ -62,15 +65,25 @@ public class SwitchRegistry {
 	}
 	
 	
+	/**
+	 * 
+	 * @param appName
+	 * @param switchClass
+	 * @throws Exception
+	 */
 	public static void register(String appName,Class<?> switchClass) throws Exception{
 		if(!inited.get()){
 			log.error("registry not inited,please invoke init first!");
 			return;
 		}
 		
-		if(SWITCHS.containsKey(appName)) return;
-		Map<String,SwitchHolder> switchs = Maps.newHashMap();
-		SWITCHS.put(appName, switchs);
+		
+		
+		Map<String,SwitchHolder> switchs = SWITCHS.get(appName);
+		if(switchs == null){
+			switchs = Maps.newHashMap();
+			SWITCHS.put(appName, switchs);
+		}
 		Field[] fields = switchClass.getFields();
 		String appPath = SWITCH_PATH_PREFIX+"/" +appName;
 		
@@ -87,26 +100,35 @@ public class SwitchRegistry {
 				String filedPath = appPath +"/" +name;
 				
 				SwitchReceiver receiver = (SwitchReceiver)switchDesc.recieiver().newInstance();
-				//读取远程持久化数据，优先读取指定ip的数据
-				if(zooKeeper.exists(filedPath +"/"+getLocalAddress(), false) != null &&
-						zooKeeper.getData(filedPath +"/"+getLocalAddress(), false,null) != null){
-					byte[] data = zooKeeper.getData(filedPath +"/"+getLocalAddress(), false, null);
-					try{
-						receiver.receive(f, new String(data));
-					}catch(Exception e){
-						log.error("init "+f.getName()+" error", e);
-					}
-					
-				}else if(zooKeeper.exists(filedPath +"/ALL", false) != null
-						&& zooKeeper.getData(filedPath +"/ALL", false,null) != null){
-					byte[] data = zooKeeper.getData(filedPath +"/ALL", false, null);
+				//读取远程持久化数据，优先读取指定ip的数据,如果两者都存在，则取后更新的。
+				Stat ipNode = zooKeeper.exists(filedPath +"/"+getLocalAddress(), false);
+				byte[] ipData = ipNode==null?null:zooKeeper.getData(filedPath +"/"+getLocalAddress(), false, null);
+				
+				Stat allNode = zooKeeper.exists(filedPath +"/ALL", false);
+				byte[] allData = allNode==null?null:zooKeeper.getData(filedPath +"/ALL", false, null);
+				
+				byte[] data = null;
+				if(ipNode == null){
+					data = allData;
+				}else if(allNode == null){
+					data = ipData;
+				}else if(ipNode.getMtime() > allNode.getMtime()){
+					data = ipData;
+				}else{
+					data = allData;
+				}
+				
+				if(data != null){
 					try{
 						receiver.receive(f, new String(data));
 					}catch(Exception e){
 						log.error("init "+f.getName()+" error", e);
 					}
 				}
-				switchs.put(name, new SwitchHolder(f, receiver));
+				
+				if(switchs.put(name, new SwitchHolder(f, receiver))!=null){
+					log.error(name+" has been rewrited!,current:"+switchClass.getName());
+				}
 				createPathIfNecessary(filedPath, "".getBytes(), Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
 				createPathIfNecessary(filedPath +"/ALL" , null, Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
 				createPathIfNecessary(filedPath +"/"+getLocalAddress() , null, Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
@@ -117,7 +139,10 @@ public class SwitchRegistry {
 		
 	}
 	
-	
+	/**
+	 * 获取本机的ip
+	 * @return
+	 */
 	private static String getLocalAddress() {
 		try {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();   
