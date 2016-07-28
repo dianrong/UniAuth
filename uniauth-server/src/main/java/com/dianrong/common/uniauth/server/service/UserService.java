@@ -87,7 +87,6 @@ import com.google.common.collect.Maps;
 @Service
 public class UserService {
 	
-	private static final Log logger = LogFactory.getLog(DataSourceUtils.class);
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -561,21 +560,13 @@ public class UserService {
 		CheckEmpty.checkEmpty(account, "账号");
 		User user = getUserByAccount(account, true);
 
-		long start = System.currentTimeMillis();
         UserDetailDto userDetailDto = getUserDetailDto(user);
-		
-        long end = System.currentTimeMillis();
-        System.out.println("getUserDetailInfo use:"+(end-start)+" ms");
         
 		return userDetailDto;
 	}
 
 
     private UserDetailDto getUserDetailDto(User user) {
-    	long sstart = System.currentTimeMillis();
-    	logger.error("start=================");
-    	
-    	 long prestart = System.currentTimeMillis();
         UserDetailDto userDetailDto = new UserDetailDto();
         UserDto userDto = BeanConverter.convert(user);
         setUserExtendVal(userDto);
@@ -589,8 +580,6 @@ public class UserService {
         Map<Integer, RoleCode> roleCodeMap = commonService.getRoleCodeMap();
         Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();
 
-        logger.error("per use:"+(System.currentTimeMillis()-prestart)+"ms");
-        
         if(UniauthSwitchs.useNewLoginSql){
         	Map<String, Object> userAndDomainMap = new HashMap<String, Object>();
             userAndDomainMap.put("userId", userId);
@@ -662,8 +651,6 @@ public class UserService {
         	fillInOld(domainList, userId, domainDtoList, roleCodeMap, permTypeMap);
         }
         
-        long send = System.currentTimeMillis();
-        logger.error("end=================("+(send - sstart)+")");
         return userDetailDto;
     }
     
@@ -672,17 +659,12 @@ public class UserService {
     		Map<Integer, PermType> permTypeMap){
     	if(domainList != null && !domainList.isEmpty()){
             for(Domain domain : domainList){
-            	long start = System.currentTimeMillis();
-            	logger.error("domain start========("+domain.getCode()+")");
-            	System.out.println("domain start========("+domain.getCode()+")");
                 Integer domainId = domain.getId();
                 
                 Map<String, Object> userAndDomainMap = new HashMap<String, Object>();
                 userAndDomainMap.put("userId", userId);
                 userAndDomainMap.put("domainId", domainId);
-                long rolestart = System.currentTimeMillis();
                 List<Role> roleList = roleMapper.getRolesByUserAndDomainId(userAndDomainMap);
-                logger.error("role use:"+(System.currentTimeMillis()-rolestart)+"ms");
                 List<RoleDto> roleDtoList = new ArrayList<RoleDto>();
 
                 DomainDto domainDto = BeanConverter.convert(domain);
@@ -692,9 +674,6 @@ public class UserService {
                 if(roleList != null){
                     for(Role role: roleList){
                     	if(!role.getDomainId().equals(domain.getId())) continue;
-                    	long startRole = System.currentTimeMillis();
-                    	logger.error("role start========("+domain.getCode()+")");
-                    	System.out.println("role start========("+domain.getCode()+")");
                         RoleDto roleDto = BeanConverter.convert(role);
                         roleDto.setRoleCode(roleCodeMap.get(role.getRoleCodeId()).getCode());
                         roleDtoList.add(roleDto);
@@ -731,14 +710,8 @@ public class UserService {
 
                         roleDto.setPermMap(permMap);
                         roleDto.setPermDtoMap(permDtoMap);
-                        long endRole = System.currentTimeMillis();
-                        logger.error("role end========("+domain.getCode()+"),time:"+(endRole-startRole)+"ms");
-                        System.out.println("role end========("+domain.getCode()+"),time:"+(endRole-startRole)+"ms");
                     }
                 }
-                long end = System.currentTimeMillis();
-                logger.error("domain end========("+domain.getCode()+"),time:"+(end - start) +"ms");
-                System.out.println("domain end========("+domain.getCode()+"),time:"+(end - start) +"ms");
             }
         }
     }

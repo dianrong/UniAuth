@@ -85,7 +85,7 @@ public class SwitchRegistry {
 		String appPath = SWITCH_PATH_PREFIX+"/" +appName;
 		
 		//创建应用主路径
-		createPathIfNecessary(appPath,"".getBytes(),Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+		createPathIfNecessary(appPath,null,Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
 		for(Field f : fields){
 			if(Modifier.isStatic(f.getModifiers()) && f.isAnnotationPresent(Switch.class)){
 				Switch switchDesc = f.getAnnotation(Switch.class);
@@ -126,7 +126,7 @@ public class SwitchRegistry {
 				if(switchs.put(name, new SwitchHolder(f, receiver))!=null){
 					log.error(name+" has been rewrited!,current:"+switchClass.getName());
 				}
-				createPathIfNecessary(filedPath, "".getBytes(), Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+				createPathIfNecessary(filedPath, null, Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
 				createPathIfNecessary(filedPath +"/ALL" , null, Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
 				createPathIfNecessary(filedPath +"/"+getLocalAddress() , null, Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
 				zooKeeper.getData(filedPath+"/ALL",  true,null);
