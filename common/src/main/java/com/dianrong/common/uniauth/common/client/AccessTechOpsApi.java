@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.client;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -50,13 +51,13 @@ public class AccessTechOpsApi {
         }
         String techOpsServerUrl = zooKeeperConfig.getTechOpsServerUrl(); //"https://techops-dev.dianrong.com";//zooKeeperConfig.getTechOpsServerUrl(); //"http://localhost:8090/techops/"; 
         String casServerUrl = zooKeeperConfig.getCasServerUrl(); //"https://passport-dev.dianrong.com";//zooKeeperConfig.getCasServerUrl(); //"http://localhost:9080/cas";  
-
-
+        
         String serviceString = "service=" + techOpsServerUrl + "/login/cas";
         String casRestBaseUrl = casServerUrl + "/v1/tickets";
 
         HttpContent tgtRequestHc = new HttpContent();
-        tgtRequestHc.setBody("username=" + account + "&password=" + password + "&" + serviceString);
+        String requestBody = "username=" + URLEncoder.encode(account) + "&password=" + URLEncoder.encode(password) + "&" + serviceString;
+        tgtRequestHc.setBody(requestBody);
         HttpContent tgtResponseHc = requestServer(casRestBaseUrl, "POST", tgtRequestHc, "application/x-www-form-urlencoded");
         logger.info("get tgt:" + tgtResponseHc.toString());
         String tgtRestUrl = tgtResponseHc.getHeaders().get("Location");
