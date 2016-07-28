@@ -1,18 +1,18 @@
 <form style="margin-left: -20px;" class="form-horizontal" name="auditQueryForm">
     <div class="form-group">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">UUID</span>
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="{{'auditMgr.transactionKey' | translate}}" ng-model="auditQuery.reqUuid" maxlength="40">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-sm-4 control-label">minElapse</span>
             <div class="col-sm-8">
                 <input type="text" class="form-control" placeholder="{{'auditMgr.minTime' | translate}}" ng-model="auditQuery.minReqElapse" maxlength="10">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <span class="col-md-4 control-label">maxElapse</span>
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="{{'auditMgr.maxTime' | translate}}" ng-model="auditQuery.maxReqElapse" maxlength="10">
@@ -20,13 +20,13 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">userId</span>
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="{{'auditMgr.userid' | translate}}" ng-model="auditQuery.userId" maxlength="16">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">minDate</span>
             <div class="col-md-8">
                 <p class="input-group">
@@ -37,7 +37,7 @@
                 </p>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <span class="col-md-4 control-label">maxDate</span>
             <div class="col-md-8">
                 <p class="input-group">
@@ -50,13 +50,13 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">param</span>
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="{{'auditMgr.filterString' | translate}}" ng-model="auditQuery.reqParam" maxlength="30">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">success</span>
             <div style="margin-left: 8px;" class="btn-group" uib-dropdown is-open="successDropdown.isOpen">
                 <button type="button" class="btn btn-primary" uib-dropdown-toggle>
@@ -70,7 +70,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <span class="col-md-4 control-label">orderBy</span>
             <div class="btn-group" uib-dropdown is-open="orderByDropdown.isOpen">
                 <button type="button" class="btn btn-primary" uib-dropdown-toggle>
