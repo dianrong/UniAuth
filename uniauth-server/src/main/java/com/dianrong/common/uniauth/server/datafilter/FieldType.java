@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.server.datafilter;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**.
  * 枚举关键字段取值的类型
  * @author wanglin
@@ -59,7 +61,15 @@ public enum FieldType {
 	/**.
 	 * extend_id
 	 */
-	FIELD_TYPE_EXTEND_ID;
+	FIELD_TYPE_EXTEND_ID,
+	/**.
+	 * roleTypeId
+	 */
+	FIELD_TYPE_ROLE_CODE_ID,
+	/**.
+	 * name
+	 */
+	FIELD_TYPE_NAME;
 	
 	/**.
 	 * 获取fieldType的字符串描述符
@@ -96,6 +106,24 @@ public enum FieldType {
 			}
 		}
 		return toValue.toString();
+	}
+	
+	/**.
+	 * 根据枚举获取属性名称
+	 * @param type
+	 * @return 名称
+	 */
+	public static String getFieldName(FieldType type){
+		String filedTypeDesc = getTypeDes(type);
+		if(StringUtils.isEmpty(filedTypeDesc)) {
+			return filedTypeDesc;
+		}
+		String prefix = "fieldType";
+		int index = filedTypeDesc.indexOf(prefix);
+		if (index != -1) {
+			return filedTypeDesc.substring(index + prefix.length());
+		}
+		return filedTypeDesc;
 	}
 	
 	/**.

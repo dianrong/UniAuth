@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 
 /**.
  * 组的数据过滤处理实现.
@@ -77,6 +78,6 @@ public class GroupDataFilter extends CurrentAbstractDataFilter {
 
 	@Override
 	protected String getProcessTableName() {
-		return "组数据";
+		return UniBundle.getMsg("data.filter.table.name.group");
 	}
 }

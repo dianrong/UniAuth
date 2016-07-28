@@ -62,9 +62,9 @@ $(function() {
 	});
 
 	var currentService = getUrlParam("service");
-	$("#domain").val(currentService);
+	$("#domain").val(currentService?encodeURIComponent(currentService):"");
 	if (console && console.log) {
-		console.log("current selected domain:" + currentService);
+		console.log("current selected domain:" + decodeURIComponent(currentService));
 	}
 
 	if (typeof (jqueryReady) == "function") {
