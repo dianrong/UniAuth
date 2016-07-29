@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 
 /**.
  * 用户扩展字段数据过滤处理
@@ -76,6 +77,6 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter{
 
 	@Override
 	protected String getProcessTableName() {
-		return "用户扩展数据";
+		return UniBundle.getMsg("data.filter.table.name.userextend");
 	}
 }

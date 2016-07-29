@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -49,6 +50,7 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 			
 			response.setContentType("application/json");
 			response.addHeader("Cache-Control", "no-store");
+			response.setStatus(200);
 			
 			response.getWriter().println("{");
 			response.getWriter().println("\"info\":");
