@@ -1,12 +1,5 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
-import java.lang.reflect.Field;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
@@ -19,12 +12,6 @@ import com.dianrong.common.uniauth.server.datafilter.FilterType;
  *
  */
 public abstract class AbstractDataFilter implements DataFilter {
-	
-	/**.
-	 *  日志对象
-	 */
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	/**
 	 * . 数据过滤的开关变量
 	 */
@@ -127,38 +114,5 @@ public abstract class AbstractDataFilter implements DataFilter {
 
 	public void setDataFilterSwitch(boolean dataFilterSwitch) {
 		this.dataFilterSwitch = dataFilterSwitch;
-	}
-
-	/**
-	 * . 从Role中获取数据
-	 * 
-	 * @param obj
-	 *            Role
-	 * @param type
-	 *            结果
-	 * @return 结果
-	 */
-	protected Object getObjectValue(Object obj, FieldType type) {
-		if (obj == null) {
-			return null;
-		}
-		try {
-			String fieldName = FieldType.getFieldName(type);
-			if (StringUtils.isEmpty(fieldName)) {
-				return null;
-			};
-			
-			fieldName = String.valueOf(fieldName.charAt(0)).toLowerCase() + fieldName.substring(1, fieldName.length());
-			Field field = ReflectionUtils.findField(obj.getClass(), fieldName);
-			if (field == null) {
-				return null;
-			}
-			field.setAccessible(true);
-			// 通过反射获取值
-			return ReflectionUtils.getField(field, obj);
-		} catch (Exception ex) {
-			logger.warn("failed get object filed", ex);
-		}
-		return null;
 	}
 }

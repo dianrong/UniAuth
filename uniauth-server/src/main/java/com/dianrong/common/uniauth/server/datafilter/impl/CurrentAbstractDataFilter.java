@@ -1,5 +1,11 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import java.lang.reflect.Field;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ReflectionUtils;
+
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
@@ -11,11 +17,14 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 
 /**
  * . 目前阶段需要处理的一个比较固定的流程
- * 
  * @author wanglin
- *
  */
 public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
+	/**.
+	 *  日志对象
+	 */
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	// 默认实现都放这里 需要的自己重写
 	@Override
 	protected void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue) {
@@ -92,11 +101,42 @@ public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
 			if (sb.toString().length() > 0) {
 				sb.append(filterEle);
 			}
-			sb.append(FieldType.getTypeDes(fd.getType()));
+			sb.append(fd.getType());
 			sb.append(filterKeyVal);
 			sb.append(StringUtil.getObjectStr(fd.getValue()));
 		}
 		return sb.toString();
+	}
+	
+
+	/**
+	 * . 从Role中获取数据
+	 * 
+	 * @param obj
+	 *            Role
+	 * @param type
+	 *            结果
+	 * @return 结果
+	 */
+	protected Object getObjectValue(Object obj, FieldType type) {
+		if (obj == null) {
+			return null;
+		}
+		try {
+			if(type == null) {
+				return null;
+			}
+			Field field = ReflectionUtils.findField(obj.getClass(), type.getFieldName());
+			if (field == null) {
+				return null;
+			}
+			field.setAccessible(true);
+			// 通过反射获取值
+			return ReflectionUtils.getField(field, obj);
+		} catch (Exception ex) {
+			logger.warn("failed get object filed", ex);
+		}
+		return null;
 	}
 
 	/**

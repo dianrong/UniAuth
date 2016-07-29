@@ -61,11 +61,22 @@ $(function() {
 		}
 	});
 
-	var currentService = getUrlParam("service");
-	$("#domain").val(currentService?encodeURIComponent(currentService):"");
+	$("#domain").val(uriEncodeOnce(getUrlParam("service")));
 	if (console && console.log) {
-		console.log("current selected domain:" + decodeURIComponent(currentService));
+		console.log("current selected domain:" + getUrlParam("service"));
 	}
+	
+	// uriencode once
+	function uriEncodeOnce(uri_str) {
+		if(!uri_str){return ""};
+		var d_str = decodeURIComponent(uri_str);
+		if (uri_str === d_str) {
+			return encodeURIComponent(uri_str);
+		}
+		// already encode
+		return uri_str;
+	}
+	
 
 	if (typeof (jqueryReady) == "function") {
 		jqueryReady();
