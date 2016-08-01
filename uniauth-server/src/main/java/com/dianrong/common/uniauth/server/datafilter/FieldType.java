@@ -9,104 +9,87 @@ public enum FieldType {
 	/**.
 	 * 通过id去查找
 	 */
-	FIELD_TYPE_ID,
+	FIELD_TYPE_ID("id", "fieldTypeId"),
 	
 	/**.
 	 * 通过code去查找
 	 */
-	FIELD_TYPE_CODE,
+	FIELD_TYPE_CODE("code", "fieldTypeCode"),
 
 	/**.
 	 * 通过email去查找
 	 */
-	FIELD_TYPE_EMAIL,
+	FIELD_TYPE_EMAIL("email", "fieldTypeEmail"),
 
 	/**.
 	 * 通过phone去查找
 	 */
-	FIELD_TYPE_PHONE,
+	FIELD_TYPE_PHONE("phone", "fieldTypePhone"),
 	
 	/**.
 	 * 通过表的value字段来找
 	 */
-	FIELD_TYPE_VALUE,
+	FIELD_TYPE_VALUE("value", "fieldTypeValue"),
 	
 	/**.
 	 * 通过表的cfg_key字段来找
 	 */
-	FIELD_TYPE_CFG_KEY,
+	FIELD_TYPE_CFG_KEY("cfgKey", "fieldTypeCfgKey"),
 	
 	/**.
 	 * type_id
 	 */
-	FIELD_TYPE_PERM_TYPE_ID,
+	FIELD_TYPE_PERM_TYPE_ID("permTypeId", "fieldTypePermTypeId"),
 	
 	/**.
 	 * domain_id
 	 */
-	FIELD_TYPE_DOMAIN_ID,
+	FIELD_TYPE_DOMAIN_ID("domainId", "fieldTypeDomainId"),
 	
 	/**.
 	 * tag_type_id
 	 */
-	FIELD_TYPE_TAG_TYPE_ID,
+	FIELD_TYPE_TAG_TYPE_ID("tagTypeId", "fieldTypeTagTypeId"),
 	
 	/**.
 	 * user_id
 	 */
-	FIELD_TYPE_USER_ID,
+	FIELD_TYPE_USER_ID("userId", "fieldTypeUserId"),
 	
 	/**.
 	 * extend_id
 	 */
-	FIELD_TYPE_EXTEND_ID;
-	
+	FIELD_TYPE_EXTEND_ID("extendId", "fieldTypeExtendId"),
 	/**.
-	 * 获取fieldType的字符串描述符
-	 * @param type type
-	 * @return 描述符
+	 * roleTypeId
 	 */
-	public static String getTypeDes(FieldType type){
-		if(type == null) {
-			return "";
-		}
-		String value = type.toString();
-		int index = value.indexOf("FIELD_TYPE_");
-		if(index != -1) {
-			value = value.substring(index);
-		}
-		//转化为小写
-		value = value.toLowerCase();
-		//驼峰写法
-		char[] chars = value.toCharArray();
-		StringBuilder toValue = new StringBuilder();
-		if(chars != null && chars.length > 0) {
-			boolean toUpper = false;
-			for(int i = 0 ; i < chars.length ; i ++) {
-				if(chars[i] == '_') {
-					toUpper = true;
-				} else {
-					if(toUpper) {
-						toValue.append(lowerToUpper(chars[i]));
-					} else {
-						toValue.append(chars[i]);
-					}
-					toUpper = false;
-				}
-			}
-		}
-		return toValue.toString();
+	FIELD_TYPE_ROLE_CODE_ID("roleCodeId", "fieldTypeRoleCodeId"),
+	/**.
+	 * name
+	 */
+	FIELD_TYPE_NAME("name", "fieldTypeName");
+	
+	// 字段名称
+	private final String fieldName;
+	
+	// 描述
+	private final String typeDes;
+	
+	private FieldType(String fieldName, String typeDes){
+		this.fieldName = fieldName;
+		this.typeDes = typeDes;
 	}
 	
-	/**.
-	 * 小写转大写
-	 * @param c
-	 * @return
-	 */
-	private static char lowerToUpper(char c) {
-		if(c >= 'a' && c <= 'z') {
-			return (char)(c - 32);
-		}
-		return c;
+	public String getFieldName() {
+		return fieldName;
+	}
+
+	public String getTypeDes() {
+		return typeDes;
+	}
+	
+	@Override
+	public String toString(){
+		return typeDes;
 	}
 }

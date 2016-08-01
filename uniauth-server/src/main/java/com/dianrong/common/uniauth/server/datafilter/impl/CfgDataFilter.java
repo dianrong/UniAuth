@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 
 /**.
  * 配置的数据过滤处理实现.
@@ -74,6 +75,6 @@ public class CfgDataFilter extends CurrentAbstractDataFilter {
 
 	@Override
 	protected String getProcessTableName() {
-		return "配置数据";
+		return UniBundle.getMsg("data.filter.table.name.cfg");
 	}
 }
