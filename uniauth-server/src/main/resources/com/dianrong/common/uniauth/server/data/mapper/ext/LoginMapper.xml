@@ -42,7 +42,7 @@ from
                     from
                         grp_path gp1, user_grp ug1, grp g1
                     where
-                        ug1.user_id = 300000001
+                        ug1.user_id = #{userId,jdbcType=BIGINT})
                             and ug1.grp_id = gp1.descendant
                             and ug1.type = 0
                             and gp1.ancestor = g1.id
