@@ -5,7 +5,7 @@
 define({
         apiBase: (function() {
             var origin = window.document.location.origin;
-            if(origin.indexOf("://techops") > 0) {
+            if(origin.indexOf("techops") > 0) {
                 return origin;
             } else {
                 return origin + "/techops";
@@ -13,7 +13,7 @@ define({
         })(),
         logout: (function() {
             var origin = window.document.location.origin;
-            if(origin.indexOf("://techops") > 0) {
+            if(origin.indexOf("techops") > 0) {
                 return origin + "/logout/cas";
             } else {
                 return origin + "/techops/logout/cas";
