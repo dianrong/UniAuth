@@ -1,4 +1,4 @@
-define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad', 'ngSanitize', 'dialogs', 'ngTreeController',
+define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate', 'ngTranslateLoad','ngSanitize', 'dialogs', 'ngTreeController',
     'controllers/main-controller', 'utils/constant', 'utils/utils', 'angularFileUpload', 'ngAnimate', 'ui-select','angular.ui.bootstrap',
     'ngLocalStorage'],
   function(angular, ngResource, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
@@ -11,7 +11,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 
         (function () {
 
-            fetchPermission().then(bootstrapApplication);
+            fetchPermission().then(fetchLanguages).then(bootstrapApplication);
 
             function fetchPermission() {
                 var initInjector = angular.injector(["ng"]);
@@ -26,6 +26,18 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
                 });
             }
 
+	    function fetchLanguages() {
+                var initInjector = angular.injector(["ng"]);
+                var $http = initInjector.get("$http");
+                return $http.get(constant.apiBase + "/i18n/query").then(function (res) {
+                    app.constant("languages", {
+                        langs : res.data.data
+                    });
+                }, function (errorResponse) {
+                    console.log('app init failed....');
+                });
+            }
+
             function bootstrapApplication() {
                 angular.element(document).ready(function () {
                     angular.bootstrap(document, [appName]);
@@ -34,8 +46,22 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         }());
     };
 
-    app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', '$http',
-        function ($cookies, $location, $rootScope, $state, $stateParams, permission, $http) {
+	app.controller('Ctrl', ['$translate', '$scope','$http','$rootScope', function ($translate, $scope,$http,$rootScope) {
+	 
+	  $scope.changeLanguage = function (langKey,it) {
+		  $http.get(constant.apiBase + "/i18n/changeLanguage?lang="+langKey).then(function (res) {
+			  		$translate.use(langKey);
+					$rootScope.translateConstant();
+					$scope.languagesDropdown.selectOption(it)
+		        }, function (errorResponse) {
+		        	console.log('change language error');
+		        	//$translate.use(langKey);
+		        });
+	  };
+	}]);
+
+     app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', '$http','languages','$translate',
+        function ($cookies, $location, $rootScope, $state, $stateParams, permission, $http,languages,$translate) {
       // It's very handy to add references to $state and $stateParams to the $rootScope
       // so that you can access them from any scope within your applications.For example,
       // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
@@ -45,20 +71,52 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
+      $rootScope.translate=function(msg){
+    	  return $translate.instant(msg);
+      };
+      $rootScope.translateOptions = function(options){
+    	  for( i in options){
+    		  if(options[i].code){
+    			  options[i].name= $rootScope.translate(options[i].code)
+    		  }
+    	  }
+      };
+      $rootScope.translateConstant = function(){
+    	//对constant进行翻译
+    	  constant.loadEmpty=$rootScope.translate(constant.loadEmpty_code);
+    	  constant.loading=$rootScope.translate(constant.loading_code);
+    	  constant.createError=$rootScope.translate(constant.createError_code);
+    	  constant.submitFail=$rootScope.translate(constant.submitFail_code);
+    	  constant.loadError=$rootScope.translate(constant.loadError_code);
+    	  $rootScope.translateOptions(constant.commonStatus);
+    	  $rootScope.translateOptions(constant.auditOrderBy);
+    	  $rootScope.translateOptions(constant.success);
+    	  $rootScope.translateOptions(constant.ascDesc);
+      };
       utils.generatorDropdown($rootScope, 'loginDomainsDropdown', permission.userInfo.switchableDomains, permission.userInfo.switchableDomains[0]);
+      var currentLang ;
+      angular.forEach(languages.langs.supportLanguages,function(item){
+    	  if(item.code== languages.langs.current){
+    		  currentLang = item;
+    	  }
+      });
+      utils.generatorDropdown($rootScope, 'languagesDropdown', languages.langs.supportLanguages, currentLang || languages.langs.supportLanguages[0]);
       $http.get(constant.apiBase + "/cfg/download/TECHOPS_TITLE").then(function (res) {
         if(res.data && res.data.data && res.data.data.value) {
           $rootScope.pageTitle = res.data.data.value;
         } else {
-          $rootScope.pageTitle = '权限运维系统';
+          $rootScope.pageTitle = $translate.instant('header.title');
         }
+        $rootScope.translateConstant();
       }, function (errorResponse) {
-          $rootScope.pageTitle = '权限运维系统';
+          $rootScope.pageTitle = $translate.instant('header.title');
+          $rootScope.translateConstant();
       });
+      
     }]);
-
-    app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$rootScopeProvider',
-        function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $rootScopeProvider) {
+    
+    app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$rootScopeProvider','languages',
+        function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $rootScopeProvider,languages) {
         //$rootScopeProvider.digestTtl(100);
         $httpProvider.defaults.useXDomain = true;
         $httpProvider.defaults.withCredentials = true;
@@ -202,43 +260,14 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             url: '/non-authorized',
             templateUrl: 'views/common/non-authorized.html'
         });
+        
+        
+        $translateProvider.useUrlLoader('servicei18n');
+        
+        $translateProvider.preferredLanguage(languages.langs.current);
+        
+        //$translateProvider.fallbackLanguage('zh');
 
-        $translateProvider.useSanitizeValueStrategy('sanitize');
-        $translateProvider.translations('en-US',{
-            DIALOGS_ERROR: "Error",
-            DIALOGS_ERROR_MSG: "An unknown error has occurred.",
-            DIALOGS_CLOSE: "Close",
-            DIALOGS_PLEASE_WAIT: "Please Wait",
-            DIALOGS_PLEASE_WAIT_ELIPS: "Please Wait...",
-            DIALOGS_PLEASE_WAIT_MSG: "Waiting on operation to complete.",
-            DIALOGS_PERCENT_COMPLETE: "% Complete",
-            DIALOGS_NOTIFICATION: "Notification",
-            DIALOGS_NOTIFICATION_MSG: "Unknown application notification.",
-            DIALOGS_CONFIRMATION: "Confirmation",
-            DIALOGS_CONFIRMATION_MSG: "Confirmation required.",
-            DIALOGS_OK: "OK",
-            DIALOGS_YES: "Yes",
-            DIALOGS_NO: "No"
-        });
-
-        $translateProvider.translations('zh-CN',{
-            DIALOGS_ERROR: "错误",
-            DIALOGS_ERROR_MSG: "出现未知错误。",
-            DIALOGS_CLOSE: "关闭",
-            DIALOGS_PLEASE_WAIT: "请稍候",
-            DIALOGS_PLEASE_WAIT_ELIPS: "请稍候...",
-            DIALOGS_PLEASE_WAIT_MSG: "请等待操作完成。",
-            DIALOGS_PERCENT_COMPLETE: "% 已完成",
-            DIALOGS_NOTIFICATION: "通知",
-            DIALOGS_NOTIFICATION_MSG: "未知应用程序的通知。",
-            DIALOGS_CONFIRMATION: "确认",
-            DIALOGS_CONFIRMATION_MSG: "确认要求。",
-            DIALOGS_OK: "确定",
-            DIALOGS_YES: "确认",
-            DIALOGS_NO: "取消"
-        });
-
-        $translateProvider.preferredLanguage('zh-CN');
     }]);
     return app;
 });

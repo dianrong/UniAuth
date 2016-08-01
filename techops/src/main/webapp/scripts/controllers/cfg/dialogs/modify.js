@@ -58,11 +58,11 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                         $scope.msg = res.info[0].msg;
                         return;
                     } else {
-                        AlertService.addAutoDismissAlert(constant.messageType.info, '配置修改成功.');
+                        AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('cfgMgr.tips.modifySuccess'));
                         $uibModalInstance.close();
                     }
                 }, function(err) {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, '配置修改失败.');
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('cfgMgr.tips.modifyFailure'));
                     $uibModalInstance.close();
                 }
             );
@@ -99,19 +99,19 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
             fileItem.formData.push(valueObj);
 
             fileItem.onProgress = function(progress) {
-                AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传中...');
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('cfgMgr.tips.uploading'));
             }
             fileItem.onComplete = function(response, status, headers) {
                 if(response.info) {
                     $scope.msg = response.info[0].msg;
                     return;
                 } else {
-                    AlertService.addAutoDismissAlert(constant.messageType.info, '配置文件上传成功.');
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('cfgMgr.tips.uploadSuccess'));
                     $uibModalInstance.close();
                 }
             }
             fileItem.onError = function(response, status, headers) {
-                AlertService.addAlert(constant.messageType.danger, '配置文件上传失败.');
+                AlertService.addAlert(constant.messageType.danger, $rootScope.translate('cfgMgr.tips.uploadFailure'));
                 $uibModalInstance.close();
             }
         };

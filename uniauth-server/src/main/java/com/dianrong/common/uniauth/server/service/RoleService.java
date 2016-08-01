@@ -45,6 +45,7 @@ import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
@@ -106,6 +107,11 @@ public class RoleService {
 
         //domainid必须是有效的
         domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+        //不能存在domainid，roleCodeId，name完全一致的 role
+        dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, 
+        		FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
+        		FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, roleCodeId),
+        		FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, name));
         
 //        if(domainMapper.selectByPrimaryKey(domainId) == null) {
 //            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", domainId, Domain.class.getSimpleName()));
@@ -124,7 +130,6 @@ public class RoleService {
     public void updateRole(Integer roleId, Integer roleCodeId, String name, String description, Byte status) {
         CheckEmpty.checkEmpty(roleId, "roleId");
         Role role = roleMapper.selectByPrimaryKey(roleId);
-//        Role role = roleMapper.selectByIdWithStatusEffective(roleId);
         
         if(role == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleId, Role.class.getSimpleName()));
@@ -140,7 +145,12 @@ public class RoleService {
         role.setDescription(description);
         role.setName(name);
         role.setRoleCodeId(roleCodeId);
-
+        
+        //不能存在domainid，roleCodeId，name完全一致的 role
+        dataFilter.filterFieldValueIsExistWithCondtionsEqual(roleId, FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, role.getDomainId()),
+        		FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, role.getRoleCodeId()),
+        		FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, role.getName()));
+        
         roleMapper.updateByPrimaryKey(role);
     }
     @Transactional

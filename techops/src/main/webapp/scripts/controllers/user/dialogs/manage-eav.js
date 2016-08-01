@@ -66,9 +66,9 @@ define(['../../../utils/constant'], function (constant) {
                         return;
                     }
                     eavCode.id = result.id;
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "EAV-CODE添加成功.");
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScopt.translate('userMgr.tips.addEavSuccess'));
                 }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, "EAV-CODE添加失败, 请联系系统管理员.");
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScopt.translate('userMgr.tips.addEavFailure'));
                 });
             } else {
             	// 修改
@@ -82,9 +82,9 @@ define(['../../../utils/constant'], function (constant) {
                         return;
                     }
                     exchangeItemToFirst(eavCode, $scope.eavCodes);
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "EAV-CODE更新成功.");
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.updateEavSuccess'));
                 }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, "EAV-CODE更新失败, 请联系系统管理员.");
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.updateEavFailure'));
                 });
             }
             eavCode.editable = false;

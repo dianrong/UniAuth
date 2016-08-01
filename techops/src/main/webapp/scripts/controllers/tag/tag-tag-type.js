@@ -67,10 +67,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         $scope.cancelEdit(tagType);
                         return;
                     }
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "标签创建成功.");
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('tagMgr.tips.createTagSuccess'));
                     tagType.id = result.id;
                 }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, "标签创建失败, 请联系系统管理员.");
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('tagMgr.tips.createTagFailure'));
                 });
             } else {
                 TagService.updateTagType(param, function (res) {
@@ -82,9 +82,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                         $scope.cancelEdit(tagType);
                         return;
                     }
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "标签更新成功.");
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('tagMgr.tips.modifyTagSuccess'));
                 }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, "标签更新失败, 请联系系统管理员.");
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('tagMgr.tips.modifyTagFailure'));
                 });
             }
             tagType.editable = false;
@@ -115,8 +115,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 case 'del':
                     var dlg = dialogs.create('views/common/dialogs/enable-disable.html','EnableDisableController',
                         {
-                            "header":'删除标签类型',
-                            "msg":"您确定要删除标签类型: " + param.code + "吗? 警告:该操作将级联删除其对应的呗禁用标签, 以及标签与人, 标签与组的关系."
+                            "header":$rootScope.translate('tagMgr.tips.delTagType'),
+                            "msg":$rootScope.translate('tagMgr.tips.confirmMsgPre')+ param.code + $rootScope.translate('tagMgr.tips.confirmMsgSuffix')
                         }, {size:'md'}
                     );
                     dlg.result.then(function (yes) {
@@ -136,9 +136,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                                 if($scope.tagTypes.length == 0) {
                                     $scope.tagTypesLoading = constant.loadEmpty;
                                 }
-                                AlertService.addAutoDismissAlert(constant.messageType.info, "删除标签类型成功.");
+                                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('tagMgr.tips.delTagSuccess'));
                             }, function(err) {
-                                AlertService.addAutoDismissAlert(constant.messageType.info, "删除标签类型失败, 请联系系统管理员.");
+                                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('tagMgr.tips.delTagFailure'));
                             }
                         );
                     }, function (no) {
@@ -149,6 +149,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         };
 
         $scope.$on('selected-domain-changed', $scope.queryTagTypes);
+        $scope.$on('selected-language-changed', $scope.queryTagTypes);
+        
 
     };
 

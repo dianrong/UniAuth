@@ -23,8 +23,11 @@
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />
+            <bean class="com.dianrong.common.uniauth.common.server.UniauthCxfServerLocaleFillter"/>
             <!--<ref bean="wadlGenerator" />-->
         </jaxrs:providers>
+        <jaxrs:inInterceptors>
+        </jaxrs:inInterceptors>
     </jaxrs:server>
 
     <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">

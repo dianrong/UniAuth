@@ -26,7 +26,7 @@ public class AuthUtils {
     private static final int MAX_PASSWORD_LENGTH = 20;
     private static final String DIGITS = "0123456789";
     private static final String LETTERS = "abcdefghijklmnopqrstuvwxyz";
-    private static final String SPECIALS = "!@#$%^&*()_+-=,.?/;:{}[]|`~";
+    private static final String SPECIALS = "!@#$%^&*()_+-=,.?/;:{}[]|`~<>'";
 
     public static byte[] createSalt() {
         byte[] salt = new byte[16];

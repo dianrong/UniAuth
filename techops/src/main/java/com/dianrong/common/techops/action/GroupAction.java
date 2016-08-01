@@ -33,7 +33,6 @@ public class GroupAction {
     @Resource
     private UARWFacade uARWFacade;
 
-    // perm double checked
     @RequestMapping(value = "/tree" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<?> getGroupTree(@RequestBody GroupParam groupParam) {
@@ -129,6 +128,13 @@ public class GroupAction {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
     public Response<GroupDto> modifyGroup(@RequestBody GroupParam groupParam) {
         Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().updateGroup(groupParam);
+        return groupDto;
+    }
+    
+    @RequestMapping(value = "/del" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
+    public Response<GroupDto> deleteGroup(@RequestBody GroupParam groupParam) {
+        Response<GroupDto> groupDto = uARWFacade.getGroupRWResource().deleteGroup(groupParam);
         return groupDto;
     }
 

@@ -14,6 +14,7 @@ dependencies {
     compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxf_version}"
     compile 'org.eclipse.persistence:org.eclipse.persistence.moxy:2.6.0'
     compile "com.fasterxml.jackson.core:jackson-annotations:2.6.0"
+    
     //Test Suite
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
@@ -27,11 +28,15 @@ dependencies {
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
 	compile 'commons-httpclient:commons-httpclient:3.1'
 	
-	compile 'org.jasig.cas.client:cas-client-core:3.4.1'
 	compile 'javax.servlet:javax.servlet-api:3.1.0'
 	
 	//fastjson
 	compile 'com.alibaba:fastjson:1.2.12'
+	// cas
+	providedCompile 'org.jasig.cas.client:cas-client-core:3.4.1'
+	
+	// spring
+	providedCompile   "org.springframework:spring-webmvc:4.1.6.RELEASE"
 }
 
 jar {

@@ -1,5 +1,5 @@
 define(['../../../utils/constant'], function (constant) {
-    var Controller = function ($scope, $uibModalInstance, EvaService, AlertService, data) {
+    var Controller = function ($rootScope,$scope, $uibModalInstance, EvaService, AlertService, data) {
     	  //-- Variables --//
         $scope.user = data;
         // 查询条件
@@ -76,13 +76,13 @@ define(['../../../utils/constant'], function (constant) {
                 getElemFromToUseToUsed(userEav);
                 // 重新计算前端的辅助值
                 computeNewData(true);
-                AlertService.addAutoDismissAlert(constant.messageType.info, "添加成功.");
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.addEavSuccess'));
                 // 关闭添加框
                 $scope.cancelAddEav();
                 // 初始化选择框
                 initSelectEavCode();
             }, function () {
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "添加失败, 请联系系统管理员.");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.addEavFailure'));
             });
         }
         
@@ -108,9 +108,9 @@ define(['../../../utils/constant'], function (constant) {
                     
                     // 更新数据了 使用中的数据进行排序
                     computeNewData(true);
-                    AlertService.addAutoDismissAlert(constant.messageType.info, "更新成功.");
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.modifyEavSuccess'));
                 }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, "更新失败, 请联系系统管理员.");
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.modifyEavFailure'));
                 });
             }
             userEav.editable = false;
@@ -150,12 +150,12 @@ define(['../../../utils/constant'], function (constant) {
                      }
                      return;
                  }
-                 AlertService.addAutoDismissAlert(constant.messageType.info, "禁用成功.");
+                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.disableEavSuccess'));
                  userEav.status = '1';
                  // 重新计算数据的权重值和排序
                  computeNewData(false);
              }, function () {
-                 AlertService.addAutoDismissAlert(constant.messageType.danger, "禁用失败, 请联系系统管理员.");
+                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.disableEavFailure'));
              });
         };
         
@@ -171,12 +171,12 @@ define(['../../../utils/constant'], function (constant) {
                      }
                      return;
                  }
-                 AlertService.addAutoDismissAlert(constant.messageType.info, "启用成功.");
+                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.enableEavSuccess'));
                  userEav.status = '0';
                  // 重新计算数据的权重值和排序
                  computeNewData(false);
              }, function () {
-                 AlertService.addAutoDismissAlert(constant.messageType.danger, "启用失败, 请联系系统管理员.");
+                 AlertService.addAutoDismissAlert(constant.messageType.danger,$rootScope.translate('userMgr.tips.enableEavFailure'));
              });
         };
         
@@ -324,6 +324,6 @@ define(['../../../utils/constant'], function (constant) {
 
     return {
         name: "UserEavController",
-        fn: ["$scope", "$uibModalInstance", "EavService", "AlertService", "data", Controller]
+        fn: ["$rootScope","$scope", "$uibModalInstance", "EavService", "AlertService", "data", Controller]
     };
 });

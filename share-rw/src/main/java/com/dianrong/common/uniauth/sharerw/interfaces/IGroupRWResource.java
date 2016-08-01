@@ -32,6 +32,10 @@ public interface IGroupRWResource extends IGroupResource {
     @Path("updategroup")
     //scenario: modify group info
     Response<GroupDto> updateGroup(GroupParam groupParam);
+    
+    @POST
+    @Path("deleteGroup")
+    Response<GroupDto> deleteGroup(GroupParam groupParam);
 
     @POST
     @Path("saverolestogroup")

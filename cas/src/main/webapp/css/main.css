@@ -426,3 +426,21 @@
 	color: black;
 	font-weight: bold;
 }
+
+.i18n-div span {
+	padding-left: 10px;
+	padding-right: 10px;
+	color: #00bc8d;
+	margin-top: -10px;
+}
+
+.i18n-div  .normal {
+	text-decoration: underline;
+	font-style: oblique;
+	cursor: pointer;
+}
+
+.i18n-div  .selected {
+	font-weight: bold;
+	cursor: auto;
+}

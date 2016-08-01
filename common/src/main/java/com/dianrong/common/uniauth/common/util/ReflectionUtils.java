@@ -52,7 +52,7 @@ public class ReflectionUtils {
 			Method method = targetObj.getClass().getMethod(methodName, new Class[0]);
 			object = method.invoke(targetObj, new Object[0]);
 		}catch(Exception e){
-			logger.warn("exception", e);
+		    logger.warn(e.getMessage());
 		}
 		return object;
 	}
@@ -72,7 +72,7 @@ public class ReflectionUtils {
 		try{
 			field.set(targetObj, fieldValue);
 		}catch(Exception e){
-			logger.warn("exception", e);
+		    logger.warn(e.getMessage());
 		}
 	}
 	
@@ -83,7 +83,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			field.set(null, fieldValue);
 		}catch(Exception e){
-			logger.warn("exception", e);
+		    logger.warn(e.getMessage());
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			object = field.get(null);
 		}catch(Exception e){
-			logger.warn("exception", e);
+			logger.warn(e.getMessage());
 		}
 		return object;
 	}

@@ -1,4 +1,4 @@
-(function() {
+$(function() {
 	var processUrl = context_path+"/uniauth/initPassword";
 	var captchaUrl = context_path+"/uniauth/captcha";
 	
@@ -65,7 +65,7 @@
 			valid_result = false;
 			//查看是否需要显示
 			if(!!notice && !!index && index == 1){
-				setWarnLabel('原始密码不符合要求', $('#originpwd_warn_info'));
+				setWarnLabel($.i18n.prop('frontpage.initpwd.edit.wrong.orginalpwd'), $('#originpwd_warn_info'));
 			}
 			if(!!index && index == 1){
 				return false;
@@ -78,7 +78,7 @@
 			valid_result = false;
 			
 			if(!!notice && !!index && index == 2){
-				setWarnLabel('新密码长度在8-20位之间', $('#newpwd_warn_info'));
+				setWarnLabel($.i18n.prop('frontpage.initpwd.edit.need.pwdlengthl'), $('#newpwd_warn_info'));
 			}
 		
 			if(!!index && index == 2){
@@ -91,7 +91,7 @@
 			valid_result = false;
 			
 			if(!!notice && !!index && index == 3){
-				setWarnLabel('两次输入密码不一致' , $('#renewpwd_warn_info'));
+				setWarnLabel($.i18n.prop('frontpage.initpwd.need.pwdequal') , $('#renewpwd_warn_info'));
 			}
 			if(!!index && index == 3){
 				return false;
@@ -103,7 +103,7 @@
 			valid_result = false;
 			
 			if(!!notice && !!index && index == 4){
-				setWarnLabel('请输入验证码', $('#verifycode_warn_info'));
+				setWarnLabel($.i18n.prop('frontpage.initpwd.need.captch'), $('#verifycode_warn_info'));
 			}
 			if(!!index && index == 4){
 				return false;
@@ -152,18 +152,18 @@
                     	setWarnLabel(result.msg, $('#init_pwd_warn_info'));
                     }
                 } else {  
-                    alert('异常');
+                	alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
             	alert(errorMsg);
             },
             complete: function(XMLHttpRequest, textStatus) {
-            	refresh_verfypic();
+            	refresh_verfypic($('#init_pwd_verfypic'));
             }
         });  
 	};
 	
 	//执行init操作
 	init();
-})();
+});

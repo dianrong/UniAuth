@@ -1,4 +1,4 @@
-(function() {
+$(function() {
 	var processUrl = context_path+"/uniauth/forgetPassword";
 	var captchaUrl = context_path+"/uniauth/captcha";
 	
@@ -109,7 +109,7 @@
 			return true;
 		} else {
 			if(show){
-				setWarnLabel($('.find-pwd-container .steps #newpwdwarn'), '密码长度应该在8到20位之间');
+				setWarnLabel($('.find-pwd-container .steps #newpwdwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.pwdlength'));
 			}
 			return false;
 		}
@@ -131,7 +131,7 @@
 			}
 		} 
 		if(show){
-			setWarnLabel($('.find-pwd-container .steps #newpwdwarn'), '两次输入的密码不一致');
+			setWarnLabel($('.find-pwd-container .steps #newpwdwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.pwdequal'));
 		}
 		return false;
 	}
@@ -205,7 +205,7 @@
                     	return;
                     }
                 } else {  
-                    alert('异常');
+                    alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
@@ -250,17 +250,17 @@
                     	return;
                     }
                     if(result.code == '1') {
-                    	setWarnLabel($('#temailwarn'), '验证码不能为空');
+                    	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.captcha'));
                     	return;
                     }
                     
                     if(result.code == '2') {
-                    	setWarnLabel($('#temailwarn'), '验证码错误');
+                    	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.wrong.captcha'));
                     	return;
                     }
                     
                     if(result.code == '3') {
-                    	setWarnLabel($('#temailwarn'), '邮箱不能为空');
+                    	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.email'));
                     	return;
                     }
                     
@@ -269,14 +269,14 @@
                     	return;
                     }
                 } else {  
-                    alert('异常');
+                	 alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
             	alert(errorMsg);
             },
             complete: function(XMLHttpRequest, textStatus) {
-            	refresh_verfypic();
+            	refresh_verfypic($('#verfypic'));
             }
         });  
 	};
@@ -316,16 +316,16 @@
                     }
                     
                     if(result.code == '2') {
-                    	setWarnLabel($('#emailverfywarn'), '验证码不能为空');
+                    	setWarnLabel($('#emailverfywarn'), $.i18n.prop('frontpage.pwdforget.edit.need.captcha'));
                     	return;
                     }
                     
                     if(result.code == '3') {
-                    	setWarnLabel($('#emailverfywarn'), '验证码错误');
+                    	setWarnLabel($('#emailverfywarn'), $.i18n.prop('frontpage.pwdforget.edit.wrong.captcha'));
                     	return;
                     }
                 } else {  
-                    alert('异常');
+                	alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
@@ -370,7 +370,7 @@
                     }
                     
                     if(result.code == '2') {
-                    	setWarnLabel($('#newpwdwarn'), '新密码不能为空');
+                    	setWarnLabel($('#newpwdwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.newpwd'));
                     	return;
                     }
                     
@@ -385,7 +385,7 @@
                     	return;
                     }
                 } else {  
-                    alert('异常');
+                	alert($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
@@ -396,4 +396,4 @@
 	
 	//执行init操作
 	init();
-})();
+});

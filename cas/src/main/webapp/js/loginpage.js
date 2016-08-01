@@ -1,4 +1,4 @@
-(function() {
+$(function() {
 	//初始化函数
 	var init = function() {
 		//刷新滚动条
@@ -62,7 +62,6 @@
             },
         });  
 	}
-	
 	//执行init操作
 	init();
-})();
+});
