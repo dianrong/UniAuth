@@ -98,7 +98,7 @@ public final class CasCrossFilterCacheHelper {
 				//刷新缓存
 				List<String> regulars = new ArrayList<String>();
 				for(ConfigDto cto: cfges) {
-					if(cto.getCfgTypeId() == AppConstants.CAS_CFG_TYPE_TEXT_ID && !StringUtil.strIsNullOrEmpty(cto.getValue())){
+					if(AppConstants.CAS_CFG_TYPE_TEXT.equalsIgnoreCase(cto.getCfgType()) && !StringUtil.strIsNullOrEmpty(cto.getValue())){
 						regulars.add(cto.getValue());
 					}
 				}

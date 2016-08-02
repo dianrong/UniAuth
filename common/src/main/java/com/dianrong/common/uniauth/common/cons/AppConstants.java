@@ -145,8 +145,8 @@ public interface AppConstants {
 	String CAS_CFG_KEY_CROSS_FILTER_ORIGIN_PREFIX = "CAS_CROSS_FILTER_ORGIN";
 	
 	// define the cfg type id 
-	int CAS_CFG_TYPE_FILE_ID = 1;
-	int CAS_CFG_TYPE_TEXT_ID = 2;
+	String CAS_CFG_TYPE_FILE ="FILE";
+	String CAS_CFG_TYPE_TEXT ="TEXT";
 	
 	// 首页广告对应herf的cfg key的后缀
 	String CAS_CFG_LOGIN_AD_HREF_SUFFIX = "_HREF";

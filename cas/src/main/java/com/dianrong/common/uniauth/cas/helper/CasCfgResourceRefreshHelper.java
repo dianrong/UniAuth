@@ -175,11 +175,11 @@ public final class CasCfgResourceRefreshHelper {
 
         try {
             CasCfgCacheModel cacheModel = new CasCfgCacheModel(
-                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, this.defaultCasCfg.getPageTitle(), AppConstants.CAS_CFG_TYPE_TEXT_ID),
-                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON, this.defaultCasCfg.getPageIcon(), AppConstants.CAS_CFG_TYPE_FILE_ID), 
-                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO, this.defaultCasCfg.getLogo(), AppConstants.CAS_CFG_TYPE_FILE_ID),
-                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT, this.defaultCasCfg.getBottomAllRightText(), AppConstants.CAS_CFG_TYPE_TEXT_ID),
-                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, this.defaultCasCfg.getBackgroundColorText(), AppConstants.CAS_CFG_TYPE_TEXT_ID), getLoginImges(loginImages));
+                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, this.defaultCasCfg.getPageTitle(), AppConstants.CAS_CFG_TYPE_TEXT),
+                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON, this.defaultCasCfg.getPageIcon(), AppConstants.CAS_CFG_TYPE_FILE), 
+                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO, this.defaultCasCfg.getLogo(), AppConstants.CAS_CFG_TYPE_FILE),
+                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT, this.defaultCasCfg.getBottomAllRightText(), AppConstants.CAS_CFG_TYPE_TEXT),
+                    getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, this.defaultCasCfg.getBackgroundColorText(), AppConstants.CAS_CFG_TYPE_TEXT), getLoginImges(loginImages));
             return cacheModel;
         } catch (Exception ex) {
             logger.error("构造cas定制化数据缓存异常:" + ex.getMessage());
@@ -197,7 +197,7 @@ public final class CasCfgResourceRefreshHelper {
         List<ConfigDto> tempList = new ArrayList<ConfigDto>();
         for (ConfigDto cto : filterList) {
             // 过滤文件类型但是文件内容为空的脏数据
-            if (cto.getCfgTypeId() != null && cto.getCfgTypeId() == AppConstants.CAS_CFG_TYPE_FILE_ID) {
+            if (cto.getCfgTypeId() != null && AppConstants.CAS_CFG_TYPE_FILE.equalsIgnoreCase(cto.getCfgType()))  {
                 if (cto.getFile() == null || cto.getFile().length == 0) {
                     tempList.add(cto);
                 }
@@ -291,10 +291,10 @@ public final class CasCfgResourceRefreshHelper {
      * @param infoList 数据数组
      * @param cfgKey 对应的cfgKey
      * @param defaultDto 默认结果
-     * @param cfgType 增加一个类型判断条件
+     * @param cfgType 增加一个类型判断条件 can not be null
      * @return 结果
      */
-    private ConfigDto getCfgModelFromList(List<ConfigDto> infoList, String cfgKey, ConfigDto defaultDto, Integer cfgType) {
+    private ConfigDto getCfgModelFromList(List<ConfigDto> infoList, String cfgKey, ConfigDto defaultDto, String cfgType) {
         if (infoList == null || infoList.isEmpty()) {
             return defaultDto;
         }
@@ -302,7 +302,7 @@ public final class CasCfgResourceRefreshHelper {
             if (cfgKey.equals(tcfg.getCfgKey())) {
                 // 判断是否需要进一步判断cfgType
                 if (cfgType != null) {
-                    if (tcfg.getCfgTypeId() != null && tcfg.getCfgTypeId() == cfgType) {
+                    if (tcfg.getCfgTypeId() != null && cfgType.equalsIgnoreCase(tcfg.getCfgType())) {
                         return tcfg;
                     }
                 } else {
@@ -329,7 +329,7 @@ public final class CasCfgResourceRefreshHelper {
         // 存储广告跳转url的map
         Map<String, ConfigDto> adHrefUrlConfigMap = new HashMap<String, ConfigDto>();
         for (ConfigDto cfd : adConfigList) {
-            if (cfd.getCfgTypeId() != null && cfd.getCfgTypeId() == AppConstants.CAS_CFG_TYPE_TEXT_ID && !StringUtil.strIsNullOrEmpty(cfd.getCfgKey())) {
+            if (AppConstants.CAS_CFG_TYPE_TEXT.equalsIgnoreCase(cfd.getCfgType())) {
                 adHrefUrlConfigMap.put(cfd.getCfgKey().trim(), cfd);
             }
         }
@@ -337,7 +337,7 @@ public final class CasCfgResourceRefreshHelper {
         // 从列表中获取所有的轮询广告的图片
         List<CasLoginAdConfigModel> newAdCfgList = new ArrayList<CasLoginAdConfigModel>();
         for (ConfigDto cfd : adConfigList) {
-            if (cfd.getCfgTypeId() != null && cfd.getCfgTypeId() == AppConstants.CAS_CFG_TYPE_FILE_ID && !StringUtil.strIsNullOrEmpty(cfd.getCfgKey())) {
+            if (AppConstants.CAS_CFG_TYPE_FILE.equalsIgnoreCase(cfd.getCfgType())) {
                 // 获取对应的正常跳转href url
                 String hrefCfgKey = cfd.getCfgKey().trim() + AppConstants.CAS_CFG_LOGIN_AD_HREF_SUFFIX;
                 String hrefUrl = adHrefUrlConfigMap.get(hrefCfgKey) == null ? AppConstants.CAS_CFG_HREF_DEFALT_VAL : adHrefUrlConfigMap.get(hrefCfgKey).getValue();

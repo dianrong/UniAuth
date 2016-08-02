@@ -44,8 +44,8 @@ insert into `role_code`(`code`, `description`) values ('ROLE_SILVER', '白银');
 insert into `role_code`(`code`, `description`) values ('ROLE_BRONZE', '青铜');
 insert into `role_code`(`code`, `description`) values ('ROLE_STEEL', '钢铁');
 
-insert into `cfg_type`(`id`, `code`) values (1, 'FILE');
-insert into `cfg_type`(`id`, `code`) values (2, 'TEXT');
+insert into `cfg_type`(`code`) values ('FILE');
+insert into `cfg_type`(`code`) values ('TEXT');
 
 select @cfg_file_id := (select id from `cfg_type` where code='FILE');
 select @cfg_text_id := (select id from `cfg_type` where code='TEXT');
