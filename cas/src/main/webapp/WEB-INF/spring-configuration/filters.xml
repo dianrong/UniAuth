@@ -58,6 +58,7 @@
     				<property name="defualt_cors_allowed_origins">
     					<value>
 	    					^http(s)?://.+\.(dianrong|starlinked|starwin)\.com;
+	    					<!-- ^http(s)?://([a-z]+\-)?[a-z]+(\-[a-z]+)?\.(dianrong|starlinked|starwin)\.com; -->
 			                ^http://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,6})?;
 			                ^http://[a-z]+(:[0-9]+)?
 		                </value>
