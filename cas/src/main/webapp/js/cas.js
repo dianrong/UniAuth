@@ -9,14 +9,6 @@ $(function() {
 		return false;
 	}
 
-	function getUrlParam(name) {
-		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-		var r = window.location.search.substr(1).match(reg);
-		if (r != null)
-			return r[2];
-		return null;
-	}
-
 	// init
 	if ($(":focus").length === 0) {
 		$("input:visible:enabled:first").focus();
@@ -61,23 +53,6 @@ $(function() {
 		}
 	});
 
-	$("#domain").val(uriEncodeOnce(getUrlParam("service")));
-	if (console && console.log) {
-		console.log("current selected domain:" + getUrlParam("service"));
-	}
-	
-	// uriencode once
-	function uriEncodeOnce(uri_str) {
-		if(!uri_str){return ""};
-		var d_str = decodeURIComponent(uri_str);
-		if (uri_str === d_str) {
-			return encodeURIComponent(uri_str);
-		}
-		// already encode
-		return uri_str;
-	}
-	
-
 	if (typeof (jqueryReady) == "function") {
 		jqueryReady();
 	}
@@ -91,3 +66,30 @@ $(function() {
 		top.window.location = redirect;
 	});
 });
+
+// fix bug sougou browser
+window.onload = function() {
+	// uriencode once
+	function uriEncodeOnce(uri_str) {
+		if(!uri_str){return ""};
+		var d_str = decodeURIComponent(uri_str);
+		if (uri_str === d_str) {
+			return encodeURIComponent(uri_str);
+		}
+		// already encode
+		return uri_str;
+	}
+	
+	function getUrlParam(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return r[2];
+		return null;
+	}
+	
+	$("#domain").val(uriEncodeOnce(getUrlParam("service")));
+	if (console && console.log) {
+		console.log("current selected domain:" + getUrlParam("service"));
+	}
+}
