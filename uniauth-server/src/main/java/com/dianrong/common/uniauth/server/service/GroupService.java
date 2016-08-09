@@ -30,6 +30,7 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.GrpTagExample;
@@ -38,6 +39,7 @@ import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 import com.dianrong.common.uniauth.server.data.entity.Tag;
 import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.entity.User;
@@ -49,7 +51,6 @@ import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
 import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
-import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
@@ -70,7 +71,6 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import com.google.common.collect.Lists;
 
 /**
  * Created by Arc on 14/1/16.
@@ -106,7 +106,7 @@ public class GroupService {
 	@Resource(name="groupDataFilter")
 	private DataFilter dataFilter;
 
-    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer id, List<Integer> groupIds, String name, String code,
+    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer roleId, Integer id, List<Integer> groupIds, String name, String code,
                                          String description, Byte status, Integer tagId, Boolean needTag, Boolean needUser,
                                          Integer pageNumber, Integer pageSize) {
 
@@ -161,6 +161,34 @@ public class GroupService {
             } else {
                 criteria.andIdIn(grpIds);
             }
+        }
+        if(roleId != null) {
+        	// query all groupIds which's roleId equals parameter roleId  
+        	GrpRoleExample grpRoleExample = new GrpRoleExample();
+        	GrpRoleExample.Criteria grpRoleCriteria = grpRoleExample.createCriteria();
+        	grpRoleCriteria.andRoleIdEqualTo(roleId);
+        	List<GrpRoleKey> grpRoles =  grpRoleMapper.selectByExample(grpRoleExample);
+            if (CollectionUtils.isEmpty(grpRoles)) {
+            	return null;
+            }
+            List<Integer> rootGrpIds = new ArrayList<Integer>();
+            for (GrpRoleKey grpRole : grpRoles) {
+            	rootGrpIds.add(grpRole.getGrpId());
+            }
+            
+            // query all sub groupIds from group table
+            GrpPathExample _grpPathCondtion = new GrpPathExample();
+            GrpPathExample.Criteria _grpPathCriteria = _grpPathCondtion.createCriteria();
+            _grpPathCriteria.andAncestorIn(rootGrpIds);
+        	 List<GrpPath> _grppaths =  grpPathMapper.selectByExample(_grpPathCondtion);
+        	if (CollectionUtils.isEmpty(_grppaths)) {
+        		return null;
+        	}
+        	List<Integer> grpIds = new ArrayList<Integer>();
+        	for (GrpPath _grpPath: _grppaths) {
+        		grpIds.add(_grpPath.getDescendant());
+        	}
+            criteria.andIdIn(grpIds);
         }
         if(tagId != null) {
             GrpTagExample grpTagExample = new GrpTagExample();
