@@ -15,6 +15,8 @@ import java.util.TreeSet;
 import javax.annotation.Resource;
 
 import com.dianrong.common.uniauth.common.bean.dto.*;
+import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,33 +30,7 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
-import com.dianrong.common.uniauth.server.data.entity.Domain;
-import com.dianrong.common.uniauth.server.data.entity.PermType;
-import com.dianrong.common.uniauth.server.data.entity.Permission;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RoleCode;
-import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
-import com.dianrong.common.uniauth.server.data.entity.RoleExample;
-import com.dianrong.common.uniauth.server.data.entity.Tag;
-import com.dianrong.common.uniauth.server.data.entity.TagExample;
 import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
-import com.dianrong.common.uniauth.server.data.entity.TagType;
-import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
-import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
-import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
-import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
-import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -84,6 +60,8 @@ public class UserService {
     private PermissionMapper permissionMapper;
     @Autowired
     private CommonService commonService;
+    @Autowired
+    private UserGrpMapper userGrpMapper;
     @Autowired
     private UserTagMapper userTagMapper;
     @Autowired
@@ -274,7 +252,7 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
+    public PageDto<UserDto> searchUser(Long userId, Integer groupId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
                                        Boolean needTag, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -301,6 +279,22 @@ public class UserService {
         }
         if(!CollectionUtils.isEmpty(userIds)) {
             criteria.andIdIn(userIds);
+        }
+        if(groupId != null) {
+            UserGrpExample userGrpExample = new UserGrpExample();
+            UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
+            userGrpExampleCriteria.andGrpIdEqualTo(groupId);
+            userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
+            List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+            if(CollectionUtils.isEmpty(userGrpKeys)) {
+                return null;
+            } else {
+                List<Long> userGrpUserIds = new ArrayList<>();
+                for (UserGrpKey userGrpKey : userGrpKeys) {
+                    userGrpUserIds.add(userGrpKey.getUserId());
+                }
+                criteria.andIdIn(userGrpUserIds);
+            }
         }
         if(tagId != null) {
             UserTagExample userTagExample = new UserTagExample();
