@@ -31,5 +31,5 @@ public class DefaultSwitchReceiver implements SwitchReceiver {
 			
 		}
 	}
-
+	
 }

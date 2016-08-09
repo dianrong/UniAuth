@@ -9,5 +9,6 @@ public interface LoginMapper {
 	
 	
 	List<RolePermissionHolder> selectRolePermission(Map map);
+	
 
 }
