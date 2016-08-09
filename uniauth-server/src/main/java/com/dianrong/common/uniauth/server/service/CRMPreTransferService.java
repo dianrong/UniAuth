@@ -44,19 +44,11 @@ import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.transfer.OldNewUserMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaCrmRoleNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaDomainNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaGroupNewMapper;
-import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaGroupRoleTypeNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaRoleUriPatternNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUriPatternNewMapper;
-import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUserNewMapper;
-import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUserRoleCrmNewMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -72,22 +64,10 @@ public class CRMPreTransferService implements TaskExecutor {
 	@Autowired
 	private TempUaGroupNewMapper groupNewMapper;
 	@Autowired
-	private TempUaGroupRoleTypeNewMapper groupRoleTypeNewMapper;
-	@Autowired
 	private TempUaUriPatternNewMapper uriPatternNewMapper;
-	@Autowired
-	private TempUaUserNewMapper userNewMapper;
-	@Autowired
-	private TempUaUserRoleCrmNewMapper userRoleCrmNewMapper;
-	@Autowired
-	private OldNewUserMapper oldNewUserMapper;
 	@Autowired
 	private TempUaRoleUriPatternNewMapper tempUaRoleUriMapper;
 
-	@Autowired
-	private UserMapper userMapper;
-	@Autowired
-	private UserRoleMapper userRoleMapper;
 	@Autowired
 	private RoleMapper roleMapper;
 	@Autowired
@@ -98,8 +78,6 @@ public class CRMPreTransferService implements TaskExecutor {
 	private PermissionMapper permissionMapper;
 	@Autowired
 	private CommonService commonService;
-	@Autowired
-	private UserTagMapper userTagMapper;
 	@Autowired
 	private GrpTagMapper grpTagMapper;
 
@@ -117,9 +95,6 @@ public class CRMPreTransferService implements TaskExecutor {
 
 	@Autowired
 	private TagTypeMapper tagTypeMapper;
-
-	@Autowired
-	private UserGrpMapper userGrpMapper;
 
 	@Override
 	public void execut(String cmd) {

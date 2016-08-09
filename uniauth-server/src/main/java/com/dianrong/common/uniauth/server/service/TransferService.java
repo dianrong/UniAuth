@@ -37,10 +37,7 @@ import com.dianrong.common.uniauth.server.data.entity.transfer.TempUaUserRoleCrm
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
@@ -52,8 +49,6 @@ import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaCrmRoleNewM
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaDomainNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaGroupNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaGroupRoleTypeNewMapper;
-import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaRoleUriPatternNewMapper;
-import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUriPatternNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUserNewMapper;
 import com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUserRoleCrmNewMapper;
 import com.google.common.collect.Maps;
@@ -72,15 +67,11 @@ public class TransferService implements TaskExecutor {
 	@Autowired
 	private TempUaGroupRoleTypeNewMapper groupRoleTypeNewMapper;
 	@Autowired
-	private TempUaUriPatternNewMapper uriPatternNewMapper;
-	@Autowired
 	private TempUaUserNewMapper userNewMapper;
 	@Autowired
 	private TempUaUserRoleCrmNewMapper userRoleCrmNewMapper;
 	@Autowired
 	private OldNewUserMapper oldNewUserMapper;
-	@Autowired
-	private TempUaRoleUriPatternNewMapper tempUaRoleUriMapper;
 	
 	
 	@Autowired
@@ -90,13 +81,7 @@ public class TransferService implements TaskExecutor {
 	@Autowired
 	private RoleMapper roleMapper;
 	@Autowired
-	private RoleCodeMapper roleCodeMapper;
-	@Autowired
 	private DomainMapper domainMapper;
-	@Autowired
-	private PermissionMapper permissionMapper;
-	@Autowired
-	private CommonService commonService;
 	@Autowired
 	private UserTagMapper userTagMapper;
 	@Autowired
@@ -104,12 +89,6 @@ public class TransferService implements TaskExecutor {
 	
 	@Autowired
 	private GrpMapper grpMapper;
-	
-	@Autowired
-	private GroupService groupService;
-	
-	@Autowired
-	private RolePermissionMapper rolePermissionMapper;
 	
 	@Autowired
 	private TagMapper tagMapper;
