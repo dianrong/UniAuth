@@ -43,6 +43,7 @@ public class ServerMapperAOPHandler {
     @Around("notAuditMapper() && (insertMappers() || updateMappers() || deleteMappers())")
     public Object interceptMapper(ProceedingJoinPoint joinPoint) throws Throwable {
     	GlobalVar origin = RequestManager.getGlobalVar();
+    	if(origin == null) return joinPoint.proceed();
     	GlobalVar gv = null;
         try {
         	gv = (GlobalVar)origin.clone();

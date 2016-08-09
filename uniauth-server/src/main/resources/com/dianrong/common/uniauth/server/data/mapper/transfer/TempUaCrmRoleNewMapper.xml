@@ -24,7 +24,7 @@
   	select * from temp_ua_crm_role_new where trStatus=0
   </select>
   
-  <select id="selectAll" resultMap="BaseResultMap">
+   <select id="selectAll" resultMap="BaseResultMap">
   	select * from temp_ua_crm_role_new
   </select>
   

@@ -27,6 +27,10 @@
   	select * from temp_ua_group_new where trStatus=0 order by parent
   </select>
   
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select * from temp_ua_group_new order by parent
+  </select>
+  
   <update id="updateSuccess" parameterType="java.lang.Integer">
   	update temp_ua_group_new set trStatus=1 where id =#{id,jdbcType=INTEGER}
   </update>

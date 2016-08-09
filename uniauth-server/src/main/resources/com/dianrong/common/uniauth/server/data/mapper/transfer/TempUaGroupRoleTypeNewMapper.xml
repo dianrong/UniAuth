@@ -18,12 +18,8 @@
   	select * from temp_ua_group_role_type_new where trStatus=0
   </select>
   
-  <select id="selectAll" resultMap="BaseResultMap">
-  	select * from temp_ua_group_role_type_new
-  </select>
-  
   <update id="updateSuccess" parameterType="java.lang.Integer">
-  	update temp_ua_group_role_type_new set trStatus=1 where id =#id#
+  	update temp_ua_group_role_type_new set trStatus=1 where id =#{id,jdbcType=INTEGER}
   </update>
   
 </mapper>

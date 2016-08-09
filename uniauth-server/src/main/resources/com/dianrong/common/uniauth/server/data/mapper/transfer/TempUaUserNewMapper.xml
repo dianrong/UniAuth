@@ -38,7 +38,7 @@
   </select>
   
   <select id="selectByRange"  parameterType="java.util.Map" resultMap="BaseResultMap">
-  	select * from temp_ua_user_new where id>=#{startNum,jdbcType=BIGINT} and id<#{endNum,jdbcType=BIGINT}
+  	select * from temp_ua_user_new where id&gt;=#{startNum,jdbcType=BIGINT} and id &lt;#{endNum,jdbcType=BIGINT}
   </select>
   
   <select id="selectAll" resultMap="BaseResultMap">

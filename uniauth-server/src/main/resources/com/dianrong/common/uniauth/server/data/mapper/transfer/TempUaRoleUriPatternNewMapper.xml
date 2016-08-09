@@ -12,4 +12,12 @@
     values (#{roleId,jdbcType=INTEGER}, #{uriPatternId,jdbcType=INTEGER}, #{trstatus,jdbcType=INTEGER}
       )
   </insert>
+  
+  <select id="select" resultMap="BaseResultMap">
+  	select * from temp_ua_role_uri_pattern_new where trStatus=0
+  </select>
+  
+   <update id="updateSuccess" parameterType="java.lang.Integer">
+  	update temp_ua_group_role_type_new set trStatus=1 where id =#id#
+  </update>
 </mapper>

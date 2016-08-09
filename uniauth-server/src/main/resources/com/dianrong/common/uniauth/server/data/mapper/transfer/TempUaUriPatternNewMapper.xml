@@ -28,7 +28,7 @@
   </select>
   
   <select id="selectAll" resultMap="BaseResultMap">
-  	select * from temp_ua_uri_pattern_new where trStatus=0
+  	select * from temp_ua_uri_pattern_new
   </select>
   
   <update id="updateSuccess" parameterType="java.lang.Integer">

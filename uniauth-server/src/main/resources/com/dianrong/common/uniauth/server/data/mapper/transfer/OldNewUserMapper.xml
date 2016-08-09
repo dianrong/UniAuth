@@ -12,6 +12,7 @@
     values (#{oldUserId,jdbcType=BIGINT}, #{newUserId,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}
       )
   </insert>
+  
   <select id="selectAll" resultMap="BaseResultMap">
   	select * from old_new_user
   </select>
