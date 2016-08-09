@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUserNewMapper" >
+  <resultMap id="BaseResultMap" type="com.dianrong.common.uniauth.server.data.entity.transfer.TempUaUserNew" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="password_salt" property="passwordSalt" jdbcType="VARCHAR" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="fail_count" property="failCount" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="group_role" property="groupRole" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+    <result column="password_date" property="passwordDate" jdbcType="TIMESTAMP" />
+    <result column="trStatus" property="trstatus" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.dianrong.common.uniauth.server.data.entity.transfer.TempUaUserNew" >
+    insert into temp_ua_user_new (id, name, email, 
+      phone, password, password_salt, 
+      last_login_time, last_login_ip, fail_count, 
+      status, group_id, group_role, 
+      create_date, last_update, password_date, 
+      trStatus)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{passwordSalt,jdbcType=VARCHAR}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR}, #{failCount,jdbcType=TINYINT}, 
+      #{status,jdbcType=TINYINT}, #{groupId,jdbcType=INTEGER}, #{groupRole,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, #{passwordDate,jdbcType=TIMESTAMP}, 
+      #{trstatus,jdbcType=INTEGER})
+  </insert>
+  <select id="select" resultMap="BaseResultMap">
+  	select * from temp_ua_user_new where trStatus=0 and status=0
+  </select>
+  
+  <select id="selectByRange"  parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select * from temp_ua_user_new where id>=#{startNum,jdbcType=BIGINT} and id<#{endNum,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select * from temp_ua_user_new where status=0
+  </select>
+  
+  <update id="updateSuccess" parameterType="java.lang.Long">
+  	update temp_ua_user_new set trStatus=1 where id =#{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaUriPatternNewMapper" >
+  <resultMap id="BaseResultMap" type="com.dianrong.common.uniauth.server.data.entity.transfer.TempUaUriPatternNew" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="domain_id" property="domainId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="method" property="method" jdbcType="VARCHAR" />
+    <result column="pattern" property="pattern" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_update" property="lastUpdate" jdbcType="TIMESTAMP" />
+    <result column="trStatus" property="trstatus" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.dianrong.common.uniauth.server.data.entity.transfer.TempUaUriPatternNew" >
+    insert into temp_ua_uri_pattern_new (id, domain_id, name, 
+      description, method, pattern, 
+      create_date, last_update, trStatus
+      )
+    values (#{id,jdbcType=INTEGER}, #{domainId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{pattern,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, #{trstatus,jdbcType=INTEGER}
+      )
+  </insert>
+  
+  <select id="select" resultMap="BaseResultMap">
+  	select * from temp_ua_uri_pattern_new where trStatus=0
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select * from temp_ua_uri_pattern_new where trStatus=0
+  </select>
+  
+  <update id="updateSuccess" parameterType="java.lang.Integer">
+  	update temp_ua_uri_pattern_new set trStatus=1 where id =#{id,jdbcType=INTEGER}
+  </update>
+</mapper>

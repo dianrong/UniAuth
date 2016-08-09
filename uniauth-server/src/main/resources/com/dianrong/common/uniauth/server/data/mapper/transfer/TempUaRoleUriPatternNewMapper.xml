@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.transfer.TempUaRoleUriPatternNewMapper" >
+  <resultMap id="BaseResultMap" type="com.dianrong.common.uniauth.server.data.entity.transfer.TempUaRoleUriPatternNew" >
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="uri_pattern_id" property="uriPatternId" jdbcType="INTEGER" />
+    <result column="trStatus" property="trstatus" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.dianrong.common.uniauth.server.data.entity.transfer.TempUaRoleUriPatternNew" >
+    insert into temp_ua_role_uri_pattern_new (role_id, uri_pattern_id, trStatus
+      )
+    values (#{roleId,jdbcType=INTEGER}, #{uriPatternId,jdbcType=INTEGER}, #{trstatus,jdbcType=INTEGER}
+      )
+  </insert>
+</mapper>
