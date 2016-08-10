@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.LoginMapper" >
+  <resultMap id="BaseResultMap" type="com.dianrong.common.uniauth.server.data.entity.RolePermissionHolder" >
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_desc" property="roleDescription" jdbcType="VARCHAR" />
+    <result column="role_status" property="roleStatus" jdbcType="TINYINT" />
+    <result column="domain_id" property="domainId" jdbcType="INTEGER" />
+    <result column="role_code_id" property="roleCodeId" jdbcType="INTEGER" />
+    
+    <result column="permission_id" property="permissionId" jdbcType="INTEGER" />
+    <result column="permission_value" property="permissionValue" jdbcType="VARCHAR" />
+    <result column="permission_value_ext" property="permissionValueExt" jdbcType="VARCHAR" />
+    <result column="permission_desc" property="permissionDescription" jdbcType="VARCHAR" />
+    <result column="permission_status" property="permissionStatus" jdbcType="TINYINT" />
+    <result column="permission_type_id" property="permTypeId" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

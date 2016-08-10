@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.LoginMapper" >
+  
+  <select id="selectRolePermission" resultMap="BaseResultMap" parameterType="java.util.Map" >
+	select 
+    CONCAT('s',role.id,p.id) id,role.id role_id,role.name role_name,role.status role_status,role.description role_desc,role.domain_id domain_id,
+	role.role_code_id role_code_id,p.id permission_id,p.value permission_value,p.value_ext permission_value_ext,
+	p.description permission_desc,p.status permission_status,p.perm_type_id permission_type_id
+from
+(
+select 
+		*
+	from role r
+	where r.status = 0
+	and r.domain_id in
+	<foreach collection="domains" index="index" item="item" open="(" separator="," close=")">
+	            #{item.id}
+	 </foreach>
+    and
+    (
+		exists
+		(
+			select ur.role_id
+			from user_role ur
+			where r.id = ur.role_id
+			and ur.user_id = #{userId,jdbcType=BIGINT}
+		)
+        or
+        exists
+        (
+			select gr.role_id
+			from grp_role gr, grp_path gp, grp g, user_grp ug
+			where gr.grp_id = gp.ancestor
+			and gp.descendant = g.id
+			and g.status = 0
+			and g.id = ug.grp_id
+			and ug.type = 0
+			and ug.user_id = #{userId,jdbcType=BIGINT}
+			and r.id = gr.role_id
+			and not exists
+			(
+				select g1.id
+				from grp_path gp1, user_grp ug1, grp g1
+				where ug1.user_id = #{userId,jdbcType=BIGINT}
+				and ug1.grp_id = gp1.descendant
+				and ug1.type = 0
+				and gp1.ancestor = g1.id
+				and g1.status = 1
+			)
+        )
+    )
+) role
+left  join
+    (select 
+        p . *, rp.role_id role_id
+    from
+        permission p, role_permission rp
+    where
+        p.status = 0 and p.id = rp.permission_id
+            and p.domain_id in 
+            <foreach collection="domains" index="index" item="item" open="(" separator="," close=")">
+	            #{item.id}
+	        </foreach>
+            ) p ON (role.id = p.role_id)
+  </select>
+</mapper>

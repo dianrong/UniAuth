@@ -8,21 +8,27 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
-import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -30,7 +36,38 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionHolder;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagExample;
 import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
+import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.LoginMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -40,16 +77,22 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.dianrong.common.uniauth.server.util.UniauthSwitchs;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Created by Arc on 14/1/16.
  */
 @Service
 public class UserService {
+	
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
+    @Autowired
+    private LoginMapper loginMapper;
     @Autowired
     private RoleMapper roleMapper;
     @Autowired
@@ -70,7 +113,7 @@ public class UserService {
     private TagTypeMapper tagTypeMapper;
     @Autowired
     private UniauthSender uniauthSender;
-
+    
     @Autowired
     private UserExtendValService userExtendValService;
     
@@ -551,7 +594,7 @@ public class UserService {
 		User user = getUserByAccount(account, true);
 
         UserDetailDto userDetailDto = getUserDetailDto(user);
-		
+        
 		return userDetailDto;
 	}
 
@@ -570,9 +613,88 @@ public class UserService {
         Map<Integer, RoleCode> roleCodeMap = commonService.getRoleCodeMap();
         Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();
 
-        if(domainList != null && !domainList.isEmpty()){
+        if(UniauthSwitchs.useNewLoginSql){
+        	Map<String, Object> userAndDomainMap = new HashMap<String, Object>();
+            userAndDomainMap.put("userId", userId);
+            userAndDomainMap.put("domains", domainList);
+            List<RolePermissionHolder> rolePermissions = loginMapper.selectRolePermission(userAndDomainMap);
+            Map<Integer,Map<Integer,List<PermissionDto>>> domainRolePermission = Maps.newHashMap();
+            Map<Integer,RoleDto> roleMap = Maps.newHashMap();
+            
+            for(RolePermissionHolder rph : rolePermissions){
+            	PermissionDto permissionDto = new PermissionDto().setDescription(rph.getPermissionDescription()).
+                        setDomainId(rph.getDomainId()).setId(rph.getPermissionId())
+                        .setPermTypeId(rph.getPermTypeId()).
+                                setStatus(rph.getPermissionStatus()).
+                                setValue(rph.getPermissionValue()).
+                                setValueExt(rph.getPermissionValueExt());
+            	if(domainRolePermission.get(rph.getDomainId())==null){
+            		domainRolePermission.put(rph.getDomainId(), new HashMap<Integer,List<PermissionDto>>());
+            	}
+            	
+            	if(domainRolePermission.get(rph.getDomainId()).get(rph.getRoleId()) == null){
+            		domainRolePermission.get(rph.getDomainId()).put(rph.getRoleId(), new ArrayList<PermissionDto>());
+            		roleMap.put(rph.getRoleId(), new RoleDto().setDescription(rph.getRoleDescription()).
+                            setId(rph.getRoleId()).
+                            setStatus(rph.getRoleStatus()).
+                            setName(rph.getRoleName()).
+                            setRoleCodeId(rph.getRoleCodeId()).
+                            setDomainId(rph.getDomainId()));
+            	}
+            	domainRolePermission.get(rph.getDomainId()).get(rph.getRoleId()).add(permissionDto);
+            }
+            
+            for(Domain domain : domainList){
+            	DomainDto domainDto = BeanConverter.convert(domain);
+            	domainDtoList.add(domainDto);
+            	Map<Integer, List<PermissionDto>> rolePermission = domainRolePermission.get(domain.getId());
+            	if(rolePermission != null){
+            		List<RoleDto> roleDtos = Lists.newArrayList();
+            		domainDto.setRoleList(roleDtos);
+            		for(Entry<Integer, List<PermissionDto>> entry:rolePermission.entrySet()){
+            			RoleDto roleDto = roleMap.get(entry.getKey());
+            			roleDto.setRoleCode(roleCodeMap.get(roleDto.getRoleCodeId()).getCode());
+            			roleDtos.add(roleDto);
+            			Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
+                        Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
+                        for(PermissionDto permissionDto : entry.getValue()){
+                        	if(permissionDto.getPermTypeId() == null) continue;
+                        	Integer permTypeId = permissionDto.getPermTypeId();
+                        	String permType = permTypeMap.get(permTypeId).getType();
+                            String value = permissionDto.getValue();
+
+                            if(permMap.containsKey(permType)){
+                                permMap.get(permType).add(value);
+                                permDtoMap.get(permType).add(permissionDto);
+                            }
+                            else{
+                                Set<String> set = new HashSet<>();
+                                set.add(value);
+                                permMap.put(permType, set);
+                                Set<PermissionDto> permissionDtos = new HashSet<>();
+                                permissionDtos.add(permissionDto);
+                                permDtoMap.put(permType, permissionDtos);
+                            }
+                        }
+                        roleDto.setPermMap(permMap);
+                        roleDto.setPermDtoMap(permDtoMap);
+            		}
+            	}
+            }
+        }else{
+        	fillInOld(domainList, userId, domainDtoList, roleCodeMap, permTypeMap);
+        }
+        
+        return userDetailDto;
+    }
+    
+    
+    private void fillInOld(List<Domain> domainList,Long userId,List<DomainDto> domainDtoList,Map<Integer, RoleCode> roleCodeMap,
+    		Map<Integer, PermType> permTypeMap){
+    	if(domainList != null && !domainList.isEmpty()){
             for(Domain domain : domainList){
                 Integer domainId = domain.getId();
+                
                 Map<String, Object> userAndDomainMap = new HashMap<String, Object>();
                 userAndDomainMap.put("userId", userId);
                 userAndDomainMap.put("domainId", domainId);
@@ -625,7 +747,6 @@ public class UserService {
                 }
             }
         }
-        return userDetailDto;
     }
 
     public UserDto getSingleUser(UserParam userParam) {
