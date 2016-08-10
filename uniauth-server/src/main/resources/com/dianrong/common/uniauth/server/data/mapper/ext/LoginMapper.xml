@@ -51,7 +51,7 @@ select
         )
     )
 ) role
- join
+left  join
     (select 
         p . *, rp.role_id role_id
     from

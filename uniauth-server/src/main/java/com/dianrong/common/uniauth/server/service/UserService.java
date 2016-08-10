@@ -643,6 +643,7 @@ public class UserService {
             			Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
                         Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
                         for(PermissionDto permissionDto : entry.getValue()){
+                        	if(permissionDto.getPermTypeId() == null) continue;
                         	Integer permTypeId = permissionDto.getPermTypeId();
                         	String permType = permTypeMap.get(permTypeId).getType();
                             String value = permissionDto.getValue();
