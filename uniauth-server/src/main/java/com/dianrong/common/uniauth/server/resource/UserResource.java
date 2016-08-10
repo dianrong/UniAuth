@@ -56,7 +56,7 @@ public class UserResource implements IUserRWResource {
 
 	@Override
 	public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
-		PageDto<UserDto> pageDto = userService.searchUser(userQuery.getUserId(), userQuery.getGroupId(), userQuery.getUserIds(), userQuery.getName(),userQuery.getPhone(),userQuery.getEmail()
+		PageDto<UserDto> pageDto = userService.searchUser(userQuery.getUserId(), userQuery.getGroupId(), userQuery.getRoleId(), userQuery.getUserIds(), userQuery.getName(),userQuery.getPhone(),userQuery.getEmail()
 				,userQuery.getStatus(), userQuery.getTagId(), userQuery.getNeedTag(), userQuery.getPageNumber(),userQuery.getPageSize());
 		return Response.success(pageDto);
 	}

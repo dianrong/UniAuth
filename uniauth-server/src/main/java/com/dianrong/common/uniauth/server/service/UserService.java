@@ -252,7 +252,7 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, Integer groupId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
+    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Integer roleId ,List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
                                        Boolean needTag, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -294,6 +294,21 @@ public class UserService {
                     userGrpUserIds.add(userGrpKey.getUserId());
                 }
                 criteria.andIdIn(userGrpUserIds);
+            }
+        }
+        if(roleId != null) {
+        	UserRoleExample userRoleExample = new UserRoleExample();
+        	UserRoleExample.Criteria userRoleExampleCriteria = userRoleExample.createCriteria();
+        	userRoleExampleCriteria.andRoleIdEqualTo(roleId);
+            List<UserRoleKey>  userRoleKeys  = userRoleMapper.selectByExample(userRoleExample);
+            if(CollectionUtils.isEmpty(userRoleKeys)) {
+                return null;
+            } else {
+                List<Long> userRoleIds = new ArrayList<>();
+                for (UserRoleKey userRoleKey : userRoleKeys) {
+                	userRoleIds.add(userRoleKey.getUserId());
+                }
+                criteria.andIdIn(userRoleIds);
             }
         }
         if(tagId != null) {

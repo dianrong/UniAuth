@@ -15,6 +15,7 @@ public class UserQuery extends PageParam {
     private Byte status;
     private Integer tagId;
     private Integer groupId;
+    private Integer roleId;
     private Boolean needTag;
 
     public Integer getGroupId() {
@@ -97,4 +98,13 @@ public class UserQuery extends PageParam {
         this.status = status;
         return this;
     }
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public UserQuery setRoleId(Integer roleId) {
+		this.roleId = roleId;
+		return this;
+	}
 }

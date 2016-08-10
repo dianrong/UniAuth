@@ -15,6 +15,7 @@ public class GroupQuery extends PageParam  {
     private Byte status;
     private Byte userGroupType;
     private Long userId;
+    private Integer roleId;
     private Integer tagId;
     private Boolean needTag;
     private Boolean needUser;
@@ -117,4 +118,13 @@ public class GroupQuery extends PageParam  {
         this.needUser = needUser;
         return this;
     }
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public GroupQuery setRoleId(Integer roleId) {
+		this.roleId = roleId;
+		return this;
+	}
 }
