@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.dianrong.common.uniauth.server.data.entity.PermType;
@@ -22,6 +23,7 @@ public class CommonService {
 	@Autowired
 	private RoleCodeMapper roleCodeMapper;
 	
+	@Cacheable(value="commonService")
 	public Map<Integer, PermType> getPermTypeMap(){
 		Map<Integer, PermType>	permTypeMap = new HashMap<Integer, PermType>();
 		PermTypeExample example = new PermTypeExample();
