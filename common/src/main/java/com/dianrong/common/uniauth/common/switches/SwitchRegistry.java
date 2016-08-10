@@ -37,7 +37,7 @@ public class SwitchRegistry {
 	
 	private static final Log log = LogFactory.getLog(SwitchRegistry.class);
 	
-	public static final String SWITCH_PATH_PREFIX = "/com/dianrong/switch";
+	public static final String SWITCH_PATH_PREFIX = System.getProperty("DR_CFG_ZOOKEEPER_BASE_PATH")==null?"/com/dianrong/switch":System.getProperty("DR_CFG_ZOOKEEPER_BASE_PATH");
 	
 	private static final Map<String, Map<String,SwitchHolder>> SWITCHS = Maps.newConcurrentMap();
 	
