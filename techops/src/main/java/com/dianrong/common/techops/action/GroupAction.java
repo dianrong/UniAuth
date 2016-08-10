@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -84,13 +85,54 @@ public class GroupAction {
             } else {
                 nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), null);
             }
+            filterNodes(nodes);
             return Response.success(nodes);
         } else {
             return Response.success(null);
         }
     }
 
-    // perm double checked
+    /**
+     * 过滤没有权限的节点
+     * @param nodes
+     */
+    private void filterNodes(List<Node> nodes) {
+    	if(nodes == null) return;
+    	Iterator<Node> iter = nodes.iterator();
+    	while(iter.hasNext()){
+    		Node n = iter.next();
+    		if(!isOwnerThisNode(n)){
+    			iter.remove();
+    		}
+    	}
+	}
+    
+    /**
+     * 是否是这个节点的owner
+     * @param node
+     * @return
+     */
+    private boolean isOwnerThisNode(Node node){
+    	if(node.getOwnerMarkup() != null && node.getOwnerMarkup()){
+    		return true;
+    	}
+    	if(node.getChildren() !=null){
+    		boolean owner = false;
+    		Iterator<Node> childIter = node.getChildren().iterator();
+    		while(childIter.hasNext()){
+    			Node child = childIter.next();
+    			if(isOwnerThisNode(child)){
+    				owner = true;
+    			}else{
+    				childIter.remove();
+    			}
+    		}
+    		return owner;
+    	}
+    	return false;
+    }
+
+	// perm double checked
     @RequestMapping(value = "/add" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
     public Response<GroupDto> addNewGroupIntoGroup(@RequestBody GroupParam groupParam) {

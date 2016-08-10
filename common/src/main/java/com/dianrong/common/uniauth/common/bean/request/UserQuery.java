@@ -14,7 +14,17 @@ public class UserQuery extends PageParam {
     private String email;
     private Byte status;
     private Integer tagId;
+    private Integer groupId;
     private Boolean needTag;
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public UserQuery setGroupId(Integer groupId) {
+        this.groupId = groupId;
+        return this;
+    }
 
     public Boolean getNeedTag() {
         return needTag;

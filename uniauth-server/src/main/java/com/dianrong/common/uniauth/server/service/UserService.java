@@ -15,10 +15,7 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -54,6 +51,8 @@ import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
@@ -65,6 +64,7 @@ import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
@@ -103,6 +103,8 @@ public class UserService {
     private PermissionMapper permissionMapper;
     @Autowired
     private CommonService commonService;
+    @Autowired
+    private UserGrpMapper userGrpMapper;
     @Autowired
     private UserTagMapper userTagMapper;
     @Autowired
@@ -293,7 +295,7 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
+    public PageDto<UserDto> searchUser(Long userId, Integer groupId, List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
                                        Boolean needTag, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -320,6 +322,22 @@ public class UserService {
         }
         if(!CollectionUtils.isEmpty(userIds)) {
             criteria.andIdIn(userIds);
+        }
+        if(groupId != null) {
+            UserGrpExample userGrpExample = new UserGrpExample();
+            UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
+            userGrpExampleCriteria.andGrpIdEqualTo(groupId);
+            userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
+            List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+            if(CollectionUtils.isEmpty(userGrpKeys)) {
+                return null;
+            } else {
+                List<Long> userGrpUserIds = new ArrayList<>();
+                for (UserGrpKey userGrpKey : userGrpKeys) {
+                    userGrpUserIds.add(userGrpKey.getUserId());
+                }
+                criteria.andIdIn(userGrpUserIds);
+            }
         }
         if(tagId != null) {
             UserTagExample userTagExample = new UserTagExample();
