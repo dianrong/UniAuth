@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -122,6 +124,8 @@ public class UserService {
 	 */
 	@Resource(name="userDataFilter")
 	private DataFilter dataFilter;
+	
+	private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     @Transactional
     public UserDto addNewUser(String name, String phone, String email) {
@@ -484,11 +488,11 @@ public class UserService {
         	throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT, UniBundle.getMsg("user.login.account.lock"));
         }
         if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), password, user.getPasswordSalt())){
-        	updateLogin(user.getId(), ip, user.getFailCount() + 1);
+        	updateLogin(user.getId(), ip, user.getFailCount() + 1,true);
             throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.error"));
         }
         //successfully loged in
-        updateLogin(user.getId(), ip, 0);
+        updateLogin(user.getId(), ip, 0,false);
         
         Date passwordDate = user.getPasswordDate();
         if(passwordDate == null){
@@ -839,13 +843,25 @@ public class UserService {
         }
     }
 
-    private int updateLogin(Long userId, String ip, int failCount) {
-        User user = new User();
+    private int updateLogin(Long userId, String ip, int failCount,boolean sync) {
+        final User user = new User();
         user.setId(userId);
         user.setLastLoginTime(new Date());
         user.setLastLoginIp(ip);
         user.setFailCount((byte)failCount);
-        return userMapper.updateByPrimaryKeySelective(user);
+        if(sync){
+        	return userMapper.updateByPrimaryKeySelective(user);
+        }
+        
+        executor.submit(new Runnable() {
+			
+			@Override
+			public void run() {
+				userMapper.updateByPrimaryKeySelective(user);
+				
+			}
+		});
+        return 1;
     }
     
     private User getUserByAccount(String account, boolean withPhoneChecked){
