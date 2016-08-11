@@ -656,7 +656,7 @@ public class GroupService {
                         }
                     }
                     for(UserExt userExt : userExts) {
-                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName());
+                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName()).setPhone(userExt.getPhone()).setCreateDate(userExt.getCreateDate());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
                         if(groupDto != null) {
                             List<UserDto> userDtos = groupDto.getUsers();
