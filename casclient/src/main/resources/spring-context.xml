@@ -30,12 +30,12 @@
     	p:casServerLoginUrl="#{uniauthConfig['cas_server']}/login" 
     	p:renew="false" 
     	p:gateway="false" 
-    	p:service="#{uniauthConfig['domains.casclient']}" />
+    	p:service="#{uniauthConfig['domains.casclient']}/login/cas" />
 
 	<bean
 	    name="ticketValidationFilter"
 	    class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter"
-	    p:service="#{uniauthConfig['domains.casclient']}">
+	    p:service="#{uniauthConfig['domains.casclient']}/login/cas">
 	    <property name="ticketValidator">
 	        <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
 	            <constructor-arg index="0" value="#{uniauthConfig['cas_server']}" />
