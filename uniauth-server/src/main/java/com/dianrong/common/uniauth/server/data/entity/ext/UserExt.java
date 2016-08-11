@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.data.entity.ext;
 
+import java.util.Date;
 
 /**
  * Created by Arc on 26/1/16.
@@ -11,6 +12,8 @@ public class UserExt {
     private String name;
     private Integer groupId;
     private Byte userGroupType;
+    private String phone;
+    private Date createDate; 
 
     public Integer getGroupId() {
         return groupId;
@@ -55,4 +58,22 @@ public class UserExt {
         this.name = name;
         return this;
     }
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public UserExt setPhone(String phone) {
+		this.phone = phone;
+		return this;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public UserExt setCreateDate(Date createDate) {
+		this.createDate = createDate;
+		return this;
+	}
 }

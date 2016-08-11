@@ -38,6 +38,7 @@ import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 import com.dianrong.common.uniauth.server.data.entity.Tag;
 import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.entity.User;
@@ -49,7 +50,6 @@ import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
 import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
-import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
@@ -70,7 +70,6 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import com.google.common.collect.Lists;
 
 /**
  * Created by Arc on 14/1/16.
@@ -628,7 +627,7 @@ public class GroupService {
                         }
                     }
                     for(UserExt userExt : userExts) {
-                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName());
+                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName()).setPhone(userExt.getPhone()).setCreateDate(userExt.getCreateDate());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
                         if(groupDto != null) {
                             List<UserDto> userDtos = groupDto.getUsers();

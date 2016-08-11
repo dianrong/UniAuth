@@ -8,6 +8,8 @@
         <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="groupId" property="groupId" jdbcType="INTEGER" />
         <result column="type" property="userGroupType" jdbcType="TINYINT" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="DATE" />
     </resultMap>
 
     <select id="getGroupOwners" resultMap="BaseResultMap">
@@ -18,7 +20,7 @@
     </select>
 
     <select id="getUsersByParentGrpIdByUserType" resultMap="GroupUsersResultMap" parameterType="map">
-        select t1.id, t1.email, t1.name, t2.id as groupId, t2.type from user t1 join
+        select t1.id, t1.email, t1.name, t2.id as groupId, t2.type, t1.phone, t1.create_date  from user t1 join
           (select ug.user_id, gid.id, ug.type from user_grp ug
           join (select grp.id from grp
           join grp_path on (grp.id = grp_path.descendant)
