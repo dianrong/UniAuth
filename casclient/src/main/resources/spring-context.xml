@@ -30,7 +30,7 @@
     	p:casServerLoginUrl="#{uniauthConfig['cas_server']}/login" 
     	p:renew="false" 
     	p:gateway="false" 
-    	p:service="#{uniauthConfig['domains.casclient']}" />
+    	p:service="#{uniauthConfig['domains.casclient']}/login/cas" />
 
 	<bean
 	    name="ticketValidationFilter"
