@@ -18,7 +18,7 @@
 		[
 			{
 				"name": "<%=AppConstants.NO_PRIVILEGE%>",
-				"msg": "<%=UniauthI18NHolder.getProperties("constant.noPermission") %>"
+				"msg": "<%=UniauthI18NHolder.getProperties(request,"constant.noPermission") %>"
 			}
 		]
 }
