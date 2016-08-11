@@ -42,14 +42,11 @@ public class UniauthI18NHolder implements ApplicationContextAware,InitializingBe
 	 */
 	public static String getProperties(HttpServletRequest request,String key){
 		if(request == null) return null;
-		String lang = (String)request.getSession().getAttribute(UniauthLocaleChangeInterceptor.sessionName);
-		Locale locale=null;
-		if(StringUtils.isNotEmpty(lang)){
-			locale=new Locale(lang);
-		}else{
-			locale=Locale.getDefault();
+		Locale lang = (Locale)request.getSession().getAttribute(UniauthLocaleChangeInterceptor.sessionName);
+		if(lang == null){
+			lang=Locale.getDefault();
 		}
-		Map<String, String> properties = techOpsResource.getProperties(locale);
+		Map<String, String> properties = techOpsResource.getProperties(lang);
 		return properties==null?null:properties.get(key);
 	}
 	
