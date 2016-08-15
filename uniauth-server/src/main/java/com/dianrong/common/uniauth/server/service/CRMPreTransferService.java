@@ -206,14 +206,24 @@ public class CRMPreTransferService implements TaskExecutor {
 		List<TempUaUriPatternNew> uaUriPattern = uriPatternNewMapper.select();
 		if (uaUriPattern != null) {
 			for (TempUaUriPatternNew uriPattern : uaUriPattern) {
-				Permission p = new Permission();
-				p.setDescription(uriPattern.getDescription());
-				p.setValue(uriPattern.getPattern());
-				p.setPermTypeId(2);// FIXME 修改为正式URL-PATTERN的id
-				p.setDomainId(domainIdMappings.get(uriPattern.getDomainId()));
-				p.setStatus(AppConstants.ZERO_Byte);
-				permissionMapper.insert(p);
-				uriPatternNewMapper.updateSuccess(uriPattern.getId());
+				try{
+					PermissionExample permExa = new PermissionExample();
+					permExa.createCriteria().andValueEqualTo(uriPattern.getPattern()).andPermTypeIdEqualTo(2)// FIXME 修改为正式URL-PATTERN的id
+							.andDomainIdEqualTo(domainIdMappings.get(uriPattern.getDomainId()));
+					List<Permission> value = permissionMapper.selectByExample(permExa);
+					if(value!= null && !value.isEmpty()) continue;
+					Permission p = new Permission();
+					p.setDescription(uriPattern.getDescription());
+					p.setValue(uriPattern.getPattern());
+					p.setPermTypeId(2);// FIXME 修改为正式URL-PATTERN的id
+					p.setDomainId(domainIdMappings.get(uriPattern.getDomainId()));
+					p.setStatus(AppConstants.ZERO_Byte);
+					permissionMapper.insert(p);
+					uriPatternNewMapper.updateSuccess(uriPattern.getId());
+				}catch(Exception e){
+					log.error("transfer permission error,pattern="+uriPattern.getPattern(), e);
+				}
+				
 			}
 		}
 

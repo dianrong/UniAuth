@@ -28,7 +28,10 @@ public class TaskInvoker {
 	
 	private static AtomicBoolean inited = new AtomicBoolean(false);
 	
+	private static AtomicBoolean locked = new AtomicBoolean(false);
+	
 	public static void register(String name,TaskExecutor exec){
+		if(!locked.get()) return;
 		TASK_REGISTRY.put(name, exec);
 		try {
 			zooKeeper.create(TASK_PATH_PREFIX+"/"+name, null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -38,12 +41,12 @@ public class TaskInvoker {
 		try {
 			zooKeeper.getData(TASK_PATH_PREFIX+"/"+name, true, null);
 		} catch (KeeperException | InterruptedException e) {
-			e.printStackTrace();
+			log.error("watch data error", e);
 		}
 	}
 	
 	/**
-	 * 初始化开关注册中心
+	 * 初始化
 	 */
 	public static void init(){
 		if(!inited.compareAndSet(false, true)){
@@ -57,9 +60,17 @@ public class TaskInvoker {
 				try{
 					zooKeeper.create(TASK_PATH_PREFIX, null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 				}catch(Exception e){
-					zooKeeper.close();
+					log.error("create path:"+TASK_PATH_PREFIX+" error", e);
 				}
 			}
+			
+			try{
+				zooKeeper.create(TASK_PATH_PREFIX+"/lock", null, Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+				locked.set(true);
+			}catch(Exception e){
+				log.debug("get lock failed");
+			}
+			
 		} catch (Exception e) {
 			log.error("init SwitchRegistry error", e);
 		}
@@ -94,7 +105,6 @@ public class TaskInvoker {
 		public void execut(String cmd); 
 		
 	}
-
 }
 
 

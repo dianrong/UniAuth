@@ -109,6 +109,7 @@ public class TransferService implements TaskExecutor {
 		if(cmd!=null && cmd.contains("-")){
 			uaUser = userNewMapper.selectByRange(m);
 		}else{
+			log.error("cmd format error!cmd="+cmd);
 			return;
 		}
 		//用户迁移
