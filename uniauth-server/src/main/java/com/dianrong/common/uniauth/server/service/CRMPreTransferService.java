@@ -121,8 +121,11 @@ public class CRMPreTransferService implements TaskExecutor {
 		DomainExample domExa = new DomainExample();
 		domExa.createCriteria().andCodeEqualTo("crm");
 		List<Domain> crmDomain = domainMapper.selectByExample(domExa);
+		Integer crmDomainId = null;
 		if (crmDomain != null && crmDomain.size() > 0) {
-
+			crmDomainId = crmDomain.get(0).getId();
+		}else{
+			log.error("没有找到CRM对应 的doamin!");
 		}
 
 		GrpExample grpExaCrm = new GrpExample();
@@ -171,23 +174,25 @@ public class CRMPreTransferService implements TaskExecutor {
 			}
 
 			Map<Integer, RoleCode> roleCodeMap = commonService.getRoleCodeMap();
-			for (TempUaCrmRoleNew uaRole : crmRoles) {
-				Role role = new Role();
-				role.setDomainId(crmDomain.get(0).getId());
-				role.setName(uaRole.getName());
-				role.setStatus(uaRole.getStatus());
-				RoleCode rrc = null;
-				for (Entry<Integer, RoleCode> r : roleCodeMap.entrySet()) {
-					if (r.getValue().getCode().equals(uaRole.getRoleCode())) {
-						rrc = r.getValue();
-						break;
+			if(crmDomainId != null){
+				for (TempUaCrmRoleNew uaRole : crmRoles) {
+					Role role = new Role();
+					role.setDomainId(crmDomainId);
+					role.setName(uaRole.getName());
+					role.setStatus(uaRole.getStatus());
+					RoleCode rrc = null;
+					for (Entry<Integer, RoleCode> r : roleCodeMap.entrySet()) {
+						if (r.getValue().getCode().equals(uaRole.getRoleCode())) {
+							rrc = r.getValue();
+							break;
+						}
 					}
+					role.setRoleCodeId(rrc == null ? null : rrc.getId());
+					role.setStatus(AppConstants.ZERO_Byte);
+					role.setDescription(uaRole.getDescription());
+					roleMapper.insert(role);
+					crmRoleNewMapper.updateSuccess(uaRole.getId());
 				}
-				role.setRoleCodeId(rrc == null ? null : rrc.getId());
-				role.setStatus(AppConstants.ZERO_Byte);
-				role.setDescription(uaRole.getDescription());
-				roleMapper.insert(role);
-				crmRoleNewMapper.updateSuccess(uaRole.getId());
 			}
 		}
 
