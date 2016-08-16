@@ -107,7 +107,7 @@ public class GroupService {
 	private DataFilter dataFilter;
 
     public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer roleId, Integer id, List<Integer> groupIds, String name, String code,
-                                         String description, Byte status, Integer tagId, Boolean needTag, Boolean needUser,
+                                         String description, Byte status, Integer tagId, Boolean needTag, Boolean needUser, Boolean needParentId,
                                          Integer pageNumber, Integer pageSize) {
 
         if(pageNumber == null || pageSize == null) {
@@ -305,6 +305,17 @@ public class GroupService {
                                 tagDtoList.add(tagDto);
                             }
                         }
+                    }
+                }
+            }
+            if(needParentId != null && needParentId) {
+                GrpPathExample grpPathExample = new GrpPathExample();
+                grpPathExample.createCriteria().andDescendantIn(new ArrayList<>(groupIdGroupDtoPair.keySet())).andDeepthEqualTo(AppConstants.ONE_Byte);
+                List<GrpPath> grpPaths = grpPathMapper.selectByExample(grpPathExample);
+                if(!CollectionUtils.isEmpty(grpPaths)) {
+                    for(GrpPath grpPath : grpPaths) {
+                        GroupDto groupDto = groupIdGroupDtoPair.get(grpPath.getDescendant());
+                        groupDto.setParentId(grpPath.getAncestor());
                     }
                 }
             }

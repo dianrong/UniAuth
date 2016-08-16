@@ -19,6 +19,7 @@ public class GroupQuery extends PageParam  {
     private Integer tagId;
     private Boolean needTag;
     private Boolean needUser;
+    private Boolean needParentId;
     
     public List<Integer> getGroupIds() {
         return groupIds;
@@ -127,4 +128,13 @@ public class GroupQuery extends PageParam  {
 		this.roleId = roleId;
 		return this;
 	}
+
+    public Boolean getNeedParentId() {
+        return needParentId;
+    }
+
+    public GroupQuery setNeedParentId(Boolean needParentId) {
+        this.needParentId = needParentId;
+        return this;
+    }
 }

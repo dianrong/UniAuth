@@ -13,6 +13,7 @@ public class GroupDto implements Serializable {
 	private Byte status;
 	private String description;
 	private List<TagDto> tags;
+	private Integer parentId;
 	/**
 	private List<UserDto> ownerList;
 	**/
@@ -139,6 +140,15 @@ public class GroupDto implements Serializable {
 
 	public GroupDto setTags(List<TagDto> tags) {
 		this.tags = tags;
+		return this;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public GroupDto setParentId(Integer parentId) {
+		this.parentId = parentId;
 		return this;
 	}
 }
