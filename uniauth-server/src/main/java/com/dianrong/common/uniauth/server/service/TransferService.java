@@ -127,7 +127,7 @@ public class TransferService implements TaskExecutor {
 	        user.setLastUpdate(now);
 	        user.setCreateDate(now);
 	        user.setPhone(uUser.getPhone());
-	        user.setStatus(AppConstants.ZERO_Byte);
+	        user.setStatus(uUser.getStatus());
 	        user.setId(uUser.getId());
 	        user.setPasswordDate(uUser.getPasswordDate());
 	        Map<String,String> phone = Maps.newHashMap();

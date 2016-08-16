@@ -175,6 +175,7 @@ public class CRMPreTransferService implements TaskExecutor {
 				Role role = new Role();
 				role.setDomainId(crmDomain.get(0).getId());
 				role.setName(uaRole.getName());
+				role.setStatus(uaRole.getStatus());
 				RoleCode rrc = null;
 				for (Entry<Integer, RoleCode> r : roleCodeMap.entrySet()) {
 					if (r.getValue().getCode().equals(uaRole.getRoleCode())) {
@@ -317,7 +318,7 @@ public class CRMPreTransferService implements TaskExecutor {
 		groupParam.setCode("CRM_" + gTree.getRelGroup().getId());
 		groupParam.setName(gTree.getRelGroup().getName());
 		groupParam.setDescription(gTree.getRelGroup().getDescription());
-		groupParam.setStatus(AppConstants.ZERO_Byte);
+		groupParam.setStatus(gTree.getRelGroup().getStatus());
 		GroupDto cG = groupService.createDescendantGroup(groupParam);
 		if (gTree.getChildren().size() > 0) {
 			for (GroupTree gChild : gTree.getChildren()) {
