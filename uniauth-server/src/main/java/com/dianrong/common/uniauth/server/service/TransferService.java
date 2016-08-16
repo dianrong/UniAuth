@@ -301,7 +301,6 @@ public class TransferService implements TaskExecutor {
 				}
 			}
 			for(TempUaUserNew uUser : uaUser){
-				if(uUser.getGroupRole() == 0) continue;
 				UserTagKey userTagKey = new UserTagKey();
 				userTagKey.setTagId(groupRoleMapping.get(uUser.getGroupRole()));
 				if(oldNewUserMapping.containsKey(uUser.getId())){
