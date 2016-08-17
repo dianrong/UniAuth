@@ -162,7 +162,7 @@ public class TransferService implements TaskExecutor {
 		        }
 				userNewMapper.updateSuccess(user.getId());
 	        }catch(Exception e){
-	        	log.error("transfer user error,userid="+uUser.getId(), e);
+	        	log.warn("transfer user error,userid="+uUser.getId(), e);
 	        }
 			
 		}
@@ -217,7 +217,7 @@ public class TransferService implements TaskExecutor {
                     mm.put("roleId",uaUserRole.getRoleId());
                     userRoleCrmNewMapper.updateSuccess(mm);
                 }catch(Exception e){
-                	log.error("transfer user role error!userid="+uaUserRole.getUserId()+",roleid="+uaUserRole.getRoleId(), e);
+                	log.warn("transfer user role error!userid="+uaUserRole.getUserId()+",roleid="+uaUserRole.getRoleId(), e);
                 }
                 
 			}
@@ -255,7 +255,7 @@ public class TransferService implements TaskExecutor {
 				try{
 					userGrpMapper.insert(userGrp);
 				}catch(Exception e){
-					log.error("transfer usergrp error!,userid:"+userGrp.getUserId(), e);
+					log.warn("transfer usergrp error!,userid:"+userGrp.getUserId(), e);
 				}
 			}
 		}
@@ -277,7 +277,7 @@ public class TransferService implements TaskExecutor {
 					try{
 						grpTagMapper.insert(grpTagKey);
 					}catch(Exception e){
-						log.error("transfer tag error!grp_id:"+grp.getId(), e);
+						log.warn("transfer tag error!grp_id:"+grp.getId(), e);
 					}
 				}
 			}
@@ -311,7 +311,7 @@ public class TransferService implements TaskExecutor {
 				try{
 					userTagMapper.insert(userTagKey);
 				}catch(Exception e){
-					log.error("transfer userTag error!userid="+uUser.getId(), e);
+					log.warn("transfer userTag error!userid="+uUser.getId(), e);
 				}
 			}
 		}
