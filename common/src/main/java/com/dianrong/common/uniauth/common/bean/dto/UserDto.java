@@ -179,4 +179,13 @@ public class UserDto implements Serializable {
 	    }
 	    return userExtendValMap.get(code);
 	}
+
+	@Override
+	public String toString() {
+		return "UserDto [id=" + id + ", name=" + name + ", password=" + password + ", passwordSalt=" + passwordSalt
+				+ ", email=" + email + ", phone=" + phone + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate
+				+ ", status=" + status + ", userGroupType=" + userGroupType + ", tagDtos=" + tagDtos
+				+ ", userExtendValDtos=" + userExtendValDtos + ", userExtendValMap=" + userExtendValMap
+				+ ", roleChecked=" + roleChecked + ", tagChecked=" + tagChecked + "]";
+	}
 }

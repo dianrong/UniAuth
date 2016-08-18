@@ -80,5 +80,12 @@ public class UserExtendValDto implements Serializable {
     public void setExtendDescription(String extendDescription) {
         this.extendDescription = extendDescription;
     }
+
+	@Override
+	public String toString() {
+		return "UserExtendValDto [id=" + id + ", userId=" + userId + ", value=" + value + ", status=" + status
+				+ ", extendId=" + extendId + ", extendCode=" + extendCode + ", extendDescription=" + extendDescription
+				+ "]";
+	}
 }
 

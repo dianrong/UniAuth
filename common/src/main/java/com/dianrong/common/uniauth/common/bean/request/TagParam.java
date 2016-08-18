@@ -7,7 +7,8 @@ import java.util.List;
  */
 public class TagParam extends Operator {
 
-    private Integer id;
+	private static final long serialVersionUID = 8630107970908020377L;
+	private Integer id;
     private String code;
     private Byte status;
     private Integer tagTypeId;
@@ -87,4 +88,11 @@ public class TagParam extends Operator {
         this.userIds = userIds;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "TagParam [id=" + id + ", code=" + code + ", status=" + status + ", tagTypeId=" + tagTypeId
+				+ ", domainId=" + domainId + ", description=" + description + ", grpIds=" + grpIds + ", userIds="
+				+ userIds + "]";
+	}
 }

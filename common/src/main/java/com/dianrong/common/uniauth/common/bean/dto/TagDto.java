@@ -8,7 +8,8 @@ import java.util.Date;
  */
 public class TagDto implements Serializable {
 
-    private Integer id;
+	private static final long serialVersionUID = -6998161636801183621L;
+	private Integer id;
     private String code;
     private Byte status;
     private String description;
@@ -112,4 +113,12 @@ public class TagDto implements Serializable {
         this.tagTypeCode = tagTypeCode;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "TagDto [id=" + id + ", code=" + code + ", status=" + status + ", description=" + description
+				+ ", tagTypeId=" + tagTypeId + ", tagTypeCode=" + tagTypeCode + ", createDate=" + createDate
+				+ ", lastUpdate=" + lastUpdate + ", tagUserChecked=" + tagUserChecked + ", tagGrouprChecked="
+				+ tagGrouprChecked + "]";
+	}
 }

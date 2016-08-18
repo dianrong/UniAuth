@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 public class LoginParam extends Operator {
+	private static final long serialVersionUID = 7180777080519450378L;
 	//domainCode may does not need involve in login process
 	/**
 	private String domainCode;
@@ -43,5 +44,10 @@ public class LoginParam extends Operator {
 	public LoginParam setPassword(String password) {
 		this.password = password;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginParam [account=" + account + ", password=" + password + ", ip=" + ip + "]";
 	}
 }

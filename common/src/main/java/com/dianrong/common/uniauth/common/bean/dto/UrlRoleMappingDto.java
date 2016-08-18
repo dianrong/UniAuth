@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class UrlRoleMappingDto implements Serializable {
 
+	private static final long serialVersionUID = 8299922400236618806L;
 	private String permUrl;
 	private String roleCode;
 	private String permType;
@@ -33,5 +34,9 @@ public class UrlRoleMappingDto implements Serializable {
 	public void setHttpMethod(String httpMethod) {
 		this.httpMethod = httpMethod;
 	}
-
+	@Override
+	public String toString() {
+		return "UrlRoleMappingDto [permUrl=" + permUrl + ", roleCode=" + roleCode + ", permType=" + permType
+				+ ", httpMethod=" + httpMethod + "]";
+	}
 }

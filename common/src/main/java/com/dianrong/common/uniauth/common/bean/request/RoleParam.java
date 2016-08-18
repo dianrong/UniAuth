@@ -4,6 +4,7 @@ import java.util.List;
 
 
 public class RoleParam extends Operator {
+	private static final long serialVersionUID = -1555945847793133921L;
 	private Integer id;
 	private String name;
 	private String description;
@@ -93,5 +94,12 @@ public class RoleParam extends Operator {
 	public RoleParam setUserIds(List<Long> userIds) {
 		this.userIds = userIds;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "RoleParam [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status
+				+ ", roleCodeId=" + roleCodeId + ", domainId=" + domainId + ", permIds=" + permIds + ", grpIds="
+				+ grpIds + ", userIds=" + userIds + "]";
 	}
 }

@@ -30,6 +30,9 @@ public class UserExtendParam extends Operator{
     public void setDescription(String description) {
         this.description = description;
     }
-
+	@Override
+	public String toString() {
+		return "UserExtendParam [id=" + id + ", code=" + code + ", description=" + description + "]";
+	}
 }
 
