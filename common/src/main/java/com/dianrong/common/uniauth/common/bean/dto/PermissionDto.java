@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.io.Serializable;
 
 public class PermissionDto implements Serializable {
@@ -96,4 +98,38 @@ public class PermissionDto implements Serializable {
 		this.valueExt = valueExt;
 		return this;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PermissionDto that = (PermissionDto) o;
+
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (value != null ? !value.equals(that.value) : that.value != null) return false;
+		if (valueExt != null ? !valueExt.equals(that.valueExt) : that.valueExt != null) return false;
+		if (description != null ? !description.equals(that.description) : that.description != null) return false;
+		if (status != null ? !status.equals(that.status) : that.status != null) return false;
+		if (permTypeId != null ? !permTypeId.equals(that.permTypeId) : that.permTypeId != null) return false;
+		if (domainId != null ? !domainId.equals(that.domainId) : that.domainId != null) return false;
+		if (permType != null ? !permType.equals(that.permType) : that.permType != null) return false;
+		return !(checked != null ? !checked.equals(that.checked) : that.checked != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (value != null ? value.hashCode() : 0);
+		result = 31 * result + (valueExt != null ? valueExt.hashCode() : 0);
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (status != null ? status.hashCode() : 0);
+		result = 31 * result + (permTypeId != null ? permTypeId.hashCode() : 0);
+		result = 31 * result + (domainId != null ? domainId.hashCode() : 0);
+		result = 31 * result + (permType != null ? permType.hashCode() : 0);
+		result = 31 * result + (checked != null ? checked.hashCode() : 0);
+		return result;
+	}
+
 }
