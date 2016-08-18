@@ -28,10 +28,10 @@ public class TaskInvoker {
 	
 	private static AtomicBoolean inited = new AtomicBoolean(false);
 	
-//	private static AtomicBoolean locked = new AtomicBoolean(false);
+	private static AtomicBoolean locked = new AtomicBoolean(false);
 	
 	public static void register(String name,TaskExecutor exec){
-//		if(!locked.get()) return;
+		if(!locked.get()) return;
 		TASK_REGISTRY.put(name, exec);
 		try {
 			zooKeeper.create(TASK_PATH_PREFIX+"/"+name, null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -63,6 +63,15 @@ public class TaskInvoker {
 					log.error("create path:"+TASK_PATH_PREFIX+" error", e);
 				}
 			}
+			
+			try{
+				zooKeeper.create(TASK_PATH_PREFIX+"/lock", null, Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+				locked.set(true);
+			}catch(Exception e){
+				log.debug("get lock failed");
+				zooKeeper.close();
+			}
+			
 		} catch (Exception e) {
 			log.error("init SwitchRegistry error", e);
 		}
