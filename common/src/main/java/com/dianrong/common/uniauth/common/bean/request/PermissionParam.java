@@ -2,9 +2,8 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-
 public class PermissionParam extends Operator {
+	private static final long serialVersionUID = -2653053952710364770L;
 	private Integer id;
 	private String value;
 	private String valueExt;
@@ -86,5 +85,12 @@ public class PermissionParam extends Operator {
 	public PermissionParam setValueExt(String valueExt) {
 		this.valueExt = valueExt;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "PermissionParam [id=" + id + ", value=" + value + ", valueExt=" + valueExt + ", description="
+				+ description + ", status=" + status + ", permTypeId=" + permTypeId + ", domainId=" + domainId
+				+ ", roleIds=" + roleIds + "]";
 	}
 }

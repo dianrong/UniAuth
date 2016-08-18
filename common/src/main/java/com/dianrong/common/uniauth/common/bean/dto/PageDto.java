@@ -1,13 +1,12 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.List;
 
 public class PageDto<T> implements Serializable {
 
-    private int currentPage;       // current page number, from 0
+	private static final long serialVersionUID = 578665277377363989L;
+	private int currentPage;       // current page number, from 0
     private int pageSize;   // page size
     private int totalCount; // total record count
     private List<T> data;   // current page data
@@ -34,7 +33,7 @@ public class PageDto<T> implements Serializable {
         }
     }
 
-    public PageDto setTotalPage(int totalPage) {
+    public PageDto<T> setTotalPage(int totalPage) {
         return this;
     }
 
@@ -50,7 +49,7 @@ public class PageDto<T> implements Serializable {
         return currentPage;
     }
 
-    public PageDto setCurrentPage(int currentPage) {
+    public PageDto<T> setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
         return this;
     }
@@ -59,7 +58,7 @@ public class PageDto<T> implements Serializable {
         return pageSize;
     }
 
-    public PageDto setPageSize(int pageSize) {
+    public PageDto<T> setPageSize(int pageSize) {
         this.pageSize = pageSize;
         return this;
     }
@@ -68,7 +67,7 @@ public class PageDto<T> implements Serializable {
         return totalCount;
     }
 
-    public PageDto setTotalCount(int totalCount) {
+    public PageDto<T> setTotalCount(int totalCount) {
         this.totalCount = totalCount;
         return this;
     }
@@ -77,8 +76,14 @@ public class PageDto<T> implements Serializable {
         return data;
     }
 
-    public PageDto setData(List<T> data) {
+    public PageDto<T> setData(List<T> data) {
         this.data = data;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "PageDto [currentPage=" + currentPage + ", pageSize=" + pageSize + ", totalCount=" + totalCount
+				+ ", data=" + data + "]";
+	}
 }

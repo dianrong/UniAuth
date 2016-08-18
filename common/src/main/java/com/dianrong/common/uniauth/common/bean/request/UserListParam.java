@@ -6,6 +6,7 @@ import java.util.List;
 
 public class UserListParam extends Operator{
 
+	private static final long serialVersionUID = -950457653366655079L;
 	private Integer groupId;
 	private List<Long> userIds;
 
@@ -48,5 +49,11 @@ public class UserListParam extends Operator{
 	public UserListParam setGroupId(Integer groupId) {
 		this.groupId = groupId;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "UserListParam [groupId=" + groupId + ", userIds=" + userIds + ", userIdGroupIdPairs="
+				+ userIdGroupIdPairs + ", normalMember=" + normalMember + "]";
 	}
 }

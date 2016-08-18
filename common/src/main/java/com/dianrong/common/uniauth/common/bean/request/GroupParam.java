@@ -4,6 +4,7 @@ import java.util.List;
 
 public class GroupParam extends Operator {
 
+	private static final long serialVersionUID = -4261321484001881493L;
 	private Integer id;
 	private String code;
 	private String name;
@@ -165,5 +166,14 @@ public class GroupParam extends Operator {
 	public GroupParam setTagIds(List<Integer> tagIds) {
 		this.tagIds = tagIds;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description=" + description
+				+ ", status=" + status + ", targetGroupId=" + targetGroupId + ", targetGroupIds=" + targetGroupIds
+				+ ", onlyShowGroup=" + onlyShowGroup + ", userGroupType=" + userGroupType + ", needOwnerMarkup="
+				+ needOwnerMarkup + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds="
+				+ roleIds + ", tagIds=" + tagIds + "]";
 	}
 }

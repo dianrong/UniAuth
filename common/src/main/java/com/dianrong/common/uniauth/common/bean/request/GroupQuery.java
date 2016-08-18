@@ -7,7 +7,8 @@ import java.util.List;
  */
 public class GroupQuery extends PageParam  {
 
-    private Integer id;
+	private static final long serialVersionUID = -6174713703363466941L;
+	private Integer id;
     private List<Integer> groupIds;
     private String code;
     private String name;
@@ -137,4 +138,12 @@ public class GroupQuery extends PageParam  {
         this.needParentId = needParentId;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name
+				+ ", description=" + description + ", status=" + status + ", userGroupType=" + userGroupType
+				+ ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId + ", needTag=" + needTag
+				+ ", needUser=" + needUser + ", needParentId=" + needParentId + "]";
+	}
 }

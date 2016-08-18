@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.io.Serializable;
 
 public class PermissionDto implements Serializable {
+	private static final long serialVersionUID = -3799602677526320793L;
 	private Integer id;
 	private String value;
 	private String valueExt;
@@ -131,5 +130,10 @@ public class PermissionDto implements Serializable {
 		result = 31 * result + (checked != null ? checked.hashCode() : 0);
 		return result;
 	}
-
+	@Override
+	public String toString() {
+		return "PermissionDto [id=" + id + ", value=" + value + ", valueExt=" + valueExt + ", description="
+				+ description + ", status=" + status + ", permTypeId=" + permTypeId + ", domainId=" + domainId
+				+ ", permType=" + permType + ", checked=" + checked + "]";
+	}
 }

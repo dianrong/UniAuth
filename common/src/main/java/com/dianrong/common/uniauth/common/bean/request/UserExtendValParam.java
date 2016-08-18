@@ -81,5 +81,11 @@ public class UserExtendValParam extends PageParam {
     public void setQueryOnlyUsed(boolean queryOnlyUsed) {
         this.queryOnlyUsed = queryOnlyUsed;
     }
+
+	@Override
+	public String toString() {
+		return "UserExtendValParam [id=" + id + ", userId=" + userId + ", extendId=" + extendId + ", value=" + value
+				+ ", status=" + status + ", extendCode=" + extendCode + ", queryOnlyUsed=" + queryOnlyUsed + "]";
+	}
 }
 

@@ -5,7 +5,8 @@ package com.dianrong.common.uniauth.common.bean.request;
  */
 public class TagTypeParam extends Operator {
 
-    private Integer id;
+	private static final long serialVersionUID = 5524584740041272751L;
+	private Integer id;
     private String code;
     private Integer domainId;
 
@@ -35,4 +36,9 @@ public class TagTypeParam extends Operator {
         this.domainId = domainId;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "TagTypeParam [id=" + id + ", code=" + code + ", domainId=" + domainId + "]";
+	}
 }

@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.bean.request;
 import java.util.List;
 
 public class DomainParam extends PageParam {
+	private static final long serialVersionUID = -1587818665974806460L;
 	private List<Integer> domainIds;
     private Integer id;
     //generally, code cann't be changed!
@@ -62,5 +63,11 @@ public class DomainParam extends PageParam {
 	public DomainParam setDomainIds(List<Integer> domainIds) {
 		this.domainIds = domainIds;
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return "DomainParam [domainIds=" + domainIds + ", id=" + id + ", code=" + code + ", displayName=" + displayName
+				+ ", description=" + description + ", status=" + status + ", domainCodeList=" + domainCodeList + "]";
 	}
 }
