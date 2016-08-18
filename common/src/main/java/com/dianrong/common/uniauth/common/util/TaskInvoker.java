@@ -20,7 +20,7 @@ public class TaskInvoker {
 	
 	private static final Log log = LogFactory.getLog(TaskInvoker.class);
 	
-	public static final String TASK_PATH_PREFIX = "/com/dianrong/cfg/1.0.0/task_";
+	public static final String TASK_PATH_PREFIX = "/com/dianrong/cfg/1.0.0/uniauth/task_";
 	
 	private static final Map<String,TaskExecutor> TASK_REGISTRY = Maps.newConcurrentMap();
 	
