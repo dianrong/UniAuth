@@ -22,7 +22,7 @@ plugins {
 }
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.44'
+    version = '1.0.46-SNAPSHOT'
 
     apply plugin: 'java'
     apply plugin: 'idea'
