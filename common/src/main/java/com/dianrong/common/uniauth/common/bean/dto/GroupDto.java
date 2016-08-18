@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 public class GroupDto implements Serializable {
+	private static final long serialVersionUID = 892184382591361189L;
 	private Integer id;
 	private String code;
 	private String name;
@@ -150,5 +151,13 @@ public class GroupDto implements Serializable {
 	public GroupDto setParentId(Integer parentId) {
 		this.parentId = parentId;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "GroupDto [id=" + id + ", code=" + code + ", name=" + name + ", createDate=" + createDate
+				+ ", lastUpdate=" + lastUpdate + ", status=" + status + ", description=" + description + ", tags="
+				+ tags + ", parentId=" + parentId + ", users=" + users + ", groups=" + groups + ", roleChecked="
+				+ roleChecked + ", tagChecked=" + tagChecked + ", ownerMarkup=" + ownerMarkup + "]";
 	}
 }

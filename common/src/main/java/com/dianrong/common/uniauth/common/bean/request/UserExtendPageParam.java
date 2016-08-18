@@ -18,6 +18,10 @@ public class UserExtendPageParam extends PageParam {
     public void setCode(String code) {
         this.code = code;
     }
-    
+
+	@Override
+	public String toString() {
+		return "UserExtendPageParam [code=" + code + "]";
+	}
 }
 

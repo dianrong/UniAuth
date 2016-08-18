@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.bean.request;
 import java.util.List;
 
 public class RoleQuery extends PageParam {
+	private static final long serialVersionUID = -2330120093448174753L;
 	private Integer id;
 	private String name;
 	private String description;
@@ -72,5 +73,11 @@ public class RoleQuery extends PageParam {
 	public RoleQuery setRoleIds(List<Integer> roleIds) {
 		this.roleIds = roleIds;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "RoleQuery [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status
+				+ ", roleCodeId=" + roleCodeId + ", roleIds=" + roleIds + ", domainId=" + domainId + "]";
 	}
 }

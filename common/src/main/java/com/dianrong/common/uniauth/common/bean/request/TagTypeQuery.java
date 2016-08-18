@@ -7,7 +7,8 @@ import java.util.List;
  */
 public class TagTypeQuery extends Operator{
 
-    private Integer id;
+	private static final long serialVersionUID = -3924943487606336730L;
+	private Integer id;
     private List<Integer> domainIds;
     private Integer domainId;
     private String code;
@@ -47,4 +48,10 @@ public class TagTypeQuery extends Operator{
         this.code = code;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "TagTypeQuery [id=" + id + ", domainIds=" + domainIds + ", domainId=" + domainId + ", code=" + code
+				+ "]";
+	}
 }

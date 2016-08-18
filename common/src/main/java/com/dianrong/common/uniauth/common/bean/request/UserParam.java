@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 
 public class UserParam extends Operator {
 
+	private static final long serialVersionUID = 8550894865549572653L;
 	private Long id;
     private String name;
     private String phone;
@@ -118,5 +119,12 @@ public class UserParam extends Operator {
 
 	public void setOriginPassword(String originPassword) {
 		this.originPassword = originPassword;
+	}
+
+	@Override
+	public String toString() {
+		return "UserParam [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", password="
+				+ password + ", originPassword=" + originPassword + ", status=" + status + ", userActionEnum="
+				+ userActionEnum + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds + "]";
 	}
 }

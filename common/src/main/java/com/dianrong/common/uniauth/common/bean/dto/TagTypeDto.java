@@ -6,8 +6,8 @@ import java.io.Serializable;
  * Created by Arc on 7/4/2016.
  */
 public class TagTypeDto implements Serializable {
-
-    private Integer id;
+	private static final long serialVersionUID = 4681756553353785511L;
+	private Integer id;
     private String code;
     private Integer domainId;
     private String domainName;
@@ -47,4 +47,10 @@ public class TagTypeDto implements Serializable {
         this.domainName = domainName;
         return this;
     }
+
+	@Override
+	public String toString() {
+		return "TagTypeDto [id=" + id + ", code=" + code + ", domainId=" + domainId + ", domainName=" + domainName
+				+ "]";
+	}
 }

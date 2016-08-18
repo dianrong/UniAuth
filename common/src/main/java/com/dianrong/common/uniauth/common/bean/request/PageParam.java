@@ -3,7 +3,8 @@ package com.dianrong.common.uniauth.common.bean.request;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class PageParam extends Operator {
-    // from index 0, default value 0
+	private static final long serialVersionUID = -816255290618366452L;
+	// from index 0, default value 0
     protected Integer pageNumber = AppConstants.MIN_PAGE_NUMBER;
 	// default 5000.
 	// if api user use defaultValue/5000 and when the query result number exceed 5000 the program will throw an exception to say that
@@ -32,5 +33,10 @@ public class PageParam extends Operator {
 		}
 		this.pageSize = pageSize;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "PageParam [pageNumber=" + pageNumber + ", pageSize=" + pageSize + "]";
 	}
 }

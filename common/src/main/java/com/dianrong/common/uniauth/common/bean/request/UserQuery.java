@@ -7,7 +7,8 @@ import java.util.List;
  */
 public class UserQuery extends PageParam {
 
-    private Long userId;
+	private static final long serialVersionUID = -9186367883822216088L;
+	private Long userId;
     private List<Long> userIds;
     private String name;
     private String phone;
@@ -106,5 +107,12 @@ public class UserQuery extends PageParam {
 	public UserQuery setRoleId(Integer roleId) {
 		this.roleId = roleId;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "UserQuery [userId=" + userId + ", userIds=" + userIds + ", name=" + name + ", phone=" + phone
+				+ ", email=" + email + ", status=" + status + ", tagId=" + tagId + ", groupId=" + groupId + ", roleId="
+				+ roleId + ", needTag=" + needTag + "]";
 	}
 }

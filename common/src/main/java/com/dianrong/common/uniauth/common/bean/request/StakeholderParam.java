@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 public class StakeholderParam extends Operator {
+	private static final long serialVersionUID = 7155432975823370632L;
 	private Integer id;
 	private String name;
 	private String email;

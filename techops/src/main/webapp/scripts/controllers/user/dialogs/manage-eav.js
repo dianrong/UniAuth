@@ -66,9 +66,9 @@ define(['../../../utils/constant'], function (constant) {
                         return;
                     }
                     eavCode.id = result.id;
-                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScopt.translate('userMgr.tips.addEavSuccess'));
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.addEavSuccess'));
                 }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScopt.translate('userMgr.tips.addEavFailure'));
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.addEavFailure'));
                 });
             } else {
             	// 修改

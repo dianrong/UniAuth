@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.bean.request;
 import java.util.List;
 
 public class PermissionQuery extends PageParam {
+	private static final long serialVersionUID = 4131252066057083988L;
 	private Integer id;
 	private String value;
 	private String description;
@@ -82,5 +83,12 @@ public class PermissionQuery extends PageParam {
 	public PermissionQuery setValueExt(String valueExt) {
 		this.valueExt = valueExt;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "PermissionQuery [id=" + id + ", value=" + value + ", description=" + description + ", status=" + status
+				+ ", permTypeId=" + permTypeId + ", domainId=" + domainId + ", permIds=" + permIds + ", valueExt="
+				+ valueExt + "]";
 	}
 }
