@@ -84,8 +84,8 @@ public class GroupAction {
                 }
             } else {
                 nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), null);
+                filterNodes(nodes);
             }
-            filterNodes(nodes);
             return Response.success(nodes);
         } else {
             return Response.success(null);
