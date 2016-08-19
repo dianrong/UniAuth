@@ -74,8 +74,8 @@ dependencies {
 
     // This is the first project to use the release version of cas&uniauth-server,
     // so if there is a version upgrade, we should make sure the release version is work for techops system first then ask other teams to upgrade.
-    compile "com.dianrong.common.uniauth:share-rw:1.0.46"
-    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.46"
+    compile "com.dianrong.common.uniauth:share-rw:1.0.47"
+    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.47"
     
    // compile project(":ss-client")
  //   compile project(":share-rw")
