@@ -2,7 +2,6 @@
 <%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
 <%@ page import="com.dianrong.common.uniauth.common.util.HttpRequestUtil" %>
 <%
-
 	String baseUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort();
 	String queryStr =  request.getQueryString();
 	queryStr = queryStr == null ? "" : "?" + queryStr;
