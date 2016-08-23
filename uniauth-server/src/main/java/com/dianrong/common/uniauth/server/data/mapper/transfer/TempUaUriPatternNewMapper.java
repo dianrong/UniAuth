@@ -8,6 +8,8 @@ public interface TempUaUriPatternNewMapper {
 	
 	public List<TempUaUriPatternNew> select();
 	
+	public List<TempUaUriPatternNew> selectByDomainId(Integer domainId);
+	
 	public List<TempUaUriPatternNew> selectAll();
 
 	public int updateSuccess(Integer id);
