@@ -27,6 +27,10 @@
   	select * from temp_ua_uri_pattern_new where trStatus=0
   </select>
   
+  <select id="selectByDomainId" resultMap="BaseResultMap"  parameterType="java.lang.Integer">
+  	select * from temp_ua_uri_pattern_new where trStatus=0 and domain_id = #{domainId, jdbcType=INTEGER}
+  </select>
+  
   <select id="selectAll" resultMap="BaseResultMap">
   	select * from temp_ua_uri_pattern_new
   </select>
