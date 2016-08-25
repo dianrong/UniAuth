@@ -61,5 +61,10 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
+    <!-- tomcat version-7.0.68 has a bug, it treats second as the unit of the config.
+    The config`s unit should be minute since 7.0.69.
+    modify this config to 120 after DO upgrade tomcats-->
+    <session-config>
+        <session-timeout>120000</session-timeout>
+    </session-config>
 </web-app>
