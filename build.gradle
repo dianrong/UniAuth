@@ -33,12 +33,24 @@ allprojects {
     repositories {
         maven {
             url 'http://archiva.dianrong.com/repository/mirror'
+			credentials {
+				username = 'developer'
+				password = '#a1GiRoKJnG'
+			}
         }
         maven {
             url 'http://archiva.dianrong.com/repository/internal'
+			credentials {
+				username = 'developer'
+				password = '#a1GiRoKJnG'
+			}
         }
         maven {
             url 'http://archiva.dianrong.com/repository/snapshots'
+			credentials {
+				username = 'developer'
+				password = '#a1GiRoKJnG'
+			}
         }
     }
 
