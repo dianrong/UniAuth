@@ -56,7 +56,7 @@
 	<error-page>  
 		<error-code>404</error-code>  
 		<location>/errors/403.jsp</location>  
-	</error-page>  
+	</error-page>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
