@@ -31,12 +31,12 @@
 		<property name="rejectPublicInvocations" value="false"></property>
 	</bean>
 
-	<sec:http pattern="/views/domain/dialogs" security="none" />
-	<sec:http pattern="/scripts/lib/jquery/src/deferred" security="none" />
-	<sec:http pattern="/styles/font-awesome/scss" security="none" />
-	<sec:http pattern="/i18n" security="none" />
-	<sec:http pattern="/images" security="none" />
-	<sec:http pattern="/swagger-ui/lang" security="none" />
+	<sec:http pattern="/views/**" security="none" />
+	<sec:http pattern="/scripts/**" security="none" />
+	<sec:http pattern="/styles/**" security="none" />
+	<sec:http pattern="/i18n/**" security="none" />
+	<sec:http pattern="/images/**" security="none" />
+	<sec:http pattern="/swagger-ui/**" security="none" />
 
 	<sec:http pattern="/metrics" security="none" />
 	<sec:http pattern="/health" security="none" />
