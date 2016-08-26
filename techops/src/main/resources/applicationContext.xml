@@ -42,6 +42,7 @@
 	<sec:http pattern="/health" security="none" />
 	<sec:http pattern="/mappings" security="none" />
 	<sec:http pattern="/beans" security="none" />
+	<sec:http pattern="/dump" security="none" />
 
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">
