@@ -38,6 +38,11 @@
 	<sec:http pattern="/images/**" security="none" />
 	<sec:http pattern="/swagger-ui/**" security="none" />
 
+	<sec:http pattern="/metrics" security="none" />
+	<sec:http pattern="/health" security="none" />
+	<sec:http pattern="/mappings" security="none" />
+	<sec:http pattern="/beans" security="none" />
+
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">
 		<sec:custom-filter ref="casAuthenticationFilter"
