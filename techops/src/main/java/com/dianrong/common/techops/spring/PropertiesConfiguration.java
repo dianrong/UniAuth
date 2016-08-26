@@ -60,4 +60,9 @@ public class PropertiesConfiguration {
     {
         return new EndpointMvcAdapter(delegate);
     }
+
+    @Bean
+    public EndpointMvcAdapter dumpEndpoint() {
+        return new EndpointMvcAdapter(new DumpEndpoint());
+    }
 }

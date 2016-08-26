@@ -58,9 +58,8 @@ public class SpringBootActuatorConfig {
     {
         return new EndpointMvcAdapter(delegate);
     }
-//    @Bean
-//    @Autowired
-//    public EndpointMvcAdapter dumpEndpoint(DumpEndpoint delegete) {
-//        return new EndpointMvcAdapter(delegete);
-//    }
+    @Bean
+    public EndpointMvcAdapter dumpEndpoint() {
+        return new EndpointMvcAdapter(new DumpEndpoint());
+    }
 }
