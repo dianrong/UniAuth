@@ -340,7 +340,7 @@
 
   <bean id="authenticationExceptionHandler" class="com.dianrong.common.uniauth.cas.handler.UniauthAuthenticationExceptionHandler" />
 
-  <bean id="generateServiceTicketAction" class="org.jasig.cas.web.flow.GenerateServiceTicketAction"
+  <bean id="generateServiceTicketAction" class="com.dianrong.common.uniauth.cas.action.GenerateServiceTicketAction"
         p:centralAuthenticationService-ref="centralAuthenticationService"/>
 
   <bean id="sendTicketGrantingTicketAction" class="org.jasig.cas.web.flow.SendTicketGrantingTicketAction"
