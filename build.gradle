@@ -57,7 +57,7 @@ allprojects {
     repositories{
 		mavenCentral()
 	}
-	
+
     publishing {
 		publications.all {
 			pom.withXml {

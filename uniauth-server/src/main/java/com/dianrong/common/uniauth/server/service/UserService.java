@@ -531,6 +531,7 @@ public class UserService {
     public List<UserDto> searchUsersWithRoleCheck(Integer roleId) {
         CheckEmpty.checkEmpty(roleId, "roleId");
         UserExample userExample = new UserExample();
+        userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED);
         List<User> allUsers = userMapper.selectByExample(userExample);
 
         UserRoleExample userRoleExample = new UserRoleExample();
@@ -560,6 +561,7 @@ public class UserService {
     public List<UserDto> searchUsersWithTagCheck(Integer tagId) {
         CheckEmpty.checkEmpty(tagId, "tagId");
         UserExample userExample = new UserExample();
+        userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED);
         List<User> allUsers = userMapper.selectByExample(userExample);
 
         UserTagExample userTagExample = new UserTagExample();
