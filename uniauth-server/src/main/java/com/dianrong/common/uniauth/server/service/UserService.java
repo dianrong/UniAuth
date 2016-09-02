@@ -183,6 +183,8 @@ public class UserService {
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
                 user.setPasswordSalt(Base64.encode(salt));
                 user.setPasswordDate(new Date());
+                //reset password
+                user.setFailCount((byte)0);
                 break;
             case STATUS_CHANGE:
             	// 只处理启用的情况
@@ -218,6 +220,8 @@ public class UserService {
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
                 user.setPasswordSalt(Base64.encode(salttemp));
                 user.setPasswordDate(new Date());
+                //reset password
+                user.setFailCount((byte)0);
                 break;
         }
         user.setLastUpdate(new Date());
