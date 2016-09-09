@@ -16,6 +16,11 @@ public class UserQuery extends PageParam {
     private Byte status;
     private Integer tagId;
     private Integer groupId;
+    // 需要在groupId != null的情况下才生效
+    private Boolean needDescendantGrpUser;
+    // 是否需要被禁用掉的组的user
+    private Boolean needDisabledGrpUser;
+    
     private Integer roleId;
     private Boolean needTag;
 
@@ -114,5 +119,21 @@ public class UserQuery extends PageParam {
 		return "UserQuery [userId=" + userId + ", userIds=" + userIds + ", name=" + name + ", phone=" + phone
 				+ ", email=" + email + ", status=" + status + ", tagId=" + tagId + ", groupId=" + groupId + ", roleId="
 				+ roleId + ", needTag=" + needTag + "]";
+	}
+
+	public Boolean getNeedDescendantGrpUser() {
+		return needDescendantGrpUser;
+	}
+
+	public void setNeedDescendantGrpUser(Boolean needDescendantGrpUser) {
+		this.needDescendantGrpUser = needDescendantGrpUser;
+	}
+
+	public Boolean getNeedDisabledGrpUser() {
+		return needDisabledGrpUser;
+	}
+
+	public void setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
+		this.needDisabledGrpUser = needDisabledGrpUser;
 	}
 }

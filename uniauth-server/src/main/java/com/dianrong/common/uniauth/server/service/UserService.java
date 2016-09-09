@@ -9,11 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
@@ -39,6 +39,10 @@ import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
 import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.Role;
@@ -60,6 +64,8 @@ import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
 import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
 import com.dianrong.common.uniauth.server.data.mapper.LoginMapper;
 import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
@@ -106,7 +112,11 @@ public class UserService {
     @Autowired
     private CommonService commonService;
     @Autowired
+    private GrpMapper grpMapper;
+    @Autowired
     private UserGrpMapper userGrpMapper;
+    @Autowired
+    private GrpPathMapper grpPathMapper;
     @Autowired
     private UserTagMapper userTagMapper;
     @Autowired
@@ -303,7 +313,7 @@ public class UserService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Integer roleId ,List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
+    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser , Integer roleId ,List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
                                        Boolean needTag, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -334,7 +344,39 @@ public class UserService {
         if(groupId != null) {
             UserGrpExample userGrpExample = new UserGrpExample();
             UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
-            userGrpExampleCriteria.andGrpIdEqualTo(groupId);
+            if (needDescendantGrpUser != null && needDescendantGrpUser) {
+            	GrpPathExample grpPathExample = new GrpPathExample();
+            	grpPathExample.createCriteria().andAncestorEqualTo(groupId);
+            	List<GrpPath> grpPathes =  grpPathMapper.selectByExample(grpPathExample);
+            	 if(CollectionUtils.isEmpty(grpPathes)) {
+                     return null;
+            	 } else {
+            		 List<Integer> descendantIds = Lists.newArrayList();
+            		 for (GrpPath grpPath : grpPathes) {
+            			 descendantIds.add(grpPath.getDescendant());
+                     }
+            		 if (needDisabledGrpUser != null && needDisabledGrpUser) {
+            			 // 查询所有子组 不管是否是禁用的
+            			 userGrpExampleCriteria.andGrpIdIn(descendantIds);
+            		 } else {
+            			 // 默认需要过滤掉禁用的组
+            			 GrpExample grpExample = new GrpExample();
+            			 grpExample.createCriteria().andIdIn(descendantIds).andStatusEqualTo(AppConstants.ZERO_Byte);
+            			 List<Grp> grps = grpMapper.selectByExample(grpExample);
+            			 if(CollectionUtils.isEmpty(grps)) {
+                             return null;
+                    	 } else {
+                    		 List<Integer> enabledGrpIds = Lists.newArrayList();
+                    		 for (Grp grp : grps) {
+                    			 enabledGrpIds.add(grp.getId());
+                             }
+                    		 userGrpExampleCriteria.andGrpIdIn(enabledGrpIds);
+                    	 }
+            		 }
+            	 }
+            } else {
+            	userGrpExampleCriteria.andGrpIdEqualTo(groupId);
+            }
             userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
             List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
             if(CollectionUtils.isEmpty(userGrpKeys)) {
