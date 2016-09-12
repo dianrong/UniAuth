@@ -83,10 +83,68 @@ public class GetServiceTicketController {
     private boolean pathPopulated = false;
 
     /**
+     * . 登陆成功的获取st的接口
+     */
+    @RequestMapping(value = "/query", method = RequestMethod.GET)
+    public void queryServiceTicket(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            final String tgtId = this.ticketGrantingTicketCookieGenerator.retrieveCookieValue(request);
+            // tgtId is not exist
+            if (StringUtils.isEmpty(tgtId)) {
+                sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
+                return;
+            }
+            final Ticket ticket = this.ticketRegistry.getTicket(tgtId);
+            if (ticket == null || ticket.isExpired()) {
+                sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
+                return;
+            }
+
+            final Service service = WebUtils.getService(this.argumentExtractors, request);
+            final ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(tgtId, service);
+            if (StringUtils.isEmpty(serviceTicket)) {
+                sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
+                return;
+            }
+            sendResponse(response, new CasGetServiceTicketModel(true, serviceTicket.getId()));
+        } catch (Exception ex) {
+            try {
+                sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
+            } catch (IOException e) {
+            }
+            logger.warn("failed to query service ticket", ex);
+        }
+    }
+    
+    /**
      * . 通过登陆的方式获取st
      */
     @RequestMapping(value = "/customlogin", method = RequestMethod.POST)
-    public void login(HttpServletRequest request, HttpServletResponse response) {
+    public void iframeLogin(HttpServletRequest request, HttpServletResponse response) {
+    	try {
+			sendHtmlResponse(response, loginProcess(request, response));
+		} catch (IOException e) {
+		}
+    }
+    
+    /**
+     * . 通过登陆的方式获取st
+     */
+    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
+    public void apilogin(HttpServletRequest request, HttpServletResponse response) {
+    	try {
+    		sendResponse(response, loginProcess(request, response));
+		} catch (IOException e) {
+		}
+    }
+    
+    /**.
+     * 登陆业务逻辑处理
+     * @param request
+     * @param response
+     * @return
+     */
+    private CasGetServiceTicketModel loginProcess(HttpServletRequest request, HttpServletResponse response) {
         // cookie 存储路径重复设置是没关系的 因为都是设置的一样的
         if (!this.pathPopulated) {
             final String contextPath = request.getContextPath();
@@ -96,15 +154,12 @@ public class GetServiceTicketController {
             this.ticketGrantingTicketCookieGenerator.setCookiePath(cookiePath);
             this.pathPopulated = true;
         }
-
         try {
             // 校验
             CasGetServiceTicketModel validResult = beforeLoginValidation(request, response);
             if (validResult != null) {
-                sendLoginResult(request, response, validResult);
-                return;
+            	return captchaValidationProcess(request, response, validResult);
             }
-
             RememberMeUsernamePasswordCredential credentials = createCredential(request);
             // call AuthenticationHandlers
             TicketGrantingTicket ticketGrantingTicketId = this.centralAuthenticationService.createTicketGrantingTicket(credentials);
@@ -114,8 +169,7 @@ public class GetServiceTicketController {
 
             // 获取service 参数失败
             if (service == null) {
-                sendLoginResult(request, response, new CasGetServiceTicketModel(false, "service parameter is invalid"));
-                return;
+            	return captchaValidationProcess(request, response, new CasGetServiceTicketModel(false, "service parameter is invalid"));
             }
             final ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicketId.getId(), service);
 
@@ -125,19 +179,15 @@ public class GetServiceTicketController {
             this.ticketGrantingTicketCookieGenerator.addCookie(request, response, ticketGrantingTicketId.getId());
             // this.warnCookieGenerator.addCookie(request, response, "true");
             // 返回处理结果
-            sendLoginResult(request, response, new CasGetServiceTicketModel(true, serviceTicket.getId()));
+            return captchaValidationProcess(request, response, new CasGetServiceTicketModel(true, serviceTicket.getId()));
         } catch (Exception e) {
             logger.error("login failed", e);
-            try {
-                sendLoginResult(request, response, getExceptionInner(e));
-            } catch (IOException ex) {
-            }
+            return captchaValidationProcess(request, response, getExceptionInner(e));
         }
     }
 
     /**
      * . 登陆之前的校验处理
-     * 
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @return null:validation success;non null:validation failed
@@ -263,7 +313,7 @@ public class GetServiceTicketController {
      * @param obj
      * @throws IOException
      */
-    private void sendLoginResult(HttpServletRequest request, HttpServletResponse response, CasGetServiceTicketModel obj) throws IOException {
+    private CasGetServiceTicketModel captchaValidationProcess(HttpServletRequest request, HttpServletResponse response, CasGetServiceTicketModel obj) {
         // this obj can not be null
         CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getCaptchaInfoFromSession(request.getSession());
         if (captchaInfo == null) {
@@ -287,45 +337,21 @@ public class GetServiceTicketController {
             // 登陆成功 验证码错误次数归0
             captchaInfo.reInit();
         }
-        // 设置返回的mime类型
-        response.setContentType("text/html;charset=utf-8");
-        sendResponse(response, "<script>window.name='" + JasonUtil.object2Jason(obj) + "';</script>");
+        return obj;
     }
-
-    /**
-     * . 登陆成功的获取st的接口
+    
+    /**.
+     * 返回纯html的返回方式
+     * @param response
+     * @param info
+     * @throws IOException
      */
-    @RequestMapping(value = "/query", method = RequestMethod.GET)
-    public void queryServiceTicket(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            final String tgtId = this.ticketGrantingTicketCookieGenerator.retrieveCookieValue(request);
-            // tgtId is not exist
-            if (StringUtils.isEmpty(tgtId)) {
-                sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
-                return;
-            }
-            final Ticket ticket = this.ticketRegistry.getTicket(tgtId);
-            if (ticket == null || ticket.isExpired()) {
-                sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
-                return;
-            }
-
-            final Service service = WebUtils.getService(this.argumentExtractors, request);
-            final ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(tgtId, service);
-            if (StringUtils.isEmpty(serviceTicket)) {
-                sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
-                return;
-            }
-            sendResponse(response, new CasGetServiceTicketModel(true, serviceTicket.getId()));
-        } catch (Exception ex) {
-            try {
-                sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
-            } catch (IOException e) {
-            }
-            logger.warn("failed to query service ticket", ex);
-        }
+    private void sendHtmlResponse(HttpServletResponse response, CasGetServiceTicketModel info) throws IOException{
+    	// 设置返回的mime类型
+        response.setContentType("text/html;charset=utf-8");
+        sendResponse(response, "<script>window.name='" + JasonUtil.object2Jason(info) + "';</script>");
     }
-
+    
     /**
      * . 发送结果到response输出流
      * 

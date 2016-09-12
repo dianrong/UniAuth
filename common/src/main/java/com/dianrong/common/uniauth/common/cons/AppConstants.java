@@ -45,6 +45,8 @@ public interface AppConstants {
 	String ZK_DOMAIN_PREFIX = ZK_DOMAIN + ZK_CFG_SPLIT ;
 	// 域的登陆页属性
 	String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
+	// 是否在主页显示登陆项
+	String ZK_DOMAIN_SHOW_IN_HOME_PAGE = "showInHomePage";
 	// zk 配置的node name， st使用的次数
 	String ZK_NODE_NAME_ST_USED_TIMES = "cas.st_use_times";
 	

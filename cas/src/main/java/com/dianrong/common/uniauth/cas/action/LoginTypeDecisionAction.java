@@ -51,7 +51,7 @@ public class LoginTypeDecisionAction extends AbstractAction {
         	for(String domainCode: allZkNodeMap.keySet() ){
         		if(ZkNodeUtils.isDomainNode(domainCode)) {
         			String domainUrl = allZkNodeMap.get(domainCode);
-        			if(WebScopeUtil.judgeTwoUrlIsEqual(domainUrl, serviceUrl)) {
+        			if(WebScopeUtil.judgeTwoServiceIsEqual(domainUrl, serviceUrl)) {
 	        				// 查找其登陆页面
 	        				String loginPageNodeName = domainCode + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
 	        				if(StringUtils.hasText(allZkNodeMap.get(loginPageNodeName))) {

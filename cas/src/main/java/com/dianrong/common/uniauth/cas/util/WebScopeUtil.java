@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.cas.util;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 
 import javax.servlet.http.HttpSession;
@@ -121,9 +122,36 @@ public final class WebScopeUtil {
 		}
 	}
 	
+	/**.
+	 * 判断两个service是否是同一个service
+	 * @param service1 service1
+	 * @param service2 urservice2
+	 * @return 
+	 */
+	public static boolean judgeTwoServiceIsEqual(String service1, String service2) {
+		if(service1 == null || service2 == null) {
+			return false;
+		}
+		try {
+			String turl1 = URLDecoder.decode(service1.trim(), "utf-8");
+			String turl2 = URLDecoder.decode(service2.trim(), "utf-8");
+			URL url1 = new URL(turl1);
+			URL url2 = new URL(turl2);
+			int port1 = url1.getPort() != -1 ? url1.getPort(): "https".equalsIgnoreCase(url1.getProtocol())? 443: 80;
+			int port2 = url2.getPort() != -1 ? url2.getPort(): "https".equalsIgnoreCase(url2.getProtocol())? 443: 80;
+			if (url1.getProtocol().equals(url2.getProtocol()) && url1.getHost().equals(url2.getHost()) && port1 == port2) {
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+			logger.warn("judgeTwoServiceIsEqual failed", e);
+			return false;
+		}
+	}
+	
 	public static void main(String[] args) {
-		String url1 = "https%3A%2F%2Ftechops-dev.dianrong.com%2Flogin%2Fcas";
-		String url2 = "https://techops-dev.dianrong.com/login/cas";
-		System.out.println(judgeTwoUrlIsEqual(url1, url2));
+		String url1 = "localhost:8160/custom-ssclient";
+		String url2 = "localhost:8160/custom-ssclient/cas/login";
+		System.out.println(judgeTwoServiceIsEqual(url1, url2));
 	}
 }
