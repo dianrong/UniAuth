@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JasonUtil {
+public class JsonUtil {
 	
 	private static ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
 	
-	private JasonUtil() {
+	private JsonUtil() {
 		
 	}
 
