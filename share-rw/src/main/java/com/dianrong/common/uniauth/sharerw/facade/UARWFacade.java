@@ -31,8 +31,6 @@ public class UARWFacade {
     private IAuditResource auditResource;
     private IConfigRWResource configRWResource;
     private ITagRWResource tagRWResource;
-    private IUserExtendRWResource userExtendRWResource;
-    private IUserExtendValRWResource userExtendValRWResource;
 
     @PostConstruct
     public void init(){
@@ -41,8 +39,6 @@ public class UARWFacade {
         UniauthCxfClientLocaleFilter localeFilter = new UniauthCxfClientLocaleFilter();
         UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
         List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,localeFilter);
-        userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
-        userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
         domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
         groupRWResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, providers);
         permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, providers);
@@ -92,13 +88,5 @@ public class UARWFacade {
 
     public ITagRWResource getTagRWResource() {
         return tagRWResource;
-    }
-
-    public IUserExtendRWResource getUserExtendRWResource() {
-        return userExtendRWResource;
-    }
-
-    public IUserExtendValRWResource getUserExtendValRWResource() {
-        return userExtendValRWResource;
     }
 }

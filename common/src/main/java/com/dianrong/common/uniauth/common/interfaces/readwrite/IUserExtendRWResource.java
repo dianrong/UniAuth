@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.sharerw.interfaces;
+package com.dianrong.common.uniauth.common.interfaces.readwrite;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

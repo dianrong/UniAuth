@@ -8,8 +8,8 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
 import com.dianrong.common.uniauth.server.service.UserExtendService;
-import com.dianrong.common.uniauth.sharerw.interfaces.IUserExtendRWResource;
 
 /**
  * @author wenlongchen

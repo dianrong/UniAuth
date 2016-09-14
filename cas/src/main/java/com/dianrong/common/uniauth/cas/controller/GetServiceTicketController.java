@@ -43,7 +43,7 @@ import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.JasonUtil;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 /**
  * @author wanglin 用于获取登陆使用的service ticket处理的controller
@@ -52,294 +52,334 @@ import com.dianrong.common.uniauth.common.util.JasonUtil;
 @Controller
 @RequestMapping("/serviceticket")
 public class GetServiceTicketController {
-    /**
-     * . 日志对象
-     */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	/**
+	 * . 日志对象
+	 */
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /** Extractors for finding the service. */
-    @Autowired
-    private List<ArgumentExtractor> argumentExtractors;
+	/** Extractors for finding the service. */
+	@Autowired
+	private List<ArgumentExtractor> argumentExtractors;
 
-    @Autowired
-    private CookieRetrievingCookieGenerator warnCookieGenerator;
+	@Autowired
+	private CookieRetrievingCookieGenerator warnCookieGenerator;
 
-    @Autowired
-    private CookieRetrievingCookieGenerator ticketGrantingTicketCookieGenerator;
+	@Autowired
+	private CookieRetrievingCookieGenerator ticketGrantingTicketCookieGenerator;
 
-    @Autowired
-    private CentralAuthenticationService centralAuthenticationService;
+	@Autowired
+	private CentralAuthenticationService centralAuthenticationService;
 
-    @Autowired
-    private TicketRegistry ticketRegistry;
+	@Autowired
+	private TicketRegistry ticketRegistry;
 
-    @Autowired
-    @Qualifier("loginTicketUniqueIdGenerator")
-    private UniqueTicketIdGenerator ticketIdGenerator;
+	@Autowired
+	@Qualifier("loginTicketUniqueIdGenerator")
+	private UniqueTicketIdGenerator ticketIdGenerator;
 
-    /**
-     * . 初始化cookie的位置
-     */
-    private boolean pathPopulated = false;
+	/**
+	 * . 初始化cookie的位置
+	 */
+	private boolean pathPopulated = false;
 
-    /**
-     * . 通过登陆的方式获取st
-     */
-    @RequestMapping(value = "/customlogin", method = RequestMethod.POST)
-    public void login(HttpServletRequest request, HttpServletResponse response) {
-        // cookie 存储路径重复设置是没关系的 因为都是设置的一样的
-        if (!this.pathPopulated) {
-            final String contextPath = request.getContextPath();
-            final String cookiePath = StringUtils.hasText(contextPath) ? contextPath + '/' : "/";
-            logger.info("Setting path for cookies to: {} ", cookiePath);
-            this.warnCookieGenerator.setCookiePath(cookiePath);
-            this.ticketGrantingTicketCookieGenerator.setCookiePath(cookiePath);
-            this.pathPopulated = true;
-        }
+	/**
+	 * . 登陆成功的获取st的接口
+	 */
+	@RequestMapping(value = "/query", method = RequestMethod.GET)
+	public void queryServiceTicket(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			final String tgtId = this.ticketGrantingTicketCookieGenerator.retrieveCookieValue(request);
+			// tgtId is not exist
+			if (StringUtils.isEmpty(tgtId)) {
+				sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
+				return;
+			}
+			final Ticket ticket = this.ticketRegistry.getTicket(tgtId);
+			if (ticket == null || ticket.isExpired()) {
+				sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
+				return;
+			}
 
-        try {
-            // 校验
-            CasGetServiceTicketModel validResult = beforeLoginValidation(request, response);
-            if (validResult != null) {
-                sendLoginResult(request, response, validResult);
-                return;
-            }
+			final Service service = WebUtils.getService(this.argumentExtractors, request);
+			final ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(tgtId, service);
+			if (StringUtils.isEmpty(serviceTicket)) {
+				sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
+				return;
+			}
+			sendResponse(response, new CasGetServiceTicketModel(true, serviceTicket.getId()));
+		} catch (Exception ex) {
+			try {
+				sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
+			} catch (IOException e) {
+			}
+			logger.warn("failed to query service ticket", ex);
+		}
+	}
 
-            RememberMeUsernamePasswordCredential credentials = createCredential(request);
-            // call AuthenticationHandlers
-            TicketGrantingTicket ticketGrantingTicketId = this.centralAuthenticationService.createTicketGrantingTicket(credentials);
+	/**
+	 * .获取登陆的ticket，前端处理访问为iframe+window.name
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/customlogin", method = RequestMethod.POST)
+	public void iframeLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		setValueToJsWindowNameResponse(response, loginProcess(request, response));
+	}
 
-            // create service ticket
-            final Service service = WebUtils.getService(this.argumentExtractors, request);
+	/**
+	 * . 普通的api方式返回json字符串
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/api/login", method = RequestMethod.POST)
+	public void apilogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		sendResponse(response, loginProcess(request, response));
+	}
 
-            // 获取service 参数失败
-            if (service == null) {
-                sendLoginResult(request, response, new CasGetServiceTicketModel(false, "service parameter is invalid"));
-                return;
-            }
-            final ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicketId.getId(), service);
+	/**
+	 * . 登陆业务逻辑处理
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	private CasGetServiceTicketModel loginProcess(HttpServletRequest request, HttpServletResponse response) {
+		// cookie 存储路径重复设置是没关系的 因为都是设置的一样的
+		if (!this.pathPopulated) {
+			final String contextPath = request.getContextPath();
+			final String cookiePath = StringUtils.hasText(contextPath) ? contextPath + '/' : "/";
+			logger.info("Setting path for cookies to: {} ", cookiePath);
+			this.warnCookieGenerator.setCookiePath(cookiePath);
+			this.ticketGrantingTicketCookieGenerator.setCookiePath(cookiePath);
+			this.pathPopulated = true;
+		}
+		try {
+			// 校验
+			CasGetServiceTicketModel validResult = beforeLoginValidation(request, response);
+			if (validResult != null) {
+				return captchaValidationProcess(request, response, validResult);
+			}
+			RememberMeUsernamePasswordCredential credentials = createCredential(request);
+			// call AuthenticationHandlers
+			TicketGrantingTicket ticketGrantingTicketId = this.centralAuthenticationService
+					.createTicketGrantingTicket(credentials);
 
-            // 删除原来的tgt
-            this.ticketGrantingTicketCookieGenerator.removeCookie(response);
-            // 写入tgt
-            this.ticketGrantingTicketCookieGenerator.addCookie(request, response, ticketGrantingTicketId.getId());
-            // this.warnCookieGenerator.addCookie(request, response, "true");
-            // 返回处理结果
-            sendLoginResult(request, response, new CasGetServiceTicketModel(true, serviceTicket.getId()));
-        } catch (Exception e) {
-            logger.error("login failed", e);
-            try {
-                sendLoginResult(request, response, getExceptionInner(e));
-            } catch (IOException ex) {
-            }
-        }
-    }
+			// create service ticket
+			final Service service = WebUtils.getService(this.argumentExtractors, request);
 
-    /**
-     * . 登陆之前的校验处理
-     * 
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @return null:validation success;non null:validation failed
-     */
-    private CasGetServiceTicketModel beforeLoginValidation(HttpServletRequest request, HttpServletResponse response) {
-        // 校验验证码
-        CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getValFromSession(request.getSession(), AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY, CasLoginCaptchaInfoModel.class);
-        if (captchaInfo == null) {
-            WebScopeUtil.putCaptchaInfoToSession(request.getSession(), new CasLoginCaptchaInfoModel());
-        } else {
-            if (!captchaInfo.canLoginWithoutCaptcha()) {
-                // 校验验证码
-                String serverCaptcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
-                String clientCaptha = request.getParameter("captcha");
-                if (serverCaptcha == null || !serverCaptcha.equals(clientCaptha)) {
-                    return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED, "valid parameter captcha failed");
-                }
-            }
-        }
-        // 验证lt
-        String lt = getCustomLoginLoginTicketAndRemove(request);
-        if (lt == null || !lt.equals(request.getParameter("lt"))) {
-            return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_LT_VALID_FAILED, "valid parameter lt failed");
-        }
-        return null;
-    }
+			// 获取service 参数失败
+			if (service == null) {
+				return captchaValidationProcess(request, response,
+						new CasGetServiceTicketModel(false, "service parameter is invalid"));
+			}
+			final ServiceTicket serviceTicket = this.centralAuthenticationService
+					.grantServiceTicket(ticketGrantingTicketId.getId(), service);
 
-    /**
-     * . 定义异常与异常编码的关联关系
-     */
-    private static final Map<Class<? extends Exception>, String> exceptionCodeMap = new HashMap<Class<? extends Exception>, String>() {
-        private static final long serialVersionUID = 296454014783954623L;
-        {
-            put(AccountNotFoundException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NOT_FOUND);
-            put(UserPasswordNotMatchException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NAME_PASSWD_NOT_MATCH);
-            put(MultiUsersFoundException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_MUTILE_USER_FOUND);
-            put(AccountDisabledException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_DISABLED);
-            put(AccountLockedException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_TOO_MANY_FAILED);
-            put(FreshUserException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_INIT_PWD);
-            put(CredentialExpiredException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_UPDATE_PWD);
-            put(FailedLoginException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_LOGINFAILED);
-        }
-    };
+			// 删除原来的tgt
+			this.ticketGrantingTicketCookieGenerator.removeCookie(response);
+			// 写入tgt
+			this.ticketGrantingTicketCookieGenerator.addCookie(request, response, ticketGrantingTicketId.getId());
+			// this.warnCookieGenerator.addCookie(request, response, "true");
+			// 返回处理结果
+			return captchaValidationProcess(request, response,
+					new CasGetServiceTicketModel(true, serviceTicket.getId()));
+		} catch (Exception e) {
+			logger.error("login failed", e);
+			return captchaValidationProcess(request, response, getExceptionInner(e));
+		}
+	}
 
-    /**
-     * .
-     * 
-     * @param e 抛出的异常
-     * @return
-     */
-    private CasGetServiceTicketModel getExceptionInner(Exception e) {
-        if (e instanceof AuthenticationException) {
-            AuthenticationException aexception = (AuthenticationException) e;
-            Map<String, Class<? extends Exception>> exmap = aexception.getHandlerErrors();
-            if (exmap != null) {
-                for (Class<? extends Exception> loginException : exmap.values()) {
-                    String errorCode = exceptionCodeMap.get(loginException);
-                    if (errorCode != null) {
-                        return new CasGetServiceTicketModel(false, errorCode, e.getMessage());
-                    }
-                }
-            }
-            return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_UNKNOW, e.getMessage());
-        } else if (e instanceof TicketCreationException) {
-            return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_CREATE_SERVICE_FAILED, e.getMessage());
-        } else {
-            // unknow exception
-            return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_UNKNOW, e.getMessage());
-        }
-    }
+	/**
+	 * . 登陆之前的校验处理
+	 * 
+	 * @param request
+	 *            HttpServletRequest
+	 * @param response
+	 *            HttpServletResponse
+	 * @return null:validation success;non null:validation failed
+	 */
+	private CasGetServiceTicketModel beforeLoginValidation(HttpServletRequest request, HttpServletResponse response) {
+		// 校验验证码
+		CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getValFromSession(request.getSession(),
+				AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY, CasLoginCaptchaInfoModel.class);
+		if (captchaInfo == null) {
+			WebScopeUtil.putCaptchaInfoToSession(request.getSession(), new CasLoginCaptchaInfoModel());
+		} else {
+			if (!captchaInfo.canLoginWithoutCaptcha()) {
+				// 校验验证码
+				String serverCaptcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
+				String clientCaptha = request.getParameter("captcha");
+				if (serverCaptcha == null || !serverCaptcha.equals(clientCaptha)) {
+					return new CasGetServiceTicketModel(false,
+							CasGetServiceTicketModel.LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED,
+							"valid parameter captcha failed");
+				}
+			}
+		}
+		// 验证lt
+		String lt = getCustomLoginLoginTicketAndRemove(request);
+		if (lt == null || !lt.equals(request.getParameter("lt"))) {
+			return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_LT_VALID_FAILED,
+					"valid parameter lt failed");
+		}
+		return null;
+	}
 
-    /**
-     * . 获取登陆对象
-     * 
-     * @param request
-     * @return
-     */
-    private RememberMeUsernamePasswordCredential createCredential(HttpServletRequest request) {
-        String username = request.getParameter("identity");
-        String password = request.getParameter("password");
-        boolean rememberMe = Boolean.valueOf(request.getParameter("rememberMe"));
-        RememberMeUsernamePasswordCredential credential = new RememberMeUsernamePasswordCredential();
-        credential.setUsername(username);
-        credential.setPassword(password);
-        credential.setRememberMe(rememberMe);
-        return credential;
-    }
+	/**
+	 * . 定义异常与异常编码的关联关系
+	 */
+	private static final Map<Class<? extends Exception>, String> exceptionCodeMap = new HashMap<Class<? extends Exception>, String>() {
+		private static final long serialVersionUID = 296454014783954623L;
+		{
+			put(AccountNotFoundException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NOT_FOUND);
+			put(UserPasswordNotMatchException.class,
+					CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NAME_PASSWD_NOT_MATCH);
+			put(MultiUsersFoundException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_MUTILE_USER_FOUND);
+			put(AccountDisabledException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_DISABLED);
+			put(AccountLockedException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_TOO_MANY_FAILED);
+			put(FreshUserException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_INIT_PWD);
+			put(CredentialExpiredException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_UPDATE_PWD);
+			put(FailedLoginException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_LOGINFAILED);
+		}
+	};
 
-    /**
-     * . 获取业务系统自定义登陆的的
-     * 
-     * @return
-     */
-    private String getCustomLoginLoginTicketAndRemove(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            String lt = (String) (session.getAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY));
-            session.removeAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY);
-            return lt;
-        }
-        return null;
-    }
+	/**
+	 * .
+	 * 
+	 * @param e
+	 *            抛出的异常
+	 * @return
+	 */
+	private CasGetServiceTicketModel getExceptionInner(Exception e) {
+		if (e instanceof AuthenticationException) {
+			AuthenticationException aexception = (AuthenticationException) e;
+			Map<String, Class<? extends Exception>> exmap = aexception.getHandlerErrors();
+			if (exmap != null) {
+				for (Class<? extends Exception> loginException : exmap.values()) {
+					String errorCode = exceptionCodeMap.get(loginException);
+					if (errorCode != null) {
+						return new CasGetServiceTicketModel(false, errorCode, e.getMessage());
+					}
+				}
+			}
+			return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_UNKNOW, e.getMessage());
+		} else if (e instanceof TicketCreationException) {
+			return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_CREATE_SERVICE_FAILED,
+					e.getMessage());
+		} else {
+			// unknow exception
+			return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_UNKNOW, e.getMessage());
+		}
+	}
 
-    /**
-     * . 替换session中的login Ticket
-     * 
-     * @param request
-     * @param newLt new login ticket
-     * @return
-     */
-    private void replaceLoginTicket(HttpServletRequest request, String newLt) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.setAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY, newLt);
-        }
-    }
+	/**
+	 * . 获取登陆对象
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private RememberMeUsernamePasswordCredential createCredential(HttpServletRequest request) {
+		String username = request.getParameter("identity");
+		String password = request.getParameter("password");
+		boolean rememberMe = Boolean.valueOf(request.getParameter("rememberMe"));
+		RememberMeUsernamePasswordCredential credential = new RememberMeUsernamePasswordCredential();
+		credential.setUsername(username);
+		credential.setPassword(password);
+		credential.setRememberMe(rememberMe);
+		return credential;
+	}
 
-    /**
-     * . 对发送结果进行处理
-     * 
-     * @param request
-     * @param response
-     * @param obj
-     * @throws IOException
-     */
-    private void sendLoginResult(HttpServletRequest request, HttpServletResponse response, CasGetServiceTicketModel obj) throws IOException {
-        // this obj can not be null
-        CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getCaptchaInfoFromSession(request.getSession());
-        if (captchaInfo == null) {
-            captchaInfo = new CasLoginCaptchaInfoModel();
-            WebScopeUtil.putCaptchaInfoToSession(request.getSession(), captchaInfo);
-        }
-        // 进行处理
-        if (!obj.getResultSuccess()) {
-            // 重新生成lt
-            final String loginTicket = this.ticketIdGenerator.getNewTicketId(AppConstants.CAS_LOGIN_TICKET_PREFIX);
-            replaceLoginTicket(request, loginTicket);
-            obj.setLt(loginTicket);
+	/**
+	 * . 获取业务系统自定义登陆的的
+	 * 
+	 * @return
+	 */
+	private String getCustomLoginLoginTicketAndRemove(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			String lt = (String) (session.getAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY));
+			session.removeAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY);
+			return lt;
+		}
+		return null;
+	}
 
-            // 判断是否需要验证码
-            if (!captchaInfo.canLoginWithouCaptchaForFailedOnce()) {
-                obj.setCaptchapath(CasGetServiceTicketModel.DEFAULT_CATCHA_RELATIVE_PATH);
-            }
-        } else {
-            // remove session lt
-            getCustomLoginLoginTicketAndRemove(request);
-            // 登陆成功 验证码错误次数归0
-            captchaInfo.reInit();
-        }
-        // 设置返回的mime类型
-        response.setContentType("text/html;charset=utf-8");
-        sendResponse(response, "<script>window.name='" + JasonUtil.object2Jason(obj) + "';</script>");
-    }
+	/**
+	 * . 替换session中的login Ticket
+	 * 
+	 * @param request
+	 * @param newLt
+	 *            new login ticket
+	 * @return
+	 */
+	private void replaceLoginTicket(HttpServletRequest request, String newLt) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.setAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY, newLt);
+		}
+	}
 
-    /**
-     * . 登陆成功的获取st的接口
-     */
-    @RequestMapping(value = "/query", method = RequestMethod.GET)
-    public void queryServiceTicket(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            final String tgtId = this.ticketGrantingTicketCookieGenerator.retrieveCookieValue(request);
-            // tgtId is not exist
-            if (StringUtils.isEmpty(tgtId)) {
-                sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
-                return;
-            }
-            final Ticket ticket = this.ticketRegistry.getTicket(tgtId);
-            if (ticket == null || ticket.isExpired()) {
-                sendResponse(response, new CasGetServiceTicketModel(false, "relogin"));
-                return;
-            }
+	/**
+	 * . 对发送结果进行处理
+	 * 
+	 * @param request
+	 * @param response
+	 * @param obj
+	 * @throws IOException
+	 */
+	private CasGetServiceTicketModel captchaValidationProcess(HttpServletRequest request, HttpServletResponse response,
+			CasGetServiceTicketModel obj) {
+		// this obj can not be null
+		CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getCaptchaInfoFromSession(request.getSession());
+		if (captchaInfo == null) {
+			captchaInfo = new CasLoginCaptchaInfoModel();
+			WebScopeUtil.putCaptchaInfoToSession(request.getSession(), captchaInfo);
+		}
+		// 进行处理
+		if (!obj.getResultSuccess()) {
+			// 重新生成lt
+			final String loginTicket = this.ticketIdGenerator.getNewTicketId(AppConstants.CAS_LOGIN_TICKET_PREFIX);
+			replaceLoginTicket(request, loginTicket);
+			obj.setLt(loginTicket);
 
-            final Service service = WebUtils.getService(this.argumentExtractors, request);
-            final ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(tgtId, service);
-            if (StringUtils.isEmpty(serviceTicket)) {
-                sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
-                return;
-            }
-            sendResponse(response, new CasGetServiceTicketModel(true, serviceTicket.getId()));
-        } catch (Exception ex) {
-            try {
-                sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
-            } catch (IOException e) {
-            }
-            logger.warn("failed to query service ticket", ex);
-        }
-    }
+			// 判断是否需要验证码
+			if (!captchaInfo.canLoginWithouCaptchaForFailedOnce()) {
+				obj.setCaptchapath(CasGetServiceTicketModel.DEFAULT_CATCHA_RELATIVE_PATH);
+			}
+		} else {
+			// remove session lt
+			getCustomLoginLoginTicketAndRemove(request);
+			// 登陆成功 验证码错误次数归0
+			captchaInfo.reInit();
+		}
+		return obj;
+	}
 
-    /**
-     * . 发送结果到response输出流
-     * 
-     * @param response
-     * @param obj
-     * @throws IOException 异常
-     */
-    private void sendResponse(HttpServletResponse response, Object obj) throws IOException {
-        if (obj == null) {
-            response.getWriter().write("");
-        } else if (obj instanceof String) {
-            response.getWriter().write((String) obj);
-        } else {
-            response.getWriter().write(JasonUtil.object2Jason(obj));
-        }
-    }
+	/**
+	 * . 将返回的值放到js的window对象中，主要是为处理iframe跨域传值的问题
+	 * @param response
+	 * @param info
+	 * @throws IOException
+	 */
+	private void setValueToJsWindowNameResponse(HttpServletResponse response, CasGetServiceTicketModel info) throws IOException {
+		// 设置返回的mime类型
+		response.setContentType("text/html;charset=utf-8");
+		sendResponse(response, "<script>window.name='" + JsonUtil.object2Jason(info) + "';</script>");
+	}
+
+	/**
+	 * . 发送结果到response输出流
+	 * 
+	 * @param response
+	 * @param obj
+	 * @throws IOException
+	 *             异常
+	 */
+	private void sendResponse(HttpServletResponse response, Object obj) throws IOException {
+		if (obj == null) {
+			response.getWriter().write("");
+		} else if (obj instanceof String) {
+			response.getWriter().write((String) obj);
+		} else {
+			response.getWriter().write(JsonUtil.object2Jason(obj));
+		}
+	}
 }

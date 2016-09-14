@@ -15,8 +15,9 @@ import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendValParam;
-import com.dianrong.common.uniauth.sharerw.interfaces.IUserExtendRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IUserExtendValRWResource;
+import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UARWFacadeTest {
 
     @Autowired
-    private UARWFacade facade;
+    private UniClientFacade facade;
     
     private ObjectMapper mapper=new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
     

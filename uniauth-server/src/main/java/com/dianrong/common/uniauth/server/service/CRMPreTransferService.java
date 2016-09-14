@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.JasonUtil;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.common.util.TaskInvoker.TaskExecutor;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
@@ -368,7 +368,7 @@ public class CRMPreTransferService implements TaskExecutor {
 	}
 
 	private void logInfo(Log log, Object obj, String opereate, Throwable t) {
-		log.error("faild to transefer info, operate:" + opereate + "， the obj info:" + JasonUtil.object2Jason(obj), t);
+		log.error("faild to transefer info, operate:" + opereate + "， the obj info:" + JsonUtil.object2Jason(obj), t);
 	}
 
 	private static class GroupTree {

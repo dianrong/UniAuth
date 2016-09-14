@@ -39,7 +39,7 @@ define(function() {
 					result : 'failed',
 					content : '501',
 					msg : msgStr || 'unknowError',
-					lt : getQueryString(lt) ||''
+					lt : getQueryString('lt') ||''
 				};
 			};
 			
