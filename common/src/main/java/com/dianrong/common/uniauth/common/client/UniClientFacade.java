@@ -51,8 +51,8 @@ public class UniClientFacade {
     private IUserExtendValResource userExtendValResource;
     
     // read and write
-    private IUserExtendRWResource userExtendRwResource;
-    private IUserExtendValRWResource userExtendValRwResource;
+    private IUserExtendRWResource userExtendRWResource;
+    private IUserExtendValRWResource userExtendValRWResource;
 
 	@PostConstruct
 	public void init(){
@@ -73,10 +73,10 @@ public class UniClientFacade {
 		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
 		
 		// write
-		userExtendRwResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
-		userExtendValRwResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
+		userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
+		userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
 		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,
-				configResource,userExtendResource,userExtendValResource, userExtendRwResource, userExtendValRwResource);
+				configResource,userExtendResource,userExtendValResource, userExtendRWResource, userExtendValRWResource);
 	}
 
     public IDomainResource getDomainResource() {
@@ -118,17 +118,16 @@ public class UniClientFacade {
     public IUserExtendValResource getUserExtendValResource() {
         return userExtendValResource;
     }
-	public IUserExtendValRWResource getUserExtendValRwResource() {
-		return userExtendValRwResource;
+	public IUserExtendRWResource getUserExtendRWResource() {
+		return userExtendRWResource;
 	}
-	public void setUserExtendValRwResource(IUserExtendValRWResource userExtendValRwResource) {
-		this.userExtendValRwResource = userExtendValRwResource;
+	public void setUserExtendRWResource(IUserExtendRWResource userExtendRWResource) {
+		this.userExtendRWResource = userExtendRWResource;
 	}
-	public IUserExtendRWResource getUserExtendRwResource() {
-		return userExtendRwResource;
+	public IUserExtendValRWResource getUserExtendValRWResource() {
+		return userExtendValRWResource;
 	}
-	public void setUserExtendRwResource(IUserExtendRWResource userExtendRwResource) {
-		this.userExtendRwResource = userExtendRwResource;
+	public void setUserExtendValRWResource(IUserExtendValRWResource userExtendValRWResource) {
+		this.userExtendValRWResource = userExtendValRWResource;
 	}
-
 }

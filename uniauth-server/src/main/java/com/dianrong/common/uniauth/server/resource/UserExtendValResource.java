@@ -9,8 +9,8 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendValParam;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
 import com.dianrong.common.uniauth.server.service.UserExtendValService;
-import com.dianrong.common.uniauth.sharerw.interfaces.IUserExtendValRWResource;
 
 /**
  * @author wenlongchen

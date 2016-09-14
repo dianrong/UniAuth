@@ -16,7 +16,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendValParam;
-import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
+import com.dianrong.common.uniauth.common.client.UniClientFacade;
 
 /**
  * eav 管理相关action
@@ -26,7 +26,7 @@ import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 public class EavAction {
 
     @Resource
-    private UARWFacade uARWFacade;
+    private UniClientFacade uniFacade;
 
     /**.
      * 查询eav-code信息
@@ -36,7 +36,7 @@ public class EavAction {
     @RequestMapping(value = "/code/query", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<PageDto<UserExtendDto>> queryEavCodes(@RequestBody UserExtendPageParam pageParam) {
-    	return uARWFacade.getUserExtendRWResource().searchUserExtend(pageParam);
+    	return uniFacade.getUserExtendRWResource().searchUserExtend(pageParam);
     }
     
     /**.
@@ -47,7 +47,7 @@ public class EavAction {
     @RequestMapping(value = "/code/insert", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops') ")
     public Response<UserExtendDto> addEavCode(@RequestBody UserExtendParam param) {
-    	return uARWFacade.getUserExtendRWResource().addUserExtend(param);
+    	return uniFacade.getUserExtendRWResource().addUserExtend(param);
     }
     
     /**.
@@ -58,7 +58,7 @@ public class EavAction {
     @RequestMapping(value = "/code/modify", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops') ")
     public Response<Integer> modifyEavCode(@RequestBody UserExtendParam param) {
-    	return uARWFacade.getUserExtendRWResource().updateUserExtend(param);
+    	return uniFacade.getUserExtendRWResource().updateUserExtend(param);
     }
     
     /**.
@@ -69,7 +69,7 @@ public class EavAction {
     @RequestMapping(value = "/user/query", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<PageDto<UserExtendValDto>> queryUserEavCodes(@RequestBody UserExtendValParam param) {
-       return uARWFacade.getUserExtendValRWResource().searchByUserIdAndCode(param);
+       return uniFacade.getUserExtendValRWResource().searchByUserIdAndCode(param);
     }
     
     /**.
@@ -80,7 +80,7 @@ public class EavAction {
     @RequestMapping(value = "/user/modify", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public  Response<Integer> modifyUserEavCode(@RequestBody UserExtendValParam param) {
-    	return uARWFacade.getUserExtendValRWResource().updateById(param);
+    	return uniFacade.getUserExtendValRWResource().updateById(param);
     }
     
     /**.
@@ -91,7 +91,7 @@ public class EavAction {
     @RequestMapping(value = "/user/insert", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<UserExtendValDto> addUserEavCode(@RequestBody UserExtendValParam param) {
-         return uARWFacade.getUserExtendValRWResource().add(param);
+         return uniFacade.getUserExtendValRWResource().add(param);
     }
     
     /**.
@@ -102,7 +102,7 @@ public class EavAction {
     @RequestMapping(value = "/user/disable", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public  Response<Integer> disableUserEavCode(@RequestBody UserExtendValParam param) {
-        return uARWFacade.getUserExtendValRWResource().delById(param);
+        return uniFacade.getUserExtendValRWResource().delById(param);
     }
     
     /**.
@@ -116,6 +116,6 @@ public class EavAction {
     	UserExtendValParam tcondtion = new UserExtendValParam();
     	tcondtion.setId(param.getId());
     	tcondtion.setStatus((byte)0);
-    	return uARWFacade.getUserExtendValRWResource().updateById(tcondtion);
+    	return uniFacade.getUserExtendValRWResource().updateById(tcondtion);
     }
 }
