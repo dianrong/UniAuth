@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.common.client;
 
 import com.dianrong.common.uniauth.common.interfaces.read.*;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
 import com.dianrong.common.uniauth.common.server.UniauthCxfClientLocaleFilter;
 import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
 import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
@@ -47,6 +49,10 @@ public class UniClientFacade {
     private IConfigResource configResource;
     private IUserExtendResource userExtendResource;
     private IUserExtendValResource userExtendValResource;
+    
+    // read and write
+    private IUserExtendRWResource userExtendRwResource;
+    private IUserExtendValRWResource userExtendValRwResource;
 
 	@PostConstruct
 	public void init(){
@@ -65,8 +71,12 @@ public class UniClientFacade {
 		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, providers);
 		tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
 		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
+		
+		// write
+		userExtendRwResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
+		userExtendValRwResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
 		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,
-				configResource,userExtendResource,userExtendValResource);
+				configResource,userExtendResource,userExtendValResource, userExtendRwResource, userExtendValRwResource);
 	}
 
     public IDomainResource getDomainResource() {
@@ -108,5 +118,17 @@ public class UniClientFacade {
     public IUserExtendValResource getUserExtendValResource() {
         return userExtendValResource;
     }
+	public IUserExtendValRWResource getUserExtendValRwResource() {
+		return userExtendValRwResource;
+	}
+	public void setUserExtendValRwResource(IUserExtendValRWResource userExtendValRwResource) {
+		this.userExtendValRwResource = userExtendValRwResource;
+	}
+	public IUserExtendRWResource getUserExtendRwResource() {
+		return userExtendRwResource;
+	}
+	public void setUserExtendRwResource(IUserExtendRWResource userExtendRwResource) {
+		this.userExtendRwResource = userExtendRwResource;
+	}
 
 }
