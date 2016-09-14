@@ -8,7 +8,16 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </context-param>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            com.dianrong.common.techops.spring.PropertiesConfiguration
+        </param-value>
+    </context-param>
 	<listener>  
 		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>  
 	</listener>  
@@ -56,10 +65,15 @@
 	<error-page>  
 		<error-code>404</error-code>  
 		<location>/errors/403.jsp</location>  
-	</error-page>  
+	</error-page>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
+    <!-- tomcat version-7.0.68 has a bug, it treats second as the unit of the config.
+    The config`s unit should be minute since 7.0.69.
+    modify this config to 120 after DO upgrade tomcats-->
+    <session-config>
+        <session-timeout>120000</session-timeout>
+    </session-config>
 </web-app>
