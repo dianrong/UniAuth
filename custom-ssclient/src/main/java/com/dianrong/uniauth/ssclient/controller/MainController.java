@@ -37,6 +37,7 @@ public class MainController {
 			}
 			requestLtUrl += "service=" + URLEncoder.encode(service);
 			response.sendRedirect(requestLtUrl);
+			return null;
 		}
 		// 设置登陆的lt和对应的业务系统service
 		request.setAttribute("ltval", lt);
