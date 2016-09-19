@@ -16,6 +16,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="description" content="This is my page">
   </head>
   <body>
-	<a href="http://localhost:8080/cas/logout">Single Sign Out</a>
+	<a href="http://10.8.12.167:8160/custom-ssclient/logout/cas">Single Sign Out</a>
   </body>
 </html>
