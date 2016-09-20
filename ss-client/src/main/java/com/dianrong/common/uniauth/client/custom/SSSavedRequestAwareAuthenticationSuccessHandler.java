@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.client.custom;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,13 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
 		
 	}
 
+	@PostConstruct
+	public void init(){
+		if(StringUtils.hasText(domainDefine.getCustomizedLoginRedirecUrl())){
+			this.setDefaultTargetUrl(domainDefine.getCustomizedLoginRedirecUrl());
+		}
+	}
+	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws ServletException, IOException {

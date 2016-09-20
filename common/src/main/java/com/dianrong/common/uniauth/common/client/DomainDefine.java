@@ -7,6 +7,8 @@ public class DomainDefine implements Serializable {
 	private String userInfoClass;
 	private boolean rejectPublicInvocations;
 	private String customizedSavedRequestUrl; 
+	// 自定义登陆成功的跳转url
+	private String customizedLoginRedirecUrl;
 	
 	private static Integer domainId;
 
@@ -40,6 +42,14 @@ public class DomainDefine implements Serializable {
 
 	public void setCustomizedSavedRequestUrl(String customizedSavedRequestUrl) {
 		this.customizedSavedRequestUrl = customizedSavedRequestUrl;
+	}
+
+	public String getCustomizedLoginRedirecUrl() {
+		return customizedLoginRedirecUrl;
+	}
+
+	public void setCustomizedLoginRedirecUrl(String customizedLoginRedirecUrl) {
+		this.customizedLoginRedirecUrl = customizedLoginRedirecUrl;
 	}
 	
 }

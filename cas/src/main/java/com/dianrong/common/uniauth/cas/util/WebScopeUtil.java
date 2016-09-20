@@ -60,6 +60,20 @@ public final class WebScopeUtil {
 	}
 	
 	/**
+	 * . get captchaInfo from session
+	 * @param session
+	 * @param val
+	 * @return
+	 */
+	public static boolean loginNeedCaptcha(HttpSession session) {
+		CasLoginCaptchaInfoModel captchaInfo =  getCaptchaInfoFromSession(session);
+		if (captchaInfo != null && !captchaInfo.canLoginWithoutCaptcha()) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * . set object to session
 	 * @param session
 	 * @param key
