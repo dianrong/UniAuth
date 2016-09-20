@@ -49,7 +49,7 @@ $(function() {
 					window.location.href = redirectUrl;
 				} else {
 						// 失败  继续登陆
-						window.location.href = getBaseUrl() + "?lt="+data.lt+"&result="+data.result+"&content="+data.content+(!!data.msg ? "&msg="+data.msg : '')+(!!data.captchapath ? "&captchaUrl="+encodeURIComponent(casUrl + '/' +data.captchapath) : '');
+						window.location.href = getBaseUrl() + "?lt="+data.lt+"&result="+data.result+"&content="+data.content+(!!data.msg ? "&msg="+data.msg : '')+(!!data.captchapath ? "&captchaUrl="+data.captchapath : '');
 					}
 			}
 			

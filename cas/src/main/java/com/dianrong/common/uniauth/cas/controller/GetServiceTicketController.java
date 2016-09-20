@@ -41,6 +41,7 @@ import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
+import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
@@ -76,6 +77,9 @@ public class GetServiceTicketController {
 	@Autowired
 	@Qualifier("loginTicketUniqueIdGenerator")
 	private UniqueTicketIdGenerator ticketIdGenerator;
+	
+	@Autowired
+	private CfgService cfgService;
 
 	/**
 	 * . 初始化cookie的位置
@@ -342,7 +346,7 @@ public class GetServiceTicketController {
 
 			// 判断是否需要验证码
 			if (!captchaInfo.canLoginWithouCaptchaForFailedOnce()) {
-				obj.setCaptchapath(CasGetServiceTicketModel.DEFAULT_CATCHA_RELATIVE_PATH);
+				obj.setCaptchapath(cfgService.getCaptchaAbsolutePath());
 			}
 		} else {
 			// remove session lt
