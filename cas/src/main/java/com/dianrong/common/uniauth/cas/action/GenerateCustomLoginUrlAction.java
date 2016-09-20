@@ -5,9 +5,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.jasig.cas.web.support.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.webflow.execution.RequestContext;
 
 import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
+import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
@@ -20,6 +22,9 @@ public class GenerateCustomLoginUrlAction {
 	/** Logger instance. */
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Autowired
+	private CfgService cfgService;
+	
 	/**
 	 * Generate the login ticket.
 	 *
@@ -43,7 +48,7 @@ public class GenerateCustomLoginUrlAction {
 		baseUrl += "lt=" + lt;
 		// captcha
 		if (WebScopeUtil.loginNeedCaptcha(request.getSession())) {
-			baseUrl += "&captchapath=" + CasGetServiceTicketModel.DEFAULT_CATCHA_RELATIVE_PATH;
+			baseUrl += "&captchapath=" + cfgService.getCaptchaAbsolutePath();
 		}
 		context.getFlowScope().put(AppConstants.CAS_CUSTOM_LOGIN_URL_KEY, baseUrl);
 		return "generated";

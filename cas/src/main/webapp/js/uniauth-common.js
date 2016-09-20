@@ -182,13 +182,10 @@ define(function() {
 					window.location.href = redirectUrl;
 				} else {
 					if(failedCallBack) {
-						if(!!data.captchapath) {
-							data.captchapath = encodeURIComponent(casUrl + '/' +data.captchapath);
-						}
 						failedCallBack(data);
 					} else {
 						// 失败  继续登陆
-						window.location.href = getBaseUrl() + "?lt="+data.lt+"&result="+data.result+"&content="+data.content+(!!data.msg ? "&msg="+data.msg : '')+(!!data.captchapath ? "&captchaUrl="+encodeURIComponent(casUrl + '/' +data.captchapath) : '');
+						window.location.href = getBaseUrl() + "?lt="+data.lt+"&result="+data.result+"&content="+data.content+(!!data.msg ? "&msg="+data.msg : '')+(!!data.captchapath ? "&captchaUrl="+data.captchapath : '');
 					}
 				}
 			});
