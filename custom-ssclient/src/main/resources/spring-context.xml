@@ -26,7 +26,7 @@
 
 	<sec:http pattern="/js/**" security="none" />
 	<!-- login controller -->
-<!-- 	<sec:http pattern="/main/login" security="none" /> -->
+	<sec:http pattern="/main/login" security="none" />
 
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">
@@ -48,7 +48,6 @@
 		<!-- the following part is customized intercept-url element definition 
 			for subsystem note: conflict with the judgment of regular expression, so 
 			the priority problem MUST be resolved. -->
-		<sec:intercept-url pattern="/main/login"  access="permitAll"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 	</sec:http>
 

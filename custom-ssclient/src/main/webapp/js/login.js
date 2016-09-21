@@ -32,8 +32,11 @@ $(function() {
 				return;
 			}
 			
-			var getBaseUrl = function () {
-				return window.location.href.substring(0,window.location.href.indexOf('?') === -1 ? window.location.href.length :window.location.href.indexOf('?'));
+			var getBaseUrl = function (url) {
+				if(!url) {
+					url = window.location.href;
+				}
+				return url.substring(0,url.indexOf('?') === -1 ? url.length :url.indexOf('?'));
 			};
 			
 			// 业务逻辑处理相关
@@ -44,7 +47,8 @@ $(function() {
 				}
 				// 有结果
 				if(data.result == 'success') {
-					var redirectUrl = customUrl +(customUrl.indexOf('?') === -1 ?"?":"&")+ "ticket="+data.content;
+					//  /login/cas保持与spring配置中的casAuthenticationFilter的filterProcessesUrl一致
+					var redirectUrl = getBaseUrl(customUrl)+"/login/cas?ticket="+data.content;
 					// 成功 直接跳转业务系统
 					window.location.href = redirectUrl;
 				} else {
