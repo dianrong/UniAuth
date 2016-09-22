@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
@@ -98,22 +97,24 @@ public interface RoleMapper {
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
     int updateByPrimaryKey(Role record);
-    
+
     List<RoleExt> selectAllRolesByDomainId(Integer domainId);
-    
+
     List<Role> getRolesByUserAndDomainId(Map map);
-    
+
     /**.
      * 根据id获取有效角色的数量
      * @param id
      * @return
      */
-     int countRoleByIdWithStatusEffective(@Param("id") Long id);
-     
-     /**.
-      * 根据id获取有效角色的信息
-      * @param id id
-      * @return 信息model
-      */
-     Role selectByIdWithStatusEffective(@Param("id") Integer id);
+    int countRoleByIdWithStatusEffective(@Param("id") Long id);
+
+    /**.
+     * 根据id获取有效角色的信息
+     * @param id id
+     * @return 信息model
+     */
+    Role selectByIdWithStatusEffective(@Param("id") Integer id);
+
+    List<Integer> selectRoleIdsExtendedFromGrp(@Param("id") Long id);
 }
