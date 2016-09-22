@@ -62,4 +62,5 @@ public class SpringBootActuatorConfig {
     public EndpointMvcAdapter dumpEndpoint() {
         return new EndpointMvcAdapter(new DumpEndpoint());
     }
+
 }

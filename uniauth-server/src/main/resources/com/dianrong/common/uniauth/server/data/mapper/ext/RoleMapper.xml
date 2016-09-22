@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.RoleMapper" >
-  <resultMap id="BaseResultMapExt" type="com.dianrong.common.uniauth.server.data.entity.ext.RoleExt" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="domain_id" property="domainId" jdbcType="INTEGER" />
-    <result column="role_code_id" property="roleCodeId" jdbcType="INTEGER" />
-    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
-    <result column="permission_id" property="permissionId" jdbcType="INTEGER" />
-  </resultMap>
-  
-  <select id="selectAllRolesByDomainId" resultMap="BaseResultMapExt" parameterType="java.lang.Integer" >
+	<resultMap id="BaseResultMapExt" type="com.dianrong.common.uniauth.server.data.entity.ext.RoleExt" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="domain_id" property="domainId" jdbcType="INTEGER" />
+		<result column="role_code_id" property="roleCodeId" jdbcType="INTEGER" />
+		<result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+		<result column="permission_id" property="permissionId" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="selectAllRolesByDomainId" resultMap="BaseResultMapExt" parameterType="java.lang.Integer" >
 	select r.id, r.name, r.description, r.status, r.domain_id, r.role_code_id,
 	rc.code role_code,
 	rp.permission_id
@@ -27,63 +27,72 @@
 	and r.domain_id = p.domain_id
 	and d.id  = #{domainId,jdbcType=INTEGER}
   </select>
-    
-  <select id="getRolesByUserAndDomainId" resultMap="BaseResultMap" parameterType="java.util.Map" >
-	select 
+
+	<select id="getRolesByUserAndDomainId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+		select
 		<include refid="Base_Column_List" />
-	from role r
-	where r.status = 0
-	and r.domain_id = #{domainId,jdbcType=INTEGER}
-    and
-    (
+		from role r
+		where r.status = 0
+		and r.domain_id = #{domainId,jdbcType=INTEGER}
+		and
+		(
 		exists
 		(
-			select ur.role_id
-			from user_role ur
-			where r.id = ur.role_id
-			and ur.user_id = #{userId,jdbcType=BIGINT}
+		select ur.role_id
+		from user_role ur
+		where r.id = ur.role_id
+		and ur.user_id = #{userId,jdbcType=BIGINT}
 		)
-        or
-        exists
-        (
-			select gr.role_id
-			from grp_role gr, grp_path gp, grp g, user_grp ug
-			where gr.grp_id = gp.ancestor
-			and gp.descendant = g.id
-			and g.status = 0
-			and g.id = ug.grp_id
-			and ug.type = 0
-			and ug.user_id = #{userId,jdbcType=BIGINT}
-			and r.id = gr.role_id
-			and not exists
-			(
-				select g1.id
-				from grp_path gp1, user_grp ug1, grp g1
-				where ug1.user_id = #{userId,jdbcType=BIGINT}
-				and ug1.grp_id = gp1.descendant
-				and ug1.type = 0
-				and gp1.ancestor = g1.id
-				and g1.status = 1
-			)
-        )
-    )
-  </select>
-  
-  <!-- 根据id获取有效角色的数量 -->
-  <select id="countRoleByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
+		or
+		exists
+		(
+		select gr.role_id
+		from grp_role gr, grp_path gp, grp g, user_grp ug
+		where gr.grp_id = gp.ancestor
+		and gp.descendant = g.id
+		and g.status = 0
+		and g.id = ug.grp_id
+		and ug.type = 0
+		and ug.user_id = #{userId,jdbcType=BIGINT}
+		and r.id = gr.role_id
+		and not exists
+		(
+		select g1.id
+		from grp_path gp1, user_grp ug1, grp g1
+		where ug1.user_id = #{userId,jdbcType=BIGINT}
+		and ug1.grp_id = gp1.descendant
+		and ug1.type = 0
+		and gp1.ancestor = g1.id
+		and g1.status = 1
+		)
+		)
+		)
+	</select>
+
+	<!-- 根据id获取有效角色的数量 -->
+	<select id="countRoleByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
 	SELECT  COUNT(id)
 	FROM role 
 	WHERE 
 	id = #{id, jdbcType=BIGINT}
 	AND status = 0 
   </select>
-  
-  <!-- 根据keyid查询有效的域名信息 -->
-   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    SELECT 
-    <include refid="Base_Column_List" />
-    FROM role
-    WHERE id = #{id, jdbcType=INTEGER}
-    AND status = 0 
-  </select>
+
+	<!-- 根据keyid查询有效的域名信息 -->
+	<select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM role
+		WHERE id = #{id, jdbcType=INTEGER}
+		AND status = 0
+	</select>
+
+	<!-- 查询有效的从父组中集成来的角色id -->
+	<select id="selectRoleIdsExtendedFromGrp" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		select role_id from grp_role where grp_role.grp_id in (
+		select distinct(gp.ancestor) from grp_path gp join user_grp ug on (gp.descendant = ug.grp_id) join grp on (grp.id = gp.ancestor) where ug.user_id = #{id, jdbcType=BIGINT}
+		and gp.ancestor not in (
+		select distinct(gp.ancestor) from grp_path gp join user_grp ug on (gp.descendant = ug.grp_id) join grp on (grp.id = gp.ancestor and grp.status = 1) where ug.user_id = #{id, jdbcType=BIGINT}));
+	</select>
+
 </mapper>
