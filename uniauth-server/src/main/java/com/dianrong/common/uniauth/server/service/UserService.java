@@ -642,6 +642,10 @@ public class UserService {
             userAllRoleIds.addAll(roleIdsExtendedFromGrp);
         }
 
+        if(CollectionUtils.isEmpty(userAllRoleIds)) {
+            return userDetailDto;
+        }
+
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria roleCriteria = roleExample.createCriteria();
         roleCriteria.andIdIn(new ArrayList<>(userAllRoleIds)).andStatusEqualTo(AppConstants.STATUS_ENABLED);
