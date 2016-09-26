@@ -18,15 +18,12 @@
 
 	<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
 		<property name="domainCode" value="springboot-ssclient"></property>
-		<property name="userInfoClass"
-			value="com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo"></property>
+		<property name="userInfoClass" value="com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo"></property>
 		<property name="rejectPublicInvocations" value="false"></property>
-		<property name="customizedSavedRequestUrl" value="/"></property>
+		<property name="customizedLoginRedirecUrl"  value="/content"></property>
 	</bean>
 
 	<sec:http pattern="/js/**" security="none" />
-	<!-- login controller -->
-	<sec:http pattern="/main/login" security="none" />
 
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">

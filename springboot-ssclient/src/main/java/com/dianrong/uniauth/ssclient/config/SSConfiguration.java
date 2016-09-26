@@ -1,4 +1,4 @@
-package com.dianrong.uniauth.ssclient.application;
+package com.dianrong.uniauth.ssclient.config;
 
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ public class SSConfiguration {
 	
 	@Bean
 	public FilterRegistrationBean springSecurityFilterChain() {
-		FilterRegistrationBean filter = new FilterRegistrationBean( new DelegatingFilterProxy());
+		FilterRegistrationBean filter = new FilterRegistrationBean(new DelegatingFilterProxy());
 		filter.addUrlPatterns("/*");
 		return filter;
 	}

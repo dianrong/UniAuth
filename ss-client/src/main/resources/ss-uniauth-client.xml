@@ -58,7 +58,9 @@
 		<b:property name="userDetailsService" ref="ssUserDetailService"/>    
 	</b:bean>  
 	
-	<b:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" />
+	<b:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" >
+		<b:property name="ignoreInitConfiguration" value="true"/>
+	</b:bean>
 	
 	<b:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
 		<b:property name="filterProcessesUrl" value="/logout/cas"></b:property>

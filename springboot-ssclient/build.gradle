@@ -8,7 +8,6 @@ buildscript {
 }
 
 apply plugin: 'java'
-apply plugin: 'war'
 apply plugin: 'spring-boot'
 
 sourceCompatibility = 1.7
@@ -24,7 +23,7 @@ dependencies {
 	// jsp 
 	compile ("org.apache.tomcat.embed:tomcat-embed-jasper")
 	compile ("javax.servlet:jstl")
-	
+
 	compile project(":ss-client")
 }
 
@@ -32,9 +31,4 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.6'
     archiveBase = 'PROJECT'
     archivePath = 'gradle/dists'
-}
-
-war {
-    archiveName = project.name + '.war'
-    destinationDir = file('build')
 }

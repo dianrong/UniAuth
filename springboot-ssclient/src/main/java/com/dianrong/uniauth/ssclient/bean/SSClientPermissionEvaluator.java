@@ -20,6 +20,4 @@ public class SSClientPermissionEvaluator extends UniauthPermissionEvaluatorImpl 
 	public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
 		return super.hasPermission(authentication, targetId, targetType, permission);
 	}
-	
-	
 }
