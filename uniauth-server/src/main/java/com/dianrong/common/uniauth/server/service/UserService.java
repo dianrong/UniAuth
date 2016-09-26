@@ -684,29 +684,39 @@ public class UserService {
             rolePermissionExampleCriteria.andRoleIdIn(enabledAllRoleIds);
             List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
             List<Integer> allPermissionIds = new ArrayList<>();
-            Map<Integer, Integer> permIdRoleIdMap = new HashMap<>();
+            Map<Integer, List<Integer>> permIdRoleIdsMap = new HashMap<>();
             if(rolePermissionKeys != null) {
                 for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
                     Integer roleId = rolePermissionKey.getRoleId();
                     Integer permissionId = rolePermissionKey.getPermissionId();
                     allPermissionIds.add(permissionId);
-                    permIdRoleIdMap.put(permissionId, roleId);
+                    List<Integer> roleIds = permIdRoleIdsMap.get(permissionId);
+                    if(roleIds == null) {
+                        roleIds = new ArrayList<>();
+                        permIdRoleIdsMap.put(permissionId, roleIds);
+                    }
+                    roleIds.add(roleId);
                 }
             }
             PermissionExample permissionExample = new PermissionExample();
             PermissionExample.Criteria permissionExampleCriteria = permissionExample.createCriteria();
             permissionExampleCriteria.andIdIn(allPermissionIds).andStatusEqualTo(AppConstants.STATUS_ENABLED);
             List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
+
             Map<Integer, List<Permission>> roleIdPermissionsMap = new HashMap<>();
             if(permissions != null) {
                 for(Permission permission :permissions) {
-                    Integer roleId = permIdRoleIdMap.get(permission.getId());
-                    List<Permission> permissionList = roleIdPermissionsMap.get(roleId);
-                    if(permissionList == null) {
-                        permissionList = new ArrayList<>();
-                        roleIdPermissionsMap.put(roleId, permissionList);
+                    List<Integer> roleIds = permIdRoleIdsMap.get(permission.getId());
+                    if(roleIds != null) {
+                        for(Integer roleId : roleIds) {
+                            List<Permission> permissionList = roleIdPermissionsMap.get(roleId);
+                            if (permissionList == null) {
+                                permissionList = new ArrayList<>();
+                                roleIdPermissionsMap.put(roleId, permissionList);
+                            }
+                            permissionList.add(permission);
+                        }
                     }
-                    permissionList.add(permission);
                 }
             }
 
