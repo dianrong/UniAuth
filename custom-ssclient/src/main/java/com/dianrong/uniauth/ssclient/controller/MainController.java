@@ -6,7 +6,9 @@ import java.net.URLEncoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.cas.ServiceProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,9 @@ public class MainController {
 	@Value("#{uniauthConfig['domains.'+domainDefine.domainCode]}")
 	private String customUrl;
 	
+	@Autowired
+	private ServiceProperties casService;
+	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String getCommonPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String lt = request.getParameter("lt");
@@ -35,13 +40,13 @@ public class MainController {
 			} else {
 				requestLtUrl += "?";
 			}
-			requestLtUrl += "service=" + URLEncoder.encode(service);
+			requestLtUrl += "service=" + URLEncoder.encode(casService.getService());
 			response.sendRedirect(requestLtUrl);
 			return null;
 		}
 		// 设置登陆的lt和对应的业务系统service
 		request.setAttribute("ltval", lt);
-		request.setAttribute("service", service);
+		request.setAttribute("service", casService.getService());
 		request.setAttribute("casUrl", casUrl);
 		request.setAttribute("customUrl", customUrl);
 		return "login";
