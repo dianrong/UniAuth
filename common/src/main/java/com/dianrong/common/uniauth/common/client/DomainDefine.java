@@ -3,12 +3,15 @@ package com.dianrong.common.uniauth.common.client;
 import java.io.Serializable;
 
 public class DomainDefine implements Serializable {
+	private static final long serialVersionUID = 7044166044801306772L;
 	private String domainCode;
 	private String userInfoClass;
 	private boolean rejectPublicInvocations;
 	private String customizedSavedRequestUrl; 
 	// 自定义登陆成功的跳转url
 	private String customizedLoginRedirecUrl;
+	
+	private String tenancyCode;
 	
 	private static Integer domainId;
 
@@ -50,6 +53,22 @@ public class DomainDefine implements Serializable {
 
 	public void setCustomizedLoginRedirecUrl(String customizedLoginRedirecUrl) {
 		this.customizedLoginRedirecUrl = customizedLoginRedirecUrl;
+	}
+
+	public String getTenancyCode() {
+		return tenancyCode;
+	}
+	
+	public void setTenancyCode(String tenancyCode) {
+		this.tenancyCode = tenancyCode;
+	}
+	
+	public static Integer getDomainId() {
+		return domainId;
+	}
+
+	public static void setDomainId(Integer domainId) {
+		DomainDefine.domainId = domainId;
 	}
 	
 }

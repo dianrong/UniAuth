@@ -49,6 +49,7 @@ public class UniClientFacade {
     private IConfigResource configResource;
     private IUserExtendResource userExtendResource;
     private IUserExtendValResource userExtendValResource;
+    private ITenancyResource tenancyResource;
     
     // read and write
     private IUserExtendRWResource userExtendRWResource;
@@ -71,6 +72,7 @@ public class UniClientFacade {
 		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, providers);
 		tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
 		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
+		tenancyResource = JAXRSClientFactory.create(uniWsEndpoint, ITenancyResource.class, providers);
 		
 		// write
 		userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
@@ -129,5 +131,8 @@ public class UniClientFacade {
 	}
 	public void setUserExtendValRWResource(IUserExtendValRWResource userExtendValRWResource) {
 		this.userExtendValRWResource = userExtendValRWResource;
+	}
+	public ITenancyResource getTenancyResource() {
+		return tenancyResource;
 	}
 }

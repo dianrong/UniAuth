@@ -47,9 +47,10 @@ public interface AppConstants {
 	String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
 	// 是否在主页显示登陆项
 	String ZK_DOMAIN_SHOW_IN_HOME_PAGE = "showInHomePage";
+	// 定义域的所属tenancy的code
+	String ZK_DOMAIN_TEANANCY_CODE = "tenancycode";
 	// zk 配置的node name， st使用的次数
 	String ZK_NODE_NAME_ST_USED_TIMES = "cas.st_use_times";
-	
 	String SERVICE_LOGIN_POSTFIX = "/login/cas";
 	
 	String ROLE_ADMIN = "ROLE_ADMIN";
@@ -169,4 +170,7 @@ public interface AppConstants {
 	
 	//cxf 传递的locale的key
 	String CAS_CXF_HEADER_LOCALE_KEY = "cas.cxf.header.locale.key";
+	
+	// 默认的租户code
+	String DEFAULT_TANANCY_CODE="DIANRONG-WEBSITE";
 }

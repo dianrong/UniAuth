@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -29,34 +30,35 @@ public class DomainService extends BaseService{
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	public List<DomainDto> getAllLoginPageDomains() {
+	@Autowired
+	private TenancyService tenancyService;
+	
+	public List<DomainDto> getAllLoginPageDomains(String tenancyCode) {
 		DomainParam domainParam = new DomainParam();
 		List<String> domainCodeList = new ArrayList<String>();
 		Iterator<Entry<String, String>> iterator = allZkNodeMap.entrySet().iterator();
+		boolean isDefaultTenancy = tenancyService.isDefaultTenancy(tenancyCode);
 		while(iterator.hasNext()){
 			Entry<String,String> entry = iterator.next();
 			String zkNodeName = entry.getKey();
-			//String zkNodeValue = entry.getValue() ;
-			
-			if(ZkNodeUtils.isDomainNode(zkNodeName)){
-				zkNodeName = zkNodeName.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
+			if(ZkNodeUtils.isDomainNode(zkNodeName, tenancyCode, isDefaultTenancy)){
+				final String domainName  = ZkNodeUtils.getDomainName(zkNodeName);
 				// 过滤有自定义页面的域
-				String customLoginUrl = allZkNodeMap.get(AppConstants.ZK_DOMAIN_PREFIX + zkNodeName+  AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE);
-				boolean showInHomePage = "true".equalsIgnoreCase(allZkNodeMap.get(AppConstants.ZK_DOMAIN_PREFIX + zkNodeName+  AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_SHOW_IN_HOME_PAGE));
-				if(!showInHomePage && customLoginUrl != null && !customLoginUrl.isEmpty()) {
+				String customLoginUrl = ZkNodeUtils.getDomainTCustomLoginUrl(domainName, tenancyCode, isDefaultTenancy, allZkNodeMap);
+				boolean showInHomePage = ZkNodeUtils.canShowInHomePage(domainName, tenancyCode, isDefaultTenancy, allZkNodeMap);
+				if(!showInHomePage && StringUtils.hasText(customLoginUrl)) {
 					continue;
 				}
-				domainCodeList.add(zkNodeName);
+				domainCodeList.add(domainName);
 			}
 		}
-		domainParam.setDomainCodeList(domainCodeList);
+		domainParam.setDomainCodeList(domainCodeList).setTenancyCode(tenancyCode);
 		Response<List<DomainDto>> response = uniClientFacade.getDomainResource().getAllLoginDomains(domainParam);
 		List<DomainDto> domainDtoList = response.getData();
 		if(domainDtoList != null && !domainDtoList.isEmpty()){
 			for(DomainDto domainDto :domainDtoList){
 				String domainCode = domainDto.getCode();
-				String zkDomainUrl = allZkNodeMap.get(AppConstants.ZK_DOMAIN_PREFIX + domainCode);
-				//zkDomainUrl = zkDomainUrl.endsWith("/") ? (zkDomainUrl + AppConstants.SERVICE_LOGIN_POSTFIX) : (zkDomainUrl + "/" + AppConstants.SERVICE_LOGIN_POSTFIX);
+				String zkDomainUrl = ZkNodeUtils.getDomainUrl(domainCode, tenancyCode, isDefaultTenancy, allZkNodeMap);
 				zkDomainUrl += AppConstants.SERVICE_LOGIN_POSTFIX;
 				domainDto.setZkDomainUrl(zkDomainUrl);
 				String zkDomainUrlEncoded = null;

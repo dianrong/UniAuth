@@ -31,7 +31,7 @@
         You can change the name if you want to make it harder for people to guess.
     </description>
 
-    <bean id="ticketGrantingTicketCookieGenerator" class="org.jasig.cas.web.support.CookieRetrievingCookieGenerator"
+    <bean id="ticketGrantingTicketCookieGenerator" class="com.dianrong.common.uniauth.cas.extend.MultiTenancyTgtCookieGenerator"
           c:casCookieValueManager-ref="cookieValueManager"
           p:cookieSecure="#{uniauthConfig['cas_server.iscookiesecure']?:'false'}"
           p:cookieMaxAge="-1"
@@ -44,14 +44,4 @@
 
     <bean id="cookieValueManager" class="org.jasig.cas.web.support.DefaultCasCookieValueManager"
           c:cipherExecutor-ref="cookieCipherExecutor"/>
-
-    <!-- As an alternative, the cookie value verification and encryption can be turned off via
-    the following configuration
-
-    <bean id="cookieCipherExecutor" class="org.jasig.cas.util.NoOpCipherExecutor" />
-
-    <bean id="cookieValueManager" class="org.jasig.cas.web.support.NoOpCookieValueManager"
-          c:cipherExecutor-ref="cookieCipherExecutor" />
-
-    -->
 </beans>

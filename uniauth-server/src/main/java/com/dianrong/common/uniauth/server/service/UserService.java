@@ -16,8 +16,6 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
-import com.dianrong.common.uniauth.server.data.entity.*;
-import com.dianrong.common.uniauth.server.data.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +37,48 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.DomainExample;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagExample;
 import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
+import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
+import com.dianrong.common.uniauth.server.data.mapper.LoginMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -89,6 +128,8 @@ public class UserService {
     private RolePermissionMapper rolePermissionMapper;
     @Autowired
     private UniauthSender uniauthSender;
+    @Autowired
+    private TenancyService tenancyService;
 
     @Autowired
     private UserExtendValService userExtendValService;
@@ -496,7 +537,7 @@ public class UserService {
         }
     }
 
-    public void login(LoginParam loginParam) {
+    public UserDto login(LoginParam loginParam) {
         String account = loginParam.getAccount();
         String password = loginParam.getPassword();
         String ip = loginParam.getIp();
@@ -504,7 +545,7 @@ public class UserService {
         CheckEmpty.checkEmpty(password, "密码");
         CheckEmpty.checkEmpty(ip, "IP地址");
 
-        User user = getUserByAccount(account.trim(), true);
+        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true);
 
         if(AppConstants.ONE_Byte.equals(user.getStatus())){
             throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
@@ -532,6 +573,7 @@ public class UserService {
                 throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH, UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
             }
         }
+        return BeanConverter.convert(user);
     }
 
     public List<UserDto> searchUsersWithRoleCheck(Integer roleId) {
@@ -607,7 +649,7 @@ public class UserService {
     public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
         String account = loginParam.getAccount();
         CheckEmpty.checkEmpty(account, "账号");
-        User user = getUserByAccount(account, true);
+        User user = getUserByAccount(account,loginParam.getTenancyCode(), loginParam.getTenancyId(),  true);
 
         UserDetailDto userDetailDto = getUserDetailDto(user);
 
@@ -774,7 +816,7 @@ public class UserService {
         String email = userParam.getEmail();
         CheckEmpty.checkEmpty(email, "邮件");
 
-        User user = getUserByAccount(email, false);
+        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false);
         UserDto userDto=BeanConverter.convert(user);
         setUserExtendVal(userDto);
 
@@ -788,7 +830,7 @@ public class UserService {
         CheckEmpty.checkEmpty(email, "邮件");
         CheckEmpty.checkEmpty(password, "密码");
 
-        User user = getUserByAccount(email, false);
+        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false);
         if(!AuthUtils.validatePasswordRule(password)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
         }
@@ -896,14 +938,24 @@ public class UserService {
         return 1;
     }
 
-    private User getUserByAccount(String account, boolean withPhoneChecked){
+    private User getUserByAccount(String account, String tenancyCode, Integer tenancyId, boolean withPhoneChecked){
         Map<String, String> map = new HashMap<String, String>();
         map.put("email", account);
 
         if(withPhoneChecked){
             map.put("phone", account);
         }
-
+        if (tenancyCode == null && tenancyId == null) {
+        	// default
+        	map.put("tenancyId", tenancyService.getDefaultTenancy().getId().toString());
+        } else {
+        	if (tenancyId == null) {
+            	CheckEmpty.checkEmpty(tenancyCode, "租户code");
+            	map.put("tenancyCode", tenancyCode);
+            } else {
+            	map.put("tenancyId", tenancyId.toString());
+            }
+        }
         List<User> userList = userMapper.selectByEmailOrPhone(map);
         if(userList == null || userList.isEmpty()){
             throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
@@ -964,7 +1016,7 @@ public class UserService {
      */
     public UserDto getUserByEmailOrPhone(LoginParam loginParam){
         CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
-        User user = getUserByAccount(loginParam.getAccount(), true);
+        User user = getUserByAccount(loginParam.getAccount(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true);
         UserDto userDto=BeanConverter.convert(user);
         setUserExtendVal(userDto);
 

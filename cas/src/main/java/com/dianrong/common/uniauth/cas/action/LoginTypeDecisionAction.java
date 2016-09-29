@@ -49,19 +49,19 @@ public class LoginTypeDecisionAction extends AbstractAction {
         	final String serviceUrl =  service.getId().trim();
         	// 通过业务地址反找其是否走自定制的页面
         	for(String domainCode: allZkNodeMap.keySet() ){
-        		if(ZkNodeUtils.isDomainNode(domainCode)) {
-        			String domainUrl = allZkNodeMap.get(domainCode);
-        			if(WebScopeUtil.judgeTwoServiceIsEqual(domainUrl, serviceUrl)) {
-	        				// 查找其登陆页面
-	        				String loginPageNodeName = domainCode + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
-	        				if(StringUtils.hasText(allZkNodeMap.get(loginPageNodeName))) {
-	        					// 将跳转url放到flowscope备用
-	        					context.getFlowScope().put(AppConstants.CAS_CUSTOM_LOGIN_PAGE_KEY, allZkNodeMap.get(loginPageNodeName));
-	        					logger.debug("custom login url:" + allZkNodeMap.get(loginPageNodeName));
-	        					return result(LOGIN_FROM_CUSTOM);
-	        				}
-        				}
-        			}
+//        		if(ZkNodeUtils.isDomainNode(domainCode)) {
+//        			String domainUrl = allZkNodeMap.get(domainCode);
+//        			if(WebScopeUtil.judgeTwoServiceIsEqual(domainUrl, serviceUrl)) {
+//	        				// 查找其登陆页面
+//	        				String loginPageNodeName = domainCode + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
+//	        				if(StringUtils.hasText(allZkNodeMap.get(loginPageNodeName))) {
+//	        					// 将跳转url放到flowscope备用
+//	        					context.getFlowScope().put(AppConstants.CAS_CUSTOM_LOGIN_PAGE_KEY, allZkNodeMap.get(loginPageNodeName));
+//	        					logger.debug("custom login url:" + allZkNodeMap.get(loginPageNodeName));
+//	        					return result(LOGIN_FROM_CUSTOM);
+//	        				}
+//        				}
+//        			}
         		}
         }
         // 不处理

@@ -17,8 +17,9 @@ public class DomainParam extends PageParam {
 	public List<String> getDomainCodeList() {
 		return domainCodeList;
 	}
-	public void setDomainCodeList(List<String> domainCodeList) {
+	public DomainParam setDomainCodeList(List<String> domainCodeList) {
 		this.domainCodeList = domainCodeList;
+		return this;
 	}
 	public Integer getId() {
 		return id;

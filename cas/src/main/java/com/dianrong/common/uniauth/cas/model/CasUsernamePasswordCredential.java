@@ -10,18 +10,22 @@ import org.jasig.cas.authentication.UsernamePasswordCredential;
 public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
 	private static final long serialVersionUID = -5552074507929396707L;
 
-    @NotNull
-    @Size(min=1, message = "required.domain")
+	@NotNull
+	@Size(min = 1, message = "required.domain")
 	private String domain;
-    
-    /**.
-     * 验证码
-     */
-	private String captcha;
+
+	@NotNull
+	@Size(min = 1, message = "required.tenancyCode")
+	private String tenancyCode;
 	
+	/**
+	 * . 验证码
+	 */
+	private String captcha;
+
 	public CasUsernamePasswordCredential() {
 	}
-	
+
 	public CasUsernamePasswordCredential(String userName, String password) {
 		super(userName, password);
 	}
@@ -29,11 +33,16 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
 	public CasUsernamePasswordCredential(String userName, String password, String domain) {
 		this(userName, password, domain, "");
 	}
+
+	public CasUsernamePasswordCredential(String userName, String password, String domain, String tenancy) {
+		this(userName, password, domain,tenancy, "");
+	}
 	
-	public CasUsernamePasswordCredential(String userName, String password, String domain, String captcha) {
+	public CasUsernamePasswordCredential(String userName, String password, String domain, String tenancyCode, String captcha) {
 		super(userName, password);
 		this.domain = domain;
 		this.captcha = captcha;
+		this.tenancyCode = tenancyCode;
 	}
 
 	public String getDomain() {
@@ -51,7 +60,7 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
 
 	@Override
 	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this,obj, false);
+		return EqualsBuilder.reflectionEquals(this, obj, false);
 	}
 
 	public String getCaptcha() {
@@ -60,5 +69,13 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
 
 	public void setCaptcha(String captcha) {
 		this.captcha = captcha;
+	}
+	
+	public String getTenancyCode() {
+		return tenancyCode;
+	}
+
+	public void setTenancyCode(String tenancyCode) {
+		this.tenancyCode = tenancyCode;
 	}
 }

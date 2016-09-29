@@ -1,12 +1,11 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Arc on 24/3/2016.
  */
-public class AuditDto implements Serializable {
+public class AuditDto extends TenancyDtoBase {
 	private static final long serialVersionUID = -1081049216491108772L;
 	private Integer id;
     private Long userId;

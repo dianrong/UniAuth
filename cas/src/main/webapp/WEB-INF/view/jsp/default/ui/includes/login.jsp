@@ -7,7 +7,7 @@
 
 <c:if test="${not empty redirectUrl}">
 	<script>
-		top.window.location = "${fn:escapeXml(redirectUrl)}";
+		top.window.location = "${redirectUrl}";
 	</script>
 </c:if>
 
@@ -20,7 +20,6 @@
 
 <div class="box" id="login">
     <form:form method="post" id="fm1" commandName="${commandName}" htmlEscape="true">
-
         <form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false" />
 		<c:if test="${not empty param.dupsession}">
 			<p><font color="red"><spring:message code="screen.tips.session.dup" /></font></p><br>
@@ -51,25 +50,28 @@
 			</h2>
 		</c:if>
 		<!-- show login page title -->
-		
-		<c:if test="${not empty edituserinfo}">
-				<section class="row hiddenbtn">
-		            <label for="domain"><spring:message code="screen.welcome.label.domain" /></label>
-		            <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
+			<c:choose>  
+			   <c:when test="${not empty edituserinfo}">  
+			   			<section class="row hiddenbtn">
+			   </c:when>  
+			   <c:otherwise> 
+			   			<section class="row">
+			   </c:otherwise>  
+			</c:choose>  
+        	<div class="left-select">
+		            <label for="tenancy"><spring:message code="screen.welcome.label.tenancy" /></label>
+		            <spring:message code="screen.welcome.label.domain.accesskey" var="tenancyAccessKey" />
 		            <div class="select">
-			            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
-			            	<c:if test="${not empty domains}">
-	  							<form:option value="${domains[0].zkDomainUrlEncoded}">${domains[0].code}</form:option>
+			            <form:select id="tenancy" tabindex="0" accesskey="${tenancyAccessKey}" path="tenancyCode">
+			            	<c:if test="${not empty tenancies}">
+			            		<c:forEach items="${tenancies}" var="tenancy">
+		  							<form:option value="${tenancy.code}">${tenancy.name}</form:option>
+								</c:forEach>
 			            	</c:if>
 			            </form:select>
 		            </div>
-		         </section>
-		         <section class="row height55">
-		            <label class="notice-red padding-top20"><spring:message code="screen.personal.info.goto.edit.relogin.notice"/></label>
-		          </section>
-        </c:if>
-        <c:if test="${empty edituserinfo}">
-	        <section class="row">
+	            </div>
+	            <div class="right-select">
 		            <label for="domain"><spring:message code="screen.welcome.label.domain" /></label>
 		            <spring:message code="screen.welcome.label.domain.accesskey" var="domainAccessKey" />
 		            <div class="select">
@@ -81,9 +83,14 @@
 			            	</c:if>
 			            </form:select>
 		            </div>
-	   		 </section>
-        </c:if>
-        
+	            </div>
+   		 </section>
+ 		<c:if test="${not empty edituserinfo}">
+  		 		<section class="row height55">
+            	<label class="notice-red padding-top20"><spring:message code="screen.personal.info.goto.edit.relogin.notice"/></label>
+           </section>
+	     </c:if>
+   		 
         <section class="row">
             <label for="username"><spring:message code="screen.welcome.label.netid" /></label>
             <c:choose>
@@ -97,7 +104,7 @@
                 </c:otherwise>
             </c:choose>
         </section>
-
+    
         <section class="row">
             <label for="password"><spring:message code="screen.welcome.label.password" /></label>
                 <%--

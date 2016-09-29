@@ -1,8 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
-
-public class PermissionDto implements Serializable {
+public class PermissionDto extends TenancyDtoBase {
 	private static final long serialVersionUID = -3799602677526320793L;
 	private Integer id;
 	private String value;

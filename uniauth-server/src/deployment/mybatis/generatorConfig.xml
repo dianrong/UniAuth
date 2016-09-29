@@ -10,7 +10,7 @@
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/uniauth"
-                        userId="root" password="cwl123">
+                        userId="root" password="123456">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -34,14 +34,9 @@
         </javaClientGenerator>
 
 
-        <table tableName="user_extend" enableCountByExample="true"
+        <table tableName="%" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>
-        <table tableName="user_extend_val" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true"
-               enableSelectByExample="true" selectByExampleQueryId="true">
-        </table>
-
     </context>
 </generatorConfiguration>

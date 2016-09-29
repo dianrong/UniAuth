@@ -61,8 +61,10 @@ $(function() {
 		}
 	});
 
+	$("#tenancy").val(uriEncodeOnce(getUrlParam("tenancy")));
 	$("#domain").val(uriEncodeOnce(getUrlParam("service")));
 	if (console && console.log) {
+		console.log("current selected tenancy:" + getUrlParam("tenancy"));
 		console.log("current selected domain:" + getUrlParam("service"));
 	}
 	
@@ -82,12 +84,22 @@ $(function() {
 		jqueryReady();
 	}
 
+	var getBaseUrl = function () {
+		return window.location.href.substring(0,window.location.href.indexOf('?') === -1 ? window.location.href.length :window.location.href.indexOf('?'));
+	};
+	
+	// tenancy change
+	$("#tenancy").change(function() {
+		var selectedValue = $("#tenancy").val();
+		var redirect = getBaseUrl() + "?tenancy=" + selectedValue;
+		top.window.location = redirect;
+	});
+	
+	// domain change
 	$("#domain").change(function() {
-		var selectedValue = $("#domain").val();
-		var location = window.location.href;
-		var pos = location.indexOf("?service=");
-		var url = location.substring(0, pos);
-		var redirect = url + "?service=" + selectedValue;
+		var selectedTenancy = $("#tenancy").val();
+		var selectedDomain = $("#domain").val();
+		var redirect = getBaseUrl() + "?service=" + selectedDomain+"&tenancy="+selectedTenancy;
 		top.window.location = redirect;
 	});
 });

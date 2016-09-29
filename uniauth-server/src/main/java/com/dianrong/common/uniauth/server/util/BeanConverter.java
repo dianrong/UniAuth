@@ -165,7 +165,8 @@ public class BeanConverter {
                     .setPhone(user.getPhone())
                     .setCreateDate(user.getCreateDate())
                     .setStatus(user.getStatus())
-                    .setLastUpdate(user.getLastUpdate());
+                    .setLastUpdate(user.getLastUpdate())
+                    .setTenancyId(user.getTenancyId() == null ? null : user.getTenancyId().intValue());
             return userDto;
         }
     }
@@ -281,6 +282,23 @@ public class BeanConverter {
                     .setId(audit.getId())
                     .setReqSequence(audit.getReqSeq());
             return auditDto;
+        }
+    }
+    
+    public static TenancyDto convert(Tenancy tenancy) {
+        if(tenancy == null) {
+            return null;
+        } else {
+            return new TenancyDto()
+            		.setCode(tenancy.getCode())
+            		.setContactName(tenancy.getContactName())
+            		.setCreateDate(tenancy.getCreateDate())
+            		.setDescription(tenancy.getDescription())
+            		.setId(tenancy.getId())
+            		.setLastUpdate(tenancy.getLastUpdate())
+            		.setName(tenancy.getName())
+            		.setPhone(tenancy.getPhone())
+            		.setStatus(tenancy.getStatus());
         }
     }
     

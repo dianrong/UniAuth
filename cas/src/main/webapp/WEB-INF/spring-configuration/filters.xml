@@ -29,6 +29,8 @@
     <bean id="characterEncodingFilter" class="org.springframework.web.filter.CharacterEncodingFilter"
             p:encoding="${httprequest.web.encoding:UTF-8}"
             p:forceEncoding="${httprequest.web.encoding.force:true}" />
+            
+    <bean id="multiTenancyFilter" class="com.dianrong.common.uniauth.cas.extend.filter.MultiTenancyFilter"/>
 
     <bean id="requestParameterSecurityFilter"
           class="org.jasig.cas.security.RequestParameterPolicyEnforcementFilter"

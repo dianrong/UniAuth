@@ -31,6 +31,7 @@ public class UARWFacade {
     private IAuditResource auditResource;
     private IConfigRWResource configRWResource;
     private ITagRWResource tagRWResource;
+    private ITenancyRWResource tenancyRWResource;
 
     @PostConstruct
     public void init(){
@@ -47,6 +48,7 @@ public class UARWFacade {
         auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, providers);
         configRWResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, providers);
         tagRWResource = JAXRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
+        tenancyRWResource = JAXRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
@@ -89,4 +91,8 @@ public class UARWFacade {
     public ITagRWResource getTagRWResource() {
         return tagRWResource;
     }
+
+	public ITenancyRWResource getTenancyRWResource() {
+		return tenancyRWResource;
+	}
 }

@@ -8,6 +8,7 @@
         <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="groupId" property="groupId" jdbcType="INTEGER" />
         <result column="type" property="userGroupType" jdbcType="TINYINT" />
+        <result column="tenancy_id" property="tenancyId" jdbcType="BIGINT" />
         <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="create_date" property="createDate" jdbcType="DATE" />
     </resultMap>
@@ -76,5 +77,14 @@
     <if test="phone != null" >
       and (email = #{email, jdbcType=VARCHAR} or phone = #{phone, jdbcType=VARCHAR})
     </if>
+    <if test="tenancyId != null" >
+      and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
+    </if>
+    <if test="tenancyId == null" >
+       and tenancy_id in ( 
+    	select id from tenancy where code = #{tenancyCode, jdbcType=VARCHAR} and status = 0 
+    )
+    </if>
+   
   </select>
 </mapper>

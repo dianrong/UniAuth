@@ -20,6 +20,7 @@
             <ref bean="tagResource" />
             <ref bean="userExtendResource" />
             <ref bean="userExtendValResource" />
+            <ref bean="tenancyResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />

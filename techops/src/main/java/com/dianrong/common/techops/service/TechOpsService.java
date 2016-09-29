@@ -1,23 +1,23 @@
 package com.dianrong.common.techops.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
-import com.dianrong.common.techops.bean.LoginUser;
-import com.dianrong.common.techops.helper.CustomizeBeanConverter;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.dianrong.common.techops.bean.LoginUser;
+import com.dianrong.common.techops.helper.CustomizeBeanConverter;
 import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.PermTypeEnum;
@@ -35,6 +35,15 @@ public class TechOpsService {
     public UserExtInfo getLoginUserInfo(){
     	UserExtInfo userExtInfo = (UserExtInfo)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	return userExtInfo;
+    }
+    
+    public int getCurrentLoginUserTenancyId(){
+    	UserExtInfo userExtInfo =getLoginUserInfo();
+    	Integer tenancyId =  userExtInfo.getUserDto().getTenancyId();
+    	if (tenancyId == null) {
+    		throw new RuntimeException("current login user's tenancyId is null, illegal user");
+    	}
+    	return tenancyId;
     }
     
 	public LoginUser getLoginUser(){

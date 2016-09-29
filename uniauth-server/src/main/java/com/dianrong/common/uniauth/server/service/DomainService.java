@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.dianrong.common.uniauth.server.util.ParamCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +25,18 @@ import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
 import com.dianrong.common.uniauth.server.data.entity.StakeholderExample;
+import com.dianrong.common.uniauth.server.data.entity.Tenancy;
+import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.StakeholderMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
 @Service
@@ -43,6 +46,9 @@ public class DomainService {
 	private DomainMapper domainMapper;
 	@Autowired
 	private StakeholderMapper stakeholderMapper;
+	
+	@Autowired
+	private TenancyMapper tenancyMapper;
 	
 	/**.
 	 * 进行域名数据过滤的filter
@@ -134,12 +140,23 @@ public class DomainService {
 	public List<DomainDto> getAllLoginDomains(DomainParam domainParam) {
 		List<String> domainCodeList = domainParam.getDomainCodeList();
 		DomainExample example = new DomainExample();
-		//CheckEmpty.checkEmpty(domainCodeList, "请求的域编码列表");
-		if(domainCodeList == null){
-			example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
+		DomainExample.Criteria criteria=  example.createCriteria();
+		criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+		if(domainCodeList != null){
+			criteria.andCodeIn(domainCodeList);
 		}
-		else{
-			example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte).andCodeIn(domainCodeList);
+		if (domainParam.getTenancyId() != null) {
+			criteria.andTenancyIdEqualTo((long)domainParam.getTenancyId());
+		}
+		if (domainParam.getTenancyCode() != null) {
+			TenancyExample tx = new TenancyExample();
+			TenancyExample.Criteria  tcriteria=tx.createCriteria();
+			tcriteria.andCodeEqualTo(domainParam.getTenancyCode()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+			 List<Tenancy> tlist =  tenancyMapper.selectByExample(tx);
+			if (tlist == null || tlist.isEmpty()) {
+				return null;
+			}
+			criteria.andTenancyIdEqualTo(tlist.get(0).getId());
 		}
 		
 		List<Domain> domainList = domainMapper.selectByExample(example);

@@ -1,7 +1,9 @@
 package com.dianrong.common.uniauth.cas.handler;
 
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
@@ -9,6 +11,7 @@ import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 
 import org.jasig.cas.authentication.AccountDisabledException;
+import org.jasig.cas.authentication.Credential;
 import org.jasig.cas.authentication.HandlerResult;
 import org.jasig.cas.authentication.PreventedException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
@@ -20,11 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
+import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.enm.CasProtocal;
 
 public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
 	
@@ -33,19 +39,23 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 	
 	@Override
 	protected HandlerResult authenticateUsernamePasswordInternal(UsernamePasswordCredential credential)	throws GeneralSecurityException, PreventedException {
-		String userName = credential.getUsername();
-		String password = credential.getPassword();
+		CasUsernamePasswordCredential _credential = (CasUsernamePasswordCredential)credential;
+		
+		String userName = _credential.getUsername();
+		String password = _credential.getPassword();
+		String tenancyCode = _credential.getTenancyCode();
 		
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(userName);
 		loginParam.setPassword(password);
+		loginParam.setTenancyCode(tenancyCode);
 		ClientInfo clientInfo = ClientInfoHolder.getClientInfo();
 		if(clientInfo != null){
 			String clientIp = clientInfo.getClientIpAddress();
 			loginParam.setIp(clientIp);
 		}
 		
-		Response<Void> response = uniClientFacade.getUserResource().login(loginParam);
+		Response<UserDto> response = uniClientFacade.getUserResource().login(loginParam);
 		List<Info> infoList = response.getInfo();
 		
 		if(infoList != null && !infoList.isEmpty()){
@@ -77,7 +87,13 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 				throw new FailedLoginException(userName + "/" + password + "not matched.");
 			}
 		}
-		
-		return createHandlerResult(credential, this.principalFactory.createPrincipal(userName), null);
+		Map<String, Object> attributes = new HashMap<String,Object>();
+		attributes.put(CasProtocal.DianRongCas.getTenancyIdName(), response.getData().getTenancyId());
+		return createHandlerResult(credential, this.principalFactory.createPrincipal(userName, attributes), null);
 	}
+	
+    @Override
+    public boolean supports(final Credential credential) {
+        return credential instanceof CasUsernamePasswordCredential;
+    }
 }

@@ -10,7 +10,7 @@ public class LoginParam extends Operator {
 	//only apply to cas sso
 	private String password;
 	private String ip;
-
+	
 	/**
 	public String getDomainCode() {
 		return domainCode;
@@ -48,6 +48,7 @@ public class LoginParam extends Operator {
 
 	@Override
 	public String toString() {
-		return "LoginParam [account=" + account + ", password=" + password + ", ip=" + ip + "]";
+		return "LoginParam [account=" + account + ", password=" + password + ", ip=" + ip + ", tenancyCode="
+				+ tenancyCode + "]";
 	}
 }

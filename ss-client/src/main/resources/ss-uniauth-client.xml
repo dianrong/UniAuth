@@ -29,15 +29,17 @@
 	<http pattern="/index.jsp" security="none"/> 
 	 -->
 	
-	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
+	<b:bean id="casAuthEntryPoint" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyCasAuthenticationEntryPoint">    
 	  <b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
-	  <b:property name="serviceProperties" ref="casService"/>    
+	  <b:property name="serviceProperties" ref="casService"/>   
+	  <b:property name="tenancyCode"  value="#{domainDefine.tenancyCode}"/>    
 	</b:bean>  
 	
-	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
-		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>   
+	<b:bean id="casService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyServiceProperties">    
 		<b:property name="authenticateAllArtifacts" value="true"/>
 		<b:property name="sendRenew" value="false" />
+		<b:property name="tenancyCode" value="#{domainDefine.tenancyCode}"/>
+		<b:property name="domainCode" value="#{domainDefine.domainCode}"/>
 	</b:bean>  
 		
 	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler">
@@ -54,7 +56,7 @@
 		<b:constructor-arg value="#{uniauthConfig['cas_server']}/"/>    
 	</b:bean>
 	
-	<b:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">    
+	<b:bean id="authenticationUserDetailsService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsWrapper">    
 		<b:property name="userDetailsService" ref="ssUserDetailService"/>    
 	</b:bean>  
 	
@@ -62,7 +64,7 @@
 	
 	<b:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
 		<b:property name="filterProcessesUrl" value="/logout/cas"></b:property>
-		<b:constructor-arg value="#{uniauthConfig['cas_server']}/logout" />
+		<b:constructor-arg value="#{uniauthConfig['cas_server'] + '/logout' + (domainDefine.tenancyCode == null? '' : '?tenancy=' + domainDefine.tenancyCode)}" />
 		<b:constructor-arg>
 			<b:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
 		</b:constructor-arg>
@@ -72,9 +74,7 @@
 		<authentication-provider ref="casAuthenticationProvider"/>
 	</authentication-manager>
 	
-	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.SSUserDetailService">
-	</b:bean>
+	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.multitenancy.SSMultiTenancyUserDetailService" />
 	
-    <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor">
-	</b:bean>
+    <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor"/>
 </b:beans>
