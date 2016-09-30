@@ -14,6 +14,10 @@ public class UserParam extends Operator {
     private String password;
     private String originPassword;
     private Byte status;
+    
+    private Integer tenancyId;
+    
+    private String tenancyCode;
 
     private UserActionEnum userActionEnum;
     
@@ -126,5 +130,21 @@ public class UserParam extends Operator {
 		return "UserParam [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", password="
 				+ password + ", originPassword=" + originPassword + ", status=" + status + ", userActionEnum="
 				+ userActionEnum + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds + "]";
+	}
+
+	public String getTenancyCode() {
+		return tenancyCode;
+	}
+
+	public void setTenancyCode(String tenancyCode) {
+		this.tenancyCode = tenancyCode;
+	}
+
+	public Integer getTenancyId() {
+		return tenancyId;
+	}
+
+	public void setTenancyId(Integer tenancyId) {
+		this.tenancyId = tenancyId;
 	}
 }

@@ -1,7 +1,11 @@
 package com.dianrong.common.uniauth.common.server.cxf.server;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,7 +26,7 @@ public final class ServerFillterSingletion {
 	}
 
 	// 只能被调用一次
-	public static void propSetInvoke(Map<String, HeaderConsumer> consumers) {
+	public static void propSetInvoke(List<HeaderConsumer> consumers) {
 		if (propSetOnce.compareAndSet(false, true)) {
 			if (consumers != null) {
 				instance.setConsumers(consumers);
@@ -35,11 +39,11 @@ public final class ServerFillterSingletion {
 		private Map<String, HeaderConsumer> consumers;
 
 		public UniauthCxfServerFillter() {
-			this(new HashMap<String, HeaderConsumer>());
+			this(new ArrayList<HeaderConsumer>());
 		}
 
-		public UniauthCxfServerFillter(Map<String, HeaderConsumer> consumers) {
-			this.consumers = consumers;
+		public UniauthCxfServerFillter(List<HeaderConsumer> consumers) {
+			setConsumers(consumers);
 		}
 
 		@Override
@@ -60,8 +64,22 @@ public final class ServerFillterSingletion {
 			}
 		}
 
-		public void setConsumers(Map<String, HeaderConsumer> consumers) {
-			this.consumers = consumers;
+		public void setConsumers(List<HeaderConsumer> consumers) {
+			if (consumers == null) {
+				return;
+			}
+			consumers = new ArrayList<HeaderConsumer>(consumers);
+			Collections.sort(consumers, new Comparator<HeaderConsumer>(){
+				@Override
+				public int compare(HeaderConsumer o1, HeaderConsumer o2) {
+					return o1.getOrder() - o2.getOrder();
+				}
+			});
+			LinkedHashMap<String, HeaderConsumer> _consumers = new LinkedHashMap<String, HeaderConsumer>();
+			for (HeaderConsumer hc : consumers) {
+				_consumers.put(hc.key(), hc);
+			}
+			this.consumers = _consumers;
 		}
 	}
 }

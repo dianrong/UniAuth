@@ -11,15 +11,19 @@ public class LoginParam extends Operator {
 	private String password;
 	private String ip;
 	
-	/**
-	public String getDomainCode() {
-		return domainCode;
-	}
-	public void setDomainCode(String domainCode) {
-		this.domainCode = domainCode;
-	}
-	**/
+	// 租户id
+	private  Integer tenancyId;
 	
+	private String tenancyCode;
+	
+	public Integer getTenancyId() {
+		return tenancyId;
+	}
+
+	public void setTenancyId(Integer tenancyId) {
+		this.tenancyId = tenancyId;
+	}
+
 	public String getAccount() {
 		return account;
 	}
@@ -46,9 +50,11 @@ public class LoginParam extends Operator {
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		return "LoginParam [account=" + account + ", password=" + password + ", ip=" + ip + ", tenancyCode="
-				+ tenancyCode + "]";
+	public String getTenancyCode() {
+		return tenancyCode;
+	}
+
+	public void setTenancyCode(String tenancyCode) {
+		this.tenancyCode = tenancyCode;
 	}
 }

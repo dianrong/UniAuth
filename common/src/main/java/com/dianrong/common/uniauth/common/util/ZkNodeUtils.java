@@ -37,7 +37,7 @@ public class ZkNodeUtils {
 	 */
 	public static String getDomainName(final String nodeName) {
 		if(isDomainNode(nodeName)) {
-			return nodeName.trim().split(AppConstants.ZK_CFG_SPLIT)[1];
+			return nodeName.trim().split("\\"+AppConstants.ZK_CFG_SPLIT)[1];
 		}
 		return null;
 	}

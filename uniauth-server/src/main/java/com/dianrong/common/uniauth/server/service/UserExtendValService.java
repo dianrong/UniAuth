@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.UserExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
@@ -41,6 +42,9 @@ public class UserExtendValService {
     @Autowired 
     private UserExtendMapper userExtendMapper;
     
+    @Autowired
+    private TenancyService tenancyService;
+    
     @Resource(name="userExtendValDataFilter")
     private UserExtendValDataFilter dataFilter;
     
@@ -64,6 +68,7 @@ public class UserExtendValService {
         userExtendVal.setStatus(status);
         userExtendVal.setUserId(userId);
         userExtendVal.setValue(value);
+        userExtendVal.setExtendId(tenancyService.getOneCanUsedTenancyId());
         
         userExtendValMapper.insertSelective(userExtendVal);
         
@@ -78,7 +83,7 @@ public class UserExtendValService {
         CheckEmpty.checkEmpty(id,"id");
         UserExtendVal userExtendVal=new UserExtendVal();
         userExtendVal.setId(id);
-        userExtendVal.setStatus((byte)1);
+        userExtendVal.setStatus(AppConstants.STATUS_DISABLED);
         return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
     }
     
@@ -93,7 +98,6 @@ public class UserExtendValService {
      */
     public int updateById(Long id,Long userId,Long extendId,String value,Byte status){
         CheckEmpty.checkEmpty(id,"id");
-        
         // 过滤数据
         List<FilterData> filterFileds = new ArrayList<FilterData>();
         if(userId != null) {
@@ -112,7 +116,6 @@ public class UserExtendValService {
         userExtendVal.setStatus(status);
         userExtendVal.setUserId(userId);
         userExtendVal.setValue(value);
-        
         return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
     }
     
@@ -130,9 +133,9 @@ public class UserExtendValService {
         if(status!=null){
             criteria.andStatusEqualTo(status);
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         
         List<UserExtendVal> userExtendVals=userExtendValMapper.selectByExample(example);
-        
         List<UserExtendValDto> userExtendValDtos=new ArrayList<UserExtendValDto>();
         UserExtendValDto userExtendValDto;
         UserExtend userExtend;
@@ -164,6 +167,7 @@ public class UserExtendValService {
         Map<String,String> params=new HashMap<String, String>();
         params.put("userId",userId.toString());
         params.put("extendCode", code==null?null:'%'+code+'%');
+        params.put("tenancyId", tenancyService.getOneCanUsedTenancyId().toString());
         
         int count=queryOnlyUsed ? userExtendValMapper.countByUserExtend(params) : userExtendValMapper.countByCode(params);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);

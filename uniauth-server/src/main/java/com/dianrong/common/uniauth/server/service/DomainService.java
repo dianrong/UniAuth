@@ -25,11 +25,8 @@ import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
 import com.dianrong.common.uniauth.server.data.entity.StakeholderExample;
-import com.dianrong.common.uniauth.server.data.entity.Tenancy;
-import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.StakeholderMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -48,7 +45,7 @@ public class DomainService {
 	private StakeholderMapper stakeholderMapper;
 	
 	@Autowired
-	private TenancyMapper tenancyMapper;
+	private TenancyService tenancyService;
 	
 	/**.
 	 * 进行域名数据过滤的filter
@@ -145,19 +142,7 @@ public class DomainService {
 		if(domainCodeList != null){
 			criteria.andCodeIn(domainCodeList);
 		}
-		if (domainParam.getTenancyId() != null) {
-			criteria.andTenancyIdEqualTo((long)domainParam.getTenancyId());
-		}
-		if (domainParam.getTenancyCode() != null) {
-			TenancyExample tx = new TenancyExample();
-			TenancyExample.Criteria  tcriteria=tx.createCriteria();
-			tcriteria.andCodeEqualTo(domainParam.getTenancyCode()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
-			 List<Tenancy> tlist =  tenancyMapper.selectByExample(tx);
-			if (tlist == null || tlist.isEmpty()) {
-				return null;
-			}
-			criteria.andTenancyIdEqualTo(tlist.get(0).getId());
-		}
+		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		List<DomainDto> domainDtoList = new ArrayList<DomainDto>();

@@ -1,9 +1,7 @@
 package com.dianrong.common.uniauth.common.server.cxf.propset;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -35,19 +33,15 @@ public class PropReadyListener implements ApplicationListener<ContextRefreshedEv
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		try {
-			ClientFilterSingleton.propSetInvoke(findBeanList(HeaderProducer.class));
-			List<HeaderConsumer> consumers = findBeanList(HeaderConsumer.class);
-			if (consumers != null && !consumers.isEmpty()) {
-				Map<String, HeaderConsumer> consumersMap = new HashMap<String, HeaderConsumer>();
-				for (HeaderConsumer thc : consumers) {
-					consumersMap.put(thc.key(), thc);
-				}
-				ServerFillterSingletion.propSetInvoke(consumersMap);
+		// root context
+		if (event.getApplicationContext().getParent() == null) {
+			try {
+				ClientFilterSingleton.propSetInvoke(findBeanList(HeaderProducer.class));
+				ServerFillterSingletion.propSetInvoke(findBeanList(HeaderConsumer.class));
+			} catch (InterruptedException e) {
+				logger.error("failed to set prop to cxf filter", e);
+				Thread.currentThread().interrupt();
 			}
-		} catch (InterruptedException e) {
-			logger.error("failed to set prop to cxf filter", e);
-			Thread.currentThread().interrupt();
 		}
 	}
 

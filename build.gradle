@@ -378,34 +378,6 @@ project(':cas') {
 				shengLongTomcatHost]
 		classpath = sourceSets.deployment.runtimeClasspath
 	}
-	
-	task tomcatCWLDeployCas(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "deploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['deploy',
-				project.name,
-				tomcatWarFile,
-				tomcatUsername,
-				tomcatPassword,
-				cwlTomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
-
-	task tomcatCWLRedeployCas(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "redeploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['redeploy',
-				project.name,
-				tomcatWarFile,
-				tomcatUsername,
-				tomcatPassword,
-				cwlTomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
 
 	task tomcatWLinDeployCas(type: JavaExec, dependsOn: warCas) {
 		doFirst {

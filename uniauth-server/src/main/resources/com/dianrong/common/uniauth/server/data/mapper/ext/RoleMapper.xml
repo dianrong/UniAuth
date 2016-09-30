@@ -87,7 +87,7 @@
 		AND status = 0
 	</select>
 
-	<!-- 查询有效的从父组中集成来的角色id -->
+	<!-- 查询有效的从父组中继承来的角色id -->
 	<select id="selectRoleIdsExtendedFromGrp" resultType="java.lang.Integer" parameterType="java.lang.Long">
 		select role_id from grp_role where grp_role.grp_id in (
 		select distinct(gp.ancestor) from grp_path gp join user_grp ug on (gp.descendant = ug.grp_id) join grp on (grp.id = gp.ancestor) where ug.user_id = #{id, jdbcType=BIGINT}
