@@ -9,6 +9,7 @@ import javax.ws.rs.ext.Provider;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 @Provider
+@Deprecated
 public final class UniauthCxfClientLocaleFilter implements ClientRequestFilter{
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {

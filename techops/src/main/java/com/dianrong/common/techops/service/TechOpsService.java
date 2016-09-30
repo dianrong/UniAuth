@@ -37,15 +37,6 @@ public class TechOpsService {
     	return userExtInfo;
     }
     
-    public int getCurrentLoginUserTenancyId(){
-    	UserExtInfo userExtInfo =getLoginUserInfo();
-    	Integer tenancyId =  userExtInfo.getUserDto().getTenancyId();
-    	if (tenancyId == null) {
-    		throw new RuntimeException("current login user's tenancyId is null, illegal user");
-    	}
-    	return tenancyId;
-    }
-    
 	public LoginUser getLoginUser(){
 		LoginUser loginUser = new LoginUser();
 		UserExtInfo userExtInfo = this.getLoginUserInfo();

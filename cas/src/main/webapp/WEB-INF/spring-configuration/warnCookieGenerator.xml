@@ -29,7 +29,7 @@
         is used. You would modify this if you wanted to change the cookie path or the name.
     </description>
 
-    <bean id="warnCookieGenerator" class="com.dianrong.common.uniauth.cas.extend.MultiTenancyTgtCookieGenerator"
+    <bean id="warnCookieGenerator" class="org.jasig.cas.web.support.CookieRetrievingCookieGenerator"
           p:cookieSecure="#{uniauthConfig['cas_server.iscookiesecure']?:'false'}"
           p:cookieMaxAge="-1"
           p:cookieName="CASPRIVACY"

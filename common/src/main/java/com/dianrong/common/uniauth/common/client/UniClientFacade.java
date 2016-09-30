@@ -1,20 +1,32 @@
 package com.dianrong.common.uniauth.common.client;
 
-import com.dianrong.common.uniauth.common.interfaces.read.*;
-import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
-import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
-import com.dianrong.common.uniauth.common.server.UniauthCxfClientLocaleFilter;
-import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
-import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ws.rs.client.ClientRequestFilter;
+
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
+import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
+import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
+import com.dianrong.common.uniauth.common.interfaces.read.ITenancyResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendValResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
+import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
+import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
+import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 @Component
 public class UniClientFacade {
@@ -61,8 +73,8 @@ public class UniClientFacade {
 		JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
 		jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
-        UniauthCxfClientLocaleFilter localeFilter = new UniauthCxfClientLocaleFilter();
-        List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,localeFilter);
+		ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
+        List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
         userExtendResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, providers);
         userExtendValResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValResource.class, providers);
 		domainResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainResource.class, providers);

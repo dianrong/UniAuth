@@ -169,6 +169,7 @@ public interface AppConstants {
 	String CAS_CUSTOM_LOGIN_URL_KEY = "custom_login_url_key";
 	
 	//cxf 传递的locale的key
+	@Deprecated
 	String CAS_CXF_HEADER_LOCALE_KEY = "cas.cxf.header.locale.key";
 	
 	// 默认的租户code

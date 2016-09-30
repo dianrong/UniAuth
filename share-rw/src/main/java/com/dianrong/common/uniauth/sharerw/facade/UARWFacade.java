@@ -1,18 +1,28 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
-import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
-import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
-import com.dianrong.common.uniauth.common.server.UniauthCxfClientLocaleFilter;
-import com.dianrong.common.uniauth.sharerw.interfaces.*;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ws.rs.client.ClientRequestFilter;
+
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
+import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
+import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
+import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
+import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.ITenancyRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 /**
  * Created by Arc on 14/2/16.
@@ -37,9 +47,9 @@ public class UARWFacade {
     public void init(){
         JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
         jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        UniauthCxfClientLocaleFilter localeFilter = new UniauthCxfClientLocaleFilter();
+        ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
         UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
-        List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,localeFilter);
+        List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
         domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
         groupRWResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, providers);
         permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, providers);

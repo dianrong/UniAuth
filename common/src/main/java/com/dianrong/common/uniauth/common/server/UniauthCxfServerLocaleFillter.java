@@ -15,6 +15,7 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
  * @author wanglin
  */
 @Provider
+@Deprecated
 public final class UniauthCxfServerLocaleFillter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {

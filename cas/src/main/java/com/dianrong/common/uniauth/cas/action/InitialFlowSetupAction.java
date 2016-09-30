@@ -43,7 +43,6 @@ public final class InitialFlowSetupAction extends AbstractAction {
 	@NotNull
 	private CookieRetrievingCookieGenerator warnCookieGenerator;
 
-
 	/** CookieGenerator for the TicketGrantingTickets. */
 	@NotNull
 	private CookieRetrievingCookieGenerator ticketGrantingTicketCookieGenerator;
@@ -65,57 +64,48 @@ public final class InitialFlowSetupAction extends AbstractAction {
 	private boolean enableFlowOnAbsentServiceRequest = true;
 
 	private DomainService domainService;
-	
+
 	@Autowired
 	private TenancyService tenancyService;
 
 	@Override
 	protected Event doExecute(final RequestContext context) throws Exception {
 		final HttpServletRequest request = WebUtils.getHttpServletRequest(context);
-
 		// 添加分之处理用户编辑管理
 		String requestType = request.getParameter(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY);
 		if (!StringUtil.strIsNullOrEmpty(requestType)) {
-			//往flowscope中放入一个标识符用于区分不同的流程
-			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY,  "go");
-			
-			//获取请求的方式  采用一个模拟的字段来模拟请求的method  优先采用该字段
+			// 往flowscope中放入一个标识符用于区分不同的流程
+			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY, "go");
+			// 获取请求的方式 采用一个模拟的字段来模拟请求的method 优先采用该字段
 			String smulateReqMethod = request.getParameter(AppConstants.CAS_USERINFO_MANAGE_REQUEST_METHOD_KEY);
-			
-			//缓存一个初始请求的方式到flow范围中
-			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY,  StringUtil.strIsNullOrEmpty(smulateReqMethod) ? request.getMethod() : smulateReqMethod);
-			
-			//往session里面放入一个用于会跳的首页链接(有对应参数则刷新跳转首页链接)
+			// 缓存一个初始请求的方式到flow范围中
+			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY,
+					StringUtil.strIsNullOrEmpty(smulateReqMethod) ? request.getMethod() : smulateReqMethod);
+			// 往session里面放入一个用于会跳的首页链接(有对应参数则刷新跳转首页链接)
 			FirstPageUrlProcessUtil.refreshLoginContextInsession(request);
 		} else {
-	        String tenancyCode = request.getParameter(DianRongCas.getTenancyCodeName());
+			boolean needRedirect = false;
+			String tenancyCode = request.getParameter(DianRongCas.getTenancyCodeName());
+			String reqService = request.getParameter(DianRongCas.getServiceName());
 			if (!StringUtils.hasText(tenancyCode)) {
-				String defaultTenancy = tenancyService.getDefaultTenancyCode();
-				StringBuffer redirecUrl =  request.getRequestURL();
-				List<DomainDto> domainDtoList = domainService.getAllLoginPageDomains(defaultTenancy);
+				tenancyCode = tenancyService.getDefaultTenancyCode();
+				needRedirect = true;
+			}
+			if (!StringUtils.hasText(reqService)) {
+				List<DomainDto> domainDtoList = domainService.getAllLoginPageDomains();
 				if (domainDtoList != null && !domainDtoList.isEmpty()) {
 					DomainDto domainDto = domainDtoList.get(0);
-					String redirectUrl = domainDto.getZkDomainUrlEncoded();
-					redirecUrl.append("?").append(DianRongCas.getServiceName()).append("=").append(StringEscapeUtils.escapeXml11(redirectUrl));
+					reqService = domainDto.getZkDomainUrlEncoded();
+				} else {
+					reqService = "";
 				}
-				redirecUrl.append(redirecUrl.toString().contains("?")?"&":"?");
-				redirecUrl.append(DianRongCas.getTenancyCodeName()).append("=").append(defaultTenancy);
+				needRedirect = true;
+			}
+			if (needRedirect) {
+				StringBuffer redirecUrl = request.getRequestURL();
+				redirecUrl.append("?").append(DianRongCas.getServiceName()).append("=").append(StringEscapeUtils.escapeXml11(reqService)).append("&")
+						.append(DianRongCas.getTenancyCodeName()).append("=").append(StringEscapeUtils.escapeXml11(tenancyCode));
 				context.getFlowScope().put("redirectUrl", redirecUrl.toString());
-				context.getFlowScope().put("tenancyCode", defaultTenancy);
-			} else {
-				String reqService = request.getParameter(DianRongCas.getServiceName());
-				if (!StringUtils.hasText(reqService)) {
-					List<DomainDto> domainDtoList = domainService.getAllLoginPageDomains(tenancyCode);
-					if (domainDtoList != null && !domainDtoList.isEmpty()) {
-						DomainDto domainDto = domainDtoList.get(0);
-						String redirectUrl = domainDto.getZkDomainUrlEncoded();
-						StringBuffer redirecUrl =  request.getRequestURL();
-						redirecUrl.append("?").append(DianRongCas.getServiceName()).append("=").append(StringEscapeUtils.escapeXml11(redirectUrl)).
-						append("&").append(DianRongCas.getTenancyCodeName()).append("=").append(StringEscapeUtils.escapeXml11(tenancyCode));
-						context.getFlowScope().put("redirectUrl", redirecUrl.toString());
-					}
-				}
-				context.getFlowScope().put("tenancyCode", tenancyCode.trim());
 			}
 		}
 		if (!this.pathPopulated) {
