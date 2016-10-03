@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,9 +9,8 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -18,43 +19,16 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("groupDataFilter")
-public class GroupDataFilter extends CurrentAbstractDataFilter {
+public class GroupDataFilter extends CurrentAbstractDataFilter<Grp> {
 	
 	@Autowired
     private GrpMapper grpMapper;
 
 	@Override
-	protected void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue) {
-		switch(type){
-			case FIELD_TYPE_CODE:
-					String newCode = TypeParseUtil.parseToStringFromObject(fieldValue);
-					Grp grpInfo = grpMapper.selectByIdWithStatusEffective(id);
-					if(grpInfo != null){
-						//如果数据信息没有改变  则不管
-						if(newCode.equals(grpInfo.getCode())){
-							break;
-						}
-					} 
-					//查看是否存在其他的记录是该code
-					this.dataFilter(FieldType.FIELD_TYPE_CODE, newCode, FilterType.FILTER_TYPE_EXSIT_DATA);
-				break;
-			default:
-				break;
-		}
-	}
-
-	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		 //判空处理
-        if(equalsField == null || equalsField.length == 0) {
-            return false;
-        }
-        //首先根据类型和值获取到对应的model数组
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         GrpExample condition = new GrpExample();
         GrpExample.Criteria criteria =  condition.createCriteria();
-        
         criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
-        
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -79,5 +53,17 @@ public class GroupDataFilter extends CurrentAbstractDataFilter {
 	@Override
 	protected String getProcessTableName() {
 		return UniBundle.getMsg("data.filter.table.name.group");
+	}
+
+	@Override
+	protected Grp getEnableRecordByPrimaryKey(Integer id) {
+		CheckEmpty.checkEmpty(id, "grpId");
+		GrpExample condition = new GrpExample();
+		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		List<Grp> selectByExample = grpMapper.selectByExample(condition);
+		if (selectByExample != null && !selectByExample.isEmpty()) {
+			return  selectByExample.get(0);
+		}
+		return null;
 	}
 }

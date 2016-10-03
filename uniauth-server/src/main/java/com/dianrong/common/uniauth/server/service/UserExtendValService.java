@@ -34,16 +34,13 @@ import com.dianrong.common.uniauth.server.util.TypeParseUtil;
  * @since May 16, 2016
  */
 @Service
-public class UserExtendValService {
+public class UserExtendValService extends TenancyBasedService{
     
     @Autowired
     private UserExtendValMapper userExtendValMapper;
     
     @Autowired 
     private UserExtendMapper userExtendMapper;
-    
-    @Autowired
-    private TenancyService tenancyService;
     
     @Resource(name="userExtendValDataFilter")
     private UserExtendValDataFilter dataFilter;
@@ -61,7 +58,7 @@ public class UserExtendValService {
     	CheckEmpty.checkEmpty(extendId, "extend_id");
     	
     	// 数据过滤
-    	dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId), FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId) );
+    	dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId), FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId) );
     	
         UserExtendVal userExtendVal=new UserExtendVal();
         userExtendVal.setExtendId(extendId);
@@ -107,7 +104,7 @@ public class UserExtendValService {
         	filterFileds.add(FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
         }
         if(filterFileds.size() > 0) {
-        	dataFilter.filterFieldValueIsExistWithCondtionsEqual(TypeParseUtil.parseToIntegerFromObject(id), filterFileds.toArray(new FilterData[filterFileds.size()]));
+        	dataFilter.updateFieldsCheck(TypeParseUtil.parseToIntegerFromObject(id), filterFileds.toArray(new FilterData[filterFileds.size()]));
         }
         
         UserExtendVal userExtendVal=new UserExtendVal();

@@ -16,26 +16,22 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 /**
  * Created by Arc on 15/4/2016.
  */
-
 @Service("tagTypeDataFilter")
-public class TagTypeDataFilter extends CurrentAbstractDataFilter {
+public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
 	/**.
 	 * tagType处理的mapper
 	 */
 	@Autowired
     private TagTypeMapper tagTypeMapper;
 
-    /**.
-     * 判断某几个字段是否同时存在.
-     */
-    @Override
-    protected boolean dataWithConditionsEqualExist(FilterData... equalsField){
-        //判空处理
-        if(equalsField == null || equalsField.length == 0) {
-            return false;
-        }
-        //首先根据类型和值获取到对应的model数组
-        TagTypeExample condition = new TagTypeExample();
+	@Override
+	protected String getProcessTableName() {
+		return  UniBundle.getMsg("data.filter.table.name.tagtype");
+	}
+	
+	@Override
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
+		TagTypeExample condition = new TagTypeExample();
         TagTypeExample.Criteria criteria =  condition.createCriteria();
         //构造查询条件
         for(FilterData fd: equalsField){
@@ -56,18 +52,13 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter {
             return true;
         }
         return false;
-    }
+	}
 
 	@Override
-	protected String getProcessTableName() {
-		return  UniBundle.getMsg("data.filter.table.name.tagtype");
-	}
-	
-	@Override
-	protected Object getRecordByPrimaryKey(Integer id) {
-		CheckEmpty.checkEmpty(id, "tagId");
+	protected TagType getEnableRecordByPrimaryKey(Integer id) {
+		CheckEmpty.checkEmpty(id, "tagTypeId");
 		TagTypeExample condition = new TagTypeExample();
-		condition.createCriteria().andIdEqualTo(id);
+		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
 		
 		if(selectByExample != null && !selectByExample.isEmpty()){

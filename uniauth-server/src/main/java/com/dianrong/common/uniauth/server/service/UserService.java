@@ -155,7 +155,7 @@ public class UserService extends TenancyBasedService {
         user.setLastUpdate(now);
         user.setCreateDate(now);
         user.setPhone(phone);
-        user.setStatus(AppConstants.ZERO_Byte);
+        user.setStatus(AppConstants.STATUS_ENABLED);
         userMapper.insert(user);
         UserDto userDto = BeanConverter.convert(user).setPassword(randomPassword);
 
@@ -181,7 +181,7 @@ public class UserService extends TenancyBasedService {
                 user.setFailCount(AppConstants.MAX_AUTH_FAIL_COUNT);
                 break;
             case UNLOCK:
-                user.setFailCount((byte)0);
+                user.setFailCount(AppConstants.ZERO_Byte);
                 break;
             case RESET_PASSWORD:
                 if(password == null) {
@@ -198,7 +198,7 @@ public class UserService extends TenancyBasedService {
                 break;
             case STATUS_CHANGE:
                 // 只处理启用的情况
-                if(status != null && status == AppConstants.ZERO_Byte){
+                if(status != null && status == AppConstants.STATUS_ENABLED){
                     this.checkPhoneAndEmail(user.getPhone(), user.getEmail(), user.getId());
                 }
                 user.setStatus(status);
@@ -221,7 +221,6 @@ public class UserService extends TenancyBasedService {
 
                 //验证原始密码是否正确
                 String origin_password_check = orginPassword;
-
                 //原始密码验证通过
                 if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), origin_password_check, user.getPasswordSalt())){
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
@@ -288,7 +287,6 @@ public class UserService extends TenancyBasedService {
 
     @Transactional
     public void saveRolesToUser(Long userId, List<Integer> roleIds) {
-
         if(userId == null || CollectionUtils.isEmpty(roleIds)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userId, roleIds"));
         }
@@ -448,7 +446,7 @@ public class UserService extends TenancyBasedService {
                     }
                     // 2. query all tags, convert into dto and index them with tagIds
                     TagExample tagExample = new TagExample();
-                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdUserIdsPair.keySet())).andStatusEqualTo(AppConstants.ZERO_Byte).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdUserIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
                     List<Tag> tags = tagMapper.selectByExample(tagExample);
                     if(!CollectionUtils.isEmpty(tags)) {
                         Map<Integer, TagDto> tagIdTagDtoPair = new HashMap<>();
@@ -500,16 +498,16 @@ public class UserService extends TenancyBasedService {
         }
         // check duplicate email
         if(userId == null){
-            dataFilter.dataFilter(FieldType.FIELD_TYPE_EMAIL, email, FilterType.FILTER_TYPE_EXSIT_DATA);
+            dataFilter.addFieldCheck( FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_EMAIL, email);
         } else {
-            dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_EMAIL, Integer.parseInt(userId.toString()), email);
+            dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL,  email);
         }
         if(phone != null) {
             //check duplicate phone
             if(userId == null){
-                dataFilter.dataFilter(FieldType.FIELD_TYPE_PHONE, phone, FilterType.FILTER_TYPE_EXSIT_DATA);
+                dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_PHONE, phone);
             } else {
-                dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_PHONE, Integer.parseInt(userId.toString()), phone);
+                dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE,  phone);
             }
         }
     }
@@ -895,17 +893,14 @@ public class UserService extends TenancyBasedService {
         user.setLastLoginTime(new Date());
         user.setLastLoginIp(ip);
         user.setFailCount((byte)failCount);
-        user.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         if(sync){
             return userMapper.updateByPrimaryKeySelective(user);
         }
 
         executor.submit(new Runnable() {
-
             @Override
             public void run() {
                 userMapper.updateByPrimaryKeySelective(user);
-
             }
         });
         return 1;
@@ -1002,7 +997,7 @@ public class UserService extends TenancyBasedService {
         // 查询tag信息
         TagExample tagConditon = new TagExample();
         Criteria andStatusEqualTo = tagConditon.createCriteria();
-        andStatusEqualTo.andStatusEqualTo(AppConstants.ZERO_Byte);
+        andStatusEqualTo.andStatusEqualTo(AppConstants.STATUS_ENABLED);
 
         // 加入domainId的限制
         andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet())).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());

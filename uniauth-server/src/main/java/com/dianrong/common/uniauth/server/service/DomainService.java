@@ -56,7 +56,7 @@ public class DomainService extends TenancyBasedService{
 		CheckEmpty.checkEmpty(domainCode, "域编码");
 		
 		//检查code
-		dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, domainCode, FilterType.FILTER_TYPE_EXSIT_DATA);
+		dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, domainCode);
 		
 		DomainExample example = new DomainExample();
 		example.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
@@ -183,7 +183,7 @@ public class DomainService extends TenancyBasedService{
 			//如果需要更新code,则加入判断
 			if(!StringUtil.strIsNullOrEmpty(domainParam.getCode())){
 				//检查code
-				dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CODE, domainParam.getId(), domainParam.getCode());
+				dataFilter.updateFieldCheck(domainParam.getId(), FieldType.FIELD_TYPE_CODE, domainParam.getCode());
 			}
 		}
 				
@@ -198,7 +198,7 @@ public class DomainService extends TenancyBasedService{
 		
 		if(domainId != null){
 			//必须要合法的数据才能插入
-			dataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+			dataFilter.addFieldCheck( FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
 		} else {
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域相关人ID"));
 		}

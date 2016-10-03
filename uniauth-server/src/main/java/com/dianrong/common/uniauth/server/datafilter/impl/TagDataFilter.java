@@ -20,22 +20,21 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("tagDataFilter")
-public class TagDataFilter extends CurrentAbstractDataFilter {
+public class TagDataFilter extends CurrentAbstractDataFilter<Tag> {
 	@Autowired
 	private TagMapper tagMapper;
 
 	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		// 判空处理
-		if (equalsField == null || equalsField.length == 0) {
-			return false;
-		}
-		// 首先根据类型和值获取到对应的model数组
+	protected String getProcessTableName() {
+		return UniBundle.getMsg("data.filter.table.name.tag");
+	}
+
+	@Override
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
 		TagExample condition = new TagExample();
 		TagExample.Criteria criteria = condition.createCriteria();
 
-		criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
-
+		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		// 构造查询条件
 		for (FilterData fd : equalsField) {
 			switch (fd.getType()) {
@@ -58,15 +57,10 @@ public class TagDataFilter extends CurrentAbstractDataFilter {
 	}
 
 	@Override
-	protected String getProcessTableName() {
-		return UniBundle.getMsg("data.filter.table.name.tag");
-	}
-
-	@Override
-	protected Object getRecordByPrimaryKey(Integer id){
+	protected Tag  getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "tagId");
 		TagExample condition = new TagExample();
-		condition.createCriteria().andIdEqualTo(id);
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<Tag> selectByExample = tagMapper.selectByExample(condition);
 
 		if (selectByExample != null && !selectByExample.isEmpty()) {

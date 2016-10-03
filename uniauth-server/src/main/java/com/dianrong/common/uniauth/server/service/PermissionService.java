@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +10,6 @@ import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
-import com.dianrong.common.uniauth.server.util.ParamCheck;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,9 +47,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ParamCheck;
 
 @Service
-public class PermissionService {
+public class PermissionService extends TenancyBasedService{
 
 	@Autowired
 	private PermTypeMapper permTypeMapper;
@@ -99,16 +100,17 @@ public class PermissionService {
 		CheckEmpty.checkEmpty(value, "权限的值");
 		
 		//域名id必须是有效的
-		domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+		domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
 		
 		//同一个域下面不能出现重复数据
-		dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA,
+		dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
 				FilterData.buildFilterData(FieldType.FIELD_TYPE_VALUE, value),
 				FilterData.buildFilterData(FieldType.FIELD_TYPE_PERM_TYPE_ID, permTypeId),
 				FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
 		
 		Permission permission = BeanConverter.convert(permissionParam, false);
-		permission.setStatus(AppConstants.ZERO_Byte);
+		permission.setStatus(AppConstants.STATUS_ENABLED);
+		permission.setTenancyId(tenancyService.getOneCanUsedTenancyId());
 		permissionMapper.insert(permission);
 		
 		PermissionDto permissionDto = BeanConverter.convert(permission);
@@ -129,13 +131,13 @@ public class PermissionService {
 		CheckEmpty.checkEmpty(value, "权限的值");
 		
 		//域名id必须是有效的
-		domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+		domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
 		
 		Byte status = permissionParam.getStatus();
 		//启用或者启用状态的修改
-        if((status != null && status == AppConstants.ZERO_Byte) || status == null){
+        if((status != null && status == AppConstants.STATUS_ENABLED) || status == null){
         	//同一个域下面不能出现重复数据
-    		dataFilter.filterFieldValueIsExistWithCondtionsEqual(permissionParam.getId(),
+    		dataFilter.updateFieldsCheck(permissionParam.getId(),
     				FilterData.buildFilterData(FieldType.FIELD_TYPE_VALUE, value),
     				FilterData.buildFilterData(FieldType.FIELD_TYPE_PERM_TYPE_ID, permTypeId),
     				FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
@@ -211,7 +213,7 @@ public class PermissionService {
 		CheckEmpty.checkEmpty(permissionId, "权限ID");
 		// 1. get all roles under the domain
 		RoleExample roleExample = new RoleExample();
-		roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte);
+		roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<Role> roles = roleMapper.selectByExample(roleExample);
 		if(CollectionUtils.isEmpty(roles)) {
 			return null;
@@ -303,6 +305,7 @@ public class PermissionService {
 		if(permTypeId != null) {
 			criteria.andPermTypeIdEqualTo(permTypeId);
 		}
+		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		Integer totalCount = permissionMapper.countByExample(permissionExample);
 		ParamCheck.checkPageParams(pageNumber, pageSize, totalCount);
 		List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);
@@ -328,7 +331,10 @@ public class PermissionService {
 		String domainCode = domainParam.getCode();
 		CheckEmpty.checkEmpty(domainCode, "域编码");
 		
-		List<UrlRoleMappingExt> urlRoleMappingExtList = permissionMapper.selectUrlRoleMapping(domainCode);
+		Map<String, String> values = new HashMap<String, String>();
+		values.put("domainCode", domainCode);
+		values.put("tenancyId", tenancyService.getOneCanUsedTenancyId().toString());
+		List<UrlRoleMappingExt> urlRoleMappingExtList = permissionMapper.selectUrlRoleMapping(values);
 		
 		List<UrlRoleMappingDto> urlRoleMappingDtoList = new ArrayList<UrlRoleMappingDto>();
 		if(urlRoleMappingExtList != null){
@@ -338,13 +344,4 @@ public class PermissionService {
 		}
 		return urlRoleMappingDtoList;
 	}
-	
-		/**.
-	    * 根据id获取有效权限的数量
-	    * @param id
-	    * @return
-	    */
-	  public  int countPermissionByIdWithStatusEffective(Long id){
-		  return permissionMapper.countPermissionByIdWithStatusEffective(id);
-	  }
 }

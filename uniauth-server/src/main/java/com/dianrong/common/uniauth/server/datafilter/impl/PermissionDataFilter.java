@@ -19,58 +19,58 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("permissionDataFilter")
-public class PermissionDataFilter extends CurrentAbstractDataFilter {
+public class PermissionDataFilter extends CurrentAbstractDataFilter<Permission> {
 	
 	@Autowired
 	private PermissionMapper permissionMapper;
 	
-	
-	@Override
-	protected Object getRecordByPrimaryKey(Integer id){
-		CheckEmpty.checkEmpty(id, "permission的ID");
-		return  permissionMapper.selectByIdWithStatusEffective(id);
-	}
-	
-	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		//判空处理
-				if(equalsField == null || equalsField.length == 0) {
-					return false;
-				}
-				//首先根据类型和值获取到对应的model数组
-				PermissionExample condition = new PermissionExample();
-				PermissionExample.Criteria criteria =  condition.createCriteria();
-				
-				criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
-				//构造查询条件
-				for(FilterData fd: equalsField){
-					switch(fd.getType()) {
-						case FIELD_TYPE_ID:
-							criteria.andIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
-							break;
-						case FIELD_TYPE_VALUE:
-							criteria.andValueEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
-							break;
-						case FIELD_TYPE_PERM_TYPE_ID:
-							criteria.andPermTypeIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
-							break;
-						case FIELD_TYPE_DOMAIN_ID:
-							criteria.andDomainIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
-							break;
-						default:
-							break;
-					}
-				}
-				//查询
-				List<Permission> permissiones = permissionMapper.selectByExample(condition);
-				if(permissiones != null && !permissiones.isEmpty()){
-					return true;
-				}
-				return false;
-	}
-
 	@Override
 	protected String getProcessTableName() {
 		return UniBundle.getMsg("data.filter.table.name.permission");
+	}
+
+	@Override
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
+		PermissionExample condition = new PermissionExample();
+		PermissionExample.Criteria criteria =  condition.createCriteria();
+		
+		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		//构造查询条件
+		for(FilterData fd: equalsField){
+			switch(fd.getType()) {
+				case FIELD_TYPE_ID:
+					criteria.andIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
+					break;
+				case FIELD_TYPE_VALUE:
+					criteria.andValueEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
+					break;
+				case FIELD_TYPE_PERM_TYPE_ID:
+					criteria.andPermTypeIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
+					break;
+				case FIELD_TYPE_DOMAIN_ID:
+					criteria.andDomainIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
+					break;
+				default:
+					break;
+			}
+		}
+		//查询
+		List<Permission> permissiones = permissionMapper.selectByExample(condition);
+		if(permissiones != null && !permissiones.isEmpty()){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected Permission getEnableRecordByPrimaryKey(Integer id) {
+		CheckEmpty.checkEmpty(id, "permissionId");
+		PermissionExample condition = new PermissionExample();
+		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		List<Permission> selectByExample = permissionMapper.selectByExample(condition);
+		if (selectByExample != null && !selectByExample.isEmpty()) {
+			return  selectByExample.get(0);
+		}
+		return null;
 	}
 }

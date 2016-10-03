@@ -1,13 +1,14 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
-import com.dianrong.common.uniauth.server.data.entity.Permission;
-import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
-import org.apache.ibatis.annotations.Param;
 
 public interface PermissionMapper {
     /**
@@ -101,9 +102,9 @@ public interface PermissionMapper {
     List<Permission> selectByExampleForSearch(PermissionExt permissionExt);
     Integer countByExampleForSearch(PermissionExt permissionExt);
 
-    List<Permission> selectByRoleAndDomainId(Map map);
+    List<Permission> selectByRoleAndDomainId(Map<String, String> map);
 
-    List<UrlRoleMappingExt> selectUrlRoleMapping(String domainCode);
+    List<UrlRoleMappingExt> selectUrlRoleMapping(Map<String, String> values);
 
     /**.
      * 根据id获取有效组的数量

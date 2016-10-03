@@ -20,22 +20,21 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("roleDataFilter")
-public class RoleDataFilter extends CurrentAbstractDataFilter {
+public class RoleDataFilter extends CurrentAbstractDataFilter<Role> {
 
 	@Autowired
 	private RoleMapper roleMapper;
+	
+	@Override
+	protected String getProcessTableName() {
+		return UniBundle.getMsg("data.filter.table.name.role");
+	}
 
 	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		// 判空处理
-		if (equalsField == null || equalsField.length == 0) {
-			return false;
-		}
-		// 首先根据类型和值获取到对应的model数组
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
 		RoleExample condition = new RoleExample();
 		RoleExample.Criteria criteria = condition.createCriteria();
-
-		criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		// 构造查询条件
 		for (FilterData fd : equalsField) {
 			switch (fd.getType()) {
@@ -61,20 +60,14 @@ public class RoleDataFilter extends CurrentAbstractDataFilter {
 	}
 
 	@Override
-	protected Object getRecordByPrimaryKey(Integer id) {
+	protected Role getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "roleId");
 		RoleExample condition = new RoleExample();
-		condition.createCriteria().andIdEqualTo(id);
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<Role> selectByExample = roleMapper.selectByExample(condition);
-
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);
 		}
 		return null;
-	};
-	
-	@Override
-	protected String getProcessTableName() {
-		return UniBundle.getMsg("data.filter.table.name.role");
 	}
 }

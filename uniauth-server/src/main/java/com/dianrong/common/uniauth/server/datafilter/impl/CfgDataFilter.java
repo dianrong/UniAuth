@@ -1,14 +1,15 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.CfgExample;
 import com.dianrong.common.uniauth.server.data.mapper.CfgMapper;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -17,44 +18,15 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("cfgDataFilter")
-public class CfgDataFilter extends CurrentAbstractDataFilter {
+public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
 	
 	@Autowired
     private CfgMapper cfgMapper;
 	
-	/**.
-	 * 判断数据是否已经重复了
-	 */
 	@Override
-	public void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue){
-		switch(type){
-			case FIELD_TYPE_CFG_KEY:
-				String newCfgKey = TypeParseUtil.parseToStringFromObject(fieldValue);
-				Cfg cfgInfo = cfgMapper.selectByIdWithStatusEffective(id);
-				if(cfgInfo != null){
-					//如果数据信息没有改变  则不管
-					if(newCfgKey.equals(cfgInfo.getCfgKey())){
-						break;
-					}
-				}
-				//查看是否存在其他的记录是该信息
-				this.dataFilter(FieldType.FIELD_TYPE_CFG_KEY, newCfgKey, FilterType.FILTER_TYPE_EXSIT_DATA);
-				break;
-			default:
-				break;
-			}
-	}
-
-	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		 //判空处理
-        if(equalsField == null || equalsField.length == 0) {
-            return false;
-        }
-        //首先根据类型和值获取到对应的model数组
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         CfgExample condition = new CfgExample();
         CfgExample.Criteria criteria =  condition.createCriteria();
-        
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -77,4 +49,16 @@ public class CfgDataFilter extends CurrentAbstractDataFilter {
 	protected String getProcessTableName() {
 		return UniBundle.getMsg("data.filter.table.name.cfg");
 	}
+	
+	@Override
+	protected  Cfg getEnableRecordByPrimaryKey(Integer id) {
+		CheckEmpty.checkEmpty(id, "cfgId");
+		CfgExample condition = new CfgExample();
+		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		List<Cfg> selectByExample = cfgMapper.selectByExample(condition);
+		if (selectByExample != null && !selectByExample.isEmpty()) {
+			return  selectByExample.get(0);
+		}
+		return null;
+	};
 }

@@ -336,9 +336,9 @@ public class GroupService extends TenancyBasedService{
         }
         
         //父group需要存在
-        dataFilter.dataFilter(FieldType.FIELD_TYPE_ID, targetGroupId, FilterType.FILTER_TYPE_NO_DATA);
+        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, targetGroupId);
         //子group不能存在
-        dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, groupCode, FilterType.FILTER_TYPE_EXSIT_DATA);
+        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, groupCode );
         
         Grp grp = BeanConverter.convert(groupParam);
         Date now = new Date();
@@ -372,9 +372,9 @@ public class GroupService extends TenancyBasedService{
         }
         
         //启用或者启用状态的修改
-        if((status != null && status == AppConstants.ZERO_Byte) || (status == null && grp.getStatus() == AppConstants.ZERO_Byte)){
+        if((status != null && status == AppConstants.STATUS_ENABLED) || (status == null && grp.getStatus() == AppConstants.STATUS_ENABLED)){
 	        //判断是否存在重复的code
-	        dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CODE, groupId, groupCode);
+	        dataFilter.updateFieldCheck(groupId, FieldType.FIELD_TYPE_CODE, groupCode);
         }
         
         grp.setName(groupName);
@@ -488,7 +488,7 @@ public class GroupService extends TenancyBasedService{
             }
         }
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte);
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         List<Role> roles = roleMapper.selectByExample(roleExample);
         if(!CollectionUtils.isEmpty(roles)) {
             List<RoleDto> roleDtos = new ArrayList<>();
@@ -532,11 +532,11 @@ public class GroupService extends TenancyBasedService{
         Grp rootGrp;
         if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT).andStatusEqualTo(AppConstants.ZERO_Byte);
+            grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
             rootGrp = grpMapper.selectByExample(grpExample).get(0);
         } else if(groupCode != null && groupId != null) {
             GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.ZERO_Byte);
+            grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
             List<Grp> grps = grpMapper.selectByExample(grpExample);
             Grp grp = grpMapper.selectByPrimaryKey(groupId);
             if(grp == null) {
@@ -551,7 +551,7 @@ public class GroupService extends TenancyBasedService{
             rootGrp = grp;
         } else if(groupCode != null && groupId == null) {
             GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.ZERO_Byte);
+            grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
             List<Grp> grps = grpMapper.selectByExample(grpExample);
             if (CollectionUtils.isEmpty(grps)) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.code.notfound", groupCode, Grp.class.getSimpleName()));
@@ -572,7 +572,7 @@ public class GroupService extends TenancyBasedService{
                 ownGrpIds = grpMapper.getOwnGrpIds(ownerId);
             }
             List<HashMap<String,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
-            Map<Integer, GroupDto> idGroupDtoPair = new HashMap();
+            Map<Integer, GroupDto> idGroupDtoPair = new HashMap<Integer, GroupDto>();
             for(Grp grp : grps) {
                 GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName())
                         .setDescription(grp.getDescription());
@@ -630,7 +630,7 @@ public class GroupService extends TenancyBasedService{
             }
 
             if(onlyShowGroup != null && !onlyShowGroup) {
-                CheckEmpty.checkEmpty(userGroupType, "users' type in the group");
+                CheckEmpty.checkEmpty(userGroupType, "user's type in the group");
                 Map<String, Object> groupIdAndUserType = new HashMap<String, Object>();
                 groupIdAndUserType.put("id", realGroupId);
                 groupIdAndUserType.put("userGroupType", userGroupType);
@@ -714,7 +714,7 @@ public class GroupService extends TenancyBasedService{
         CheckEmpty.checkEmpty(domainId, "domainId");
         //step 1. get roleIds in the specific domain.
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId);
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         List<Role> roles = roleMapper.selectByExample(roleExample);
         List<Integer> roleIdsInDomain = new ArrayList<>();
         if(!CollectionUtils.isEmpty(roles)) {
@@ -788,15 +788,6 @@ public class GroupService extends TenancyBasedService{
     
 	    
 	    /**.
-	     * 根据id获取组的信息
-	     * @param id id
-	     * @return 信息
-	     */
-	    public GroupDto selectByIdWithStatusEffective( Integer id){
-	    	return BeanConverter.convert(grpMapper.selectByIdWithStatusEffective(id));
-	    }
-	    
-	    /**.
 	     * 获取所有的tags，并且根据groupId打上对应的checked标签
 	     * @param groupId 组id
 	     * @param domainId 域idd
@@ -809,7 +800,7 @@ public class GroupService extends TenancyBasedService{
 	        // 获取tagType信息
 	        TagTypeExample tagTypeExample = new TagTypeExample();
 	        //添加查询条件
-	        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId);
+	        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 	        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
 	        if(tagTypes == null || tagTypes.isEmpty()){
 	        	return new ArrayList<TagDto>();
@@ -837,7 +828,7 @@ public class GroupService extends TenancyBasedService{
 	        // 查询tag信息
 	        TagExample tagConditon = new TagExample();
 	        Criteria andStatusEqualTo = tagConditon.createCriteria();
-	        andStatusEqualTo.andStatusEqualTo(AppConstants.ZERO_Byte);
+	        andStatusEqualTo.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 	        
 	        // 加入domainId的限制
 	        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet()));

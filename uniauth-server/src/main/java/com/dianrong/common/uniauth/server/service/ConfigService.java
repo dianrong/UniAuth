@@ -58,7 +58,7 @@ public class ConfigService extends TenancyBasedService{
         if(id != null) {
         	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
         		//更新判断比较
-        		dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CFG_KEY,id ,cfgKey);
+        		dataFilter.updateFieldCheck(id, FieldType.FIELD_TYPE_CFG_KEY ,cfgKey);
         	}
             Map<String, Integer> cfgTypesMap = this.getAllCfgTypesCodeIdPair();
             if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file != null) {
@@ -75,7 +75,7 @@ public class ConfigService extends TenancyBasedService{
         } else {
         	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
         		//添加判断比较
-        		dataFilter.dataFilter(FieldType.FIELD_TYPE_CFG_KEY,cfgKey ,FilterType.FILTER_TYPE_EXSIT_DATA);
+        		dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,cfgKey);
         	}
         	
         	 cfg.setTenancyId(tenancyService.getOneCanUsedTenancyId());

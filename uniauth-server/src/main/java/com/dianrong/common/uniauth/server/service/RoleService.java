@@ -35,7 +35,6 @@ import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
 import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
-import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.PermTypeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
@@ -57,14 +56,12 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * Created by Arc on 15/1/16.
  */
 @Service
-public class RoleService {
+public class RoleService extends TenancyBasedService{
 
     @Autowired
     private RoleCodeMapper roleCodeMapper;
     @Autowired
     private RoleMapper roleMapper;
-    @Autowired
-    private DomainMapper domainMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
     @Autowired
@@ -106,23 +103,20 @@ public class RoleService {
         CheckEmpty.checkEmpty(name, "name");
 
         //domainid必须是有效的
-        domainDataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+        domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
         //不能存在domainid，roleCodeId，name完全一致的 role
-        dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, 
+        dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, 
         		FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
         		FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, roleCodeId),
         		FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, name));
         
-//        if(domainMapper.selectByPrimaryKey(domainId) == null) {
-//            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", domainId, Domain.class.getSimpleName()));
-//        }
-
         Role role = new Role();
         role.setDomainId(domainId);
         role.setName(name);
         role.setRoleCodeId(roleCodeId);
         role.setStatus(AppConstants.ZERO_Byte);
         role.setDescription(description);
+        role.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         roleMapper.insert(role);
         return BeanConverter.convert(role);
     }
@@ -147,7 +141,7 @@ public class RoleService {
         role.setRoleCodeId(roleCodeId);
         
         //不能存在domainid，roleCodeId，name完全一致的 role
-        dataFilter.filterFieldValueIsExistWithCondtionsEqual(roleId, FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, role.getDomainId()),
+        dataFilter.updateFieldsCheck(roleId, FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, role.getDomainId()),
         		FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, role.getRoleCodeId()),
         		FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, role.getName()));
         
@@ -364,6 +358,7 @@ public class RoleService {
             ParamCheck.checkStatus(status);
             criteria.andStatusEqualTo(status);
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         int count = roleMapper.countByExample(roleExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Role> roles = roleMapper.selectByExample(roleExample);
@@ -391,7 +386,7 @@ public class RoleService {
         CheckEmpty.checkEmpty(roleId, "roleId");
         // 1. get all permissions under the domain
         PermissionExample permissionExample = new PermissionExample();
-        permissionExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte);
+        permissionExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED);
         List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
         if(CollectionUtils.isEmpty(permissions)) {
             return null;
@@ -429,13 +424,4 @@ public class RoleService {
         }
         return permissionDtos;
     }
-    
-    /**.
-	    * 根据id获取有效角色的数量
-	    * @param id
-	    * @return
-	    */
-	  public int countRoleByIdWithStatusEffective(Long id){
-		  return roleMapper.countRoleByIdWithStatusEffective(id);
-	  }
 }
