@@ -75,9 +75,11 @@ public interface AppConstants {
 	String CAS_CAPTCHA_SESSION_TYPE_KEY = "captchaType";
 
 	//request
+	String REQUEST_PARAMETER_KEY_TENANCY_CODE="tenancyCode";
+	String REQUEST_PARAMETER_KEY_TENANCY_ID="tenancyId";
+	
 	String PWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
 	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
-	String PWDFORGET_TENANCY_CODE_KEY="tenancyCode";
 	String PWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
 	String PWDFORGET_NEW_PASSWORD_KEY = "newPassword";
 	String LOGIN_SCROLL_IMAGES_MODEL_KEY = "loginImges";
@@ -85,6 +87,7 @@ public interface AppConstants {
 	//session
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
 	String PWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
+	String PWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
 	String PWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
 	String PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";

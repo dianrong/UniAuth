@@ -914,8 +914,7 @@ public class UserService extends TenancyBasedService {
             map.put("phone", account);
         }
         if (tenancyCode == null && tenancyId == null) {
-        	// default
-        	map.put("tenancyId", tenancyService.getDefaultTenancy().getId().toString());
+        	map.put("tenancyId", tenancyService.getOneCanUsedTenancyId().toString());
         } else {
         	if (tenancyId == null) {
             	CheckEmpty.checkEmpty(tenancyCode, "租户code");

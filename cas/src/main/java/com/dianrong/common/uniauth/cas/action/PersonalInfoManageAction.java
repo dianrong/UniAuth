@@ -12,6 +12,7 @@ import org.springframework.webflow.execution.RequestContext;
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**
@@ -63,6 +64,7 @@ public class PersonalInfoManageAction extends AbstractAction {
 
 		// 获取用户账号
 		String account = principal.getId();
+		Integer tenancyId = (Integer)principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName());
 		
 		String requestMethod = StringUtil.getObjectStr(context.getFlowScope().get(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY));
 		// 简单的以post和其他请求方式来区分去请求数据还是更新数据
@@ -70,7 +72,7 @@ public class PersonalInfoManageAction extends AbstractAction {
 			// 到更新数据的action去处理
 			return updateUserInfo(context, account);
 		} else {
-			return queryUserInfo(context, account);
+			return queryUserInfo(context, account, tenancyId);
 		}
 	}
 
@@ -82,11 +84,11 @@ public class PersonalInfoManageAction extends AbstractAction {
 	 * @return result
 	 * @throws Exception
 	 */
-	private Event queryUserInfo(final RequestContext context, String account) throws Exception {
+	private Event queryUserInfo(final RequestContext context, String account, Integer tenancyId) throws Exception {
 		UserDto userInfo = null;
 		try {
 			// 调服务获取用户信息
-			userInfo = userInfoManageService.getUserDetailInfo(account);
+			userInfo = userInfoManageService.getUserDetailInfo(account, tenancyId);
 		} catch (Exception ex) {
 			// 将异常信息仍到前端去
 			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, ex.getMessage());

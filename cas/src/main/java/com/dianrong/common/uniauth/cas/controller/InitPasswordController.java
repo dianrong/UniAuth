@@ -70,7 +70,6 @@ public class InitPasswordController extends AbstractBaseController {
 
     /**
      * . 用于处理post请求的初始化密码操作
-     * 
      * @param request
      * @param response
      */
@@ -96,6 +95,7 @@ public class InitPasswordController extends AbstractBaseController {
         String req_account = getParamFromRequest(request, "email");
         String req_originpwd = getParamFromRequest(request, "originpwd");
         String req_newpwd = getParamFromRequest(request, "newpwd");
+        String req_tenancyCode = getParamFromRequest(request, AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
 
         // 后端验证
         if (StringUtil.strIsNullOrEmpty(req_account)) {
@@ -114,7 +114,7 @@ public class InitPasswordController extends AbstractBaseController {
         // 根据邮箱获取用户原始信息
         UserDto userinfo = null;
         try {
-            userinfo = userInfoManageService.getUserDetailInfo(req_account);
+            userinfo = userInfoManageService.getUserDetailInfo(req_account, req_tenancyCode);
         } catch (Exception ex) {
             setResponseResultJson(response, "1", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
             return;

@@ -24,17 +24,18 @@ public class UserInfoManageService extends BaseService{
 	private UniClientFacade uniClientFacade;
 
 	/**
-	 * . 根据邮箱获取用户信息
+	 * . 根据用户邮箱或者电话获取用户信息
 	 * 
-	 * @param email
-	 *            邮箱
+	 * @param account 用户信息标识
+	 * @param tenancyCode 租户code
 	 * @return user
 	 * @throws Exception 
 	 */
-	public UserDto findSingleUser(String email) throws Exception {
-		UserParam userParam = new UserParam();
-		userParam.setEmail(email);
-		Response<UserDto> response = uniClientFacade.getUserResource().getSingleUser(userParam);
+	public UserDto getUserDetailInfo(String account, String tenancyCode) throws Exception {
+		LoginParam loginParam = new LoginParam();
+		loginParam.setAccount(account);
+		loginParam.setTenancyCode(tenancyCode);
+		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
 		List<Info> infoList = response.getInfo();
 		checkInfoList(infoList);
 		return response.getData();
@@ -43,13 +44,15 @@ public class UserInfoManageService extends BaseService{
 	/**
 	 * . 根据用户邮箱或者电话获取用户信息
 	 * 
-	 * @param userTag 用户信息标识
+	 * @param account 用户信息标识
+	 * @param tenancyId 租户idgetUserDetailInfo
 	 * @return user
 	 * @throws Exception 
 	 */
-	public UserDto getUserDetailInfo(String account) throws Exception {
+	public UserDto getUserDetailInfo(String account, Integer tenancyId) throws Exception {
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(account);
+		loginParam.setTenancyId(tenancyId);
 		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
 		List<Info> infoList = response.getInfo();
 		checkInfoList(infoList);

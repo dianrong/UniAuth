@@ -16,6 +16,7 @@
 							    		${credential.username} 
 							    	</label>
 							    	<input type="hidden" value="${credential.username} " name="email" id="user_email">
+							    	<input type="hidden" value="${credential.tenancyCode }" name="tenancyCode">
 							    	<input type="hidden" name="savedLoginContext" id="login_redirec_url_id">
 							    	<input type="hidden" name="expire"  value="${expire }">
 							    </div>
