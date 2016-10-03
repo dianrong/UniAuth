@@ -76,7 +76,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * Created by Arc on 14/1/16.
  */
 @Service
-public class GroupService {
+public class GroupService extends TenancyBasedService{
     @Autowired
     private GrpMapper grpMapper;
     @Autowired
@@ -139,6 +139,7 @@ public class GroupService {
         if(!CollectionUtils.isEmpty(groupIds)) {
             criteria.andIdIn(groupIds);
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         // join user table to find group
         if(userId != null) {
             UserGrpExample userGrpExample = new UserGrpExample();
@@ -234,7 +235,7 @@ public class GroupService {
                     }
                     // 2. query all users in the groups
                     UserExample userExample = new UserExample();
-                    userExample.createCriteria().andIdIn(new ArrayList<Long>(userGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.ZERO_Byte);
+                    userExample.createCriteria().andIdIn(new ArrayList<Long>(userGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
                     List<User> users = userMapper.selectByExample(userExample);
                     for(User user : users) {
                         UserDto userDto = BeanConverter.convert(user);
@@ -271,7 +272,7 @@ public class GroupService {
                     }
                     // 2. query all tags, convert into dto and index them with tagIds
                     TagExample tagExample = new TagExample();
-                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.ZERO_Byte);
+                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
                     List<Tag> tags = tagMapper.selectByExample(tagExample);
                     if(!CollectionUtils.isEmpty(tags)) {
                         Map<Integer, TagDto> tagIdTagDtoPair = new HashMap<>();
@@ -282,7 +283,7 @@ public class GroupService {
                         }
                         // 3. query tagTypes info and index them with tagTypeId
                         TagTypeExample tagTypeExample = new TagTypeExample();
-                        tagTypeExample.createCriteria().andIdIn(tagTypeIds);
+                        tagTypeExample.createCriteria().andIdIn(tagTypeIds).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
                         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
                         Map<Integer,String> tagTypeIdTagCodePair = new HashMap<>();
                         for(TagType tagType : tagTypes) {
@@ -338,17 +339,13 @@ public class GroupService {
         dataFilter.dataFilter(FieldType.FIELD_TYPE_ID, targetGroupId, FilterType.FILTER_TYPE_NO_DATA);
         //子group不能存在
         dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, groupCode, FilterType.FILTER_TYPE_EXSIT_DATA);
-//        GrpExample grpExample = new GrpExample();
-//        grpExample.createCriteria().andCodeEqualTo(groupCode);
-//        List<Grp> grps = grpMapper.selectByExample(grpExample);
-//        if(!CollectionUtils.isEmpty(grps)) {
-//            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.code", groupCode));
-//        }
+        
         Grp grp = BeanConverter.convert(groupParam);
         Date now = new Date();
-        grp.setStatus(AppConstants.ZERO_Byte);
+        grp.setStatus(AppConstants.STATUS_ENABLED);
         grp.setCreateDate(now);
         grp.setLastUpdate(now);
+        grp.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         grpMapper.insert(grp);
         GrpPath grpPath = new GrpPath();
         grpPath.setDeepth(AppConstants.ZERO_Byte);
@@ -789,23 +786,6 @@ public class GroupService {
         }
     }
     
-    /**.
-	    * 根据id获取有效组的数量
-	    * @param id
-	    * @return
-	    */
-	  public  int countGroupByIdWithStatusEffective(Long id){
-		  return grpMapper.countGroupByIdWithStatusEffective(id);
-	  }
-	    
-	    /**.
-	     * 根据code获取有效组的数量
-	     * @param code code
-	     * @return 数量
-	     */
-	    public int countGroupByCodeWithStatusEffective( String code){
-	    	return grpMapper.countGroupByCodeWithStatusEffective(code);
-	    }
 	    
 	    /**.
 	     * 根据id获取组的信息

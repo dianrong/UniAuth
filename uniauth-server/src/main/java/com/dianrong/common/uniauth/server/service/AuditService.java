@@ -22,11 +22,11 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
  * Created by Arc on 24/3/2016.
  */
 @Service
-public class AuditService {
+public class AuditService extends TenancyBasedService{
 
     @Autowired
     private AuditMapper auditMapper;
-
+    
     public PageDto<AuditDto> searchAudit(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid,
                                          String reqUrl, Long reqSequence, String reqClass, String reqMethod, Byte reqSuccess, String reqException,
                                          Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult, String orderBy, Boolean ascOrDesc,
@@ -126,5 +126,6 @@ public class AuditService {
         if(!StringUtils.isEmpty(reqException)) {
             criteria.andReqExpLike("%" + reqException + "%");
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
     }
 }

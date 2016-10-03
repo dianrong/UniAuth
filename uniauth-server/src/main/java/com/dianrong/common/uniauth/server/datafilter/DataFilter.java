@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.server.datafilter;
 /**.
  * uniauth-server 所有数据过滤的接口
  * @author wanglin
- *
  */
 public interface DataFilter {
 		/**.

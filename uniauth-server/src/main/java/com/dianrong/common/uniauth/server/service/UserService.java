@@ -94,7 +94,7 @@ import com.google.common.collect.Lists;
  * Created by Arc on 14/1/16.
  */
 @Service
-public class UserService {
+public class UserService extends TenancyBasedService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -125,8 +125,6 @@ public class UserService {
     private RolePermissionMapper rolePermissionMapper;
     @Autowired
     private UniauthSender uniauthSender;
-    @Autowired
-    private TenancyService tenancyService;
 
     @Autowired
     private UserExtendValService userExtendValService;

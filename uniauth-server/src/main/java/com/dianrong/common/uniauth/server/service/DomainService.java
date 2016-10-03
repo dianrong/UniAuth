@@ -37,15 +37,12 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
 @Service
-public class DomainService {
+public class DomainService extends TenancyBasedService{
 
 	@Autowired
 	private DomainMapper domainMapper;
 	@Autowired
 	private StakeholderMapper stakeholderMapper;
-	
-	@Autowired
-	private TenancyService tenancyService;
 	
 	/**.
 	 * 进行域名数据过滤的filter
@@ -62,13 +59,14 @@ public class DomainService {
 		dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, domainCode, FilterType.FILTER_TYPE_EXSIT_DATA);
 		
 		DomainExample example = new DomainExample();
-		example.createCriteria().andCodeEqualTo(domainCode);
+		example.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		if(domainList == null || domainList.isEmpty()){
 			Domain param = BeanConverter.convert(domainParam);
 			Date now = new Date();
 			param.setCreateDate(now);
 			param.setLastUpdate(now);
+			param.setTenancyId(tenancyService.getOneCanUsedTenancyId());
 			domainMapper.insert(param);
 			return BeanConverter.convert(param);
 		}
@@ -103,6 +101,7 @@ public class DomainService {
 		if(!StringUtils.isEmpty(description)) {
 			criteria.andDescriptionLike("%" + description + "%");
 		}
+		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 
 		int count = domainMapper.countByExample(domainExample);
 		ParamCheck.checkPageParams(pageNumber, pageSize, count);
@@ -121,7 +120,7 @@ public class DomainService {
 	public List<StakeholderDto> getAllStakeholdersInDomain(Integer domainId) {
 		if(domainId != null) {
 			StakeholderExample stakeholderExample = new StakeholderExample();
-			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId);
+			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 			List<Stakeholder> stakeholders = stakeholderMapper.selectByExample(stakeholderExample);
 			List<StakeholderDto> stakeholderDtos = new ArrayList<>();
 			if(stakeholders != null) {
@@ -161,7 +160,7 @@ public class DomainService {
 		Domain domain = checkDomain(domainId);
 		
 		StakeholderExample stakeholderExample = new StakeholderExample();
-		stakeholderExample.createCriteria().andDomainIdEqualTo(domainId);
+		stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<Stakeholder> stakeHolderList = stakeholderMapper.selectByExample(stakeholderExample);
 		List<StakeholderDto> stakeholderDtoList = new ArrayList<StakeholderDto>();
 		for(Stakeholder stakeholder : stakeHolderList){
@@ -203,11 +202,10 @@ public class DomainService {
 		} else {
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域相关人ID"));
 		}
-//		checkDomain(domainId);
 		Stakeholder stakeholder = BeanConverter.convert(stakeholderParam,false);
+		stakeholder.setTenancyId(tenancyService.getOneCanUsedTenancyId());
 		stakeholderMapper.insert(stakeholder);
 		StakeholderDto stakeholderDto = BeanConverter.convert(stakeholder);
-		
 		return stakeholderDto;
 	}
 
@@ -237,31 +235,4 @@ public class DomainService {
 		}
 		return domain;
 	}
-	
-	/**.
-	    * 根据id获取有效域名的数量
-	    * @param id
-	    * @return
-	    */
-	  public  int countDomainByIdWithStatusEffective(Long id){
-		  return domainMapper.countDomainByIdWithStatusEffective(id);
-	  }
-	    
-	    /**.
-	     * 根据code获取有效域名的数量
-	     * @param code code
-	     * @return 数量
-	     */
-	    public int countDomainByCodeWithStatusEffective( String code){
-	    	return domainMapper.countDomainByCodeWithStatusEffective(code);
-	    }
-	    
-	    /**.
-	     * 根据id获取有效的域名信息
-	     * @param id id
-	     * @return 域名信息
-	     */
-	    public DomainDto selectByIdWithStatusEffective(Integer id){
-	    	return BeanConverter.convert(domainMapper.selectByIdWithStatusEffective(id));
-	    }
 }

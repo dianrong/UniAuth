@@ -53,7 +53,7 @@ public class GroupDataFilter extends CurrentAbstractDataFilter {
         GrpExample condition = new GrpExample();
         GrpExample.Criteria criteria =  condition.createCriteria();
         
-        criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
         
         //构造查询条件
         for(FilterData fd: equalsField){

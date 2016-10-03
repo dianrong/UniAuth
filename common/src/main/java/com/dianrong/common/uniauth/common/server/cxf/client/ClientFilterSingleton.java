@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public final class ClientFilterSingleton {
 	private static final Logger logger = Logger.getLogger(ClientFilterSingleton.class);
 	private static UniauthCxfClientFilter instance = new UniauthCxfClientFilter();
-	private static AtomicBoolean propSetOnce = new AtomicBoolean(false);
+	private static final AtomicBoolean propSetOnce = new AtomicBoolean(false);
 
 	public static ClientRequestFilter getInstance() {
 		return instance;
