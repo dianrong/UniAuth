@@ -108,11 +108,4 @@ public interface GrpMapper {
     Integer checkOwner(Map<String, Object> paramMap);
 
     Set<Integer> getOwnGrpIds(Long ownerId);
-    
-     /**.
-      * 根据id获取有效组的信息
-      * @param id id
-      * @return 信息model
-      */
-     Grp selectByIdWithStatusEffective(@Param("id") Integer id);
 }

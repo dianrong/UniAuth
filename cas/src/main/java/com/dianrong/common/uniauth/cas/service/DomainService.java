@@ -54,9 +54,6 @@ public class DomainService extends BaseService {
 			for (DomainDto domainDto : domainDtoList) {
 				String domainCode = domainDto.getCode();
 				String zkDomainUrl = allZkNodeMap.get(AppConstants.ZK_DOMAIN_PREFIX + domainCode);
-				// zkDomainUrl = zkDomainUrl.endsWith("/") ? (zkDomainUrl +
-				// AppConstants.SERVICE_LOGIN_POSTFIX) : (zkDomainUrl + "/" +
-				// AppConstants.SERVICE_LOGIN_POSTFIX);
 				zkDomainUrl += AppConstants.SERVICE_LOGIN_POSTFIX;
 				domainDto.setZkDomainUrl(zkDomainUrl);
 				String zkDomainUrlEncoded = null;
@@ -69,5 +66,4 @@ public class DomainService extends BaseService {
 		}
 		return domainDtoList;
 	}
-
 }

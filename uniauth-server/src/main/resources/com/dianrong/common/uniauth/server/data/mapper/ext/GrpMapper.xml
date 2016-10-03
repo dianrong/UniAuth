@@ -48,31 +48,4 @@
         on gp.ancestor = pgid.p_grp_id
         join grp on grp.id = gp.descendant where grp.status=0
     </select>
-
-	<!-- 根据id获取有效域组的数量 -->
-  <select id="countGroupByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.Long" >
-	SELECT  COUNT(id)
-	FROM grp 
-	WHERE 
-	id = #{id, jdbcType=BIGINT}
-	AND status = 0 
-  </select>
-  
-  <!-- 根据code获取有效组的数量 -->
-  <select id="countGroupByCodeWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
-	SELECT  COUNT(id)
-	FROM grp 
-	WHERE 
-	code = #{code, jdbcType=VARCHAR}
-	AND status = 0 
-  </select>
-  
-  <!-- 根据keyid查询有效的组信息 -->
-   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    SELECT 
-    <include refid="Base_Column_List" />
-    FROM grp
-    WHERE id = #{id, jdbcType=INTEGER}
-    AND status = 0 
-  </select>
 </mapper>

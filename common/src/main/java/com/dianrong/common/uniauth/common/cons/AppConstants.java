@@ -77,6 +77,7 @@ public interface AppConstants {
 	//request
 	String PWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
 	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
+	String PWDFORGET_TENANCY_CODE_KEY="tenancyCode";
 	String PWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
 	String PWDFORGET_NEW_PASSWORD_KEY = "newPassword";
 	String LOGIN_SCROLL_IMAGES_MODEL_KEY = "loginImges";

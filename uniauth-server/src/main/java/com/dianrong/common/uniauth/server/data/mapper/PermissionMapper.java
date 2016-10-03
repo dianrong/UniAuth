@@ -99,24 +99,5 @@ public interface PermissionMapper {
      */
     int updateByPrimaryKey(Permission record);
 
-    List<Permission> selectByExampleForSearch(PermissionExt permissionExt);
-    Integer countByExampleForSearch(PermissionExt permissionExt);
-
-    List<Permission> selectByRoleAndDomainId(Map<String, String> map);
-
     List<UrlRoleMappingExt> selectUrlRoleMapping(Map<String, String> values);
-
-    /**.
-     * 根据id获取有效组的数量
-     * @param id
-     * @return
-     */
-     int countPermissionByIdWithStatusEffective(@Param("id") Long id);
-     
-     /**.
-      * 根据id获取有效权限的信息
-      * @param id id
-      * @return 信息model
-      */
-     Permission selectByIdWithStatusEffective(@Param("id") Integer id);
 }

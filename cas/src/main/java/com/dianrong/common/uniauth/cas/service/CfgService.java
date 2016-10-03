@@ -23,7 +23,6 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
 public class CfgService extends BaseService{
 	
 	private static final String DEFAULT_CAS_URL = "https://passport.dianrong.com";
-	
 	/**.
 	 * 远程调用对象
 	 */
@@ -72,6 +71,7 @@ public class CfgService extends BaseService{
 	 * 获取zk配置项目  验证码的绝对路径
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public String getCaptchaAbsolutePath(){
 		String casUrl = allZkNodeMap.get("cas_server");
 		if (!StringUtils.hasLength(casUrl)) {

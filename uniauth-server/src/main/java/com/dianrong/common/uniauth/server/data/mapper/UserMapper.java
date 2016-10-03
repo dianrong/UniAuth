@@ -104,34 +104,5 @@ public interface UserMapper {
     // userId + email + groupId
     List<UserExt> getUsersByParentGrpIdByUserType(Map params);
     
-    /**.
-     * 根据id获取有效用户的数量
-     * @param id
-     * @return
-     */
-     int countUserByIdWithStatusEffective(@Param("id") Long id);
-     
-     /**.
-      * 根据email获取有效用户的数量
-      * @param email
-      * @return
-      */
-      int countUserByEmailWithStatusEffective(@Param("email") String email);
-      
-      /**.
-       * 根据phone获取有效用户的数量
-       * @param phone
-       * @return
-       */
-       int countUserByPhoneWithStatusEffective(@Param("phone") String phone);
-       
-       /**.
-        * 根据id获取有效用户的信息
-        * @param id id
-        * @return 信息model
-        */
-       User selectByIdWithStatusEffective(@Param("id") Integer id);
-       
      List<User> selectByEmailOrPhone(Map<String, String> map);
-   
 }

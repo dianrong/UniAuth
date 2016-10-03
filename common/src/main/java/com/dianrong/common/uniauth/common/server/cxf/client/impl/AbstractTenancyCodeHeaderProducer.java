@@ -6,6 +6,6 @@ import com.dianrong.common.uniauth.common.server.cxf.client.HeaderProducer;
 public abstract class AbstractTenancyCodeHeaderProducer implements HeaderProducer{
 	@Override
 	public String key() {
-		return CxfHeaderKeyDefine.LOCALE_KEY;
+		return CxfHeaderKeyDefine.TENANCY_CODE_KEY;
 	}
 }
