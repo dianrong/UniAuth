@@ -34,7 +34,7 @@ public class RoleDataFilter extends CurrentAbstractDataFilter<Role> {
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
 		RoleExample condition = new RoleExample();
 		RoleExample.Criteria criteria = condition.createCriteria();
-		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
 		// 构造查询条件
 		for (FilterData fd : equalsField) {
 			switch (fd.getType()) {
@@ -63,7 +63,7 @@ public class RoleDataFilter extends CurrentAbstractDataFilter<Role> {
 	protected Role getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "roleId");
 		RoleExample condition = new RoleExample();
-		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
 		List<Role> selectByExample = roleMapper.selectByExample(condition);
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);

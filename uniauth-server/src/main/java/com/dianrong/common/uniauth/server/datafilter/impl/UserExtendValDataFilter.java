@@ -33,6 +33,7 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExten
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
 		UserExtendValExample condition = new UserExtendValExample();
 		UserExtendValExample.Criteria criteria = condition.createCriteria();
+		criteria.andTenancyIdEqualTo(getTenancyId());
 		// 构造查询条件
 		for (FilterData fd : equalsField) {
 			switch (fd.getType()) {
@@ -57,7 +58,7 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExten
 	protected UserExtendVal getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "UserExtendValId");
 		UserExtendValExample condtion = new UserExtendValExample();
-		condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id)).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id)).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
 		List<UserExtendVal> infoes = userExtendValMapper.selectByExample(condtion);
 		if (infoes != null && infoes.size() > 0) {
 			return infoes.get(0);

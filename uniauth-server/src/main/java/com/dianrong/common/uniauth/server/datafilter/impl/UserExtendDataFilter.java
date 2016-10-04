@@ -31,6 +31,7 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend>{
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         UserExtendExample condition = new UserExtendExample();
         UserExtendExample.Criteria criteria =  condition.createCriteria();
+        criteria.andTenancyIdEqualTo(getTenancyId());
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -53,7 +54,7 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend>{
 	protected UserExtend getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "userExtendId");
 		UserExtendExample condition = new UserExtendExample();
-		condition.createCriteria().andIdEqualTo(new Long(id.toString())).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		condition.createCriteria().andIdEqualTo(new Long(id.toString())).andTenancyIdEqualTo(getTenancyId());
 		List<UserExtend> selectByExample = userExtendMapper.selectByExample(condition);
 		if(selectByExample != null && !selectByExample.isEmpty()){
 			return selectByExample.get(0);

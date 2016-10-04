@@ -33,6 +33,7 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
 		TagTypeExample condition = new TagTypeExample();
         TagTypeExample.Criteria criteria =  condition.createCriteria();
+        criteria.andTenancyIdEqualTo(getTenancyId());
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -58,7 +59,7 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
 	protected TagType getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "tagTypeId");
 		TagTypeExample condition = new TagTypeExample();
-		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(getTenancyId());
 		List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
 		
 		if(selectByExample != null && !selectByExample.isEmpty()){

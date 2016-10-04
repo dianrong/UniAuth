@@ -34,7 +34,7 @@ public class TagDataFilter extends CurrentAbstractDataFilter<Tag> {
 		TagExample condition = new TagExample();
 		TagExample.Criteria criteria = condition.createCriteria();
 
-		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
 		// 构造查询条件
 		for (FilterData fd : equalsField) {
 			switch (fd.getType()) {
@@ -60,7 +60,7 @@ public class TagDataFilter extends CurrentAbstractDataFilter<Tag> {
 	protected Tag  getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "tagId");
 		TagExample condition = new TagExample();
-		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
 		List<Tag> selectByExample = tagMapper.selectByExample(condition);
 
 		if (selectByExample != null && !selectByExample.isEmpty()) {

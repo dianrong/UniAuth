@@ -34,7 +34,7 @@ public class PermissionDataFilter extends CurrentAbstractDataFilter<Permission> 
 		PermissionExample condition = new PermissionExample();
 		PermissionExample.Criteria criteria =  condition.createCriteria();
 		
-		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
 		//构造查询条件
 		for(FilterData fd: equalsField){
 			switch(fd.getType()) {
@@ -66,7 +66,7 @@ public class PermissionDataFilter extends CurrentAbstractDataFilter<Permission> 
 	protected Permission getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "permissionId");
 		PermissionExample condition = new PermissionExample();
-		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(getTenancyId()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		List<Permission> selectByExample = permissionMapper.selectByExample(condition);
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);
