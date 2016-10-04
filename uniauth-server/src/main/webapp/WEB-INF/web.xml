@@ -73,7 +73,7 @@
     <!-- cxf header clear -->
     <filter>
     	<filter-name>HolderClearFilter</filter-name>
-    	<filter-class>com.dianrong.common.uniauth.server.support.CxfHeaderHolder.HolderClearFilter</filter-class>
+    	<filter-class>com.dianrong.common.uniauth.server.support.HolderClearFilter</filter-class>
     </filter>
     <filter-mapping>
     	<filter-name>HolderClearFilter</filter-name>

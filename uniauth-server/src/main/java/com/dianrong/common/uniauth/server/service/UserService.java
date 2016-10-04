@@ -619,7 +619,7 @@ public class UserService extends TenancyBasedService {
         	return null;
         }
         // 手动设置tenancyid
-        CxfHeaderHolder.TenancyIdHolder.set(user.getTenancyId());
+        CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
     }
@@ -934,7 +934,7 @@ public class UserService extends TenancyBasedService {
         User user = userList.get(0);
         
         // 手动设置tenancyid  -- important
-        CxfHeaderHolder.TenancyIdHolder.set(user.getTenancyId());
+        CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         return user;
     }
 

@@ -83,11 +83,11 @@ public class TenancyService {
 	 * @return
 	 */
 	public Long getOneCanUsedTenancyId() {
-		Long _id = CxfHeaderHolder.TenancyIdHolder.get();
+		Long _id = (Long)CxfHeaderHolder.TENANCYID.get();
 		if (_id != null) {
 			return _id;
 		}
-		String tenancyCode = CxfHeaderHolder.TenancyCodeHolder.get();
+		String tenancyCode = (String)CxfHeaderHolder.TENANCYCODE.get();
 		TenancyDto dto = getEnableTenancyByCode(tenancyCode);
 		if (dto != null) {
 			return dto.getId();
