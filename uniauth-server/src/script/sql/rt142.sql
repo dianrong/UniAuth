@@ -125,6 +125,10 @@ alter table audit add index audit_tenancy_id (tenancy_id) comment '根据租户i
 
 #update audit INNER JOIN tenancy ON tenancy.code='DIANRONG-WEBSITE'  SET audit.tenancy_id = tenancy.id;
 
+alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
+
+alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
+
 -- 循环更新audit表的tenancy_id 字段
 DROP procedure IF EXISTS `multi_tenancy_update_audit`;
 DELIMITER $$
@@ -135,16 +139,18 @@ declare while_index int(10) default 0;
 declare while_times int(10);
 declare update_min_id int(10);
 declare update_max_id int(10);
+declare dest_tenancy_id int(10);
 declare update_per_num int(10) default 1000;
 
 set sql_safe_updates = 0;
 select max(id) into audit_top_id from audit;
+select max(id) into dest_tenancy_id from tenancy where code='DIANRONG-WEBSITE' ;
 set while_times = (audit_top_id  DIV update_per_num) + 1;
 
  while while_index<while_times do
     SET update_min_id = while_index * update_per_num;
     SET update_max_id = update_min_id + update_per_num;
-    update audit INNER JOIN tenancy ON tenancy.code='DIANRONG-WEBSITE'  SET audit.tenancy_id = tenancy.id   WHERE audit.id >= update_min_id and audit.id < update_max_id;
+    update audit SET tenancy_id = dest_tenancy_id  WHERE id >= update_min_id and id < update_max_id;
     set while_index=while_index+1;
 end while;
 END$$
@@ -153,11 +159,4 @@ DELIMITER ;
 -- 耗时
 call multi_tenancy_update_audit();
 
--- drop procedure
-DROP procedure IF EXISTS `multi_tenancy_update_audit`;
-
 alter table audit add constraint fk_audit_tenancy foreign key(tenancy_id) references tenancy(id);
-
-alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
-
-alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
