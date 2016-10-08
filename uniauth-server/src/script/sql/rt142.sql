@@ -125,10 +125,6 @@ alter table audit add index audit_tenancy_id (tenancy_id) comment '根据租户i
 
 #update audit INNER JOIN tenancy ON tenancy.code='DIANRONG-WEBSITE'  SET audit.tenancy_id = tenancy.id;
 
-alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
-
-alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
-
 -- 循环更新audit表的tenancy_id 字段
 DROP procedure IF EXISTS `multi_tenancy_update_audit`;
 DELIMITER $$
@@ -160,3 +156,7 @@ DELIMITER ;
 call multi_tenancy_update_audit();
 
 alter table audit add constraint fk_audit_tenancy foreign key(tenancy_id) references tenancy(id);
+
+alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
+
+alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
