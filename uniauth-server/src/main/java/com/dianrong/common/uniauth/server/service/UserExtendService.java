@@ -28,9 +28,7 @@ import com.dianrong.common.uniauth.server.util.TypeParseUtil;
  * @since May 16, 2016
  */
 @Service
-public class UserExtendService {
-    
-//    private Logger logger=Logger.getLogger(UserExtendService.class);
+public class UserExtendService extends TenancyBasedService{
     
     @Autowired
     private UserExtendMapper userExtendMapper;
@@ -48,15 +46,14 @@ public class UserExtendService {
     	CheckEmpty.checkEmpty(code, "eav_code");
     	
     	// 过滤数据
-    	dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, code.trim(), FilterType.FILTER_TYPE_EXSIT_DATA);
+    	dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code.trim());
     	
         UserExtend userExtend=new UserExtend();
         userExtend.setCode(code);
         userExtend.setDescription(description);
+        userExtend.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         userExtendMapper.insertSelective(userExtend);
-        
         UserExtendDto userExtendDto = BeanConverter.convert(userExtend,UserExtendDto.class);
-        
         return userExtendDto;
     }
     
@@ -82,14 +79,12 @@ public class UserExtendService {
         CheckEmpty.checkEmpty(id,"id");
         if(!StringUtil.strIsNullOrEmpty(code)) {
         	// 过滤数据
-        	dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CODE, TypeParseUtil.parseToIntegerFromObject(id), code.trim());
+        	dataFilter.updateFieldCheck(TypeParseUtil.parseToIntegerFromObject(id), FieldType.FIELD_TYPE_CODE,  code.trim());
         }
-        
         UserExtend userExtend=new UserExtend();
         userExtend.setCode(code);
         userExtend.setDescription(description);
         userExtend.setId(id);
-        
         return userExtendMapper.updateByPrimaryKeySelective(userExtend);
     }
     
@@ -108,9 +103,11 @@ public class UserExtendService {
         example.setPageOffSet(pageNumber*pageSize);
         example.setPageSize(pageSize);
         example.setOrderByClause("id desc");
+        UserExtendExample.Criteria criteria = example.createCriteria();
         if(StringUtils.isNotBlank(code)){
-            example.createCriteria().andCodeLike('%'+code+'%');
+        	criteria.andCodeLike('%'+code+'%');
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         //查询
         int count=userExtendMapper.countByExample(example);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
@@ -122,7 +119,6 @@ public class UserExtendService {
         }
         //生成分页对象
         PageDto<UserExtendDto> pageDto=new PageDto<UserExtendDto>(pageNumber,pageSize, count, userExtendDtos);
-        
         return pageDto;
     }
 }

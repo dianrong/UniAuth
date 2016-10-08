@@ -38,7 +38,7 @@
 		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>   
 		<b:property name="authenticateAllArtifacts" value="true"/>
 		<b:property name="sendRenew" value="false" />
-	</b:bean>  
+	</b:bean>
 		
 	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler">
 	</b:bean>
@@ -54,7 +54,7 @@
 		<b:constructor-arg value="#{uniauthConfig['cas_server']}/"/>    
 	</b:bean>
 	
-	<b:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">    
+	<b:bean id="authenticationUserDetailsService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsWrapper">    
 		<b:property name="userDetailsService" ref="ssUserDetailService"/>    
 	</b:bean>  
 	
@@ -74,9 +74,7 @@
 		<authentication-provider ref="casAuthenticationProvider"/>
 	</authentication-manager>
 	
-	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.SSUserDetailService">
-	</b:bean>
+	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.multitenancy.SSMultiTenancyUserDetailService" />
 	
-    <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor">
-	</b:bean>
+    <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor"/>
 </b:beans>

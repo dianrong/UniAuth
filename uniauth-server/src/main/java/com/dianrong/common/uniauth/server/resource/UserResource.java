@@ -62,9 +62,9 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
-	public Response<Void> login(LoginParam loginParam) {
-		userService.login(loginParam);
-		return Response.success();
+	public Response<UserDto> login(LoginParam loginParam) {
+		UserDto dto = userService.login(loginParam);
+		return Response.success(dto);
 	}
 
 	@Override

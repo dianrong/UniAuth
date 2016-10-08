@@ -92,6 +92,7 @@
         	<binding property="domain" required="true"/>
             <binding property="username" required="true"/>
             <binding property="password" required="true"/>
+            <binding property="tenancyCode" required="true"/>
             <binding property="captcha" required="false"/>
         </binder>
         <on-entry>
@@ -100,6 +101,7 @@
             <!--
             <evaluate expression="samlMetadataUIParserAction" />
             -->
+            <evaluate expression="tenancyService.getAllTenancies()" result="viewScope.tenancies"/>
             <evaluate expression="domainService.getAllLoginPageDomains()" result="viewScope.domains"/>
         </on-entry>
         <transition on="submit" bind="true" validate="true" to="realSubmit"/>

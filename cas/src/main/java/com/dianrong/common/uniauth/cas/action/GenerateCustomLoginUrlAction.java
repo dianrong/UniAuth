@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.webflow.execution.RequestContext;
 
-import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
 import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;

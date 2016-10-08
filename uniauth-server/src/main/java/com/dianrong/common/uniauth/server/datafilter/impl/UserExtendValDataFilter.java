@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
@@ -19,31 +20,20 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("userExtendValDataFilter")
-public class UserExtendValDataFilter extends CurrentAbstractDataFilter {
+public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExtendVal> {
 	@Autowired
 	private UserExtendValMapper userExtendValMapper;
 
 	@Override
-	protected Object getRecordByPrimaryKey(Integer id) {
-		CheckEmpty.checkEmpty(id, "UserExtendValId");
-		UserExtendValExample condtion = new UserExtendValExample();
-		condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
-		List<UserExtendVal> infoes = userExtendValMapper.selectByExample(condtion);
-		if (infoes != null && infoes.size() > 0) {
-			return infoes.get(0);
-		}
-		return null;
-	};
+	protected String getProcessTableName() {
+		return UniBundle.getMsg("data.filter.table.name.userextendval");
+	}
 
 	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		// 判空处理
-		if (equalsField == null || equalsField.length == 0) {
-			return false;
-		}
-		// 首先根据类型和值获取到对应的model数组
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
 		UserExtendValExample condition = new UserExtendValExample();
 		UserExtendValExample.Criteria criteria = condition.createCriteria();
+		criteria.andTenancyIdEqualTo(getTenancyId());
 		// 构造查询条件
 		for (FilterData fd : equalsField) {
 			switch (fd.getType()) {
@@ -57,7 +47,6 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter {
 				break;
 			}
 		}
-		// 查询
 		int count = userExtendValMapper.countByExample(condition);
 		if (count > 0) {
 			return true;
@@ -66,7 +55,14 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter {
 	}
 
 	@Override
-	protected String getProcessTableName() {
-		return UniBundle.getMsg("data.filter.table.name.userextendval");
+	protected UserExtendVal getEnableRecordByPrimaryKey(Integer id) {
+		CheckEmpty.checkEmpty(id, "UserExtendValId");
+		UserExtendValExample condtion = new UserExtendValExample();
+		condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id)).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+		List<UserExtendVal> infoes = userExtendValMapper.selectByExample(condtion);
+		if (infoes != null && infoes.size() > 0) {
+			return infoes.get(0);
+		}
+		return null;
 	}
 }

@@ -1,13 +1,18 @@
 package com.dianrong.common.uniauth.common.util;
 
+import java.util.Map;
+
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
-/**.
- * 用于处理zk的节点相关工具方法
+/**
+ * . 用于处理zk的节点相关工具方法
+ * 
  * @author wanglin
  */
 public class ZkNodeUtils {
-	
+	// 常量
+	private static final String DEFAULT_TRUE = "true";
+
 	/**.
 	 * 判断nodeName是否属于域的node
 	 * @param nodeName node名称
@@ -32,27 +37,18 @@ public class ZkNodeUtils {
 	 */
 	public static String getDomainName(final String nodeName) {
 		if(isDomainNode(nodeName)) {
-			return nodeName.trim().split(AppConstants.ZK_CFG_SPLIT)[1];
+			return nodeName.trim().split("\\"+AppConstants.ZK_CFG_SPLIT)[1];
 		}
 		return null;
 	}
 	
-	/**.
-	 * 判断节点是否属于Domain的某种属性节点
-	 * @param nodeName 节点
-	 * @param propName 属性名
-	 * @return
-	 */
-	public static boolean isDomainProp(final String nodeName, String propName) {
-		if(nodeName == null || propName == null) {
-			return false;
-		}
-		// eg . domains.techops
-		String[] nodes = nodeName.trim().split(AppConstants.ZK_CFG_SPLIT);
-		if(nodes.length == 3 && nodes[0].equals(AppConstants.ZK_DOMAIN) && nodes[3].equals(propName)) {
-			return true;
-		}
-		return false;
+	
+	public static String getDomainCustomUrlNodeKey(final String nodeName) {
+		return AppConstants.ZK_DOMAIN_PREFIX + nodeName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
 	}
 	
+	public static boolean IsShowInHomePage(final String nodeName, Map<String, String> infoes) {
+		String key =  AppConstants.ZK_DOMAIN_PREFIX + nodeName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_SHOW_IN_HOME_PAGE;
+		return DEFAULT_TRUE.equalsIgnoreCase(infoes.get(key));
+	}
 }

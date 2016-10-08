@@ -2,8 +2,8 @@ package com.dianrong.common.uniauth.server.datafilter.impl;
 
 import java.lang.reflect.Field;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
@@ -17,27 +17,22 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 
 /**
  * . 目前阶段需要处理的一个比较固定的流程
+ * 
  * @author wanglin
  */
-public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
-	/**.
-	 *  日志对象
+public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck{
+	/**
+	 * . 日志对象
 	 */
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = Logger.getLogger(CurrentAbstractDataFilter.class);
 	
-	// 默认实现都放这里 需要的自己重写
 	@Override
-	protected void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected void doFilterFieldValueIsExistWithConditionsEqual(Integer id, FilterData... equalsField) {
+	protected void doUpdateFieldsCheck(Integer id, FilterData... equalsField) {
 		// 不处理
 		if (equalsField == null || equalsField.length == 0) {
 			return;
 		}
-		Object record = getRecordByPrimaryKey(id);
+		Object record = getEnableRecordByPrimaryKey(id);
 		if (record != null) {
 			// 默认是全部相等的
 			boolean isEqual = true;
@@ -55,27 +50,27 @@ public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
 			}
 		}
 		// 查看是否存在其他的记录是该信息
-		this.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, equalsField);
+		this.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, equalsField);
 	}
 
 	@Override
-	protected void doDataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField) {
-		if (ftype == null) {
-			throw new NullPointerException();
+	protected void doAddFieldsCheck(FilterType ftype, FilterData... equalsField) {
+		// 不处理
+		if (equalsField == null || equalsField.length == 0) {
+			return;
 		}
+		Assert.notNull(ftype);
 		switch (ftype) {
 		case FILTER_TYPE_EXSIT_DATA:
-			if (dataWithConditionsEqualExist(equalsField)) {
-				throw new AppException(InfoName.INTERNAL_ERROR,
-						UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", getProcessTableName(),
-								getFieldTypeKeyAndValue(equalsField)));
+			if (multiFieldsDuplicateCheck(equalsField)) {
+				throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", 
+						getProcessTableName(), getFieldTypeKeyAndValue(equalsField)));
 			}
 			break;
 		case FILTER_TYPE_NO_DATA:
-			if (!dataWithConditionsEqualExist(equalsField)) {
-				throw new AppException(InfoName.INTERNAL_ERROR,
-						UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", getProcessTableName(),
-								getFieldTypeKeyAndValue(equalsField)));
+			if (!multiFieldsDuplicateCheck(equalsField)) {
+				throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", 
+						getProcessTableName(), getFieldTypeKeyAndValue(equalsField)));
 			}
 			break;
 		default:
@@ -101,13 +96,12 @@ public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
 			if (sb.toString().length() > 0) {
 				sb.append(filterEle);
 			}
-			sb.append(fd.getType());
+			sb.append(fd.getType().getFieldName());
 			sb.append(filterKeyVal);
 			sb.append(StringUtil.getObjectStr(fd.getValue()));
 		}
 		return sb.toString();
 	}
-	
 
 	/**
 	 * . 从Role中获取数据
@@ -123,7 +117,7 @@ public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
 			return null;
 		}
 		try {
-			if(type == null) {
+			if (type == null) {
 				return null;
 			}
 			Field field = ReflectionUtils.findField(obj.getClass(), type.getFieldName());
@@ -141,12 +135,10 @@ public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
 
 	/**
 	 * . 处理查询数据中是否存在对应的字段相等的情况
-	 * 
-	 * @param equalsField
-	 *            字段列表
+	 * @param equalsField 字段列表,一定不为空
 	 * @return 结果
 	 */
-	protected abstract boolean dataWithConditionsEqualExist(FilterData... equalsField);
+	protected abstract boolean multiFieldsDuplicateCheck(FilterData... equalsField);
 
 	/**
 	 * . 获取描述的表的名字
@@ -156,13 +148,9 @@ public abstract class CurrentAbstractDataFilter extends AbstractDataFilter {
 	protected abstract String getProcessTableName();
 
 	/**
-	 * . 根据主键id获取对象 空实现一个
-	 * 
-	 * @param id
-	 *            primary key
+	 * . 根据主键id获取一个启用状态的数据
+	 * @param id primary key
 	 * @return record
 	 */
-	protected Object getRecordByPrimaryKey(Integer id) {
-		throw new UnsupportedOperationException();
-	};
+	protected abstract T getEnableRecordByPrimaryKey(Integer id);
 }

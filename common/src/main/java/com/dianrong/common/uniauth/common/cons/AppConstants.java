@@ -47,9 +47,10 @@ public interface AppConstants {
 	String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
 	// 是否在主页显示登陆项
 	String ZK_DOMAIN_SHOW_IN_HOME_PAGE = "showInHomePage";
+	// 定义域的所属tenancy的code
+	String ZK_DOMAIN_TEANANCY_CODE = "tenancycode";
 	// zk 配置的node name， st使用的次数
 	String ZK_NODE_NAME_ST_USED_TIMES = "cas.st_use_times";
-	
 	String SERVICE_LOGIN_POSTFIX = "/login/cas";
 	
 	String ROLE_ADMIN = "ROLE_ADMIN";
@@ -74,6 +75,9 @@ public interface AppConstants {
 	String CAS_CAPTCHA_SESSION_TYPE_KEY = "captchaType";
 
 	//request
+	String REQUEST_PARAMETER_KEY_TENANCY_CODE="tenancyCode";
+	String REQUEST_PARAMETER_KEY_TENANCY_ID="tenancyId";
+	
 	String PWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
 	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
 	String PWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
@@ -83,6 +87,7 @@ public interface AppConstants {
 	//session
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
 	String PWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
+	String PWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
 	String PWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
 	String PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
@@ -168,5 +173,9 @@ public interface AppConstants {
 	String CAS_CUSTOM_LOGIN_URL_KEY = "custom_login_url_key";
 	
 	//cxf 传递的locale的key
+	@Deprecated
 	String CAS_CXF_HEADER_LOCALE_KEY = "cas.cxf.header.locale.key";
+	
+	// 默认的租户code
+	String DEFAULT_TANANCY_CODE="DIANRONG-WEBSITE";
 }

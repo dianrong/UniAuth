@@ -1,11 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
-
 /**
  * Created by Arc on 15/1/16.
  */
-public class RoleCodeDto implements Serializable {
+public class RoleCodeDto extends TenancyBaseDto {
 
 	private static final long serialVersionUID = -644318011242242347L;
 	private Integer id;

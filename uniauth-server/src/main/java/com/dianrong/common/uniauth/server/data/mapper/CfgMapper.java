@@ -119,19 +119,4 @@ public interface CfgMapper {
      * @mbggenerated Tue Mar 29 15:10:36 CST 2016
      */
     int updateByPrimaryKey(Cfg record);
-    
-    
-    /**.
-     * 根据cfg_key获取有效配置的数量
-     * @param cfgKey cfgKey
-     * @return 数量
-     */
-    int countCfgByCfgKeyWithStatusEffective(@Param("cfgKey")  String cfgKey);
-    
-    /**.
-     * 根据id获取有效配置的信息
-     * @param id id
-     * @return 信息model
-     */
-    Cfg selectByIdWithStatusEffective(@Param("id") Integer id);
 }

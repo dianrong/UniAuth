@@ -14,6 +14,7 @@
   "logoutType" : "BACK_CHANNEL",
   "attributeReleasePolicy" : {
     "@class" : "org.jasig.cas.services.ReturnAllowedAttributeReleasePolicy",
+    "allowedAttributes" : [ "java.util.ArrayList", [ "tenancyid" ] ],
     "principalAttributesRepository" : {
       "@class" : "org.jasig.cas.authentication.principal.DefaultPrincipalAttributesRepository"
     },

@@ -6,44 +6,25 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 
 /**
- * . 数据过滤的模板方法，用于提供一些公用的属性以及方法
- * 
+ * . 该抽象方法主要是加入了数据校验的开关-- dataFilterSwitch
  * @author wanglin
- *
  */
-public abstract class AbstractDataFilter implements DataFilter {
+public abstract class AbstractDataFilter  implements DataFilter {
 	/**
 	 * . 数据过滤的开关变量
 	 */
 	private boolean dataFilterSwitch = true;
 
 	@Override
-	public void dataFilter(FieldType type, Object fieldValue, FilterType ftype) {
-		dataFilterWithConditionsEqual(ftype, new FilterData(type, fieldValue));
+	public void addFieldCheck(FilterType ftype, FieldType type, Object fieldValue) {
+		addFieldsCheck(ftype, FilterData.buildFilterData(type, fieldValue));
 	}
-
-	/**
-	 * . 判断数据是否重复
-	 * 
-	 * @param type
-	 *            字段
-	 * @param id
-	 *            keyid
-	 * @param fieldValue
-	 *            需要新加入的值
-	 */
+	
 	@Override
-	public void filterFieldValueIsExist(FieldType type, Integer id, Object fieldValue) {
-		if (!isDataFilterSwitch()) {
-			return;
-		}
-		// 判空处理
-		if (fieldValue == null) {
-			return;
-		}
-		doFilterFieldValueIsExist(type, id, fieldValue);
+	public void updateFieldCheck(Integer id, FieldType type, Object fieldValue) {
+		updateFieldsCheck(id, FilterData.buildFilterData(type, fieldValue));
 	}
-
+	
 	/**
 	 * . 数据过滤并且伴随字段相等的情况。
 	 * 
@@ -53,11 +34,11 @@ public abstract class AbstractDataFilter implements DataFilter {
 	 *            比较的字段以及值
 	 */
 	@Override
-	public void dataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField) {
+	public void addFieldsCheck(FilterType ftype, FilterData... equalsField) {
 		if (!isDataFilterSwitch()) {
 			return;
 		}
-		doDataFilterWithConditionsEqual(ftype, equalsField);
+		doAddFieldsCheck(ftype, equalsField);
 	}
 
 	/**
@@ -69,44 +50,31 @@ public abstract class AbstractDataFilter implements DataFilter {
 	 *            比较的字段以及值
 	 */
 	@Override
-	public void filterFieldValueIsExistWithCondtionsEqual(Integer id, FilterData... equalsField) {
+	public void updateFieldsCheck(Integer id, FilterData... equalsField) {
 		if (!isDataFilterSwitch()) {
 			return;
 		}
-		doFilterFieldValueIsExistWithConditionsEqual(id, equalsField);
+		doUpdateFieldsCheck(id, equalsField);
 	}
 
 	/**
-	 * . 数据过滤并且伴随字段相等的情况。
-	 * 
+	 * . addFieldsCheck 的委托方法
 	 * @param ftype
 	 *            过滤的方式
 	 * @param equalsField
 	 *            需要比较的字段以及值
 	 */
-	protected abstract void doDataFilterWithConditionsEqual(FilterType ftype, FilterData... equalsField);
+	protected abstract void doAddFieldsCheck(FilterType ftype, FilterData... equalsField);
 
 	/**
-	 * . 判断数据是否重复并且伴随字段相等的情况。
+	 * . updateFieldsCheck的委托方法
 	 * 
 	 * @param id
 	 *            keyid
 	 * @param equalsField
 	 *            需要比较的字段以及值
 	 */
-	protected abstract void doFilterFieldValueIsExistWithConditionsEqual(Integer id, FilterData... equalsField);
-
-	/**
-	 * . 判断数据是否重复
-	 * 
-	 * @param type
-	 *            字段
-	 * @param id
-	 *            keyid
-	 * @param fieldValue
-	 *            需要新加入的值
-	 */
-	protected abstract void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue);
+	protected abstract void doUpdateFieldsCheck(Integer id, FilterData... equalsField);
 
 	public boolean isDataFilterSwitch() {
 		return dataFilterSwitch;

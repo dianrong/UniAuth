@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,9 +9,8 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -18,45 +19,17 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("domainDataFilter")
-public class DomainDataFilter extends CurrentAbstractDataFilter {
+public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	
 	@Autowired
 	private DomainMapper domainMapper;
 	
-	/**.
-	 * 判断数据是否已经重复了
-	 */
 	@Override
-	public void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue){
-		switch(type){
-			case FIELD_TYPE_CODE:
-				String newCode = TypeParseUtil.parseToStringFromObject(fieldValue);
-				Domain domainInfo = domainMapper.selectByIdWithStatusEffective(id);
-				if(domainInfo != null){
-					//如果数据信息没有改变  则不管
-					if(newCode.equals(domainInfo.getCode())){
-						break;
-					}
-				}
-				//查看是否存在其他的记录是该信息
-				this.dataFilter(FieldType.FIELD_TYPE_CODE, newCode, FilterType.FILTER_TYPE_EXSIT_DATA);
-				break;
-			default:
-				break;
-			}
-	}
-
-	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		//判空处理
-        if(equalsField == null || equalsField.length == 0) {
-            return false;
-        }
-        //首先根据类型和值获取到对应的model数组
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         DomainExample condition = new DomainExample();
         DomainExample.Criteria criteria =  condition.createCriteria();
         
-        criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -81,5 +54,17 @@ public class DomainDataFilter extends CurrentAbstractDataFilter {
 	@Override
 	protected String getProcessTableName() {
 		return UniBundle.getMsg("data.filter.table.name.domain");
+	}
+
+	@Override
+	protected Domain getEnableRecordByPrimaryKey(Integer id) {
+		CheckEmpty.checkEmpty(id, "domainId");
+		DomainExample condition = new DomainExample();
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+		List<Domain> selectByExample = domainMapper.selectByExample(condition);
+		if (selectByExample != null && !selectByExample.isEmpty()) {
+			return  selectByExample.get(0);
+		}
+		return null;
 	}
 }

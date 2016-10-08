@@ -1,11 +1,14 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import static com.dianrong.common.uniauth.common.enm.CasProtocal.DianRongCas;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.services.RegisteredService;
 import org.jasig.cas.services.ServicesManager;
@@ -15,6 +18,7 @@ import org.jasig.cas.web.support.CookieRetrievingCookieGenerator;
 import org.jasig.cas.web.support.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
@@ -22,23 +26,12 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
 
 import com.dianrong.common.uniauth.cas.service.DomainService;
+import com.dianrong.common.uniauth.cas.service.TenancyService;
 import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.common.uniauth.common.util.StringUtil;;
 
-/**
- * Class to automatically set the paths for the CookieGenerators.
- * <p>
- * Note: This is technically not threadsafe, but because its overriding with a
- * constant value it doesn't matter.
- * <p>
- * Note: As of CAS 3.1, this is a required class that retrieves and exposes the
- * values in the two cookies for subclasses to use.
- *
- * @author Scott Battaglia
- * @since 3.1
- */
 public final class InitialFlowSetupAction extends AbstractAction {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,7 +42,6 @@ public final class InitialFlowSetupAction extends AbstractAction {
 	/** CookieGenerator for the Warnings. */
 	@NotNull
 	private CookieRetrievingCookieGenerator warnCookieGenerator;
-
 
 	/** CookieGenerator for the TicketGrantingTickets. */
 	@NotNull
@@ -73,36 +65,47 @@ public final class InitialFlowSetupAction extends AbstractAction {
 
 	private DomainService domainService;
 
+	@Autowired
+	private TenancyService tenancyService;
+
 	@Override
 	protected Event doExecute(final RequestContext context) throws Exception {
 		final HttpServletRequest request = WebUtils.getHttpServletRequest(context);
-
 		// 添加分之处理用户编辑管理
 		String requestType = request.getParameter(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY);
 		if (!StringUtil.strIsNullOrEmpty(requestType)) {
-			//往flowscope中放入一个标识符用于区分不同的流程
-			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY,  "go");
-			
-			//获取请求的方式  采用一个模拟的字段来模拟请求的method  优先采用该字段
+			// 往flowscope中放入一个标识符用于区分不同的流程
+			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY, "go");
+			// 获取请求的方式 采用一个模拟的字段来模拟请求的method 优先采用该字段
 			String smulateReqMethod = request.getParameter(AppConstants.CAS_USERINFO_MANAGE_REQUEST_METHOD_KEY);
-			
-			//缓存一个初始请求的方式到flow范围中
-			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY,  StringUtil.strIsNullOrEmpty(smulateReqMethod) ? request.getMethod() : smulateReqMethod);
-			
-			//往session里面放入一个用于会跳的首页链接(有对应参数则刷新跳转首页链接)
+			// 缓存一个初始请求的方式到flow范围中
+			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY,
+					StringUtil.strIsNullOrEmpty(smulateReqMethod) ? request.getMethod() : smulateReqMethod);
+			// 往session里面放入一个用于会跳的首页链接(有对应参数则刷新跳转首页链接)
 			FirstPageUrlProcessUtil.refreshLoginContextInsession(request);
 		} else {
-	        String queryStr = request.getQueryString();
-	        queryStr = queryStr == null ? "" : "&" + queryStr;
-			String reqService = request.getParameter("service");
-			if (reqService == null || "".equals(reqService.trim())) {
+			boolean needRedirect = false;
+			String tenancyCode = request.getParameter(DianRongCas.getTenancyCodeName());
+			String reqService = request.getParameter(DianRongCas.getServiceName());
+			if (!StringUtils.hasText(tenancyCode)) {
+				tenancyCode = tenancyService.getDefaultTenancyCode();
+				needRedirect = true;
+			}
+			if (!StringUtils.hasText(reqService)) {
 				List<DomainDto> domainDtoList = domainService.getAllLoginPageDomains();
 				if (domainDtoList != null && !domainDtoList.isEmpty()) {
 					DomainDto domainDto = domainDtoList.get(0);
-					String redirectUrl = domainDto.getZkDomainUrlEncoded();
-					String makeUpService = request.getRequestURL().append("?service=").append(redirectUrl).append(queryStr).toString();
-					context.getFlowScope().put("redirectUrl", makeUpService);
+					reqService = domainDto.getZkDomainUrlEncoded();
+				} else {
+					reqService = "";
 				}
+				needRedirect = true;
+			}
+			if (needRedirect) {
+				StringBuffer redirecUrl = request.getRequestURL();
+				redirecUrl.append("?").append(DianRongCas.getServiceName()).append("=").append(StringEscapeUtils.escapeXml11(reqService)).append("&")
+						.append(DianRongCas.getTenancyCodeName()).append("=").append(StringEscapeUtils.escapeXml11(tenancyCode));
+				context.getFlowScope().put("redirectUrl", redirecUrl.toString());
 			}
 		}
 		if (!this.pathPopulated) {

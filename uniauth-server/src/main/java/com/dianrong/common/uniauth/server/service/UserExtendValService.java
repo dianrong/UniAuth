@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.UserExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
@@ -33,7 +34,7 @@ import com.dianrong.common.uniauth.server.util.TypeParseUtil;
  * @since May 16, 2016
  */
 @Service
-public class UserExtendValService {
+public class UserExtendValService extends TenancyBasedService{
     
     @Autowired
     private UserExtendValMapper userExtendValMapper;
@@ -57,13 +58,14 @@ public class UserExtendValService {
     	CheckEmpty.checkEmpty(extendId, "extend_id");
     	
     	// 数据过滤
-    	dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA, FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId), FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId) );
+    	dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId), FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId) );
     	
         UserExtendVal userExtendVal=new UserExtendVal();
         userExtendVal.setExtendId(extendId);
         userExtendVal.setStatus(status);
         userExtendVal.setUserId(userId);
         userExtendVal.setValue(value);
+        userExtendVal.setExtendId(tenancyService.getOneCanUsedTenancyId());
         
         userExtendValMapper.insertSelective(userExtendVal);
         
@@ -78,7 +80,7 @@ public class UserExtendValService {
         CheckEmpty.checkEmpty(id,"id");
         UserExtendVal userExtendVal=new UserExtendVal();
         userExtendVal.setId(id);
-        userExtendVal.setStatus((byte)1);
+        userExtendVal.setStatus(AppConstants.STATUS_DISABLED);
         return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
     }
     
@@ -93,7 +95,6 @@ public class UserExtendValService {
      */
     public int updateById(Long id,Long userId,Long extendId,String value,Byte status){
         CheckEmpty.checkEmpty(id,"id");
-        
         // 过滤数据
         List<FilterData> filterFileds = new ArrayList<FilterData>();
         if(userId != null) {
@@ -103,7 +104,7 @@ public class UserExtendValService {
         	filterFileds.add(FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
         }
         if(filterFileds.size() > 0) {
-        	dataFilter.filterFieldValueIsExistWithCondtionsEqual(TypeParseUtil.parseToIntegerFromObject(id), filterFileds.toArray(new FilterData[filterFileds.size()]));
+        	dataFilter.updateFieldsCheck(TypeParseUtil.parseToIntegerFromObject(id), filterFileds.toArray(new FilterData[filterFileds.size()]));
         }
         
         UserExtendVal userExtendVal=new UserExtendVal();
@@ -112,7 +113,6 @@ public class UserExtendValService {
         userExtendVal.setStatus(status);
         userExtendVal.setUserId(userId);
         userExtendVal.setValue(value);
-        
         return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
     }
     
@@ -130,9 +130,9 @@ public class UserExtendValService {
         if(status!=null){
             criteria.andStatusEqualTo(status);
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         
         List<UserExtendVal> userExtendVals=userExtendValMapper.selectByExample(example);
-        
         List<UserExtendValDto> userExtendValDtos=new ArrayList<UserExtendValDto>();
         UserExtendValDto userExtendValDto;
         UserExtend userExtend;
@@ -164,6 +164,7 @@ public class UserExtendValService {
         Map<String,String> params=new HashMap<String, String>();
         params.put("userId",userId.toString());
         params.put("extendCode", code==null?null:'%'+code+'%');
+        params.put("tenancyId", tenancyService.getOneCanUsedTenancyId().toString());
         
         int count=queryOnlyUsed ? userExtendValMapper.countByUserExtend(params) : userExtendValMapper.countByCode(params);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);

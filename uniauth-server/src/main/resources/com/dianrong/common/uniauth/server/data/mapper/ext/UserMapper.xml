@@ -8,6 +8,7 @@
         <result column="name" property="name" jdbcType="VARCHAR" />
         <result column="groupId" property="groupId" jdbcType="INTEGER" />
         <result column="type" property="userGroupType" jdbcType="TINYINT" />
+        <result column="tenancy_id" property="tenancyId" jdbcType="BIGINT" />
         <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="create_date" property="createDate" jdbcType="DATE" />
     </resultMap>
@@ -28,42 +29,6 @@
           t2 on t1.id=t2.user_id where t1.status=0
     </select>
     
-    <!-- 根据id获取有效用户的数量 -->
-  <select id="countUserByIdWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
-	SELECT  COUNT(id)
-	FROM user 
-	WHERE 
-	id = #{id, jdbcType=BIGINT}
-	AND status = 0 
-  </select>
-  
-  <!-- 根据email获取有效用户的数量 -->
-  <select id="countUserByEmailWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
-	SELECT  COUNT(id)
-	FROM user 
-	WHERE 
-	email = #{email, jdbcType=VARCHAR}
-	AND status = 0 
-  </select>
-  
-  <!-- 根据phone获取有效用户的数量 -->
-  <select id="countUserByPhoneWithStatusEffective"  resultType="java.lang.Integer"  parameterType="java.lang.String" >
-	SELECT  COUNT(id)
-	FROM user 
-	WHERE 
-	phone = #{phone, jdbcType=VARCHAR}
-	AND status = 0 
-  </select>
-  
-  <!-- 根据keyid查询有效的用户信息 -->
-   <select id="selectByIdWithStatusEffective" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    SELECT 
-    <include refid="Base_Column_List" />
-    FROM user
-    WHERE id = #{id, jdbcType=INTEGER}
-    AND status = 0 
-  </select>
-    
   <select id="selectByEmailOrPhone" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
     <include refid="Base_Column_List" />
@@ -76,5 +41,14 @@
     <if test="phone != null" >
       and (email = #{email, jdbcType=VARCHAR} or phone = #{phone, jdbcType=VARCHAR})
     </if>
+    <if test="tenancyId != null" >
+      and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
+    </if>
+    <if test="tenancyId == null" >
+       and tenancy_id in ( 
+    	select id from tenancy where code = #{tenancyCode, jdbcType=VARCHAR} and status = 0 
+    )
+    </if>
+   
   </select>
 </mapper>

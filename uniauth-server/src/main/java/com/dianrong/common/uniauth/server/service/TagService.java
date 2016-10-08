@@ -48,7 +48,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * Created by Arc on 7/4/2016.
  */
 @Service
-public class TagService {
+public class TagService extends TenancyBasedService{
     @Autowired
     private UserTagMapper userTagMapper;
     @Autowired
@@ -94,6 +94,7 @@ public class TagService {
         if(!StringUtils.isEmpty(fuzzyTagCode)) {
             criteria.andCodeLike("%" + fuzzyTagCode + "%");
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 
         if(userId != null) {
             UserTagExample userTagExample = new UserTagExample();
@@ -120,7 +121,7 @@ public class TagService {
             }
             if(domainCode != null) {
                 DomainExample domainExample = new DomainExample();
-                domainExample.createCriteria().andCodeEqualTo(domainCode);
+                domainExample.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
                 List<Domain> domains = domainMapper.selectByExample(domainExample);
                 if(!CollectionUtils.isEmpty(domains)) {
                     for(Domain domain : domains) {
@@ -131,7 +132,7 @@ public class TagService {
                 }
             }
             TagTypeExample tagTypeExample = new TagTypeExample();
-            tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds);
+            tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
             List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
             if (!CollectionUtils.isEmpty(tagTypes)) {
                 List<Integer> tagTypeIds = new ArrayList<>();
@@ -177,7 +178,7 @@ public class TagService {
         CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
         
         // 不能存在重复的数据
-        tagDataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA , 
+        tagDataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA , 
         		new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId) ,
         		new FilterData(FieldType.FIELD_TYPE_CODE, code));
         
@@ -189,6 +190,7 @@ public class TagService {
         tag.setTagTypeId(tagTypeId);
         tag.setDescription(description);
         tag.setCode(code);
+        tag.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         tagMapper.insert(tag);
         return BeanConverter.convert(tag);
     }
@@ -204,7 +206,7 @@ public class TagService {
         // 除了禁用的情况
         if(!(status != null && status != AppConstants.ZERO_Byte)) {
 	       // 过滤重复数据 启用状态的才管
-	        tagDataFilter.filterFieldValueIsExistWithCondtionsEqual(tagId, 
+	        tagDataFilter.updateFieldsCheck(tagId, 
 	        		new FilterData(FieldType.FIELD_TYPE_CODE, StringUtil.strIsNullOrEmpty(code) ? tag.getCode() : code),
 	        		new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId == null ? tag.getTagTypeId(): tagTypeId));
         }
@@ -232,6 +234,7 @@ public class TagService {
         if(code != null) {
             criteria.andCodeEqualTo(code);
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
         if(!CollectionUtils.isEmpty(tagTypes)) {
             List<TagTypeDto> tagTypeDtos = new ArrayList<>();
@@ -247,12 +250,13 @@ public class TagService {
     public TagTypeDto addNewTagType(String code, Integer domainId) {
         CheckEmpty.checkEmpty(domainId, "domainId");
         CheckEmpty.checkEmpty(code, "code");
-        dataFilter.dataFilterWithConditionsEqual(FilterType.FILTER_TYPE_EXSIT_DATA,
+        dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
                 FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
                 FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
         TagType tagType = new TagType();
         tagType.setDomainId(domainId);
         tagType.setCode(code);
+        tagType.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         tagTypeMapper.insert(tagType);
         return BeanConverter.convert(tagType);
     }
@@ -270,7 +274,7 @@ public class TagService {
         }
         
         // 判断
-        dataFilter.filterFieldValueIsExistWithCondtionsEqual(tagTypeId,
+        dataFilter.updateFieldsCheck(tagTypeId,
                 FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
                 FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, tagType.getDomainId()));
         
@@ -285,15 +289,14 @@ public class TagService {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
         }
         TagExample tagExample = new TagExample();
-        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.ZERO_Byte);
+        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         int count = tagMapper.countByExample(tagExample);
         if(count > 0) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("tagtype.delete.linked-tag.error"));
         }
 
-
         TagExample tagExample2 = new TagExample();
-        tagExample2.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.ONE_Byte);
+        tagExample2.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_DISABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         List<Tag> tags = tagMapper.selectByExample(tagExample2);
         if(!CollectionUtils.isEmpty(tags)) {
             List<Integer> tagIds = new ArrayList<>();

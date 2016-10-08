@@ -4,11 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.util.Assert;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.model.DateSessionObjModel;
 import com.dianrong.common.uniauth.cas.service.ForgetPasswordService;
 import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
@@ -192,10 +194,12 @@ public class ForgetPasswordController extends AbstractBaseController {
             setResponseResultJson(response, "3");
             return;
         }
-
+        String tenancyCode = getParamFromRequest(request, AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
+        UserDto user = null;
         try {
             // 验证邮箱是否存在
-            forgetPasswordService.checkUser(email);
+        	user =  forgetPasswordService.checkUser(email, tenancyCode);
+        	Assert.notNull(user, "can not find user, email :" +email + ", tenancyCode:" +tenancyCode);
         } catch (Exception ex) {
             // 验证用户失败了
             setResponseResultJson(response, "4", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
@@ -204,6 +208,7 @@ public class ForgetPasswordController extends AbstractBaseController {
 
         // 往session里面放email
         putValToSession(session, AppConstants.PWDFORGET_MAIL_VAL_KEY, email);
+        putValToSession(session, AppConstants.PWDFORGET_TENAYC_ID_KEY, user.getTenancyId());
         // 成功进入第二步
         setResponseResultJson(response, "0");
     }
@@ -267,6 +272,7 @@ public class ForgetPasswordController extends AbstractBaseController {
         HttpSession session = request.getSession(false);
         // 必须要有邮箱
         String email = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VAL_KEY, String.class);
+        Integer tenancyId = getValFromSession(session, AppConstants.PWDFORGET_TENAYC_ID_KEY, Integer.class);
         if (StringUtil.strIsNullOrEmpty(email)) {
             setResponseResultJson(response, "1");
             return;
@@ -274,7 +280,7 @@ public class ForgetPasswordController extends AbstractBaseController {
 
         // 新密码
         String newPwd = getParamFromRequest(request, AppConstants.PWDFORGET_NEW_PASSWORD_KEY);
-        if (StringUtil.strIsNullOrEmpty(newPwd)) {
+        if (StringUtil.strIsNullOrEmpty(newPwd) || tenancyId == null) {
             setResponseResultJson(response, "2");
             return;
         }
@@ -287,7 +293,7 @@ public class ForgetPasswordController extends AbstractBaseController {
             if (!tobj.isExpired()) {
                 // 后端修改密码
                 try {
-                    forgetPasswordService.resetPassword(email, newPwd);
+                    forgetPasswordService.resetPassword(email, tenancyId, newPwd);
                 } catch (Exception ex) {
                     setResponseResultJson(response, "3", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
                     return;
@@ -352,9 +358,6 @@ public class ForgetPasswordController extends AbstractBaseController {
             session.removeAttribute(AppConstants.PWDFORGET_MAIL_VERIFY_CODE_KEY);
 
             session.removeAttribute(AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY);
-
-            // 回跳地址不能删 只能更新
-            // session.removeAttribute(AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY);
         }
     }
 

@@ -58,6 +58,7 @@
 					    <div class="form-group">
 						  	<div class="col-sm-offset-4 col-sm-4">
 						    	<input type="password" class="form-control" id="rnewpwd" placeholder="<spring:message code="screen.password.reset.step3.rnewpwd.notice"/>">
+						    	<input type="hidden"  value="" name="tenancyId">
 						  	</div>
 						</div>
 						<div class="form-group">

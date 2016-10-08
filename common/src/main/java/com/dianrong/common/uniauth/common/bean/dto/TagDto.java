@@ -1,12 +1,11 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Arc on 7/4/2016.
  */
-public class TagDto implements Serializable {
+public class TagDto extends TenancyBaseDto {
 
 	private static final long serialVersionUID = -6998161636801183621L;
 	private Integer id;

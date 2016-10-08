@@ -2,12 +2,15 @@ package com.dianrong.common.uniauth.common.util;
 
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+
 /**.
  * some functions process String
  * @author R9GBP97
  *
  */
 public class StringUtil {
+	private static final Logger logger = Logger.getLogger(StringUtil.class);
 	
 	/**.
 	 * judge str is null or empty
@@ -32,6 +35,23 @@ public class StringUtil {
 			return "";
 		}
 		return obj.toString();
+	}
+	
+	/**.
+	 * 获取对象的字符串表示方式
+	 * @param obj 对象
+	 * @return 字符串结果
+	 */
+	public static Integer tryToTranslateStrToInt(String str){
+		if(str == null){
+			return null;
+		}
+		try {
+		return Integer.parseInt(str);
+		} catch(NumberFormatException e) {
+			logger.warn(str + "is a invalid number format string", e);
+		}
+		return null;
 	}
 	
 	/**.

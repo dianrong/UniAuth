@@ -29,7 +29,7 @@
     <bean id="characterEncodingFilter" class="org.springframework.web.filter.CharacterEncodingFilter"
             p:encoding="${httprequest.web.encoding:UTF-8}"
             p:forceEncoding="${httprequest.web.encoding.force:true}" />
-
+            
     <bean id="requestParameterSecurityFilter"
           class="org.jasig.cas.security.RequestParameterPolicyEnforcementFilter"
           p:allowMultiValueParameters="${cas.http.allow.multivalue.params:false}">

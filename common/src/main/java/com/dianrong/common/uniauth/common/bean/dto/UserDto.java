@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.Map;
 /**
  * Created by Arc on 13/1/16.
  */
-public class UserDto implements Serializable {
+public class UserDto extends TenancyBaseDto {
     
     private static final long serialVersionUID = -1969133233179816584L;
     

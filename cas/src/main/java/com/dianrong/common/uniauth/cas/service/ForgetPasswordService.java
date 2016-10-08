@@ -21,19 +21,22 @@ public class ForgetPasswordService extends BaseService{
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	public void checkUser(String email) throws Exception {
+	public UserDto checkUser(String email, String tenancyCode) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
+		userParam.setTenancyCode(tenancyCode);
 		Response<UserDto> response = uniClientFacade.getUserResource().getSingleUser(userParam);
 		List<Info> infoList = response.getInfo();
 
 		checkInfoList(infoList);
+		return response.getData();
 	}
 	
-	public void resetPassword(String email, String password) throws Exception {
+	public void resetPassword(String email, Integer tenancyId, String password) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
 		userParam.setPassword(password);
+		userParam.setTenancyId(tenancyId);
 		Response<Void> response = uarwFacade.getUserRWResource().resetPassword(userParam);
 		List<Info> infoList = response.getInfo();
 

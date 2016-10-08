@@ -51,7 +51,7 @@ public interface IUserResource {
     @POST
     @Path("login")
     //scenario: cas login
-    Response<Void> login(LoginParam loginParam);
+    Response<UserDto> login(LoginParam loginParam);
 
     @POST
     @Path("usedetailinfo")

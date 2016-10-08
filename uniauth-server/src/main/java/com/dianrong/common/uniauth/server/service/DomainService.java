@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.dianrong.common.uniauth.server.util.ParamCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +33,11 @@ import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
 @Service
-public class DomainService {
+public class DomainService extends TenancyBasedService{
 
 	@Autowired
 	private DomainMapper domainMapper;
@@ -56,16 +56,17 @@ public class DomainService {
 		CheckEmpty.checkEmpty(domainCode, "域编码");
 		
 		//检查code
-		dataFilter.dataFilter(FieldType.FIELD_TYPE_CODE, domainCode, FilterType.FILTER_TYPE_EXSIT_DATA);
+		dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, domainCode);
 		
 		DomainExample example = new DomainExample();
-		example.createCriteria().andCodeEqualTo(domainCode);
+		example.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		if(domainList == null || domainList.isEmpty()){
 			Domain param = BeanConverter.convert(domainParam);
 			Date now = new Date();
 			param.setCreateDate(now);
 			param.setLastUpdate(now);
+			param.setTenancyId(tenancyService.getOneCanUsedTenancyId());
 			domainMapper.insert(param);
 			return BeanConverter.convert(param);
 		}
@@ -100,6 +101,7 @@ public class DomainService {
 		if(!StringUtils.isEmpty(description)) {
 			criteria.andDescriptionLike("%" + description + "%");
 		}
+		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 
 		int count = domainMapper.countByExample(domainExample);
 		ParamCheck.checkPageParams(pageNumber, pageSize, count);
@@ -118,7 +120,7 @@ public class DomainService {
 	public List<StakeholderDto> getAllStakeholdersInDomain(Integer domainId) {
 		if(domainId != null) {
 			StakeholderExample stakeholderExample = new StakeholderExample();
-			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId);
+			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 			List<Stakeholder> stakeholders = stakeholderMapper.selectByExample(stakeholderExample);
 			List<StakeholderDto> stakeholderDtos = new ArrayList<>();
 			if(stakeholders != null) {
@@ -134,13 +136,12 @@ public class DomainService {
 	public List<DomainDto> getAllLoginDomains(DomainParam domainParam) {
 		List<String> domainCodeList = domainParam.getDomainCodeList();
 		DomainExample example = new DomainExample();
-		//CheckEmpty.checkEmpty(domainCodeList, "请求的域编码列表");
-		if(domainCodeList == null){
-			example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte);
+		DomainExample.Criteria criteria=  example.createCriteria();
+		criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+		if(domainCodeList != null){
+			criteria.andCodeIn(domainCodeList);
 		}
-		else{
-			example.createCriteria().andStatusEqualTo(AppConstants.ZERO_Byte).andCodeIn(domainCodeList);
-		}
+		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		List<DomainDto> domainDtoList = new ArrayList<DomainDto>();
@@ -159,7 +160,7 @@ public class DomainService {
 		Domain domain = checkDomain(domainId);
 		
 		StakeholderExample stakeholderExample = new StakeholderExample();
-		stakeholderExample.createCriteria().andDomainIdEqualTo(domainId);
+		stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 		List<Stakeholder> stakeHolderList = stakeholderMapper.selectByExample(stakeholderExample);
 		List<StakeholderDto> stakeholderDtoList = new ArrayList<StakeholderDto>();
 		for(Stakeholder stakeholder : stakeHolderList){
@@ -182,7 +183,7 @@ public class DomainService {
 			//如果需要更新code,则加入判断
 			if(!StringUtil.strIsNullOrEmpty(domainParam.getCode())){
 				//检查code
-				dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CODE, domainParam.getId(), domainParam.getCode());
+				dataFilter.updateFieldCheck(domainParam.getId(), FieldType.FIELD_TYPE_CODE, domainParam.getCode());
 			}
 		}
 				
@@ -197,15 +198,14 @@ public class DomainService {
 		
 		if(domainId != null){
 			//必须要合法的数据才能插入
-			dataFilter.dataFilter(FieldType.FIELD_TYPE_ID, domainId, FilterType.FILTER_TYPE_NO_DATA);
+			dataFilter.addFieldCheck( FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
 		} else {
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域相关人ID"));
 		}
-//		checkDomain(domainId);
 		Stakeholder stakeholder = BeanConverter.convert(stakeholderParam,false);
+		stakeholder.setTenancyId(tenancyService.getOneCanUsedTenancyId());
 		stakeholderMapper.insert(stakeholder);
 		StakeholderDto stakeholderDto = BeanConverter.convert(stakeholder);
-		
 		return stakeholderDto;
 	}
 
@@ -235,31 +235,4 @@ public class DomainService {
 		}
 		return domain;
 	}
-	
-	/**.
-	    * 根据id获取有效域名的数量
-	    * @param id
-	    * @return
-	    */
-	  public  int countDomainByIdWithStatusEffective(Long id){
-		  return domainMapper.countDomainByIdWithStatusEffective(id);
-	  }
-	    
-	    /**.
-	     * 根据code获取有效域名的数量
-	     * @param code code
-	     * @return 数量
-	     */
-	    public int countDomainByCodeWithStatusEffective( String code){
-	    	return domainMapper.countDomainByCodeWithStatusEffective(code);
-	    }
-	    
-	    /**.
-	     * 根据id获取有效的域名信息
-	     * @param id id
-	     * @return 域名信息
-	     */
-	    public DomainDto selectByIdWithStatusEffective(Integer id){
-	    	return BeanConverter.convert(domainMapper.selectByIdWithStatusEffective(id));
-	    }
 }

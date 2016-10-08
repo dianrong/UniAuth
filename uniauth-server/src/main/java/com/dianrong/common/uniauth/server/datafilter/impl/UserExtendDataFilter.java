@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import com.dianrong.common.uniauth.server.data.entity.UserExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendMapper;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
@@ -19,44 +18,20 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * @author wanglin
  */
 @Service("userExtendDataFilter")
-public class UserExtendDataFilter extends CurrentAbstractDataFilter{
-	/**.
-	 * dao
-	 */
+public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend>{
 	@Autowired
 	 private UserExtendMapper userExtendMapper;
-	
+
 	@Override
-	protected void doFilterFieldValueIsExist(FieldType type, Integer id, Object fieldValue) {
-		switch(type){
-		case FIELD_TYPE_CODE:
-			String newCode = TypeParseUtil.parseToStringFromObject(fieldValue);
-			UserExtendExample condtion = new UserExtendExample();
-			condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
-			List<UserExtend> infoes =  userExtendMapper.selectByExample(condtion);
-			if(infoes != null && infoes.size() > 0){
-				//如果数据信息没有改变  则不管
-				if(newCode.equals(infoes.get(0).getCode())){
-					break;
-				}
-			}
-			//查看是否存在其他的记录是该信息
-			this.dataFilter(type, newCode, FilterType.FILTER_TYPE_EXSIT_DATA);
-			break;
-		default:
-			break;
-		}
+	protected String getProcessTableName() {
+		return UniBundle.getMsg("data.filter.table.name.userextend");
 	}
-	
+
 	@Override
-	protected boolean dataWithConditionsEqualExist(FilterData... equalsField) {
-		 //判空处理
-        if(equalsField == null || equalsField.length == 0) {
-            return false;
-        }
-        //首先根据类型和值获取到对应的model数组
+	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         UserExtendExample condition = new UserExtendExample();
         UserExtendExample.Criteria criteria =  condition.createCriteria();
+        criteria.andTenancyIdEqualTo(getTenancyId());
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -76,7 +51,14 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter{
 	}
 
 	@Override
-	protected String getProcessTableName() {
-		return UniBundle.getMsg("data.filter.table.name.userextend");
+	protected UserExtend getEnableRecordByPrimaryKey(Integer id) {
+		CheckEmpty.checkEmpty(id, "userExtendId");
+		UserExtendExample condition = new UserExtendExample();
+		condition.createCriteria().andIdEqualTo(new Long(id.toString())).andTenancyIdEqualTo(getTenancyId());
+		List<UserExtend> selectByExample = userExtendMapper.selectByExample(condition);
+		if(selectByExample != null && !selectByExample.isEmpty()){
+			return selectByExample.get(0);
+		}
+		return null;
 	}
 }

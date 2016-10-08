@@ -1,12 +1,10 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
-
 /**
  * @author wenlongchen
  * @since May 16, 2016
  */
-public class UserExtendValDto implements Serializable {
+public class UserExtendValDto extends TenancyBaseDto {
 
     private static final long serialVersionUID = -4191944113318490773L;
 
@@ -24,7 +22,7 @@ public class UserExtendValDto implements Serializable {
     private String extendCode;
     
     private String extendDescription;
-
+    
     public Long getId() {
         return id;
     }
@@ -80,12 +78,5 @@ public class UserExtendValDto implements Serializable {
     public void setExtendDescription(String extendDescription) {
         this.extendDescription = extendDescription;
     }
-
-	@Override
-	public String toString() {
-		return "UserExtendValDto [id=" + id + ", userId=" + userId + ", value=" + value + ", status=" + status
-				+ ", extendId=" + extendId + ", extendCode=" + extendCode + ", extendDescription=" + extendDescription
-				+ "]";
-	}
 }
 

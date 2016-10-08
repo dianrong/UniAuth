@@ -6,6 +6,6 @@
   "description" : "sample",
   "attributeReleasePolicy" : {
     "@class" : "org.jasig.cas.services.ReturnAllowedAttributeReleasePolicy",
-    "allowedAttributes" : [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ]
+    "allowedAttributes" : [ "java.util.ArrayList", [ "cn", "mail", "sn", "tenancyid" ] ]
   }
 }

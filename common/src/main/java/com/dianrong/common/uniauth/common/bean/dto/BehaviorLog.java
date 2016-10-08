@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class BehaviorLog implements Serializable {
+public class BehaviorLog extends TenancyBaseDto {
 
 	private Long id;
 

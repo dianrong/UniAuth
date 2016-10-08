@@ -33,7 +33,7 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
  * Created by Arc on 25/3/2016.
  */
 @Service
-public class ConfigService {
+public class ConfigService extends TenancyBasedService{
 
     @Autowired
     private CfgMapper cfgMapper;
@@ -58,7 +58,7 @@ public class ConfigService {
         if(id != null) {
         	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
         		//更新判断比较
-        		dataFilter.filterFieldValueIsExist(FieldType.FIELD_TYPE_CFG_KEY,id ,cfgKey);
+        		dataFilter.updateFieldCheck(id, FieldType.FIELD_TYPE_CFG_KEY ,cfgKey);
         	}
             Map<String, Integer> cfgTypesMap = this.getAllCfgTypesCodeIdPair();
             if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file != null) {
@@ -75,9 +75,10 @@ public class ConfigService {
         } else {
         	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
         		//添加判断比较
-        		dataFilter.dataFilter(FieldType.FIELD_TYPE_CFG_KEY,cfgKey ,FilterType.FILTER_TYPE_EXSIT_DATA);
+        		dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,cfgKey);
         	}
         	
+        	 cfg.setTenancyId(tenancyService.getOneCanUsedTenancyId());
             // add process.
             cfgMapper.insert(cfg);
         }
@@ -116,6 +117,7 @@ public class ConfigService {
         if(!CollectionUtils.isEmpty(cfgKeys)) {
             criteria.andCfgKeyIn(cfgKeys);
         }
+        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
 
         int count = cfgMapper.countByExample(cfgExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
