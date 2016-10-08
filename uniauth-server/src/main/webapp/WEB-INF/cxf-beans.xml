@@ -31,7 +31,7 @@
         </jaxrs:inInterceptors>
     </jaxrs:server>
 
-	<bean id="cxfServerHeaderFilter"  class="com.dianrong.common.uniauth.common.server.cxf.server.ServerFillterSingletion"  factory-method="getInstance"/>
+	<bean id="cxfServerHeaderFilter"  class="com.dianrong.common.uniauth.common.server.cxf.server.ServerFilterSingletion"  factory-method="getInstance"/>
 
     <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
         <property name="serializationInclusion" value="NON_NULL"/>

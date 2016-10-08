@@ -96,7 +96,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck{
 			if (sb.toString().length() > 0) {
 				sb.append(filterEle);
 			}
-			sb.append(fd.getType());
+			sb.append(fd.getType().getFieldName());
 			sb.append(filterKeyVal);
 			sb.append(StringUtil.getObjectStr(fd.getValue()));
 		}

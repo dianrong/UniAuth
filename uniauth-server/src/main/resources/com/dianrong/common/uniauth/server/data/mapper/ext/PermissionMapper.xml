@@ -15,15 +15,15 @@
 	role r, role_code rc
 	where d.status = 0
 	and d.code = #{domainCode, jdbcType=VARCHAR}
-	and d.tenanci_id = #{tenancyId, jdbcType = BIGINT}
+	and d.tenancy_id = #{tenancyId, jdbcType = BIGINT}
 	and pt.type = 'URI_PATTERN'
 	and pt.id = p.perm_type_id
 	and p.status = 0
-	and p.tenanci_id = #{tenancyId, jdbcType = BIGINT}
+	and p.tenancy_id = #{tenancyId, jdbcType = BIGINT}
 	and p.domain_id = d.id
 	and p.id = rp.permission_id
 	and rp.role_id = r.id
-	and r.tenanci_id = #{tenancyId, jdbcType = BIGINT}
+	and r.tenancy_id = #{tenancyId, jdbcType = BIGINT}
 	and r.status = 0
 	and r.domain_id = d.id
 	and r.role_code_id = rc.id

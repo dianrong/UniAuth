@@ -42,6 +42,16 @@
 	   	<filter-name>TrackFilter</filter-name>
 	   	<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	    <!-- cxf header clear -->
+    <filter>
+    	<filter-name>HolderClearFilter</filter-name>
+    	<filter-class>com.dianrong.common.uniauth.server.support.HolderClearFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>HolderClearFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <!-- SpringMVC -->
     <servlet>
@@ -69,15 +79,4 @@
         <servlet-name>default</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-    
-    <!-- cxf header clear -->
-    <filter>
-    	<filter-name>HolderClearFilter</filter-name>
-    	<filter-class>com.dianrong.common.uniauth.server.support.HolderClearFilter</filter-class>
-    </filter>
-    <filter-mapping>
-    	<filter-name>HolderClearFilter</filter-name>
-    	<url-pattern>/*</url-pattern>
-    </filter-mapping>
-
 </web-app>

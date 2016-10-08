@@ -81,26 +81,49 @@ update user_extend INNER JOIN tenancy ON  tenancy.code='DIANRONG-WEBSITE'   SET 
 update user_extend_val INNER JOIN tenancy ON  tenancy.code='DIANRONG-WEBSITE'   SET user_extend_val.tenancy_id = tenancy.id;
 
 -- add foreign key
-alter table audit add constraint audit_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table audit add constraint fk_audit_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table cfg add constraint cfg_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table cfg add constraint fk_cfg_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table domain add constraint domain_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table domain add constraint fk_domain_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table grp add constraint grp_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table grp add constraint fk_grp_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table permission add constraint permission_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table permission add constraint fk_permission_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table role add constraint role_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table role add constraint fk_role_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table stakeholder add constraint stakeholder_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table stakeholder add constraint fk_stakeholder_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table tag add constraint tag_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table tag add constraint fk_tag_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table tag_type add constraint tag_type_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table tag_type add constraint fk_tag_type_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table `user` add constraint user_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table `user` add constraint fk_user_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table user_extend add constraint user_extend_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table user_extend add constraint fk_user_extend_tenancy foreign key(tenancy_id) references tenancy(id);
 
-alter table user_extend_val add constraint user_extend_val_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+alter table user_extend_val add constraint fk_user_extend_val_tenancy foreign key(tenancy_id) references tenancy(id);
+
+-- update index 
+alter table user drop index `user_email_idx`;
+alter table user add index  `user_email_idx` (`email`,`tenancy_id`) comment 'user index, email + tenancy_id';
+
+alter table user drop index `user_name_idx`;
+alter table user add index  `user_name_idx` (`name`,`tenancy_id`) comment 'user index, name + tenancy_id';
+
+alter table user drop index `user_phone_idx`;
+alter table user add index  `user_phone_idx` (`phone`,`tenancy_id`) comment 'user index, phone + tenancy_id';
+
+alter table grp drop index `group_name_idx`;
+alter table grp add index  `group_name_idx` (`name`,`tenancy_id`) comment 'grp index, name + tenancy_id';
+
+alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
+
+alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
+
+alter table cfg drop index `cfg_key_UNIQUE`;
+alter table cfg add unique index  `cfg_key_UNIQUE` (`cfg_key`,`tenancy_id`) comment 'cfg index, cfg_key + tenancy_id';
+
+alter table tag_type drop index `code_domainid_UNIQUE`;
+alter table tag_type add unique index `code_domainid_UNIQUE` (`code`,`domain_id`, `tenancy_id`) comment 'tag_type index: code + domain_id + tenancy_id';
