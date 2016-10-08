@@ -128,7 +128,7 @@ alter table audit add index audit_tenancy_id (tenancy_id) comment '根据租户i
 -- 循环更新audit表的tenancy_id 字段
 DROP procedure IF EXISTS `multi_tenancy_update_audit`;
 DELIMITER $$
-CREATE DEFINER=`uniauth`@`%` PROCEDURE `multi_tenancy_update_audit`()
+CREATE PROCEDURE `multi_tenancy_update_audit`()
 BEGIN
 declare  audit_top_id int(10);
 declare while_index int(10) default 0;
@@ -144,8 +144,12 @@ select max(id) into dest_tenancy_id from tenancy where code='DIANRONG-WEBSITE' ;
 set while_times = (audit_top_id  DIV update_per_num) + 1;
 
 -- drop index
+IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_userid_idx') THEN  
 alter table audit drop index `audit_userid_idx`;
-alter table audit drop index `audit_action_date`;
+END IF;  
+IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_action_date') THEN  
+alter table audit drop index`audit_action_date`;
+END IF;  
 
  while while_index<while_times do
     SET update_min_id = while_index * update_per_num;
@@ -155,8 +159,8 @@ alter table audit drop index `audit_action_date`;
 end while;
 
 -- add index
-alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
-alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
+alter table audit add index  `uniauth_audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
+alter table audit add index  `uniauth_audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
 END$$
 DELIMITER ;
 
