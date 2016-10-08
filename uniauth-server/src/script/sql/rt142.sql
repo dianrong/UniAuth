@@ -136,7 +136,7 @@ declare while_times int(10);
 declare update_min_id int(10);
 declare update_max_id int(10);
 declare dest_tenancy_id int(10);
-declare update_per_num int(10) default 1000;
+declare update_per_num int(10) default 500;
 
 set sql_safe_updates = 0;
 select max(id) into audit_top_id from audit;
