@@ -10,9 +10,6 @@ public class DomainDefine implements Serializable {
 	private String customizedSavedRequestUrl; 
 	// 自定义登陆成功的跳转url
 	private String customizedLoginRedirecUrl;
-	
-	private String tenancyCode;
-	
 	private static Integer domainId;
 
 	public String getDomainCode() {
@@ -55,14 +52,6 @@ public class DomainDefine implements Serializable {
 		this.customizedLoginRedirecUrl = customizedLoginRedirecUrl;
 	}
 
-	public String getTenancyCode() {
-		return tenancyCode;
-	}
-	
-	public void setTenancyCode(String tenancyCode) {
-		this.tenancyCode = tenancyCode;
-	}
-	
 	public static Integer getDomainId() {
 		return domainId;
 	}

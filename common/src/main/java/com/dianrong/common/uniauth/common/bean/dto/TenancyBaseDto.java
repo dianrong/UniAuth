@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.io.Serializable;
 
-public class TenancyDtoBase  implements Serializable{
+public class TenancyBaseDto  implements Serializable{
 
 	private static final long serialVersionUID = 7612408066715418041L;
 	
@@ -16,7 +16,7 @@ public class TenancyDtoBase  implements Serializable{
 		return tenancyId;
 	}
 
-	public TenancyDtoBase setTenancyId(Integer tenancyId) {
+	public TenancyBaseDto setTenancyId(Integer tenancyId) {
 		this.tenancyId = tenancyId;
 		return this;
 	}
@@ -25,7 +25,7 @@ public class TenancyDtoBase  implements Serializable{
 		return tenancyCode;
 	}
 
-	public TenancyDtoBase setTenancyCode(String tenancyCode) {
+	public TenancyBaseDto setTenancyCode(String tenancyCode) {
 		this.tenancyCode = tenancyCode;
 		return this;
 	}

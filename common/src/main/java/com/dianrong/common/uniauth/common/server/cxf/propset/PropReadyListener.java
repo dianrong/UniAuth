@@ -15,7 +15,7 @@ import org.springframework.util.Assert;
 import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
 import com.dianrong.common.uniauth.common.server.cxf.client.HeaderProducer;
 import com.dianrong.common.uniauth.common.server.cxf.server.HeaderConsumer;
-import com.dianrong.common.uniauth.common.server.cxf.server.ServerFillterSingletion;
+import com.dianrong.common.uniauth.common.server.cxf.server.ServerFilterSingletion;
 
 /**
  * . 在spring 初始化完成之后执行
@@ -37,7 +37,7 @@ public class PropReadyListener implements ApplicationListener<ContextRefreshedEv
 		if (event.getApplicationContext().getParent() == null) {
 			try {
 				ClientFilterSingleton.propSetInvoke(findBeanList(HeaderProducer.class));
-				ServerFillterSingletion.propSetInvoke(findBeanList(HeaderConsumer.class));
+				ServerFilterSingletion.propSetInvoke(findBeanList(HeaderConsumer.class));
 			} catch (InterruptedException e) {
 				logger.error("failed to set prop to cxf filter", e);
 				Thread.currentThread().interrupt();

@@ -3,7 +3,10 @@ package com.dianrong.common.uniauth.common.server.cxf.server;
 import org.springframework.core.Ordered;
 
 /**.
- * cxf header 的消费, 优先级高的覆盖优先级低的
+ * cxf header 的消费
+ *  实现Ordered的接口，同一个key可以有多个实现，
+ * 由高优先级的覆盖低优先级(返回的order越小，优先级越大)，从而实现用户自定义的consumer覆盖
+ * uniauth提供的默认实现
  * @author wanglin
  */
 public interface HeaderConsumer extends Ordered{

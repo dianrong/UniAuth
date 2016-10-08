@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
 /**
  * Created by Arc on 7/4/2016.
  */
-public class TagTypeDto extends TenancyDtoBase {
+public class TagTypeDto extends TenancyBaseDto {
 	private static final long serialVersionUID = 4681756553353785511L;
 	private Integer id;
     private String code;

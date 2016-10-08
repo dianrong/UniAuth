@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-public class PermissionDto extends TenancyDtoBase {
+public class PermissionDto extends TenancyBaseDto {
 	private static final long serialVersionUID = -3799602677526320793L;
 	private Integer id;
 	private String value;

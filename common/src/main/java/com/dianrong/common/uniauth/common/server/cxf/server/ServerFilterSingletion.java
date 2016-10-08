@@ -16,8 +16,8 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.log4j.Logger;
 
-public final class ServerFillterSingletion {
-	private static final Logger logger = Logger.getLogger(ServerFillterSingletion.class);
+public final class ServerFilterSingletion {
+	private static final Logger logger = Logger.getLogger(ServerFilterSingletion.class);
 	private static UniauthCxfServerFillter instance = new UniauthCxfServerFillter();
 	private static AtomicBoolean propSetOnce = new AtomicBoolean(false);
 

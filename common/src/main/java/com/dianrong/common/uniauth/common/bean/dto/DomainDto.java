@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import java.util.Date;
 import java.util.List;
 
-public class DomainDto extends TenancyDtoBase {
+public class DomainDto extends TenancyBaseDto {
 	private static final long serialVersionUID = -7455679107780186680L;
 	private Integer id;
 	private String code;

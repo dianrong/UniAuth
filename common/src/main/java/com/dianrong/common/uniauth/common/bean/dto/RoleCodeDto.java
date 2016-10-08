@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
 /**
  * Created by Arc on 15/1/16.
  */
-public class RoleCodeDto extends TenancyDtoBase {
+public class RoleCodeDto extends TenancyBaseDto {
 
 	private static final long serialVersionUID = -644318011242242347L;
 	private Integer id;

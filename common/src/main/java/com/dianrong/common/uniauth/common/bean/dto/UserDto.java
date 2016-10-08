@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by Arc on 13/1/16.
  */
-public class UserDto extends TenancyDtoBase {
+public class UserDto extends TenancyBaseDto {
     
     private static final long serialVersionUID = -1969133233179816584L;
     

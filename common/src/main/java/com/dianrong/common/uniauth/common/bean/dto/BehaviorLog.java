@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.util.Date;
 
-public class BehaviorLog extends TenancyDtoBase {
+public class BehaviorLog extends TenancyBaseDto {
 
 	private Long id;
 

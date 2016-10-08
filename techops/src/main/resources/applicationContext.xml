@@ -29,7 +29,6 @@
 		<property name="userInfoClass"
 			value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
 		<property name="rejectPublicInvocations" value="false"></property>
-		<property name="tenancyCode"  value="DIANRONG-WEBSITE"></property>
 	</bean>
 
 	<sec:http pattern="/views/**" security="none" />

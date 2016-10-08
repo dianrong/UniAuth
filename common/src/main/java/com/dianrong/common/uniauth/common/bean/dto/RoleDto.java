@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Created by Arc on 14/1/16.
  */
-public class RoleDto extends TenancyDtoBase {
+public class RoleDto extends TenancyBaseDto {
 	private static final long serialVersionUID = 1578124776064866724L;
 	private Integer id;
 	private String name;

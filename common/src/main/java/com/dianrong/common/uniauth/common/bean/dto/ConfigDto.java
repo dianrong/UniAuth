@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Created by Arc on 25/3/2016.
  */
-public class ConfigDto extends TenancyDtoBase {
+public class ConfigDto extends TenancyBaseDto {
 	private static final long serialVersionUID = -5735868920727388059L;
 	private Integer id;
     private String cfgKey;

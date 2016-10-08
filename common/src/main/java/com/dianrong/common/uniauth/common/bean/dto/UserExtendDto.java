@@ -4,7 +4,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
  * @author wenlongchen
  * @since May 16, 2016
  */
-public class UserExtendDto extends TenancyDtoBase {
+public class UserExtendDto extends TenancyBaseDto {
     
     private static final long serialVersionUID = -6617306737768606631L;
     

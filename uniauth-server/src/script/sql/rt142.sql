@@ -2,16 +2,16 @@
 -- Table `tenancy`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `tenancy` (
-  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT comment '租户主键id',
    `code` VARCHAR(30) NOT NULL comment '每一个租户的唯一标识code',
-  `name` VARCHAR(64) NULL,
-  `contact_name` VARCHAR(30) NULL,
-  `phone` VARCHAR(30) NULL,
-  `description` VARCHAR(200) NULL,
-  `status` TINYINT(3) NOT NULL DEFAULT 0,
-  `create_date` DATETIME NULL,
-  `last_update` DATETIME NULL,
-  	PRIMARY KEY (`id`)
+  `name` VARCHAR(64) NULL comment '租户名称，比如点融网',
+  `contact_name` VARCHAR(30) NULL comment '租户联系人姓名',
+  `phone` VARCHAR(30) NULL comment '租户联系电话',
+  `description` VARCHAR(200) NULL comment '租户描述',
+  `status` TINYINT(3) NOT NULL comment '状态，0:启用,1:禁用' DEFAULT 0,
+  `create_date` DATETIME NULL comment '租户创建时间',
+  `last_update` DATETIME NULL comment '最新更新时间',
+  	PRIMARY KEY (`id`) 
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `tenancy` (`code`, `name`, `contact_name`, `phone`,`description`, `create_date`, `last_update` ) 
@@ -48,11 +48,11 @@ alter table tag_type add index tag_type_tenancy_id (tenancy_id) comment '根据�
 alter table `user` add tenancy_id BIGINT(20) NOT NULL DEFAULT 0 comment '租户id' after status ;
 alter table `user` add index user_tenancy_id (tenancy_id) comment '根据租户id查询的索引';
 
-alter table `user_extend` add tenancy_id BIGINT(20) NOT NULL DEFAULT 0 comment '租户id' after description ;
-alter table `user_extend` add index user_extend_tenancy_id (tenancy_id) comment '根据租户id查询的索引';
+alter table user_extend add tenancy_id BIGINT(20) NOT NULL DEFAULT 0 comment '租户id' after description ;
+alter table user_extend add index user_extend_tenancy_id (tenancy_id) comment '根据租户id查询的索引';
 
-alter table `user_extend_val` add tenancy_id BIGINT(20) NOT NULL DEFAULT 0 comment '租户id' after status ;
-alter table `user_extend_val` add index user_extend_val_tenancy_id (tenancy_id) comment '根据租户id查询的索引';
+alter table user_extend_val add tenancy_id BIGINT(20) NOT NULL DEFAULT 0 comment '租户id' after status ;
+alter table user_extend_val add index user_extend_val_tenancy_id (tenancy_id) comment '根据租户id查询的索引';
 
 -- init data
 set sql_safe_updates = 0;
@@ -79,3 +79,28 @@ update `user` INNER JOIN tenancy ON  tenancy.code='DIANRONG-WEBSITE'   SET `user
 update user_extend INNER JOIN tenancy ON  tenancy.code='DIANRONG-WEBSITE'   SET user_extend.tenancy_id = tenancy.id;
 
 update user_extend_val INNER JOIN tenancy ON  tenancy.code='DIANRONG-WEBSITE'   SET user_extend_val.tenancy_id = tenancy.id;
+
+-- add foreign key
+alter table audit add constraint audit_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table cfg add constraint cfg_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table domain add constraint domain_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table grp add constraint grp_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table permission add constraint permission_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table role add constraint role_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table stakeholder add constraint stakeholder_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table tag add constraint tag_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table tag_type add constraint tag_type_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table `user` add constraint user_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table user_extend add constraint user_extend_tenancy_fk foreign key(tenancy_id) references tenancy(id);
+
+alter table user_extend_val add constraint user_extend_val_tenancy_fk foreign key(tenancy_id) references tenancy(id);

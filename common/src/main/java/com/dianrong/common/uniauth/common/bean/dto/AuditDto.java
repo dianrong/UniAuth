@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Arc on 24/3/2016.
  */
-public class AuditDto extends TenancyDtoBase {
+public class AuditDto extends TenancyBaseDto {
 	private static final long serialVersionUID = -1081049216491108772L;
 	private Integer id;
     private Long userId;

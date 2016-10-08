@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-public class StakeholderDto extends TenancyDtoBase {
+public class StakeholderDto extends TenancyBaseDto {
 	private static final long serialVersionUID = 2120671490345809592L;
 	private Integer id;
 	private String name;

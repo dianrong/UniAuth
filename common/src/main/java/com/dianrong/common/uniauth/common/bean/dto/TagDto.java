@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Arc on 7/4/2016.
  */
-public class TagDto extends TenancyDtoBase {
+public class TagDto extends TenancyBaseDto {
 
 	private static final long serialVersionUID = -6998161636801183621L;
 	private Integer id;
