@@ -143,20 +143,24 @@ select max(id) into audit_top_id from audit;
 select max(id) into dest_tenancy_id from tenancy where code='DIANRONG-WEBSITE' ;
 set while_times = (audit_top_id  DIV update_per_num) + 1;
 
+-- drop index
+alter table audit drop index `audit_userid_idx`;
+alter table audit drop index `audit_action_date`;
+
  while while_index<while_times do
     SET update_min_id = while_index * update_per_num;
     SET update_max_id = update_min_id + update_per_num;
     update audit SET tenancy_id = dest_tenancy_id  WHERE id >= update_min_id and id < update_max_id;
     set while_index=while_index+1;
 end while;
+
+-- add index
+alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
+alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
 END$$
 DELIMITER ;
 
--- 耗时
+-- 耗时(幂等)
 call multi_tenancy_update_audit();
 
 alter table audit add constraint fk_audit_tenancy foreign key(tenancy_id) references tenancy(id);
-
-alter table audit add index  `audit_userid_idx` (`user_id`,`tenancy_id`) comment 'audit index, user_id + tenancy_id';
-
-alter table audit add index  `audit_action_date` (`req_date`,`tenancy_id`) comment 'audit index, req_date + tenancy_id';
