@@ -42,6 +42,9 @@ public class ZkNodeUtils {
 		return null;
 	}
 	
+	public static String getServiceKey(final String nodeName) {
+		return  AppConstants.ZK_DOMAIN_PREFIX + nodeName;
+	}
 	
 	public static String getDomainCustomUrlNodeKey(final String nodeName) {
 		return AppConstants.ZK_DOMAIN_PREFIX + nodeName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
