@@ -189,6 +189,7 @@ public class DomainService extends TenancyBasedService{
 				
 		Domain param = BeanConverter.convert(domainParam);
 		param.setLastUpdate(new Date());
+		param.setTenancyId(tenancyService.getOneCanUsedTenancyId());
 		domainMapper.updateByPrimaryKey(param);
 	}
 
