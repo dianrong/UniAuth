@@ -11,6 +11,7 @@ import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 
 import org.jasig.cas.authentication.AccountDisabledException;
+import org.jasig.cas.authentication.Credential;
 import org.jasig.cas.authentication.HandlerResult;
 import org.jasig.cas.authentication.PreventedException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
@@ -98,4 +99,9 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 	Map<String, Object> attributes = new HashMap<String, Object>();attributes.put(CasProtocal.DianRongCas.getTenancyIdName(),response.getData().getTenancyId());return
 	createHandlerResult(credential, this.principalFactory.createPrincipal(userName, attributes), null);
 	}
+	
+    @Override
+    public boolean supports(final Credential credential) {
+        return credential instanceof CasUsernamePasswordCredential;
+    }
 }
