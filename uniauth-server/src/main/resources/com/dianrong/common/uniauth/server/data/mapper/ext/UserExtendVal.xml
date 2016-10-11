@@ -38,7 +38,7 @@
   
    <select id="countByUserExtend" parameterType="map" resultType="int"> 
    select count(id) from user_extend_val  t1 where t1.user_id = #{userId} 
-   and AND tenancy_id = #{tenancyId, jdbcType=BIGINT}  
+   and  tenancy_id = #{tenancyId, jdbcType=BIGINT}  
    and  exists (
 	select id from user_extend t2 where  t2.id = t1.extend_id  
 	<if test="extendCode!=null and extendCode!=''">
