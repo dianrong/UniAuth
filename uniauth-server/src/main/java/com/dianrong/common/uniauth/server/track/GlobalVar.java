@@ -18,6 +18,7 @@ public class GlobalVar implements Cloneable {
 	private String mapper;
 	private Long invokeSeq;
 	private Integer domainId;
+	private Long tenancyId;
 	
 	public Integer getDomainId() {
 		return domainId;
@@ -133,5 +134,13 @@ public class GlobalVar implements Cloneable {
 
 	public void setReqDate(Date reqDate) {
 		this.reqDate = reqDate;
+	}
+
+	public Long getTenancyId() {
+		return tenancyId;
+	}
+
+	public void setTenancyId(Long tenancyId) {
+		this.tenancyId = tenancyId;
 	}
 }

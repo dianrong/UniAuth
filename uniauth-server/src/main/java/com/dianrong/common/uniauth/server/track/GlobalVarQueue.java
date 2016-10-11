@@ -1,11 +1,9 @@
 package com.dianrong.common.uniauth.server.track;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
@@ -76,6 +74,7 @@ public class GlobalVarQueue {
 							audit.setReqClass(gv.getMapper());
 							audit.setReqSeq(gv.getInvokeSeq());
 							audit.setDomainId(gv.getDomainId());
+							audit.setTenancyId(gv.getTenancyId());
 							synchronized(lock){
 								auditList.add(audit);
 							}
