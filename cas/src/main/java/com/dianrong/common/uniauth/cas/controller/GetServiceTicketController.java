@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.AuthenticationException;
-import org.jasig.cas.authentication.RememberMeUsernamePasswordCredential;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.ServiceTicket;
 import org.jasig.cas.ticket.Ticket;
@@ -41,6 +40,7 @@ import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
+import com.dianrong.common.uniauth.cas.model.CasRememberMeUsernamePasswordCredential;
 import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -161,7 +161,7 @@ public class GetServiceTicketController {
 			if (validResult != null) {
 				return captchaValidationProcess(request, response, validResult);
 			}
-			RememberMeUsernamePasswordCredential credentials = createCredential(request);
+			CasRememberMeUsernamePasswordCredential credentials = createCredential(request);
 			// call AuthenticationHandlers
 			TicketGrantingTicket ticketGrantingTicketId = this.centralAuthenticationService
 					.createTicketGrantingTicket(credentials);
@@ -280,14 +280,16 @@ public class GetServiceTicketController {
 	 * @param request
 	 * @return
 	 */
-	private RememberMeUsernamePasswordCredential createCredential(HttpServletRequest request) {
+	private CasRememberMeUsernamePasswordCredential createCredential(HttpServletRequest request) {
 		String username = request.getParameter("identity");
 		String password = request.getParameter("password");
 		boolean rememberMe = Boolean.valueOf(request.getParameter("rememberMe"));
-		RememberMeUsernamePasswordCredential credential = new RememberMeUsernamePasswordCredential();
+		String tenancyCode = request.getParameter("tenancyCode");
+		CasRememberMeUsernamePasswordCredential credential = new CasRememberMeUsernamePasswordCredential();
 		credential.setUsername(username);
 		credential.setPassword(password);
 		credential.setRememberMe(rememberMe);
+		credential.setTenancyCode(tenancyCode == null ? AppConstants.DEFAULT_TANANCY_CODE : tenancyCode);
 		return credential;
 	}
 
