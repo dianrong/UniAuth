@@ -144,6 +144,7 @@ public class PermissionService extends TenancyBasedService{
         }
 
 		Permission permission = BeanConverter.convert(permissionParam, true);
+		permission.setTenancyId(tenancyService.getOneCanUsedTenancyId());
 		permissionMapper.updateByPrimaryKey(permission);
 	}
 

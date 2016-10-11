@@ -56,7 +56,7 @@ public class GetServiceTicketController {
 	/**
 	 * . 日志对象
 	 */
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(GetServiceTicketController.class);
 
 	/** Extractors for finding the service. */
 	@Autowired
