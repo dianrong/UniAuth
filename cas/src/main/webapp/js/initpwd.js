@@ -78,7 +78,7 @@ $(function() {
 			valid_result = false;
 			
 			if(!!notice && !!index && index == 2){
-				setWarnLabel($.i18n.prop('frontpage.initpwd.edit.need.pwdlengthl'), $('#newpwd_warn_info'));
+				setWarnLabel($.i18n.prop('frontpage.initpwd.edit.need.pwdlength'), $('#newpwd_warn_info'));
 			}
 		
 			if(!!index && index == 2){
