@@ -22,7 +22,7 @@
 							    </div>
 						  	</div>
 						  	<div class="form-group">
-						  		<label for="inputOriginPws" class="col-sm-offset-2  col-sm-2 control-label"><spring:message code="screen.init.password.step1.content.originpwd"/></label>
+						  		<label for="inputOriginPws" class="col-sm-offset-1  col-sm-3 control-label"><spring:message code="screen.init.password.step1.content.originpwd"/></label>
 							  	<div class="col-sm-4">
 							    	<input type="password" class="form-control"  name="originpwd"   id="origin_password">
 							    </div>
@@ -31,7 +31,7 @@
 							  	</div>
 						  </div>
 						  <div class="form-group">
-						  		<label for="inputNewPwd" class="col-sm-offset-2  col-sm-2 control-label"><spring:message code="screen.init.password.step1.content.newpwd"/></label>
+						  		<label for="inputNewPwd" class="col-sm-offset-1  col-sm-3 control-label"><spring:message code="screen.init.password.step1.content.newpwd"/></label>
 							  	<div class="col-sm-4">
 							    	<input type="password" class="form-control" name="newpwd"  id="new_password">
 							    </div>
@@ -40,7 +40,7 @@
 							  	</div>
 						  </div>
 						  <div class="form-group">
-						  		<label for="reInputPwd" class="col-sm-offset-2  col-sm-2 control-label"><spring:message code="screen.init.password.step1.content.renewpwd"/></label>
+						  		<label for="reInputPwd" class="col-sm-offset-1  col-sm-3 control-label"><spring:message code="screen.init.password.step1.content.renewpwd"/></label>
 							  	<div class="col-sm-4">
 							    	<input type="password" class="form-control" name="renewpwd"  id="re_new_password">
 							    </div>
@@ -49,7 +49,7 @@
 							  	</div>
 						  </div>
 						  <div class="form-group">
-						  	<label for="inputVerifyCode" class="col-sm-offset-2  col-sm-2 control-label"><spring:message code="screen.init.password.step1.content.verifycode"/></label>
+						  	<label for="inputVerifyCode" class="col-sm-offset-1  col-sm-3 control-label"><spring:message code="screen.init.password.step1.content.verifycode"/></label>
 						  	<div class="col-sm-2">
 						    	<input type="text" class="form-control"  name="verify_code"  id="init_pwd_tverfynotice">
 						  	</div>

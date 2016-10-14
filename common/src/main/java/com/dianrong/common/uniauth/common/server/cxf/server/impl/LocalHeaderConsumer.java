@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.support;
+package com.dianrong.common.uniauth.common.server.cxf.server.impl;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
