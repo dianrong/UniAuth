@@ -108,6 +108,8 @@ public class GroupService extends TenancyBasedService{
 
     @Transactional
     public void moveGroup(Integer sourceGroup, Integer targetGroup) {
+        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, sourceGroup);
+        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, targetGroup);
         grpPathMapper.moveTreeStepOne(sourceGroup);
         Map<String, Object> moveParam = new HashMap<>();
         moveParam.put("subAncestor", sourceGroup);
