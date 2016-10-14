@@ -21,8 +21,8 @@
 
     <!-- 将子组及其所有子组的子组都变成supertree的子组 -->
     <insert id="moveTreeStepTwo" parameterType="java.util.Map">
-        insert into grp_path (ancestor, descendant, depth)
-        select supertree.ancestor, subtree.descendant, supertree.depth+subtree.depth+1
+        insert into grp_path (ancestor, descendant, deepth)
+        select supertree.ancestor, subtree.descendant, supertree.deepth+subtree.deepth+1
         from grp_path as supertree join grp_path as
         subtree where subtree.ancestor = #{subAncestor,jdbcType=INTEGER} and supertree.descendant = #{superDecendant,jdbcType=INTEGER};
     </insert>
