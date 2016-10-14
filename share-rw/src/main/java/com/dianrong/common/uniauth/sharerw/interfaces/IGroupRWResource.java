@@ -50,4 +50,8 @@ public interface IGroupRWResource extends IGroupResource {
     @Path("replacetagstogroup")
   //scenario: replace tags to group
     Response<Void> replaceTagsToGrp(GroupParam groupParam);
+
+    @POST
+    @Path("move")
+    Response<Void> moveGroup(GroupParam groupParam);
 }
