@@ -106,6 +106,15 @@ public class GroupService extends TenancyBasedService{
 	@Resource(name="groupDataFilter")
 	private DataFilter dataFilter;
 
+    @Transactional
+    public void moveGroup(Integer sourceGroup, Integer targetGroup) {
+        grpPathMapper.moveTreeStepOne(sourceGroup);
+        Map<String, Object> moveParam = new HashMap<>();
+        moveParam.put("subAncestor", sourceGroup);
+        moveParam.put("superDecendant", targetGroup);
+        grpPathMapper.moveTreeStepTwo(moveParam);
+    }
+
     public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer roleId, Integer id, List<Integer> groupIds, String name, String code,
                                          String description, Byte status, Integer tagId, Boolean needTag, Boolean needUser, Boolean needParentId,
                                          Integer pageNumber, Integer pageSize) {

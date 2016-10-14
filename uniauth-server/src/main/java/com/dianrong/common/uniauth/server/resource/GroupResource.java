@@ -144,4 +144,9 @@ public class GroupResource implements IGroupRWResource {
 		return Response.success();
 	}
 
+	@Override
+	public Response<Void> moveGroup(GroupParam groupParam) {
+		groupService.moveGroup(groupParam.getId(), groupParam.getTargetGroupId());
+		return Response.success();
+	}
 }
