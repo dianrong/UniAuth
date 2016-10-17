@@ -11,7 +11,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @ImportResource({"classpath:spring-context.xml"})
 public class SSConfiguration {
-	
 	// 配置view resolver
 	@Bean
 	public InternalResourceViewResolver internalResourceViewResolver(){
