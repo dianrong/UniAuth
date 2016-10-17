@@ -24,6 +24,7 @@
 	</bean>
 
 	<sec:http pattern="/js/**" security="none" />
+	<sec:http pattern="/favicon.ico" security="none" />
 
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">
@@ -41,7 +42,7 @@
 		<sec:session-management
 			session-authentication-strategy-ref="sas"
 			invalid-session-url="#{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas" />
-		<sec:logout delete-cookies="JSESSIONID" />
+		<sec:logout delete-cookies="JSESSIONID"/>
 		<!-- the following part is customized intercept-url element definition 
 			for subsystem note: conflict with the judgment of regular expression, so 
 			the priority problem MUST be resolved. -->
