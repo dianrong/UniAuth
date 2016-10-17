@@ -2,9 +2,11 @@ package com.dianrong.uniauth.ssclient.config.support;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
@@ -14,13 +16,13 @@ import javax.servlet.ServletException;
 import org.apache.catalina.core.ApplicationFilterRegistration;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
+import org.springframework.util.Assert;
 
 import com.dianrong.uniauth.ssclient.config.SpringContextHolder;
 
 public class DisableSpringFilterBeanAutomicRegistry implements ServletContextInitializer{
   // 需要放过的filterClass的name列表
-  private static final String[] excludeFilterClassNames = {
-  };
+  private  Set<String> excludeFilterClassNames = new HashSet<String>();
   
   @Override
   public void onStartup(ServletContext servletContext) throws ServletException {
@@ -87,5 +89,12 @@ public class DisableSpringFilterBeanAutomicRegistry implements ServletContextIni
       }
     }
     return map;
+  }
+  
+  public void addExcludeFilterName(Set<String> filterNames) {
+    Assert.notNull(filterNames);
+    Set<String> _excludeFilterClassNames = new HashSet<String>(this.excludeFilterClassNames);
+    _excludeFilterClassNames.addAll(filterNames);
+    this.excludeFilterClassNames = _excludeFilterClassNames;
   }
 }
