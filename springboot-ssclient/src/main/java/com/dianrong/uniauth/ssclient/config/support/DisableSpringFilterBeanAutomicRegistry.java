@@ -15,7 +15,6 @@ import org.apache.catalina.core.ApplicationFilterRegistration;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
 
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import com.dianrong.uniauth.ssclient.config.SpringContextHolder;
 
 public class DisableSpringFilterBeanAutomicRegistry implements ServletContextInitializer{
@@ -31,7 +30,7 @@ public class DisableSpringFilterBeanAutomicRegistry implements ServletContextIni
       FilterRegistration  registration =  servletContext.getFilterRegistration(entry.getKey());
       if (registration instanceof ApplicationFilterRegistration) {
         ApplicationFilterRegistration _registration = (ApplicationFilterRegistration)registration;
-        FilterDef filterDef =  (FilterDef)ReflectionUtils.getField(_registration, "filterDef", false);
+        FilterDef filterDef =  (FilterDef)ReflectionUtils.getField(_registration, "filterDef");
         if (filterDef != null) {
           InvalidateFilterDelegateFilter delegateFilter = new InvalidateFilterDelegateFilter(entry.getValue());
           filterDef.setFilter(delegateFilter);
