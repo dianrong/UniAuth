@@ -2,8 +2,9 @@ package com.dianrong.uniauth.ssclient.config;
 
 import java.io.IOException;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Component;
 /**.
  * 获取applicationContext的引用
  * @author wanglin
- * 实现Servlet接口是为了让该bean提前被spring初始化
+ * 实现Filter接口是为了让该bean提前被spring初始化
  */
 @Component
-public class SpringContextHolder implements ApplicationContextAware, Servlet{
+public class SpringContextHolder implements ApplicationContextAware, Filter{
 
   private static volatile ApplicationContext applicationContext;
   
@@ -46,25 +47,15 @@ public class SpringContextHolder implements ApplicationContextAware, Servlet{
     return applicationContext;
   }
 
-  // 该servlet 不提供对外的工作  只是为了让spring boot 提前初始化该bean
+  
+  // 实现Filter接口是为了让该bean提前被spring初始化
   @Override
-  public void init(ServletConfig config) throws ServletException {
+  public void init(FilterConfig filterConfig) throws ServletException {
   }
-
   @Override
-  public ServletConfig getServletConfig() {
-    return null;
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    chain.doFilter(request, response);
   }
-
-  @Override
-  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-  }
-
-  @Override
-  public String getServletInfo() {
-    return null;
-  }
-
   @Override
   public void destroy() {
   }

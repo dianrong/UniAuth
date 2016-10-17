@@ -17,13 +17,13 @@ import org.springframework.util.Assert;
  */
 public class InvalidateFilterDelegateFilter implements Filter{
   
-  private final Filter souceFilter;
+  private final Filter delegatedFilter;
   
   private boolean invalidateFilter = true;
   
-  public InvalidateFilterDelegateFilter(Filter sourceFilter) {
-    Assert.notNull(sourceFilter);
-    this.souceFilter = sourceFilter;
+  public InvalidateFilterDelegateFilter(Filter delegatedFilter) {
+    Assert.notNull(delegatedFilter);
+    this.delegatedFilter = delegatedFilter;
   }
 
   @Override
@@ -35,7 +35,7 @@ public class InvalidateFilterDelegateFilter implements Filter{
     if (invalidateFilter) {
       chain.doFilter(request, response);
     } else {
-      souceFilter.doFilter(request, response, chain);
+      delegatedFilter.doFilter(request, response, chain);
     }
   }
 
