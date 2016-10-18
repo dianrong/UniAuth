@@ -145,10 +145,10 @@ set while_times = (audit_top_id  DIV update_per_num) + 1;
 
 -- drop index
 IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_userid_idx') THEN  
-alter table audit drop index `audit_userid_idx`;
+alter table audit drop index `uniauth_audit_userid_idx`;
 END IF;  
 IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_action_date') THEN  
-alter table audit drop index`audit_action_date`;
+alter table audit drop index`uniauth_audit_action_date`;
 END IF;  
 
  while while_index<while_times do
