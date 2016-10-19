@@ -86,6 +86,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             $scope.getRoleUserGrpTree();
         });
 
+        $scope.$on('selected-language-changed', $scope.getRoleUserGrpTree);
     };
 
     return {

@@ -53,8 +53,8 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 			  		$translate.use(langKey).then(
 			  				function(){
 			  					$rootScope.translateConstant();
+			  					$scope.languagesDropdown.selectOption(it)
 			  				});
-					$scope.languagesDropdown.selectOption(it)
 		        }, function (errorResponse) {
 		        	console.log('change language error');
 		        	//$translate.use(langKey);

@@ -92,6 +92,8 @@ define(['../../utils/constant'], function (constant, AlertService) {
         //watch();
         $scope.predicate = '';
         $scope.comparator = false;
+        
+        $scope.$on('selected-language-changed', $scope.getUserRolesWithCheckedInfo);
     };
 
     return {
