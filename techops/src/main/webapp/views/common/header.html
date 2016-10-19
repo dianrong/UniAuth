@@ -3,7 +3,7 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <a class="navbar-brand" href="#/"><img style="height: 100%" src="cfg/download/TECHOPS_LOGO"></a>
-            <a class="navbar-brand" href="#/" style="padding-left:5px">{{title?title: ('header.title' | translate)}}</a>
+            <a class="navbar-brand" href="#/" style="padding-left:5px"  title="{{title?title: ('header.title.fullname' | translate)}}">{{title?title: ('header.title' | translate)}}</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -20,10 +20,7 @@
                             </li>
                         </ul>
                     </div>
-
-		                    
                 </li>
-		
                 <li><a href="{{userInfo.userInfoUpdateUrl}}">{{ 'header.welcome' | translate}}：<span>{{userInfo.user.email}}</span></a></li>
 		<li style="padding-top: 8px;">
 		{{'header.languages' | translate}}:

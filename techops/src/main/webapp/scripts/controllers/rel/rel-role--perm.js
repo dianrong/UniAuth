@@ -100,6 +100,8 @@ define(['../../utils/constant'], function (constant) {
 
         $scope.predicate = '';
         $scope.comparator = false;
+        
+        $scope.$on('selected-language-changed', $scope.getAllPermsWithCheckedInfoInDomain);
     };
 
     return {

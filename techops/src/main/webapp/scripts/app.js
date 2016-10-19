@@ -50,9 +50,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 	 
 	  $scope.changeLanguage = function (langKey,it) {
 		  $http.get(constant.apiBase + "/i18n/changeLanguage?lang="+langKey).then(function (res) {
-			  		$translate.use(langKey);
-					$rootScope.translateConstant();
-					$scope.languagesDropdown.selectOption(it)
+			  		$translate.use(langKey).then(
+			  				function(){
+			  					$rootScope.translateConstant();
+			  					$scope.languagesDropdown.selectOption(it)
+			  				});
 		        }, function (errorResponse) {
 		        	console.log('change language error');
 		        	//$translate.use(langKey);
