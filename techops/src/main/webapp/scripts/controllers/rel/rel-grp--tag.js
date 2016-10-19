@@ -19,7 +19,6 @@ define(['../../utils/constant'], function (constant, AlertService) {
 
         $scope.grpTagsMsg = constant.loadEmpty;
         $scope.getGroupTagsWithCheckedInfo = function () {
-        	console.log(language);
             $scope.grpTagsMsg = constant.loading;
             var params = {};
             
