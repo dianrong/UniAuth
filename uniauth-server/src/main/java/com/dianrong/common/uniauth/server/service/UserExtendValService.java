@@ -65,7 +65,7 @@ public class UserExtendValService extends TenancyBasedService{
         userExtendVal.setStatus(status);
         userExtendVal.setUserId(userId);
         userExtendVal.setValue(value);
-        userExtendVal.setExtendId(tenancyService.getOneCanUsedTenancyId());
+        userExtendVal.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         
         userExtendValMapper.insertSelective(userExtendVal);
         

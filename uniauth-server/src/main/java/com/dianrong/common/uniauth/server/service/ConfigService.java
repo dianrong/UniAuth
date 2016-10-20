@@ -56,6 +56,7 @@ public class ConfigService extends TenancyBasedService{
         cfg.setCfgTypeId(cfgTypeId);
         // update process.
         if(id != null) {
+        	cfg.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
         		//更新判断比较
         		dataFilter.updateFieldCheck(id, FieldType.FIELD_TYPE_CFG_KEY ,cfgKey);

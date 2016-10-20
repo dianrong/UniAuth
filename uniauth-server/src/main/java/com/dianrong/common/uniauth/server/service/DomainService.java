@@ -190,7 +190,8 @@ public class DomainService extends TenancyBasedService{
 		Domain param = BeanConverter.convert(domainParam);
 		param.setLastUpdate(new Date());
 		param.setTenancyId(tenancyService.getOneCanUsedTenancyId());
-		domainMapper.updateByPrimaryKey(param);
+		domainMapper.updateByPrimaryKeySelective(param);
+//		domainMapper.updateByPrimaryKey(param);
 	}
 
 	@Transactional
@@ -217,7 +218,7 @@ public class DomainService extends TenancyBasedService{
 		}
 		
 		Stakeholder param = BeanConverter.convert(stakeholderParam,true);
-		stakeholderMapper.updateByPrimaryKey(param);
+		stakeholderMapper.updateByPrimaryKeySelective(param);
 	}
 
 	@Transactional
