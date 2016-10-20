@@ -4,6 +4,8 @@ import com.dianrong.common.uniauth.server.data.entity.GrpPath;
 import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpPathKey;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface GrpPathMapper {
@@ -96,4 +98,7 @@ public interface GrpPathMapper {
     int updateByPrimaryKey(GrpPath record);
 
     int insertNewNode(GrpPath record);
+
+    int moveTreeStepOne(Integer ancestor);
+    int moveTreeStepTwo(Map<String, Object> paramMap);
 }

@@ -11,4 +11,19 @@
         SELECT #{descendant,jdbcType=INTEGER}, #{descendant,jdbcType=INTEGER}, 0;
     </insert>
 
+    <!-- 删除需要移动的节点与其父节点的关联 -->
+    <delete id="moveTreeStepOne" parameterType="java.lang.Integer">
+        delete a from grp_path as a join grp_path as d
+        on a.descendant = d.descendant left join grp_path
+        as x on x.ancestor = d.ancestor and x.descendant = a.ancestor
+        where d.ancestor = #{ancestor,jdbcType=INTEGER} and x.ancestor is null;
+    </delete>
+
+    <!-- 将子组及其所有子组的子组都变成supertree的子组 -->
+    <insert id="moveTreeStepTwo" parameterType="java.util.Map">
+        insert into grp_path (ancestor, descendant, deepth)
+        select supertree.ancestor, subtree.descendant, supertree.deepth+subtree.deepth+1
+        from grp_path as supertree join grp_path as
+        subtree where subtree.ancestor = #{subAncestor,jdbcType=INTEGER} and supertree.descendant = #{superDecendant,jdbcType=INTEGER};
+    </insert>
 </mapper>
