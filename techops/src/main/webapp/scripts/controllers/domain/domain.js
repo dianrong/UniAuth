@@ -157,6 +157,8 @@ define(['../../utils/constant','../../utils/utils'], function (constant, utils) 
             DomainService.domainShared.selected = undefined;
             $state.go('user');
         });
+        
+        $scope.$on('selected-language-changed', $scope.refreshStakeholders);
     };
 
     return {
