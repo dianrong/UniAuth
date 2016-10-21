@@ -444,3 +444,90 @@
 	font-weight: bold;
 	cursor: auto;
 }
+
+/* tenancy_code */
+.tenancy_show {
+	float: left;
+	width: 200px;
+}
+
+.tenancy_show p {
+	padding: 5px 2px;
+	color: white;
+}
+
+.tenancy_show p a {
+	font-weight: bold;
+	color: #70BA61;
+}
+
+.tenancy_show p a:hover {
+	color: #63A955;
+}
+
+.tenancy_select {
+	float: left;
+	width: 200px;
+	height: 120px;
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+	background-color: #155975;
+}
+
+#tenancy_select:hover {
+		background-color: #268CB7
+}
+
+.tenancy_select .content {
+	padding : 5px  2px;
+}
+
+.tenancy_select .content  .title {
+	padding: 5px 2px;
+	text-align: left;
+	font-weight: bold;
+}
+
+.tenancy_select .content .info {
+	padding: 5px 2px;
+}
+
+.tenancy_select .float-left {
+	float:  left;
+	padding-right: 10px;
+} 
+
+.tenancy_select .content .btn-submit {
+    cursor: pointer;
+	background: #70ba61;
+    font-weight: bold;
+    border: 0;
+    color: white;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.tenancy_select input[type=text] {
+	 -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+	width: 120px;
+}
+.tenancy_select input[type=button] {
+	width: 50px;
+	height: 21px;
+}
+
+.tenancy_select input[type=button]:hover {
+	background: #7DD26B;
+}
+
+.tenancy_select .content  .msg {
+	padding: 5px 2px;
+}
+
+.tenancy_select .content  .msg p {
+	color:white; 
+}

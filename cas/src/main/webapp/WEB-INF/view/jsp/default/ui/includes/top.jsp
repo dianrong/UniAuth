@@ -50,6 +50,32 @@
   <![endif]-->
 </head>
 <body   id="cas"  style="background-color:<%=CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_BACKGROUND_COLOR")==null?"":CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_BACKGROUND_COLOR").getValue()%>">
+   	<!-- 租户选择 -->
+	<div class="tenancy_show" id="tenancy_show">
+		<p>
+			<a href="javascript:void(0);" title="点击切换租户"  id="tenancy_set">点融网</a>&nbsp;欢迎您的访问
+		</p>
+	</div>
+   	<div id="tenancy_select" class="tenancy_select hiddenbtn">
+		<div class="content">
+			<div class="title">
+				<label for="tenancy_code">tenancy_Code</label>
+			</div>
+			<div class="info">
+				<div class="float-left">
+					<input type="text"/>
+				</div>
+				<div>
+					<input type="button" value="confirm" class="btn-submit" id="btn_confirm_tenancy">
+				</div>
+			</div>
+			<div class="msg">
+				<p>
+					the tenancy code you input is not exist, please check is right or not.
+				</p>
+			</div>
+			</div>
+   </div>	   		
   <div id="container">
       <header>
       	<img alt="cas-login-logo" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>

@@ -1,10 +1,7 @@
 <!-- include some java object -->
 <%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
 <%@ page import="com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel"%>
-
 <jsp:directive.include file="top.jsp" />
-
-
 <c:if test="${not empty redirectUrl}">
 	<script>
 		top.window.location = "${redirectUrl}";
