@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.common.server.cxf;
 
-/**-
+/**
  * cxf header 的key 定义
  * @author wanglin
  *
