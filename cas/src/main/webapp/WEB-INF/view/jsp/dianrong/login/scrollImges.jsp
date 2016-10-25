@@ -19,7 +19,7 @@
 								target="_blank"
 			    		</c:if>
 					href="${item.hrefUrl}">
-						<img alt="${item.cfgKey}" src="uniauth/cascfg/imges/${item.cfgKey}">
+						<img alt="${item.cfgKey}" src="<%=path %>/uniauth/cascfg/imges/${item.cfgKey}">
 					</a>
 				</li>
 		</c:forEach> 
@@ -38,5 +38,5 @@
 		</c:forEach> 
 	</ol>
 </div>
-<script type="text/javascript" src="imgscroll/js/slider.js" ></script>
-<script type="text/javascript" src="js/loginscroll.js" ></script>
+<script type="text/javascript" src="<%=path %>/imgscroll/js/slider.js" ></script>
+<script type="text/javascript" src="<%=path %>/js/loginscroll.js" ></script>
