@@ -4,9 +4,6 @@ $(function() {
 	
 	//初始化函数
 	var init = function() {
-		//添加跳转页面事件
-		$('#to_reset_pwd_btn').bind('click', jump_to_step1_page);
-		
 		// 刷新验证码
 		$('#verfypic').click(function(){
 			refresh_verfypic($('#verfypic'));
@@ -38,20 +35,6 @@ $(function() {
 		
 		// 第三步的请求
 		$('#btn_step3').click(processStep3);
-	}
-	
-	//jump to reset pwd
-	var jump_to_step1_page = function() {
-		//通过隐藏表单设置背景url
-		$('#hidden_savedLoginContext').val(getLocationParameterStr());
-		
-		var hidden_to_step1_form = $('#hidden_post_form_for_loginurl');
-		//设置action
-		var action_url = processUrl +"?step=0";
-		hidden_to_step1_form.attr("action", action_url);
-		hidden_to_step1_form.submit();
-		//防止多点
-		$(this).unbind('click');
 	}
 	
 	// step1 btn show
@@ -232,6 +215,7 @@ $(function() {
 				'email' : temalval,
 				'pageVerifyCode' : tverifycode,
 				'step' : '1',
+				'tenancyCode': cookieOperation.getTenancyCode(),
 		};
 		$.ajax({  
             type : "POST", 

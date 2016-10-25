@@ -125,7 +125,7 @@ body {
 	-o-transition: box-shadow 0.25s ease;
 	-webkit-transition: box-shadow 0.25s ease;
 	transition: box-shadow 0.25s ease;
-	width: 120px;
+	width: 210px;
 	/* 6 */
 	/* 6 */
 }
@@ -537,14 +537,4 @@ footer a:link, footer a:visited {
 	width: 500px;
     height: 320px;
     float: right;
-}
-
-.row .left-select {
-    float: left;
-    width: 40%;
-}
-
-.row .right-select {
-    display: inline;
-    width: 50%;
 }

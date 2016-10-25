@@ -3,9 +3,6 @@ $(function() {
 	
 	//初始化函数
 	var init = function(){
-		//添加跳转页面事件
-		$('#to_edit_userinfo_btn').bind('click', jump_to_userinfo_edit_page);
-		
 		//显示提示框
 		$('#user_info_edit_ok_btn').click(modal_confirm_btn_process);
 		
@@ -45,20 +42,6 @@ $(function() {
 		$('#modal_new_password_ok_btn').click(btn_update_password_ok_process);
 		//关闭事件
 		$('#modal-new-password').on('hidden.bs.modal', modal_update_password_close_event);
-	}
-	
-	//jump to userinfo edit page
-	var jump_to_userinfo_edit_page = function() {
-		//通过隐藏表单设置背景url
-		$('#hidden_savedLoginContext').val(getLocationParameterStr());
-		$('#hidden_form_method').val('get');
-		var hidden_to_edit_form = $('#hidden_post_form_for_loginurl');
-		//设置action
-		var action_url = processUrl + "?edituserinfo=go";
-		hidden_to_edit_form.attr("action", action_url);
-		hidden_to_edit_form.submit();
-		//防止多点
-		$(this).unbind('click');
 	}
 	
 	//弹出用于确认的模态框

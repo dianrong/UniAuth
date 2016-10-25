@@ -3,18 +3,7 @@
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
 			<header class="find-pwd">
-				<% 
-								Object savedLoginContext = request.getSession().getAttribute("pwdg_savedLoginContext");
-								if(savedLoginContext == null) {
-									%>
-										<a href="<%=path %>/login"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
-									<% 
-								} else {
-									%>
-										<a href="<%=path%>/login?${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
-									<% 
-								}
-						%>
+				<a href="login"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
 				&gt;<spring:message code="screen.password.reset.step1.title" />
 			</header>
 			<div class="common-wizard password-reset-wizard ng-isolate-scope">
@@ -51,7 +40,7 @@
 				<div class="steps">
 					<div class="row">
 					  <div class="col-sm-offset-5 col-sm-3 reset-success-notice">
-						<img src="<%=path %>/images/pwdreset/icon-reset-success.png" class="img-responsive check-ok-icon" alt="Responsive image">
+						<img src="images/pwdreset/icon-reset-success.png" class="img-responsive check-ok-icon" alt="Responsive image">
 					  </div>
 					</div>
 					<div class="row">
@@ -61,11 +50,11 @@
 									Object savedLoginContext1 = request.getSession().getAttribute("pwdg_savedLoginContext");
 									if(savedLoginContext1 == null) {
 										%>
-											<a href="<%=path %>/login"><spring:message code="screen.password.reset.step3.success.login"/></a>
+											<a href="login"><spring:message code="screen.password.reset.step3.success.login"/></a>
 										<% 
 									} else {
 										%>
-											<a href="<%=path%>/login?${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.password.reset.step3.success.login"/></a>
+											<a href="login?${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}"><spring:message code="screen.password.reset.step3.success.login"/></a>
 										<% 
 									}
 								%>

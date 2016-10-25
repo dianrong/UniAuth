@@ -449,6 +449,7 @@
 .tenancy_show {
 	float: left;
 	width: 200px;
+	text-align: left;
 }
 
 .tenancy_show p {
@@ -459,6 +460,7 @@
 .tenancy_show p a {
 	font-weight: bold;
 	color: #70BA61;
+	text-decoration: none;
 }
 
 .tenancy_show p a:hover {
@@ -479,18 +481,27 @@
 		background-color: #268CB7
 }
 
-.tenancy_select .content {
+.tenancy_select .cas_content {
 	padding : 5px  2px;
+	line-height: initial;
 }
 
-.tenancy_select .content  .title {
+.tenancy_select .cas_content  .cas_title {
 	padding: 5px 2px;
+	margin: 3px 0px;
 	text-align: left;
 	font-weight: bold;
 }
 
-.tenancy_select .content .info {
+.tenancy_select .cas_content  .cas_title   label {
+	color : black;
+	margin-bottom:0px;
+	 line-height: normal;
+}
+
+.tenancy_select .cas_content .cas_info {
 	padding: 5px 2px;
+	margin: 5px 0px;
 }
 
 .tenancy_select .float-left {
@@ -498,7 +509,7 @@
 	padding-right: 10px;
 } 
 
-.tenancy_select .content .btn-submit {
+.tenancy_select .cas_content .btn-submit {
     cursor: pointer;
 	background: #70ba61;
     font-weight: bold;
@@ -524,10 +535,13 @@
 	background: #7DD26B;
 }
 
-.tenancy_select .content  .msg {
+.tenancy_select .cas_content  .cas_msg {
 	padding: 5px 2px;
+	margin: 5px 0px;
+	text-align: left;
 }
 
-.tenancy_select .content  .msg p {
+.tenancy_select .cas_content  .cas_msg p {
 	color:white; 
+	line-height: inherit;
 }
