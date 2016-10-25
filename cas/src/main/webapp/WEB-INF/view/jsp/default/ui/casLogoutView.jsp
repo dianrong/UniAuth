@@ -36,21 +36,7 @@
     <p><spring:message code="screen.logout.success" /></p>
     <p><spring:message code="screen.logout.security" /></p>
     <br>
-    <p>
-    <% 
-			Object savedLoginContext = request.getSession().getAttribute("pwdg_savedLoginContext");
-			if(savedLoginContext == null) {
-				%>
-					<a href="<%=path %>/login"><spring:message code="screen.logout.login.again" /></a>
-				<% 
-			} else {
-				%>
-					<a href="<%=path%>/login?${fn:escapeXml(sessionScope.pwdg_savedLoginContext)}">
-						<spring:message code="screen.logout.login.again" />
-					</a>
-				<% 
-			}
-	%></p>
+    <p><a href="<%=path %>/login"><spring:message code="screen.logout.login.again" /></a></p>
   </div>
 <jsp:directive.include file="includes/bottom.jsp" />
 

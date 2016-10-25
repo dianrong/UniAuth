@@ -1,16 +1,19 @@
 package com.dianrong.common.uniauth.cas.util;
 
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
+import com.dianrong.common.uniauth.cas.model.HttpResponseModel;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 /**.
  * request，response，session等的一些统一操作的工具方法
@@ -107,32 +110,18 @@ public final class WebScopeUtil {
 		return (T)session.getAttribute(key);
 	}
 	
+	
 	/**.
-	 * 判断两个url是否相等
-	 * @param url1 url1
-	 * @param url2 url2
-	 * @return 
+	 * 以json格式返回结果
+	 * @param response
+	 * @param obj  返回结果对象
+	 * @throws IOException  response write error
 	 */
-	public static boolean judgeTwoUrlIsEqual(String url1, String url2) {
-		if(url1 == null || url2 == null) {
-			return false;
-		}
-		try {
-			String turl1 = URLDecoder.decode(url1.trim(), "utf-8");
-			String turl2 = URLDecoder.decode(url2.trim(), "utf-8");
-
-			// 去掉末尾的/
-			while(turl1.length() > 0 && turl1.charAt(turl1.length() - 1) == '/') {
-				turl1 = turl1.substring(0, turl1.length() - 1);
-			}
-			// 去掉末尾的/
-			while(turl2.length() > 0 && turl2.charAt(turl2.length() - 1) == '/') {
-				turl2 = turl2.substring(0, turl2.length() - 1);
-			}
-			return turl1.equalsIgnoreCase(turl2);
-		} catch (UnsupportedEncodingException e) {
-			logger.warn("UnsupportedEncodingException", e);
-			return false;
+	public static void sendJsonToResponse(HttpServletResponse response, HttpResponseModel<?> obj) throws IOException {
+		if (obj == null) {
+			response.getWriter().write("");
+		} else {
+			response.getWriter().write(JsonUtil.object2Jason(obj));
 		}
 	}
 	
@@ -161,11 +150,5 @@ public final class WebScopeUtil {
 			logger.warn("judgeTwoServiceIsEqual failed", e);
 			return false;
 		}
-	}
-	
-	public static void main(String[] args) {
-		String url1 = "localhost:8160/custom-ssclient";
-		String url2 = "localhost:8160/custom-ssclient/cas/login";
-		System.out.println(judgeTwoServiceIsEqual(url1, url2));
 	}
 }

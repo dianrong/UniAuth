@@ -20,17 +20,14 @@
     </div>
 </footer>
 </div> <!-- END #container -->
-<%
-	String bpath = request.getContextPath();
-%>
-<script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
+<script type="text/javascript" src="jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" src="jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js" ></script>
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
 
-<script type="text/javascript" src="<%=bpath %>/js/common.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/head.min.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/cas.js" ></script>
+<script type="text/javascript" src="js/common.js" ></script>
+<script type="text/javascript" src="js/head.min.js" ></script>
+<script type="text/javascript" src="js/cas.js" ></script>
 </body>
 </html>
 

@@ -61,16 +61,41 @@ $(function() {
 		}
 	});
 
-	$("#tenancy").val(uriEncodeOnce(getUrlParam("tenancy")));
-	$("#domain").val(uriEncodeOnce(getUrlParam("service")));
-	if (console && console.log) {
-		console.log("current selected tenancy:" + getUrlParam("tenancy"));
-		console.log("current selected domain:" + getUrlParam("service"));
+	if(!($('#login_domain_select').hasClass('hiddenbtn')) && $("#domain").length>0) {
+		var service_url = getUrlParam("service");
+		if(service_url) {
+			$("#domain").val(uriEncodeOnce(service_url));
+			logOperation.log("current selected domain:" + getUrlParam("service"));
+		} else {
+			// get from cookie
+			var cookie_service = cookieOperation.getService();
+			var _service_url;
+			if (!cookie_service) {
+				// get default one
+				_service_url = $("#domain option:first").val();
+				cookieOperation.setService($("#domain option:first").text());
+			} else {
+				var cookie_option;
+				$("#domain option").each(function (){  
+				    if($(this).text()===cookie_service){   
+				    	cookie_option = $(this);
+				  }});  
+				if (cookie_option) {
+					_service_url = cookie_option.val();
+				} else {
+					_service_url = $("#domain option:first").val();
+					cookieOperation.setService($("#domain option:first").text());
+				}
+			}
+			// redirect
+			var redirect = getBaseUrl() + "?service=" + _service_url;
+			top.window.location = redirect;
+		}
 	}
 	
-	// uriencode once
+	// uri_encode once
 	function uriEncodeOnce(uri_str) {
-		if(!uri_str){return ""};
+		if(!uri_str)return "";
 		var d_str = decodeURIComponent(uri_str);
 		if (uri_str === d_str) {
 			return encodeURIComponent(uri_str);
@@ -84,22 +109,28 @@ $(function() {
 		jqueryReady();
 	}
 
-	var getBaseUrl = function () {
+	function getBaseUrl() {
 		return window.location.href.substring(0,window.location.href.indexOf('?') === -1 ? window.location.href.length :window.location.href.indexOf('?'));
 	};
 	
-	// tenancy change
-	$("#tenancy").change(function() {
-		var selectedValue = $("#tenancy").val();
-		var redirect = getBaseUrl() + "?tenancy=" + selectedValue;
+	// domain change
+	$("#domain").change(function() {
+		// write cookie
+		var selectedDomainCode = $("#domain option:selected").text();
+		cookieOperation.setService(selectedDomainCode);
+		// redirect
+		var selectedDomain = $("#domain").val();
+		var redirect = getBaseUrl() + "?service=" + selectedDomain;
 		top.window.location = redirect;
 	});
 	
-	// domain change
-	$("#domain").change(function() {
-		var selectedTenancy = $("#tenancy").val();
-		var selectedDomain = $("#domain").val();
-		var redirect = getBaseUrl() + "?service=" + selectedDomain+"&tenancy="+selectedTenancy;
-		top.window.location = redirect;
+	// login submit
+	$('#btn_cas_submit').click(function(e){
+		e.preventDefault();  
+		var loginForm = $('#login #fm1');
+		var input_tenancy = $("<input type='hidden' name='tenancyCode' />")
+	    input_tenancy.attr('value', cookieOperation.getTenancyCode());
+		loginForm.append(input_tenancy);
+		loginForm.submit();
 	});
 });

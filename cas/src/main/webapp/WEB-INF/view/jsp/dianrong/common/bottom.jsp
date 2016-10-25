@@ -19,15 +19,12 @@
     </div>
 </footer>
 </body>
-<%
-	String bpath = request.getContextPath();
-%>
-<script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/bootstrap-3.3.5/js/bootstrap.min.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/common.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/pwdfoget.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/userinfoedit.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/initpwd.js" ></script>
+<script type="text/javascript" src="jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" src="jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
+<script type="text/javascript" src="bootstrap-3.3.5/js/bootstrap.min.js" ></script>
+<script type="text/javascript" src="js/common.js" ></script>
+<script type="text/javascript" src="js/pwdforget.js" ></script>
+<script type="text/javascript" src="js/userinfoedit.js" ></script>
+<script type="text/javascript" src="js/initpwd.js" ></script>
 </html>
 

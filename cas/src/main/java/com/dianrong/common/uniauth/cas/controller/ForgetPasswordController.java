@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dianrong.common.uniauth.cas.model.DateSessionObjModel;
 import com.dianrong.common.uniauth.cas.service.ForgetPasswordService;
-import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -85,9 +84,6 @@ public class ForgetPasswordController extends AbstractBaseController {
         HttpSession session = request.getSession(false);
         // clear session
         clearAllSessionVal(session);
-
-        // 记录跳转的上下文url
-        FirstPageUrlProcessUtil.refreshLoginContextInsession(request);
         // refresh or set
         return getPwdForgetStep1Page();
     }

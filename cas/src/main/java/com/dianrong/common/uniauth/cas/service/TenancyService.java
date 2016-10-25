@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
@@ -31,6 +32,23 @@ public class TenancyService extends BaseService {
 		TenancyParam param = new TenancyParam();
 		param.setStatus(AppConstants.STATUS_ENABLED);
 		return uniClientFacade.getTenancyResource().searchTenancy(param).getData();
+	}
+	
+	/**.
+	 * 通过tenancyCode 获取对应的tenancy(可用的)
+	 * @param tenancyCode 查询的tenancyCode
+	 * @return tenancy or null
+	 */
+	public TenancyDto getTenancyByCode(String tenancyCode) {
+		Assert.notNull(tenancyCode, "tenancyCode can not be null");
+		TenancyParam param = new TenancyParam();
+		param.setStatus(AppConstants.STATUS_ENABLED);
+		param.setCode(tenancyCode);
+		 List<TenancyDto> tenancies =  uniClientFacade.getTenancyResource().searchTenancy(param).getData();
+		 if (tenancies != null && !tenancies.isEmpty()) {
+			 return tenancies.get(0);
+		 }
+		 return null;
 	}
 
 	// 初期的租户需要一个默认的租户，即点融网
