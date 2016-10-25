@@ -179,7 +179,7 @@ $(function() {
 			}
 			// tenancy_code check
 			var url = context_path + "/uniauth/tenancy/check/"+check_tenancy_code;
-			$.post(url, function(data) {
+			$.get(url, function(data) {
 				if(data.success && data.success !== 'false') {
 					set_tenancy_info(data.content);
 					tenancy_show(false);
