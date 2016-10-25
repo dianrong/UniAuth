@@ -137,7 +137,7 @@ $(function() {
 		};
 		var check_tenancy_code = function(tenancyCode){
 			var url = context_path + "/uniauth/tenancy/check/"+tenancyCode;
-			$.post(url, function(data) {
+			$.get(url, function(data) {
 				if(data && data.content) {
 					callBackInit(data.content);
 				}
