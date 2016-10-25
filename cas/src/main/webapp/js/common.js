@@ -122,6 +122,8 @@ $(function() {
 		// 回调函数  用于设置查询到的租户信息
 		var callBackInit = function(usefulTenancy) {
 			set_tenancy_info(usefulTenancy);
+			// enable login btn
+			$('.enable-after-init-success').removeAttr('disabled');
 		};
 		var query_default_tenancy = function(){
 			var url = context_path + "/uniauth/tenancy/getDefault";

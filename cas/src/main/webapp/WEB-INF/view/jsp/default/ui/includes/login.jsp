@@ -106,7 +106,7 @@
             <input type="hidden" name="execution" value="${flowExecutionKey}" />
             <input type="hidden" name="_eventId" value="submit" />
 
-            <input class="btn-submit" name="cas_submit" accesskey="l" value="<spring:message code="screen.welcome.button.login" />" tabindex="6"  id="btn_cas_submit"  type="submit" />
+            <input class="btn-submit  enable-after-init-success"  name="cas_submit"  disabled="disabled"  accesskey="l"  value="<spring:message code="screen.welcome.button.login" />"  tabindex="6"   id="btn_cas_submit"   type="submit" />
             <input class="btn-reset" name="reset" accesskey="c" value="<spring:message code="screen.welcome.button.clear" />" tabindex="7" type="reset" />
             
             <c:if test="${empty edituserinfo}">
@@ -128,5 +128,5 @@
 </div>
 <jsp:directive.include file="bottom.jsp" />
 <script type="text/javascript" src="js/loginpage.js" ></script>
-<script type="text/javascript" src="js/pwdfoget.js" ></script>
+<script type="text/javascript" src="js/pwdforget.js" ></script>
 <script type="text/javascript" src="js/userinfoedit.js" ></script>
