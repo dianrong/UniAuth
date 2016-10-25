@@ -3,7 +3,7 @@
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
 			<header class="find-pwd">
-				<a href="login"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
+				<a href="<%=path %>/login"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
 				&gt;<spring:message code="screen.password.reset.step1.title" />
 			</header>
 			<div class="common-wizard password-reset-wizard ng-isolate-scope">
@@ -38,7 +38,7 @@
 				
 				<!-- content -->
 				<div class="steps">
-					<form action="uniauth/forgetPassword" id="step1Post" class="form-horizontal">
+					<form action="<%=path %>/uniauth/forgetPassword" id="step1Post" class="form-horizontal">
 					  <div class="form-group">
 					  	<div class="col-sm-offset-4 col-sm-4">
 					    	<input type="email" class="form-control" placeholder="Email" id="temail">
@@ -50,7 +50,7 @@
 					  	</div>
 					  	<div class="col-sm-2">
 					  		<div class="captcha-img">
-					    		<img alt="picture" src="uniauth/captcha" title="picture" id="verfypic" >
+					    		<img alt="picture" src="<%=path %>/uniauth/captcha" title="picture" id="verfypic" >
 					    		<button type="button" class="btn btn-primary glyphicon glyphicon-refresh" id="refreshverfypic"></button>
 					    	</div>
 					  	</div>

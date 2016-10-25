@@ -3,7 +3,7 @@
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
 			<header class="find-pwd">
-				<a href="login"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
+				<a href="<%=path %>/login"><spring:message code="screen.password.reset.step.backtofirstpage"/></a>
 				&gt;<spring:message code="screen.password.reset.step1.title" />
 			</header>
 			<div class="common-wizard password-reset-wizard ng-isolate-scope">
@@ -38,7 +38,7 @@
 				
 				<!-- content -->
 				<div class="steps">
-					<form action="uniauth/forgetPassword" id="step2Post" class="form-horizontal">
+					<form action="<%=path %>/uniauth/forgetPassword" id="step2Post" class="form-horizontal">
 					 	<div class="form-group">
 							<div class="col-sm-offset-4 col-sm-4">
 						    <label for="emailValue" class="h6">${fn:escapeXml(sessionScope.pwdg_emailVal)}</label>

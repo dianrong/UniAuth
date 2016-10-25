@@ -8,26 +8,24 @@
 <%@page import="com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper"%>       
 <%
 String path = request.getContextPath(); 
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/"; 
 %>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<base href=" <%=basePath%>"> 
 <title>
 <%=CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_TITLE")==null?"":CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_TITLE").getValue()%>
 </title>
 
-<link rel="icon" href="uniauth/cascfg/imges/CAS_ICON"  type="image/x-icon" />
+<link rel="icon" href="<%=path %>/uniauth/cascfg/imges/CAS_ICON"  type="image/x-icon" />
 <!-- 	type="image/x-icon" /> -->
 <!-- Bootstrap -->
-<link href="bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="<%=path %>/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- system -->
-<link href="css/main.css" rel="stylesheet">
-<link href="css/component.css" rel="stylesheet">
-<link href="css/system.css" rel="stylesheet">
+<link href="<%=path %>/css/main.css" rel="stylesheet">
+<link href="<%=path %>/css/component.css" rel="stylesheet">
+<link href="<%=path %>/css/system.css" rel="stylesheet">
 
 <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
@@ -61,7 +59,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
    </div>	   		
 	<header class="header">
-		<img alt="cas-login-logo" src="uniauth/cascfg/imges/CAS_LOGO"><br>
+		<img alt="cas-login-logo" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>
 		<c:if test="${not empty principal}">
 			<font color="white"><spring:message code="sscreen.welcome.label.current.loginuser" />${principal}</font>
 		</c:if>
