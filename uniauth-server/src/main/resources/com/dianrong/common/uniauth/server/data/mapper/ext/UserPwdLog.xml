@@ -27,7 +27,7 @@
      )
   </insert>
   
-  <select id="queryUserPwdLogs" parameterType="com.dianrong.common.uniauth.server.data.entity.UserPwdLog" resultMap="BaseResultMap">
+  <select id="queryUserPwdLogs" parameterType="com.dianrong.common.uniauth.server.data.query.UserPwdLogQueryParam" resultMap="BaseResultMap">
 	select 
 		<include refid="Base_Column_List"/> 
 	from user_pwd_log 

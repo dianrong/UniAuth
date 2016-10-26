@@ -82,6 +82,7 @@ import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserPwdLogMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
+import com.dianrong.common.uniauth.server.data.query.UserPwdLogQueryParam;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -1077,7 +1078,7 @@ public class UserService extends TenancyBasedService {
     	 if(!AuthUtils.validatePasswordRule(password)) {
              throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
     	 }
-    	 UserPwdLog condition = new UserPwdLog();
+    	 UserPwdLogQueryParam condition = new UserPwdLogQueryParam();
     	 condition.setUserId(userId);
     	 Calendar time = Calendar.getInstance();
     	 time.add(Calendar.MONTH, -AppConstants.DUPLICATE_PWD_VALID_MONTH);

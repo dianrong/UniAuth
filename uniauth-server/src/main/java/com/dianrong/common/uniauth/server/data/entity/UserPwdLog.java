@@ -19,10 +19,6 @@ public class UserPwdLog {
     private Date createDate;
     
     private Long tenancyId;
-    // query condtion
-    private Date createDateBegin;
-    
-    private Date createDateEnd;
 
 	public Long getId() {
 		return id;
@@ -62,22 +58,6 @@ public class UserPwdLog {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
-	}
-
-	public Date getCreateDateBegin() {
-		return createDateBegin;
-	}
-
-	public void setCreateDateBegin(Date createDateBegin) {
-		this.createDateBegin = createDateBegin;
-	}
-
-	public Date getCreateDateEnd() {
-		return createDateEnd;
-	}
-
-	public void setCreateDateEnd(Date createDateEnd) {
-		this.createDateEnd = createDateEnd;
 	}
 
 	public Long getTenancyId() {

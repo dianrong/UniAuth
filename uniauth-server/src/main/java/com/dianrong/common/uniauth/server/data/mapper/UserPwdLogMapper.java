@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import java.util.List;
 
 import com.dianrong.common.uniauth.server.data.entity.UserPwdLog;
+import com.dianrong.common.uniauth.server.data.query.UserPwdLogQueryParam;
 
 public interface UserPwdLogMapper {
     /**.
@@ -17,5 +18,5 @@ public interface UserPwdLogMapper {
      * @param condition
      * @return
      */
-    List<UserPwdLog> queryUserPwdLogs(UserPwdLog condition);
+    List<UserPwdLog> queryUserPwdLogs(UserPwdLogQueryParam condition);
 }
