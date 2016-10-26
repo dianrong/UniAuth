@@ -16,9 +16,11 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
@@ -61,6 +63,7 @@ import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
 import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserPwdLog;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
@@ -76,6 +79,7 @@ import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserPwdLogMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
@@ -95,6 +99,9 @@ import com.google.common.collect.Lists;
  */
 @Service
 public class UserService extends TenancyBasedService {
+	
+	private final static Logger logger = Logger.getLogger(UserService.class);
+	
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -128,6 +135,9 @@ public class UserService extends TenancyBasedService {
 
     @Autowired
     private UserExtendValService userExtendValService;
+    
+    @Autowired
+    private UserPwdLogMapper  userPwdLogMapper;
 
     /**.
      * 进行用户数据过滤的filter
@@ -162,6 +172,7 @@ public class UserService extends TenancyBasedService {
         //用户添加成功后发送mq
         uniauthSender.sendUserAdd(user);
 
+        asynAddUserPwdLog(user);
         return userDto;
     }
 
@@ -184,17 +195,15 @@ public class UserService extends TenancyBasedService {
                 user.setFailCount(AppConstants.ZERO_Byte);
                 break;
             case RESET_PASSWORD:
-                if(password == null) {
-                    throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "password"));
-                } else if(!AuthUtils.validatePasswordRule(password)) {
-                    throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
-                }
+            	checkUserPwd(id, password);
                 byte salt[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
                 user.setPasswordSalt(Base64.encode(salt));
                 user.setPasswordDate(new Date());
                 //reset failed count
                 user.setFailCount(AppConstants.ZERO_Byte);
+                // log
+                asynAddUserPwdLog(user);
                 break;
             case STATUS_CHANGE:
                 // 只处理启用的情况
@@ -210,33 +219,29 @@ public class UserService extends TenancyBasedService {
                 user.setPhone(phone);
                 break;
             case RESET_PASSWORD_AND_CHECK:
-                if(password == null) {
-                    throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "password"));
-                } else if(!AuthUtils.validatePasswordRule(password)) {
-                    throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
-                }
+            	// 原始密码验证通过
                 if(orginPassword == null) {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.origin.password.wrong"));
                 }
-
-                //验证原始密码是否正确
-                String origin_password_check = orginPassword;
-                //原始密码验证通过
-                if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), origin_password_check, user.getPasswordSalt())){
+                if(!UniPasswordEncoder.isPasswordValid(user.getPassword(), orginPassword, user.getPasswordSalt())){
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
                 }
+                // 验证新密码
+                checkUserPwd(id, password);
                 byte salttemp[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
                 user.setPasswordSalt(Base64.encode(salttemp));
                 user.setPasswordDate(new Date());
                 user.setFailCount(AppConstants.ZERO_Byte);
+                // log
+                asynAddUserPwdLog(user);
                 break;
         }
         user.setLastUpdate(new Date());
         userMapper.updateByPrimaryKey(user);
         return BeanConverter.convert(user).setPassword(password);
     }
-
+    
     public List<RoleDto> getAllRolesToUser(Long userId, Integer domainId) {
         if(userId == null || domainId == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userId, domainId"));
@@ -859,7 +864,8 @@ public class UserService extends TenancyBasedService {
             for(UserRoleKey userRoleKey : userRoleKeys) {
                 dbRoleIds.add(userRoleKey.getRoleId());
             }
-            ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
+            @SuppressWarnings("unchecked")
+			ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
             intersections.retainAll(roleIds);
             List<Integer> roleIdsNeedAddToDB = new ArrayList<>();
             List<Integer> roleIdsNeedDeleteFromDB = new ArrayList<>();
@@ -1055,5 +1061,61 @@ public class UserService extends TenancyBasedService {
             infoes.add(new UserTagKey().setUserId(userId).setTagId(tagId));
         }
         userTagMapper.bacthInsert(infoes);
+    }
+    
+    /**.
+     * 检验密码是否符合要求
+     * @param userId  userId
+     * @param password  the new password
+     */
+    private void checkUserPwd(Long userId, String password){
+    	 CheckEmpty.checkEmpty(userId, "userId");
+    	 // check
+    	 if(password == null) {
+             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "password"));
+    	 }
+    	 if(!AuthUtils.validatePasswordRule(password)) {
+             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
+    	 }
+    	 UserPwdLog condition = new UserPwdLog();
+    	 condition.setUserId(userId);
+    	 Calendar time = Calendar.getInstance();
+    	 time.add(Calendar.MONTH, -AppConstants.DUPLICATE_PWD_VALID_MONTH);
+    	 condition.setCreateDateBegin(time.getTime());
+    	 List<UserPwdLog> logs =  userPwdLogMapper.queryUserPwdLogs(condition);
+    	 if (logs == null || logs.isEmpty()) {
+    		 return;
+    	 }
+    	 // check duplicate password
+    	 for (UserPwdLog log : logs) {
+    		 if (UniPasswordEncoder.isPasswordValid(log.getPassword(), password, log.getPasswordSalt())) {
+    			 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.duplicate", AppConstants.DUPLICATE_PWD_VALID_MONTH));
+    		 }
+    	 }
+    }
+    
+    /**.
+     * 异步记录用户的密码设置记录
+     * @param user info
+     */
+    private void asynAddUserPwdLog(final User user) {
+    	Assert.notNull(user);
+    	 // 异步添加UserPwdLog
+        executor.submit(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					UserPwdLog log = new UserPwdLog();
+					log.setUserId(user.getId());
+					log.setPassword(user.getPassword());
+					log.setPasswordSalt(user.getPasswordSalt());
+					log.setCreateDate(new Date());
+					log.setTenancyId(user.getTenancyId());
+					userPwdLogMapper.insert(log);
+				} catch(Exception ex) {
+					logger.error("failed to log add new user pwd log", ex);
+				}
+			}
+        });
     }
 }

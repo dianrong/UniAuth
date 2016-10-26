@@ -136,13 +136,11 @@ $(function() {
 						callBackInit(data.content);
 					} else {
 						logOperation.log('init failed, can not find default tenancy')
-						// refresh, reload
-						window.location=window.location;
+						alert('sever error, please refresh page');
 					}
 				},
 				error: function() {
-					// refresh, reload
-					window.location=window.location;
+					alert('sever error, please refresh page');
 				}
 			});
 		};
@@ -156,13 +154,12 @@ $(function() {
 					if(data && data.content) {
 						callBackInit(data.content);
 					} else {
-						// refresh, reload
-						window.location=window.location;
+						logOperation.log('init failed, server return wrong info, ' + data);
+						alert('sever error, please refresh page');
 					}
 				},
 				error: function() {
-					// refresh, reload
-					window.location=window.location;
+					alert('sever error, please refresh page');
 				}
 			});
 		};
