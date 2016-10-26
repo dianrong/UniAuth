@@ -6,7 +6,7 @@
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="password_salt" jdbcType="VARCHAR" property="passwordSalt" />
-    <result column="create_date" jdbcType="DATETIME" property="createDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="tenancy_id" jdbcType="BIGINT" property="tenancyId" />
  </resultMap>
  <sql id="Base_Column_List">
@@ -21,8 +21,8 @@
     	#{id,jdbcType=BIGINT}, 
     	#{userId,jdbcType=BIGINT}, 
     	#{password,jdbcType=VARCHAR}, 
-        #{password_salt,jdbcType=VARCHAR}, 
-        #{createDate,jdbcType=DATETIME},
+        #{passwordSalt,jdbcType=VARCHAR}, 
+        #{createDate,jdbcType=TIMESTAMP},
         #{tenancyId,jdbcType=BIGINT}
      )
   </insert>
@@ -33,25 +33,25 @@
 	from user_pwd_log 
 	where 1 = 1 
     <if test="id != null">
-      , and id = #{id,jdbcType=BIGINT}
+       and id = #{id,jdbcType=BIGINT}
     </if>
     <if test="userId != null">
-       , and user_id = #{userId,jdbcType=BIGINT}
+        and user_id = #{userId,jdbcType=BIGINT}
     </if>
     <if test="createDate != null">
-      , and create_date = #{createDate,jdbcType=DATETIME}
+       and create_date = #{createDate,jdbcType=TIMESTAMP}
     </if>
     <if test="tenancyId != null">
-      , and tenancy_id = #{tenancyId,jdbcType=BIGINT}
+       and tenancy_id = #{tenancyId,jdbcType=BIGINT}
     </if>
     <if test="createDateBegin != null">
       <![CDATA[ 
-      	 , and create_date >=  #{createDateBegin,jdbcType=DATETIME}
+      	 and create_date >=  #{createDateBegin,jdbcType=TIMESTAMP}
       ]]>  
     </if>
     <if test="createDateEnd != null">
      <![CDATA[ 
-      	  , and create_date <  #{createDate,jdbcType=DATETIME}
+      	, and create_date <  #{createDateEnd,jdbcType=TIMESTAMP}
       ]]>  
     </if>
   </select>
