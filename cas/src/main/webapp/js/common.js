@@ -127,21 +127,41 @@ $(function() {
 		};
 		var query_default_tenancy = function(){
 			var url = context_path + "/uniauth/tenancy/getDefault";
-			$.get(url, function(data) {
-				if(data.success && data.success !== 'false') {
-					callBackInit(data.content);
-				} else {
-					logOperation.log('init failed, can not find default tenancy')
+			$.ajax({
+				type: 'GET',
+				url : url,
+				dataType: 'json',
+				success : function(data) {
+					if(data.success && data.success !== 'false') {
+						callBackInit(data.content);
+					} else {
+						logOperation.log('init failed, can not find default tenancy')
+						alert('sever error, please refresh page');
+					}
+				},
+				error: function() {
+					alert('sever error, please refresh page');
 				}
-			}, 'json');
+			});
 		};
 		var check_tenancy_code = function(tenancyCode){
 			var url = context_path + "/uniauth/tenancy/check/"+tenancyCode;
-			$.get(url, function(data) {
-				if(data && data.content) {
-					callBackInit(data.content);
+			$.ajax({
+				type: 'GET',
+				url : url,
+				dataType: 'json',
+				success : function(data) {
+					if(data && data.content) {
+						callBackInit(data.content);
+					} else {
+						logOperation.log('init failed, server return wrong info, ' + data);
+						alert('sever error, please refresh page');
+					}
+				},
+				error: function() {
+					alert('sever error, please refresh page');
 				}
-			}, 'json');
+			});
 		};
 		// query tenancy_code from cookie
 		var tenancy_code_cookie = cookieOperation.getTenancyCode();

@@ -23,9 +23,10 @@ public interface AppConstants {
 	String NODE_TYPE_MEMBER_USER = "mUser";
 	String NODE_TYPE_OWNER_USER = "oUser";
 
-        String GRP_ROOT = "GRP_ROOT";
-        byte MAX_AUTH_FAIL_COUNT = 10;
-        int MAX_PASSWORD_VALID_MONTH = 2;
+	String GRP_ROOT = "GRP_ROOT";
+	byte MAX_AUTH_FAIL_COUNT = 10;
+	int MAX_PASSWORD_VALID_MONTH = 6;
+	int DUPLICATE_PWD_VALID_MONTH = 8;
 	// this value can avoid the "data.query.result.number.exceed" exception when you need query as much as more.
 	Integer MAX_PAGE_SIZE_MINUS_ONE = 4999;
 	// if you don't pass pageSize parameter to the query api, it is the default value.
@@ -35,7 +36,7 @@ public interface AppConstants {
 	String PERM_TYPE_DOMAIN = "DOMAIN";
 	String PERM_TYPE_URIPATTERN = "URI_PATTERN";
 	String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
-        String DOMAIN_CODE_TECHOPS = "techops";
+    String DOMAIN_CODE_TECHOPS = "techops";
     
 	// 分隔符
 	String ZK_CFG_SPLIT= ".";

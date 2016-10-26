@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.UserPwdLogMapper" >
+<resultMap id="BaseResultMap" type="com.dianrong.common.uniauth.server.data.entity.UserPwdLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="password_salt" jdbcType="VARCHAR" property="passwordSalt" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="tenancy_id" jdbcType="BIGINT" property="tenancyId" />
+ </resultMap>
+ <sql id="Base_Column_List">
+    id, user_id, password, password_salt, create_date, tenancy_id
+ </sql>
+ 
+   <insert id="insert" parameterType="com.dianrong.common.uniauth.server.data.entity.UserPwdLog" useGeneratedKeys="true" keyProperty="id">
+    insert into user_pwd_log (
+    	<include refid="Base_Column_List"/>
+    )
+    values (
+    	#{id,jdbcType=BIGINT}, 
+    	#{userId,jdbcType=BIGINT}, 
+    	#{password,jdbcType=VARCHAR}, 
+        #{passwordSalt,jdbcType=VARCHAR}, 
+        #{createDate,jdbcType=TIMESTAMP},
+        #{tenancyId,jdbcType=BIGINT}
+     )
+  </insert>
+  
+  <select id="queryUserPwdLogs" parameterType="com.dianrong.common.uniauth.server.data.query.UserPwdLogQueryParam" resultMap="BaseResultMap">
+	select 
+		<include refid="Base_Column_List"/> 
+	from user_pwd_log 
+	where 1 = 1 
+    <if test="id != null">
+       and id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="userId != null">
+        and user_id = #{userId,jdbcType=BIGINT}
+    </if>
+    <if test="createDate != null">
+       and create_date = #{createDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="tenancyId != null">
+       and tenancy_id = #{tenancyId,jdbcType=BIGINT}
+    </if>
+    <if test="createDateBegin != null">
+      <![CDATA[ 
+      	 and create_date >=  #{createDateBegin,jdbcType=TIMESTAMP}
+      ]]>  
+    </if>
+    <if test="createDateEnd != null">
+     <![CDATA[ 
+      	, and create_date <  #{createDateEnd,jdbcType=TIMESTAMP}
+      ]]>  
+    </if>
+  </select>
+</mapper>
