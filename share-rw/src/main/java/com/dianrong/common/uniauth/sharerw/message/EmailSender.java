@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.mail.*;
@@ -19,12 +21,21 @@ public class EmailSender {
 
     @Value("#{uniauthConfig['internal.mail.smtp.host']}")
     private String internalSmtpHost;
+    
+    @Value("#{uniauthConfig['internal.mail.smtp.port']}")
+    private String internalSmtpPort;
+    
+    @Value("#{uniauthConfig['internal.mail.smtp.femail']}")
+    private String internalSmtpFromEmail;
 
     class EmailWorker implements Runnable {
 
         private String subject;
         private String toEmail;
         private StringBuffer buffer;
+        private String defaultSmtpHost = "smtp-dev.sl.com";
+        private String defaultFromEmail = "TechOps-Notification<noreply@dianrong.com>";
+        private int defaultSmptPort = 25;
 
         public String getSubject() {
             return subject;
@@ -52,7 +63,37 @@ public class EmailSender {
             this.buffer = buffer;
             return this;
         }
-
+        
+        /**
+         *  get integer configuration  
+         * @param config
+         * @param defaultVal
+         * @return integer configuration
+         */
+        private int getConfig(String config, int defaultVal) {
+        	if (StringUtil.strIsNullOrEmpty(config)) {
+        		return defaultVal;
+        	}
+        	Integer val =  StringUtil.tryToTranslateStrToInt(config);
+        	if (val == null) {
+        		return defaultVal;
+        	}
+        	return val;
+        }
+        
+        /**
+         *  get string configuration  
+         * @param config
+         * @param defaultVal
+         * @return string configuration
+         */
+        private String getConfig(String config, String defaultVal) {
+        	if (StringUtil.strIsNullOrEmpty(config)) {
+        		return defaultVal;
+        	}
+        	return config.trim();
+        }
+        
         @Override
         public void run() {
             try {
@@ -85,16 +126,9 @@ public class EmailSender {
 //                };
 //                // 使用环境属性和授权信息，创建邮件会话
 //                Session mailSession = Session.getInstance(props, authenticator);
-                String host;
-                if(internalSmtpHost != null) {
-                    host = internalSmtpHost;
-                } else {
-                    host = "smtp-dev.sl.com";
-                }
-
-                props.put("mail.smtp.host", host);
-                props.put("mail.smtp.port", "25");
-                props.put("mail.user", "TechOps-Notification<noreply@dianrong.com>");
+                props.put("mail.smtp.host", getConfig(internalSmtpHost, defaultSmtpHost));
+                props.put("mail.smtp.port", getConfig(internalSmtpPort, defaultSmptPort));
+                props.put("mail.user", getConfig(internalSmtpFromEmail, defaultFromEmail));
                 Session mailSession = Session.getInstance(props);
                 // 创建邮件消息
                 MimeMessage message = new MimeMessage(mailSession);
