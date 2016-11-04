@@ -10,16 +10,16 @@ public class ExtractRequestUrl {
 		return extractRequestUrl(request, true);
 	}
 	
-	public static String extractRequestUrl(HttpServletRequest request, boolean includingQury){
+	public static String extractRequestUrl(HttpServletRequest request, boolean includingQuery){
 		String url = request.getServletPath();
 		String pathInfo = request.getPathInfo();
 		String query = request.getQueryString();
-		if (pathInfo != null || (query != null && includingQury)) {
+		if (pathInfo != null || (query != null && includingQuery)) {
 			StringBuilder sb = new StringBuilder(url);
 			if (pathInfo != null) {
 				sb.append(pathInfo);
 			}
-			if (query != null && includingQury) {
+			if (query != null && includingQuery) {
 				sb.append('?').append(query);
 			}
 			url = sb.toString();

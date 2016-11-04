@@ -111,7 +111,7 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
 
 	@Override
 	public boolean isOn() {
-		return domainDefine.controlTypeSupport(CasPermissionControlType.REGULAR);
+		return domainDefine.controlTypeSupport(CasPermissionControlType.REGULAR_PATTERN);
 	}
 
 	@Override

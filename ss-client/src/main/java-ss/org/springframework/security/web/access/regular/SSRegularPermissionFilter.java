@@ -2,7 +2,6 @@ package org.springframework.security.web.access.regular;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -39,14 +38,15 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
 		boolean checkPass = false;
 		try {
 			UserExtInfo loginUser = LoginUserInfoHolder.getLoginUserInfo();
-			Set<Pattern> regularPatterns = loginUser.getAllPermittedRegularPattern();
+			Set<SSRegularPattern> regularPatterns = loginUser.getAllPermittedRegularPattern();
 			if (regularPatterns.isEmpty()) {
 				checkPass = true;
 				return;
 			}
 			String url = ExtractRequestUrl.extractRequestUrl(request, false);
-			for (Pattern p: regularPatterns) {
-				if (p.matcher(url).matches()) {
+			String requetMethod = request.getMethod();
+			for (SSRegularPattern p: regularPatterns) {
+				if (p.permissonCheck(requetMethod, url)) {
 					checkPass = true;
 					break;
 				}

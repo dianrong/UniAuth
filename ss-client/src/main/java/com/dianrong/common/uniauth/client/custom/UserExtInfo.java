@@ -6,18 +6,22 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.access.regular.SSRegularPattern;
 
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.google.common.collect.Maps;
 
 public class UserExtInfo extends User {
 	private static final long serialVersionUID = 8347558918889027136L;
@@ -30,7 +34,7 @@ public class UserExtInfo extends User {
 	private Map<String, Set<String>> permMap;
 	private Map<String, Set<PermissionDto>> permDtoMap;
 	// current login user support regular pattern set
-	private volatile Set<Pattern> regularPatterns;
+	private volatile Set<SSRegularPattern> regularPatterns;
 	private Object lock = new Object();
 
 	public Boolean hasDomain(String domainPerm) {
@@ -90,7 +94,7 @@ public class UserExtInfo extends User {
 	 *  get current user's all permitted regular patterns set
 	 * @return unmodifiable set , not null
 	 */
-	public Set<Pattern> getAllPermittedRegularPattern() {
+	public Set<SSRegularPattern> getAllPermittedRegularPattern() {
 		if (regularPatterns == null) {
 			synchronized (lock) {
 				if (regularPatterns == null) {
@@ -102,20 +106,77 @@ public class UserExtInfo extends User {
 	}
 	
 	// for initiate current user's regular pattern set
-	private Set<Pattern> constructPermittedRegularPattern(){
-		Set<PermissionDto> permissions =  permDtoMap.get(DomainDefine.CasPermissionControlType.REGULAR.getTypeStr());
+	private Set<SSRegularPattern> constructPermittedRegularPattern(){
+		Set<PermissionDto> permissions =  permDtoMap.get(DomainDefine.CasPermissionControlType.REGULAR_PATTERN.getTypeStr());
 		if (permissions == null || permissions.isEmpty()) {
 			return Collections.emptySet();
 		}
-		Set<Pattern> patterns = new HashSet<Pattern>();
+		Set<SSRegularPattern> patterns = new HashSet<SSRegularPattern>();
 		for (PermissionDto p: permissions) {
-			try {
-				patterns.add(Pattern.compile(p.getValue()));
-			} catch(PatternSyntaxException e) {
-				logger.warn(p.getValue() + " is not a syntax pattern string", e);
+			String httpMethod = p.getValueExt();
+			if(httpMethod != null){
+				httpMethod = httpMethod.trim();
+				// exclude ALL
+				if(!AppConstants.HTTP_METHOD_ALL.equalsIgnoreCase(httpMethod)){
+					try{
+						HttpMethod.valueOf(httpMethod);
+					}catch(IllegalArgumentException e){
+						logger.warn("'" + httpMethod + "' is not a valid http method.", e);
+						// ignore invalid httpMethod configuration
+						continue;
+					}
+				}
+				Pattern pattern = PatternCacheManager.getPattern(p.getValue());
+				if (pattern != null) {
+					patterns.add(SSRegularPattern.build(httpMethod, pattern));
+				}
 			}
 		}
 		return patterns;
+	}
+	
+	/**
+	 * used for pattern catche
+	 * @author wanglin
+	 */
+	private static class PatternCacheManager {
+		/**.
+		 * Pattern.compile(patternStr) is a heavy method, so cache the patterns
+		 */
+		private static final ConcurrentMap< String, Pattern>  patternCaches = Maps.newConcurrentMap();
+		private static final Pattern syntaxPattern =  Pattern.compile("syntaxPattern");
+		
+		/**.
+		 * get Pattern from patternStr, 1 from cache; 2 from Pattern.compile(patternStr) 
+		 * @param patternStr  the pattern string
+		 * @return Pattern. if return is null, means patternStr is a syntax pattern string
+		 */
+		public static final Pattern getPattern(String patternStr) {
+			if (patternStr == null) {
+				return null;
+			}
+			Pattern p = patternCaches.get(patternStr);
+			if ( p == null) {
+				try {
+					p = Pattern.compile(patternStr);
+				} catch(PatternSyntaxException e) {
+					logger.warn(patternStr + " is not a syntax pattern string", e);
+				}
+				// syntax pattern
+				if ( p == null) {
+					patternCaches.putIfAbsent(patternStr, syntaxPattern);
+					return null;
+				}
+				patternCaches.putIfAbsent(patternStr, p);
+				return patternCaches.get(patternStr);
+			} else {
+				// syntax pattern
+				if ( p == syntaxPattern) {
+					return null;
+				}
+				return p;
+			}
+		}
 	}
 	
 	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,

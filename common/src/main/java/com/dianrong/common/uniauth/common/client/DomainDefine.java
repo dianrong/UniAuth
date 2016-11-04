@@ -113,9 +113,9 @@ public class DomainDefine implements Serializable {
 		// default type
 		URI_PATTERN("URI_PATTERN", "URI_PATTERN"),
 		// 正则类型
-		REGULAR("REGULAR", "REGULAR"),
+		REGULAR_PATTERN("REGULAR_PATTERN", "REGULAR_PATTERN"),
 		// 启用所有
-		ALL("ALL", "URI_PATTERN", "REGULAR"),
+		ALL("ALL", "URI_PATTERN", "REGULAR_PATTERN"),
 		// 一种都不启用
 		NONE("NONE")
 		;

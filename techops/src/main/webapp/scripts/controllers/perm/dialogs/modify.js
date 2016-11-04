@@ -37,7 +37,7 @@ define(['../../../utils/utils','../../../utils/constant'], function (utils, cons
                 'domainId':param.domainId,
                 'status':param.status
             }
-            if($scope.permModifyPermTypesDropdown.option.type == constant.permType.URI_PATTERN) {
+            if($scope.permModifyPermTypesDropdown.option.type == constant.permType.URI_PATTERN || $scope.permModifyPermTypesDropdown.option.type == constant.permType.REGULAR_PATTERN ) {
                 obj.valueExt = $scope.permModifyPermValueExtDropdown.option;
             } else {
                 obj.valueExt = param.valueExt
