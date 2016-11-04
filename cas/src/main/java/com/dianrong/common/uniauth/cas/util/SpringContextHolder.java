@@ -49,7 +49,7 @@ public class SpringContextHolder {
                     SpringContextHolder.class.wait();
                 } catch (InterruptedException e) {
                     logger.warn("getBean(String) wait InterruptedException", e);
-                    Thread.interrupted();
+                    Thread.currentThread().interrupt();
                 }
             }
             Object obj = context.getBean(beanName);
