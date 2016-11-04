@@ -29,7 +29,7 @@
 		<property name="userInfoClass"
 			value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
 		<property name="rejectPublicInvocations" value="false"></property>
-		<property name="controlType" value="REGULAR"></property>
+<!-- 		<property name="controlType" value="REGULAR"></property> -->
 	</bean>
 
 	<sec:http pattern="/views/**" security="none" />
