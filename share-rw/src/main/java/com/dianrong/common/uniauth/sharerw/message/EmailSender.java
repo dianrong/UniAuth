@@ -83,10 +83,11 @@ public class EmailSender implements InitializingBean{
     	return config.trim();
     }
 
-//    /**.
-//     *  邮件发送线程池
-//     */
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    /**.
+     *  邮件发送线程池
+     *  初始化5个线程池
+     */
+    private static final ExecutorService executor = Executors.newFixedThreadPool(5);
     
     class EmailWorker implements Runnable {
         private String subject;

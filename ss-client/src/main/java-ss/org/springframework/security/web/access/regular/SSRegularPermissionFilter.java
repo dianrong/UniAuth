@@ -39,8 +39,8 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
 		try {
 			UserExtInfo loginUser = LoginUserInfoHolder.getLoginUserInfo();
 			Set<SSRegularPattern> regularPatterns = loginUser.getAllPermittedRegularPattern();
+			// no any permission for requesting
 			if (regularPatterns.isEmpty()) {
-				checkPass = true;
 				return;
 			}
 			String url = ExtractRequestUrl.extractRequestUrl(request, false);
