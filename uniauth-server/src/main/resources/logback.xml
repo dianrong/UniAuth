@@ -138,7 +138,13 @@
 		<appender-ref ref="uniAuthMQAppender" />
 		<appender-ref ref="consoleAppender" />
 	</logger>
-
+	
+	<logger name="com.dianrong.common.uniauth.server.data.mapper" additivity="true">
+		<level value="DEBUG" />
+		<appender-ref ref="dataAppender" />
+		<appender-ref ref="consoleAppender" />
+	</logger>
+		
 	<logger name="org.apache.http.wire" additivity="false">
 		<level value="WARN" />
 		<appender-ref ref="uniAuthAppender" />

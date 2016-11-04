@@ -23,9 +23,9 @@
             </div>
             <br />
             <label class="control-label" for="valueExt" placeholder="{{ 'permMgr.eavValue' | translate}}">{{ 'permMgr.eavValue' | translate}}:</label>
-            <input type="text" class="form-control common-hidden {{(permModifyPermTypesDropdown && permModifyPermTypesDropdown.option.type == 'URI_PATTERN')?'':'no'}}" name="valueExt" id="valueExt" ng-model="perm.valueExt">
-
-            <div class="common-hidden {{(permModifyPermTypesDropdown && permModifyPermTypesDropdown.option.type != 'URI_PATTERN')?'':'no'}}">
+            <input type="text" class="form-control common-hidden {{(permModifyPermTypesDropdown && (permModifyPermTypesDropdown.option.type == 'URI_PATTERN'  
+            || permModifyPermTypesDropdown.option.type == 'REGULAR_PATTERN'))?'':'no'}}"  name="valueExt" id="valueExt" ng-model="perm.valueExt">
+            <div class="common-hidden {{(permModifyPermTypesDropdown && (permModifyPermTypesDropdown.option.type != 'URI_PATTERN' && permModifyPermTypesDropdown.option.type != 'REGULAR_PATTERN'))?'':'no'}}">
                 <div id="valueExtDropDown" class="btn-group" uib-dropdown is-open="permModifyPermValueExtDropdown.isOpen">
                     <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
                         <span ng-bind="permModifyPermValueExtDropdown.option"></span>

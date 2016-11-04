@@ -21,6 +21,7 @@ public class GroupQuery extends PageParam  {
     private Boolean needTag;
     private Boolean needUser;
     private Boolean needParentId;
+    private Boolean includeOwner;
     
     public List<Integer> getGroupIds() {
         return groupIds;
@@ -139,11 +140,20 @@ public class GroupQuery extends PageParam  {
         return this;
     }
 
+	public Boolean getIncludeOwner() {
+		return includeOwner;
+	}
+
+	public GroupQuery setIncludeOwner(Boolean includeOwner) {
+		this.includeOwner = includeOwner;
+		 return this;
+	}
+
 	@Override
 	public String toString() {
 		return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name
 				+ ", description=" + description + ", status=" + status + ", userGroupType=" + userGroupType
 				+ ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId + ", needTag=" + needTag
-				+ ", needUser=" + needUser + ", needParentId=" + needParentId + "]";
+				+ ", needUser=" + needUser + ", needParentId=" + needParentId + ", includeOwner=" + includeOwner + "]";
 	}
 }

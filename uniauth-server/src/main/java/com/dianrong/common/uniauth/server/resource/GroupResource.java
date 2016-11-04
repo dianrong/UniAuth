@@ -149,4 +149,10 @@ public class GroupResource implements IGroupRWResource {
 		groupService.moveGroup(groupParam.getId(), groupParam.getTargetGroupId());
 		return Response.success();
 	}
+
+	@Override
+	public Response<Boolean> isUserInGroupOrSub(GroupQuery query) {
+		Boolean result = groupService.isUserInGroupOrSub(query.getUserId(), query.getCode(),query.getIncludeOwner() == null ? false : query.getIncludeOwner());
+		return Response.success(result);
+	}
 }

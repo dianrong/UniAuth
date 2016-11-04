@@ -1,27 +1,95 @@
 package com.dianrong.common.uniauth.sharerw.message;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import org.springframework.beans.factory.annotation.Value;
-
-import javax.mail.*;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**
  * Created by Arc on 10/3/2016.
  */
-public class EmailSender {
+public class EmailSender implements InitializingBean{
     private static Logger logger = LoggerFactory.getLogger(EmailSender.class);
+
+    // default values
+    private static final String DEFAULTSMTPHOST = "smtp-dev.sl.com";
+    private static final String DEFAULTFROMEMAIL = "TechOps-Notification<noreply@dianrong.com>";
+    private static final int DEFAULTSMPTPORT = 25;
+    // 10s
+    private static final long EMAIL_CONNECTION_TIMEOUT = 10L * 1000L;
+    private static final long EMAIL_READ_TIMEOUT = 10L * 1000L;
 
     @Value("#{uniauthConfig['internal.mail.smtp.host']}")
     private String internalSmtpHost;
+    
+    @Value("#{uniauthConfig['internal.mail.smtp.port']}")
+    private String internalSmtpPort;
+    
+    @Value("#{uniauthConfig['internal.mail.smtp.femail']}")
+    private String internalSmtpFromEmail;
+    
+    private String smtpHost;
+    private String fromEmail;
+    private int smtpPort;
+    
+    // init value
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		this.smtpHost = getConfig(internalSmtpHost, DEFAULTSMTPHOST);
+        this.smtpPort = getConfig(internalSmtpPort, DEFAULTSMPTPORT);
+        this.fromEmail = getConfig(internalSmtpFromEmail, DEFAULTFROMEMAIL);
+	}
+	
+    /**
+     *  get integer configuration  
+     * @param config
+     * @param defaultVal
+     * @return integer configuration
+     */
+    private int getConfig(String config, int defaultVal) {
+    	if (StringUtil.strIsNullOrEmpty(config)) {
+    		return defaultVal;
+    	}
+    	Integer val =  StringUtil.tryToTranslateStrToInt(config);
+    	if (val == null) {
+    		return defaultVal;
+    	}
+    	return val;
+    }
+    
+    /**
+     *  get string configuration  
+     * @param config
+     * @param defaultVal
+     * @return string configuration
+     */
+    private String getConfig(String config, String defaultVal) {
+    	if (StringUtil.strIsNullOrEmpty(config)) {
+    		return defaultVal;
+    	}
+    	return config.trim();
+    }
 
+    /**.
+     *  邮件发送线程池
+     *  初始化5个线程池
+     */
+    private static final ExecutorService executor = Executors.newFixedThreadPool(5);
+    
     class EmailWorker implements Runnable {
-
         private String subject;
         private String toEmail;
         private StringBuffer buffer;
@@ -52,7 +120,7 @@ public class EmailSender {
             this.buffer = buffer;
             return this;
         }
-
+        
         @Override
         public void run() {
             try {
@@ -85,16 +153,13 @@ public class EmailSender {
 //                };
 //                // 使用环境属性和授权信息，创建邮件会话
 //                Session mailSession = Session.getInstance(props, authenticator);
-                String host;
-                if(internalSmtpHost != null) {
-                    host = internalSmtpHost;
-                } else {
-                    host = "smtp-dev.sl.com";
-                }
-
-                props.put("mail.smtp.host", host);
-                props.put("mail.smtp.port", "25");
-                props.put("mail.user", "TechOps-Notification<noreply@dianrong.com>");
+                props.put("mail.smtp.host", smtpHost);
+                props.put("mail.smtp.port", smtpPort);
+                props.put("mail.user", fromEmail);
+                
+                props.put("mail.smtp.connectiontimeout", EMAIL_CONNECTION_TIMEOUT);
+                props.put("mail.smtp.timeout", EMAIL_READ_TIMEOUT);
+                
                 Session mailSession = Session.getInstance(props);
                 // 创建邮件消息
                 MimeMessage message = new MimeMessage(mailSession);
@@ -125,9 +190,9 @@ public class EmailSender {
     public void sendEmail(String subject, String toEmail, StringBuffer buffer) {
         logger.debug("Starting to asynchronous send email to : " + toEmail);
         EmailWorker emailWorker = new EmailWorker().setSubject(subject).setToEmail(toEmail).setBuffer(buffer);
-        new Thread(emailWorker).start();
+        executor.submit(emailWorker);
+//        new Thread(emailWorker).start();
         logger.debug("End of asynchronous sending email to : " + toEmail);
         logger.debug("Content: \n " + buffer);
     }
-
 }

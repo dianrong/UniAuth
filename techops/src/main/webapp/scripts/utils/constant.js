@@ -103,6 +103,7 @@ define({
         httpMethods: ['ALL', 'GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS', 'PATCH', 'TRACE'],
         permType: {
             'URI_PATTERN':'URI_PATTERN',
+            'REGULAR_PATTERN':'REGULAR_PATTERN',
             'DOMAIN':'DOMAIN',
             'PRIVILEGE':'PRIVILEGE'
         }

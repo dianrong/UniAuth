@@ -61,7 +61,7 @@ String path = request.getContextPath();
 	<header class="header">
 		<img alt="cas-login-logo" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>
 		<c:if test="${not empty principal}">
-			<font color="white"><spring:message code="sscreen.welcome.label.current.loginuser" />${principal}</font>
+			<font color="white"><spring:message code="screen.welcome.label.current.loginuser" />${principal}</font>
 		</c:if>
 	</header>
 	<input type="hidden" id="hidden_path_input" value="<%=path %>">

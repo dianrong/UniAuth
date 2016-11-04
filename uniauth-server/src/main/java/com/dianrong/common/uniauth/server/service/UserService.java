@@ -624,7 +624,7 @@ public class UserService extends TenancyBasedService {
         if (user == null) {
         	return null;
         }
-        // 手动设置tenancyid
+        // 手动设置tenancyId
         CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
@@ -633,7 +633,7 @@ public class UserService extends TenancyBasedService {
     public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
         String account = loginParam.getAccount();
         CheckEmpty.checkEmpty(account, "账号");
-        User user = getUserByAccount(account,loginParam.getTenancyCode(), loginParam.getTenancyId(),  true);
+        User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(),  true);
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
     }
@@ -950,7 +950,7 @@ public class UserService extends TenancyBasedService {
 
         User user = userList.get(0);
         
-        // 手动设置tenancyid  -- important
+        // 手动设置tenancyId  -- important
         CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         return user;
     }

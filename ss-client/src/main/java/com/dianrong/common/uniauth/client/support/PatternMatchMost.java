@@ -76,6 +76,7 @@ public class PatternMatchMost {
 				}
 				
 				int baseOriginLength = pattern.length();
+				// 过滤掉正则表达式的模糊匹配字符串，比如/w,*,.,+这些字符串,把pattern过滤成一个正则无关的字符串
 				String baseOfPattern = EXCLUDE_CHARS_PATTERN.matcher(pattern).replaceAll("");
 				int length = baseOfPattern.length();
 

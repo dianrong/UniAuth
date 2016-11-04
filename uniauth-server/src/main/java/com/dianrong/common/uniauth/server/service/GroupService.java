@@ -893,4 +893,27 @@ public class GroupService extends TenancyBasedService{
 		public List<Grp> queryGroupByAncestor(Integer id) {
 			return grpMapper.getGroupTree(id);
 		}
+		
+		/**
+		 * check if the user witch's id is userId is in group or in the sub group
+		 * @param userId  can not be null
+		 * @param code  can not be null
+		 * @param includeOwner if group-user owner relationship is include 
+		 * @return true or false
+		 * @throws AppException  the input parameter is null
+		 */
+		public boolean isUserInGroupOrSub(Long userId, String code, boolean includeOwner) {
+			 CheckEmpty.checkEmpty(userId, "userId");
+			 CheckEmpty.checkEmpty(code, "groupCode");
+			 Map<String, Object> paramMap = new HashMap<String, Object>();
+			 paramMap.put("userId", userId);
+			 paramMap.put("includeOwner", String.valueOf(includeOwner));
+			 paramMap.put("code", code);
+			 paramMap.put("tenancyId", tenancyService.getOneCanUsedTenancyId());
+			 Integer count = grpMapper.getUserIdInGroupOrSub(paramMap);
+			 if (count != null && count > 0) {
+				 return true;
+			 }
+			 return false;
+		}
 }
