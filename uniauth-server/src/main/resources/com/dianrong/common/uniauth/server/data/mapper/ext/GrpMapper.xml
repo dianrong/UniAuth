@@ -48,4 +48,17 @@
         on gp.ancestor = pgid.p_grp_id
         join grp on grp.id = gp.descendant where grp.status=0
     </select>
+    
+     <select id="getUserIdInGroupOrSub" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(user_id) from user_grp where user_id =  #{userId, jdbcType=BIGINT}
+       <if test="includeOwner == null or includeOwner == 'false' ">
+			and type = 0 
+		</if>      
+		and grp_id in (
+				select descendant from grp_path where ancestor in (
+					select id from grp where code = #{code, jdbcType=VARCHAR} and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
+					and status = 0
+				)
+		)
+    </select>
 </mapper>

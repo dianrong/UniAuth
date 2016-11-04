@@ -20,6 +20,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.web.access.SwitchControl;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
@@ -31,11 +32,12 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
+import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
-public class SSBeanPostProcessor implements BeanPostProcessor {
+public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 	private static Logger LOGGER = LoggerFactory.getLogger(SSBeanPostProcessor.class);
 	@Autowired
 	private UniClientFacade uniClientFacade;
@@ -50,6 +52,9 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		if (!isOn()) {
+			return bean;
+		}
 		String currentDomainCode = domainDefine.getDomainCode();
 		String beanClazzName = bean.getClass().getName();
 		
@@ -224,5 +229,10 @@ public class SSBeanPostProcessor implements BeanPostProcessor {
 				LOGGER.info("Refresh domain resource completed at " + new Date() + " .");
 			}
 		}
+	}
+
+	@Override
+	public boolean isOn() {
+		return domainDefine.controlTypeSupport(CasPermissionControlType.URI_PATTERN);
 	}
 }

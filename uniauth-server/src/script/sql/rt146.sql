@@ -1,0 +1,3 @@
+INSERT INTO perm_type(`type`) SELECT 'REGULAR' FROM DUAL WHERE NOT EXISTS(
+	SELECT 1 FROM perm_type WHERE `type` = 'REGULAR'
+);

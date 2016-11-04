@@ -51,4 +51,17 @@ public interface IGroupResource {
     @POST
     @Path("querytagswithchecked")
     Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam);
+    
+    /**
+     * check whether the user with the specified userId is in the group or the sub group
+     * @param query &nbsp;&nbsp;  parameter model.   <br>
+     *   					query.code   &nbsp;&nbsp;  group code; <br>
+     *   					query.userId   &nbsp;&nbsp; specified userId;<br>
+     *   					query.includeOwner &nbsp;&nbsp; the check result is include ownership or not, default is false.
+     * @return  Response.data  true or false 
+     * @throws Reponse.info exceptionInfo  
+     */
+    @POST
+    @Path("userInGroupOrSub")
+    Response<Boolean>  isUserInGroupOrSub(GroupQuery query);
 }

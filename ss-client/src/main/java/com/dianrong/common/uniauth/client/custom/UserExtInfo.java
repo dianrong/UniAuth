@@ -1,22 +1,37 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import org.apache.log4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class UserExtInfo extends User {
 	private static final long serialVersionUID = 8347558918889027136L;
+
+	private static final Logger logger = Logger.getLogger(UserExtInfo.class);
+	
 	private Long id;
 	private UserDto userDto;
 	private DomainDto domainDto;
 	private Map<String, Set<String>> permMap;
 	private Map<String, Set<PermissionDto>> permDtoMap;
+	// current login user support regular pattern set
+	private volatile Set<Pattern> regularPatterns;
+	private Object lock = new Object();
 
 	public Boolean hasDomain(String domainPerm) {
 		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
@@ -69,6 +84,38 @@ public class UserExtInfo extends User {
 				return Boolean.FALSE;
 			}
 		}
+	}
+	
+	/**
+	 *  get current user's all permitted regular patterns set
+	 * @return unmodifiable set , not null
+	 */
+	public Set<Pattern> getAllPermittedRegularPattern() {
+		if (regularPatterns == null) {
+			synchronized (lock) {
+				if (regularPatterns == null) {
+					this.regularPatterns = constructPermittedRegularPattern();
+				}
+			}
+		}
+		return Collections.unmodifiableSet(this.regularPatterns);
+	}
+	
+	// for initiate current user's regular pattern set
+	private Set<Pattern> constructPermittedRegularPattern(){
+		Set<PermissionDto> permissions =  permDtoMap.get(DomainDefine.CasPermissionControlType.REGULAR.getTypeStr());
+		if (permissions == null || permissions.isEmpty()) {
+			return Collections.emptySet();
+		}
+		Set<Pattern> patterns = new HashSet<Pattern>();
+		for (PermissionDto p: permissions) {
+			try {
+				patterns.add(Pattern.compile(p.getValue()));
+			} catch(PatternSyntaxException e) {
+				logger.warn(p.getValue() + " is not a syntax pattern string", e);
+			}
+		}
+		return patterns;
 	}
 	
 	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,

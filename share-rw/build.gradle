@@ -2,7 +2,7 @@
 dependencies {
     compile project(":common")
     //Java Mail
-    compile "javax.mail:mail:1.4.7"
+    compile "javax.mail:mail:1.5.0-b01"
     // compile 'org.freemarker:freemarker:2.3.23'
     
     //Test Suite

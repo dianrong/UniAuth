@@ -28,6 +28,9 @@ public class EmailSender implements InitializingBean{
     private static final String DEFAULTSMTPHOST = "smtp-dev.sl.com";
     private static final String DEFAULTFROMEMAIL = "TechOps-Notification<noreply@dianrong.com>";
     private static final int DEFAULTSMPTPORT = 25;
+    // 10s
+    private static final long EMAIL_CONNECTION_TIMEOUT = 10L * 1000L;
+    private static final long EMAIL_READ_TIMEOUT = 10L * 1000L;
 
     @Value("#{uniauthConfig['internal.mail.smtp.host']}")
     private String internalSmtpHost;
@@ -80,9 +83,9 @@ public class EmailSender implements InitializingBean{
     	return config.trim();
     }
 
-    /**.
-     *  邮件发送线程池
-     */
+//    /**.
+//     *  邮件发送线程池
+//     */
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     
     class EmailWorker implements Runnable {
@@ -152,6 +155,10 @@ public class EmailSender implements InitializingBean{
                 props.put("mail.smtp.host", smtpHost);
                 props.put("mail.smtp.port", smtpPort);
                 props.put("mail.user", fromEmail);
+                
+                props.put("mail.smtp.connectiontimeout", EMAIL_CONNECTION_TIMEOUT);
+                props.put("mail.smtp.timeout", EMAIL_READ_TIMEOUT);
+                
                 Session mailSession = Session.getInstance(props);
                 // 创建邮件消息
                 MimeMessage message = new MimeMessage(mailSession);

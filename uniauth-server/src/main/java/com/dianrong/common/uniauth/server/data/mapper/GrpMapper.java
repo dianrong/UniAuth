@@ -108,4 +108,6 @@ public interface GrpMapper {
     Integer checkOwner(Map<String, Object> paramMap);
 
     Set<Integer> getOwnGrpIds(Long ownerId);
+    
+    Integer getUserIdInGroupOrSub(Map<String, Object> paramMap);
 }
