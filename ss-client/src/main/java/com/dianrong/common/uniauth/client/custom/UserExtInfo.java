@@ -136,7 +136,7 @@ public class UserExtInfo extends User {
 	}
 	
 	/**
-	 * used for pattern catche
+	 * used for pattern cache
 	 * @author wanglin
 	 */
 	private static class PatternCacheManager {
@@ -144,7 +144,7 @@ public class UserExtInfo extends User {
 		 * Pattern.compile(patternStr) is a heavy method, so cache the patterns
 		 */
 		private static final ConcurrentMap< String, Pattern>  patternCaches = Maps.newConcurrentMap();
-		private static final Pattern syntaxPattern =  Pattern.compile("syntaxPattern");
+		private static final Pattern invalidSyntaxPattern =  Pattern.compile("invalidSyntaxPattern");
 		
 		/**.
 		 * get Pattern from patternStr, 1 from cache; 2 from Pattern.compile(patternStr) 
@@ -164,14 +164,14 @@ public class UserExtInfo extends User {
 				}
 				// syntax pattern
 				if ( p == null) {
-					patternCaches.putIfAbsent(patternStr, syntaxPattern);
+					patternCaches.putIfAbsent(patternStr, invalidSyntaxPattern);
 					return null;
 				}
 				patternCaches.putIfAbsent(patternStr, p);
 				return patternCaches.get(patternStr);
 			} else {
 				// syntax pattern
-				if ( p == syntaxPattern) {
+				if ( p == invalidSyntaxPattern) {
 					return null;
 				}
 				return p;

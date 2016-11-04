@@ -1,6 +1,8 @@
 package org.springframework.security.web.access.regular;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.FilterChain;
@@ -18,6 +20,8 @@ import com.dianrong.common.uniauth.client.custom.LoginUserInfoHolder;
 import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 import com.dianrong.common.uniauth.client.exp.UserNotLoginException;
 import com.dianrong.common.uniauth.client.support.ExtractRequestUrl;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 /**
  * uniauth中的regular权限的处理filter,必须处理登陆成功的情况
@@ -68,16 +72,51 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
 	}
 	
 	/**.
-	 * process not permitted request, response code 401
+	 * process not permitted request, response code 403
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
 	 */
 	private void unPermittedRequest(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-			response.getWriter().write("Sorry! You do not have permission to access the resource!");
+			response.setStatus(HttpStatus.SC_FORBIDDEN);
+			response.getWriter().write(JsonUtil.object2Jason(new ForbiddenResponseMsg(AppConstants.NO_PRIVILEGE, "Sorry! You do not have permission to access the resource!")));
 		} catch(IOException ex) {
 			logger.warn("failed to send unpermitted warn");
+		}
+	}
+	
+	// inner class for unPermittedRequest reponse
+	class ForbiddenResponseMsg {
+		private final List<Info> info;
+		public ForbiddenResponseMsg(String name, String msg) {
+			info = new ArrayList<Info>();
+			info.add(new Info(name, msg));
+		}
+		public void addInfo(String name, String msg) {
+			this.info.add(new Info(name, msg));
+		}
+		public List<Info> getInfo() {
+			return info;
+		}
+	  class Info {
+			private String name;
+			private String msg;
+			public Info(String name, String msg){
+				this.name = name;
+				this.msg = msg;
+			}
+			public String getName() {
+				return name;
+			}
+			public void setName(String name) {
+				this.name = name;
+			}
+			public String getMsg() {
+				return msg;
+			}
+			public void setMsg(String msg) {
+				this.msg = msg;
+			}
 		}
 	}
 }

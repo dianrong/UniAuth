@@ -6,7 +6,6 @@ import javax.servlet.Filter;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
@@ -24,7 +23,7 @@ import com.dianrong.common.uniauth.common.util.ReflectionUtils;
  * 用于在服务启动的时候将SSRegularPermissionFilter注入到spring security的处理链路中
  * @author wanglin
  */
-public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Ordered, SwitchControl, InitializingBean{
+public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Ordered, SwitchControl {
 	/**.
 	 * logger
 	 */
@@ -94,10 +93,10 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
 				List<SecurityFilterChain> _filterChains = (List<SecurityFilterChain>)ReflectionUtils.getField(_filterChainProxy, "filterChains", false);
 				_filterChains.add(new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, regularPermissionFilter));
 			} else {
-				int index = -1;
+				int index = 0;
 				List<Filter> _filters =  destFilterChain.getFilters();
 				for (Filter _filter : _filters) {
-					if (_filter.getClass().equals(SPRING_SECURITY_FILTERSECURITYINTERCEPTOR_CLASS_NAME)) {
+					if (_filter.getClass().getName().equals(SPRING_SECURITY_FILTERSECURITYINTERCEPTOR_CLASS_NAME)) {
 						break;
 					}
 					index++;
@@ -112,13 +111,5 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
 	@Override
 	public boolean isOn() {
 		return domainDefine.controlTypeSupport(CasPermissionControlType.REGULAR_PATTERN);
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		if (this.regularPermissionFilter == null) {
-			logger.error("regularPermissionFilter is null , check the xml configuration");
-			throw new RuntimeException("regularPermissionFilter can not be null");
-		}
 	}
 }
