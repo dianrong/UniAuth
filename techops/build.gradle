@@ -94,7 +94,7 @@ dependencies {
     compile "org.springframework:spring-aop:4.1.6.RELEASE"
 
     // zookeeper util.
-    compile 'com.dianrong.platform:cfg-zk-client:1.0.2-SNAPSHOT'
+    compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
 
     //Aspectj
     compile "org.aspectj:aspectjrt:1.8.8"
