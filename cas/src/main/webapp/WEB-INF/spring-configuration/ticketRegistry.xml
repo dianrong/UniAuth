@@ -63,20 +63,20 @@
         <property name="testOnBorrow" value="true" />  
     </bean>
 
-    <!--<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"-->
-          <!--p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"-->
-          <!--p:database="#{uniauthConfig['redis.database']?:'0'}"   p:pool-config-ref="poolConfig"/>-->
-
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-    	p:password="#{uniauthConfig['redis.password']?:'mypass1'}" p:database="#{uniauthConfig['redis.database']?:'0'}">
-        <constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration"></constructor-arg>
-        <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
-     </bean>
+          p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"
+          p:database="#{uniauthConfig['redis.database']?:'0'}"   p:pool-config-ref="poolConfig"/>
 
-     <bean id="redisSentinelConfiguration" lazy-init="true" class="com.dianrong.common.uniauth.cas.registry.support.RedisSentinelConfigurationHelper">
-        <constructor-arg name="master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></constructor-arg>
-        <constructor-arg name="sentinels" value="#{uniauthConfig['redis.sentinels']?:'10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000'}"></constructor-arg>
-    </bean>
+    <!--<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"-->
+    	<!--p:password="#{uniauthConfig['redis.password']?:'mypass1'}" p:database="#{uniauthConfig['redis.database']?:'0'}">-->
+        <!--<constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration"></constructor-arg>-->
+        <!--<constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>-->
+     <!--</bean>-->
+
+     <!--<bean id="redisSentinelConfiguration" lazy-init="true" class="com.dianrong.common.uniauth.cas.registry.support.RedisSentinelConfigurationHelper">-->
+        <!--<constructor-arg name="master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></constructor-arg>-->
+        <!--<constructor-arg name="sentinels" value="#{uniauthConfig['redis.sentinels']?:'10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000'}"></constructor-arg>-->
+    <!--</bean>-->
      
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
         p:connection-factory-ref="connectionFactory">
