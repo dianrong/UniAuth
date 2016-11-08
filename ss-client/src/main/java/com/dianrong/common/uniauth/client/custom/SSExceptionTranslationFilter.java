@@ -19,11 +19,15 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 	private final static Logger logger = LoggerFactory.getLogger(SSExceptionTranslationFilter.class);
 	@Autowired
 	private ZooKeeperConfig zooKeeperConfig;
+	
+	@Autowired(required = false)
+	private CustomizedRedirectFormat customizedRedirectFormat;
 	
 	public SSExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint, RequestCache requestCache) {
 		super(authenticationEntryPoint, requestCache);
@@ -51,15 +55,22 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 			response.addHeader("Cache-Control", "no-store");
 			response.setStatus(200);
 			
-			response.getWriter().println("{");
-			response.getWriter().println("\"info\":");
-			response.getWriter().println("[");
-			response.getWriter().println("{");
-			response.getWriter().println("\"name\": \"" + AppConstants.LOGIN_REDIRECT_URL +"\",");
-			response.getWriter().println("\"msg\": \"" + loginUrl +"\"");
-			response.getWriter().println("}");
-			response.getWriter().println("]");
-			response.getWriter().println("}");
+			if(customizedRedirectFormat == null){
+				response.getWriter().println("{");
+				response.getWriter().println("\"info\":");
+				response.getWriter().println("[");
+				response.getWriter().println("{");
+				response.getWriter().println("\"name\": \"" + AppConstants.LOGIN_REDIRECT_URL +"\",");
+				response.getWriter().println("\"msg\": \"" + loginUrl +"\"");
+				response.getWriter().println("}");
+				response.getWriter().println("]");
+				response.getWriter().println("}");
+			} else {
+				Object redirectObj = customizedRedirectFormat.getRedirectInfo(request, loginUrl);
+				if(redirectObj != null){
+					response.getWriter().println(JsonUtil.object2Jason(redirectObj));
+				}
+			}
 		}
 		else{
 			super.sendStartAuthentication(request, response, chain, reason);
