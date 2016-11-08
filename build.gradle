@@ -24,6 +24,7 @@ allprojects {
     group = 'com.dianrong.common.uniauth'
     version = '1.0.54-SNAPSHOT'
 
+
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
