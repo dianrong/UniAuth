@@ -22,7 +22,7 @@ dependencies {
     testCompile "org.springframework:spring-web:4.1.6.RELEASE"
     
     //zoo keeper
-    compile 'com.dianrong.platform:cfg-zk-client:1.0.2-SNAPSHOT'
+    compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
 
 	compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.1'
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
