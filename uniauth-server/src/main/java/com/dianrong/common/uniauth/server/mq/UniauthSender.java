@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.server.mq;
 
-import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 
 /**
  * <pre>
@@ -15,7 +15,7 @@ public interface UniauthSender{
      * 添加用户发送消息
      * @param user
      */
-    public void sendUserAdd(User user);
+    public void sendUserAdd(UserDto user);
 
 }
 

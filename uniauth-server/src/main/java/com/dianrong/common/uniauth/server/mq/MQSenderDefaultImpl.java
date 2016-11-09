@@ -1,16 +1,12 @@
 package com.dianrong.common.uniauth.server.mq;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.util.Assert;
 
 /**
  * <pre>
@@ -20,43 +16,80 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @created Apr 11, 2016
  */
 public class MQSenderDefaultImpl implements MQSender {
+    private final Logger logger = Logger.getLogger(MQSenderDefaultImpl.class);
 
-    private final Logger log = LoggerFactory.getLogger(MQSenderDefaultImpl.class);
-
-    private RabbitTemplate template;
-
-    private static ObjectMapper objectMapper = new ObjectMapper();
-    static{
-        objectMapper.setSerializationInclusion(Include.NON_NULL);
+	private RabbitTemplate template;
+    
+    // for declare exchange
+    private RabbitAdmin admin;
+    
+    private String exchangeName;
+    
+	private  AtomicBoolean init = new AtomicBoolean(false);
+    
+    // 私有构造函数
+    private MQSenderDefaultImpl(){
     }
     
-    MQSenderDefaultImpl(RabbitTemplate template){
-        this.template=template;
-    }
-
     @Override
     public void send(String key, Object msgObj) {
         try {
-            template.convertAndSend(key, toJsonString(msgObj));
+            template.convertAndSend(key, msgObj);
         } catch (Exception e) {
-            log.error("消息发送失败：key【"+key+'】',e);
+        	logger.error("消息发送失败：key【"+key+'】',e);
         }
     }
+    // init
+	private void init() {
+		if(init.compareAndSet(false, true)) {
+			Assert.notNull(exchangeName, "rabbitmq exchange name can not be null");
+			Assert.notNull(template, "rabbitmq template can not be null");
+			Assert.notNull(admin, "rabbitmq admin can not be null");
+			// declare
+			TopicExchange exchange = new TopicExchange(exchangeName);
+			admin.declareExchange(exchange);
+		}
+	}
     
-    /**
-     * 将对象转换为json串
-     * null值不进行转换
-     * @param obj
-     * @return
-     * @throws JsonGenerationException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-     public static String toJsonString(Object obj) throws JsonGenerationException, JsonMappingException, IOException{
-         StringWriter sw = new StringWriter();
-         objectMapper.writeValue(sw, obj);
-         return sw.toString();
-     }
+    public RabbitTemplate getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(RabbitTemplate template) {
+		this.template = template;
+	}
+
+	public RabbitAdmin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(RabbitAdmin admin) {
+		this.admin = admin;
+	}
+	
+	public String getExchangeName() {
+		return exchangeName;
+	}
+	
+	public void setExchangeName(String exchangeName) {
+		this.exchangeName = exchangeName;
+	}
+
+	/**
+	 * build a UNIAUTH standard MQSender implementation. 
+	 * @param template  RabbitTemplate can not be null
+	 * @param admin RabbitAdmin can not be null
+	 * @param exchangeName String exchange name
+	 * @return MQSender instance
+	 * @throws IllegalArgumentException  if any parameter is null
+	 */
+	public static MQSender build(RabbitTemplate template, RabbitAdmin admin, String exchangeName){
+		MQSenderDefaultImpl instance = new MQSenderDefaultImpl();
+		instance.setAdmin(admin);
+		instance.setExchangeName(exchangeName);
+		instance.setTemplate(template);
+		instance.init();
+		return instance;
+	}
+
 }
-
-

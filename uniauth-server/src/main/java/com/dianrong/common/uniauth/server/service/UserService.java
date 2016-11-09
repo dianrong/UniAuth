@@ -168,11 +168,11 @@ public class UserService extends TenancyBasedService {
         user.setPhone(phone);
         user.setStatus(AppConstants.STATUS_ENABLED);
         userMapper.insert(user);
-        UserDto userDto = BeanConverter.convert(user).setPassword(randomPassword);
+        UserDto userDto = BeanConverter.convert(user);
 
         //用户添加成功后发送mq
-        uniauthSender.sendUserAdd(user);
-
+        uniauthSender.sendUserAdd(userDto);
+        userDto.setPassword(randomPassword);
         asynAddUserPwdLog(user);
         return userDto;
     }
