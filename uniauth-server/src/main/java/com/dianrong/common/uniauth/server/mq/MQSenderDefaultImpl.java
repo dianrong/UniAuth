@@ -8,8 +8,6 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.util.Assert;
 
-import com.dianrong.common.uniauth.common.util.JsonUtil;
-
 /**
  * <pre>
  * mqsender默认实现
@@ -36,7 +34,7 @@ public class MQSenderDefaultImpl implements MQSender {
     @Override
     public void send(String key, Object msgObj) {
         try {
-            template.convertAndSend(key, JsonUtil.object2Jason(msgObj));
+            template.convertAndSend(key, msgObj);
         } catch (Exception e) {
         	logger.error("消息发送失败：key【"+key+'】',e);
         }

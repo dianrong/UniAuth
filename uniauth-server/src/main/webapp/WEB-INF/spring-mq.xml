@@ -46,7 +46,7 @@
 <!-- 			name="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.exchange']:UNIAUTH_RABBIT_OFF}"> -->
 <!-- 	</rabbit:topic-exchange> -->
 	
-	<rabbit:template id="uniauth_mq_template" exchange="#{uniauthConfig['rabbit.exchange']}" connection-factory="uniauth_mq_connectionFactory" >
-	</rabbit:template>
+	<rabbit:template id="uniauth_mq_template" exchange="#{uniauthConfig['rabbit.exchange']}" connection-factory="uniauth_mq_connectionFactory"  message-converter="daJsonMessageConverter"/>
+	<bean id="daJsonMessageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"/>  
 	<bean id="mqSender" class="com.dianrong.common.uniauth.server.mq.MQSenderFactory"  factory-bean="mqSenderFactory"  factory-method="getSender"/>
 </beans>
