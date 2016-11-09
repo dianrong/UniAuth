@@ -170,7 +170,7 @@
 	</logger>
 
 	<root>
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="consoleAppender" />
 		<appender-ref ref="uniAuthAppender" />
 	</root>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xsi:schemaLocation="
             	http://www.springframework.org/schema/beans
@@ -31,25 +32,21 @@
 	<rabbit:connection-factory id="uniauth_mq_connectionFactory"
 		host="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['address']:UNIAUTH_RABBIT_OFF}"
 		port="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['port']:'9999'}"
-		username="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.username']:UNIAUTH_RABBIT_OFF}"
-		virtual-host="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.virtualHost']:UNIAUTH_RABBIT_OFF}"
-		password="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.password']:UNIAUTH_RABBIT_OFF}" />
+		username="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['username']:UNIAUTH_RABBIT_OFF}"
+		virtual-host="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['vhost']:UNIAUTH_RABBIT_OFF}"
+		password="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['password']:UNIAUTH_RABBIT_OFF}" />
 
-	<rabbit:admin connection-factory="uniauth_mq_connectionFactory" />
+	<rabbit:admin id="uniauth_admin" connection-factory="uniauth_mq_connectionFactory" />
 
-	<rabbit:queue id="user_add_queue" durable="true"
-		auto-delete="false" exclusive="false"
-		name="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.user.add.queue']:UNIAUTH_RABBIT_OFF}" />
+<!-- 	<rabbit:queue id="user_add_queue" durable="true" -->
+<!-- 		auto-delete="false" exclusive="false" -->
+<!-- 		name="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.user.add.queue']:UNIAUTH_RABBIT_OFF}" /> -->
 		
-	<rabbit:direct-exchange id="uniauth_exchange"
-		durable="true" auto-delete="false"
-		name="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.exchange']:UNIAUTH_RABBIT_OFF}">
-		<rabbit:bindings>
-			<rabbit:binding queue="user_add_queue"
-				key="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.user.add.key']:UNIAUTH_RABBIT_OFF}" />
-		</rabbit:bindings>
-	</rabbit:direct-exchange>
+<!-- 	<rabbit:topic-exchange id="uniauth_exchange" durable="true" auto-delete="false"  -->
+<!-- 			name="#{uniauthConfig['rabbit.switch']=='on'?uniauthConfig['rabbit.exchange']:UNIAUTH_RABBIT_OFF}"> -->
+<!-- 	</rabbit:topic-exchange> -->
 	
-	<rabbit:template id="uniauth_mq_template" exchange="uniauth_exchange"
-		connection-factory="uniauth_mq_connectionFactory" />
+	<rabbit:template id="uniauth_mq_template" exchange="#{uniauthConfig['rabbit.exchange']}" connection-factory="uniauth_mq_connectionFactory" >
+	</rabbit:template>
+	<bean id="mqSender" class="com.dianrong.common.uniauth.server.mq.MQSenderFactory"  factory-bean="mqSenderFactory"  factory-method="getSender"/>
 </beans>
