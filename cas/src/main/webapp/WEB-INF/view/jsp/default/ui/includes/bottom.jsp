@@ -3,8 +3,10 @@
 <%@page import="com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper"%>       
 <%@page import="com.dianrong.common.uniauth.cas.util.I18nLanguageConstantUtil"%> 
 <%@page import="com.dianrong.common.uniauth.cas.util.I18nLanguageConstantUtil.I18nContent"%>       
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/version.jsp" />
 <%
 String bpath = request.getContextPath(); 
+String bversion = (String)application.getAttribute("cas_v");
 %>   
 <footer>
     <div id="copyright">
@@ -23,14 +25,14 @@ String bpath = request.getContextPath();
     </div>
 </footer>
 </div> <!-- END #container -->
-<script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js" ></script>
-<script type="text/javascript" src="jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js" ></script>
-<script type="text/javascript" src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="jquery/jquery.i18n.properties-min-1.0.9.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/jqueryui/1.11.4/jquery-ui.min.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js?v=<%=bversion %>" ></script>
 
-<script type="text/javascript" src="<%=bpath %>/js/common.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/head.min.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/cas.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/common.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/head.min.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/cas.js?v=<%=bversion %>" ></script>
 </body>
 </html>
 

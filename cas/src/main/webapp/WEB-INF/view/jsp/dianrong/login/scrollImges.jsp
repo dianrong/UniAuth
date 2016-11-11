@@ -2,8 +2,10 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/version.jsp" />
 <%
 	String path = request.getContextPath();
+	String version = (String)application.getAttribute("cas_v");
 %>
 <meta charset="UTF-8" />
 
@@ -38,5 +40,5 @@
 		</c:forEach> 
 	</ol>
 </div>
-<script type="text/javascript" src="<%=path %>/imgscroll/js/slider.js" ></script>
-<script type="text/javascript" src="<%=path %>/js/loginscroll.js" ></script>
+<script type="text/javascript" src="<%=path %>/imgscroll/js/slider.js?v=<%=version %>" ></script>
+<script type="text/javascript" src="<%=path %>/js/loginscroll.js?v=<%=version %>" ></script>
