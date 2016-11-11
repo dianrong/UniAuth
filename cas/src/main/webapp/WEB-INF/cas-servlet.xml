@@ -129,7 +129,7 @@
         
         <prop key="/uniauth/captcha">captchaController</prop>
         <prop key="/uniauth/forgetPassword">forgetPasswordController</prop>
-        <prop key="/uniauth/initPassword">initPasswordController</prop>
+<!--         <prop key="/uniauth/initPassword">initPasswordController</prop> -->
       </util:properties>
     </property>
     <property name="interceptors">
@@ -152,10 +152,10 @@
   </bean>
   
   <!-- init password controller -->
-  <bean id="initPasswordController" class="com.dianrong.common.uniauth.cas.controller.InitPasswordController">
-  		<property name="userInfoManageService" ref="userInfoManageService"></property>
-  		<property name="messageSource" ref="messageSource"></property>
-  </bean>
+<!--   <bean id="initPasswordController" class="com.dianrong.common.uniauth.cas.controller.InitPasswordController"> -->
+<!--   		<property name="userInfoManageService" ref="userInfoManageService"></property> -->
+<!--   		<property name="messageSource" ref="messageSource"></property> -->
+<!--   </bean> -->
   
   <!-- 进行登陆submit后台处理的拦截action -->
   <bean id="authenticationActionInterceptor" class="com.dianrong.common.uniauth.cas.action.AuthenticationViaFormSubmitInterceptor">

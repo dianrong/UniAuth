@@ -1,5 +1,6 @@
 $(function() {
-	var processUrl = context_path+"/uniauth/initPassword";
+	var processUrl = context_path+"/uniauth/initPassword/process";
+	var successUrl = context_path+"/uniauth/initPassword/initSuccess";
 	var captchaUrl = context_path+"/uniauth/captcha";
 	
 	//初始化函数
@@ -25,6 +26,9 @@ $(function() {
 		$('#init_pwd_tverfynotice').keyup(btn_init_pwd_process_show);
 		
 		//信息提示
+		$('#username_warn_info').blur(function(){
+			valid_input_value(true, 0);
+		});
 		$('#origin_password').blur(function(){
 			valid_input_value(true, 1);
 		});
@@ -56,10 +60,22 @@ $(function() {
 	
 	// 验证输入的数据
 	var valid_input_value = function(notice, index){
-		var originpwd = $('#origin_password').val();
-		
-		//验证结果
 		var valid_result  = true;
+		
+		var useremail = $('#user_email').val();
+		//验证原始密码
+		if(!useremail){
+			valid_result = false;
+			//查看是否需要显示
+			if(!!notice && !!index && index == 0){
+				setWarnLabel($.i18n.prop('frontpage.initpwd.edit.need.username'), $('#username_warn_info'));
+			}
+			if(!!index && index == 0){
+				return false;
+			}
+		}
+		
+		var originpwd = $('#origin_password').val();
 		//验证原始密码
 		if(!originpwd){
 			valid_result = false;
@@ -128,12 +144,12 @@ $(function() {
 	//点击进行初始化密码操作
 	var init_pwd_process = function(){
 		var turl = processUrl;
-		//设置一下跳转路径  //将跳转链接也仍进去到后台
-		$('#login_redirec_url_id').val(getLocationParameterStr());
-		
+		var tenancyCode = $('#input_tenancy_code_val').val();
+		if (!tenancyCode) {
+			$('#input_tenancy_code_val').val(cookieOperation.getTenancyCode());
+		}
 		//数据
 		var data = $('#initpwd_post_form').serialize() ;
-		
 		$.ajax({  
             type : "POST", 
             url : turl,
@@ -144,10 +160,10 @@ $(function() {
             	setWarnLabel('', $('#init_pwd_warn_info'));
             },
             success : function(result) {// 返回数据根据结果进行相应的处理
-                if (result.issuccess == 'true') {  
-                    if(result.code == '0'){
-                    	// 跳转到第二步
-                    	window.location = processUrl + '?step=2';
+                if (result.success) {  
+                    if(result.code ===  0){
+                    	// success
+                    	window.location = successUrl;
                     } else {
                     	setWarnLabel(result.msg, $('#init_pwd_warn_info'));
                     }
