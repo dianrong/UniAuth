@@ -27,12 +27,12 @@ public abstract class AbstractBaseController extends AbstractController {
     /**
      * . get parameter from request
      * 
-     * @param reqeust httpRequest
+     * @param request httpRequest
      * @param key parameterKey
-     * @return val
+     * @return value
      */
-    protected String getParamFromRequest(HttpServletRequest reqeust, String key) {
-        return reqeust.getParameter(key);
+    protected String getParamFromRequest(HttpServletRequest request, String key) {
+        return request.getParameter(key);
     }
 
     /**

@@ -15,18 +15,7 @@
 					</div>
 					<div class="row">
 					  <div class="col-sm-offset-4 col-sm-4 h6">
-					  <%
-					  		Object expire = request.getSession().getAttribute("pwdg_passwrod_expire");
-					  		if(expire != null && Boolean.valueOf(String.valueOf(expire))){
-					  			%>
-					  				<spring:message code="screen.init.password.step2.content.expire.link"/>
-					  			<%
-					  		}else{
-					  			%>
-					  			<spring:message code="screen.init.password.step2.content.link"/>
-					  			<%
-					  		}
-					  %>
+					  		<spring:message code="screen.init.password.step2.content.expire.link"/>
 							<a href="<%=path %>/login"><spring:message code="screen.password.reset.step3.success.login"/></a>
 					  </div>
 					</div>
