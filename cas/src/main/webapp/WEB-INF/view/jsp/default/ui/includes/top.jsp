@@ -6,8 +6,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page import="com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper"%>       
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/version.jsp" />
 <%
 String path = request.getContextPath(); 
+String version = (String)application.getAttribute("cas_v");
 %>
 
 <html lang="en">
@@ -20,8 +22,8 @@ String path = request.getContextPath();
   <link rel="stylesheet" href="<c:url value="${customCssFile}" />" />
   <link rel="icon" href="<%=path %>/uniauth/cascfg/imges/CAS_ICON"  type="image/x-icon" />
 	<!-- for ad scroll -->
-	<link href="<%=path %>/imgscroll/css/scroll.css" rel="stylesheet">
-	<link href="<%=path %>/css/main.css" rel="stylesheet">
+	<link href="<%=path %>/imgscroll/css/scroll.css?v=<%=version %>" rel="stylesheet">
+	<link href="<%=path %>/css/main.css?v=<%=version %>" rel="stylesheet">
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
   <![endif]-->
