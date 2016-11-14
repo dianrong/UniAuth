@@ -4,7 +4,7 @@
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
 			<header class="find-pwd">
-				<a href="javascript:void(0);" id="init_pwd_to_firstpage_a"><spring:message code="screen.init.password.navigation.firstpage"/></a>
+				<a href="<%=path %>/login"><spring:message code="screen.init.password.navigation.firstpage"/></a>
 				&gt;<spring:message code="screen.init.password.navigation.initpwd" />
 			</header>
 				<!-- content -->
