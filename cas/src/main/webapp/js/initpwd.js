@@ -5,9 +5,6 @@ $(function() {
 	
 	//初始化函数
 	var init = function() {
-		//添加跳转首页的刷新功能
-		$('#init_pwd_to_firstpage_a').click(refresh_page);
-		
 		//post提交
 		$('#btn_init_pwd_process').bind('click', init_pwd_process);
 		
