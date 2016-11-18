@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.track;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -27,7 +28,7 @@ public class GlobalVarQueue {
 
 	private BlockingQueue<GlobalVar> GLOBALVAR_QUEUE = new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBALVAR_QUEUE_SIZE);
 	
-	private Object lock = new Object();
+	private Object lock = new Serializable(){};
 
 	private GlobalVarQueue() {
 

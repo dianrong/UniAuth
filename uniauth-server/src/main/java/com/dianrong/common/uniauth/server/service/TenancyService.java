@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class TenancyService {
 	 * . 默认使用的tenancy
 	 */
 	private volatile TenancyDto defaultTenancy;
-	private Object lock = new Object();
+	private Object lock = new Serializable(){};
 
 	public List<TenancyDto> getAllTenancy(Long id, String code, Byte status, String name, String contactName,
 			String phone, String description) {
