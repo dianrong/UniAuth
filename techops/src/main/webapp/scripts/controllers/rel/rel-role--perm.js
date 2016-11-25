@@ -85,7 +85,7 @@ define(['../../utils/constant'], function (constant) {
             });
         }
         $scope.selectAllPermsForRole = function(tag) {
-        	tag =  tag === false?false: true;
+        	tag = tag !== false
             for(var i=0;i<$scope.perms.length;i++) {
                 $scope.perms[i].checked = tag; 
             }
