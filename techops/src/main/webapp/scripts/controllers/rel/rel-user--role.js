@@ -77,9 +77,10 @@ define(['../../utils/constant'], function (constant, AlertService) {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceUserRoleFailure'));
             });
         }
-        $scope.selectAllRolesForUser = function() {
+        $scope.selectAllRolesForUser = function(tag) {
+        	tag =  tag === false?false: true;
             for(var i=0;i<$scope.roles.length;i++) {
-                $scope.roles[i].checked = true;
+                $scope.roles[i].checked = tag;
             }
         }
         var watch = $scope.$watch('user.selected', $scope.getUserRolesWithCheckedInfo);

@@ -49,7 +49,10 @@
         </tbody>
     </table>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="selectAllTagsForGrp()">{{'relMgr.selectedAll' | translate}}</button>
-        <button type="button" class="btn btn-info" ng-click="replaceTagsToGroup()"  ng-disabled="grp.selected == null">{{'dialog.save' | translate}}</button>
+    	<div class="btn-left">
+        	<button type="button" class="btn btn-info" ng-click="selectAllTagsForGrp(true)">{{'relMgr.selectedAll' | translate}}</button>
+        	<button type="button" class="btn btn-default" ng-click="selectAllTagsForGrp(false)">{{'relMgr.selectedNone' | translate}}</button>
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="replaceTagsToGroup()"  ng-disabled="grp.selected == null">{{'dialog.save' | translate}}</button>
     </div>
 </div>

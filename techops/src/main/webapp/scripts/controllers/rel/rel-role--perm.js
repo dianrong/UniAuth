@@ -84,9 +84,10 @@ define(['../../utils/constant'], function (constant) {
                 $scope.rolePermsMsg = constant.submitFail;
             });
         }
-        $scope.selectAllPermsForRole = function() {
+        $scope.selectAllPermsForRole = function(tag) {
+        	tag =  tag === false?false: true;
             for(var i=0;i<$scope.perms.length;i++) {
-                $scope.perms[i].checked = true;
+                $scope.perms[i].checked = tag; 
             }
         }
         var watch = $scope.$watch('role.selected', $scope.getAllPermsWithCheckedInfoInDomain);

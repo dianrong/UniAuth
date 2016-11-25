@@ -187,3 +187,9 @@
 }
 
 /*user-eav-form special css */
+
+.btn-left {
+	text-align: left;
+	float: left;
+	margin-left: -15px;
+}

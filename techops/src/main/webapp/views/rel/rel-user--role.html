@@ -49,8 +49,11 @@
         </tbody>
     </table>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="selectAllRolesForUser()">{{'relMgr.selectedAll' | translate}}</button>
-        <button type="button" class="btn btn-info" ng-click="replaceRolesToUser()"
+    	<div class="btn-left">
+        	<button type="button" class="btn btn-info" ng-click="selectAllRolesForUser(true)">{{'relMgr.selectedAll' | translate}}</button>
+        	<button type="button" class="btn btn-default" ng-click="selectAllRolesForUser(false)">{{'relMgr.selectedNone' | translate}}</button>
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="replaceRolesToUser()"
                 ng-disabled="user.selected == null">{{'dialog.save' | translate}}</button>
     </div>
 </div>
