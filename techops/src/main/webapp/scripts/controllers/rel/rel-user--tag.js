@@ -78,9 +78,10 @@ define(['../../utils/constant'], function (constant, AlertService) {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceUserTagFailure'));
             });
         }
-        $scope.selectAllTagsForUser = function() {
+        $scope.selectAllTagsForUser = function(tag) {
+        	tag =  tag === false?false: true;
             for(var i=0;i<$scope.tags.length;i++) {
-                $scope.tags[i].tagUserChecked = true;
+                $scope.tags[i].tagUserChecked = tag;
             }
         }
         var watch = $scope.$watch('user.selected', $scope.getUserTagsWithCheckedInfo);

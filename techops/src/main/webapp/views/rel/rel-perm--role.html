@@ -48,8 +48,11 @@
         </tbody>
     </table>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="selectAllRolesForPerm()">{{'relMgr.selectedAll' | translate}}</button>
-        <button type="button" class="btn btn-info" ng-click="replaceRolesToPerm()"
+    	<div class="btn-left">
+        	<button type="button" class="btn btn-info" ng-click="selectAllRolesForPerm(true)">{{'relMgr.selectedAll' | translate}}</button>
+        	<button type="button" class="btn btn-default" ng-click="selectAllRolesForPerm(false)">{{'relMgr.selectedNone' | translate}}</button>
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="replaceRolesToPerm()"
                 ng-disabled="perm.selected == null">{{'dialog.save' | translate}}</button>
     </div>
 </div>
