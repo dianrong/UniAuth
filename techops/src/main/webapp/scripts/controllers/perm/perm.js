@@ -145,6 +145,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     break;
             }
         };
+        $scope.$watch('permTypesDropdown.option', $scope.queryPerm, true)
         $scope.$on('selected-domain-changed', $scope.queryPerm);
         $scope.$on('selected-language-changed', $scope.queryPerm);
     };
