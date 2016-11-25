@@ -79,7 +79,7 @@ define(['../../utils/constant'], function (constant, AlertService) {
             });
         }
         $scope.selectAllTagsForUser = function(tag) {
-        	tag =  tag === false?false: true;
+        	tag = tag !== false
             for(var i=0;i<$scope.tags.length;i++) {
                 $scope.tags[i].tagUserChecked = tag;
             }
