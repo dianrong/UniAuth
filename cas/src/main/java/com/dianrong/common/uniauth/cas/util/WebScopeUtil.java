@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -151,4 +152,25 @@ public final class WebScopeUtil {
 			return false;
 		}
 	}
+	
+    /**
+     * . get parameter from request
+     * 
+     * @param request httpRequest
+     * @param key parameterKey
+     * @return value
+     */
+    public static String getParamFromRequest(HttpServletRequest request, String key) {
+        return request.getParameter(key);
+    }
+    
+    /**
+     * . set attribute to request
+     * @param request httpRequest
+     * @param key attributeKey
+     * @param value the value to set to httpRequest
+     */
+    public static void setAttribute(HttpServletRequest request, String key, Object value) {
+        request.setAttribute(key, value);
+    }
 }

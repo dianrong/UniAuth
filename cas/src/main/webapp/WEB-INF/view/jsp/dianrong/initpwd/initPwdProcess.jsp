@@ -1,9 +1,10 @@
 <jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/top.jsp" />
+<%@page import="com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential"%>       
 
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
 			<header class="find-pwd">
-				<a href="javascript:void(0);" id="init_pwd_to_firstpage_a"><spring:message code="screen.init.password.navigation.firstpage"/></a>
+				<a href="<%=path %>/login"><spring:message code="screen.init.password.navigation.firstpage"/></a>
 				&gt;<spring:message code="screen.init.password.navigation.initpwd" />
 			</header>
 				<!-- content -->
@@ -11,15 +12,32 @@
 					<p ><spring:message code="screen.init.password.step1.content.user.notice"/></p>
 					<form action="" id="initpwd_post_form" class="form-horizontal" method="post">
 						 	<div class="form-group">
-								<div class="col-sm-offset-4 col-sm-4 text-align-left">
-							    	<label for="emailValue" class="h6">
-							    		${credential.username} 
-							    	</label>
-							    	<input type="hidden" value="${credential.username} " name="email" id="user_email">
-							    	<input type="hidden" value="${credential.tenancyCode }" name="tenancyCode">
-							    	<input type="hidden" name="savedLoginContext" id="login_redirec_url_id">
-							    	<input type="hidden" name="expire"  value="${expire }">
-							    </div>
+									<%
+									CasUsernamePasswordCredential credential = (CasUsernamePasswordCredential)request.getAttribute("credential");
+										if (credential != null && credential.getUsername() != null) {
+									%>
+									<div class="col-sm-offset-4 col-sm-4 text-align-left">
+											<label for="emailValue" class="h6">
+									    		${credential.username} 
+									    	</label>
+									    	<input type="hidden" value="${credential.username} " name="email" id="user_email">
+									    	  <input type="hidden" value="${credential.tenancyCode }" name="tenancyCode" id="input_tenancy_code_val">
+									  </div>
+									<%											
+										} else {
+									%>
+										<label for="user_email" class="col-sm-offset-1  col-sm-3 control-label"><spring:message code="screen.init.password.step1.content.email"/></label>
+									  	<div class="col-sm-4">
+									    	<input type="text" class="form-control"  name="email"   id="user_email">
+									    </div>
+									     <div class="col-sm-4 showwarninfo">
+									  		<label for="initpwdwarn" id="username_warn_info">
+									  		</label>
+									  	</div>
+								    <input type="hidden" name="tenancyCode" id="input_tenancy_code_val">
+									<%
+										}
+									%>
 						  	</div>
 						  	<div class="form-group">
 						  		<label for="inputOriginPws" class="col-sm-offset-1  col-sm-3 control-label"><spring:message code="screen.init.password.step1.content.originpwd"/></label>
@@ -63,13 +81,13 @@
 							  		<label for="initpwdwarn" id="verifycode_warn_info"></label>
 							  	</div>
 						  </div>
-						  <div class="form-group">
+						  <div class="form-group" >
 						  	<div class="col-sm-offset-4 col-sm-4">
 						  		<button type="button" id="btn_init_pwd_process" class="btn btn-wide btn-primary btnstep cursordefault" disabled="disabled"><spring:message code="screen.init.password.step1.confirm.title"/></button>
 						  	</div>
 						  </div>
 					  <div class="form-group">
-					  	<div class="col-sm-offset-4 col-sm-8 showwarninfo">
+					  	<div class="col-sm-offset-4 col-sm-8 showwarninfo  margin-top--20px">
 					  		<label for="initpwdwarn" id="init_pwd_warn_info"></label>
 					  	</div>
 				  </div>

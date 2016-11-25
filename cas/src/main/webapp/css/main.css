@@ -125,6 +125,14 @@
 	margin-top : 35px;
 }
 
+.margin-bottom-0 {
+	margin-bottom: 0px;
+}
+
+.margin-top--20px {
+	margin-top: -20px;
+}
+
 .find-pwd-container .find-pwd-content .infoedit   .form-group {
 	margin-bottom:15px;
 	margin-top : 15px;

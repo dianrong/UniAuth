@@ -127,6 +127,6 @@
     </div>
 </div>
 <jsp:directive.include file="bottom.jsp" />
-<script type="text/javascript" src="<%=path %>/js/loginpage.js" ></script>
-<script type="text/javascript" src="<%=path %>/js/pwdforget.js" ></script>
-<script type="text/javascript" src="<%=path %>/js/userinfoedit.js" ></script>
+<script type="text/javascript" src="<%=path %>/js/loginpage.js?v=<%=version %>" ></script>
+<script type="text/javascript" src="<%=path %>/js/pwdforget.js?v=<%=version %>" ></script>
+<script type="text/javascript" src="<%=path %>/js/userinfoedit.js?v=<%=version %>" ></script>

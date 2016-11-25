@@ -2,8 +2,10 @@
 <%@page import="com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper"%>
 <%@page import="com.dianrong.common.uniauth.cas.util.I18nLanguageConstantUtil"%> 
 <%@page import="com.dianrong.common.uniauth.cas.util.I18nLanguageConstantUtil.I18nContent"%>
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/version.jsp" />
 <%
 String bpath = request.getContextPath(); 
+String bversion = (String)application.getAttribute("cas_v");
 %>   
 <footer class="footer">
     <div>
@@ -22,12 +24,12 @@ String bpath = request.getContextPath();
     </div>
 </footer>
 </body>
-<script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/jquery/jquery.i18n.properties-min-1.0.9.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/bootstrap-3.3.5/js/bootstrap.min.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/common.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/pwdforget.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/userinfoedit.js" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/initpwd.js" ></script>
+<script type="text/javascript" src="<%=bpath %>/jquery/jquery-1.12.1.min.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/jquery/jquery.i18n.properties-min-1.0.9.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/bootstrap-3.3.5/js/bootstrap.min.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/common.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/pwdforget.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/userinfoedit.js?v=<%=bversion %>" ></script>
+<script type="text/javascript" src="<%=bpath %>/js/initpwd.js?v=<%=bversion %>" ></script>
 </html>
 

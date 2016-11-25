@@ -78,6 +78,9 @@ public interface AppConstants {
 	//request
 	String REQUEST_PARAMETER_KEY_TENANCY_CODE="tenancyCode";
 	String REQUEST_PARAMETER_KEY_TENANCY_ID="tenancyId";
+	String REQUEST_PARAMETER_KEY_EMAIL="email";
+	String REQUEST_ATTRIBUTE_KEY_CREDENTIAL="credential";
+	String REQUEST_ATTRIBUTE_KEY_INITMSG="initMsg";
 	
 	String PWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
 	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
@@ -94,12 +97,12 @@ public interface AppConstants {
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
 	String PWDEXPIRE_SESSION_KEY = "pwdg_passwrod_expire";
 
-	//60 secondes
+	//60 seconds
 	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
-	//5 minitues
+	//5 minutes
 	long PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
 	
-	//tag for userinfo edit in request
+	//tag for UserInfo edit in request
 	String CAS_USERINFO_MANAGE_EDIT_KEY = "edituserinfo";
 	String CAS_USERINFO_MANAGE_REQUEST_METHOD_KEY = "form_method";
 	String CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY = "user_mangage_flow_request_type";
@@ -116,7 +119,7 @@ public interface AppConstants {
 	String CAS_USERINFO_MANGE_UPDATE_PASSWORD_TAG = "password";
 	String CAS_USERINFO_MANGE_UPDATE_ORIGINPASSWORD_TAG = "orign_password";
 	
-	//cas登陆captcha的session值的key
+	//cas登陆Captcha的session值的key
 	String CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY = "cas_login_captcha_validation_session_key";
 	
 	String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
@@ -137,7 +140,7 @@ public interface AppConstants {
 	int AUDIT_INSET_PARAM_LENGTH = 256;
 	
 	//cas cfg refresh
-	//default 120 minitues
+	//default 120 minutes
 	long CAS_CFG_CACHE_REFRESH_PERIOD_MILLES = 120L * 60L * 1000L;
 	
 	//cascfg cache model in application's key
@@ -149,7 +152,7 @@ public interface AppConstants {
 	String CAS_CFG_KEY_TITLE = "CAS_TITLE";
 	String CAS_CFG_KEY_ALL_RIGHT = "CAS_ALL_RIGHT";
 	String CAS_CFG_KEY_LOGIN_AD_IMG = "CAS_LOGIN_AD_IMG";
-	// cfg cas orgin cfg key prefix
+	// cfg cas original cfg key prefix
 	String CAS_CFG_KEY_CROSS_FILTER_ORIGIN_PREFIX = "CAS_CROSS_FILTER_ORGIN";
 	
 	// define the cfg type id 
