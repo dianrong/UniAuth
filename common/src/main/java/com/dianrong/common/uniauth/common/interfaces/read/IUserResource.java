@@ -79,10 +79,10 @@ public interface IUserResource {
     Response<List<TagDto>>  getTagsWithUserCheckedInfo(UserParam userParam);
     
     @POST
-    @Path("searchUserByRoleId")
+    @Path("search-user-by-roleid")
     Response<List<UserDto>>  searchUserByRoleId(UserParam userParam);
     
     @POST
-    @Path("searchUserByTagId")
+    @Path("search-user-by-tagid")
     Response<List<UserDto>> searchUserByTagId(UserParam userParam);
 }

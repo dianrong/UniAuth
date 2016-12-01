@@ -26,10 +26,6 @@ public class UserQuery extends PageParam {
     
     private List<Long> excludeUserIds;
 
-    public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public Integer getGroupId() {
         return groupId;
     }
@@ -120,13 +116,6 @@ public class UserQuery extends PageParam {
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		return "UserQuery [userId=" + userId + ", userIds=" + userIds + ", name=" + name + ", phone=" + phone
-				+ ", email=" + email + ", status=" + status + ", tagId=" + tagId + ", groupId=" + groupId + ", roleId="
-				+ roleId + ", needTag=" + needTag + "]";
-	}
-
 	public Boolean getNeedDescendantGrpUser() {
 		return needDescendantGrpUser;
 	}
@@ -150,4 +139,10 @@ public class UserQuery extends PageParam {
 	public void setExcludeUserIds(List<Long> excludeUserIds) {
 		this.excludeUserIds = excludeUserIds;
 	}
+
+  @Override
+  public String toString() {
+    return "UserQuery [userId=" + userId + ", userIds=" + userIds + ", name=" + name + ", phone=" + phone + ", email=" + email + ", status=" + status + ", tagId=" + tagId + ", groupId=" + groupId + ", needDescendantGrpUser=" + needDescendantGrpUser
+        + ", needDisabledGrpUser=" + needDisabledGrpUser + ", roleId=" + roleId + ", needTag=" + needTag + ", excludeUserIds=" + excludeUserIds + "]";
+  }
 }

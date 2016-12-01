@@ -47,7 +47,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 return;
             }
             params.roleId = $scope.role.selected.id;
-            params.needAllGrp = true;
+            params.onlyNeedGrpInfo = true;
             GroupService.syncTree(params, true);
             $scope.roleUserGrpMsg = '';
         }

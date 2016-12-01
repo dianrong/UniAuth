@@ -46,7 +46,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 return;
             }
             params.tagId = $scope.tag.selected.id;
-            params.needAllGrp = true;
+            params.onlyNeedGrpInfo = true;
             GroupService.syncTagTree(params);
             $scope.tagUserGrpMsg = '';
         }

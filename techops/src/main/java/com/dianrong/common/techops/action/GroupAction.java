@@ -44,7 +44,10 @@ public class GroupAction {
         GroupDto groupDto = groupDtoResponse.getData();
         if(groupDto != null) {
             List<Node> nodes;
-            if(groupParam.getRoleId() != null && groupParam.getNeedUserRelationShip() != null && groupParam.getNeedUserRelationShip()) {
+            if (groupParam.getOnlyNeedGrpInfo() != null && groupParam.getOnlyNeedGrpInfo()) {
+                // 根据groupParam.roleId来判断  逻辑上的处理为：如果传了RoleId 就当成在查询角色与用户关联关系
+                nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), groupParam.getRoleId() != null);
+            } else if(groupParam.getRoleId() != null) {
                 nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), Boolean.TRUE);
                 PrimaryKeyParam primaryKeyParam = new PrimaryKeyParam();
                 primaryKeyParam.setId(groupParam.getRoleId());
@@ -63,7 +66,7 @@ public class GroupAction {
                         nodes.add(userNode);
                     }
                 }
-            } else if(groupParam.getTagId() != null  && groupParam.getNeedUserRelationShip() != null && groupParam.getNeedUserRelationShip()) {
+            } else if(groupParam.getTagId() != null) {
                 nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), Boolean.FALSE);
                 PrimaryKeyParam primaryKeyParam = new PrimaryKeyParam();
                 primaryKeyParam.setId(groupParam.getTagId());
@@ -82,9 +85,6 @@ public class GroupAction {
                         nodes.add(userNode);
                     }
                 }
-            } else if (groupParam.getNeedAllGrp() != null && groupParam.getNeedAllGrp()) {
-            	// 根据groupParam.roleId来判断  逻辑上的处理为：如果传了RoleId 就当成在查询角色与用户关联关系
-                nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), groupParam.getRoleId() != null);
             }  else {
             	// 是 owner 才能查看到的组集合
                 nodes = CustomizeBeanConverter.convert(Arrays.asList(groupDto), null);

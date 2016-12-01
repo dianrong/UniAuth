@@ -33,9 +33,7 @@ public class GroupParam extends Operator {
 	
 	private List<Integer> tagIds;
 
-	private Boolean needUserRelationShip;
-	
-	private Boolean needAllGrp;
+	private Boolean onlyNeedGrpInfo;
 	
 	public Integer getId() {
 		return id;
@@ -172,39 +170,18 @@ public class GroupParam extends Operator {
 		return this;
 	}
 
-	public Boolean getNeedUserRelationShip() {
-		return needUserRelationShip;
-	}
-	
-	public GroupParam setNeedUserRelationShip(Boolean needUserRelationShip) {
-		this.needUserRelationShip = needUserRelationShip;
-		return this;
-	}
+  public Boolean getOnlyNeedGrpInfo() {
+      return onlyNeedGrpInfo;
+  }
 
-	@Override
-	public String toString() {
-		return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description=" + description
-				+ ", status=" + status + ", targetGroupId=" + targetGroupId + ", targetGroupIds=" + targetGroupIds
-				+ ", onlyShowGroup=" + onlyShowGroup + ", userGroupType=" + userGroupType + ", needOwnerMarkup="
-				+ needOwnerMarkup + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds="
-				+ roleIds + ", tagIds=" + tagIds + ", needUserRelationShip=" + needUserRelationShip + ", opUserId="
-				+ opUserId + ", opDomainId=" + opDomainId + ", getId()=" + getId() + ", getCode()=" + getCode()
-				+ ", getName()=" + getName() + ", getDescription()=" + getDescription() + ", getStatus()=" + getStatus()
-				+ ", getTargetGroupId()=" + getTargetGroupId() + ", getOnlyShowGroup()=" + getOnlyShowGroup()
-				+ ", getRoleId()=" + getRoleId() + ", getDomainId()=" + getDomainId() + ", getRoleIds()=" + getRoleIds()
-				+ ", getUserGroupType()=" + getUserGroupType() + ", getNeedOwnerMarkup()=" + getNeedOwnerMarkup()
-				+ ", getTargetGroupIds()=" + getTargetGroupIds() + ", getTagId()=" + getTagId() + ", getTagIds()="
-				+ getTagIds() + ", getNeedUserRelationShip()=" + getNeedUserRelationShip() + ", getOpUserId()="
-				+ getOpUserId() + ", getOpDomainId()=" + getOpDomainId() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
-	}
+  public GroupParam setOnlyNeedGrpInfo(Boolean onlyNeedGrpInfo) {
+      this.onlyNeedGrpInfo = onlyNeedGrpInfo;
+      return this;
+  }
 
-	public Boolean getNeedAllGrp() {
-		return needAllGrp;
-	}
-
-	public GroupParam setNeedAllGrp(Boolean needAllGrp) {
-		this.needAllGrp = needAllGrp;
-		return this;
-	}
+  @Override
+  public String toString() {
+    return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description=" + description + ", status=" + status + ", targetGroupId=" + targetGroupId + ", targetGroupIds=" + targetGroupIds + ", onlyShowGroup=" + onlyShowGroup
+        + ", userGroupType=" + userGroupType + ", needOwnerMarkup=" + needOwnerMarkup + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds + ", onlyNeedGrpInfo=" + onlyNeedGrpInfo + "]";
+  }
 }
