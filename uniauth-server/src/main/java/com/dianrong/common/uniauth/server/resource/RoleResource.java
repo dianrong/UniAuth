@@ -61,7 +61,7 @@ public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam) {
-		roleService.replaceGroupsAndUsersToRole(roleParam.getId(),roleParam.getGrpIds(),roleParam.getUserIds());
+		roleService.replaceGroupsAndUsersToRole(roleParam.getId(),roleParam.getGrpIds(),roleParam.getUserIds(), roleParam.getReplaceGrpIds(), roleParam.getReplaceUserIds());
 		return Response.success();
 	}
 

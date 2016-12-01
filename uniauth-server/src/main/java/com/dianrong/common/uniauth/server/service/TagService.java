@@ -317,108 +317,117 @@ public class TagService extends TenancyBasedService{
     }
 
     @Transactional
-    public void replaceGroupsAndUsersToTag(Integer tagId, List<Integer> grpIdsDup, List<Long> userIdsDup) {
+    public void replaceGroupsAndUsersToTag(Integer tagId, List<Integer> grpIdsDup, List<Long> userIdsDup, Boolean replaceGrpIds, Boolean replaceUserIds) {
         CheckEmpty.checkEmpty(tagId, "tagId");
-        // remove duplicate values;
-        List<Integer> grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
-        List<Long> userIds = new ArrayList<>(new HashSet<>(userIdsDup));
-
-        GrpTagExample grpTagExample = new GrpTagExample();
-        grpTagExample.createCriteria().andTagIdEqualTo(tagId);
-        if(CollectionUtils.isEmpty(grpIds)) {
-            grpTagMapper.deleteByExample(grpTagExample);
-        } else {
-            List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-            if (!CollectionUtils.isEmpty(grpTagKeys)) {
-                ArrayList<Integer> dbGrpIds = new ArrayList<>();
-                for (GrpTagKey grpTagKey : grpTagKeys) {
-                    dbGrpIds.add(grpTagKey.getGrpId());
-                }
-                ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
-                intersections.retainAll(grpIds);
-                List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
-                List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
-                for (Integer grpId : grpIds) {
-                    if (!intersections.contains(grpId)) {
-                        grpIdsNeedAddToDB.add(grpId);
-                    }
-                }
-                for (Integer dbGrpId : dbGrpIds) {
-                    if (!intersections.contains(dbGrpId)) {
-                        grpIdsNeedDeleteFromDB.add(dbGrpId);
-                    }
-                }
-
-                if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
-                    for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
-                        GrpTagKey grpTagKey = new GrpTagKey();
-                        grpTagKey.setTagId(tagId);
-                        grpTagKey.setGrpId(grpIdNeedAddToDB);
-                        grpTagMapper.insert(grpTagKey);
-                    }
-                }
-                if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
-                    GrpTagExample grpTagDeleteExample = new GrpTagExample();
-                    grpTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andGrpIdIn(grpIdsNeedDeleteFromDB);
-                    grpTagMapper.deleteByExample(grpTagDeleteExample);
-                }
-            } else {
-                for (Integer grpId : grpIds) {
-                    GrpTagKey grpTagKey = new GrpTagKey();
-                    grpTagKey.setTagId(tagId);
-                    grpTagKey.setGrpId(grpId);
-                    grpTagMapper.insert(grpTagKey);
-                }
-            }
+        List<Integer> grpIds = null;
+        List<Long> userIds = null;
+        if (replaceGrpIds != null && replaceGrpIds) {
+        	grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
         }
-
-        UserTagExample userTagExample = new UserTagExample();
-        userTagExample.createCriteria().andTagIdEqualTo(tagId);
-        if(CollectionUtils.isEmpty(userIds)) {
-            userTagMapper.deleteByExample(userTagExample);
-        } else {
-            List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
-            if (!CollectionUtils.isEmpty(userTagKeys)) {
-                ArrayList<Long> dbUserIds = new ArrayList<>();
-                for (UserTagKey userTagKey : userTagKeys) {
-                    dbUserIds.add(userTagKey.getUserId());
-                }
-                ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
-                intersections.retainAll(userIds);
-                List<Long> userIdsNeedAddToDB = new ArrayList<>();
-                List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
-                for (Long userId : userIds) {
-                    if (!intersections.contains(userId)) {
-                        userIdsNeedAddToDB.add(userId);
-                    }
-                }
-                for (Long dbUserId : dbUserIds) {
-                    if (!intersections.contains(dbUserId)) {
-                        userIdsNeedDeleteFromDB.add(dbUserId);
-                    }
-                }
-
-                if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
-                    for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
-                        UserTagKey userTagKey = new UserTagKey();
-                        userTagKey.setTagId(tagId);
-                        userTagKey.setUserId(userIdNeedAddToDB);
-                        userTagMapper.insert(userTagKey);
-                    }
-                }
-                if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
-                    UserTagExample userTagDeleteExample = new UserTagExample();
-                    userTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andUserIdIn(userIdsNeedDeleteFromDB);
-                    userTagMapper.deleteByExample(userTagDeleteExample);
-                }
-            } else {
-                for (Long userId : userIds) {
-                    UserTagKey userTagKey = new UserTagKey();
-                    userTagKey.setTagId(tagId);
-                    userTagKey.setUserId(userId);
-                    userTagMapper.insert(userTagKey);
-                }
-            }
+        if (replaceUserIds != null && replaceUserIds) {
+        	userIds = new ArrayList<>(new HashSet<>(userIdsDup));
         }
+        
+	    if (replaceGrpIds != null) {
+	        GrpTagExample grpTagExample = new GrpTagExample();
+	        grpTagExample.createCriteria().andTagIdEqualTo(tagId);
+	        if(CollectionUtils.isEmpty(grpIds)) {
+	            grpTagMapper.deleteByExample(grpTagExample);
+	        } else {
+	            List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+	            if (!CollectionUtils.isEmpty(grpTagKeys)) {
+	                ArrayList<Integer> dbGrpIds = new ArrayList<>();
+	                for (GrpTagKey grpTagKey : grpTagKeys) {
+	                    dbGrpIds.add(grpTagKey.getGrpId());
+	                }
+	                ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
+	                intersections.retainAll(grpIds);
+	                List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
+	                List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
+	                for (Integer grpId : grpIds) {
+	                    if (!intersections.contains(grpId)) {
+	                        grpIdsNeedAddToDB.add(grpId);
+	                    }
+	                }
+	                for (Integer dbGrpId : dbGrpIds) {
+	                    if (!intersections.contains(dbGrpId)) {
+	                        grpIdsNeedDeleteFromDB.add(dbGrpId);
+	                    }
+	                }
+	
+	                if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
+	                    for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
+	                        GrpTagKey grpTagKey = new GrpTagKey();
+	                        grpTagKey.setTagId(tagId);
+	                        grpTagKey.setGrpId(grpIdNeedAddToDB);
+	                        grpTagMapper.insert(grpTagKey);
+	                    }
+	                }
+	                if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
+	                    GrpTagExample grpTagDeleteExample = new GrpTagExample();
+	                    grpTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andGrpIdIn(grpIdsNeedDeleteFromDB);
+	                    grpTagMapper.deleteByExample(grpTagDeleteExample);
+	                }
+	            } else {
+	                for (Integer grpId : grpIds) {
+	                    GrpTagKey grpTagKey = new GrpTagKey();
+	                    grpTagKey.setTagId(tagId);
+	                    grpTagKey.setGrpId(grpId);
+	                    grpTagMapper.insert(grpTagKey);
+	                }
+	            }
+	        }
+	    }
+
+	    if (userIds != null) {
+	        UserTagExample userTagExample = new UserTagExample();
+	        userTagExample.createCriteria().andTagIdEqualTo(tagId);
+	        if(CollectionUtils.isEmpty(userIds)) {
+	            userTagMapper.deleteByExample(userTagExample);
+	        } else {
+	            List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+	            if (!CollectionUtils.isEmpty(userTagKeys)) {
+	                ArrayList<Long> dbUserIds = new ArrayList<>();
+	                for (UserTagKey userTagKey : userTagKeys) {
+	                    dbUserIds.add(userTagKey.getUserId());
+	                }
+	                ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
+	                intersections.retainAll(userIds);
+	                List<Long> userIdsNeedAddToDB = new ArrayList<>();
+	                List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
+	                for (Long userId : userIds) {
+	                    if (!intersections.contains(userId)) {
+	                        userIdsNeedAddToDB.add(userId);
+	                    }
+	                }
+	                for (Long dbUserId : dbUserIds) {
+	                    if (!intersections.contains(dbUserId)) {
+	                        userIdsNeedDeleteFromDB.add(dbUserId);
+	                    }
+	                }
+	
+	                if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
+	                    for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
+	                        UserTagKey userTagKey = new UserTagKey();
+	                        userTagKey.setTagId(tagId);
+	                        userTagKey.setUserId(userIdNeedAddToDB);
+	                        userTagMapper.insert(userTagKey);
+	                    }
+	                }
+	                if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
+	                    UserTagExample userTagDeleteExample = new UserTagExample();
+	                    userTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andUserIdIn(userIdsNeedDeleteFromDB);
+	                    userTagMapper.deleteByExample(userTagDeleteExample);
+	                }
+	            } else {
+	                for (Long userId : userIds) {
+	                    UserTagKey userTagKey = new UserTagKey();
+	                    userTagKey.setTagId(tagId);
+	                    userTagKey.setUserId(userId);
+	                    userTagMapper.insert(userTagKey);
+	                }
+	            }
+	        }
+	    }
     }
 }

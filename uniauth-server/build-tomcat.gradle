@@ -23,8 +23,7 @@ ext {
     shengLongTomcatPassword = 'admin'        //Tomcat密码
     shengLongTomcatHost = '192.168.56.101:8080'        //
     
-    cwlTomcatHost = 'localhost:8080'        //
-    wlinTomcatHost = 'localhost:8090'        //
+    wlinTomcatHost = 'localhost:8200'        //
 }
 
 war {
@@ -116,35 +115,6 @@ task shengLongTomcatRedeploy(type: JavaExec, dependsOn: warUniAuthServer) {
             shengLongTomcatUsername,
             shengLongTomcatPassword,
             shengLongTomcatHost]
-    classpath = sourceSets.deployment.runtimeClasspath
-}
-
-
-task tomcatCWLDeploy(type: JavaExec, dependsOn: warUniAuthServer) {
-    doFirst {
-        println "deploying war file " + tomcatWarFile + " to Tomcat."
-    }
-    main = 'gradle.TomcatDeploy'
-    args = ['deploy',
-            tomcatAppName,
-            tomcatWarFile,
-            tomcatUsername,
-            tomcatPassword,
-            cwlTomcatHost]
-    classpath = sourceSets.deployment.runtimeClasspath
-}
-
-task tomcatCWLRedeploy(type: JavaExec, dependsOn: warUniAuthServer) {
-    doFirst {
-        println "redeploying war file " + tomcatWarFile + " to Tomcat."
-    }
-    main = 'gradle.TomcatDeploy'
-    args = ['redeploy',
-            tomcatAppName,
-            tomcatWarFile,
-            tomcatUsername,
-            tomcatPassword,
-            cwlTomcatHost]
     classpath = sourceSets.deployment.runtimeClasspath
 }
 

@@ -29,6 +29,8 @@ define({
         smallPageSize: 5,
         maxPageSize: 4999,
         hackMaxPageSize: 5e7,
+        statusEnable: 0,
+        statusDisable: 1,
         loading: '正在加载...',
         loading_code:'constant.loading',
         createError: '创建失败',

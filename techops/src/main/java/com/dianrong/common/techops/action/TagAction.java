@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import org.springframework.http.MediaType;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,4 +85,13 @@ public class TagAction {
         return uARWFacade.getTagRWResource().deleteTagType(tagTypeParam);
     }
 
+    @RequestMapping(value = "/query-tag-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+    public Response<List<UserDto>> getTagUser(@RequestBody TagParam tagParam) {
+    	UserParam param = new UserParam();
+    	List<Integer> tagIds = new ArrayList<Integer>();
+    	tagIds.add(tagParam.getId());
+    	param.setTagIds(tagIds);
+        return uARWFacade.getUserRWResource().searchUserByTagId(param);
+    }
 }

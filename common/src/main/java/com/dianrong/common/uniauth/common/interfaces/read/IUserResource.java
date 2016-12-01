@@ -77,4 +77,12 @@ public interface IUserResource {
     @Path("tagsWithUserChecked")
     //scenario: techops user-tag 
     Response<List<TagDto>>  getTagsWithUserCheckedInfo(UserParam userParam);
+    
+    @POST
+    @Path("searchUserByRoleId")
+    Response<List<UserDto>>  searchUserByRoleId(UserParam userParam);
+    
+    @POST
+    @Path("searchUserByTagId")
+    Response<List<UserDto>> searchUserByTagId(UserParam userParam);
 }

@@ -1,5 +1,4 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
-
     var Controller = function ($scope, $rootScope, TagService, GroupService, AlertService) {
         $scope.tag = TagService.tagShared;
         $scope.refreshTags = function(code) {
@@ -38,7 +37,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.predicate = '';
         $scope.comparator = false;
 
-        $scope.getTagUserGrpTree = function() {
+        $scope.getTagGrpTree = function() {
             var params = {};
             params.onlyShowGroup = true;
             if(!$scope.tag.selected || !$scope.tag.selected.id) {
@@ -47,12 +46,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 return;
             }
             params.tagId = $scope.tag.selected.id;
+            params.needAllGrp = true;
             GroupService.syncTagTree(params);
             $scope.tagUserGrpMsg = '';
         }
-        $scope.getTagUserGrpTree();
+        $scope.getTagGrpTree();
 
-        $scope.saveTagsToUserAndGrp = function() {
+        $scope.saveTagsToGrp = function() {
             if(!$scope.tag.selected || !$scope.tag.selected.id) {
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('relMgr.tips.plaseChooseTag'));
                 return;
@@ -61,10 +61,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             params.id = $scope.tag.selected.id;
             var nodeArray = $scope.treedata.data;
             var checkedGroupIds = [];
-            var checkedUserIds = [];
-            utils.extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, checkedUserIds);
+            utils.extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, []);
             params.grpIds = checkedGroupIds;
-            params.userIds = checkedUserIds;
+            params.replaceUserIds = false;
             TagService.replaceGroupsAndUsersToTag(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
@@ -73,24 +72,24 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceTagGroupSuccess'));
-                $scope.getTagUserGrpTree();
+                $scope.getTagGrpTree();
             }, function () {
                 $scope.tags = [];
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceTagGroupFailure'));
             });
         };
 
-        $scope.$watch('tag.selected', $scope.getTagUserGrpTree);
+        $scope.$watch('tag.selected', $scope.getTagGrpTree);
         $scope.$on('selected-domain-changed', function(){
             $scope.refreshTags();
-            $scope.getTagUserGrpTree();
+            $scope.getTagGrpTree();
         });
 
-        $scope.$on('selected-language-changed', $scope.getTagUserGrpTree);
+        $scope.$on('selected-language-changed', $scope.getTagGrpTree);
     };
 
     return {
-        name: "RelTagUserGroupController",
+        name: "RelTagGroupController",
         fn: ["$scope", "$rootScope", "TagService", "GroupService", "AlertService", Controller]
     };
 

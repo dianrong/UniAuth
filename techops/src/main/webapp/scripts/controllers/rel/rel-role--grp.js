@@ -38,7 +38,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.predicate = '';
         $scope.comparator = false;
 
-        $scope.getRoleUserGrpTree = function() {
+        $scope.getRoleGrpTree = function() {
             var params = {};
             params.onlyShowGroup = true;
             if(!$scope.role.selected || !$scope.role.selected.id) {
@@ -47,12 +47,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 return;
             }
             params.roleId = $scope.role.selected.id;
+            params.needAllGrp = true;
             GroupService.syncTree(params, true);
             $scope.roleUserGrpMsg = '';
         }
-        $scope.getRoleUserGrpTree();
+        $scope.getRoleGrpTree();
 
-        $scope.saveRolesToUserAndGrp = function() {
+        $scope.saveRolesToGrp = function() {
             if(!$scope.role.selected || !$scope.role.selected.id) {
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('relMgr.tips.pleaseChooseRole'));
                 return;
@@ -61,10 +62,9 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             params.id = $scope.role.selected.id;
             var nodeArray = $scope.treedata.data;
             var checkedGroupIds = [];
-            var checkedUserIds = [];
-            utils.extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, checkedUserIds);
+            utils.extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, []);
             params.grpIds = checkedGroupIds;
-            params.userIds = checkedUserIds;
+            params.replaceUserIds = false;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
@@ -73,24 +73,24 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceGUSuccess'));
-                $scope.getRoleUserGrpTree();
+                $scope.getRoleGrpTree();
             }, function () {
                 $scope.roles = [];
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGUFailure'));
             });
         };
 
-        $scope.$watch('role.selected', $scope.getRoleUserGrpTree);
+        $scope.$watch('role.selected', $scope.getRoleGrpTree);
         $scope.$on('selected-domain-changed', function(){
             $scope.refreshRoles();
-            $scope.getRoleUserGrpTree();
+            $scope.getRoleGrpTree();
         });
 
-        $scope.$on('selected-language-changed', $scope.getRoleUserGrpTree);
+        $scope.$on('selected-language-changed', $scope.getRoleGrpTree);
     };
 
     return {
-        name: "RelRoleUserGroupController",
+        name: "RelRoleGroupController",
         fn: ["$scope", "$rootScope", "RoleService", "GroupService", "AlertService", Controller]
     };
 

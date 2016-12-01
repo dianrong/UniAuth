@@ -125,7 +125,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     svc.roleUserGrpTree.expandedNodes = expandedNodes;
                     svc.roleUserGrpTree.msg = '';
                 }, function (res) {
-                    svc.roleUserGrpTree.msg = 'Role -- UserGrp 同步树查询失败.';
+                    svc.roleUserGrpTree.msg = 'Role -- Grp 同步树查询失败.';
                     console.log('syncTree failed' + res);
                 });
             }

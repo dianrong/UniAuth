@@ -23,8 +23,14 @@ public class UserQuery extends PageParam {
     
     private Integer roleId;
     private Boolean needTag;
+    
+    private List<Long> excludeUserIds;
 
-    public Integer getGroupId() {
+    public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public Integer getGroupId() {
         return groupId;
     }
 
@@ -135,5 +141,13 @@ public class UserQuery extends PageParam {
 
 	public void setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
 		this.needDisabledGrpUser = needDisabledGrpUser;
+	}
+
+	public List<Long> getExcludeUserIds() {
+		return excludeUserIds;
+	}
+
+	public void setExcludeUserIds(List<Long> excludeUserIds) {
+		this.excludeUserIds = excludeUserIds;
 	}
 }

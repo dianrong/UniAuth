@@ -16,7 +16,30 @@ public class TagParam extends Operator {
     private String description;
     private List<Integer> grpIds;
     private List<Long> userIds;
+    
+    // 默认是全部都要处理
+ 	private Boolean replaceGrpIds = Boolean.TRUE;
+ 	private Boolean replaceUserIds = Boolean.TRUE;
 
+ 	public Boolean getReplaceGrpIds() {
+		return replaceGrpIds;
+	}
+
+	public TagParam setReplaceGrpIds(Boolean replaceGrpIds) {
+		this.replaceGrpIds = replaceGrpIds;
+		return this;
+	}
+
+	public Boolean getReplaceUserIds() {
+		return replaceUserIds;
+	}
+
+	public TagParam setReplaceUserIds(Boolean replaceUserIds) {
+		this.replaceUserIds = replaceUserIds;
+		return this;
+	}
+
+ 	
     public Integer getId() {
         return id;
     }
