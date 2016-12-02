@@ -42,10 +42,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceGUSuccess'));
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceUserSuccess'));
             }, function () {
                 $scope.roles = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGUFailure'));
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceUserFailure'));
             });
         };
         

@@ -43,10 +43,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceTagGroupSuccess'));
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceTagUserSuccess'));
             }, function () {
                 $scope.tags = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceTagGroupFailure'));
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceTagUserFailure'));
             });
         };
         
