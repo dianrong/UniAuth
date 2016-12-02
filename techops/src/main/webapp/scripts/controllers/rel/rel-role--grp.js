@@ -64,7 +64,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             var checkedGroupIds = [];
             utils.extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, []);
             params.grpIds = checkedGroupIds;
-            params.replaceUserIds = false;
+            params.needProcessUserIds = false;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
@@ -72,11 +72,11 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceGUSuccess'));
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceGroupSuccess'));
                 $scope.getRoleGrpTree();
             }, function () {
                 $scope.roles = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGUFailure'));
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGroupFailure'));
             });
         };
 

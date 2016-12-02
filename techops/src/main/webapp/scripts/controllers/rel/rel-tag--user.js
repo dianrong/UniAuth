@@ -35,7 +35,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
              params.id = $scope.tag.selected.id;
              params.grpIds = [];
              params.userIds = selectedUserIds;
-             params.replaceGrpIds = false;
+             params.needProcessGoupIds = false;
             TagService.replaceGroupsAndUsersToTag(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
@@ -43,10 +43,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceTagGroupSuccess'));
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceTagUserSuccess'));
             }, function () {
                 $scope.tags = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceTagGroupFailure'));
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceTagUserFailure'));
             });
         };
         

@@ -34,7 +34,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             params.id = $scope.role.selected.id;
             params.grpIds = [];
             params.userIds = selectedUserIds;
-            params.replaceGrpIds = false;
+            params.needProcessGoupIds = false;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
@@ -42,10 +42,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceGUSuccess'));
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('relMgr.tips.replaceUserSuccess'));
             }, function () {
                 $scope.roles = [];
-                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGUFailure'));
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceUserFailure'));
             });
         };
         
