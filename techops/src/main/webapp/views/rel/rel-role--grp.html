@@ -1,0 +1,47 @@
+<div style="width: 27%">
+    <ui-select ng-model="role.selected"
+               theme="bootstrap"
+               ng-disabled="disabled"
+               reset-search-input="false"
+               style="width:100%;margin-top: 6px;">
+        <ui-select-match placeholder="{{'relMgr.roleInputMsg' | translate}}">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="role in roles track by $index"
+                           refresh="refreshRoles($select.search)"
+                           refresh-delay="300">
+            <div ng-bind-html="role.name | highlight: $select.search"></div>
+        </ui-select-choices>
+    </ui-select>
+</div>
+<div style="padding: 5px 5px 5px 5px">
+    <div ng-if="role.selected.id">
+        <i class="fa fa-exclamation-circle font-color-blue"></i>
+        {{'relMgr.selectedRoleId' | translate}}: <strong>'{{role.selected.id}}'</strong> {{'groupMgr.name' | translate}}: <strong>'{{role.selected.name}}'</strong> Code: <strong>'{{role.selected.roleCode}}'</strong> .
+    </div>
+    <div ng-if="!role.selected.id">
+        <i class="fa fa-exclamation-circle font-color-blue"></i>
+        {{'relMgr.noRoleSelected' | translate}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-29d4 col-sm-9">
+        <div class="control-panel">
+            <div class="panel-header modal-header dialog-header-group">
+                <h4 class="modal-title text-center">
+                    <i class="fa fa-leaf"></i> {{'relMgr.roleGroup.notice' | translate}}
+                </h4>
+            </div>
+            <div class="modal-body" ng-bind-html="roleUserGrpMsg"></div>
+            <div class="modal-footer">
+                <button type="button" ng-disabled="role.selected == null" class="btn btn-info" ng-click="saveRolesToGrp()">{{'relMgr.confirmSave' | translate}}</button>
+            </div>
+        </div>
+    </div>
+    <div style="padding-left: 1px" class="col-md-70d6 col-sm-9">
+        <input ng-show="treedata.data != null && treedata.data[0].date != null" style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="{{'relMgr.filterString' | translate}}" />
+        <treecontrol class="tree-custom" options="opts" tree-model="treedata.data" expanded-nodes="treedata.expandedNodes"
+                     filter-expression="predicate" filter-comparator="comparator">
+                  	{{node.label}} 
+                  <input ng-click="checkClick($event)" type="checkbox" ng-model="node.checked">
+        </treecontrol>
+    </div>
+</div>

@@ -148,108 +148,116 @@ public class RoleService extends TenancyBasedService{
         roleMapper.updateByPrimaryKey(role);
     }
     @Transactional
-    public void replaceGroupsAndUsersToRole(Integer roleId, List<Integer> grpIdsDup, List<Long> userIdsDup) {
+    public void replaceGroupsAndUsersToRole(Integer roleId, List<Integer> grpIdsDup, List<Long> userIdsDup, Boolean needProcessGoupIds, Boolean needProcessUserIds) {
         CheckEmpty.checkEmpty(roleId, "roleId");
-        // remove duplicate values;
-        List<Integer> grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
-        List<Long> userIds = new ArrayList<>(new HashSet<>(userIdsDup));
+        List<Integer> grpIds =  null;
+        List<Long> userIds =  null;
+        if (needProcessGoupIds != null && needProcessGoupIds) {
+        	grpIds =  new ArrayList<>(new HashSet<>(grpIdsDup));
+        }
+        if (needProcessUserIds != null && needProcessUserIds) {
+        	userIds = new ArrayList<>(new HashSet<>(userIdsDup));
+        }
+        if (grpIds != null ) {
+        	GrpRoleExample grpRoleExample = new GrpRoleExample();
+        	grpRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+        	 if(grpIds.isEmpty()) {
+                 grpRoleMapper.deleteByExample(grpRoleExample);
+             } else {
+                 List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
+                 if (!CollectionUtils.isEmpty(grpRoleKeys)) {
+                     ArrayList<Integer> dbGrpIds = new ArrayList<>();
+                     for (GrpRoleKey grpRoleKey : grpRoleKeys) {
+                         dbGrpIds.add(grpRoleKey.getGrpId());
+                     }
+                     ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
+                     intersections.retainAll(grpIds);
+                     List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
+                     List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
+                     for (Integer grpId : grpIds) {
+                         if (!intersections.contains(grpId)) {
+                             grpIdsNeedAddToDB.add(grpId);
+                         }
+                     }
+                     for (Integer dbGrpId : dbGrpIds) {
+                         if (!intersections.contains(dbGrpId)) {
+                             grpIdsNeedDeleteFromDB.add(dbGrpId);
+                         }
+                     }
 
-        GrpRoleExample grpRoleExample = new GrpRoleExample();
-        grpRoleExample.createCriteria().andRoleIdEqualTo(roleId);
-        if(CollectionUtils.isEmpty(grpIds)) {
-            grpRoleMapper.deleteByExample(grpRoleExample);
-        } else {
-            List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
-            if (!CollectionUtils.isEmpty(grpRoleKeys)) {
-                ArrayList<Integer> dbGrpIds = new ArrayList<>();
-                for (GrpRoleKey grpRoleKey : grpRoleKeys) {
-                    dbGrpIds.add(grpRoleKey.getGrpId());
-                }
-                ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
-                intersections.retainAll(grpIds);
-                List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
-                List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
-                for (Integer grpId : grpIds) {
-                    if (!intersections.contains(grpId)) {
-                        grpIdsNeedAddToDB.add(grpId);
-                    }
-                }
-                for (Integer dbGrpId : dbGrpIds) {
-                    if (!intersections.contains(dbGrpId)) {
-                        grpIdsNeedDeleteFromDB.add(dbGrpId);
-                    }
-                }
-
-                if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
-                    for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
-                        GrpRoleKey grpRoleKey = new GrpRoleKey();
-                        grpRoleKey.setRoleId(roleId);
-                        grpRoleKey.setGrpId(grpIdNeedAddToDB);
-                        grpRoleMapper.insert(grpRoleKey);
-                    }
-                }
-                if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
-                    GrpRoleExample grpRoleDeleteExample = new GrpRoleExample();
-                    grpRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andGrpIdIn(grpIdsNeedDeleteFromDB);
-                    grpRoleMapper.deleteByExample(grpRoleDeleteExample);
-                }
-            } else {
-                for (Integer grpId : grpIds) {
-                    GrpRoleKey grpRoleKey = new GrpRoleKey();
-                    grpRoleKey.setRoleId(roleId);
-                    grpRoleKey.setGrpId(grpId);
-                    grpRoleMapper.insert(grpRoleKey);
-                }
-            }
+                     if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
+                         for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
+                             GrpRoleKey grpRoleKey = new GrpRoleKey();
+                             grpRoleKey.setRoleId(roleId);
+                             grpRoleKey.setGrpId(grpIdNeedAddToDB);
+                             grpRoleMapper.insert(grpRoleKey);
+                         }
+                     }
+                     if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
+                         GrpRoleExample grpRoleDeleteExample = new GrpRoleExample();
+                         grpRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andGrpIdIn(grpIdsNeedDeleteFromDB);
+                         grpRoleMapper.deleteByExample(grpRoleDeleteExample);
+                     }
+                 } else {
+                     for (Integer grpId : grpIds) {
+                         GrpRoleKey grpRoleKey = new GrpRoleKey();
+                         grpRoleKey.setRoleId(roleId);
+                         grpRoleKey.setGrpId(grpId);
+                         grpRoleMapper.insert(grpRoleKey);
+                     }
+                 }
+             }
         }
 
-        UserRoleExample userRoleExample = new UserRoleExample();
-        userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
-        if(CollectionUtils.isEmpty(userIds)) {
-            userRoleMapper.deleteByExample(userRoleExample);
-        } else {
-            List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
-            if (!CollectionUtils.isEmpty(userRoleKeys)) {
-                ArrayList<Long> dbUserIds = new ArrayList<>();
-                for (UserRoleKey userRoleKey : userRoleKeys) {
-                    dbUserIds.add(userRoleKey.getUserId());
-                }
-                ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
-                intersections.retainAll(userIds);
-                List<Long> userIdsNeedAddToDB = new ArrayList<>();
-                List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
-                for (Long userId : userIds) {
-                    if (!intersections.contains(userId)) {
-                        userIdsNeedAddToDB.add(userId);
-                    }
-                }
-                for (Long dbUserId : dbUserIds) {
-                    if (!intersections.contains(dbUserId)) {
-                        userIdsNeedDeleteFromDB.add(dbUserId);
-                    }
-                }
-
-                if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
-                    for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
-                        UserRoleKey userRoleKey = new UserRoleKey();
-                        userRoleKey.setRoleId(roleId);
-                        userRoleKey.setUserId(userIdNeedAddToDB);
-                        userRoleMapper.insert(userRoleKey);
-                    }
-                }
-                if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
-                    UserRoleExample userRoleDeleteExample = new UserRoleExample();
-                    userRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdIn(userIdsNeedDeleteFromDB);
-                    userRoleMapper.deleteByExample(userRoleDeleteExample);
-                }
-            } else {
-                for (Long userId : userIds) {
-                    UserRoleKey userRoleKey = new UserRoleKey();
-                    userRoleKey.setRoleId(roleId);
-                    userRoleKey.setUserId(userId);
-                    userRoleMapper.insert(userRoleKey);
-                }
-            }
+        if (userIds != null) {
+        	UserRoleExample userRoleExample = new UserRoleExample();
+        	userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+        	if(userIds.isEmpty()) {
+        		userRoleMapper.deleteByExample(userRoleExample);
+        	} else {
+        		List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+        		if (!CollectionUtils.isEmpty(userRoleKeys)) {
+        			ArrayList<Long> dbUserIds = new ArrayList<>();
+        			for (UserRoleKey userRoleKey : userRoleKeys) {
+        				dbUserIds.add(userRoleKey.getUserId());
+        			}
+        			ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
+        			intersections.retainAll(userIds);
+        			List<Long> userIdsNeedAddToDB = new ArrayList<>();
+        			List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
+        			for (Long userId : userIds) {
+        				if (!intersections.contains(userId)) {
+        					userIdsNeedAddToDB.add(userId);
+        				}
+        			}
+        			for (Long dbUserId : dbUserIds) {
+        				if (!intersections.contains(dbUserId)) {
+        					userIdsNeedDeleteFromDB.add(dbUserId);
+        				}
+        			}
+        			
+        			if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
+        				for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
+        					UserRoleKey userRoleKey = new UserRoleKey();
+        					userRoleKey.setRoleId(roleId);
+        					userRoleKey.setUserId(userIdNeedAddToDB);
+        					userRoleMapper.insert(userRoleKey);
+        				}
+        			}
+        			if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
+        				UserRoleExample userRoleDeleteExample = new UserRoleExample();
+        				userRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdIn(userIdsNeedDeleteFromDB);
+        				userRoleMapper.deleteByExample(userRoleDeleteExample);
+        			}
+        		} else {
+        			for (Long userId : userIds) {
+        				UserRoleKey userRoleKey = new UserRoleKey();
+        				userRoleKey.setRoleId(roleId);
+        				userRoleKey.setUserId(userId);
+        				userRoleMapper.insert(userRoleKey);
+        			}
+        		}
+        	}
         }
     }
 

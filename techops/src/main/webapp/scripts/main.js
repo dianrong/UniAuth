@@ -1,5 +1,4 @@
 require.config({
-
   baseUrl: 'scripts',
   paths: {
     'angular': 'lib/angular/angular.min',
@@ -71,6 +70,9 @@ require.config({
     'ngAnimate': {
       deps:['angular']
     },
+    'uniauth-transfer': {
+        deps:['angular']
+      },
     angular: {
       exports: 'angular'
     }

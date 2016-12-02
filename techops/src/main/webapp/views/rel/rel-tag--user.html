@@ -27,23 +27,16 @@
         <div class="control-panel">
             <div class="panel-header modal-header dialog-header-group">
                 <h4 class="modal-title text-center">
-                    <i class="fa fa-leaf"></i> {{'relMgr.tagGroupUser' | translate}}
+                    <i class="fa fa-leaf"></i> {{'relMgr.tagUser.notice' | translate}}
                 </h4>
             </div>
             <div class="modal-body" ng-bind-html="tagUserGrpMsg"></div>
             <div class="modal-footer">
-                <button type="button" ng-disabled="tag.selected == null" class="btn btn-info" ng-click="saveTagsToUserAndGrp()">{{'relMgr.confirmSave' | translate}}</button>
+                <button type="button" ng-disabled="tag.selected == null" class="btn btn-info" ng-click="saveTagsToUser()">{{'relMgr.confirmSave' | translate}}</button>
             </div>
         </div>
     </div>
     <div style="padding-left: 1px" class="col-md-70d6 col-sm-9">
-        <input ng-show="treedata.data != null && treedata.data[0].date != null" style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="{{'relMgr.filterString' | translate}}" />
-        <treecontrol class="tree-custom" options="opts" tree-model="treedata.data" expanded-nodes="treedata.expandedNodes"
-                     filter-expression="predicate" filter-comparator="comparator">
-                <span ng-switch="" on="node.type">
-                  <i ng-switch-when="oUser" class="fa fa-user font-color-red"></i>
-                  <i ng-switch-when="mUser" class="fa fa-user font-color-blue"></i>
-                </span>{{node.label}} <input ng-click="checkClick($event)" type="checkbox" ng-model="node.checked">
-        </treecontrol>
+        <div uniauth-transfer uniauth-transfer-config="uniauthTransfer"></div>
     </div>
 </div>

@@ -1,0 +1,87 @@
+.uniauth-transfer {
+  width: 800px;
+  height: 500px;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.uniauth-transfer-list {
+  font-size: 14px;
+  border: 1px solid #d9d9d9;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  width: 300px;
+  height: 400px;
+  overflow: auto;
+  border-radius: 0px 0px 6px 6px;
+  background-color: rgba(219, 226, 241, 0.09);
+}
+
+.uniauth-transfer-operation {
+  display: inline-block;
+  overflow: hidden;
+  margin: 0 8px;
+  vertical-align: middle;
+  width: 100px;
+}
+
+.uniauth-transfer-item {
+  line-height: 40px;
+  padding: 0 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.uniauth-transfer-item:hover {
+  background: #efefef;
+}
+
+.uniauth-transfer-item.focused {
+  background: #2db7f5;
+  color: #fff;
+}
+
+.uniauth-transfer-operation-btn {
+  display: block;
+  width: 80px;
+  height: 30px;
+  background: #fff;
+  margin-bottom: 10px;
+  outline: none;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.uniauth-transfer-btn-move {
+	margin: 20px 10px;
+}
+
+.uniauth-transfer-btn-move-all {
+	margin: 20px 10px;
+}
+
+.uniauth-transfer-operation-btn[disabled] {
+  cursor: not-allowed;
+  background: #f0f0f0;
+}
+
+.uniauth-transfer-fiter-input {
+	width: 300px;
+    margin: 10px 0px;
+}
+
+.uniauth-transfer-list-title {
+	text-align: center;
+	margin:10px 0px  0px;
+    font-size: 18px;
+    color: white;
+    border: 1px solid #eee;
+    background-color: #51A3EA;
+    word-spacing: 15px;
+    letter-spacing: 15px;
+    display: inline-block;
+    width: 300px;
+    border-radius: 7px 7px 0px 0px;
+}

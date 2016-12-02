@@ -57,7 +57,7 @@ public class UserResource implements IUserRWResource {
 	@Override
 	public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
 		PageDto<UserDto> pageDto = userService.searchUser(userQuery.getUserId(), userQuery.getGroupId(), userQuery.getNeedDescendantGrpUser(),  userQuery.getNeedDisabledGrpUser(), 
-				userQuery.getRoleId(), userQuery.getUserIds(), userQuery.getName(),userQuery.getPhone(),userQuery.getEmail() ,userQuery.getStatus(), userQuery.getTagId(), userQuery.getNeedTag(), userQuery.getPageNumber(),userQuery.getPageSize());
+				userQuery.getRoleId(), userQuery.getUserIds(), userQuery.getExcludeUserIds(), userQuery.getName(),userQuery.getPhone(),userQuery.getEmail() ,userQuery.getStatus(), userQuery.getTagId(), userQuery.getNeedTag(), userQuery.getPageNumber(),userQuery.getPageSize());
 		return Response.success(pageDto);
 	}
 
@@ -123,5 +123,17 @@ public class UserResource implements IUserRWResource {
 	public Response<Void> replaceTagsToUser(UserParam userParam) {
 		userService.replaceTagsToUser(userParam.getId(), userParam.getTagIds());
 		return Response.success();
+	}
+
+	@Override
+	public Response<List<UserDto>> searchUserByRoleId(UserParam userParam) {
+		List<UserDto> userDtos = userService.searchUserByRoleIds(userParam.getRoleIds());
+		return Response.success(userDtos);
+	}
+	
+	@Override
+	public Response<List<UserDto>> searchUserByTagId(UserParam userParam) {
+		List<UserDto> userDtos = userService.searchUserByTagIds(userParam.getTagIds());
+		return Response.success(userDtos);
 	}
 }

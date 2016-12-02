@@ -1,0 +1,46 @@
+<div style="width: 27%">
+    <ui-select ng-model="tag.selected"
+               theme="bootstrap"
+               ng-disabled="disabled"
+               reset-search-input="false"
+               style="width:100%;margin-top: 6px;">
+        <ui-select-match placeholder="{{'relMgr.tagInputMsg' | translate}}">{{$select.selected.code}}</ui-select-match>
+        <ui-select-choices repeat="tag in tags track by $index"
+                           refresh="refreshTags($select.search)"
+                           refresh-delay="300">
+            <div ng-bind-html="tag.code | highlight: $select.search"></div>
+        </ui-select-choices>
+    </ui-select>
+</div>
+<div style="padding: 5px 5px 5px 5px">
+    <div ng-if="tag.selected.id">
+        <i class="fa fa-exclamation-circle font-color-blue"></i>
+        {{'relMgr.selectedTagId' | translate}}: <strong>'{{tag.selected.id}}'</strong> code: <strong>'{{tag.selected.code}}'</strong> type: <strong>'{{getTagTypeCode(tag.selected)}}'</strong> .
+    </div>
+    <div ng-if="!tag.selected.id">
+        <i class="fa fa-exclamation-circle font-color-blue"></i>
+        {{'relMgr.noTagSelected' | translate}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-29d4 col-sm-9">
+        <div class="control-panel">
+            <div class="panel-header modal-header dialog-header-group">
+                <h4 class="modal-title text-center">
+                    <i class="fa fa-leaf"></i> {{'relMgr.tagGroup.notice' | translate}}
+                </h4>
+            </div>
+            <div class="modal-body" ng-bind-html="tagUserGrpMsg"></div>
+            <div class="modal-footer">
+                <button type="button" ng-disabled="tag.selected == null" class="btn btn-info" ng-click="saveTagsToGrp()">{{'relMgr.confirmSave' | translate}}</button>
+            </div>
+        </div>
+    </div>
+    <div style="padding-left: 1px" class="col-md-70d6 col-sm-9">
+        <input ng-show="treedata.data != null && treedata.data[0].date != null" style="margin-left: 14px;width: 24%" type="text" class="form-control" ng-model="predicate" placeholder="{{'relMgr.filterString' | translate}}" />
+        <treecontrol class="tree-custom" options="opts" tree-model="treedata.data" expanded-nodes="treedata.expandedNodes"
+                     filter-expression="predicate" filter-comparator="comparator">
+                {{node.label}} <input ng-click="checkClick($event)" type="checkbox" ng-model="node.checked">
+        </treecontrol>
+    </div>
+</div>

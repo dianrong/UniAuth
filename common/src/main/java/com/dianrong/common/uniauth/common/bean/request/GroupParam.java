@@ -33,6 +33,8 @@ public class GroupParam extends Operator {
 	
 	private List<Integer> tagIds;
 
+	private Boolean onlyNeedGrpInfo;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -168,12 +170,18 @@ public class GroupParam extends Operator {
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description=" + description
-				+ ", status=" + status + ", targetGroupId=" + targetGroupId + ", targetGroupIds=" + targetGroupIds
-				+ ", onlyShowGroup=" + onlyShowGroup + ", userGroupType=" + userGroupType + ", needOwnerMarkup="
-				+ needOwnerMarkup + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds="
-				+ roleIds + ", tagIds=" + tagIds + "]";
-	}
+  public Boolean getOnlyNeedGrpInfo() {
+      return onlyNeedGrpInfo;
+  }
+
+  public GroupParam setOnlyNeedGrpInfo(Boolean onlyNeedGrpInfo) {
+      this.onlyNeedGrpInfo = onlyNeedGrpInfo;
+      return this;
+  }
+
+  @Override
+  public String toString() {
+    return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description=" + description + ", status=" + status + ", targetGroupId=" + targetGroupId + ", targetGroupIds=" + targetGroupIds + ", onlyShowGroup=" + onlyShowGroup
+        + ", userGroupType=" + userGroupType + ", needOwnerMarkup=" + needOwnerMarkup + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds + ", onlyNeedGrpInfo=" + onlyNeedGrpInfo + "]";
+  }
 }
