@@ -1,19 +1,19 @@
 package com.dianrong.common.uniauth.server.resource;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 import com.dianrong.common.uniauth.server.service.RoleService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 public class RoleResource implements IRoleRWResource {
@@ -61,7 +61,7 @@ public class RoleResource implements IRoleRWResource {
 
 	@Override
 	public Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam) {
-		roleService.replaceGroupsAndUsersToRole(roleParam.getId(),roleParam.getGrpIds(),roleParam.getUserIds(), roleParam.getReplaceGrpIds(), roleParam.getReplaceUserIds());
+		roleService.replaceGroupsAndUsersToRole(roleParam.getId(),roleParam.getGrpIds(),roleParam.getUserIds(), roleParam.getNeedProcessGoupIds(), roleParam.getNeedProcessUserIds());
 		return Response.success();
 	}
 

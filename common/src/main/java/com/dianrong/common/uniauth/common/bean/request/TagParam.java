@@ -6,7 +6,6 @@ import java.util.List;
  * Created by Arc on 12/4/2016.
  */
 public class TagParam extends Operator {
-
 	private static final long serialVersionUID = 8630107970908020377L;
 	private Integer id;
     private String code;
@@ -18,28 +17,25 @@ public class TagParam extends Operator {
     private List<Long> userIds;
     
     // 默认是全部都要处理
- 	private Boolean replaceGrpIds = Boolean.TRUE;
- 	private Boolean replaceUserIds = Boolean.TRUE;
+    private Boolean needProcessGoupIds = Boolean.TRUE;
+    private Boolean needProcessUserIds = Boolean.TRUE;
 
- 	public Boolean getReplaceGrpIds() {
-		return replaceGrpIds;
-	}
+    public Boolean getNeedProcessGoupIds() {
+      return needProcessGoupIds;
+    }
 
-	public TagParam setReplaceGrpIds(Boolean replaceGrpIds) {
-		this.replaceGrpIds = replaceGrpIds;
-		return this;
-	}
+    public void setNeedProcessGoupIds(Boolean needProcessGoupIds) {
+      this.needProcessGoupIds = needProcessGoupIds;
+    }
 
-	public Boolean getReplaceUserIds() {
-		return replaceUserIds;
-	}
+    public Boolean getNeedProcessUserIds() {
+      return needProcessUserIds;
+    }
 
-	public TagParam setReplaceUserIds(Boolean replaceUserIds) {
-		this.replaceUserIds = replaceUserIds;
-		return this;
-	}
+    public void setNeedProcessUserIds(Boolean needProcessUserIds) {
+      this.needProcessUserIds = needProcessUserIds;
+    }
 
- 	
     public Integer getId() {
         return id;
     }
@@ -112,10 +108,9 @@ public class TagParam extends Operator {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "TagParam [id=" + id + ", code=" + code + ", status=" + status + ", tagTypeId=" + tagTypeId
-				+ ", domainId=" + domainId + ", description=" + description + ", grpIds=" + grpIds + ", userIds="
-				+ userIds + "]";
-	}
+    @Override
+    public String toString() {
+      return "TagParam [id=" + id + ", code=" + code + ", status=" + status + ", tagTypeId=" + tagTypeId + ", domainId=" + domainId + ", description=" + description + ", grpIds=" + grpIds + ", userIds=" + userIds + ", needProcessGoupIds=" + needProcessGoupIds
+          + ", needProcessUserIds=" + needProcessUserIds + "]";
+    }
 }

@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
-
 public class RoleParam extends Operator {
 	private static final long serialVersionUID = -1555945847793133921L;
 	private Integer id;
@@ -16,28 +15,26 @@ public class RoleParam extends Operator {
 	private List<Long> userIds;
 	
 	// 默认是全部都要处理
-	private Boolean replaceGrpIds = Boolean.TRUE;
-	private Boolean replaceUserIds = Boolean.TRUE;
+	private Boolean needProcessGoupIds = Boolean.TRUE;
+	private Boolean needProcessUserIds = Boolean.TRUE;
 	
-	public Boolean getReplaceGrpIds() {
-		return replaceGrpIds;
-	}
+	public Boolean getNeedProcessGoupIds() {
+    return needProcessGoupIds;
+  }
 
-	public RoleParam setReplaceGrpIds(Boolean replaceGrpIds) {
-		this.replaceGrpIds = replaceGrpIds;
-		return this;
-	}
+  public void setNeedProcessGoupIds(Boolean needProcessGoupIds) {
+    this.needProcessGoupIds = needProcessGoupIds;
+  }
 
-	public Boolean getReplaceUserIds() {
-		return replaceUserIds;
-	}
+  public Boolean getNeedProcessUserIds() {
+    return needProcessUserIds;
+  }
 
-	public RoleParam setReplaceUserIds(Boolean replaceUserIds) {
-		this.replaceUserIds = replaceUserIds;
-		return this;
-	}
+  public void setNeedProcessUserIds(Boolean needProcessUserIds) {
+    this.needProcessUserIds = needProcessUserIds;
+  }
 
-	public Integer getId() {
+  public Integer getId() {
 		return id;
 	}
 
@@ -118,10 +115,9 @@ public class RoleParam extends Operator {
 		return this;
 	}
 
-	@Override
-	public String toString() {
-		return "RoleParam [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status
-				+ ", roleCodeId=" + roleCodeId + ", domainId=" + domainId + ", permIds=" + permIds + ", grpIds="
-				+ grpIds + ", userIds=" + userIds + "]";
-	}
+  @Override
+  public String toString() {
+    return "RoleParam [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status + ", roleCodeId=" + roleCodeId + ", domainId=" + domainId + ", permIds=" + permIds + ", grpIds=" + grpIds + ", userIds=" + userIds
+        + ", needProcessGoupIds=" + needProcessGoupIds + ", needProcessUserIds=" + needProcessUserIds + "]";
+  }
 }

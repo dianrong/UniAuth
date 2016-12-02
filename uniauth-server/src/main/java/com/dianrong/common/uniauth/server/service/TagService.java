@@ -317,18 +317,18 @@ public class TagService extends TenancyBasedService{
     }
 
     @Transactional
-    public void replaceGroupsAndUsersToTag(Integer tagId, List<Integer> grpIdsDup, List<Long> userIdsDup, Boolean replaceGrpIds, Boolean replaceUserIds) {
+    public void replaceGroupsAndUsersToTag(Integer tagId, List<Integer> grpIdsDup, List<Long> userIdsDup, Boolean needProcessGoupIds, Boolean needProcessUserIds) {
         CheckEmpty.checkEmpty(tagId, "tagId");
         List<Integer> grpIds = null;
         List<Long> userIds = null;
-        if (replaceGrpIds != null && replaceGrpIds) {
+        if (needProcessGoupIds != null && needProcessGoupIds) {
         	grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
         }
-        if (replaceUserIds != null && replaceUserIds) {
+        if (needProcessUserIds != null && needProcessUserIds) {
         	userIds = new ArrayList<>(new HashSet<>(userIdsDup));
         }
         
-	    if (replaceGrpIds != null) {
+	    if (grpIds != null) {
 	        GrpTagExample grpTagExample = new GrpTagExample();
 	        grpTagExample.createCriteria().andTagIdEqualTo(tagId);
 	        if(CollectionUtils.isEmpty(grpIds)) {

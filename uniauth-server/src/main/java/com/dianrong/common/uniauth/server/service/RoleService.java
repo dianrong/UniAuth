@@ -148,14 +148,14 @@ public class RoleService extends TenancyBasedService{
         roleMapper.updateByPrimaryKey(role);
     }
     @Transactional
-    public void replaceGroupsAndUsersToRole(Integer roleId, List<Integer> grpIdsDup, List<Long> userIdsDup, Boolean replaceGrpIds, Boolean replaceUserIds) {
+    public void replaceGroupsAndUsersToRole(Integer roleId, List<Integer> grpIdsDup, List<Long> userIdsDup, Boolean needProcessGoupIds, Boolean needProcessUserIds) {
         CheckEmpty.checkEmpty(roleId, "roleId");
         List<Integer> grpIds =  null;
         List<Long> userIds =  null;
-        if (replaceGrpIds != null && replaceGrpIds) {
+        if (needProcessGoupIds != null && needProcessGoupIds) {
         	grpIds =  new ArrayList<>(new HashSet<>(grpIdsDup));
         }
-        if (replaceUserIds != null && replaceUserIds) {
+        if (needProcessUserIds != null && needProcessUserIds) {
         	userIds = new ArrayList<>(new HashSet<>(userIdsDup));
         }
         if (grpIds != null ) {

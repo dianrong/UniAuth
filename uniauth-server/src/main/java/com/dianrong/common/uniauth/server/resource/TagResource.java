@@ -72,7 +72,7 @@ public class TagResource implements ITagRWResource {
 
     @Override
     public Response<Void> replaceGroupsAndUsersToTag(TagParam tagParam) {
-        tagService.replaceGroupsAndUsersToTag(tagParam.getId(),tagParam.getGrpIds(), tagParam.getUserIds(), tagParam.getReplaceGrpIds(), tagParam.getReplaceUserIds());
+        tagService.replaceGroupsAndUsersToTag(tagParam.getId(),tagParam.getGrpIds(), tagParam.getUserIds(), tagParam.getNeedProcessGoupIds(), tagParam.getNeedProcessUserIds());
         return Response.success();
     }
 }
