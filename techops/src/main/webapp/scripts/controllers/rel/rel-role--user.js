@@ -34,7 +34,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             params.id = $scope.role.selected.id;
             params.grpIds = [];
             params.userIds = selectedUserIds;
-            params.replaceGrpIds = false;
+            params.needProcessGoupIds = false;
             RoleService.replaceGroupsAndUsersToRole(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {

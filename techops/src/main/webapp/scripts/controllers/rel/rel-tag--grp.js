@@ -63,7 +63,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             var checkedGroupIds = [];
             utils.extractCheckedGrpAndUserIds(nodeArray, checkedGroupIds, []);
             params.grpIds = checkedGroupIds;
-            params.replaceUserIds = false;
+            params.needProcessUserIds = false;
             TagService.replaceGroupsAndUsersToTag(params, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
