@@ -19,8 +19,18 @@ public class DomainDto extends TenancyBaseDto {
 	
 	private String zkDomainUrl;
 	private String zkDomainUrlEncoded;
+	// 是否自定义登陆页面（默认没有）
+	private Boolean customeLoginPage = Boolean.FALSE;
 	
-	public String getZkDomainUrlEncoded() {
+	public Boolean getCustomeLoginPage() {
+        return customeLoginPage;
+    }
+
+    public void setCustomeLoginPage(Boolean customeLoginPage) {
+        this.customeLoginPage = customeLoginPage;
+    }
+
+    public String getZkDomainUrlEncoded() {
 		return zkDomainUrlEncoded;
 	}
 

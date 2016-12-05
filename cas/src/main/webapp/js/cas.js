@@ -77,12 +77,14 @@ $(function() {
 			} else {
 				var cookie_option;
 				$("#domain option").each(function (){  
-				    if($(this).text()===cookie_service){   
+					// 自定义登陆页面的 不自动跳转
+				    if($(this).text()===cookie_service && $(this).attr('customLoginPage') === 'false'){   
 				    	cookie_option = $(this);
 				  }});  
 				if (cookie_option) {
 					_service_url = cookie_option.val();
 				} else {
+					// default value: domainCode = techops
 					_service_url = $("#domain option:first").val();
 					cookieOperation.setService($("#domain option:first").text());
 				}

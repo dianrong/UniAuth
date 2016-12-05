@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,11 @@ public class DomainService extends BaseService {
 				} catch (UnsupportedEncodingException e) {
 				}
 				domainDto.setZkDomainUrlEncoded(zkDomainUrlEncoded);
+                                String customLoginUrl = allZkNodeMap.get(ZkNodeUtils.getDomainCustomUrlNodeKey(domainCode));
+                                // 自定义登陆页面的系统
+                                if (!StringUtils.isEmpty(customLoginUrl)) {
+                                    domainDto.setCustomeLoginPage(Boolean.TRUE);
+                                }
 			}
 		}
 		return domainDtoList;
