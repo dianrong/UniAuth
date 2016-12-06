@@ -27,7 +27,8 @@ public class TenancyService extends BaseService {
 	 * . 默认使用的tenancy
 	 */
 	private volatile TenancyDto defaultTenancy;
-	private Object lock = new Serializable(){};
+	private Object lock = new Serializable(){
+		private static final long serialVersionUID = 4645855938824431576L;};
 
 	public List<TenancyDto> getAllTenancies() {
 		TenancyParam param = new TenancyParam();

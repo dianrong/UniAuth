@@ -1,246 +1,219 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.access.regular.SSRegularPattern;
+import org.springframework.util.Assert;
 
+import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
+import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
+import com.dianrong.common.uniauth.client.custom.model.UserExtInfoParam;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.google.common.collect.Maps;
 
-public class UserExtInfo extends User {
+/**
+ * uniauth对外的UserDetails实现
+ * 
+ * @author wanglin
+ */
+public class UserExtInfo implements UserDetails {
 	private static final long serialVersionUID = 8347558918889027136L;
-
 	private static final Logger logger = Logger.getLogger(UserExtInfo.class);
+
+	// 通过账号密码登陆的域所对应的userExtInfo
+	private SingleDomainUserExtInfo loginDomainUserExtInfo;
+	// 是否采用所有域用户信息共享模式
+	private boolean useAllDomainUserInfoShareMode;
+	// 所有域共享的用户信息
+	private AllDomainUserExtInfo allDomainUserExtInfo;
 	
-	private Long id;
-	private UserDto userDto;
-	private DomainDto domainDto;
-	private Map<String, Set<String>> permMap;
-	private Map<String, Set<PermissionDto>> permDtoMap;
-	// current login user support regular pattern set
-	private volatile Set<SSRegularPattern> regularPatterns;
-	private Object lock = new Serializable(){};
+	/**
+	 * get the correct UserExtInfo
+	 * 
+	 * @return not null
+	 */
+	private SingleDomainUserExtInfo getCurrentDomainUserExtInfo() {
+		SingleDomainUserExtInfo currentDomainUserExtInfo = null; 
+		if (useAllDomainUserInfoShareMode) {
+			if (this.allDomainUserExtInfo == null) {
+				throw new RuntimeException(
+						"useAllDomainUserInfoShareMode = true, allDomainUserExtInfo can not be null, please check domainDefine config or contact uniauth developer");
+			}
+			currentDomainUserExtInfo =  this.allDomainUserExtInfo.getUserDetail(DomainDefine.getStaticDomainCode());
+			// 用户没有对应域的权限 需要构造一个空权限的对象
+			if (currentDomainUserExtInfo == null) {
+				SingleDomainUserExtInfo emptyUserInfo = SingleDomainUserExtInfo.emptyAuthorityUserInfo( this.loginDomainUserExtInfo.getUsername(), 
+						 this.loginDomainUserExtInfo.getId(),  this.loginDomainUserExtInfo.getUserDto(), new DomainDto());
+				// cache
+				this.allDomainUserExtInfo.addUserDetail(DomainDefine.getStaticDomainCode(), emptyUserInfo);
+				currentDomainUserExtInfo = emptyUserInfo;
+			}
+		} else {
+			currentDomainUserExtInfo =  this.loginDomainUserExtInfo;
+		}
+		logger.info("current domain user extention info :" +  currentDomainUserExtInfo);
+		return currentDomainUserExtInfo;
+	}
 
 	public Boolean hasDomain(String domainPerm) {
-		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
-			return Boolean.FALSE;
-		} else {
-			Set<String> domainPerms = permMap.get(AppConstants.PERM_TYPE_DOMAIN);
-			if(domainPerms.contains(domainPerm)) {
-				return Boolean.TRUE;
-			} else {
-				return Boolean.FALSE;
-			}
-		}
+		return getCurrentDomainUserExtInfo().hasDomain(domainPerm);
 	}
 
 	public Boolean hasPrivilege(String privilegePerm) {
-		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_PRIVILEGE) == null) {
-			return Boolean.FALSE;
-		} else {
-			Set<String> privilegesHave = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
-			if(privilegesHave.contains(privilegePerm)) {
-				return Boolean.TRUE;
-			} else {
-				return Boolean.FALSE;
-			}
-		}
+		return getCurrentDomainUserExtInfo().hasPrivilege(privilegePerm);
 	}
 
 	public Boolean hasAnyPrivilege(String... privilegePerms) {
-		if(privilegePerms == null || privilegePerms.length == 0) {
-			return Boolean.FALSE;
-		} else {
-			Set<String> privilegesHave = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
-			for(String privilege : privilegePerms) {
-				if(privilegesHave.contains(privilege)) {
-					return Boolean.TRUE;
-				}
-			}
-			return Boolean.FALSE;
-		}
+		return getCurrentDomainUserExtInfo().hasAnyPrivilege(privilegePerms);
 	}
 
 	public Boolean hasAllPrivileges(String... privilegePerms) {
-		if(privilegePerms == null || privilegePerms.length == 0) {
-			return Boolean.TRUE;
-		} else {
-			Set<String> privilegesHave = permMap.get(AppConstants.PERM_TYPE_PRIVILEGE);
-			if(privilegesHave.containsAll(Arrays.asList(privilegePerms))) {
-				return Boolean.TRUE;
-			} else {
-				return Boolean.FALSE;
-			}
-		}
+		return getCurrentDomainUserExtInfo().hasAllPrivileges(privilegePerms);
 	}
-	
+
 	/**
-	 *  get current user's all permitted regular patterns set
+	 * get current user's all permitted regular patterns set
+	 * 
 	 * @return unmodifiable set , not null
 	 */
 	public Set<SSRegularPattern> getAllPermittedRegularPattern() {
-		if (regularPatterns == null) {
-			synchronized (lock) {
-				if (regularPatterns == null) {
-					this.regularPatterns = constructPermittedRegularPattern();
-				}
-			}
-		}
-		return Collections.unmodifiableSet(this.regularPatterns);
+		return getCurrentDomainUserExtInfo().getAllPermittedRegularPattern();
+	}
+
+	public UserExtInfo(String username, String password, boolean enabled,
+			boolean accountNonExpired, boolean credentialsNonExpired,
+			boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities, Long id,
+			UserDto userDto, DomainDto domainDto,
+			Map<String, Set<String>> permMap) {
+		this(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id, userDto, domainDto, permMap, null);
 	}
 	
-	// for initiate current user's regular pattern set
-	private Set<SSRegularPattern> constructPermittedRegularPattern(){
-		Set<PermissionDto> permissions =  permDtoMap.get(DomainDefine.CasPermissionControlType.REGULAR_PATTERN.getTypeStr());
-		if (permissions == null || permissions.isEmpty()) {
-			return Collections.emptySet();
-		}
-		Set<SSRegularPattern> patterns = new HashSet<SSRegularPattern>();
-		for (PermissionDto p: permissions) {
-			String httpMethod = p.getValueExt();
-			if(httpMethod != null){
-				httpMethod = httpMethod.trim();
-				// exclude ALL
-				if(!AppConstants.HTTP_METHOD_ALL.equalsIgnoreCase(httpMethod)){
-					try{
-						HttpMethod.valueOf(httpMethod);
-					}catch(IllegalArgumentException e){
-						logger.warn("'" + httpMethod + "' is not a valid http method.", e);
-						// ignore invalid httpMethod configuration
-						continue;
-					}
-				}
-				Pattern pattern = PatternCacheManager.getPattern(p.getValue());
-				if (pattern != null) {
-					patterns.add(SSRegularPattern.build(httpMethod, pattern));
-				}
+	public UserExtInfo(String username, String password, boolean enabled,
+			boolean accountNonExpired, boolean credentialsNonExpired,
+			boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities, Long id,
+			UserDto userDto, DomainDto domainDto,
+			Map<String, Set<String>> permMap,
+			Map<String, Set<PermissionDto>> permDtoMap) {
+		this(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id, userDto, domainDto, permMap, null, false, new HashMap<String, UserExtInfoParam>());
+	}
+
+	public UserExtInfo(String username, String password, boolean enabled,boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities, Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap, Map<String, Set<PermissionDto>> permDtoMap, 
+			boolean useAllDomainUserInfoShareMode, Map<String, UserExtInfoParam> userExtInfos) {
+		this.loginDomainUserExtInfo = new SingleDomainUserExtInfo(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id, userDto, domainDto, permMap, permDtoMap);
+		if (useAllDomainUserInfoShareMode) {
+			Assert.notNull(userExtInfos);
+			allDomainUserExtInfo = new AllDomainUserExtInfo();
+			for (String domainCode : userExtInfos.keySet()) {
+				UserExtInfoParam userExtInfo = userExtInfos.get(domainCode);
+				this.allDomainUserExtInfo.addUserDetail(domainCode, 
+						new SingleDomainUserExtInfo(userExtInfo.getUsername(), userExtInfo.getPassword(), userExtInfo.isEnabled(), userExtInfo.isAccountNonExpired(), 
+								userExtInfo.isCredentialsNonExpired(), userExtInfo.isAccountNonLocked(), userExtInfo.getAuthorities(), userExtInfo.getId(), userExtInfo.getUserDto(), 
+								userExtInfo.getDomainDto(), userExtInfo.getPermMap(), userExtInfo.getPermDtoMap()));
 			}
 		}
-		return patterns;
 	}
 	
 	/**
-	 * used for pattern cache
-	 * @author wanglin
+	 * @param currentLoginDomainUserInfo can not be null
+	 * @param useAllDomainUserInfoShareMode
+	 * @param userExtInfos
 	 */
-	private static class PatternCacheManager {
-		/**.
-		 * Pattern.compile(patternStr) is a heavy method, so cache the patterns
-		 */
-		private static final ConcurrentMap< String, Pattern>  patternCaches = Maps.newConcurrentMap();
-		private static final Pattern invalidSyntaxPattern =  Pattern.compile("invalidSyntaxPattern");
-		
-		/**.
-		 * get Pattern from patternStr, 1 from cache; 2 from Pattern.compile(patternStr) 
-		 * @param patternStr  the pattern string
-		 * @return Pattern. if return is null, means patternStr is a syntax pattern string
-		 */
-		public static final Pattern getPattern(String patternStr) {
-			if (patternStr == null) {
-				return null;
-			}
-			Pattern p = patternCaches.get(patternStr);
-			if ( p == null) {
-				try {
-					p = Pattern.compile(patternStr);
-				} catch(PatternSyntaxException e) {
-					logger.warn(patternStr + " is not a syntax pattern string", e);
-				}
-				// syntax pattern
-				if ( p == null) {
-					patternCaches.putIfAbsent(patternStr, invalidSyntaxPattern);
-					return null;
-				}
-				patternCaches.putIfAbsent(patternStr, p);
-				return patternCaches.get(patternStr);
-			} else {
-				// syntax pattern
-				if ( p == invalidSyntaxPattern) {
-					return null;
-				}
-				return p;
-			}
-		}
-	}
-	
-	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
-					   boolean credentialsNonExpired, boolean accountNonLocked,
-					   Collection<? extends GrantedAuthority> authorities,
-					   Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap, Map<String, Set<PermissionDto>> permDtoMap) {
-		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-		this.id = id;
-		this.userDto = userDto;
-		this.domainDto = domainDto;
-		this.permMap = permMap;
-		this.permDtoMap = permDtoMap;
+	public static UserExtInfo build(UserExtInfoParam currentLoginDomainUserInfo, boolean useAllDomainUserInfoShareMode, Map<String, UserExtInfoParam> userExtInfos){
+		Assert.notNull(currentLoginDomainUserInfo);
+		return new UserExtInfo(currentLoginDomainUserInfo.getUsername(), currentLoginDomainUserInfo.getPassword(), currentLoginDomainUserInfo.isEnabled(), currentLoginDomainUserInfo.isAccountNonExpired(), 
+				currentLoginDomainUserInfo.isCredentialsNonExpired(), currentLoginDomainUserInfo.isAccountNonLocked(), currentLoginDomainUserInfo.getAuthorities(), currentLoginDomainUserInfo.getId(), 
+				currentLoginDomainUserInfo.getUserDto(), currentLoginDomainUserInfo.getDomainDto(), currentLoginDomainUserInfo.getPermMap(), currentLoginDomainUserInfo.getPermDtoMap(), useAllDomainUserInfoShareMode, userExtInfos);
 	}
 
-	public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
-					   boolean credentialsNonExpired, boolean accountNonLocked,
-					   Collection<? extends GrantedAuthority> authorities,
-					   Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap) {
-		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-		this.id = id;
-		this.userDto = userDto;
-		this.domainDto = domainDto;
-		this.permMap = permMap;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return getCurrentDomainUserExtInfo().getAuthorities();
+	}
+
+	@Override
+	public String getPassword() {
+		return getCurrentDomainUserExtInfo().getPassword();
+	}
+
+	@Override
+	public String getUsername() {
+		return getCurrentDomainUserExtInfo().getUsername();
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return getCurrentDomainUserExtInfo().isAccountNonExpired();
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return getCurrentDomainUserExtInfo().isAccountNonLocked();
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return getCurrentDomainUserExtInfo().isCredentialsNonExpired();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return getCurrentDomainUserExtInfo().isEnabled();
 	}
 	
+	// 为了兼容以前的版本
 	public Long getId() {
-		return id;
+		return getCurrentDomainUserExtInfo().getId();
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public UserExtInfo setId(Long id) {
+		getCurrentDomainUserExtInfo().setId(id);
+		return this;
 	}
 
 	public UserDto getUserDto() {
-		return userDto;
+		return getCurrentDomainUserExtInfo().getUserDto();
 	}
 
-	public void setUserDto(UserDto userDto) {
-		this.userDto = userDto;
+	public UserExtInfo setUserDto(UserDto userDto) {
+		getCurrentDomainUserExtInfo().setUserDto(userDto);
+		return this;
 	}
 
 	public DomainDto getDomainDto() {
-		return domainDto;
+		return getCurrentDomainUserExtInfo().getDomainDto();
 	}
 
-	public void setDomainDto(DomainDto domainDto) {
-		this.domainDto = domainDto;
+	public UserExtInfo setDomainDto(DomainDto domainDto) {
+		getCurrentDomainUserExtInfo().setDomainDto(domainDto);
+		return this;
 	}
 
 	public Map<String, Set<String>> getPermMap() {
-		return permMap;
+		return getCurrentDomainUserExtInfo().getPermMap();
 	}
 
-	public void setPermMap(Map<String, Set<String>> permMap) {
-		this.permMap = permMap;
+	public UserExtInfo setPermMap(Map<String, Set<String>> permMap) {
+		getCurrentDomainUserExtInfo().setPermMap(permMap);
+		return this;
 	}
 
 	public Map<String, Set<PermissionDto>> getPermDtoMap() {
-		return permDtoMap;
+		return getCurrentDomainUserExtInfo().getPermDtoMap();
 	}
 
 	public UserExtInfo setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
-		this.permDtoMap = permDtoMap;
+		getCurrentDomainUserExtInfo().setPermDtoMap(permDtoMap);
 		return this;
 	}
 }
