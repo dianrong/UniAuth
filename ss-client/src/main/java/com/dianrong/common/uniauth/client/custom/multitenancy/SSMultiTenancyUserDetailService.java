@@ -31,7 +31,6 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsService {
 	private static Logger LOGGER = Logger.getLogger(SSMultiTenancyUserDetailService.class);
@@ -84,14 +83,11 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
 					} else {
 						_domainDtoList = domainDtoList;
 					}
-					for(DomainDto domainDto : domainDtoList){
+					for(DomainDto domainDto : _domainDtoList){
 						Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
 						Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
 						Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 						List<RoleDto> roleDtoList = domainDto.getRoleList();
-						if (!domainDefine.isUseAllDomainUserInfoShareMode()) {
-							
-						}
 						if(roleDtoList != null && !roleDtoList.isEmpty()){
 							for(RoleDto roleDto: roleDtoList){
 								String roleCode = roleDto.getRoleCode();
@@ -116,11 +112,9 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
 						.setDomainDto(new DomainDto()).setPermMap(new HashMap<String, Set<String>>()).setPermDtoMap(new HashMap<String, Set<PermissionDto>>());
 						userExtInfos.put(currentDomainCode, userExtInfoParam);
 						currentDomainUserInfo = userExtInfos.get(currentDomainCode);
-				} else {
-					ReflectionUtils.setStaticField(DomainDefine.class.getName(), "domainId", currentDomainUserInfo.getDomainDto().getId());
-				}
+				} 
 				if(userInfoClass == null || "".equals(userInfoClass.trim())){
-					return UserExtInfo.build(currentDomainUserInfo, domainDefine.isUseAllDomainUserInfoShareMode(), userExtInfos);
+					return UserExtInfo.build(currentDomainUserInfo , userExtInfos);
 				}
 				else{
 					try{
@@ -130,14 +124,13 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
 								currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(), currentDomainUserInfo.isAccountNonExpired(), currentDomainUserInfo.isCredentialsNonExpired(), 
 								currentDomainUserInfo.isAccountNonLocked(), currentDomainUserInfo.getAuthorities(), currentDomainUserInfo.getId(), currentDomainUserInfo.getUserDto(), 
 								currentDomainUserInfo.getDomainDto(), currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap());
-						
 						if(userInfoCallBack != null){
 							userInfoCallBack.fill(userExtInfo);
 						}
 						return userExtInfo;
 					}catch(Exception e){
 						LOGGER.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
-						return UserExtInfo.build(currentDomainUserInfo, domainDefine.isUseAllDomainUserInfoShareMode(), userExtInfos);
+						return UserExtInfo.build(currentDomainUserInfo, userExtInfos);
 					}
 				}
 			}

@@ -52,7 +52,8 @@
             <td ng-bind="!d.status?'{{'userMgr.enable' | translate}}':'{{ 'userMgr.disable' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="{{'tagMgr.manageTag' | translate}}" class="btn btn-info" ng-click="navToTagUserGrp(d)"><i class="fa fa-users"></i></a>
+                    <a title="{{'tagMgr.manageTagGrp' | translate}}" class="btn btn-info" ng-click="navToTagGrp(d)"><i class="fa fa-users"></i></a>
+                    <a title="{{'tagMgr.manageTagUser' | translate}}" class="btn btn-info" ng-click="navToTagUser(d)"><i class="fa  fa-street-view"></i></a>
                     <a title="{{'tagMgr.editTag' | translate}}" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
                     <a title="{{d.status?('tagMgr.enableTag' | translate):( 'tagMgr.disableTag'| translate)}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>

@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.cas.service;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ public class TenancyService extends BaseService {
 	 * . 默认使用的tenancy
 	 */
 	private volatile TenancyDto defaultTenancy;
-	private Object lock = new Serializable(){
-		private static final long serialVersionUID = 4645855938824431576L;};
+	
+	private transient Object lock = new Object();
 
 	public List<TenancyDto> getAllTenancies() {
 		TenancyParam param = new TenancyParam();

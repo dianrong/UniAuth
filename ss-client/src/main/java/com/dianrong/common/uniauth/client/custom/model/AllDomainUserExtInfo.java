@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.Assert;
@@ -13,7 +12,7 @@ import org.springframework.util.Assert;
 public class AllDomainUserExtInfo implements Serializable {
 	private static final long serialVersionUID = 8347558918889027136L;
 	// Map<DomainCode, userExtInfo>
-	private Map<String, SingleDomainUserExtInfo> userExtInfoMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, SingleDomainUserExtInfo> userExtInfoMap = new ConcurrentHashMap<>();
 	
 	/**
 	 * get userExtInfo by domainCode
@@ -36,5 +35,24 @@ public class AllDomainUserExtInfo implements Serializable {
         Assert.notNull(domainCode);
         Assert.notNull(userDetails);
         userExtInfoMap.put(domainCode, userDetails);
+    }
+    
+    /**
+     * get userExtInfo by domainCode
+     * @param domainCode not null
+     * @return UserDetails in domain[domainCode]
+     * @throws IllegalArgumentException if the domainCode or userDetails is null
+     */
+    public SingleDomainUserExtInfo addUserDetailIfAbsent(String domainCode, SingleDomainUserExtInfo userDetails) {
+        Assert.notNull(domainCode);
+        Assert.notNull(userDetails);
+       return userExtInfoMap.putIfAbsent(domainCode, userDetails);
+    }
+    
+    public SingleDomainUserExtInfo getOneSingleDomainUserExtInfo() {
+    	for(String code : userExtInfoMap.keySet()){
+    		return userExtInfoMap.get(code);
+    	}
+    	throw new RuntimeException("userExtInfoMap is empty");
     }
 }

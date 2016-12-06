@@ -52,7 +52,8 @@
             <td ng-bind="!d.status?'{{ 'userMgr.enable' | translate}}':'{{ 'userMgr.disable' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
-                    <a title="{{ 'roleMgr.manageRole' | translate}}" class="btn btn-info" ng-click="navToRoleUser(d)"><i class="fa fa-users"></i></a>
+                    <a title="{{ 'roleMgr.manageRoleGrp' | translate}}" class="btn btn-info" ng-click="navToRoleGroup(d)"><i class="fa fa-users"></i></a>
+                    <a title="{{ 'roleMgr.manageRoleUser' | translate}}" class="btn btn-info" ng-click="navToRoleUser(d)"><i class="fa  fa-street-view"></i></a>
                     <a title="{{ 'roleMgr.managePerm' | translate}}" class="btn btn-info" ng-click="navToRolePerm(d)"><i class="fa fa-thumbs-up"></i></a>
                     <a title="{{ 'roleMgr.editRole' | translate}}" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
                     <a title="{{d.status?('roleMgr.enableRole' | translate):('roleMgr.disableRole' | translate)}}" class="btn btn-info" ng-click="launch('status', d)">

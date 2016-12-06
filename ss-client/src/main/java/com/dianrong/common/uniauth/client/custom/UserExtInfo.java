@@ -28,12 +28,10 @@ public class UserExtInfo implements UserDetails {
 	private static final long serialVersionUID = 8347558918889027136L;
 	private static final Logger logger = Logger.getLogger(UserExtInfo.class);
 
-	// 通过账号密码登陆的域所对应的userExtInfo
+	// 通过账号密码登陆的域所对应的userExtInfo,可以通过该对象知道具体是从哪一个域登陆的
 	private SingleDomainUserExtInfo loginDomainUserExtInfo;
-	// 是否采用所有域用户信息共享模式
-	private boolean useAllDomainUserInfoShareMode;
 	// 所有域共享的用户信息
-	private AllDomainUserExtInfo allDomainUserExtInfo;
+	private AllDomainUserExtInfo allDomainUserExtInfo =  new AllDomainUserExtInfo();;
 	
 	/**
 	 * get the correct UserExtInfo
@@ -41,23 +39,18 @@ public class UserExtInfo implements UserDetails {
 	 * @return not null
 	 */
 	private SingleDomainUserExtInfo getCurrentDomainUserExtInfo() {
-		SingleDomainUserExtInfo currentDomainUserExtInfo = null; 
-		if (useAllDomainUserInfoShareMode) {
-			if (this.allDomainUserExtInfo == null) {
-				throw new RuntimeException(
-						"useAllDomainUserInfoShareMode = true, allDomainUserExtInfo can not be null, please check domainDefine config or contact uniauth developer");
-			}
-			currentDomainUserExtInfo =  this.allDomainUserExtInfo.getUserDetail(DomainDefine.getStaticDomainCode());
-			// 用户没有对应域的权限 需要构造一个空权限的对象
-			if (currentDomainUserExtInfo == null) {
-				SingleDomainUserExtInfo emptyUserInfo = SingleDomainUserExtInfo.emptyAuthorityUserInfo( this.loginDomainUserExtInfo.getUsername(), 
-						 this.loginDomainUserExtInfo.getId(),  this.loginDomainUserExtInfo.getUserDto(), new DomainDto());
-				// cache
-				this.allDomainUserExtInfo.addUserDetail(DomainDefine.getStaticDomainCode(), emptyUserInfo);
+		SingleDomainUserExtInfo currentDomainUserExtInfo =  this.allDomainUserExtInfo.getUserDetail(DomainDefine.getStaticDomainCode());
+		// 用户没有对应域的权限 需要构造一个空权限的对象
+		if (currentDomainUserExtInfo == null) {
+			SingleDomainUserExtInfo emptyUserInfo = SingleDomainUserExtInfo.emptyAuthorityUserInfo( this.loginDomainUserExtInfo.getUsername(), 
+					 this.loginDomainUserExtInfo.getId(),  this.loginDomainUserExtInfo.getUserDto(), new DomainDto());
+			// cache
+			SingleDomainUserExtInfo exsitOne =  this.allDomainUserExtInfo.addUserDetailIfAbsent(DomainDefine.getStaticDomainCode(), emptyUserInfo);
+			if (exsitOne == null) {
 				currentDomainUserExtInfo = emptyUserInfo;
+			} else {
+				currentDomainUserExtInfo = exsitOne;
 			}
-		} else {
-			currentDomainUserExtInfo =  this.loginDomainUserExtInfo;
 		}
 		logger.info("current domain user extention info :" +  currentDomainUserExtInfo);
 		return currentDomainUserExtInfo;
@@ -104,24 +97,23 @@ public class UserExtInfo implements UserDetails {
 			UserDto userDto, DomainDto domainDto,
 			Map<String, Set<String>> permMap,
 			Map<String, Set<PermissionDto>> permDtoMap) {
-		this(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id, userDto, domainDto, permMap, null, false, new HashMap<String, UserExtInfoParam>());
+		this(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id, userDto, domainDto, permMap, permDtoMap, new HashMap<String, UserExtInfoParam>());
 	}
 
 	public UserExtInfo(String username, String password, boolean enabled,boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
 			Collection<? extends GrantedAuthority> authorities, Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap, Map<String, Set<PermissionDto>> permDtoMap, 
-			boolean useAllDomainUserInfoShareMode, Map<String, UserExtInfoParam> userExtInfos) {
+			 Map<String, UserExtInfoParam> userExtInfos) {
 		this.loginDomainUserExtInfo = new SingleDomainUserExtInfo(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id, userDto, domainDto, permMap, permDtoMap);
-		if (useAllDomainUserInfoShareMode) {
-			Assert.notNull(userExtInfos);
-			allDomainUserExtInfo = new AllDomainUserExtInfo();
-			for (String domainCode : userExtInfos.keySet()) {
-				UserExtInfoParam userExtInfo = userExtInfos.get(domainCode);
-				this.allDomainUserExtInfo.addUserDetail(domainCode, 
-						new SingleDomainUserExtInfo(userExtInfo.getUsername(), userExtInfo.getPassword(), userExtInfo.isEnabled(), userExtInfo.isAccountNonExpired(), 
-								userExtInfo.isCredentialsNonExpired(), userExtInfo.isAccountNonLocked(), userExtInfo.getAuthorities(), userExtInfo.getId(), userExtInfo.getUserDto(), 
-								userExtInfo.getDomainDto(), userExtInfo.getPermMap(), userExtInfo.getPermDtoMap()));
-			}
+		Assert.notNull(userExtInfos);
+		allDomainUserExtInfo = new AllDomainUserExtInfo();
+		for (String domainCode : userExtInfos.keySet()) {
+			UserExtInfoParam userExtInfo = userExtInfos.get(domainCode);
+			this.allDomainUserExtInfo.addUserDetail(domainCode, 
+					new SingleDomainUserExtInfo(userExtInfo.getUsername(), userExtInfo.getPassword(), userExtInfo.isEnabled(), userExtInfo.isAccountNonExpired(), 
+							userExtInfo.isCredentialsNonExpired(), userExtInfo.isAccountNonLocked(), userExtInfo.getAuthorities(), userExtInfo.getId(), userExtInfo.getUserDto(), 
+							userExtInfo.getDomainDto(), userExtInfo.getPermMap(), userExtInfo.getPermDtoMap()));
 		}
+		this.allDomainUserExtInfo.addUserDetailIfAbsent(domainDto.getCode(), this.loginDomainUserExtInfo);
 	}
 	
 	/**
@@ -129,11 +121,11 @@ public class UserExtInfo implements UserDetails {
 	 * @param useAllDomainUserInfoShareMode
 	 * @param userExtInfos
 	 */
-	public static UserExtInfo build(UserExtInfoParam currentLoginDomainUserInfo, boolean useAllDomainUserInfoShareMode, Map<String, UserExtInfoParam> userExtInfos){
+	public static UserExtInfo build(UserExtInfoParam currentLoginDomainUserInfo, Map<String, UserExtInfoParam> userExtInfos){
 		Assert.notNull(currentLoginDomainUserInfo);
 		return new UserExtInfo(currentLoginDomainUserInfo.getUsername(), currentLoginDomainUserInfo.getPassword(), currentLoginDomainUserInfo.isEnabled(), currentLoginDomainUserInfo.isAccountNonExpired(), 
 				currentLoginDomainUserInfo.isCredentialsNonExpired(), currentLoginDomainUserInfo.isAccountNonLocked(), currentLoginDomainUserInfo.getAuthorities(), currentLoginDomainUserInfo.getId(), 
-				currentLoginDomainUserInfo.getUserDto(), currentLoginDomainUserInfo.getDomainDto(), currentLoginDomainUserInfo.getPermMap(), currentLoginDomainUserInfo.getPermDtoMap(), useAllDomainUserInfoShareMode, userExtInfos);
+				currentLoginDomainUserInfo.getUserDto(), currentLoginDomainUserInfo.getDomainDto(), currentLoginDomainUserInfo.getPermMap(), currentLoginDomainUserInfo.getPermDtoMap(), userExtInfos);
 	}
 
 	@Override

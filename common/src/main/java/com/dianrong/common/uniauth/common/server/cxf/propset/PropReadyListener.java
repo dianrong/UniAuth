@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.common.server.cxf.propset;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class PropReadyListener implements ApplicationListener<ContextRefreshedEv
 	// spring 容器对象引用
 	private volatile ApplicationContext applicationContext;
 
-	private Object lock = new Serializable(){};
+	private transient Object lock = new Object();
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {

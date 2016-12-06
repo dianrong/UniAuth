@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,9 +41,7 @@ public class SingleDomainUserExtInfo extends User {
 	private Map<String, Set<PermissionDto>> permDtoMap;
 	// current login user support regular pattern set
 	private volatile Set<SSRegularPattern> regularPatterns;
-	private Object lock = new Serializable(){
-        private static final long serialVersionUID = 5277588062932851730L;
-    };
+	private transient Object lock = new Object();
 
 	public Boolean hasDomain(String domainPerm) {
 		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
