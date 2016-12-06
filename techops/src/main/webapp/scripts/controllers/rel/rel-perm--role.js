@@ -77,9 +77,10 @@ define(['../../utils/constant'], function (constant) {
             });
         };
 
-        $scope.selectAllRolesForPerm = function() {
+        $scope.selectAllRolesForPerm = function(tag) {
+        	tag = tag !== false
             for(var i=0;i<$scope.roles.length;i++) {
-                $scope.roles[i].checked = true;
+                $scope.roles[i].checked = tag;
             }
         };
         var watch = $scope.$watch('perm.selected', $scope.getAllRolesWithCheckedInfoInDomain);

@@ -316,7 +316,7 @@ public class UserService extends TenancyBasedService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser , Integer roleId ,List<Long> userIds, String name, String phone, String email, Byte status, Integer tagId,
+    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser , Integer roleId ,List<Long> userIds, List<Long> excludeUserIds, String name, String phone, String email, Byte status, Integer tagId,
                                        Boolean needTag, Integer pageNumber, Integer pageSize) {
         if(pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -343,6 +343,9 @@ public class UserService extends TenancyBasedService {
         }
         if(!CollectionUtils.isEmpty(userIds)) {
             criteria.andIdIn(userIds);
+        }
+        if (!CollectionUtils.isEmpty(excludeUserIds)) {
+        	criteria.andIdNotIn(excludeUserIds);
         }
         criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
         if(groupId != null) {
@@ -586,6 +589,34 @@ public class UserService extends TenancyBasedService {
         }
         return userDtos;
     }
+    
+    public List<UserDto> searchUserByRoleIds(List<Integer> roleIds) {
+    	CheckEmpty.checkEmpty(roleIds, "roleId");
+    	List<UserDto> userDtos = new ArrayList<>();
+    	if (roleIds.isEmpty()) {
+    		return userDtos;
+    	}
+	    UserRoleExample userRoleExample = new UserRoleExample();
+	    userRoleExample.createCriteria().andRoleIdIn(roleIds);
+	    List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+	    if(!CollectionUtils.isEmpty(userRoleKeys)) {
+	          List<Long> userIdsLinkedToRole = new ArrayList<>();
+	          for(UserRoleKey userRoleKey : userRoleKeys) {
+	              userIdsLinkedToRole.add(userRoleKey.getUserId());
+	          }
+	          UserExample userExample = new UserExample();
+	          userExample.createCriteria().andIdIn(userIdsLinkedToRole).
+	          andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+	          List<User> users = userMapper.selectByExample(userExample);
+	          if (users != null && !users.isEmpty()) {
+	        	  for(User user: users) {
+	        		  userDtos.add(BeanConverter.convert(user));
+	        	  }
+	          }
+	      }
+          return userDtos;
+	}
+    
 
     public List<UserDto> searchUsersWithTagCheck(Integer tagId) {
         CheckEmpty.checkEmpty(tagId, "tagId");
@@ -617,6 +648,33 @@ public class UserService extends TenancyBasedService {
         }
         return userDtos;
     }
+    
+    public List<UserDto> searchUserByTagIds(List<Integer> tagIds) {
+    	CheckEmpty.checkEmpty(tagIds, "tagId");
+    	List<UserDto> userDtos = new ArrayList<>();
+    	if (tagIds.isEmpty()) {
+    		return userDtos;
+    	}
+	    UserTagExample userTagExample = new UserTagExample();
+	    userTagExample.createCriteria().andTagIdIn(tagIds);
+	    List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+	    if(!CollectionUtils.isEmpty(userTagKeys)) {
+	          List<Long> userIdsLinkedToTag = new ArrayList<>();
+	          for(UserTagKey usertagKey : userTagKeys) {
+	        	  userIdsLinkedToTag.add(usertagKey.getUserId());
+	          }
+	          UserExample userExample = new UserExample();
+	          userExample.createCriteria().andIdIn(userIdsLinkedToTag).
+	          andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+	          List<User> users = userMapper.selectByExample(userExample);
+	          if (users != null && !users.isEmpty()) {
+	        	  for(User user: users) {
+	        		  userDtos.add(BeanConverter.convert(user));
+	        	  }
+	          }
+	      }
+          return userDtos;
+	}
 
     public UserDetailDto getUserDetailInfoByUid(Long paramUserId) {
         CheckEmpty.checkEmpty(paramUserId, "userId");

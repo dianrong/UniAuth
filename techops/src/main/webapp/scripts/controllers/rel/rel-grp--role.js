@@ -72,9 +72,10 @@ define(['../../utils/constant'], function (constant) {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceGroupFailure'));
             });
         }
-        $scope.selectAllRolesForGrp = function() {
+        $scope.selectAllRolesForGrp = function(tag) {
+        	tag = tag !== false;
             for(var i=0;i<$scope.roles.length;i++) {
-                $scope.roles[i].checked = true;
+                $scope.roles[i].checked = tag;
             }
         }
         var watch = $scope.$watch('grp.selected', $scope.getGrpRolesWithCheckedInfo);

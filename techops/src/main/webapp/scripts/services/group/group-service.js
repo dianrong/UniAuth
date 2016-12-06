@@ -1,5 +1,5 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
-    var Service = function ($resource) {
+    var Service = function ($rootScope,  $resource) {
         var svc = $resource(constant.apiBase + '/group/:method/:method2', null, {
             queryGroup: {
                 method: 'POST',
@@ -111,7 +111,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     }
                     svc.tree.msg = '';
                 }, function (res) {
-                    svc.tree.msg = '同步树查询失败.';
+                    svc.tree.msg =$rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
                     console.log('syncTree failed' + res);
                 });
             } else {
@@ -125,7 +125,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     svc.roleUserGrpTree.expandedNodes = expandedNodes;
                     svc.roleUserGrpTree.msg = '';
                 }, function (res) {
-                    svc.roleUserGrpTree.msg = 'Role -- UserGrp 同步树查询失败.';
+                    svc.roleUserGrpTree.msg = $rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
                     console.log('syncTree failed' + res);
                 });
             }
@@ -141,7 +141,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 svc.tagUserGrpTree.expandedNodes = expandedNodes;
                 svc.tagUserGrpTree.msg = '';
             }, function (res) {
-                svc.tagUserGrpTree.msg = 'Role -- UserGrp 同步树查询失败.';
+                svc.tagUserGrpTree.msg = $rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
                 console.log('syncTree failed' + res);
             });
         };
@@ -150,7 +150,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
     return {
         name: "GroupService",
-        svc: ["$resource", Service]
+        svc: ["$rootScope", "$resource", Service]
     };
-
 });

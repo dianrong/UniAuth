@@ -56,6 +56,14 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            queryRoleUser: {
+                method: 'POST',
+                params: {
+                    method: 'query-role-user'
+                },
+                isArray: false,
+                timeout: constant.reqTimeout
             }
         });
         svc.roleShared = {};

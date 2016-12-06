@@ -64,6 +64,14 @@ define(['../../utils/constant'], function (constant) {
                 },
                 isArray: false,
                 timeout: constant.reqTimeout
+            },
+            queryTagUser : {
+            	 method: 'POST',
+                 params: {
+                     method: 'query-tag-user'
+                 },
+                 isArray: false,
+                 timeout: constant.reqTimeout
             }
         });
         svc.tagShared = {};

@@ -77,9 +77,10 @@ define(['../../utils/constant'], function (constant, AlertService) {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('relMgr.tips.replaceTagFailure'));
             });
         }
-        $scope.selectAllTagsForGrp = function() {
+        $scope.selectAllTagsForGrp = function(tag) {
+        	tag = tag !== false
             for(var i=0;i<$scope.tags.length;i++) {
-                $scope.tags[i].tagGrouprChecked = true;
+                $scope.tags[i].tagGrouprChecked = tag;
             }
         }
         var watch = $scope.$watch('grp.selected', $scope.getGroupTagsWithCheckedInfo);

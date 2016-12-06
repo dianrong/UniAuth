@@ -3,16 +3,19 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
     'ngLocalStorage'],
   function(angular, ngResource, ngUiRouter, ngCookies, ngTranslate, ngTranslateLoad, ngSanitize, dialogs,
            ngTreeController, mainController, constant, utils) {
+	// define directive module
+	var directivesModule =  angular.module('uniauth-directives', []);
     var appName = "ops";
     var app = angular.module(appName, ['ngResource', 'ui.router', 'pascalprecht.translate', 'ngSanitize',
-        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'treeControl', 'ngAnimate', 'ui.select', 'angularFileUpload']);
+        'ngCookies', 'ui.bootstrap', 'LocalStorageModule', 'dialogs.main', 'treeControl', 'ngAnimate', 'ui.select', 'angularFileUpload', 'uniauth-directives']);
     app.controller(mainController.name, mainController.fn);
+    // redefine angular  directive
+    app.directive = function(name, directiveFn) {
+    	directivesModule.directive(name, directiveFn);
+    }
     app.bootstrap = function() {
-
         (function () {
-
             fetchPermission().then(fetchLanguages).then(bootstrapApplication);
-
             function fetchPermission() {
                 var initInjector = angular.injector(["ng"]);
                 var $http = initInjector.get("$http");
@@ -223,15 +226,25 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "RelGrpRoleController",
             templateUrl: "views/rel/rel-grp--role.html"
         }).
-        state('rel.role--user-grp', {
-            url: '/rel-role--user-grp',
-            controller: "RelRoleUserGroupController",
-            templateUrl: "views/rel/rel-role--user-grp.html"
+        state('rel.role--grp', {
+            url: '/rel-role--grp',
+            controller: "RelRoleGroupController",
+            templateUrl: "views/rel/rel-role--grp.html"
         }).
-        state('rel.tag--user-grp', {
-            url: '/rel-tag--user-grp',
-            controller: "RelTagUserGroupController",
-            templateUrl: "views/rel/rel-tag--user-grp.html"
+        state('rel.role--user', {
+            url: '/rel-role--user',
+            controller: "RelRoleUserController",
+            templateUrl: "views/rel/rel-role--user.html"
+        }).
+        state('rel.tag--grp', {
+            url: '/rel-tag--grp',
+            controller: "RelTagGroupController",
+            templateUrl: "views/rel/rel-tag--grp.html"
+        }).
+        state('rel.tag--user', {
+            url: '/rel-tag--user',
+            controller: "RelTagUserController",
+            templateUrl: "views/rel/rel-tag--user.html"
         }).
         state('rel.user--tag', {
             url: '/rel-user--tag',

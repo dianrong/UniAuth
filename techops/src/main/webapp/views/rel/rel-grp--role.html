@@ -48,8 +48,11 @@
         </tbody>
     </table>
     <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="selectAllRolesForGrp()">{{'relMgr.selectedAll' | translate}}</button>
-        <button type="button" class="btn btn-info" ng-click="replaceRolesToGrp()"
+    	<div class="btn-left">
+        	<button type="button" class="btn btn-info" ng-click="selectAllRolesForGrp(true)">{{'relMgr.selectedAll' | translate}}</button>
+        	<button type="button" class="btn btn-default" ng-click="selectAllRolesForGrp(false)">{{'relMgr.selectedNone' | translate}}</button>
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="replaceRolesToGrp()"
                 ng-disabled="grp.selected == null">{{'dialog.save' | translate}}</button>
     </div>
 </div>
