@@ -41,7 +41,6 @@ public class SingleDomainUserExtInfo extends User {
 	private Map<String, Set<PermissionDto>> permDtoMap;
 	// current login user support regular pattern set
 	private volatile Set<SSRegularPattern> regularPatterns;
-	private transient Object lock = new Object();
 
 	public Boolean hasDomain(String domainPerm) {
 		if(permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
@@ -102,7 +101,7 @@ public class SingleDomainUserExtInfo extends User {
 	 */
 	public Set<SSRegularPattern> getAllPermittedRegularPattern() {
 		if (regularPatterns == null) {
-			synchronized (lock) {
+			synchronized (this) {
 				if (regularPatterns == null) {
 					this.regularPatterns = constructPermittedRegularPattern();
 				}
@@ -250,8 +249,11 @@ public class SingleDomainUserExtInfo extends User {
 		return this;
 	}
 
-  @Override
-  public String toString() {
-    return "SingleDomainUserExtInfo [id=" + id + ", userDto=" + userDto + ", domainDto=" + domainDto + ", permMap=" + permMap + ", permDtoMap=" + permDtoMap + ", regularPatterns=" + regularPatterns + ", lock=" + lock + "]";
-  }
+	@Override
+	public String toString() {
+		return "SingleDomainUserExtInfo [id=" + id + ", userDto=" + userDto
+				+ ", domainDto=" + domainDto + ", permMap=" + permMap
+				+ ", permDtoMap=" + permDtoMap + ", regularPatterns="
+				+ regularPatterns + "]";
+	}
 }

@@ -27,7 +27,7 @@ public class TenancyService extends BaseService {
 	 */
 	private volatile TenancyDto defaultTenancy;
 	
-	private transient Object lock = new Object();
+	private  Object lock = new Object();
 
 	public List<TenancyDto> getAllTenancies() {
 		TenancyParam param = new TenancyParam();

@@ -29,7 +29,7 @@ public class PropReadyListener implements ApplicationListener<ContextRefreshedEv
 	// spring 容器对象引用
 	private volatile ApplicationContext applicationContext;
 
-	private transient Object lock = new Object();
+	private  Object lock = new Object();
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {

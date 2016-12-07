@@ -27,7 +27,7 @@ public class GlobalVarQueue {
 
 	private BlockingQueue<GlobalVar> GLOBALVAR_QUEUE = new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBALVAR_QUEUE_SIZE);
 	
-	private transient Object lock = new Object();
+	private  Object lock = new Object();
 
 	private GlobalVarQueue() {
 
