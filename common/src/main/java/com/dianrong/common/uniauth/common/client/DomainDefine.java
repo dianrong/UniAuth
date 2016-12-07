@@ -1,12 +1,22 @@
 package com.dianrong.common.uniauth.common.client;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+
+import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 
 public class DomainDefine implements Serializable {
 	
@@ -19,19 +29,48 @@ public class DomainDefine implements Serializable {
 	private String customizedSavedRequestUrl; 
 	// 自定义登陆成功的跳转url
 	private String customizedLoginRedirecUrl;
+	private boolean useAllDomainUserInfoShareMode;
 	private static Integer domainId;
-	
+	// 每一个服务就只有一个的域名code定义
+	private static String staticDomainCode;
+	 
+	 @Autowired
+	 private UniClientFacade uniClientFacade;
+	 
 	/**
 	 * 权限控制类型定义,默认为使用uri_pattern
 	 */
 	private CasPermissionControlType controlType = CasPermissionControlType.URI_PATTERN;
 
+	@PostConstruct
+	public void init(){
+		if (!StringUtil.strIsNullOrEmpty(domainCode)) {
+			// init static field domainId
+			logger.info("DomainDefine init, query domainId");
+			List<String> codes = new ArrayList<String>();
+			codes.add(this.domainCode);
+			Response<List<DomainDto>> result= uniClientFacade.getDomainResource().getAllLoginDomains(new DomainParam().setDomainCodeList(codes));
+			if (result == null || (result.getInfo() != null && !result.getInfo().isEmpty())) {
+				throw new RuntimeException("query domain info by configed domainCode failed, please check domainCode is correct or uniauth-server is alreay running");
+			}
+			List<DomainDto> data = result.getData();
+			if (data == null || data.isEmpty()) {
+				throw new RuntimeException("please check the configed domainCode is correct or not");
+			}
+			domainId = data.get(0).getId();
+			logger.info("DomainDefine init, query domainId success");
+		} else {
+			logger.info("domainCode is null or empty, so do not query domainId");
+		}
+	}
+	
 	public String getDomainCode() {
 		return domainCode;
 	}
 
 	public void setDomainCode(String domainCode) {
 		this.domainCode = domainCode;
+		DomainDefine.staticDomainCode = domainCode;
 	}
 
 	public String getUserInfoClass() {
@@ -77,6 +116,21 @@ public class DomainDefine implements Serializable {
 	public String getControlType() {
 		return controlType.getTypeStr();
 	}
+	
+	public static String getStaticDomainCode() {
+	     if (DomainDefine.staticDomainCode == null) {
+	       throw new RuntimeException("before call getStaticDomainCode, need set domainCode first");
+	     }
+	     return DomainDefine.staticDomainCode;
+	}
+
+	public boolean isUseAllDomainUserInfoShareMode() {
+	  return useAllDomainUserInfoShareMode;
+	}
+	
+	public void setUseAllDomainUserInfoShareMode(boolean useAllDomainUserInfoShareMode) {
+	  this.useAllDomainUserInfoShareMode = useAllDomainUserInfoShareMode;
+	}
 
 	/**
 	 *  set permission control type
@@ -105,7 +159,8 @@ public class DomainDefine implements Serializable {
 		return this.controlType.support(type.getTypeStr());
 	}
 
-	/**
+
+  /**
 	 * cas 的权限控制类型定义
 	 * @author wanglin
 	 */
