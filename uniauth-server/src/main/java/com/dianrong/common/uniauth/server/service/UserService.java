@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -704,8 +705,6 @@ public class UserService extends TenancyBasedService {
         userDetailDto.setUserDto(userDto);
 
         Long userId = user.getId();
-        List<DomainDto> domainDtoList = new ArrayList<DomainDto>();
-        userDetailDto.setDomainList(domainDtoList);
 
         Set<Integer> userAllRoleIds = new HashSet<>();
         UserRoleExample userRoleExample = new UserRoleExample();
@@ -737,9 +736,6 @@ public class UserService extends TenancyBasedService {
             return userDetailDto;
         }
 
-        Map<Integer, RoleCode> roleCodeMap = commonService.getRoleCodeMap();
-        Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();
-
         List<Integer> domainIds = new ArrayList<>();
         Map<Integer, List<Role>> domainRoleMap = new HashMap<>();
         List<Integer> enabledAllRoleIds = new ArrayList<>();
@@ -759,107 +755,157 @@ public class UserService extends TenancyBasedService {
         DomainExample.Criteria criteria = domainExample.createCriteria();
         criteria.andIdIn(domainIds).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getDefaultTenancy().getId());
         List<Domain> domainList = domainMapper.selectByExample(domainExample);
+        List<DomainDto> domainDtoList = null;
+        if(domainList==null || domainList.isEmpty()){
+          domainDtoList = new ArrayList<DomainDto>(1); 
+        }else{
+          //modify refactor
+          domainDtoList = domainBean2DtoList(domainList,enabledAllRoleIds,domainRoleMap);
+        }
+        userDetailDto.setDomainList(domainDtoList);
+        return userDetailDto;
+    }
+    /**
+     * 将domain数据库实体对象转为dto对象
+     * @param domainList domain的数据库实体对象
+     * @param enabledAllRoleIds 
+     * @param domainRoleMap
+     * @return
+     */
+    private List<DomainDto> domainBean2DtoList(List<Domain> domainList,List<Integer> enabledAllRoleIds,Map<Integer, List<Role>> domainRoleMap) {
+        List<DomainDto> domainDtoList = new ArrayList<DomainDto>(domainList.size());  
+        RolePermissionExample rolePermissionExample = new RolePermissionExample();
+        RolePermissionExample.Criteria rolePermissionExampleCriteria = rolePermissionExample.createCriteria();
+        rolePermissionExampleCriteria.andRoleIdIn(enabledAllRoleIds);
+        List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
+        //add refactor
+        Map<Integer, List<Permission>> roleIdPermissionsMap = getRolePermission(rolePermissionKeys);
+        //move
+        Map<Integer, RoleCode> roleCodeMap = commonService.getRoleCodeMap();
+        Map<Integer, PermType> permTypeMap = commonService.getPermTypeMap();
+        for(Domain domain : domainList){
+            Integer domainId = domain.getId();
 
-        if(domainList != null && !domainList.isEmpty()){
-            RolePermissionExample rolePermissionExample = new RolePermissionExample();
-            RolePermissionExample.Criteria rolePermissionExampleCriteria = rolePermissionExample.createCriteria();
-            rolePermissionExampleCriteria.andRoleIdIn(enabledAllRoleIds);
-            List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
-            List<Integer> allPermissionIds = new ArrayList<>();
-            Map<Integer, List<Integer>> permIdRoleIdsMap = new HashMap<>();
-            if(rolePermissionKeys != null) {
-                for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
-                    Integer roleId = rolePermissionKey.getRoleId();
-                    Integer permissionId = rolePermissionKey.getPermissionId();
-                    allPermissionIds.add(permissionId);
-                    List<Integer> roleIds = permIdRoleIdsMap.get(permissionId);
-                    if(roleIds == null) {
-                        roleIds = new ArrayList<>();
-                        permIdRoleIdsMap.put(permissionId, roleIds);
-                    }
-                    roleIds.add(roleId);
-                }
-            }
-            PermissionExample permissionExample = new PermissionExample();
-            PermissionExample.Criteria permissionExampleCriteria = permissionExample.createCriteria();
-            permissionExampleCriteria.andIdIn(allPermissionIds).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
-            List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
+            List<Role> roleList = domainRoleMap.get(domainId);
+            List<RoleDto> roleDtoList = new ArrayList<RoleDto>();
 
-            Map<Integer, List<Permission>> roleIdPermissionsMap = new HashMap<>();
-            if(permissions != null) {
-                for(Permission permission :permissions) {
-                    List<Integer> roleIds = permIdRoleIdsMap.get(permission.getId());
-                    if(roleIds != null) {
-                        for(Integer roleId : roleIds) {
-                            List<Permission> permissionList = roleIdPermissionsMap.get(roleId);
-                            if (permissionList == null) {
-                                permissionList = new ArrayList<>();
-                                roleIdPermissionsMap.put(roleId, permissionList);
-                            }
-                            permissionList.add(permission);
-                        }
-                    }
-                }
-            }
+            DomainDto domainDto = BeanConverter.convert(domain);
+            domainDto.setRoleList(roleDtoList);
+            domainDtoList.add(domainDto);
 
-            for(Domain domain : domainList){
-                Integer domainId = domain.getId();
-
-                List<Role> roleList = domainRoleMap.get(domainId);
-                List<RoleDto> roleDtoList = new ArrayList<RoleDto>();
-
-                DomainDto domainDto = BeanConverter.convert(domain);
-                domainDto.setRoleList(roleDtoList);
-                domainDtoList.add(domainDto);
-
-                if(roleList != null){
-                    for(Role role: roleList){
-                        RoleDto roleDto = BeanConverter.convert(role);
-                        roleDto.setRoleCode(roleCodeMap.get(role.getRoleCodeId()).getCode());
-                        roleDtoList.add(roleDto);
-
-                        List<Permission> permissionList = roleIdPermissionsMap.get(role.getId());
-                        List<Permission> permList = new ArrayList<>();
-                        if(permissionList != null) {
-                            for(Permission permission : permissionList) {
-                                if(domainId.equals(permission.getDomainId())) {
-                                    permList.add(permission);
-                                }
-                            }
-                        }
-
-                        Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
-                        Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
-                        if(permList != null){
-                            for(Permission permission: permList){
-                                Integer permTypeId = permission.getPermTypeId();
-                                String permType = permTypeMap.get(permTypeId).getType();
-                                String value = permission.getValue();
-                                PermissionDto permissionDto = BeanConverter.convert(permission);
-
-                                if(permMap.containsKey(permType)){
-                                    permMap.get(permType).add(value);
-                                    permDtoMap.get(permType).add(permissionDto);
-                                }
-                                else{
-                                    Set<String> set = new HashSet<>();
-                                    set.add(value);
-                                    permMap.put(permType, set);
-                                    Set<PermissionDto> permissionDtos = new HashSet<>();
-                                    permissionDtos.add(permissionDto);
-                                    permDtoMap.put(permType, permissionDtos);
-                                }
-                            }
-                        }
-
-                        roleDto.setPermMap(permMap);
-                        roleDto.setPermDtoMap(permDtoMap);
-                    }
+            if(roleList != null){
+                for(Role role: roleList){
+                    RoleDto roleDto = BeanConverter.convert(role);
+                    roleDto.setRoleCode(roleCodeMap.get(role.getRoleCodeId()).getCode());
+                    //add refactor 
+                    buildRolePermissionDto(permTypeMap, roleIdPermissionsMap, domainId, role, roleDto);
+                    roleDtoList.add(roleDto);
                 }
             }
         }
+        return domainDtoList;
+    }
 
-        return userDetailDto;
+    /**
+     * 封装角色的权限数据,最终确定某个role有某个domain的某些permission
+     * @param permTypeMap 权限类型映射数据
+     * @param roleIdPermissionsMap 角色有哪些权限
+     * @param domainId domainId用来映射domain的权限数据
+     * @param role 角色实体
+     * @param roleDto 角色dto,已经封装了角色名称等基本信息
+     */
+    private void buildRolePermissionDto(Map<Integer, PermType> permTypeMap,
+        Map<Integer, List<Permission>> roleIdPermissionsMap, Integer domainId, Role role,
+        RoleDto roleDto) {
+      List<Permission> permissionList = roleIdPermissionsMap.get(role.getId());
+      List<Permission> permList = new ArrayList<>();
+      if(permissionList != null) {
+          for(Permission permission : permissionList) {
+              if(domainId.equals(permission.getDomainId())) {
+                  permList.add(permission);
+              }
+          }
+      }
+
+      Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
+      Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
+      if(permList != null){
+          for(Permission permission: permList){
+              Integer permTypeId = permission.getPermTypeId();
+              String permType = permTypeMap.get(permTypeId).getType();
+              String value = permission.getValue();
+              PermissionDto permissionDto = BeanConverter.convert(permission);
+
+              if(permMap.containsKey(permType)){
+                  permMap.get(permType).add(value);
+                  permDtoMap.get(permType).add(permissionDto);
+              }else{
+                  Set<String> set = new HashSet<>();
+                  set.add(value);
+                  permMap.put(permType, set);
+                  Set<PermissionDto> permissionDtos = new HashSet<>();
+                  permissionDtos.add(permissionDto);
+                  permDtoMap.put(permType, permissionDtos);
+              }
+          }
+      }
+
+      roleDto.setPermMap(permMap);
+      roleDto.setPermDtoMap(permDtoMap);
+    }
+    /**
+     * 获取角色下面所有的权限
+     * @param rolePermissionKeys 角色与权限映射关系id集合
+     * @return roleId与对应的权限集合映射;<br/>
+     * 1.如果角色没有任何权限,那么角色的权限是空;<br/>
+     * 2.如果没有任何角色,那么返回null
+     */
+    @SuppressWarnings("unchecked")
+    private Map<Integer, List<Permission>> getRolePermission(List<RolePermissionKey> rolePermissionKeys) {
+        if(CollectionUtils.isEmpty(rolePermissionKeys))
+          return Collections.EMPTY_MAP;//2.没有角色
+        //权限id集合
+        List<Integer> allPermissionIds = new ArrayList<>(rolePermissionKeys.size());
+        //map permission roles
+        Map<Integer, List<Integer>> permIdRoleIdsMap = new HashMap<>();
+        for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+            Integer roleId = rolePermissionKey.getRoleId();
+            Integer permissionId = rolePermissionKey.getPermissionId();
+            allPermissionIds.add(permissionId);
+            List<Integer> roleIds = permIdRoleIdsMap.get(permissionId);
+            if(roleIds == null) {
+                roleIds = new ArrayList<>();
+                permIdRoleIdsMap.put(permissionId, roleIds);
+            }
+            roleIds.add(roleId);
+        }
+        Map<Integer, List<Permission>> roleIdPermissionsMap = new HashMap<>();
+        if(CollectionUtils.isEmpty(allPermissionIds)){//1.空有角色没有权限,see jira->UNIAZ-181
+          for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+            roleIdPermissionsMap.put(rolePermissionKey.getRoleId(),Collections.EMPTY_LIST);            
+          }
+          return roleIdPermissionsMap;
+        }
+        PermissionExample permissionExample = new PermissionExample();
+        PermissionExample.Criteria permissionExampleCriteria = permissionExample.createCriteria();
+        permissionExampleCriteria.andIdIn(allPermissionIds).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
+        
+        //map role permissions
+        for(Permission permission :permissions) {
+            List<Integer> roleIds = permIdRoleIdsMap.get(permission.getId());
+            if(roleIds != null) {
+                for(Integer roleId : roleIds) {//每一个角色都包含这个权限
+                    List<Permission> permissionList = roleIdPermissionsMap.get(roleId);
+                    if (permissionList == null) {
+                        permissionList = new ArrayList<>();
+                        roleIdPermissionsMap.put(roleId, permissionList);
+                    }
+                    permissionList.add(permission);
+                }
+            }
+        }
+       return roleIdPermissionsMap;
     }
 
     public UserDto getSingleUser(UserParam userParam) {
