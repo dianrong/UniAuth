@@ -8,7 +8,6 @@ import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
@@ -22,8 +21,6 @@ import com.dianrong.common.uniauth.common.util.ReflectionUtils;
  */
 public class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvider{
 
-	private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
-	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Authentication authenticate = super.authenticate(authentication);
@@ -45,6 +42,7 @@ public class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvi
 		if (!(userDetails instanceof  UserExtInfo)) {
 				return;
 		}
+		GrantedAuthoritiesMapper authoritiesMapper =  (GrantedAuthoritiesMapper)ReflectionUtils.getField(this, "authoritiesMapper", true);
 		SingleDomainUserExtInfo loginDomainUserExtInfo = (SingleDomainUserExtInfo)ReflectionUtils.getField(userDetails, "loginDomainUserExtInfo", true);
 		ReflectionUtils.setUserInfoField(loginDomainUserExtInfo, "authorities", authoritiesMapper.mapAuthorities(loginDomainUserExtInfo.getAuthorities()));
 		AllDomainUserExtInfo allDomainUserExtInfo = (AllDomainUserExtInfo)ReflectionUtils.getField(userDetails, "allDomainUserExtInfo", true);
@@ -55,9 +53,5 @@ public class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvi
 			SingleDomainUserExtInfo userExtInfo = userExtInfoMap.get(key);
 			ReflectionUtils.setUserInfoField(loginDomainUserExtInfo, "authorities", authoritiesMapper.mapAuthorities(userExtInfo.getAuthorities()));
 		}
-	}
-	public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
-		super.setAuthoritiesMapper(authoritiesMapper);
-		this.authoritiesMapper = authoritiesMapper;
 	}
 }
