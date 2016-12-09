@@ -70,7 +70,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             });
         }
         
-        function queryRoleUser(){
+        function queryRoleUser(callback){
         	if (!$scope.role.selected || !$scope.role.selected.id) return;
         	var param = {
         			id : $scope.role.selected.id
@@ -81,14 +81,17 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 } else {
                 	$scope.uniauthTransfer.targetItems = [];
                 }
+                refreshCache();
+                callback();
             });
         }
         
         function roleSelectInvoke(){
         	// query selected user
-        	queryRoleUser();
+        	queryRoleUser(function(){
+        	    queryNotSelectedUser($scope.uniauthTransfer.filter_input_predicate);        	    
+        	});
         	// query not selected user
-        	queryNotSelectedUser($scope.uniauthTransfer.filter_input_predicate);
         }
         
         function refreshCache(){
@@ -100,7 +103,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         }
         
         $scope.$watch('role.selected', roleSelectInvoke);
-        $scope.$watch('uniauthTransfer.targetItems', refreshCache, true);
+        //$scope.$watch('uniauthTransfer.targetItems', refreshCache, true);
         $scope.$on('selected-domain-changed', function(){
         	$scope.refreshRoles();
         });
