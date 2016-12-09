@@ -81,7 +81,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 } else {
                 	$scope.uniauthTransfer.targetItems = [];
                 }
-                refreshCache();
                 if(callback && typeof(callback) === "function") {
                     callback();
                 }
@@ -91,6 +90,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         function roleSelectInvoke(){
         	// query selected user
         	queryRoleUser(function(){
+        	    refreshCache();
         	    // query not selected user
         	    queryNotSelectedUser($scope.uniauthTransfer.filter_input_predicate);        	    
         	});
