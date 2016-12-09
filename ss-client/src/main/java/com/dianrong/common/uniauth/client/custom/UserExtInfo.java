@@ -30,25 +30,6 @@ public class UserExtInfo implements UserDetails {
 
 	// 通过账号密码登陆的域所对应的userExtInfo,可以通过该对象知道具体是从哪一个域登陆的
 	private SingleDomainUserExtInfo loginDomainUserExtInfo;
-	public SingleDomainUserExtInfo getLoginDomainUserExtInfo() {
-		return loginDomainUserExtInfo;
-	}
-
-	public UserExtInfo setLoginDomainUserExtInfo(
-			SingleDomainUserExtInfo loginDomainUserExtInfo) {
-		this.loginDomainUserExtInfo = loginDomainUserExtInfo;
-		return this;
-	}
-
-	public AllDomainUserExtInfo getAllDomainUserExtInfo() {
-		return allDomainUserExtInfo;
-	}
-
-	public UserExtInfo setAllDomainUserExtInfo(AllDomainUserExtInfo allDomainUserExtInfo) {
-		this.allDomainUserExtInfo = allDomainUserExtInfo;
-		return this;
-	}
-
 	// 所有域共享的用户信息
 	private AllDomainUserExtInfo allDomainUserExtInfo =  new AllDomainUserExtInfo();;
 	

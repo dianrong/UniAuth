@@ -4,12 +4,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.GrantedAuthority;
 
 import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 
 public class TechOpsUserExtInfo extends UserExtInfo {
