@@ -16,10 +16,6 @@ public interface AppConstants {
         // 人性化设计
         byte STATUS_ENABLED= ZERO_byte;
         byte STATUS_DISABLED=ONE_byte;
-        /**
-         * 任意状态,即不关心状态是什么 -1
-         */
-        byte STATUS_UNCONCERN=(byte)-1;
 
 	String API_UUID = "api-uuid";
 

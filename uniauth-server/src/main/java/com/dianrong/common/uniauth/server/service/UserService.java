@@ -529,7 +529,7 @@ public class UserService extends TenancyBasedService {
         CheckEmpty.checkEmpty(password, "密码");
         CheckEmpty.checkEmpty(ip, "IP地址");
 
-        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_UNCONCERN);
+        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,null);
         if (AppConstants.ONE_Byte.equals(user.getStatus())) {
             throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
         }
@@ -1039,13 +1039,12 @@ public class UserService extends TenancyBasedService {
      * @param tenancyCode 
      * @param tenancyId
      * @param withPhoneChecked
-     * @param status 用户启用禁用状态,或者任意状态
+     * @param status 用户启用禁用状态,null表示任意状态
      * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
      * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
-     * @see {@link AppConstants#STATUS_UNCONCERN 任意用户状态}
-     * @return
+     * @return 用户信息
      */
-    private User getUserByAccount(String account, String tenancyCode, Integer tenancyId, boolean withPhoneChecked,byte status) {
+    private User getUserByAccount(String account, String tenancyCode, Integer tenancyId, boolean withPhoneChecked,Byte status) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("email", account);
 
@@ -1062,7 +1061,7 @@ public class UserService extends TenancyBasedService {
                 map.put("tenancyId", tenancyId.toString());
             }
         }
-        if(status!=AppConstants.STATUS_UNCONCERN)
+        if(status!=null)
             map.put("status", Integer.toString(status));
         List<User> userList = userMapper.selectByEmailOrPhone(map);
         if (userList == null || userList.isEmpty()) {
