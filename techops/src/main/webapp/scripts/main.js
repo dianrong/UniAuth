@@ -72,7 +72,7 @@ require.config({
     },
     'uniauth-transfer': {
         deps:['angular']
-      },
+    },
     angular: {
       exports: 'angular'
     }
