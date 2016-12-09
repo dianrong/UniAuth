@@ -1061,7 +1061,7 @@ public class UserService extends TenancyBasedService {
                 map.put("tenancyId", tenancyId.toString());
             }
         }
-        if(status!=null)
+        if(status != null)
             map.put("status", Integer.toString(status));
         List<User> userList = userMapper.selectByEmailOrPhone(map);
         if (userList == null || userList.isEmpty()) {
