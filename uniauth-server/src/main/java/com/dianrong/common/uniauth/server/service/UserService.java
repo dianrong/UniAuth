@@ -529,8 +529,7 @@ public class UserService extends TenancyBasedService {
         CheckEmpty.checkEmpty(password, "密码");
         CheckEmpty.checkEmpty(ip, "IP地址");
 
-        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true);
-
+        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_UNCONCERN);
         if (AppConstants.ONE_Byte.equals(user.getStatus())) {
             throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
         }
@@ -687,7 +686,7 @@ public class UserService extends TenancyBasedService {
     public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
         String account = loginParam.getAccount();
         CheckEmpty.checkEmpty(account, "账号");
-        User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(), true);
+        User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_ENABLED);
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
     }
@@ -918,7 +917,7 @@ public class UserService extends TenancyBasedService {
     public UserDto getSingleUser(UserParam userParam) {
         String email = userParam.getEmail();
         CheckEmpty.checkEmpty(email, "邮件");
-        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false);
+        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false,AppConstants.STATUS_ENABLED);
         UserDto userDto = BeanConverter.convert(user);
         setUserExtendVal(userDto);
         return userDto;
@@ -930,7 +929,7 @@ public class UserService extends TenancyBasedService {
         String password = userParam.getPassword();
         CheckEmpty.checkEmpty(email, "邮件");
         CheckEmpty.checkEmpty(password, "密码");
-        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false);
+        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false,AppConstants.STATUS_ENABLED);
         if (!AuthUtils.validatePasswordRule(password)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
         }
@@ -1034,8 +1033,19 @@ public class UserService extends TenancyBasedService {
         });
         return 1;
     }
-
-    private User getUserByAccount(String account, String tenancyCode, Integer tenancyId, boolean withPhoneChecked) {
+    /**
+     * 根据帐号获取用户信息，注意判断用户状态
+     * @param account 帐号唯一编号：邮箱或手机
+     * @param tenancyCode 
+     * @param tenancyId
+     * @param withPhoneChecked
+     * @param status 用户启用禁用状态,或者任意状态
+     * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
+     * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
+     * @see {@link AppConstants#STATUS_UNCONCERN 任意用户状态}
+     * @return
+     */
+    private User getUserByAccount(String account, String tenancyCode, Integer tenancyId, boolean withPhoneChecked,byte status) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("email", account);
 
@@ -1052,6 +1062,8 @@ public class UserService extends TenancyBasedService {
                 map.put("tenancyId", tenancyId.toString());
             }
         }
+        if(status!=AppConstants.STATUS_UNCONCERN)
+            map.put("status", Integer.toString(status));
         List<User> userList = userMapper.selectByEmailOrPhone(map);
         if (userList == null || userList.isEmpty()) {
             throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
@@ -1081,7 +1093,7 @@ public class UserService extends TenancyBasedService {
      */
     public UserDto getUserByEmailOrPhone(LoginParam loginParam) {
         CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
-        User user = getUserByAccount(loginParam.getAccount(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true);
+        User user = getUserByAccount(loginParam.getAccount(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_ENABLED);
         UserDto userDto = BeanConverter.convert(user);
         setUserExtendVal(userDto);
         return userDto;

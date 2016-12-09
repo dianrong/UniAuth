@@ -33,8 +33,10 @@
     select
     <include refid="Base_Column_List" />
     from user
-    where
-    status = 0
+    where 1=1
+    <if test="status != null">
+     and status = #{status,jdbcType=TINYINT}
+    </if>
     <if test="phone == null" >
      and email = #{email, jdbcType=VARCHAR}
     </if>
