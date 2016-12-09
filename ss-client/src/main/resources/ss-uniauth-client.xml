@@ -43,7 +43,7 @@
 	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler">
 	</b:bean>
 	
-	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
+	<b:bean id="casAuthenticationProvider" class="com.dianrong.common.uniauth.client.custom.ShareDomainCasAuthenticationProvider">    
 		<b:property name="ticketValidator" ref="casTicketValidator"/>    
 		<b:property name="serviceProperties" ref="casService"/>    
 		<b:property name="key" value="dianrong-ss-uniauth-cas"/>    
