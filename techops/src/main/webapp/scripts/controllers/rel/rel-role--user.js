@@ -82,16 +82,18 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 	$scope.uniauthTransfer.targetItems = [];
                 }
                 refreshCache();
-                callback();
+                if(callback && typeof(callback) === "function") {
+                    callback();
+                }
             });
         }
         
         function roleSelectInvoke(){
         	// query selected user
         	queryRoleUser(function(){
+        	    // query not selected user
         	    queryNotSelectedUser($scope.uniauthTransfer.filter_input_predicate);        	    
         	});
-        	// query not selected user
         }
         
         function refreshCache(){
