@@ -35,6 +35,34 @@ public class ReflectionUtils {
 		return object;
 	}
 	
+	public static Object getField(Object targetObj, String fieldName){
+		Object object = null;
+		try{
+			Class<?> targetClazz = targetObj.getClass();
+			Field field = null;
+			while(targetClazz != null) {
+				try {
+					field = targetClazz.getDeclaredField(fieldName);
+				} catch(NoSuchFieldException ex) {
+					logger.debug(targetClazz.getName() + " can not find field " + fieldName, ex);
+				}
+				// find it
+				if (field != null) {
+					break;
+				}
+				targetClazz = targetClazz.getSuperclass();
+			}
+			if (field == null) {
+				throw new NoSuchFieldException(fieldName);
+			}
+			field.setAccessible(true);
+			object = field.get(targetObj);
+		}catch(Exception e){
+			logger.warn("exception", e);
+		}
+		return object;
+	}
+	
 	public static Object invokeStaticMethodWithoutParam(Class<?> clazz, String methodName){
 		Object object = null;
 		try{

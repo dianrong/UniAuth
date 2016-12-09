@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.jasig.cas.client.validation.Assertion;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
@@ -25,7 +26,7 @@ public class ShareDomainAuthentication extends CasAuthenticationToken{
 	}
 	
 	@Override
-	public Object getCredentials() {
-		return userDetails.getAuthorities();
+	public Collection<GrantedAuthority> getAuthorities() {
+		return Collections.unmodifiableCollection(userDetails.getAuthorities());
 	}
 }
