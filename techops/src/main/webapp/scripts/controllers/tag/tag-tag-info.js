@@ -29,9 +29,14 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         }
         $scope.getTagTypes();
 
-        $scope.navToTagUserGrp = function(tag) {
+        $scope.navToTagUser = function(tag) {
             TagService.tagShared.selected = tag;
-            $state.go('rel.tag--user-grp');
+            $state.go('rel.tag--user');
+        };
+        
+        $scope.navToTagGrp = function(tag) {
+            TagService.tagShared.selected = tag;
+            $state.go('rel.tag--grp');
         };
 
         $scope.pagination = {

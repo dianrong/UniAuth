@@ -84,7 +84,11 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.navToRoleUser = function(role) {
             RoleService.roleUserGrpShared.selected = role;
-            $state.go('rel.role--user-grp');
+            $state.go('rel.role--user');
+        };
+        $scope.navToRoleGroup = function(role) {
+            RoleService.roleUserGrpShared.selected = role;
+            $state.go('rel.role--grp');
         };
         $scope.navToRolePerm = function(role) {
             RoleService.roleShared.selected = role;
