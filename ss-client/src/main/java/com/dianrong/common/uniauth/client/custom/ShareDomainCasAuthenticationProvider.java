@@ -1,14 +1,18 @@
 package com.dianrong.common.uniauth.client.custom;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
 
 import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
 import com.dianrong.common.uniauth.client.custom.model.ShareDomainAuthentication;
@@ -19,8 +23,9 @@ import com.dianrong.common.uniauth.common.util.ReflectionUtils;
  * 用于处理多域共享信息的情况 
  * @author wanglin
  */
-public class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvider{
-
+public final class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvider{
+	private static final Logger logger = Logger.getLogger(ShareDomainCasAuthenticationProvider.class);
+	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Authentication authenticate = super.authenticate(authentication);
@@ -43,15 +48,30 @@ public class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvi
 				return;
 		}
 		GrantedAuthoritiesMapper authoritiesMapper =  (GrantedAuthoritiesMapper)ReflectionUtils.getField(this, "authoritiesMapper");
-		SingleDomainUserExtInfo loginDomainUserExtInfo = (SingleDomainUserExtInfo)ReflectionUtils.getField(userDetails, "loginDomainUserExtInfo");
-		ReflectionUtils.setUserInfoField(loginDomainUserExtInfo, "authorities", authoritiesMapper.mapAuthorities(loginDomainUserExtInfo.getAuthorities()));
-		AllDomainUserExtInfo allDomainUserExtInfo = (AllDomainUserExtInfo)ReflectionUtils.getField(userDetails, "allDomainUserExtInfo");
-		@SuppressWarnings("unchecked")
-		ConcurrentHashMap<String, SingleDomainUserExtInfo> userExtInfoMap = (ConcurrentHashMap<String, SingleDomainUserExtInfo>)ReflectionUtils.getField(allDomainUserExtInfo, "userExtInfoMap");
-		Set<String> keySet = userExtInfoMap.keySet();
-		for (String key : keySet) {
-			SingleDomainUserExtInfo userExtInfo = userExtInfoMap.get(key);
-			ReflectionUtils.setUserInfoField(loginDomainUserExtInfo, "authorities", authoritiesMapper.mapAuthorities(userExtInfo.getAuthorities()));
+		if (authoritiesMapper == null ) {
+			logger.warn("please check AuthenticationProvider implementation, whether there is a fied type of  GrantedAuthoritiesMapper not name of authoritiesMapper. GrantedAuthoritiesMapper is not effective");
+			return;
 		}
+		
+		UserExtInfo userExtInfo = (UserExtInfo)userDetails;
+		SingleDomainUserExtInfo loginDomainUserExtInfo = userExtInfo.getLoginDomainUserExtInfo();
+		if (loginDomainUserExtInfo != null) {
+			userExtInfo.setLoginDomainUserExtInfo(replaceAuthorities(loginDomainUserExtInfo, authoritiesMapper.mapAuthorities(loginDomainUserExtInfo.getAuthorities())));
+		}
+		AllDomainUserExtInfo allDomainUserExtInfo = userExtInfo.getAllDomainUserExtInfo();
+		if (allDomainUserExtInfo != null) {
+			Set<String> allDomainCodes =  allDomainUserExtInfo.getAllDomainCode();
+			for (String key : allDomainCodes) {
+				SingleDomainUserExtInfo domainUserExtInfo = allDomainUserExtInfo.getUserDetail(key);
+				allDomainUserExtInfo.repleaceUserExtInfo(key, replaceAuthorities(domainUserExtInfo, authoritiesMapper.mapAuthorities(domainUserExtInfo.getAuthorities())));
+			}
+		}
+	}
+	
+	private SingleDomainUserExtInfo replaceAuthorities(final SingleDomainUserExtInfo orginalOne, final Collection<? extends GrantedAuthority> newAuthorities){
+		Assert.notNull(orginalOne);
+		Collection<? extends GrantedAuthority>  _newAuthorities = newAuthorities == null? new ArrayList<GrantedAuthority>() : newAuthorities;
+		return new SingleDomainUserExtInfo(orginalOne.getUsername(), orginalOne.getPassword(), orginalOne.isEnabled(), orginalOne.isAccountNonExpired(), orginalOne.isCredentialsNonExpired() ,
+				orginalOne.isAccountNonLocked(), _newAuthorities, orginalOne.getId(), orginalOne.getUserDto(), orginalOne.getDomainDto(), orginalOne.getPermMap(), orginalOne.getPermDtoMap());
 	}
 }
