@@ -30,8 +30,9 @@ public class UserExtInfo implements UserDetails {
 
 	// 通过账号密码登陆的域所对应的userExtInfo,可以通过该对象知道具体是从哪一个域登陆的
 	private SingleDomainUserExtInfo loginDomainUserExtInfo;
+
 	// 所有域共享的用户信息
-	private AllDomainUserExtInfo allDomainUserExtInfo =  new AllDomainUserExtInfo();;
+	private AllDomainUserExtInfo allDomainUserExtInfo =  new AllDomainUserExtInfo();
 	
 	/**
 	 * get the correct UserExtInfo
@@ -105,7 +106,6 @@ public class UserExtInfo implements UserDetails {
 			 Map<String, UserExtInfoParam> userExtInfos) {
 		this.loginDomainUserExtInfo = new SingleDomainUserExtInfo(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities, id, userDto, domainDto, permMap, permDtoMap);
 		Assert.notNull(userExtInfos);
-		allDomainUserExtInfo = new AllDomainUserExtInfo();
 		for (String domainCode : userExtInfos.keySet()) {
 			UserExtInfoParam userExtInfo = userExtInfos.get(domainCode);
 			this.allDomainUserExtInfo.addUserDetail(domainCode, 
@@ -206,6 +206,24 @@ public class UserExtInfo implements UserDetails {
 
 	public UserExtInfo setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
 		getCurrentDomainUserExtInfo().setPermDtoMap(permDtoMap);
+		return this;
+	}
+
+	public final SingleDomainUserExtInfo getLoginDomainUserExtInfo() {
+		return loginDomainUserExtInfo;
+	}
+
+	public final AllDomainUserExtInfo getAllDomainUserExtInfo() {
+		return allDomainUserExtInfo;
+	}
+	
+	public final UserExtInfo setLoginDomainUserExtInfo(SingleDomainUserExtInfo loginDomainUserExtInfo) {
+		this.loginDomainUserExtInfo = loginDomainUserExtInfo;
+		return this;
+	}
+
+	public final  UserExtInfo setAllDomainUserExtInfo(AllDomainUserExtInfo allDomainUserExtInfo) {
+		this.allDomainUserExtInfo = allDomainUserExtInfo;
 		return this;
 	}
 }
