@@ -10,7 +10,6 @@ dependencies {
 
     //Spring
     def spring_version = '4.1.6.RELEASE'
-    compile('org.springframework.boot:spring-boot-actuator:1.3.5.RELEASE'){ exclude group: 'org.springframework.boot', module:'spring-boot-starter-logging'}
 
     compile "org.springframework:spring-context:${spring_version}"
     compile "org.springframework:spring-jdbc:${spring_version}"
