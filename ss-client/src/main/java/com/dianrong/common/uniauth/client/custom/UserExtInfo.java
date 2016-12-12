@@ -29,10 +29,10 @@ public class UserExtInfo implements UserDetails {
 	private static final Logger logger = Logger.getLogger(UserExtInfo.class);
 
 	// 通过账号密码登陆的域所对应的userExtInfo,可以通过该对象知道具体是从哪一个域登陆的
-	private  SingleDomainUserExtInfo loginDomainUserExtInfo;
+	private SingleDomainUserExtInfo loginDomainUserExtInfo;
 
 	// 所有域共享的用户信息
-	private  AllDomainUserExtInfo allDomainUserExtInfo =  new AllDomainUserExtInfo();;
+	private AllDomainUserExtInfo allDomainUserExtInfo =  new AllDomainUserExtInfo();
 	
 	/**
 	 * get the correct UserExtInfo

@@ -63,7 +63,7 @@ public final class ShareDomainCasAuthenticationProvider extends CasAuthenticatio
 			Set<String> allDomainCodes =  allDomainUserExtInfo.getAllDomainCode();
 			for (String key : allDomainCodes) {
 				SingleDomainUserExtInfo domainUserExtInfo = allDomainUserExtInfo.getUserDetail(key);
-				allDomainUserExtInfo.repleaceUserExtInfo(key, replaceAuthorities(domainUserExtInfo, authoritiesMapper.mapAuthorities(domainUserExtInfo.getAuthorities())));
+				allDomainUserExtInfo.replaceUserExtInfo(key, replaceAuthorities(domainUserExtInfo, authoritiesMapper.mapAuthorities(domainUserExtInfo.getAuthorities())));
 			}
 		}
 	}

@@ -71,7 +71,7 @@ public final class AllDomainUserExtInfo implements Serializable {
      * @param userDetails SingleDomainUserExtInfo
      * @throws IllegalArgumentException if the domainCode or userDetails is null
      */
-    public void repleaceUserExtInfo(String domainCode, SingleDomainUserExtInfo userDetails) {
+    public void replaceUserExtInfo(String domainCode, SingleDomainUserExtInfo userDetails) {
     	 addUserDetail(domainCode, userDetails);
     }
 }
