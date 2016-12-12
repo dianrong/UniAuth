@@ -44,7 +44,7 @@ public class UserExtInfo implements UserDetails {
 		// 用户没有对应域的权限 需要构造一个空权限的对象
 		if (currentDomainUserExtInfo == null) {
 			SingleDomainUserExtInfo emptyUserInfo = SingleDomainUserExtInfo.emptyAuthorityUserInfo( this.loginDomainUserExtInfo.getUsername(), 
-					 this.loginDomainUserExtInfo.getId(),  this.loginDomainUserExtInfo.getUserDto(), new DomainDto());
+					 this.loginDomainUserExtInfo.getId(),  this.loginDomainUserExtInfo.getUserDto(), new DomainDto().setCode(DomainDefine.getStaticDomainCode()));
 			// cache
 			SingleDomainUserExtInfo exsitOne =  this.allDomainUserExtInfo.addUserDetailIfAbsent(DomainDefine.getStaticDomainCode(), emptyUserInfo);
 			if (exsitOne == null) {

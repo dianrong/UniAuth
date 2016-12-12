@@ -109,7 +109,7 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
 						UserExtInfoParam userExtInfoParam = new UserExtInfoParam();
 						userExtInfoParam.setUsername(userName).setPassword("fake_password").setEnabled(true).setAccountNonExpired(true)
 						.setCredentialsNonExpired(true).setAccountNonLocked(true).setAuthorities(new ArrayList<GrantedAuthority>()).setId(id).setUserDto(userDto)
-						.setDomainDto(new DomainDto()).setPermMap(new HashMap<String, Set<String>>()).setPermDtoMap(new HashMap<String, Set<PermissionDto>>());
+						.setDomainDto(new DomainDto().setCode(DomainDefine.getStaticDomainCode())).setPermMap(new HashMap<String, Set<String>>()).setPermDtoMap(new HashMap<String, Set<PermissionDto>>());
 						userExtInfos.put(currentDomainCode, userExtInfoParam);
 						currentDomainUserInfo = userExtInfos.get(currentDomainCode);
 				} 
