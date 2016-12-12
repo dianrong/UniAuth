@@ -47,7 +47,7 @@ public class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvi
 		ReflectionUtils.setUserInfoField(loginDomainUserExtInfo, "authorities", authoritiesMapper.mapAuthorities(loginDomainUserExtInfo.getAuthorities()));
 		AllDomainUserExtInfo allDomainUserExtInfo = (AllDomainUserExtInfo)ReflectionUtils.getField(userDetails, "allDomainUserExtInfo");
 		@SuppressWarnings("unchecked")
-		ConcurrentHashMap<String, SingleDomainUserExtInfo> userExtInfoMap = (ConcurrentHashMap<String, SingleDomainUserExtInfo>)ReflectionUtils.getField(allDomainUserExtInfo, "userExtInfoMap", false);
+		ConcurrentHashMap<String, SingleDomainUserExtInfo> userExtInfoMap = (ConcurrentHashMap<String, SingleDomainUserExtInfo>)ReflectionUtils.getField(allDomainUserExtInfo, "userExtInfoMap");
 		Set<String> keySet = userExtInfoMap.keySet();
 		for (String key : keySet) {
 			SingleDomainUserExtInfo userExtInfo = userExtInfoMap.get(key);
