@@ -29,7 +29,7 @@ import com.google.common.collect.Maps;
  * 单个域的用户信息model 
  * @author wanglin
  */
-public class SingleDomainUserExtInfo extends User {
+public final class SingleDomainUserExtInfo extends User {
 	private static final long serialVersionUID = 8347558918889027136L;
 
 	private static final Logger logger = Logger.getLogger(SingleDomainUserExtInfo.class);

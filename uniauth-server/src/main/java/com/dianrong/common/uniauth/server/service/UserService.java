@@ -520,7 +520,7 @@ public class UserService extends TenancyBasedService {
             }
         }
     }
-
+    
     public UserDto login(LoginParam loginParam) {
         String account = loginParam.getAccount();
         String password = loginParam.getPassword();

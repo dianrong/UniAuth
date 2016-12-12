@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.Assert;
@@ -9,7 +10,7 @@ import org.springframework.util.Assert;
  * 当前登陆用户的所有域下的权限集合的信息
  * @author wanglin
  */
-public class AllDomainUserExtInfo implements Serializable {
+public final class AllDomainUserExtInfo implements Serializable {
 	private static final long serialVersionUID = 8347558918889027136L;
 	// Map<DomainCode, userExtInfo>
 	private ConcurrentHashMap<String, SingleDomainUserExtInfo> userExtInfoMap = new ConcurrentHashMap<>();
@@ -54,5 +55,23 @@ public class AllDomainUserExtInfo implements Serializable {
     		return userExtInfoMap.get(code);
     	}
     	throw new RuntimeException("userExtInfoMap is empty");
+    }
+    
+    /**
+     * get all domain code
+     * @return Set<DomainCode>
+     */
+    public Set<String> getAllDomainCode() {
+    	return userExtInfoMap.keySet();
+    }
+    
+    /**
+     * replace userExtInfo with the domain code 
+     * @param domainCode domainCode
+     * @param userDetails SingleDomainUserExtInfo
+     * @throws IllegalArgumentException if the domainCode or userDetails is null
+     */
+    public void replaceUserExtInfo(String domainCode, SingleDomainUserExtInfo userDetails) {
+    	 addUserDetail(domainCode, userDetails);
     }
 }
