@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import com.codahale.metrics.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -74,6 +75,7 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
+	@Timed
 	public Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam) {
 		UserDetailDto userDetailDto = userService.getUserDetailInfo(loginParam);
 		return new Response<UserDetailDto>(userDetailDto);

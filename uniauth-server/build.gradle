@@ -10,7 +10,6 @@ dependencies {
 
     //Spring
     def spring_version = '4.1.6.RELEASE'
-    compile('org.springframework.boot:spring-boot-actuator:1.3.5.RELEASE'){ exclude group: 'org.springframework.boot', module:'spring-boot-starter-logging'}
 
     compile "org.springframework:spring-context:${spring_version}"
     compile "org.springframework:spring-jdbc:${spring_version}"
@@ -45,6 +44,10 @@ dependencies {
     compile "org.apache.cxf:cxf-rt-transports-http:${cxf_version}"
     compile "org.apache.cxf:cxf-rt-rs-service-description:${cxf_version}"  // for wadl generate purpose
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.1' // for json support
+
+    //spring-metrics
+    compile 'com.ryantenney.metrics:metrics-spring:3.1.2'
+    compile 'io.dropwizard.metrics:metrics-servlets:3.1.2'
 
     // common
     compile 'org.apache.commons:commons-lang3:3.4'

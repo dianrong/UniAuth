@@ -8,6 +8,11 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
+    <listener>
+        <listener-class>com.ryantenney.metrics.spring.servlets.MetricsServletsContextListener</listener-class>
+    </listener>
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext.xml</param-value>
@@ -73,6 +78,15 @@
     <servlet-mapping>
         <servlet-name>CXFServlet</servlet-name>
         <url-pattern>/ws/*</url-pattern>
+    </servlet-mapping>
+    <!-- Spring metrics -->
+    <servlet>
+        <servlet-name>metrics</servlet-name>
+        <servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>metrics</servlet-name>
+        <url-pattern>/metrics/*</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
