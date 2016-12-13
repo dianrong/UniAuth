@@ -105,7 +105,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         }
         
         $scope.$watch('role.selected', roleSelectInvoke);
-        //$scope.$watch('uniauthTransfer.targetItems', refreshCache, true);
+        $scope.$watch('uniauthTransfer.targetItems', refreshCache, true);
         $scope.$on('selected-domain-changed', function(){
         	$scope.refreshRoles();
         });
