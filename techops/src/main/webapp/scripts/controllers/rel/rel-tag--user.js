@@ -71,7 +71,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             });
         }
         
-        function queryTagUser(){
+        function queryTagUser(callback){
         	if (!$scope.tag.selected || !$scope.tag.selected.id) return;
         	var param = {
         			id : $scope.tag.selected.id
@@ -82,14 +82,19 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 } else {
                 	$scope.uniauthTransfer.targetItems = [];
                 }
+                if(callback && typeof(callback) === "function") {
+                    callback();
+                }
             });
         }
         
         function tagSelectInvoke(){
         	// query selected user
-        	queryTagUser();
-        	// query not selected user
-        	queryNotSelectedUser($scope.uniauthTransfer.filter_input_predicate);
+        	queryTagUser(function(){
+                refreshCache();
+                // query not selected user
+                queryNotSelectedUser($scope.uniauthTransfer.filter_input_predicate);
+            });
         }
         
         function refreshCache(){
