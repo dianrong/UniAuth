@@ -17,6 +17,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import com.dianrong.common.uniauth.cas.registry.support.SerialzableTicketRegistryHolder;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     @NotNull
     private final RedisTemplate<String,Object> redisTemplate;
@@ -48,13 +51,13 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     }
     @Override
     public void addTicket(Ticket ticket) {
-        logger.debug("Adding ticket {}", ticket);
+        log.debug("Adding ticket {}", ticket);
         try {
         	registryHolder.beforeSerializable(ticket);
         	redisTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
         	registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
-            logger.error("Failed adding {}", ticket, e);
+            log.error("Failed adding {}", ticket, e);
             throw e;
         }
     }
@@ -68,7 +71,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
                     return getProxiedTicketInstance(t);
                 }
             } catch (final Exception e) {
-                logger.error("Failed fetching {} ", ticketId, e);
+                log.error("Failed fetching {} ", ticketId, e);
                 throw e;
             }
             return null;
@@ -76,7 +79,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
 
     @Override
     public boolean deleteTicket(String ticketId) {
-         logger.debug("Deleting ticket {}", ticketId);
+         log.debug("Deleting ticket {}", ticketId);
             try {
             	Ticket t = getTicket(ticketId);
             	if(t instanceof TicketGrantingTicket) {
@@ -85,7 +88,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
             	this.redisTemplate.delete(ticketId);
             	return true;
             } catch (final Exception e) {
-                logger.error("Failed deleting {}", ticketId, e);
+                log.error("Failed deleting {}", ticketId, e);
                 throw e;
             }
     }
@@ -101,9 +104,9 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
         if (services != null && !services.isEmpty()) {
             for (final Map.Entry<String, Service> entry : services.entrySet()) {
                 if (this.deleteServiceTicket(entry.getKey())) {
-                    logger.trace("Removed service ticket [{}]", entry.getKey());
+                    log.trace("Removed service ticket [{}]", entry.getKey());
                 } else {
-                    logger.trace("Unable to remove service ticket [{}]", entry.getKey());
+                    log.trace("Unable to remove service ticket [{}]", entry.getKey());
                 }
             }
         }
@@ -117,12 +120,12 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
     	if(ticketId == null) {
     		return false;
     	}
-    	  logger.debug("Deleting ticket {}", ticketId);
+    	  log.debug("Deleting ticket {}", ticketId);
           try {
           		this.redisTemplate.delete(ticketId);
                return true;
           } catch (final Exception e) {
-              logger.error("Failed deleting {}", ticketId, e);
+              log.error("Failed deleting {}", ticketId, e);
               throw e;
           }
     }
@@ -135,14 +138,14 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry{
 
     @Override
     protected void updateTicket(Ticket ticket) {
-     logger.debug("Updating ticket {}", ticket);
+     log.debug("Updating ticket {}", ticket);
         try {
               this.redisTemplate.delete(ticket.getId());
               registryHolder.beforeSerializable(ticket);
               redisTemplate.opsForValue().set(ticket.getId(),ticket, getTimeout(ticket), TimeUnit.SECONDS);
               registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
-            logger.error("Failed updating {}", ticket, e);
+            log.error("Failed updating {}", ticket, e);
             throw e;
         }
     }

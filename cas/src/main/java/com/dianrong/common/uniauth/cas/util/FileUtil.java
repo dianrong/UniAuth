@@ -10,9 +10,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 文件处理相关util.主要用于cas的子系统
@@ -20,11 +20,8 @@ import org.springframework.util.Assert;
  * @author wanglin
  *
  */
+@Slf4j
 public final class FileUtil {
-
-    /** Logger instance. */
-    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
-
     /**
      * . 返回webApp文件夹所在路径
      * 
@@ -110,14 +107,14 @@ public final class FileUtil {
             }
             return values;
         } catch (IOException e) {
-            logger.warn("failed to read properties from " + filePath, e);
+            log.warn("failed to read properties from " + filePath, e);
             throw new RuntimeException(e);
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    logger.warn("failed to close FileInputStream  " + in, e);
+                    log.warn("failed to close FileInputStream  " + in, e);
                 }
             }
         }

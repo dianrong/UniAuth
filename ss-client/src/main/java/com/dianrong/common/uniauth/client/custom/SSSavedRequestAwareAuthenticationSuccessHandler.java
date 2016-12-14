@@ -19,6 +19,9 @@ import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	private RequestCache requestCache = new HttpSessionRequestCache();
 	
@@ -63,14 +66,14 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
 		//start to check saved request url 
 		String customizedSavedRequestUrl= domainDefine.getCustomizedSavedRequestUrl();
 		if(StringUtils.hasText(customizedSavedRequestUrl)){
-			logger.debug("Redirecting to CustomizedSavedRequest Url: " + customizedSavedRequestUrl);
+			log.debug("Redirecting to CustomizedSavedRequest Url: " + customizedSavedRequestUrl);
 			getRedirectStrategy().sendRedirect(request, response, zooKeeperConfig.getDomainUrl() + customizedSavedRequestUrl);
 		}
 		else{
 			// Use the DefaultSavedRequest URL
 			if(!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCORSRequest(request)){
 				String targetUrl = savedRequest.getRedirectUrl();
-				logger.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
+				log.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
 				getRedirectStrategy().sendRedirect(request, response, targetUrl);
 			}
 			else{

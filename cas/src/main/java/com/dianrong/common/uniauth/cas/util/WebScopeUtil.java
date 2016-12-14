@@ -8,21 +8,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
 import com.dianrong.common.uniauth.cas.model.HttpResponseModel;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**.
  * request，response，session等的一些统一操作的工具方法
  * @author wanglin
  */
+@Slf4j
 public final class WebScopeUtil {
-	  /** Logger instance. */
-    private static final Logger logger = LoggerFactory.getLogger(WebScopeUtil.class);
 	/**
 	 * . set captcha to session
 	 * @param session
@@ -148,7 +146,7 @@ public final class WebScopeUtil {
 			}
 			return false;
 		} catch (Exception e) {
-			logger.warn("judgeTwoServiceIsEqual failed", e);
+			log.warn("judgeTwoServiceIsEqual failed", e);
 			return false;
 		}
 	}

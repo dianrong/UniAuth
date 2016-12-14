@@ -7,8 +7,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +16,13 @@ import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
-import com.dianrong.common.uniauth.server.util.RegExpUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Aspect
 @Component
+@Slf4j
 public class ServerMapperAOPHandler {
-	private static Logger logger = LoggerFactory.getLogger(ServerMapperAOPHandler.class);
-	
-
     @Autowired
     private GlobalVarQueue globalVarQueue;
     
@@ -78,7 +75,7 @@ public class ServerMapperAOPHandler {
             		gv.setReqParam(sb.toString());
             	}
         	}catch(Exception e){
-        		logger.error("Can not get param when access mapper methods.", e);
+        		log.error("Can not get param when access mapper methods.", e);
         	}
         	
         	long start = System.currentTimeMillis();
@@ -91,7 +88,7 @@ public class ServerMapperAOPHandler {
             globalVarQueue.add(gv);
             return result;
         } catch (Throwable throwable) {
-            logger.error("exception occured", throwable);
+            log.error("exception occured", throwable);
             String expInfo = ExceptionUtils.getStackTrace(throwable);
             gv.setException(expInfo);
             globalVarQueue.add(gv);

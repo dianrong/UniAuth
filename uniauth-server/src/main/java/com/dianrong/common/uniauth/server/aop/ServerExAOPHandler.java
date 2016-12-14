@@ -10,8 +10,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,16 +23,16 @@ import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
-import com.dianrong.common.uniauth.server.util.RegExpUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Arc on 15/1/16.
  */
 @Aspect
 @Component
+@Slf4j
 public class ServerExAOPHandler {
-    private static Logger logger = LoggerFactory.getLogger(ServerExAOPHandler.class);
-    
     //todo: should migrate to zoo keeper
     private static final boolean IS_PRINT_STACKTRACE = true;
 
@@ -85,7 +83,7 @@ public class ServerExAOPHandler {
             		}
             	}
         	}catch(Exception e){
-        		logger.error("Can not get opUserid from request param.", e);
+        		log.error("Can not get opUserid from request param.", e);
         	}
         	
         	long start = System.currentTimeMillis();
@@ -98,14 +96,14 @@ public class ServerExAOPHandler {
             globalVarQueue.add(gv);
             return response;
         } catch(AppException appExp){
-        	logger.error("appException occured", appExp);
+        	log.error("appException occured", appExp);
             String expInfo = ExceptionUtils.getStackTrace(appExp);
             gv.setException(expInfo);
             globalVarQueue.add(gv);
             
         	return Response.failure(Info.build(appExp.getInfoName(), appExp.getMsg()));
         } catch (Throwable throwable) {
-            logger.error("exception occured", throwable);
+            log.error("exception occured", throwable);
             String expInfo = ExceptionUtils.getStackTrace(throwable);
             gv.setException(expInfo);
             globalVarQueue.add(gv);

@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -37,8 +35,10 @@ import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
-	private static Logger LOGGER = LoggerFactory.getLogger(SSBeanPostProcessor.class);
 	@Autowired
 	private UniClientFacade uniClientFacade;
 
@@ -101,7 +101,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 				response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
 				break;
 			}catch(Exception e){
-				LOGGER.warn("The uniauth-server[" + uniClientFacade.getUniWsEndpoint() + "] not completely started yet, need sleeping for 2 seconds, then retry.", e);
+				log.warn("The uniauth-server[" + uniClientFacade.getUniWsEndpoint() + "] not completely started yet, need sleeping for 2 seconds, then retry.", e);
 				try {
 					Thread.sleep(2000L);
 				} catch (InterruptedException ie) {
@@ -167,7 +167,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 						try{
 							HttpMethod.valueOf(httpMethod);
 						}catch(Exception e){
-							LOGGER.warn("'" + httpMethod + "' is not a valid http method.", e);
+							log.warn("'" + httpMethod + "' is not a valid http method.", e);
 							httpMethod = null;
 						}
 					}
@@ -223,10 +223,10 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 				try {
 					sleep(10L * 60 * 1000);
 				} catch (InterruptedException e) {
-					LOGGER.error("RefreshDomainResourceThread error.", e);
+					log.error("RefreshDomainResourceThread error.", e);
 				}
 				composeMetadataSource(filterSecurityInterceptor, originRequestMap, currentDomainCode);
-				LOGGER.info("Refresh domain resource completed at " + new Date() + " .");
+				log.info("Refresh domain resource completed at " + new Date() + " .");
 			}
 		}
 	}

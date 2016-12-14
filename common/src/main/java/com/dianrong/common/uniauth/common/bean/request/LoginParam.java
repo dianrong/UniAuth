@@ -12,19 +12,19 @@ public class LoginParam extends Operator {
 	private String ip;
 	
 	// 租户id
-	private  Integer tenancyId;
+	private  Long tenancyId;
 	
 	private String tenancyCode;
 	
-	public Integer getTenancyId() {
-		return tenancyId;
-	}
+	public Long getTenancyId() {
+        return tenancyId;
+    }
 
-	public void setTenancyId(Integer tenancyId) {
-		this.tenancyId = tenancyId;
-	}
+    public void setTenancyId(Long tenancyId) {
+        this.tenancyId = tenancyId;
+    }
 
-	public String getAccount() {
+    public String getAccount() {
 		return account;
 	}
 

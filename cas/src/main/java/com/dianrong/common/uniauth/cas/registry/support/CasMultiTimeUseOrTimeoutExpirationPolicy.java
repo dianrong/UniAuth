@@ -8,23 +8,17 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jasig.cas.ticket.TicketState;
 import org.jasig.cas.ticket.support.AbstractCasExpirationPolicy;
-import org.jasig.cas.ticket.support.MultiTimeUseOrTimeoutExpirationPolicy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j()
 public class CasMultiTimeUseOrTimeoutExpirationPolicy extends AbstractCasExpirationPolicy{
 
     /** Serialization support. */
     private static final long serialVersionUID = -5704993954986738308L;
-
-    /**
-     * The Logger instance for this class. Using a transient instance field for the Logger doesn't work, on object
-     * deserialization the field is null.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MultiTimeUseOrTimeoutExpirationPolicy.class);
 
     /** The time to kill in milliseconds. */
     private final long timeToKillInMilliSeconds;

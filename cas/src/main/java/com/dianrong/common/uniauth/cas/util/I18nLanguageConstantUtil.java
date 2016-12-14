@@ -4,23 +4,19 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 定义i18n所有支持的语言
- * 
  * @author wanglin
  */
+@Slf4j
 public final class I18nLanguageConstantUtil {
 
     /**
      * . i18n menu配置文件路径
      */
     private static final String menuPath = "menus.properties";
-
-    /** Logger instance. */
-    private static final Logger logger = LoggerFactory.getLogger(I18nLanguageConstantUtil.class);
 
     public static final LinkedHashMap<String, String> localeMap;
 
@@ -29,7 +25,7 @@ public final class I18nLanguageConstantUtil {
         try {
             localeMap = new LinkedHashMap<String, String>(FileUtil.loadProperties(menuPath));
         } catch (Exception ex) {
-            logger.error("failed load i18n menues from filepath : " + menuPath +", please check whether it is exsists." + ex);
+            log.error("failed load i18n menues from filepath : " + menuPath +", please check whether it is exsists." + ex);
             throw new RuntimeException(ex);
         }
     }

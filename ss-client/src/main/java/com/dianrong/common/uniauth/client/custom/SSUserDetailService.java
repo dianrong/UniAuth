@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +30,9 @@ import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SSUserDetailService implements UserDetailsService {
 	@Autowired
 	private UniClientFacade uniClientFacade;
@@ -41,8 +42,6 @@ public class SSUserDetailService implements UserDetailsService {
 	
 	@Autowired(required = false)
 	private UserInfoCallBack userInfoCallBack;
-	
-	private static Logger LOGGER = LoggerFactory.getLogger(SSUserDetailService.class);
 	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException, DataAccessException {
@@ -114,7 +113,7 @@ public class SSUserDetailService implements UserDetailsService {
 						}
 						return userExtInfo;
 					}catch(Exception e){
-						LOGGER.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
+						log.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
 						return new UserExtInfo(userName, "fake_password", true, true, true, true, authorities, id, userDto, currentDomainDto, permMap, permDtoMap);
 					}
 				}

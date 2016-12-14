@@ -7,8 +7,6 @@ import java.util.concurrent.BlockingQueue;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +15,14 @@ import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.mapper.AuditMapper;
 import com.dianrong.common.uniauth.server.util.RegExpUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class GlobalVarQueue {
 
 	@Autowired
 	private AuditMapper auditMapper;
-
-	private static Logger logger = LoggerFactory.getLogger(GlobalVarQueue.class);
 
 	private BlockingQueue<GlobalVar> GLOBALVAR_QUEUE = new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBALVAR_QUEUE_SIZE);
 	
@@ -36,7 +35,7 @@ public class GlobalVarQueue {
 	public void add(GlobalVar gv) {
 		boolean isSuccess = GLOBALVAR_QUEUE.offer(gv);
 		if (!isSuccess) {
-			logger.error("Can not add " + gv + " into global queue.");
+			log.error("Can not add " + gv + " into global queue.");
 		}
 	}
 
@@ -80,7 +79,7 @@ public class GlobalVarQueue {
 							}
 						}
 					} catch (Exception e) {
-						logger.error("Take from GLOBALVAR_QUEUE error.", e);
+						log.error("Take from GLOBALVAR_QUEUE error.", e);
 					}
 				}
 			}
@@ -105,7 +104,7 @@ public class GlobalVarQueue {
 					}
 					
 					int size = insertAuditList.size();
-					logger.debug("Size for insertAuditList:" + insertAuditList.size());
+					log.debug("Size for insertAuditList:" + insertAuditList.size());
 					if(size > 0){
 						int start = 0;
 						int end = AppConstants.AUDIT_INSERT_LIST_SIZE;
@@ -116,7 +115,7 @@ public class GlobalVarQueue {
 							try {
 								auditMapper.insertBatch(insertAuditList.subList(start, end));
 							} catch (Exception e) {
-								logger.error("Inner:Batch insert db error.", e);
+								log.error("Inner:Batch insert db error.", e);
 							}
 							if(end == size){
 								break;
@@ -127,7 +126,7 @@ public class GlobalVarQueue {
 						insertAuditList.clear();
 					}
 				} catch (Exception e) {
-					logger.error("Sleep error.", e);
+					log.error("Sleep error.", e);
 				}
 			}
 		}

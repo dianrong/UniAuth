@@ -2,12 +2,10 @@ package com.dianrong.uniauth.ssclient.config.support;
 
 import java.lang.reflect.Field;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 public class ReflectionUtils {
-  private final static Logger logger = Logger.getLogger(ReflectionUtils.class);
-  
   public static Object getField(Object targetObj, String fieldName){
     Object object = null;
     try{
@@ -22,7 +20,7 @@ public class ReflectionUtils {
         field.setAccessible(true);
         object = field.get(targetObj);
     }catch(Exception e){
-        logger.warn("ReflectionUtils.getField exception", e);
+        log.warn("ReflectionUtils.getField exception", e);
     }
     return object;
 }

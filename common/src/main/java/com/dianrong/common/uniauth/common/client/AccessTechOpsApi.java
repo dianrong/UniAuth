@@ -15,8 +15,6 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +23,11 @@ import com.dianrong.common.uniauth.common.exp.NetworkException;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.exp.OperationForbiddenException;
 
-@Component
-public class AccessTechOpsApi {
-	/**
-	 * ./**. 日志对象
-	 */
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+import lombok.extern.slf4j.Slf4j;
 
+@Component
+@Slf4j
+public class AccessTechOpsApi {
 	@Autowired
 	private ZooKeeperConfig zooKeeperConfig;
 	private volatile HttpClient httpClient;
@@ -54,7 +50,7 @@ public class AccessTechOpsApi {
 		tgtRequestHc.setBody(requestBody);
 		HttpContent tgtResponseHc = requestServer(casRestBaseUrl, "POST", tgtRequestHc,
 				"application/x-www-form-urlencoded");
-		logger.info("get tgt:" + tgtResponseHc.toString());
+		log.info("get tgt:" + tgtResponseHc.toString());
 		String tgtRestUrl = tgtResponseHc.getHeaders().get("Location");
 		String tgt = tgtRestUrl.substring(tgtRestUrl.lastIndexOf("/"));
 
@@ -62,13 +58,13 @@ public class AccessTechOpsApi {
 		stRequestHc.setBody(serviceString);
 		HttpContent stResponseHc = requestServer(casRestBaseUrl + tgt, "POST", stRequestHc,
 				"application/x-www-form-urlencoded");
-		logger.info("get st" + stResponseHc.toString());
+		log.info("get st" + stResponseHc.toString());
 		String st = stResponseHc.getBody().trim();
 
 		// remove cookie
 		httpClient.getState().clearCookies();
 		HttpContent sessionResponsetHc = requestServer(techOpsServerUrl + "/login/cas?ticket=" + st, "GET", null, null);
-		logger.info("st validation:" + sessionResponsetHc.toString());
+		log.info("st validation:" + sessionResponsetHc.toString());
 		logHttpClientInfo("after ticket validation");
 		
 		String techopsCookie = sessionResponsetHc.getHeaders().get("Set-Cookie");
@@ -201,7 +197,7 @@ public class AccessTechOpsApi {
 		for(Cookie c : cookies) {
 			sb.append(c.getName() + ":" + c.getValue() + ",");
 		}
-		logger.info(sb.toString());
+		log.info(sb.toString());
 	}
 
 	public class HttpContent {

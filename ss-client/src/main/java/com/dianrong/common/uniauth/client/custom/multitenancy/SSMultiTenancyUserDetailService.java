@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,9 +30,12 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsService {
-	private static Logger LOGGER = Logger.getLogger(SSMultiTenancyUserDetailService.class);
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
@@ -56,8 +58,12 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
 		else{
 			LoginParam loginParam = new LoginParam();
 			loginParam.setAccount(userName);
-			loginParam.setTenancyId((int)tenancyId);
+			loginParam.setTenancyId(tenancyId);
+			// not login, need set tenancyId manually
+			CxfHeaderHolder.TENANCYID.set(tenancyId);
 			Response<UserDetailDto> response = uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
+			// clear
+			CxfHeaderHolder.TENANCYID.set(null);
 			UserDetailDto userDetailDto = response.getData();
 			
 			if(userDetailDto == null){
@@ -129,7 +135,7 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
 						}
 						return userExtInfo;
 					}catch(Exception e){
-						LOGGER.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
+						log.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) " + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
 						return UserExtInfo.build(currentDomainUserInfo, userExtInfos);
 					}
 				}

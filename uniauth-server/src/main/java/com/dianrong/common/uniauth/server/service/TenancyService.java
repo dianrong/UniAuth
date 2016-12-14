@@ -3,24 +3,24 @@ package com.dianrong.common.uniauth.server.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
-import com.dianrong.common.uniauth.server.support.CxfHeaderHolder;
+import com.dianrong.common.uniauth.server.exp.ParameterRequiredException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 
-@Service
-public class TenancyService {
-	private static Logger logger = LoggerFactory.getLogger(TenancyService.class);
+import lombok.extern.slf4j.Slf4j;
 
+@Service
+@Slf4j
+public class TenancyService {
 	@Autowired
 	private TenancyMapper tenancyMapper;
 
@@ -79,21 +79,40 @@ public class TenancyService {
 
 	/**.
 	 * 获取一个可用的租户id
-	 * 优先级为：tenancyId -> tenancyCode - > defaultTenancyId
-	 * @return
+	 * @return tenancyId for current thread
 	 */
 	public Long getOneCanUsedTenancyId() {
-		Long _id = (Long)CxfHeaderHolder.TENANCYID.get();
-		if (_id != null) {
-			return _id;
-		}
-		String tenancyCode = (String)CxfHeaderHolder.TENANCYCODE.get();
-		TenancyDto dto = getEnableTenancyByCode(tenancyCode);
-		if (dto != null) {
-			return dto.getId();
-		}
-		return getDefaultTenancy().getId();
+		return getTenancyId(false);
 	}
+	
+	/**.
+     * 获取一个租户id，并且必须是有效值
+     * @return tenancyId for current thread
+     */
+    public Long getTenancyIdWithCheck() {
+        return getTenancyId(true);
+    }
+	
+	   /**.
+     * 获取一个可用的租户id
+     * 优先级为：tenancyId -> tenancyCode
+     * @return tenancyId for current thread
+     */
+    private Long getTenancyId(boolean check) {
+        Long _id = (Long)CxfHeaderHolder.TENANCYID.get();
+        if (_id != null) {
+            return _id;
+        }
+        String tenancyCode = (String)CxfHeaderHolder.TENANCYCODE.get();
+        TenancyDto dto = getEnableTenancyByCode(tenancyCode);
+        if (dto != null) {
+            return dto.getId();
+        }
+        if (check) {
+            throw new ParameterRequiredException("tenancyId or tenancyCode is required");
+        }
+        return AppConstants.TENANCY_UNRELATED_TENANCY_ID;
+    }
 
 	/**.
 	 * 根据tenancyCode 查询 可用的租户信息
@@ -122,7 +141,7 @@ public class TenancyService {
 		if (tenancyList != null && !tenancyList.isEmpty()) {
 			return BeanConverter.convert(tenancyList.get(0));
 		}
-		logger.error("can not find default tenancy, the default tenancy code is " + AppConstants.DEFAULT_TANANCY_CODE);
+		log.error("can not find default tenancy, the default tenancy code is " + AppConstants.DEFAULT_TANANCY_CODE);
 		return null;
 	}
 }

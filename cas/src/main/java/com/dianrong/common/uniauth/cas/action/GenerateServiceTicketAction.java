@@ -17,6 +17,9 @@ import org.springframework.webflow.execution.RequestContext;
 
 import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public final class GenerateServiceTicketAction  extends AbstractAction {
 
     /** Instance of CentralAuthenticationService. */
@@ -38,7 +41,7 @@ public final class GenerateServiceTicketAction  extends AbstractAction {
             FirstPageUrlProcessUtil.refreshServiceInSession(WebUtils.getHttpServletRequest(context), service.getId());
             return success();
         } catch (final AuthenticationException e) {
-            logger.error("Could not verify credentials to grant service ticket", e);
+            log.error("Could not verify credentials to grant service ticket", e);
         } catch (final TicketException e) {
             if (e instanceof InvalidTicketException) {
                 this.centralAuthenticationService.destroyTicketGrantingTicket(ticketGrantingTicket);

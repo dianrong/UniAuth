@@ -22,6 +22,6 @@ public abstract class MultiTenancyCheck extends  AbstractDataFilter {
 	 * @return
 	 */
 	public Long getTenancyId(){
-		return tenancyService.getOneCanUsedTenancyId();
+		return tenancyService.getTenancyIdWithCheck();
 	}
 }

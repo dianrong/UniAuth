@@ -28,6 +28,9 @@ import org.jasig.cas.client.util.CommonUtils;
 import org.jasig.cas.client.util.ReflectUtils;
 import org.jasig.cas.client.validation.Assertion;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CasAuthenticationFilter extends AbstractCasFilter {
 	/**.
 	 * header 中的referer头的name
@@ -88,10 +91,10 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
                     this.ignoreUrlPatternMatcherStrategyClass = ReflectUtils.newInstance(ignoreUrlMatcherClass.getName());
                 } else {
                     try {
-                        logger.trace("Assuming {} is a qualified class name...", ignoreUrlPatternType);
+                        log.trace("Assuming {} is a qualified class name...", ignoreUrlPatternType);
                         this.ignoreUrlPatternMatcherStrategyClass = ReflectUtils.newInstance(ignoreUrlPatternType);
                     } catch (final IllegalArgumentException e) {
-                        logger.error("Could not instantiate class [{}]", ignoreUrlPatternType, e);
+                        log.error("Could not instantiate class [{}]", ignoreUrlPatternType, e);
                     }
                 }
                 if (this.ignoreUrlPatternMatcherStrategyClass != null) {
@@ -125,7 +128,7 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         
         if (isRequestUrlExcluded(request)) {
-            logger.debug("Request is ignored.");
+            log.debug("Request is ignored.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -149,20 +152,20 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
 
         final String modifiedServiceUrl;
 
-        logger.debug("no ticket and no assertion found");
+        log.debug("no ticket and no assertion found");
         if (this.gateway) {
-            logger.debug("setting gateway attribute in session");
+            log.debug("setting gateway attribute in session");
             modifiedServiceUrl = this.gatewayStorage.storeGatewayInformation(request, serviceUrl);
         } else {
             modifiedServiceUrl = serviceUrl;
         }
 
-        logger.debug("Constructed service url: {}", modifiedServiceUrl);
+        log.debug("Constructed service url: {}", modifiedServiceUrl);
 
         final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.casServerLoginUrl,
                 getProtocol().getServiceParameterName(), modifiedServiceUrl, this.renew, this.gateway);
 
-        logger.debug("redirecting to \"{}\"", urlToRedirectTo);
+        log.debug("redirecting to \"{}\"", urlToRedirectTo);
         this.authenticationRedirectStrategy.redirect(request, response, urlToRedirectTo);
     }
 

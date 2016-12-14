@@ -1,21 +1,24 @@
 package com.dianrong.common.uniauth.server.support;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.server.cxf.server.impl.AbstractTenancyIdHeaderConsumer;
 
-@Component
-public class TenancyIdHeaderConsumer extends AbstractTenancyIdHeaderConsumer {
-	private static Logger logger = Logger.getLogger(TenancyIdHeaderConsumer.class);
+import lombok.extern.slf4j.Slf4j;
 
+@Component
+@Slf4j
+public class TenancyIdHeaderConsumer extends AbstractTenancyIdHeaderConsumer {
 	@Override
 	public void consume(String value) {
 		try {
 			Long tenancyId = Long.parseLong(value);
 			CxfHeaderHolder.TENANCYID.set(tenancyId);
 		} catch (NumberFormatException ex) {
-			logger.error("value [" + value + "] is a  invalid  format number!");
+			log.error("value [" + value + "] is a  invalid  format number!");
+			CxfHeaderHolder.TENANCYID.set(null);
+			log.debug("request tenancyId is null");
 		}
 	}
 

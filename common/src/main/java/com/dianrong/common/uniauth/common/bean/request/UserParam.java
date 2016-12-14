@@ -15,7 +15,7 @@ public class UserParam extends Operator {
     private String originPassword;
     private Byte status;
     
-    private Integer tenancyId;
+    private Long tenancyId;
     
     private String tenancyCode;
 
@@ -140,11 +140,11 @@ public class UserParam extends Operator {
 		this.tenancyCode = tenancyCode;
 	}
 
-	public Integer getTenancyId() {
-		return tenancyId;
-	}
+    public Long getTenancyId() {
+        return tenancyId;
+    }
 
-	public void setTenancyId(Integer tenancyId) {
-		this.tenancyId = tenancyId;
-	}
+    public void setTenancyId(Long tenancyId) {
+        this.tenancyId = tenancyId;
+    }
 }

@@ -1,6 +1,5 @@
 package com.dianrong.loanbusiness.subsystem.controller;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,11 +11,12 @@ import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.loanbusiness.subsystem.model.TestModel;
 import com.dianrong.loanbusiness.subsystem.service.MyService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
 @RequestMapping("/main")
+@Slf4j
 public class MainController {
-	protected static Logger logger = Logger.getLogger("controller");
-	
 	@Autowired
 	private MyService myService;
 	
@@ -29,7 +29,7 @@ public class MainController {
 
 	@RequestMapping(value = "/common", method = RequestMethod.GET)
 	public String getCommonPage() {
-		logger.debug("Received request to show common page");
+		log.debug("Received request to show common page");
 		//myService.testService();
 		return "commonpage";
 	}
@@ -46,7 +46,7 @@ public class MainController {
 		
 		TestModel tm = new TestModel();
 		myService.testModel(tm);
-		logger.debug("Received request to show admin page");
+		log.debug("Received request to show admin page");
 		return "adminpage";
 
 	}

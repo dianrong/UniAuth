@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -18,10 +17,10 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class DomainDefine implements Serializable {
-	
-	private static final Logger logger = Logger.getLogger(DomainDefine.class);
-	
 	private static final long serialVersionUID = 7044166044801306772L;
 	private String domainCode;
 	private String userInfoClass;
@@ -46,7 +45,7 @@ public class DomainDefine implements Serializable {
 	public void init(){
 		if (!StringUtil.strIsNullOrEmpty(domainCode)) {
 			// init static field domainId
-			logger.info("DomainDefine init, query domainId");
+			log.info("DomainDefine init, query domainId");
 			List<String> codes = new ArrayList<String>();
 			codes.add(this.domainCode);
 			Response<List<DomainDto>> result= uniClientFacade.getDomainResource().getAllLoginDomains(new DomainParam().setDomainCodeList(codes));
@@ -58,9 +57,9 @@ public class DomainDefine implements Serializable {
 				throw new RuntimeException("please check the configed domainCode is correct or not");
 			}
 			domainId = data.get(0).getId();
-			logger.info("DomainDefine init, query domainId success");
+			log.info("DomainDefine init, query domainId success");
 		} else {
-			logger.info("domainCode is null or empty, so do not query domainId");
+			log.info("domainCode is null or empty, so do not query domainId");
 		}
 	}
 	
@@ -141,7 +140,7 @@ public class DomainDefine implements Serializable {
 		try {
 			this.controlType = CasPermissionControlType.valueOf(type);
 		} catch (IllegalArgumentException ex) {
-			logger.debug("illegal argument", ex);
+			log.debug("illegal argument", ex);
 			throw new IllegalArgumentException("permission control type supports [" + CasPermissionControlType.allType()+"], please check the param '" +type+"'");
 		}
 	}
@@ -153,7 +152,7 @@ public class DomainDefine implements Serializable {
 	 */
 	public  boolean controlTypeSupport(CasPermissionControlType type) {
 		if (type == null) {
-			logger.error("controlTypeSupport param is null");
+			log.error("controlTypeSupport param is null");
 			return false;
 		}
 		return this.controlType.support(type.getTypeStr());

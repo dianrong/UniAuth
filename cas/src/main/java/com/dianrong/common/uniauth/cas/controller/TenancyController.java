@@ -5,8 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -20,6 +18,8 @@ import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * . tenancy处理相关
  * 
@@ -27,11 +27,8 @@ import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
  */
 @Controller
 @RequestMapping("/tenancy")
+@Slf4j
 public class TenancyController {
-	/**
-	 * . 日志对象
-	 */
-	public static final Logger logger = LoggerFactory.getLogger(TenancyController.class);
 	
 	@Autowired
 	private TenancyService tenancyService;

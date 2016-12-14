@@ -3,16 +3,10 @@ package com.dianrong.common.uniauth.common.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ReflectionUtils {
-
-	/**./**.
-	 * 日志对象
-	 */
-	private final static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
-	
 	private ReflectionUtils() {
 	}
 
@@ -30,7 +24,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			object = field.get(targetObj);
 		}catch(Exception e){
-			logger.warn("exception", e);
+			log.warn("exception", e);
 		}
 		return object;
 	}
@@ -44,7 +38,7 @@ public class ReflectionUtils {
 				try {
 					field = targetClazz.getDeclaredField(fieldName);
 				} catch(NoSuchFieldException ex) {
-					logger.debug(targetClazz.getName() + " can not find field " + fieldName, ex);
+					log.debug(targetClazz.getName() + " can not find field " + fieldName, ex);
 				}
 				// find it
 				if (field != null) {
@@ -58,7 +52,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			object = field.get(targetObj);
 		}catch(Exception e){
-			logger.warn("exception", e);
+			log.warn("exception", e);
 		}
 		return object;
 	}
@@ -69,7 +63,7 @@ public class ReflectionUtils {
 			Method method = clazz.getMethod(methodName, new Class[0]);
 			object = method.invoke(null, new Object[0]);
 		}catch(Exception e){
-			logger.warn("exception", e);
+			log.warn("exception", e);
 		}
 		return object;
 	}
@@ -80,7 +74,7 @@ public class ReflectionUtils {
 			Method method = targetObj.getClass().getMethod(methodName, new Class[0]);
 			object = method.invoke(targetObj, new Object[0]);
 		}catch(Exception e){
-		    logger.warn(e.getMessage());
+		    log.warn(e.getMessage());
 		}
 		return object;
 	}
@@ -92,7 +86,7 @@ public class ReflectionUtils {
 			try{
 				field = selfClazz.getDeclaredField(fieldName);
 			}catch(Exception e){
-				logger.debug("exception", e);
+				log.debug("exception", e);
 				selfClazz = selfClazz.getSuperclass();
 			}
 		}
@@ -100,7 +94,7 @@ public class ReflectionUtils {
 		try{
 			field.set(targetObj, fieldValue);
 		}catch(Exception e){
-		    logger.warn(e.getMessage());
+		    log.warn(e.getMessage());
 		}
 	}
 	
@@ -111,7 +105,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			field.set(null, fieldValue);
 		}catch(Exception e){
-		    logger.warn(e.getMessage());
+		    log.warn(e.getMessage());
 		}
 	}
 	
@@ -123,7 +117,7 @@ public class ReflectionUtils {
 			field.setAccessible(true);
 			object = field.get(null);
 		}catch(Exception e){
-			logger.warn(e.getMessage());
+			log.warn(e.getMessage());
 		}
 		return object;
 	}
@@ -146,7 +140,7 @@ public class ReflectionUtils {
 				}
 			}
 		} catch (ClassNotFoundException e) {
-			logger.debug("class <org.springframework.security.core.context.SecurityContextHolder> not found, maybe getOpUserId() called on the uniauth-server side?");
+			log.debug("class <org.springframework.security.core.context.SecurityContextHolder> not found, maybe getOpUserId() called on the uniauth-server side?");
 		}
 		return opUserId;
 	}

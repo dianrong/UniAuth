@@ -181,5 +181,7 @@ public interface AppConstants {
 	String CAS_CXF_HEADER_LOCALE_KEY = "cas.cxf.header.locale.key";
 	
 	// 默认的租户code
-	String DEFAULT_TANANCY_CODE="DIANRONG-WEBSITE";
+	String DEFAULT_TANANCY_CODE="DIANRONG";
+	// 设置一个非租户相关的租户id
+	Long TENANCY_UNRELATED_TENANCY_ID= -1L;
 }

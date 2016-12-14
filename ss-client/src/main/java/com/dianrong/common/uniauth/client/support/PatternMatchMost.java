@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
@@ -18,10 +16,11 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PatternMatchMost {
 	private static final Pattern EXCLUDE_CHARS_PATTERN = Pattern.compile("[(\\)(\\|)(\\,)(\\[)(\\])(\\{)(\\})(\\()(\\))(\\^)(\\$)(\\.)(\\-)(\\&)(\\?)(\\*)(\\+)(\\\\s)(\\\\S)(\\\\d)(\\\\D)(\\\\w)(\\\\W)]");
-	private static Logger LOGGER = LoggerFactory.getLogger(PatternMatchMost.class);
-	
 	private PatternMatchMost(){
 		
 	}
@@ -101,13 +100,13 @@ public class PatternMatchMost {
 		int mapSize = allMatchedMap.size();
 		
 		if(mapSize >= 1){
-			if(LOGGER.isWarnEnabled()){
+			if(log.isWarnEnabled()){
 				String pattern = "";
 				if(matchMostRequestMatcher instanceof RegexRequestMatcher){
 					pattern = ((Pattern)(ReflectionUtils.getField(matchMostRequestMatcher, "pattern", false))).pattern();
 					pattern = "(" + pattern + ")";
 				}
-				LOGGER.warn("Found " + mapSize + " patterns <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + pattern + ">");
+				log.warn("Found " + mapSize + " patterns <" + allMatchedMap + "> matching <" + url +">, choose <" + matchMostRequestMatcher + pattern + ">");
 			}
 		}
 		

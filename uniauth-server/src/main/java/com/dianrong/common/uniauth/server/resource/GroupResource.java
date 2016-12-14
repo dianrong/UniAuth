@@ -3,29 +3,30 @@ package com.dianrong.common.uniauth.server.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.request.*;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.service.GroupService;
-import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
+import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
+import com.dianrong.common.uniauth.common.bean.request.UserListParam;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.service.GroupService;
+import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
+
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@Slf4j
 public class GroupResource implements IGroupRWResource {
-	
-	private static final Logger logger = Logger.getLogger(GroupResource.class);
-
 	@Autowired
 	private GroupService groupService;
 
@@ -88,7 +89,7 @@ public class GroupResource implements IGroupRWResource {
 				}
 			}
 		}catch(Exception e){
-			logger.error("delete child group error ,groupid:"+groupParam.getId(), e);
+			log.error("delete child group error ,groupid:"+groupParam.getId(), e);
 		}
 		
 		return resp;

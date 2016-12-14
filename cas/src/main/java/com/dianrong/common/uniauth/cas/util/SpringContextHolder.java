@@ -1,20 +1,16 @@
 package com.dianrong.common.uniauth.cas.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 用于管理spring context对象
  * 
  * @author wanglin
  */
+@Slf4j
 public class SpringContextHolder {
-    /**
-     * . 日志对象
-     */
-    private static final Logger logger = LoggerFactory.getLogger(SpringContextHolder.class);
-
     /**
      * . spring 容器上下文
      */
@@ -48,7 +44,7 @@ public class SpringContextHolder {
                 try {
                     SpringContextHolder.class.wait();
                 } catch (InterruptedException e) {
-                    logger.warn("getBean(String) wait InterruptedException", e);
+                    log.warn("getBean(String) wait InterruptedException", e);
                     Thread.currentThread().interrupt();
                 }
             }
@@ -72,7 +68,7 @@ public class SpringContextHolder {
                 try {
                     SpringContextHolder.class.wait();
                 } catch (InterruptedException e) {
-                    logger.warn("getBean(Class<T>) wait InterruptedException", e);
+                    log.warn("getBean(Class<T>) wait InterruptedException", e);
                 }
             }
             return context.getBean(clst);

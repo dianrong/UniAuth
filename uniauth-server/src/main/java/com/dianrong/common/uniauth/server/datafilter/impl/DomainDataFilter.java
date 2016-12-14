@@ -29,7 +29,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
         DomainExample condition = new DomainExample();
         DomainExample.Criteria criteria =  condition.createCriteria();
         
-        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -60,7 +60,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	protected Domain getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "domainId");
 		DomainExample condition = new DomainExample();
-		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 		List<Domain> selectByExample = domainMapper.selectByExample(condition);
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);

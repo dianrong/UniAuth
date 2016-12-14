@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 
 @Service
@@ -35,6 +36,7 @@ public class UserInfoManageService extends BaseService{
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(account);
 		loginParam.setTenancyCode(tenancyCode);
+		CxfHeaderHolder.TENANCYCODE.set(tenancyCode);
 		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
 		List<Info> infoList = response.getInfo();
 		checkInfoList(infoList);
@@ -49,10 +51,11 @@ public class UserInfoManageService extends BaseService{
 	 * @return user
 	 * @throws Exception 
 	 */
-	public UserDto getUserDetailInfo(String account, Integer tenancyId) throws Exception {
+	public UserDto getUserDetailInfo(String account, Long tenancyId) throws Exception {
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(account);
 		loginParam.setTenancyId(tenancyId);
+		CxfHeaderHolder.TENANCYID.set(new Long(tenancyId));
 		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
 		List<Info> infoList = response.getInfo();
 		checkInfoList(infoList);

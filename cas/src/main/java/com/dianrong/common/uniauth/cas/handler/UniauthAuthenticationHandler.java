@@ -18,8 +18,6 @@ import org.jasig.cas.authentication.UsernamePasswordCredential;
 import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
 import org.jasig.inspektr.common.web.ClientInfo;
 import org.jasig.inspektr.common.web.ClientInfoHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
@@ -34,9 +32,10 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 
-public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
-	private static final Logger logger = LoggerFactory.getLogger(UniauthAuthenticationHandler.class);
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
 	@Autowired
 	private UniClientFacade uniClientFacade;
 
@@ -91,7 +90,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 					throw new FailedLoginException(userName + "/" + password + "not matched.");
 				}
 			} catch (Exception ex) {
-				logger.error("username + password login, error :" + ex);
+				log.error("username + password login, error :" + ex);
 				throw ex;
 			}
 		}

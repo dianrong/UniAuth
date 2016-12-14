@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.log4j.Logger;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.dianrong.common.uniauth.client.custom.LoginUserInfoHolder;
@@ -23,17 +22,15 @@ import com.dianrong.common.uniauth.client.support.ExtractRequestUrl;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * uniauth中的regular权限的处理filter,必须处理登陆成功的情况
  * 
  * @author wanglin
  */
+@Slf4j
 public class SSRegularPermissionFilter extends GenericFilterBean {
-	/**
-	 * . logger
-	 */
-	private static final Logger logger = Logger.getLogger(SSRegularPermissionFilter.class);
-
 	@Override
 	public void doFilter(ServletRequest _request, ServletResponse _response, FilterChain chain) throws IOException, ServletException {
 		long start = System.nanoTime();
@@ -56,7 +53,7 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
 				}
 			}
 		} catch (UserNotLoginException ex) {
-			logger.debug("not login", ex);
+			log.debug("not login", ex);
 			checkPass = true;
 		} finally {
 			try {
@@ -66,7 +63,7 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
 				unPermittedRequest(request, response);
 			}
 			} finally {
-				logger.debug(this.getClass().getName() +" consume times : " + (System.nanoTime() - start));
+				log.debug(this.getClass().getName() +" consume times : " + (System.nanoTime() - start));
 			}
 		}
 	}
@@ -81,7 +78,7 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
 			response.setStatus(HttpStatus.SC_FORBIDDEN);
 			response.getWriter().write(JsonUtil.object2Jason(new ForbiddenResponseMsg(AppConstants.NO_PRIVILEGE, "Sorry! You do not have permission to access the resource!")));
 		} catch(IOException ex) {
-			logger.warn("failed to send unpermitted warn");
+			log.warn("failed to send unpermitted warn");
 		}
 	}
 	

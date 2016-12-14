@@ -26,8 +26,6 @@ import org.jasig.cas.util.UniqueTicketIdGenerator;
 import org.jasig.cas.web.support.ArgumentExtractor;
 import org.jasig.cas.web.support.CookieRetrievingCookieGenerator;
 import org.jasig.cas.web.support.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -46,17 +44,16 @@ import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author wanglin 用于获取登陆使用的service ticket处理的controller
  */
 
 @Controller
 @RequestMapping("/serviceticket")
+@Slf4j
 public class GetServiceTicketController {
-	/**
-	 * . 日志对象
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(GetServiceTicketController.class);
 
 	/** Extractors for finding the service. */
 	@Autowired
@@ -116,7 +113,7 @@ public class GetServiceTicketController {
 				sendResponse(response, new CasGetServiceTicketModel(false, "generate service ticket failed"));
 			} catch (IOException e) {
 			}
-			logger.warn("failed to query service ticket", ex);
+			log.warn("failed to query service ticket", ex);
 		}
 	}
 
@@ -150,7 +147,7 @@ public class GetServiceTicketController {
 		if (!this.pathPopulated) {
 			final String contextPath = request.getContextPath();
 			final String cookiePath = StringUtils.hasText(contextPath) ? contextPath + '/' : "/";
-			logger.info("Setting path for cookies to: {} ", cookiePath);
+			log.info("Setting path for cookies to: {} ", cookiePath);
 			this.warnCookieGenerator.setCookiePath(cookiePath);
 			this.ticketGrantingTicketCookieGenerator.setCookiePath(cookiePath);
 			this.pathPopulated = true;
@@ -186,7 +183,7 @@ public class GetServiceTicketController {
 			return captchaValidationProcess(request, response,
 					new CasGetServiceTicketModel(true, serviceTicket.getId()));
 		} catch (Exception e) {
-			logger.error("login failed", e);
+			log.error("login failed", e);
 			return captchaValidationProcess(request, response, getExceptionInner(e));
 		}
 	}
