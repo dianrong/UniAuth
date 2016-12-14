@@ -332,11 +332,12 @@ public class PermissionService extends TenancyBasedService{
 		String domainCode = domainParam.getCode();
 		CheckEmpty.checkEmpty(domainCode, "域编码");
 		
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("domainCode", domainCode);
-		values.put("tenancyId", tenancyService.getTenancyIdWithCheck().toString());
+		if (domainParam.getIncludeTenancyIds() != null && !domainParam.getIncludeTenancyIds().isEmpty()) {
+		    values.put("tenancyIds", domainParam.getIncludeTenancyIds());
+		}
 		List<UrlRoleMappingExt> urlRoleMappingExtList = permissionMapper.selectUrlRoleMapping(values);
-		
 		List<UrlRoleMappingDto> urlRoleMappingDtoList = new ArrayList<UrlRoleMappingDto>();
 		if(urlRoleMappingExtList != null){
 			for(UrlRoleMappingExt urlRoleMappingExt: urlRoleMappingExtList){

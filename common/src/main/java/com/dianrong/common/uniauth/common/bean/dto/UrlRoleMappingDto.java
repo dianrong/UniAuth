@@ -9,6 +9,7 @@ public class UrlRoleMappingDto implements Serializable {
 	private String roleCode;
 	private String permType;
 	private String httpMethod;
+	private Long tenancyId;
 	
 	public String getPermUrl() {
 		return permUrl;
@@ -34,9 +35,15 @@ public class UrlRoleMappingDto implements Serializable {
 	public void setHttpMethod(String httpMethod) {
 		this.httpMethod = httpMethod;
 	}
-	@Override
-	public String toString() {
-		return "UrlRoleMappingDto [permUrl=" + permUrl + ", roleCode=" + roleCode + ", permType=" + permType
-				+ ", httpMethod=" + httpMethod + "]";
-	}
+    public Long getTenancyId() {
+        return tenancyId;
+    }
+    public void setTenancyId(Long tenancyId) {
+        this.tenancyId = tenancyId;
+    }
+    @Override
+    public String toString() {
+        return "UrlRoleMappingDto [permUrl=" + permUrl + ", roleCode=" + roleCode + ", permType=" + permType
+                + ", httpMethod=" + httpMethod + ", tenancyId=" + tenancyId + "]";
+    }
 }

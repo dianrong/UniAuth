@@ -5,6 +5,7 @@ public class UrlRoleMappingExt {
 	private String roleCode;
 	private String permType;
 	private String httpMethod;
+	private Long tenancyId;
 	
 	public String getPermUrl() {
 		return permUrl;
@@ -30,4 +31,10 @@ public class UrlRoleMappingExt {
 	public void setHttpMethod(String httpMethod) {
 		this.httpMethod = httpMethod;
 	}
+    public Long getTenancyId() {
+        return tenancyId;
+    }
+    public void setTenancyId(Long tenancyId) {
+        this.tenancyId = tenancyId;
+    }
 }
