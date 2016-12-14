@@ -54,7 +54,7 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend>{
 	protected UserExtend getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "userExtendId");
 		UserExtendExample condition = new UserExtendExample();
-		condition.createCriteria().andIdEqualTo(new Long(id.toString())).andTenancyIdEqualTo(getTenancyId());
+		condition.createCriteria().andIdEqualTo(new Long(id.toString()));
 		List<UserExtend> selectByExample = userExtendMapper.selectByExample(condition);
 		if(selectByExample != null && !selectByExample.isEmpty()){
 			return selectByExample.get(0);

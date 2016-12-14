@@ -28,8 +28,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         DomainExample condition = new DomainExample();
         DomainExample.Criteria criteria =  condition.createCriteria();
-        
-        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
+        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -60,7 +59,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	protected Domain getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "domainId");
 		DomainExample condition = new DomainExample();
-		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		List<Domain> selectByExample = domainMapper.selectByExample(condition);
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);

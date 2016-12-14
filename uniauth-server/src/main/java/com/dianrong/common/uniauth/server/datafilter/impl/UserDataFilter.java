@@ -62,7 +62,7 @@ public class UserDataFilter extends CurrentAbstractDataFilter<User> {
 	protected User getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "userId");
 		UserExample condition = new UserExample();
-		condition.createCriteria().andIdEqualTo(new Long(id.toString())).andTenancyIdEqualTo(getTenancyId()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+		condition.createCriteria().andIdEqualTo(new Long(id.toString())).andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		List<User> selectByExample = userMapper.selectByExample(condition);
 		if(selectByExample != null && !selectByExample.isEmpty()){
 			return selectByExample.get(0);

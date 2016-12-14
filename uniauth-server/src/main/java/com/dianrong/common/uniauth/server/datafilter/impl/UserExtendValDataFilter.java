@@ -58,7 +58,7 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExten
 	protected UserExtendVal getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "UserExtendValId");
 		UserExtendValExample condtion = new UserExtendValExample();
-		condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id)).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+		condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id)).andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		List<UserExtendVal> infoes = userExtendValMapper.selectByExample(condtion);
 		if (infoes != null && infoes.size() > 0) {
 			return infoes.get(0);

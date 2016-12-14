@@ -182,7 +182,7 @@ public class UserService extends TenancyBasedService {
         if (userActionEnum == null || id == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum, userId"));
         }
-        User user = userMapper.selectByPrimaryKey(id);
+        User user = getUserByPrimaryKey(id);
         if (user == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", id, User.class.getSimpleName()));
         } else if (AppConstants.ONE_Byte.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
@@ -671,15 +671,27 @@ public class UserService extends TenancyBasedService {
     }
 
     public UserDetailDto getUserDetailInfoByUid(Long paramUserId) {
-        CheckEmpty.checkEmpty(paramUserId, "userId");
-        User user = userMapper.selectByPrimaryKey(paramUserId);
+        User user = getUserByPrimaryKey(paramUserId);
         if (user == null) {
             return null;
         }
-        // 手动设置tenancyId
-        CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
+    }
+    
+    /**
+     * get user info by primary id 
+     * @param id  primary id
+     * @return user or null
+     */
+    private User getUserByPrimaryKey(Long id) {
+        CheckEmpty.checkEmpty(id, "userId");
+        User user = userMapper.selectByPrimaryKey(id);
+        if (user != null) {
+            // 手动设置tenancyId  important
+            CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
+        }
+        return user;
     }
 
     public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
@@ -1071,7 +1083,6 @@ public class UserService extends TenancyBasedService {
         }
 
         User user = userList.get(0);
-
         // 手动设置tenancyId -- important
         CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         return user;

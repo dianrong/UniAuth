@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.CfgExample;
 import com.dianrong.common.uniauth.server.data.mapper.CfgMapper;
@@ -28,7 +27,6 @@ public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         CfgExample condition = new CfgExample();
         CfgExample.Criteria criteria =  condition.createCriteria();
-        criteria.andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -56,7 +54,7 @@ public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
 	protected  Cfg getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "cfgId");
 		CfgExample condition = new CfgExample();
-		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
+		condition.createCriteria().andIdEqualTo(id);
 		List<Cfg> selectByExample = cfgMapper.selectByExample(condition);
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);
