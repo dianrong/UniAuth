@@ -45,7 +45,14 @@ public class ZkNodeUtils {
 	public static String getServiceKey(final String nodeName) {
 		return  AppConstants.ZK_DOMAIN_PREFIX + nodeName;
 	}
-	
+	/**
+     * 获取业务系统在service ticket认证失败时配置跳转url的节点名称
+     * @param domainName 域编号
+     * @return
+     */
+    public static String domainAuthFailUrlNodeKey(String domainName){
+        return AppConstants.ZK_DOMAIN_PREFIX + domainName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_AUTH_FAIL_URL;
+    }
 	public static String getDomainCustomUrlNodeKey(final String nodeName) {
 		return AppConstants.ZK_DOMAIN_PREFIX + nodeName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
 	}
