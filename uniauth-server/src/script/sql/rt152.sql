@@ -6,3 +6,7 @@
  -- update dianrong tenancyCode from DIANRONG-WEBSITE to DIANRONG
  set sql_safe_updates = 0;
  update tenancy set code = 'DIANRONG' where code = 'DIANRONG-DIANRONG-WEBSITE'; 
+ -- update none tenancy related info, set tenancyId = -1(none tenancy related id)
+ update domain set tenancy_id = -1;
+ update cfg set tenancy_id = -1;
+ 
