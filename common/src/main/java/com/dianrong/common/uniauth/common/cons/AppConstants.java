@@ -184,4 +184,6 @@ public interface AppConstants {
 	String DEFAULT_TANANCY_CODE="DIANRONG";
 	// 设置一个非租户相关的租户id
 	Long TENANCY_UNRELATED_TENANCY_ID= -1L;
+	// 配置项，指定是否强制监测租户信息
+	String CHECK_TENANCY_IDENTITY_FORCIBLY = "tenancyIdentity.check.switch";
 }

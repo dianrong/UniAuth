@@ -2,6 +2,9 @@ package com.dianrong.common.uniauth.server.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 public class TenancyService {
 	@Autowired
 	private TenancyMapper tenancyMapper;
+	
+	@Resource(name = "uniauthConfig")
+    private Map<String, String> allZkNodeMap;
 
 	/**
 	 * . 默认使用的tenancy
@@ -109,7 +115,11 @@ public class TenancyService {
             return dto.getId();
         }
         if (check) {
-            throw new ParameterRequiredException("tenancyId or tenancyCode is required");
+            if (checkTenancyIdentity()) {
+                throw new ParameterRequiredException("tenancyId or tenancyCode is required");
+            } else {
+                return getDefaultTenancy().getId();
+            }
         }
         return AppConstants.TENANCY_UNRELATED_TENANCY_ID;
     }
@@ -143,5 +153,13 @@ public class TenancyService {
 		}
 		log.error("can not find default tenancy, the default tenancy code is " + AppConstants.DEFAULT_TANANCY_CODE);
 		return null;
+	}
+	
+	/**
+	 * a switch to control check tenancyIdentity forcibly
+	 * @return true or false
+	 */
+	private boolean checkTenancyIdentity(){
+	    return "true".equalsIgnoreCase(allZkNodeMap.get(AppConstants.CHECK_TENANCY_IDENTITY_FORCIBLY));
 	}
 }

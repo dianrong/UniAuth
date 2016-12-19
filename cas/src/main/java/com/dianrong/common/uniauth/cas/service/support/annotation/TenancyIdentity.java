@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(value=ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface TenancyIdentify {
+public @interface TenancyIdentity {
     public enum Type {ID, CODE};
     /**
      * 处理的参数类型

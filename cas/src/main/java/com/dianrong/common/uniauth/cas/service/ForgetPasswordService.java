@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentify;
-import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentify.Type;
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity;
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity.Type;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
@@ -23,7 +23,7 @@ public class ForgetPasswordService extends BaseService{
 	@Autowired
 	private UniClientFacade uniClientFacade;
 	
-	@TenancyIdentify(type=Type.CODE, index=1)
+	@TenancyIdentity(type=Type.CODE, index=1)
 	public UserDto checkUser(String email, String tenancyCode) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
@@ -35,7 +35,7 @@ public class ForgetPasswordService extends BaseService{
 		return response.getData();
 	}
 	
-	@TenancyIdentify(type=Type.ID, index=1)
+	@TenancyIdentity(type=Type.ID, index=1)
 	public void resetPassword(String email, Long tenancyId, String password) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);

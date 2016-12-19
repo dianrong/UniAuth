@@ -9,8 +9,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentify;
-import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentify.Type;
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity;
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity.Type;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Component
 @Slf4j
-public class TenancyIdentifyAop {
+public class TenancyIdentityAop {
 
     @Pointcut(value = "@annotation(com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentify)")
     public void tenancyIdentifySet() {}
@@ -52,7 +52,7 @@ public class TenancyIdentifyAop {
             log.error(e.getMessage(), e);
         }
         if (method != null) {
-            TenancyIdentify annotation = method.getAnnotation(TenancyIdentify.class);
+            TenancyIdentity annotation = method.getAnnotation(TenancyIdentity.class);
             Type type = annotation.type();
             int index = annotation.index();
             CxfHeaderHolder holder = getCxfHeaderHolder(type);
