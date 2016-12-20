@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.access.regular.SSRegularPattern;
@@ -19,15 +18,16 @@ import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * uniauth对外的UserDetails实现
  * 
  * @author wanglin
  */
+@Slf4j
 public class UserExtInfo implements UserDetails {
 	private static final long serialVersionUID = 8347558918889027136L;
-	private static final Logger logger = Logger.getLogger(UserExtInfo.class);
-
 	// 通过账号密码登陆的域所对应的userExtInfo,可以通过该对象知道具体是从哪一个域登陆的
 	private SingleDomainUserExtInfo loginDomainUserExtInfo;
 
@@ -53,7 +53,7 @@ public class UserExtInfo implements UserDetails {
 				currentDomainUserExtInfo = exsitOne;
 			}
 		}
-		logger.info("current domain user extention info :" +  currentDomainUserExtInfo);
+		log.info("current domain user extention info :" +  currentDomainUserExtInfo);
 		return currentDomainUserExtInfo;
 	}
 

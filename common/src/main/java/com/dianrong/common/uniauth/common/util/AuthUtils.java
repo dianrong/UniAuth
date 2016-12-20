@@ -6,19 +6,14 @@ import java.security.SecureRandom;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Guoying on 2015/9/8.
  */
+@Slf4j
 public class AuthUtils {
-
-	/**./**.
-	 * 日志对象
-	 */
-	private final static Logger logger = LoggerFactory.getLogger(AuthUtils.class);
-	
     private static final String SALT_GENERATION_ALGORITHM = "SHA1PRNG";
     private static final String PASSWORD_DIGEST_ALGORITHM = "SHA";
 
@@ -49,7 +44,7 @@ public class AuthUtils {
             byte[] digest = msgDigest.digest(password.getBytes());
             return digest;
         } catch (NoSuchAlgorithmException e) {
-        	logger.warn("digest exception",e);
+        	log.warn("digest exception",e);
             return null;
         }
     }

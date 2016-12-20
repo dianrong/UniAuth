@@ -1,10 +1,11 @@
 package com.dianrong.common.uniauth.common.server.cxf.server.impl;
 
+import java.util.Locale;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
-import com.dianrong.common.uniauth.common.server.cxf.server.impl.AbstractLocalHeaderConsumer;
 
 /**.
  * 消费local header的默认实现
@@ -16,6 +17,9 @@ public class LocalHeaderConsumer extends AbstractLocalHeaderConsumer{
 	public void consume(String localeStr) {
 		 if(localeStr != null) {
 	            UniauthLocaleInfoHolder.setLocale(StringUtils.parseLocaleString(localeStr));
+	        } else {
+	            // set default
+	            UniauthLocaleInfoHolder.setLocale(Locale.getDefault());
 	        }
 	}
 

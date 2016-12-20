@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,13 +18,14 @@ import com.dianrong.common.uniauth.client.custom.model.ShareDomainAuthentication
 import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 用于处理多域共享信息的情况 
  * @author wanglin
  */
+@Slf4j
 public final class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvider{
-	private static final Logger logger = Logger.getLogger(ShareDomainCasAuthenticationProvider.class);
-	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Authentication authenticate = super.authenticate(authentication);
@@ -49,7 +49,7 @@ public final class ShareDomainCasAuthenticationProvider extends CasAuthenticatio
 		}
 		GrantedAuthoritiesMapper authoritiesMapper =  (GrantedAuthoritiesMapper)ReflectionUtils.getField(this, "authoritiesMapper");
 		if (authoritiesMapper == null ) {
-			logger.warn("please check AuthenticationProvider implementation, whether there is a fied type of  GrantedAuthoritiesMapper not name of authoritiesMapper. GrantedAuthoritiesMapper is not effective");
+			log.warn("please check AuthenticationProvider implementation, whether there is a fied type of  GrantedAuthoritiesMapper not name of authoritiesMapper. GrantedAuthoritiesMapper is not effective");
 			return;
 		}
 		

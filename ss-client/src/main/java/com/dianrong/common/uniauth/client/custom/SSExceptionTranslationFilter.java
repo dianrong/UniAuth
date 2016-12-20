@@ -7,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +19,10 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
-	private final static Logger logger = LoggerFactory.getLogger(SSExceptionTranslationFilter.class);
 	@Autowired
 	private ZooKeeperConfig zooKeeperConfig;
 	
@@ -42,7 +42,7 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 		// existing Authentication is no longer considered valid
 		SecurityContextHolder.getContext().setAuthentication(null);
 		if(HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)){
-			logger.debug("This ia an ajax or cors request, return json to client side.");
+			log.debug("This ia an ajax or cors request, return json to client side.");
 			
 			String casServerUrl = zooKeeperConfig.getCasServerUrl();
 			String domainUrl = zooKeeperConfig.getDomainUrl();

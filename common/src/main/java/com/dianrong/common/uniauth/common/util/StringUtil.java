@@ -2,16 +2,14 @@ package com.dianrong.common.uniauth.common.util;
 
 import java.util.Random;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**.
  * some functions process String
  * @author R9GBP97
- *
  */
+@Slf4j
 public class StringUtil {
-	private static final Logger logger = Logger.getLogger(StringUtil.class);
-	
 	/**.
 	 * judge str is null or empty
 	 * @param str str
@@ -49,7 +47,7 @@ public class StringUtil {
 		try {
 		return Integer.parseInt(str);
 		} catch(NumberFormatException e) {
-			logger.warn(str + "is a invalid number format string", e);
+			log.warn(str + "is a invalid number format string", e);
 		}
 		return null;
 	}

@@ -11,8 +11,6 @@ import java.util.regex.PatternSyntaxException;
 import javax.annotation.PostConstruct;
 import javax.servlet.FilterConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dianrong.common.uniauth.cas.helper.thread.RefreshCasCrossFilterCacheRunnable;
@@ -23,17 +21,15 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**.
  * 用于辅助cas的cross filter获取缓存数据
  * ps. 目前只缓存orgin数据
  * @author wanglin
  */
+@Slf4j
 public final class CasCrossFilterCacheHelper {
-	/**.
-	 * 日志对象
-	 */
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	/**.
 	 * 调用远程服务的service
 	 */
@@ -105,7 +101,7 @@ public final class CasCrossFilterCacheHelper {
 				this.cacheModel = new CasCrossFilterCacheModel(regulars);
 			}
 		} catch (Exception ex) {
-			logger.warn("CasCrossFilterCacheHelper refresh cache exception", ex);
+			log.warn("CasCrossFilterCacheHelper refresh cache exception", ex);
 		}
 		if(this.cacheModel == null) {
 			if(!StringUtil.strIsNullOrEmpty(this.defualt_cors_allowed_origins)){
@@ -124,7 +120,7 @@ public final class CasCrossFilterCacheHelper {
 				Pattern tp = Pattern.compile(torigin);
 				tempPattern.add(tp);
             } catch(PatternSyntaxException pse) {
-                logger.error("invalid regular pattern : " + torigin);
+                log.error("invalid regular pattern : " + torigin);
             }
 		}
 		this.patternCache = Collections.unmodifiableSet(tempPattern);

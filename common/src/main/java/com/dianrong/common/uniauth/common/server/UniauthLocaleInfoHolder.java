@@ -22,14 +22,14 @@ public final class UniauthLocaleInfoHolder {
      */
     public static void setLocale(Locale newLocale) {
         if(newLocale == null) {
-            return;
+            newLocale = Locale.getDefault();
         }
         localeInfo.set(newLocale);
     }
     
     /**.
      * get locale info from holder
-     * @return Locale
+     * @return Locale not null
      */
     public static Locale getLocale() {
         return localeInfo.get();

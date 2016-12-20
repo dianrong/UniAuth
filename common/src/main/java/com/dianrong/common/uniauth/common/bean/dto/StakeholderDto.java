@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-public class StakeholderDto extends TenancyBaseDto {
+import java.io.Serializable;
+
+public class StakeholderDto implements Serializable {
 	private static final long serialVersionUID = 2120671490345809592L;
 	private Integer id;
 	private String name;

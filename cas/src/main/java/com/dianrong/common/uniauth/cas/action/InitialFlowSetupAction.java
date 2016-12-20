@@ -13,8 +13,6 @@ import org.jasig.cas.services.UnauthorizedServiceException;
 import org.jasig.cas.web.support.ArgumentExtractor;
 import org.jasig.cas.web.support.CookieRetrievingCookieGenerator;
 import org.jasig.cas.web.support.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
@@ -23,11 +21,12 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
 
 import com.dianrong.common.uniauth.cas.service.DomainService;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.StringUtil;;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;;
+
+@Slf4j
 public final class InitialFlowSetupAction extends AbstractAction {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	/** The services manager with access to the registry. **/
 	@NotNull
 	private ServicesManager servicesManager;
@@ -75,7 +74,7 @@ public final class InitialFlowSetupAction extends AbstractAction {
 		if (!this.pathPopulated) {
 			final String contextPath = context.getExternalContext().getContextPath();
 			final String cookiePath = StringUtils.hasText(contextPath) ? contextPath + '/' : "/";
-			logger.info("Setting path for cookies to: {} ", cookiePath);
+			log.info("Setting path for cookies to: {} ", cookiePath);
 			this.warnCookieGenerator.setCookiePath(cookiePath);
 			this.ticketGrantingTicketCookieGenerator.setCookiePath(cookiePath);
 			this.pathPopulated = true;
@@ -89,16 +88,16 @@ public final class InitialFlowSetupAction extends AbstractAction {
 		final Service service = WebUtils.getService(this.argumentExtractors, context);
 
 		if (service != null) {
-			logger.debug("Placing service in context scope: [{}]", service.getId());
+			log.debug("Placing service in context scope: [{}]", service.getId());
 
 			final RegisteredService registeredService = this.servicesManager.findServiceBy(service);
 			if (registeredService != null && registeredService.getAccessStrategy().isServiceAccessAllowed()) {
-				logger.debug("Placing registered service [{}] with id [{}] in context scope",
+				log.debug("Placing registered service [{}] with id [{}] in context scope",
 						registeredService.getServiceId(), registeredService.getId());
 				WebUtils.putRegisteredService(context, registeredService);
 			}
 		} else if (!this.enableFlowOnAbsentServiceRequest) {
-			logger.warn(
+			log.warn(
 					"No service authentication request is available at [{}]. CAS is configured to disable the flow.",
 					WebUtils.getHttpServletRequest(context).getRequestURL());
 			throw new NoSuchFlowExecutionException(context.getFlowExecutionContext().getKey(),

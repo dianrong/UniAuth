@@ -11,9 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -29,21 +28,27 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import com.dianrong.common.uniauth.client.custom.SSExpressionSecurityMetadataSource;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
-	private static Logger LOGGER = LoggerFactory.getLogger(SSBeanPostProcessor.class);
 	@Autowired
 	private UniClientFacade uniClientFacade;
 
 	@Autowired
 	private DomainDefine domainDefine;
+	
+	private int perQueryTenancyCount = 10;
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -81,129 +86,171 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 		return bean;
 	}
 	
-	private void composeMetadataSource(FilterSecurityInterceptor filterSecurityInterceptor, 
-			LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap, String currentDomainCode){
-		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> requestMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
-		requestMap.putAll(originRequestMap);
-		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = getAppendMap(currentDomainCode);
-		requestMap.putAll(appendMap);
-		
-		filterSecurityInterceptor.setSecurityMetadataSource(new SSExpressionSecurityMetadataSource(requestMap));
+	private void composeMetadataSource(FilterSecurityInterceptor filterSecurityInterceptor,  LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap, String currentDomainCode){
+		Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedReuqestMap = getAppendMap(currentDomainCode);
+		filterSecurityInterceptor.setSecurityMetadataSource(new SSExpressionSecurityMetadataSource(originRequestMap, configedReuqestMap));
 	}
 	
-	private LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> getAppendMap(String currentDomainCode){
-
+	private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> getAppendMap(String currentDomainCode){
+		TenancyParam tenancyParam = new TenancyParam();
+        tenancyParam.setStatus(AppConstants.STATUS_ENABLED);
+        List<Long> enableTenancyIds =  new ArrayList<Long>();
+		while(true){
+    		try{
+    		    Response<List<TenancyDto>> enableTenancys = uniClientFacade.getTenancyResource().searchTenancy(tenancyParam);
+    		    if (enableTenancys.getInfo() != null && !enableTenancys.getInfo().isEmpty()) {
+    		        log.error("failed to  query enable tenancy ids");
+    		        break;
+    		    }
+    		    List<TenancyDto> tenancys = enableTenancys.getData();
+    		    Set<Long> tids =  new HashSet<Long>();
+    		    for (TenancyDto tenancy: tenancys) {
+    		        tids.add(tenancy.getId());
+    		    }
+    		    log.info("success query enable tenancys" + tids);
+    		    enableTenancyIds.addAll(tids);
+                break;
+            }catch(Exception e){
+                log.warn("The uniauth-server[" + uniClientFacade.getUniWsEndpoint() + "] not completely started yet, need sleeping for 2 seconds, then retry.", e);
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException ie) {
+                }
+            }
+		}
+		int startIndex = 0;
 		DomainParam domainParam = new DomainParam();
-		domainParam.setCode(currentDomainCode);
-		Response<List<UrlRoleMappingDto>> response = null;
+        domainParam.setCode(currentDomainCode);
+        Map<Long, List<UrlRoleMappingDto>> allUrlRoleMappings = new HashMap<Long, List<UrlRoleMappingDto>>();
 		while(true){
 			try{
-				response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
-				break;
+			    if (startIndex >= enableTenancyIds.size()) {
+			        break;
+			     }
+			    int endIndex = (startIndex + perQueryTenancyCount) > enableTenancyIds.size() ? (enableTenancyIds.size() - startIndex) : perQueryTenancyCount;
+			    List<Long> includeTenancyIds = enableTenancyIds.subList(startIndex, endIndex);
+			    domainParam.setIncludeTenancyIds(includeTenancyIds);
+			    Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
+				// query error
+				if (response.getInfo() != null && !response.getInfo().isEmpty()) {
+				    throw new RuntimeException("failed to getUrlRoleMapping");
+				}
+				List<UrlRoleMappingDto> urlRoleMappings = response.getData();
+				if (urlRoleMappings != null) {
+				    for (UrlRoleMappingDto urlRoleMaping: urlRoleMappings) {
+				        Long tenancyId = urlRoleMaping.getTenancyId();
+				        List<UrlRoleMappingDto> domainUrlRoleMappings =  allUrlRoleMappings.get(tenancyId);
+				        if (domainUrlRoleMappings == null) {
+				            domainUrlRoleMappings = new ArrayList<UrlRoleMappingDto>();
+				            allUrlRoleMappings.put(tenancyId, domainUrlRoleMappings);
+				        }
+				        domainUrlRoleMappings.add(urlRoleMaping);
+				    }
+				}
+				startIndex = startIndex + includeTenancyIds.size();
 			}catch(Exception e){
-				LOGGER.warn("The uniauth-server[" + uniClientFacade.getUniWsEndpoint() + "] not completely started yet, need sleeping for 2 seconds, then retry.", e);
+				log.warn("The uniauth-server[" + uniClientFacade.getUniWsEndpoint() + "] not completely started yet, need sleeping for 2 seconds, then retry.", e);
 				try {
 					Thread.sleep(2000L);
 				} catch (InterruptedException ie) {
 				}
 			}
 		}
-		List<UrlRoleMappingDto> urlRoleMappingDtoList = response.getData();
-		
-		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = convert2StandardMap(urlRoleMappingDtoList);
-		
+		Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> appendMap = convert2StandardMap(allUrlRoleMappings);
 		return appendMap;
 	}
 	
 	
-	private LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> convert2StandardMap(List<UrlRoleMappingDto> urlRoleMappingDtoList){
-		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
-		if(urlRoleMappingDtoList != null){
-			SpelExpressionParser spelParser = new SpelExpressionParser();
-			
-			Map<SSUrlAndMethod,Set<String>> plainMap = new HashMap<SSUrlAndMethod,Set<String>>();
-			
-			for(UrlRoleMappingDto urlRoleMappingDto: urlRoleMappingDtoList){
-				String permUrl = urlRoleMappingDto.getPermUrl();
-				String roleCode = urlRoleMappingDto.getRoleCode();
-				String permType = urlRoleMappingDto.getPermType();
-				String httpMethod = urlRoleMappingDto.getHttpMethod();
-				
-				SSUrlAndMethod urlAndMethod = new SSUrlAndMethod();
-				urlAndMethod.setHttpMethod(httpMethod);
-				urlAndMethod.setPermUrl(permUrl);
-				/*
-				 * 
-				if(PermTypeEnum.PRIVILEGE.toString().equals(permType)){
-					permUrl = permUrl.startsWith("/") ? permUrl : "/" + permUrl;
-				}
-				*/
-				
-				Set<String> roleCodeSet = plainMap.get(urlAndMethod);
-				if(roleCodeSet == null){
-					roleCodeSet = new HashSet<String>();
-					roleCodeSet.add(roleCode);
-					plainMap.put(urlAndMethod, roleCodeSet);
-				}
-				else{
-					roleCodeSet.add(roleCode);
-				}
-			}
-			
-			Iterator<Entry<SSUrlAndMethod,Set<String>>> plainIterator = plainMap.entrySet().iterator();
-			while(plainIterator.hasNext()){
-				Entry<SSUrlAndMethod,Set<String>> plainEntry = plainIterator.next();
-				SSUrlAndMethod urlAndMethod = plainEntry.getKey();
-				String permUrl = urlAndMethod.getPermUrl();
-				String httpMethod = urlAndMethod.getHttpMethod();
-				Set<String> plainSet = plainEntry.getValue();
-				
-				if(httpMethod != null){
-					httpMethod = httpMethod.trim();
-					if(AppConstants.HTTP_METHOD_ALL.equals(httpMethod)){
-						httpMethod = null;
-					}
-					else{
-						try{
-							HttpMethod.valueOf(httpMethod);
-						}catch(Exception e){
-							LOGGER.warn("'" + httpMethod + "' is not a valid http method.", e);
-							httpMethod = null;
-						}
-					}
-				}
-				
-				//case insensitive for url
-				RegexRequestMatcher rrm = new RegexRequestMatcher(permUrl, httpMethod);
-				
-				StringBuilder sb = new StringBuilder();
-				
-				String[] plainRoleCodes = plainSet.toArray(new String[0]);
-				if(plainRoleCodes.length == 1){
-					sb.append("hasRole('" + plainRoleCodes[0] + "')");
-				}
-				else{
-					for(int i = 0;i < plainRoleCodes.length;i++){
-						if(i == 0){
-							sb.append("hasAnyRole('" + plainRoleCodes[i] + "',");
-						}
-						else if(i == plainRoleCodes.length - 1){
-							sb.append("'" + plainRoleCodes[i] + "')" );
-						}
-						else{
-							sb.append("'" + plainRoleCodes[i] + "'," );
-						}
-					}
-				}
-				
-				WebExpressionConfigAttribute weca = new WebExpressionConfigAttribute(spelParser.parseExpression(sb.toString()));
-				List<ConfigAttribute> wecaList = new ArrayList<ConfigAttribute>();
-				wecaList.add(weca);
-				
-				appendMap.put(rrm, wecaList);
-			}
-		}
-		return appendMap;
+	private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> convert2StandardMap(Map<Long, List<UrlRoleMappingDto>> allUrlRoleMappings) {
+	    Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> allMaps = new ConcurrentHashMap<>();
+	    Set<Long> tenancyIds =  allUrlRoleMappings.keySet();
+	    for (Long tenancyId : tenancyIds) {
+	        List<UrlRoleMappingDto>  urlRoleMappingList =  allUrlRoleMappings.get(tenancyId);
+	        LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+            SpelExpressionParser spelParser = new SpelExpressionParser();
+            Map<SSUrlAndMethod,Set<String>> plainMap = new HashMap<SSUrlAndMethod,Set<String>>();
+            for(UrlRoleMappingDto urlRoleMappingDto: urlRoleMappingList){
+                String permUrl = urlRoleMappingDto.getPermUrl();
+                String roleCode = urlRoleMappingDto.getRoleCode();
+                String permType = urlRoleMappingDto.getPermType();
+                String httpMethod = urlRoleMappingDto.getHttpMethod();
+                
+                SSUrlAndMethod urlAndMethod = new SSUrlAndMethod();
+                urlAndMethod.setHttpMethod(httpMethod);
+                urlAndMethod.setPermUrl(permUrl);
+                /*
+                 * 
+                if(PermTypeEnum.PRIVILEGE.toString().equals(permType)){
+                    permUrl = permUrl.startsWith("/") ? permUrl : "/" + permUrl;
+                }
+                */
+                
+                Set<String> roleCodeSet = plainMap.get(urlAndMethod);
+                if(roleCodeSet == null){
+                    roleCodeSet = new HashSet<String>();
+                    roleCodeSet.add(roleCode);
+                    plainMap.put(urlAndMethod, roleCodeSet);
+                }
+                else{
+                    roleCodeSet.add(roleCode);
+                }
+            }
+            
+            Iterator<Entry<SSUrlAndMethod,Set<String>>> plainIterator = plainMap.entrySet().iterator();
+            while(plainIterator.hasNext()){
+                Entry<SSUrlAndMethod,Set<String>> plainEntry = plainIterator.next();
+                SSUrlAndMethod urlAndMethod = plainEntry.getKey();
+                String permUrl = urlAndMethod.getPermUrl();
+                String httpMethod = urlAndMethod.getHttpMethod();
+                Set<String> plainSet = plainEntry.getValue();
+                
+                if(httpMethod != null){
+                    httpMethod = httpMethod.trim();
+                    if(AppConstants.HTTP_METHOD_ALL.equals(httpMethod)){
+                        httpMethod = null;
+                    }
+                    else{
+                        try{
+                            HttpMethod.valueOf(httpMethod);
+                        }catch(Exception e){
+                            log.warn("'" + httpMethod + "' is not a valid http method.", e);
+                            httpMethod = null;
+                        }
+                    }
+                }
+                
+                //case insensitive for url
+                RegexRequestMatcher rrm = new RegexRequestMatcher(permUrl, httpMethod);
+                
+                StringBuilder sb = new StringBuilder();
+                
+                String[] plainRoleCodes = plainSet.toArray(new String[0]);
+                if(plainRoleCodes.length == 1){
+                    sb.append("hasRole('" + plainRoleCodes[0] + "')");
+                }
+                else{
+                    for(int i = 0;i < plainRoleCodes.length;i++){
+                        if(i == 0){
+                            sb.append("hasAnyRole('" + plainRoleCodes[i] + "',");
+                        }
+                        else if(i == plainRoleCodes.length - 1){
+                            sb.append("'" + plainRoleCodes[i] + "')" );
+                        }
+                        else{
+                            sb.append("'" + plainRoleCodes[i] + "'," );
+                        }
+                    }
+                }
+                
+                WebExpressionConfigAttribute weca = new WebExpressionConfigAttribute(spelParser.parseExpression(sb.toString()));
+                List<ConfigAttribute> wecaList = new ArrayList<ConfigAttribute>();
+                wecaList.add(weca);
+                
+                appendMap.put(rrm, wecaList);
+            }
+            allMaps.put(tenancyId, appendMap);
+	    }
+		return allMaps;
 	}
 
 	private class RefreshDomainResourceThread extends Thread{
@@ -223,10 +270,10 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 				try {
 					sleep(10L * 60 * 1000);
 				} catch (InterruptedException e) {
-					LOGGER.error("RefreshDomainResourceThread error.", e);
+					log.error("RefreshDomainResourceThread error.", e);
 				}
 				composeMetadataSource(filterSecurityInterceptor, originRequestMap, currentDomainCode);
-				LOGGER.info("Refresh domain resource completed at " + new Date() + " .");
+				log.info("Refresh domain resource completed at " + new Date() + " .");
 			}
 		}
 	}
@@ -235,4 +282,12 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 	public boolean isOn() {
 		return domainDefine.controlTypeSupport(CasPermissionControlType.URI_PATTERN);
 	}
+
+    public int getPerQueryTenancyCount() {
+        return perQueryTenancyCount;
+    }
+
+    public void setPerQueryTenancyCount(int perQueryTenancyCount) {
+        this.perQueryTenancyCount = perQueryTenancyCount;
+    }
 }

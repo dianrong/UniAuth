@@ -25,3 +25,16 @@
 <%
 	}
 %>
+<a href="#" onclick="logout()"><%=UniauthI18NHolder.getProperties(request,"header.logout") %></a>
+<script type="text/javascript">
+function logout() {
+    var origin = window.document.location.origin;
+    var logoutUrl;
+    if(origin.indexOf("techops") > 0) {
+    	logoutUrl =  origin + "/logout/cas";
+    } else {
+    	logoutUrl =  origin + "/techops/logout/cas";
+    }
+    window.location = logoutUrl;
+};
+</script>

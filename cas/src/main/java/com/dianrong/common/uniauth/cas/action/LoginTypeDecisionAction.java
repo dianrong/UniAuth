@@ -6,8 +6,6 @@ import javax.annotation.Resource;
 
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.web.support.WebUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
@@ -17,13 +15,14 @@ import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**.
  * 用于判断当前的登陆请求的处理方式
  * @author wanglin
  */
+@Slf4j
 public class LoginTypeDecisionAction extends AbstractAction {
-	  /** Logger instance. */
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 	/**
 	 * 默认的登陆方式，从cas的统一登陆页面登陆
 	 */
@@ -58,7 +57,7 @@ public class LoginTypeDecisionAction extends AbstractAction {
 	        				if(StringUtils.hasText(allZkNodeMap.get(loginPageNodeName))) {
 	        					// 将跳转url放到flowscope备用
 	        					context.getFlowScope().put(AppConstants.CAS_CUSTOM_LOGIN_PAGE_KEY, allZkNodeMap.get(loginPageNodeName));
-	        					logger.debug("custom login url:" + allZkNodeMap.get(loginPageNodeName));
+	        					log.debug("custom login url:" + allZkNodeMap.get(loginPageNodeName));
 	        					return result(LOGIN_FROM_CUSTOM);
 	        				}
         				}

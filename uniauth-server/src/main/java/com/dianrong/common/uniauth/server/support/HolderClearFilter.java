@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
+
 public  class HolderClearFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {}

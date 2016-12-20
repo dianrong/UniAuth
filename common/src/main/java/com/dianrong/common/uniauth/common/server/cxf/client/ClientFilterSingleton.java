@@ -15,17 +15,17 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.ext.Provider;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public final class ClientFilterSingleton {
-	private static final Logger logger = Logger.getLogger(ClientFilterSingleton.class);
 	private static UniauthCxfClientFilter instance = new UniauthCxfClientFilter();
 	private static final AtomicBoolean propSetOnce = new AtomicBoolean(false);
 
 	public static ClientRequestFilter getInstance() {
 		return instance;
 	}
-
+	
 	// 只能被调用一次
 	public static void propSetInvoke(List<HeaderProducer> producers) {
 		if (propSetOnce.compareAndSet(false, true)) {
@@ -57,7 +57,7 @@ public final class ClientFilterSingleton {
 						requestContext.getStringHeaders().add(key, value);
 					}
 				} catch (Exception ex) {
-					logger.error("add header [" + key + "] failed", ex);
+					log.error("add header [" + key + "] failed", ex);
 				}
 			}
 		}

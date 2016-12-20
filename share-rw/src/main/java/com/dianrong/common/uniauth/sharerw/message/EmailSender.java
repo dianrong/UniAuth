@@ -10,20 +10,19 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Created by Arc on 10/3/2016.
  */
+@Slf4j
 public class EmailSender implements InitializingBean{
-    private static Logger logger = LoggerFactory.getLogger(EmailSender.class);
-
     // default values
     private static final String DEFAULTSMTPHOST = "smtp-dev.sl.com";
     private static final String DEFAULTFROMEMAIL = "TechOps-Notification<noreply@dianrong.com>";
@@ -124,8 +123,8 @@ public class EmailSender implements InitializingBean{
         @Override
         public void run() {
             try {
-                logger.debug("Sending email to : " + toEmail);
-                logger.debug("Content: \n " + buffer);
+                log.debug("Sending email to : " + toEmail);
+                log.debug("Content: \n " + buffer);
                 // 配置发送邮件的环境属性
                 final Properties props = new Properties();
         /*
@@ -179,20 +178,20 @@ public class EmailSender implements InitializingBean{
 
                 // 发送邮件
                 Transport.send(message);
-                logger.debug("End of sending email to : " + toEmail);
-                logger.debug("Content: \n " + buffer);
+                log.debug("End of sending email to : " + toEmail);
+                log.debug("Content: \n " + buffer);
             } catch (Exception e) {
-                logger.error("error to send email to the email:" + toEmail, e);
+                log.error("error to send email to the email:" + toEmail, e);
             }
         }
     }
 
     public void sendEmail(String subject, String toEmail, StringBuffer buffer) {
-        logger.debug("Starting to asynchronous send email to : " + toEmail);
+        log.debug("Starting to asynchronous send email to : " + toEmail);
         EmailWorker emailWorker = new EmailWorker().setSubject(subject).setToEmail(toEmail).setBuffer(buffer);
         executor.submit(emailWorker);
 //        new Thread(emailWorker).start();
-        logger.debug("End of asynchronous sending email to : " + toEmail);
-        logger.debug("Content: \n " + buffer);
+        log.debug("End of asynchronous sending email to : " + toEmail);
+        log.debug("Content: \n " + buffer);
     }
 }

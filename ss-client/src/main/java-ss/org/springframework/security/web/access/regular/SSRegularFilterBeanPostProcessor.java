@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.Filter;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -19,16 +18,14 @@ import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 用于在服务启动的时候将SSRegularPermissionFilter注入到spring security的处理链路中
  * @author wanglin
  */
+@Slf4j
 public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Ordered, SwitchControl {
-	/**.
-	 * logger
-	 */
-	private static final Logger logger = Logger.getLogger(SSRegularFilterBeanPostProcessor.class);
-	
 	/**.
 	 * spring security处理filter链的bean name
 	 */

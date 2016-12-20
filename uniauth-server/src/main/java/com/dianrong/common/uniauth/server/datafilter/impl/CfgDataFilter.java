@@ -27,7 +27,6 @@ public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         CfgExample condition = new CfgExample();
         CfgExample.Criteria criteria =  condition.createCriteria();
-        criteria.andTenancyIdEqualTo(getTenancyId());
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -55,7 +54,7 @@ public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
 	protected  Cfg getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "cfgId");
 		CfgExample condition = new CfgExample();
-		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(getTenancyId());
+		condition.createCriteria().andIdEqualTo(id);
 		List<Cfg> selectByExample = cfgMapper.selectByExample(condition);
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);

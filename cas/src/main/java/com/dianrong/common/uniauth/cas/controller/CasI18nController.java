@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor;
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * . 国际化处理相关的请求处理
  * 
@@ -23,11 +23,8 @@ import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
  */
 @Controller
 @RequestMapping("/i18n")
+@Slf4j
 public class CasI18nController {
-    /**
-     * . 日志对象
-     */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     
     /**.
      * 参数
@@ -45,7 +42,7 @@ public class CasI18nController {
         try {
             response.getWriter().write(UniauthLocaleInfoHolder.getLocale().toString());
         } catch (IOException e) {
-            logger.warn("query i18n language failed");
+            log.warn("query i18n language failed");
         } ;
     }
 
@@ -65,7 +62,7 @@ public class CasI18nController {
             }
             response.getWriter().write("success");
         } catch (IOException e) {
-            logger.warn("refresh i18n language failed");
+            log.warn("refresh i18n language failed");
         } ;
     }
 }

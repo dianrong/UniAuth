@@ -2,11 +2,12 @@ package com.dianrong.common.uniauth.server.mq;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.log4j.Logger;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.util.Assert;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
@@ -15,9 +16,8 @@ import org.springframework.util.Assert;
  * @author cwl
  * @created Apr 11, 2016
  */
+@Slf4j
 public class MQSenderDefaultImpl implements MQSender {
-    private final Logger logger = Logger.getLogger(MQSenderDefaultImpl.class);
-
 	private RabbitTemplate template;
     
     // for declare exchange
@@ -36,7 +36,7 @@ public class MQSenderDefaultImpl implements MQSender {
         try {
             template.convertAndSend(key, msgObj);
         } catch (Exception e) {
-        	logger.error("消息发送失败：key【"+key+'】',e);
+        	log.error("消息发送失败：key【"+key+'】',e);
         }
     }
     // init

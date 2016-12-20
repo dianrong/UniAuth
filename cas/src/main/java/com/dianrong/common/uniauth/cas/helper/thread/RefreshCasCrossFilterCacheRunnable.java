@@ -1,19 +1,15 @@
 package com.dianrong.common.uniauth.cas.helper.thread;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**.
  * 用于异步刷新cas的cross filter的cache
  * @author wanglin
  */
+@Slf4j
 public final class RefreshCasCrossFilterCacheRunnable implements Runnable{
-	/**.
-	 * 日志对象
-	 */
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	/**.
 	 * 缓存刷新的heloer
@@ -36,7 +32,7 @@ public final class RefreshCasCrossFilterCacheRunnable implements Runnable{
 		try {
 			this.helper.refreshCache();
 		} catch(Exception ex){
-			logger.warn(this.getClass().getName() + " exception :" + ex.getMessage());
+			log.warn(this.getClass().getName() + " exception :" + ex.getMessage());
 		}
 	}
 }

@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
@@ -25,17 +23,15 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * . cas的配置资源刷新辅助类
  * 
  * @author wanglin
  */
+@Slf4j
 public final class CasCfgResourceRefreshHelper {
-    /**
-     * . 日志对象
-     */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /**
      * . singleton
      */
@@ -124,7 +120,7 @@ public final class CasCfgResourceRefreshHelper {
                     null,  getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, "#153e50"),
                     Arrays.asList(new CasLoginAdConfigModel(getConfigDto(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG + "_1", AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG, FileUtil.readFiles(getRelativePath("images", "spring_festival.jpg"))), AppConstants.CAS_CFG_HREF_DEFALT_VAL)));
         } catch (Exception ex) {
-            logger.error("init default cas cfg error:" + ex.getMessage());
+            log.error("init default cas cfg error:" + ex.getMessage());
         }
 
         if (this.defaultCasCfg == null) {
@@ -163,10 +159,10 @@ public final class CasCfgResourceRefreshHelper {
      */
     private CasCfgCacheModel constructCacheModel(List<ConfigDto> standardCaches, List<ConfigDto> loginImages) {
         if (standardCaches == null || standardCaches.isEmpty()) {
-            logger.info("没有获取到cas的配置信息");
+            log.info("没有获取到cas的配置信息");
         }
         if (loginImages == null || loginImages.isEmpty()) {
-            logger.info("没有获取到首页滚动的配置信息");
+            log.info("没有获取到首页滚动的配置信息");
         }
 
         // 过滤脏数据
@@ -182,7 +178,7 @@ public final class CasCfgResourceRefreshHelper {
                     getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, this.defaultCasCfg.getBackgroundColorText(), AppConstants.CAS_CFG_TYPE_TEXT), getLoginImges(loginImages));
             return cacheModel;
         } catch (Exception ex) {
-            logger.error("构造cas定制化数据缓存异常:" + ex.getMessage());
+            log.error("构造cas定制化数据缓存异常:" + ex.getMessage());
         }
         return null;
     }

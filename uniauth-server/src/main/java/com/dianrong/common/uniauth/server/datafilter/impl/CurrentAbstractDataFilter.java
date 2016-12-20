@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.server.datafilter.impl;
 
 import java.lang.reflect.Field;
 
-import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
@@ -15,17 +14,15 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * . 目前阶段需要处理的一个比较固定的流程
  * 
  * @author wanglin
  */
+@Slf4j
 public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck{
-	/**
-	 * . 日志对象
-	 */
-	private static final Logger logger = Logger.getLogger(CurrentAbstractDataFilter.class);
-	
 	@Override
 	protected void doUpdateFieldsCheck(Integer id, FilterData... equalsField) {
 		// 不处理
@@ -128,7 +125,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck{
 			// 通过反射获取值
 			return ReflectionUtils.getField(field, obj);
 		} catch (Exception ex) {
-			logger.warn("failed get object filed", ex);
+			log.warn("failed get object filed", ex);
 		}
 		return null;
 	}

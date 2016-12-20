@@ -116,7 +116,7 @@ public class RoleService extends TenancyBasedService{
         role.setRoleCodeId(roleCodeId);
         role.setStatus(AppConstants.ZERO_Byte);
         role.setDescription(description);
-        role.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+        role.setTenancyId(tenancyService.getTenancyIdWithCheck());
         roleMapper.insert(role);
         return BeanConverter.convert(role);
     }
@@ -366,7 +366,7 @@ public class RoleService extends TenancyBasedService{
             ParamCheck.checkStatus(status);
             criteria.andStatusEqualTo(status);
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         int count = roleMapper.countByExample(roleExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Role> roles = roleMapper.selectByExample(roleExample);
@@ -394,7 +394,7 @@ public class RoleService extends TenancyBasedService{
         CheckEmpty.checkEmpty(roleId, "roleId");
         // 1. get all permissions under the domain
         PermissionExample permissionExample = new PermissionExample();
-        permissionExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+        permissionExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
         if(CollectionUtils.isEmpty(permissions)) {
             return null;

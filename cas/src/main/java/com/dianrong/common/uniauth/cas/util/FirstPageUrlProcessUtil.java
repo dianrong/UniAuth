@@ -6,23 +6,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**.
  * 登陆主页参数记录的工具方法
  * @author wanglin
  *
  */
+@Slf4j
 public final class FirstPageUrlProcessUtil {
-    /**
-     * . 日志对象
-     */
-    private static final Logger logger = LoggerFactory.getLogger(FirstPageUrlProcessUtil.class);
-    
 	/**.
 	 * 刷新session中保存的主页会跳地址的参数
 	 * @param request  HttpServletRequest
@@ -66,7 +62,7 @@ public final class FirstPageUrlProcessUtil {
 				putValToSession(session, AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
 			} catch (Exception e) {
 				// ignore
-				logger.warn("failed to refreshServiceInSession", e);
+				log.warn("failed to refreshServiceInSession", e);
 			}
 		}
 	}

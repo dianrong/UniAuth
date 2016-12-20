@@ -110,7 +110,7 @@ public class PermissionService extends TenancyBasedService{
 		
 		Permission permission = BeanConverter.convert(permissionParam, false);
 		permission.setStatus(AppConstants.STATUS_ENABLED);
-		permission.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+		permission.setTenancyId(tenancyService.getTenancyIdWithCheck());
 		permissionMapper.insert(permission);
 		
 		PermissionDto permissionDto = BeanConverter.convert(permission);
@@ -144,7 +144,7 @@ public class PermissionService extends TenancyBasedService{
         }
 
 		Permission permission = BeanConverter.convert(permissionParam, true);
-		permission.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+		permission.setTenancyId(tenancyService.getTenancyIdWithCheck());
 		permissionMapper.updateByPrimaryKey(permission);
 	}
 
@@ -214,7 +214,7 @@ public class PermissionService extends TenancyBasedService{
 		CheckEmpty.checkEmpty(permissionId, "权限ID");
 		// 1. get all roles under the domain
 		RoleExample roleExample = new RoleExample();
-		roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
 		List<Role> roles = roleMapper.selectByExample(roleExample);
 		if(CollectionUtils.isEmpty(roles)) {
 			return null;
@@ -306,7 +306,7 @@ public class PermissionService extends TenancyBasedService{
 		if(permTypeId != null) {
 			criteria.andPermTypeIdEqualTo(permTypeId);
 		}
-		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
 		Integer totalCount = permissionMapper.countByExample(permissionExample);
 		ParamCheck.checkPageParams(pageNumber, pageSize, totalCount);
 		List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);
@@ -332,11 +332,12 @@ public class PermissionService extends TenancyBasedService{
 		String domainCode = domainParam.getCode();
 		CheckEmpty.checkEmpty(domainCode, "域编码");
 		
-		Map<String, String> values = new HashMap<String, String>();
+		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("domainCode", domainCode);
-		values.put("tenancyId", tenancyService.getOneCanUsedTenancyId().toString());
+		if (domainParam.getIncludeTenancyIds() != null && !domainParam.getIncludeTenancyIds().isEmpty()) {
+		    values.put("tenancyIds", domainParam.getIncludeTenancyIds());
+		}
 		List<UrlRoleMappingExt> urlRoleMappingExtList = permissionMapper.selectUrlRoleMapping(values);
-		
 		List<UrlRoleMappingDto> urlRoleMappingDtoList = new ArrayList<UrlRoleMappingDto>();
 		if(urlRoleMappingExtList != null){
 			for(UrlRoleMappingExt urlRoleMappingExt: urlRoleMappingExtList){

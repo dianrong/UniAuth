@@ -64,7 +64,7 @@ public class PersonalInfoManageAction extends AbstractAction {
 
 		// 获取用户账号
 		String account = principal.getId();
-		Integer tenancyId = (Integer)principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName());
+		Long tenancyId = (Long)principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName());
 		
 		String requestMethod = StringUtil.getObjectStr(context.getFlowScope().get(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY));
 		// 简单的以post和其他请求方式来区分去请求数据还是更新数据
@@ -84,7 +84,7 @@ public class PersonalInfoManageAction extends AbstractAction {
 	 * @return result
 	 * @throws Exception
 	 */
-	private Event queryUserInfo(final RequestContext context, String account, Integer tenancyId) throws Exception {
+	private Event queryUserInfo(final RequestContext context, String account, Long tenancyId) throws Exception {
 		UserDto userInfo = null;
 		try {
 			// 调服务获取用户信息

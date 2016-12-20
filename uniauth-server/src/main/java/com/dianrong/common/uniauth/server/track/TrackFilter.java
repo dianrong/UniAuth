@@ -11,16 +11,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.aop.ServerExAOPHandler;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component("trackFilter")
+@Slf4j
 public class TrackFilter implements Filter {
-	private static Logger logger = LoggerFactory.getLogger(ServerExAOPHandler.class);
 	public TrackFilter() {
 	}
 
@@ -51,7 +50,7 @@ public class TrackFilter implements Filter {
         try{
         	chain.doFilter(arg0, arg1);
         }catch(Exception e){
-        	logger.error("Unknown exception in TrackFilter.", e);
+        	log.error("Unknown exception in TrackFilter.", e);
         }
         RequestManager.closeRequest();
 	}

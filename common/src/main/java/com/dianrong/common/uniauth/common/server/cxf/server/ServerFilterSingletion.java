@@ -14,10 +14,10 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.ext.Provider;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public final class ServerFilterSingletion {
-	private static final Logger logger = Logger.getLogger(ServerFilterSingletion.class);
 	private static UniauthCxfServerFillter instance = new UniauthCxfServerFillter();
 	private static AtomicBoolean propSetOnce = new AtomicBoolean(false);
 
@@ -53,12 +53,10 @@ public final class ServerFilterSingletion {
 				HeaderConsumer consumer = this.consumers.get(key);
 				if (consumer != null) {
 					String value = requestContext.getHeaderString(key);
-					if (value != null) {
-						try {
-							consumer.consume(value);
-						} catch (Exception ex) {
-							logger.warn(key + " consume failed", ex);
-						}
+					try {
+						consumer.consume(value);
+					} catch (Exception ex) {
+						log.warn(key + " consume failed", ex);
 					}
 				}
 			}

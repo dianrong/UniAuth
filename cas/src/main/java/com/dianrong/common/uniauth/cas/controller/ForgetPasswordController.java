@@ -268,7 +268,7 @@ public class ForgetPasswordController extends AbstractBaseController {
         HttpSession session = request.getSession(false);
         // 必须要有邮箱
         String email = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VAL_KEY, String.class);
-        Integer tenancyId = getValFromSession(session, AppConstants.PWDFORGET_TENAYC_ID_KEY, Integer.class);
+        Long tenancyId = getValFromSession(session, AppConstants.PWDFORGET_TENAYC_ID_KEY, Long.class);
         if (StringUtil.strIsNullOrEmpty(email)) {
             setResponseResultJson(response, "1");
             return;

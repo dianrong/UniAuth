@@ -11,8 +11,6 @@ import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 
 import org.jasig.cas.authentication.AccountDisabledException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
@@ -24,17 +22,15 @@ import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * . 基础类,提供远程调用的公用方法
  * 
  * @author wanglin
  */
+@Slf4j
 public abstract class BaseService {
-    /**
-     * . 日志对象
-     */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /**
      * . infoName与异常class的map
      */
@@ -75,9 +71,9 @@ public abstract class BaseService {
         try {
             constructor = exceptionClass.getConstructor(String.class);
         } catch (NoSuchMethodException e) {
-            logger.info(exceptionClass + " has no constructor with 1 String parameter");
+            log.info(exceptionClass + " has no constructor with 1 String parameter");
         } catch (SecurityException e) {
-            logger.info(e.getMessage());
+            log.info(e.getMessage());
         }
 
         try {
@@ -88,11 +84,11 @@ public abstract class BaseService {
                 return constructor.newInstance(errorMsg);
             }
         } catch (InstantiationException e) {
-            logger.info(e.getMessage());
+            log.info(e.getMessage());
         } catch (IllegalAccessException e) {
-            logger.info(e.getMessage());
+            log.info(e.getMessage());
         } catch (InvocationTargetException e) {
-            logger.info(e.getMessage());
+            log.info(e.getMessage());
         }
         // 默认值
         return new Exception(errorMsg);

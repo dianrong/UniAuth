@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity;
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity.Type;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
@@ -31,6 +33,7 @@ public class UserInfoManageService extends BaseService{
 	 * @return user
 	 * @throws Exception 
 	 */
+	@TenancyIdentity(type=Type.CODE, index=1)
 	public UserDto getUserDetailInfo(String account, String tenancyCode) throws Exception {
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(account);
@@ -49,7 +52,8 @@ public class UserInfoManageService extends BaseService{
 	 * @return user
 	 * @throws Exception 
 	 */
-	public UserDto getUserDetailInfo(String account, Integer tenancyId) throws Exception {
+	@TenancyIdentity(index=1)
+	public UserDto getUserDetailInfo(String account, Long tenancyId) throws Exception {
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(account);
 		loginParam.setTenancyId(tenancyId);

@@ -166,7 +166,7 @@ public class BeanConverter {
                     .setCreateDate(user.getCreateDate())
                     .setStatus(user.getStatus())
                     .setLastUpdate(user.getLastUpdate())
-                    .setTenancyId(user.getTenancyId() == null ? null : user.getTenancyId().intValue());
+                    .setTenancyId(user.getTenancyId() == null ? null : new Integer(user.getTenancyId().toString()));
             return userDto;
         }
     }
@@ -254,6 +254,7 @@ public class BeanConverter {
     		urlRoleMappingDto.setPermUrl(urlRoleMappingExt.getPermUrl());
     		urlRoleMappingDto.setRoleCode(urlRoleMappingExt.getRoleCode());
     		urlRoleMappingDto.setHttpMethod(urlRoleMappingExt.getHttpMethod());
+    		urlRoleMappingDto.setTenancyId(urlRoleMappingExt.getTenancyId());
     		
     		return urlRoleMappingDto;
     	}

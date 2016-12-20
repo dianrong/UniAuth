@@ -1,11 +1,12 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by Arc on 25/3/2016.
  */
-public class ConfigDto extends TenancyBaseDto {
+public class ConfigDto implements Serializable {
 	private static final long serialVersionUID = -5735868920727388059L;
 	private Integer id;
     private String cfgKey;

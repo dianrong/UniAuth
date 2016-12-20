@@ -126,6 +126,6 @@ public class AuditService extends TenancyBasedService{
         if(!StringUtils.isEmpty(reqException)) {
             criteria.andReqExpLike("%" + reqException + "%");
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     }
 }

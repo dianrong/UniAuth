@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.log4j.Logger;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,15 +24,16 @@ import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.google.common.collect.Maps;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 单个域的用户信息model 
  * @author wanglin
  */
+@Slf4j
 public final class SingleDomainUserExtInfo extends User {
 	private static final long serialVersionUID = 8347558918889027136L;
 
-	private static final Logger logger = Logger.getLogger(SingleDomainUserExtInfo.class);
-	
 	private Long id;
 	private UserDto userDto;
 	private DomainDto domainDto;
@@ -126,7 +126,7 @@ public final class SingleDomainUserExtInfo extends User {
 					try{
 						HttpMethod.valueOf(httpMethod);
 					}catch(IllegalArgumentException e){
-						logger.warn("'" + httpMethod + "' is not a valid http method.", e);
+						log.warn("'" + httpMethod + "' is not a valid http method.", e);
 						// ignore invalid httpMethod configuration
 						continue;
 					}
@@ -165,7 +165,7 @@ public final class SingleDomainUserExtInfo extends User {
 				try {
 					p = Pattern.compile(patternStr);
 				} catch(PatternSyntaxException e) {
-					logger.warn(patternStr + " is not a syntax pattern string", e);
+					log.warn(patternStr + " is not a syntax pattern string", e);
 				}
 				// syntax pattern
 				if ( p == null) {

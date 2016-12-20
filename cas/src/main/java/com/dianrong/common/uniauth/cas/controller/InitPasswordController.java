@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -20,16 +19,16 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * . 初始化密码的处理controller
  * @author wanglin
  */
 @Controller
 @RequestMapping("/initPassword")
+@Slf4j
 public class InitPasswordController {
-	
-	private static final Logger logger = Logger.getLogger(InitPasswordController.class);
-	
 	// define InitPasswordController process result code
 	// success
     private static final int INITPWDSUCCESSCODE = 0;
@@ -134,11 +133,11 @@ public class InitPasswordController {
 	        // 返回修改密码成功
 	        responseVal(response, true, "");
     	} catch(IOException ex) {
-    		logger.error("failed to process user password init", ex);
+    		log.error("failed to process user password init", ex);
 			try {
 				responseVal(response, false, StringUtil.getExceptionSimpleMessage(ex.getMessage()));
 			} catch (IOException e) {
-				logger.warn("failed to process user password init", e);
+				log.warn("failed to process user password init", e);
 				throw e;
 			}
     	}

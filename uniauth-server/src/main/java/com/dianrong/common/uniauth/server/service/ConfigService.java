@@ -56,7 +56,7 @@ public class ConfigService extends TenancyBasedService{
         cfg.setCfgTypeId(cfgTypeId);
         // update process.
         if(id != null) {
-        	cfg.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+        	cfg.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
         	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
         		//更新判断比较
         		dataFilter.updateFieldCheck(id, FieldType.FIELD_TYPE_CFG_KEY ,cfgKey);
@@ -79,7 +79,7 @@ public class ConfigService extends TenancyBasedService{
         		dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,cfgKey);
         	}
         	
-        	 cfg.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+        	 cfg.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
             // add process.
             cfgMapper.insert(cfg);
         }
@@ -118,7 +118,7 @@ public class ConfigService extends TenancyBasedService{
         if(!CollectionUtils.isEmpty(cfgKeys)) {
             criteria.andCfgKeyIn(cfgKeys);
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        criteria.andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 
         int count = cfgMapper.countByExample(cfgExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);

@@ -59,14 +59,14 @@ public class DomainService extends TenancyBasedService{
 		dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, domainCode);
 		
 		DomainExample example = new DomainExample();
-		example.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		example.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		if(domainList == null || domainList.isEmpty()){
 			Domain param = BeanConverter.convert(domainParam);
 			Date now = new Date();
 			param.setCreateDate(now);
 			param.setLastUpdate(now);
-			param.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+			param.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 			domainMapper.insert(param);
 			return BeanConverter.convert(param);
 		}
@@ -101,7 +101,7 @@ public class DomainService extends TenancyBasedService{
 		if(!StringUtils.isEmpty(description)) {
 			criteria.andDescriptionLike("%" + description + "%");
 		}
-		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		criteria.andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 
 		int count = domainMapper.countByExample(domainExample);
 		ParamCheck.checkPageParams(pageNumber, pageSize, count);
@@ -120,7 +120,7 @@ public class DomainService extends TenancyBasedService{
 	public List<StakeholderDto> getAllStakeholdersInDomain(Integer domainId) {
 		if(domainId != null) {
 			StakeholderExample stakeholderExample = new StakeholderExample();
-			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+			stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 			List<Stakeholder> stakeholders = stakeholderMapper.selectByExample(stakeholderExample);
 			List<StakeholderDto> stakeholderDtos = new ArrayList<>();
 			if(stakeholders != null) {
@@ -141,7 +141,7 @@ public class DomainService extends TenancyBasedService{
 		if(domainCodeList != null){
 			criteria.andCodeIn(domainCodeList);
 		}
-		criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		criteria.andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 		
 		List<Domain> domainList = domainMapper.selectByExample(example);
 		List<DomainDto> domainDtoList = new ArrayList<DomainDto>();
@@ -160,7 +160,7 @@ public class DomainService extends TenancyBasedService{
 		Domain domain = checkDomain(domainId);
 		
 		StakeholderExample stakeholderExample = new StakeholderExample();
-		stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+		stakeholderExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 		List<Stakeholder> stakeHolderList = stakeholderMapper.selectByExample(stakeholderExample);
 		List<StakeholderDto> stakeholderDtoList = new ArrayList<StakeholderDto>();
 		for(Stakeholder stakeholder : stakeHolderList){
@@ -189,7 +189,7 @@ public class DomainService extends TenancyBasedService{
 				
 		Domain param = BeanConverter.convert(domainParam);
 		param.setLastUpdate(new Date());
-		param.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+		param.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 		domainMapper.updateByPrimaryKeySelective(param);
 //		domainMapper.updateByPrimaryKey(param);
 	}
@@ -205,7 +205,7 @@ public class DomainService extends TenancyBasedService{
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域相关人ID"));
 		}
 		Stakeholder stakeholder = BeanConverter.convert(stakeholderParam,false);
-		stakeholder.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+		stakeholder.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
 		stakeholderMapper.insert(stakeholder);
 		StakeholderDto stakeholderDto = BeanConverter.convert(stakeholder);
 		return stakeholderDto;

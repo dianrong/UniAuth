@@ -11,21 +11,21 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.dianrong.common.uniauth.common.bean.LangDto;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 
  * @author dreamlee
  *
  */
+@Slf4j
 public class UniauthResourceService implements InitializingBean{
-	
-	private static final Logger logger = Logger.getLogger(UniauthResourceService.class);
 	
 	private static final String BASE_PATH="META-INF/resources/";
 	
@@ -98,7 +98,7 @@ public class UniauthResourceService implements InitializingBean{
 				}
 			}
 		} catch (IOException e) {
-			logger.error("getLanguageList error", e);
+			log.error("getLanguageList error", e);
 		}
 		return menuCache;
 	}
