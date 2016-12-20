@@ -26,55 +26,44 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class PropReadyListener implements ApplicationListener<ContextRefreshedEvent>, ApplicationContextAware {
-	// spring 容器对象引用
-	private volatile ApplicationContext applicationContext;
+    // spring 容器对象引用
+    private ApplicationContext applicationContext;
 
-	private  Object lock = new Object();
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        // root context
+        if (event.getApplicationContext().getParent() == null) {
+            try {
+                ClientFilterSingleton.propSetInvoke(findBeanList(HeaderProducer.class));
+                ServerFilterSingletion.propSetInvoke(findBeanList(HeaderConsumer.class));
+            } catch (InterruptedException e) {
+                log.error("failed to set prop to cxf filter", e);
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
 
-	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
-		// root context
-		if (event.getApplicationContext().getParent() == null) {
-			try {
-				ClientFilterSingleton.propSetInvoke(findBeanList(HeaderProducer.class));
-				ServerFilterSingletion.propSetInvoke(findBeanList(HeaderConsumer.class));
-			} catch (InterruptedException e) {
-				log.error("failed to set prop to cxf filter", e);
-				Thread.currentThread().interrupt();
-			}
-		}
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		synchronized (lock) {
-			this.applicationContext = applicationContext;
-			lock.notifyAll();
-		}
-	}
-
-	/**
-	 * . 从applicationContext 中获取对应类型的bean
-	 * 
-	 * @param requiredType
-	 *            can not be null
-	 * @return
-	 * @throws InterruptedException
-	 */
-	private <T> List<T> findBeanList(Class<T> requiredType) throws InterruptedException {
-		synchronized (lock) {
-			Assert.notNull(requiredType);
-			if (this.applicationContext == null) {
-				lock.wait();
-			}
-			List<T> beans = new ArrayList<T>();
-			String[] beanNames = this.applicationContext.getBeanNamesForType(requiredType, true, false);
-			for (String tname : beanNames) {
-				@SuppressWarnings("unchecked")
-				T bean = (T) this.applicationContext.getBean(tname);
-				beans.add(bean);
-			}
-			return beans;
-		}
-	}
+    /**
+     * . 从applicationContext 中获取对应类型的bean
+     * 
+     * @param requiredType can not be null
+     * @return
+     * @throws InterruptedException
+     */
+    private <T> List<T> findBeanList(Class<T> requiredType) throws InterruptedException {
+        Assert.notNull(requiredType);
+        List<T> beans = new ArrayList<T>();
+        String[] beanNames = this.applicationContext.getBeanNamesForType(requiredType, true, false);
+        for (String tname : beanNames) {
+            @SuppressWarnings("unchecked")
+            T bean = (T) this.applicationContext.getBean(tname);
+            beans.add(bean);
+        }
+        return beans;
+    }
 }
