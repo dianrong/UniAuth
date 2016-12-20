@@ -7,16 +7,16 @@ public class TenancyBaseDto  implements Serializable{
 	private static final long serialVersionUID = 7612408066715418041L;
 	
 	// 租户id
-	private Long tenancyId;
+	private Integer tenancyId;
 	
 	// 租户Code
 	private String tenancyCode;
 
-	public Long getTenancyId() {
+	public Integer getTenancyId() {
 		return tenancyId;
 	}
 
-	public TenancyBaseDto setTenancyId(Long tenancyId) {
+	public TenancyBaseDto setTenancyId(Integer tenancyId) {
 		this.tenancyId = tenancyId;
 		return this;
 	}

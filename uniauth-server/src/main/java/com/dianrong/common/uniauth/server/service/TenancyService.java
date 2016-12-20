@@ -10,14 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
-import com.dianrong.common.uniauth.server.exp.ParameterRequiredException;
+import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -116,7 +118,7 @@ public class TenancyService {
         }
         if (check) {
             if (checkTenancyIdentity()) {
-                throw new ParameterRequiredException("tenancyId or tenancyCode is required");
+                throw new AppException(InfoName.TENANCY_IDENTITY_REQUIRED, UniBundle.getMsg("common.parameter.tenancyidentity.required"));
             } else {
                 return getDefaultTenancy().getId();
             }

@@ -166,7 +166,7 @@ public class BeanConverter {
                     .setCreateDate(user.getCreateDate())
                     .setStatus(user.getStatus())
                     .setLastUpdate(user.getLastUpdate())
-                    .setTenancyId(user.getTenancyId());
+                    .setTenancyId(user.getTenancyId() == null ? null : new Integer(user.getTenancyId().toString()));
             return userDto;
         }
     }
