@@ -67,7 +67,12 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
 		String customizedSavedRequestUrl= domainDefine.getCustomizedSavedRequestUrl();
 		if(StringUtils.hasText(customizedSavedRequestUrl)){
 			log.debug("Redirecting to CustomizedSavedRequest Url: " + customizedSavedRequestUrl);
-			getRedirectStrategy().sendRedirect(request, response, zooKeeperConfig.getDomainUrl() + customizedSavedRequestUrl);
+			// 绝对地址
+			if (customizedSavedRequestUrl.startsWith("http")) {
+			    getRedirectStrategy().sendRedirect(request, response,  customizedSavedRequestUrl);
+			} else {
+			    getRedirectStrategy().sendRedirect(request, response, zooKeeperConfig.getDomainUrl() + customizedSavedRequestUrl);
+			}
 		}
 		else{
 			// Use the DefaultSavedRequest URL
