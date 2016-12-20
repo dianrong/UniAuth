@@ -6,7 +6,7 @@ public class DomainParam extends PageParam {
     private static final long serialVersionUID = -1587818665974806460L;
     private List<Integer> domainIds;
     private Integer id;
-    // generally, code cann't be changed!
+    // generally, code can't be changed!
     private String code;
     private String displayName;
     private String description;

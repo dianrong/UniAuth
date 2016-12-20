@@ -17,7 +17,7 @@ import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * for annotation TenancyIdentify. set tenancy identify
+ * for annotation TenancyIdentity. set tenancy identity
  * @author wanglin
  */
 @Aspect
@@ -25,10 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TenancyIdentityAop {
 
-    @Pointcut(value = "@annotation(com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentify)")
-    public void tenancyIdentifySet() {}
+    @Pointcut(value = "@annotation(com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity)")
+    public void tenancyIdentitySet() {}
 
-    @Around("tenancyIdentifySet()")
+    @Around("tenancyIdentitySet()")
     public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
         Object target = joinPoint.getTarget();
         String methodName = joinPoint.getSignature().getName();
@@ -57,18 +57,18 @@ public class TenancyIdentityAop {
             int index = annotation.index();
             CxfHeaderHolder holder = getCxfHeaderHolder(type);
             if (index >= args.length) {
-                throw new IndexOutOfBoundsException("please check TenancyIdentify annotaion index parameter, it is start from 0 ");
+                throw new IndexOutOfBoundsException("please check TenancyIdentity annotaion index parameter, it is start from 0 ");
             }
-            Object identify = args[index];
-            holder.set(identify);
-            log.debug("indentify is " + identify);
+            Object identity = args[index];
+            holder.set(identity);
+            log.debug("indentity is " + identity);
             try {
                 return joinPoint.proceed(joinPoint.getArgs());
             } finally {
                 holder.set(null);
             }
         } else {
-            log.error("because can not find the method, so do not set tenancy identify to CxfHeaderHolder");
+            log.error("because can not find the method, so do not set tenancy identity to CxfHeaderHolder");
             return joinPoint.proceed(joinPoint.getArgs());
         }
     }

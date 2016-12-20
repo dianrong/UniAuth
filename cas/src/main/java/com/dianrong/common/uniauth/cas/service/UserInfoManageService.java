@@ -52,7 +52,7 @@ public class UserInfoManageService extends BaseService{
 	 * @return user
 	 * @throws Exception 
 	 */
-	@TenancyIdentity(type=Type.ID, index=1)
+	@TenancyIdentity(index=1)
 	public UserDto getUserDetailInfo(String account, Long tenancyId) throws Exception {
 		LoginParam loginParam = new LoginParam();
 		loginParam.setAccount(account);

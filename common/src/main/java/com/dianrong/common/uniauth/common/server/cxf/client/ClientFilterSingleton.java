@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.common.server.cxf.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -27,26 +26,6 @@ public final class ClientFilterSingleton {
 		return instance;
 	}
 	
-	public static void main(String[] args) {
-	    HeaderProducer ss =   new HeaderProducer(){
-            @Override
-            public String produce() {
-                return null;
-            }
-
-            @Override
-            public int getOrder() {
-                return 0;
-            }
-
-            @Override
-            public String key() {
-                return null;
-            }
-        };
-	    ClientFilterSingleton.propSetInvoke(Arrays.asList(ss));
-    }
-
 	// 只能被调用一次
 	public static void propSetInvoke(List<HeaderProducer> producers) {
 		if (propSetOnce.compareAndSet(false, true)) {

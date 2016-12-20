@@ -17,8 +17,9 @@ public @interface TenancyIdentity {
     public enum Type {ID, CODE};
     /**
      * 处理的参数类型
+     * 默认为ID类型
      */
-    public Type type();
+    public Type type() default Type.ID;
     
     /**.
      * 参数在第几个

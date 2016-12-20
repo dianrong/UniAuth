@@ -35,7 +35,7 @@ public class ForgetPasswordService extends BaseService{
 		return response.getData();
 	}
 	
-	@TenancyIdentity(type=Type.ID, index=1)
+	@TenancyIdentity(index=1)
 	public void resetPassword(String email, Long tenancyId, String password) throws Exception {
 		UserParam userParam = new UserParam();
 		userParam.setEmail(email);
