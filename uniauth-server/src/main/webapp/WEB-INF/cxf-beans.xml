@@ -33,8 +33,9 @@
 
 	<bean id="cxfServerHeaderFilter"  class="com.dianrong.common.uniauth.common.server.cxf.server.ServerFilterSingletion"  factory-method="getInstance"/>
 
-    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+    <bean id="jacksonObjectMapper" class="com.dianrong.common.uniauth.server.support.ConfigurableObjectMapper">
         <property name="serializationInclusion" value="NON_NULL"/>
+         <property name="disableleFailOnUnKnownProperties"  value="true"/>  
     </bean>
 
     <bean id="jacksonJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
