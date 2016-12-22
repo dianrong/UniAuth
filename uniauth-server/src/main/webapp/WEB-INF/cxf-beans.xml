@@ -33,11 +33,21 @@
 
 	<bean id="cxfServerHeaderFilter"  class="com.dianrong.common.uniauth.common.server.cxf.server.ServerFilterSingletion"  factory-method="getInstance"/>
 
-    <bean id="jacksonObjectMapper" class="com.dianrong.common.uniauth.server.support.ConfigurableObjectMapper">
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
         <property name="serializationInclusion" value="NON_NULL"/>
-         <property name="disableleFailOnUnKnownProperties"  value="true"/>  
     </bean>
-
+    
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="jacksonObjectMapper" />
+		<property name="targetMethod" value="configure" />
+		<property name="arguments">
+			<list>
+				<value type="com.fasterxml.jackson.databind.DeserializationFeature">FAIL_ON_UNKNOWN_PROPERTIES</value>
+				<value>false</value>
+			</list>
+		</property>
+	</bean>
+    
     <bean id="jacksonJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
         <constructor-arg ref="jacksonObjectMapper"></constructor-arg>
     </bean>
