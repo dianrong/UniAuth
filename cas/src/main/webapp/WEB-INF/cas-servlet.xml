@@ -315,7 +315,7 @@
   <bean id="proxyController" class="org.jasig.cas.web.ProxyController"
         p:centralAuthenticationService-ref="centralAuthenticationService"/>
 
- <bean id="logoutAction" class="com.dianrong.common.uniauth.cas.action.LogoutFinishEventDecorateAction">
+ <bean id="logoutAction" class="com.dianrong.common.uniauth.cas.action.LogoutRedirectToLoginPageAction">
  		<constructor-arg ref="originalLogoutAction"/>
  </bean>
 
