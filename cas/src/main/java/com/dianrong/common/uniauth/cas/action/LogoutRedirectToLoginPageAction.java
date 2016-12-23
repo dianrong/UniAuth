@@ -8,12 +8,17 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * redirect to login page
+ * 
  * @author wanglin
  */
-public final class LogoutFinishEventDecorateAction extends AbstractAction {
+public final class LogoutRedirectToLoginPageAction extends AbstractAction {
+    public final static String REDIRECT_URL_KEY = "logoutRedirectUrl";
+    public final static String LOGIN_PAGE_URL = "/login";
+
     private final LogoutAction originalAction;
 
-    public LogoutFinishEventDecorateAction(LogoutAction originalAction) {
+
+    public LogoutRedirectToLoginPageAction(LogoutAction originalAction) {
         Assert.notNull(originalAction);
         this.originalAction = originalAction;
     }
@@ -23,10 +28,11 @@ public final class LogoutFinishEventDecorateAction extends AbstractAction {
         Event result = originalAction.execute(context);
         if (result != null) {
             if (result.getId().equals(LogoutAction.FINISH_EVENT)) {
-                context.getFlowScope().put("logoutRedirectUrl", "/login");
+                if (context.getFlowScope().get(REDIRECT_URL_KEY) == null) {
+                    context.getFlowScope().put(REDIRECT_URL_KEY, LOGIN_PAGE_URL);
+                }
             }
         }
         return result;
     }
-
 }
