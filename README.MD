@@ -3,6 +3,8 @@
 * [三. 系统结构](#architecture)
 * [四. 参数配置](#configuration)
 * [五.系统接入](#integration)
+* [六.SDK使用](#sdk)
+
 
 <a id='about'/>
 ## 一. 关于UNIAUTH
@@ -78,12 +80,202 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 ![组件调用关系](http://upload-images.jianshu.io/upload_images/4122900-c9db4273269a3aaa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 上图中分两条线 
 1. step 1-7, include sso and authentication
-Between step 7 and 8,the `uniauth client` get `st ` and send request to cas server for authentication user then the client can get `credentials`(* include `username` *) from response data 。
+Between step 7 and 8,the `uniauth client` send request to cas server for authentication user with  `st` (get from step 6) then the client can get `credentials`(* include `username` *) from response data 。
 2. step 8 , include authorization
 After got `credentials`, `uniauth client`  call `uniauth-server` to get user details and all permissions.
 
 <a id='configuration'/>
 ## 四. 参数配置
+配置都是在zookeeper中添加节点数据
+### 1. 核心配置
+（1） cas本身的配置
+``` shell
+  /com/dianrong/cfg/1.0.0/uniauth/cas_server.iscookiesecure true #是否采用https的形式写cookie,生产为true
+  /com/dianrong/cfg/1.0.0/uniauth/cas_server     http://localhost:8081/cas  #cas的地址 。比如：http://localhost:8080/cas
+  /com/dianrong/cfg/1.0.0/uniauth/cas.st_use_times  2  #配置cas的service ticket可验证的次数，现在默认是2次。其实正常情况下只验证一次是最安全的。
+  /com/dianrong/cfg/1.0.0/uniauth/tenancyIdentity.check.switch   true #配置true 或 false。 用于指定是否强制的验证访问uniauth-server请求是否带有租户的验证信息
+  /com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint    http://localhost:8090/uniauth/ws/rs #配置的uniauth-server的地址。比如：http://localhost:8090/uniauth/ws/rs
+```
+ ( 2 ) 邮箱配置
+邮箱主要是为了验证码发送，密码重置
+``` shell
+   /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.host    邮箱服务器host，比如：smtp-dev.sl.com（默认值）
+   /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.port    邮箱服务器port，比如：[2](http://smtp-dev.sl.com/)5（默认值）
+   /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.femail   uniauth系统邮件的发送者，比如：TechOps-Notification<noreply@[dianrong.com](http://dianrong.com/)>（默认值）
+```
+### 2. redis配置
+``` shell
+ a 普通模式
+  /com/dianrong/cfg/1.0.0/uniauth/redis.host  localhost    #cas采用的redis的host
+  /com/dianrong/cfg/1.0.0/uniauth/redis.port   6379        #redis的port
+ b 哨兵模式
+  /com/dianrong/cfg/1.0.0/uniauth/redis.database 0     #redis的数据库index
+  /com/dianrong/cfg/1.0.0/uniauth/cas.iscluster true   #true or false  cas是否采用redis存储登陆的ticket
+  /com/dianrong/cfg/1.0.0/uniauth/redis.password ''    #指定redis密码
+  /com/dianrong/cfg/1.0.0/uniauth/redis.master  mymaster  #指定master节点name
+  /com/dianrong/cfg/1.0.0/uniauth/redis.sentinels  10.18.19.51:5000,10.18.19.101:5000    #指定 redis集群节点列表,例如：10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000
+```
+### 3. 集成系统配置
+下面的`xxx`就是定义好的`domain`，如techops,crm,pms,cms,etc
+``` shell
+  /com/dianrong/cfg/1.0.0/uniauth/domains.xxx    http://localhost:8100/techops/  #xxx系统的地址。比如：http://localhost:8100/techops/
+  /com/dianrong/cfg/1.0.0/uniauth/domainx.xxx.loginPage  http://localhost:8100/techops/login.jsp #如果xxx系统采用自定义登陆页面，则此处配置其自定义登陆页面地址。
+  /com/dianrong/cfg/1.0.0/uniauth/domainx.xxx.auth_fail_url    http://localhost:8100/techops/login_fail.jsp  #如果xxx系统在进行st认证失败的时候跳转到失败页面（需要客户端集成做一些配置）。
+  /com/dianrong/cfg/1.0.0/uniauth/domains.xxx.showInHomePage true  #明确指定是否在uniauth登陆页能跳转到xxx系统的登陆页（是否出现选项框中），例如：true
+```
 
 <a id='integration'/>
-## 五. 系统接入
+## 五. 系统接入指南 
+### 5.1.Spring系统
+客户端系统需要使用[spring security](http://projects.spring.io/spring-security/)，引入`ss-client`模块的jar包
+- 1) web.xml
+```xml
+<!-- spring session publisher -->
+    <listener> 
+      <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class> 
+    </listener>
+    <!-- Spring Security Filter，一般处于filter配置的第一位 -->
+    <filter>
+      <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>
+```
+- 2) applicationContext.xml
+<font color=#ff0000 size=3> 不要把下面这一段配置放到SpringMVC对应的xml当中，必须放置到Spring Bean的xml当中 </font>
+```xml
+<import resource="classpath:ss-uniauth-client.xml" /> //导入ss-client中的Spring配置文件
+    <bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">      
+      <property name="domainCode" value="techops">
+      </property> //定义自身域编码，和Uniauth的zookper（有domains.前缀），TechOps中的域定义保持一致      
+<!-- <property name="userInfoClass" value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property> --> 
+//定义UserDetails扩展属性类，该类从UserExtInfo扩展，如果不需要则可以不配置
+      //如果设置成true，则如果当前请求的url没有找到任何匹配的url定义，就会拒绝访问
+      //如果设置成true，需要去掉<sec:intercept-url pattern="/**" access="isAuthenticated()"/>，因为这条定义是涵盖任何url的默认定义
+      <property name="rejectPublicInvocations" value="false"></property>
+      //在访问业务域的某个url时，如果session失效或从未登录过，这个url地址会被业务域服务器记下来，然后转向到cas登录页；
+      //登录成功后会再转向回来到这个url，如果需要复写这个url，则在此处定制，如果不做定制默认就是转向先前记下的url地址
+      <property name="customiedSavedRequestUrl" value="/jump/jump.html"></property>
+    </bean>
+    <sec:http pattern="/views/**" security="none" /> //某些url资源不需要被Spring Security保护
+    <sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true" request-matcher="ant">      
+    <sec:custom-filter ref="casAuthenticationFilter" position="CAS_FILTER"/>
+    <sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="exceptionTranslationFilter" />
+    <sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />      
+    <sec:custom-filter  ref="requestSingleLogoutFilter" before="LOGOUT_FILTER" />
+    <sec:access-denied-handler error-page="/errors/403.jsp"/> //随需定制自己的403 Forbidden页      
+    <sec:csrf disabled="true"/>      
+    <sec:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />      
+    <sec:session-management session-authentication-strategy-ref="sas" invalid-session-url="#{uniauthConfig['cas_server']}/logout?dupsession=true"/>      
+    <sec:logout delete-cookies="JSESSIONID" />      
+  <!--         在此处可以添加业务系统常用的稳定的intercept-url定义      -->
+       // 重要：如果你的系统基于url_pattern进行权限判断，应尽可能地将需要保护的url进行分解和登记，
+       //否则就会退而求其次地选用这条规则，因为这条定义是涵盖任何url的默认定义，即登录用户能访问所有url。      
+    <sec:intercept-url pattern="/**" access="isAuthenticated()"/>    
+</sec:http>
+ <bean id="exceptionTranslationFilter" class="com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter"> 
+<constructor-arg name="authenticationEntryPoint" ref="casAuthEntryPoint"></constructor-arg>
+     <property name="accessDeniedHandler"> 
+        <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">       
+          <property name="errorPage" value="/errors/403.jsp" /> 
+        </bean> 
+</property> 
+</bean>
+    <!-- Session并发控制: start -->    
+<bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">   
+    <constructor-arg name="sessionRegistry" ref="sessionRegistry">
+    </constructor-arg>      
+    <constructor-arg name="expiredUrl" value="#{uniauthConfig['cas_server']}/logout?dupsession=true">
+    </constructor-arg>    
+</bean>   
+ <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />    
+<bean id="sas" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">     
+     <constructor-arg>        
+        <list>          
+            <bean class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">           
+             <constructor-arg ref="sessionRegistry"/>          
+            </bean>          
+            <bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">            
+              <constructor-arg ref="sessionRegistry"/>           
+                 <property name="maximumSessions" value="1" />            
+                <property name="exceptionIfMaximumExceeded" value="false" />          
+            </bean>        
+        </list>      
+      </constructor-arg>    
+</bean>    
+<bean id="casAuthenticationFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">     
+    <property name="authenticationManager" ref="authenticationManager"/>    
+    <property name="filterProcessesUrl" value="/login/cas"></property>    
+    <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>    
+    <property name="sessionAuthenticationStrategy" ref="sas" />    </bean>   
+ <!-- Session并发控制: end -->    
+<!--
+    注册PermissionEvaluator实现，以便支持hasPermission表达式，如果不使用则不用配置
+    注意：ID必须为uniauthPermissionEvaluator，且primary="true"
+     -->    
+<bean id="uniauthPermissionEvaluator" class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
+```
+* 3)获取当前登录用户
+可以通过调用UniClientCommonService这个Spring Bean类的getLoginUserInfo()方法获取当前登录用户对象
+```java
+ SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+```
+### 5.2.非Spring系统
+#### 5.2.1 与CAS集成
+* 1) 引入Cas jar包
+ jar包：'org.jasig.cas.client:cas-client-core:3.4.1'  
+* 2) 添加filter
+说明：需要添加三个filter，SingleSignOutFilter（统一登出filter）， AuthenticationFilter（统一认证） ，Cas20ProxyReceivingTicketValidationFilter（ticket验证filter） 
+使用方式举例（以jetty内置服务器为例，其他tomcat容器的配置类似）
+```java
+// first
+FilterHolder singleSignOutFilter = new FilterHolder(SingleSignOutFilter.class);
+singleSignOutFilter.setInitParameter("casServerUrlPrefix", "http://localhost:8080/cas"); // 配置cas的统一地址cas_server
+root.addFilter(singleSignOutFilter, "/*", Handler.DEFAULT);
+// second
+FilterHolder authenticationFilter = new FilterHolder(AuthenticationFilter.class);
+authenticationFilter.setInitParameter("casServerLoginUrl", "http://localhost:8080/cas/login");// 配置cas的登陆页面： cas_server/login
+authenticationFilter.setInitParameter("gateway", Boolean.FALSE.toString());// 默认采用false
+authenticationFilter.setInitParameter("service", "http://localhost:8120/login/cas"); // 配置业务系统的地址：custom_url/login/cas.  后缀/login/cas 必须要，为了与统一登陆页面兼容。
+root.addFilter(authenticationFilter, "/*", Handler.DEFAULT);
+// third
+FilterHolder ticketValidationFilter = new FilterHolder(Cas20ProxyReceivingTicketValidationFilter.class);
+ticketValidationFilter.setInitParameter("service", "http://localhost:8120/login/cas"); // 配置业务系统的地址：custom_url/login/cas.  后缀/login/cas 必须要，为了与统一登陆页面兼容。如： https://passport-dev.dianrong.com
+ticketValidationFilter.setInitParameter("casServerUrlPrefix", "http://localhost:8080/cas");//  配置cas的统一地址cas_server
+root.addFilter(ticketValidationFilter, "/*", Handler.DEFAULT);
+```
+注意：可以注意到添加filter的顺序，SingleSignOutFilter -> AuthenticationFilter -> ticketValidationFilter
+#### 5.2.2经过上面的Filter后，可从session中 获取登陆人Principal
+```java
+Assertion assertion = （Assertion）session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION)；
+AttributePrincipal principal = assertion.getPrincipal(); // principal中有登陆人的相关信息，邮箱，service等。
+```
+说明：其中CONST_CAS_ASSERTION为字符串“_const_cas_assertion_”，可以直接使用AbstractCasFilter.CONST_CAS_ASSERTION获取。
+####5.2.3登陆用户信息获取
+a) 首先通过第2.3步得到的AttributePrincipal对象
+b) 获取principal的attribute属性：principal.getAttributes().get("tenancyid"),返回一个字符串，即为租户的id
+c) call uniauth的api获取用户信息：
+```java
+// 构造登陆参数
+LoginParam loginParam = new LoginParam();
+// 用户
+emailloginParam.setAccount(userName);
+// 设置租户
+idloginParam.setTenancyId(tenancyId);// 设置租户id（用于uniauth统计调用日志）
+CxfHeaderHolder.TENANCYID.set(tenancyId);
+Response<UserDetailDto> response = uniClientFacade.getUserResource().getUserDetailInfo(loginParam);// 清空租户
+idCxfHeaderHolder.TENANCYID.set(null);
+```
+<a id='sdk'/>
+## 六. SDK使用
+`common`模块针对`uniauth-server`提供的Rest API进行了客户端封装，客户系统引入`com.dianrong.common.uniauth.common.client.UniClientFacade`即可获取人员，组，域，角色，权限等信息，如下：
+```java
+public static void main(String args[]) {
+ //这个构造函数中的字符串是uniauth-server的webservice endpoint
+    UniClientFacade uniClientFacade = new UniClientFacade("http://localhost:8080/ws/rs"); 
+    System.out.println(uniClientFacade.getConfigResource().getAllCfgTypes().getData());
+}
+```
