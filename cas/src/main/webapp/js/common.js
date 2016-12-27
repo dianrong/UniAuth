@@ -135,12 +135,11 @@ $(function() {
 					if(data.success && data.success !== 'false') {
 						callBackInit(data.content);
 					} else {
-						logOperation.log('init failed, can not find default tenancy')
-						alert('sever error, please refresh page');
+						logOperation.error('init failed, can not find default tenancy')
 					}
 				},
 				error: function() {
-					alert('sever error, please refresh page');
+					logOperation.error('sever error, please refresh page');
 				}
 			});
 		};
