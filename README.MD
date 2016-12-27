@@ -2,30 +2,31 @@
 * [二. 快速开始](#quickstart)
 * [三. 系统结构](#architecture)
 * [四. 参数配置](#configuration)
-* [五.系统接入](#integration)
-* [六.SDK使用](#sdk)
+* [五. 系统接入](#integration)
+* [六. SDK使用](#sdk)
+* [七. 系统说明](#attention)
 
 
 <a id='about'/>
 ## 一. 关于UNIAUTH
-###1.uniauth干什么的
+###1.1.uniauth干什么的
 >它是一个统一登录+鉴权+权限管理的综合系统；它适用于各系统需要通过统一认证/授权，并能根据既定的角色和权限来规范业务操作的多子系统环境。 
 
-###2.uniauth技术选型
+###1.2.uniauth技术选型
 > 基于`jdk7`,使用`spring mvc4.2+mybatis3+spring security4+cas+cxf`作为基础框架，数据库为`mysql5.7`，配置管理使用`zookeeper3.4`，`redis` 作为可选项用于保存ticket和session信息，前端使用`angularJS 1.x`；
 
 <a id='quickstart'/>
 ## 二. 快速开始
-###1.编译打包
+###2.1.编译打包
 在源码目录执行命令
 ``` shell 
 gradle warUniAuthServer、 gradle warCas、 gradle warTechopsWebsite, 
 ```
 分别可以在uniauth-server,cas,techops项目的build路径下得到`uniauth.war` 、  `cas.war`、  `techops.war`；
-###2.初始化数据库
+###2.2.初始化数据库
 在mysql中`create database uniauth`，然后按rt顺序执行`uniauth-server/src/script/sql`  中所有的脚本；
 管理员账号：` shuanggui.fan@dianrong.com `，密码： `$1234qweR`
-###3.配置tomcat7
+###2.3.配置tomcat7
 - **添加环境参数**
 修改tomcat bin目录中` catalina.sh`文件，在正文首行后加入下面环境参数：
 ``` shell
@@ -42,7 +43,7 @@ export DR_CFG_ZOOKEEPER_ENV_URL 
 <Resource name="jdbc/uniauth" auth="Container" type="javax.sql.DataSource" driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/uniauth?useUnicode=true&characterEncoding=utf8" username="root" password="root" maxActive="50" maxIdle="20" maxWait="200" />
 ```
 
-###4.配置zookeeper
+###2.4.配置zookeeper
 在zokeeper中`create`下面节点数据
 ```shell
 /com/dianrong/cfg/1.0.0/uniauth/cas_server.iscookiesecure false   // 线上环境一定是true
@@ -51,7 +52,7 @@ export DR_CFG_ZOOKEEPER_ENV_URL 
 /com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint http://localhost:8080/uniauth/ws/rs  // uniauth的webservice endpoint地址， base+/ws/rs
 ```
 zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通过在catalina.sh中 `export DR_CFG_ZOOKEEPER_BASE_PATH`变量来更改
-###5.部署启动
+###2.5.部署启动
  按下面顺序启动
 * 1.启动tomcat_uniauth
 将`uniauth.war`部署到tomcat_uniauth 的webapps目录，启动tomcat
@@ -63,31 +64,31 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 访问[管理控制台techops](http://localhost:8082/techops)
 <a id='architecture' />
 ## 三. 系统结构
-###1. 模块组件依赖
+###3.1. 模块组件依赖
 ![uniauth模块依赖图.png](http://upload-images.jianshu.io/upload_images/4122900-04105bd9cba75464.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 如上图，uniauth的核心模块：`uniauth-server`，`common`，`share-rw`，`ss-client`,`cas`,`techops`。
 - 三个独立应用：
-（1）`uniauth-server`是提供数据访问的`REST`服务；用户，资源，权限数据通过它进行访问；
+>（1）`uniauth-server`是提供数据访问的`REST`服务；用户，资源，权限数据通过它进行访问；
 （2）`techops`是web界面的管理控制台；通过`techops`录入资源，角色，做权限分配；
 （3）`cas`是单点登录系统；各个*subsystem*通过cas做sso认证；
 - 三个关键模块：
-（4）`common`定义了**读**uniauth-server的接口，接口的数据模型以及cxf方式的访问实现；由它定义了数据接口，因此各个模块必须依赖它；
+>（4）`common`定义了**读**uniauth-server的接口，接口的数据模型以及cxf方式的访问实现；由它定义了数据接口，因此各个模块必须依赖它；
 （5）`share-rw`提供对`uniauth-server`中**写**功能的访问接口定义  ，cxf方式访问实现，由于牵涉到对数据的修改，因此只有管理系统才能依赖这个模块，如`techops`
 （6）`ss-client`是uniauth提供的sdk，各子系统依赖它后只需要少量的配置就可以完成sso,authentication 和 authorization的业务
 （7）*subsystem*代表各个子系统,也是uniauth的客户端，各个需要用到sso,authentication和authorization的系统，比如`techops`。
 
-###2.系统架构
+###3.2.系统架构
 ![组件调用关系](http://upload-images.jianshu.io/upload_images/4122900-c9db4273269a3aaa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 上图中分两条线 
 1. step 1-7, include sso and authentication
-Between step 7 and 8,the `uniauth client` send request to cas server for authentication user with  `st` (get from step 6) then the client can get `credentials`(* include `username` *) from response data 。
-2. step 8 , include authorization
-After got `credentials`, `uniauth client`  call `uniauth-server` to get user details and all permissions.
+>Between step 7 and 8,the `uniauth client` send request to cas server for authentication user with  `st` (get from step 6) then the client can get `credentials`(* include `username` *) from response data 。
+2.  step 8 , include authorization
+>After got `credentials`, `uniauth client`  call `uniauth-server` to get user details and all permissions.
 
 <a id='configuration'/>
 ## 四. 参数配置
 配置都是在zookeeper中添加节点数据
-### 1. 核心配置
+### 4.1. 核心配置
 （1） cas本身的配置
 ``` shell
   /com/dianrong/cfg/1.0.0/uniauth/cas_server.iscookiesecure true #是否采用https的形式写cookie,生产为true
@@ -103,7 +104,7 @@ After got `credentials`, `uniauth client`  call `uniauth-server` to get user det
    /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.port    邮箱服务器port，比如：[2](http://smtp-dev.sl.com/)5（默认值）
    /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.femail   uniauth系统邮件的发送者，比如：TechOps-Notification<noreply@[dianrong.com](http://dianrong.com/)>（默认值）
 ```
-### 2. redis配置
+### 4.2. redis配置
 ``` shell
  a 普通模式
   /com/dianrong/cfg/1.0.0/uniauth/redis.host  localhost    #cas采用的redis的host
@@ -115,7 +116,7 @@ After got `credentials`, `uniauth client`  call `uniauth-server` to get user det
   /com/dianrong/cfg/1.0.0/uniauth/redis.master  mymaster  #指定master节点name
   /com/dianrong/cfg/1.0.0/uniauth/redis.sentinels  10.18.19.51:5000,10.18.19.101:5000    #指定 redis集群节点列表,例如：10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000
 ```
-### 3. 集成系统配置
+### 4.3. 集成系统配置
 下面的`xxx`就是定义好的`domain`，如techops,crm,pms,cms,etc
 ``` shell
   /com/dianrong/cfg/1.0.0/uniauth/domains.xxx    http://localhost:8100/techops/  #xxx系统的地址。比如：http://localhost:8100/techops/
@@ -128,13 +129,14 @@ After got `credentials`, `uniauth client`  call `uniauth-server` to get user det
 ## 五. 系统接入指南 
 ### 5.1.Spring系统
 客户端系统需要使用[spring security](http://projects.spring.io/spring-security/)，引入`ss-client`模块的jar包
+下面以`techops`项目为例
 - 1) web.xml
 ```xml
 <!-- spring session publisher -->
     <listener> 
       <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class> 
     </listener>
-    <!-- Spring Security Filter，一般处于filter配置的第一位 -->
+    <!-- In generally  Spring Security Filter order first before other filters  -->
     <filter>
       <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -147,7 +149,7 @@ After got `credentials`, `uniauth client`  call `uniauth-server` to get user det
 - 2) applicationContext.xml
 <font color=#ff0000 size=3> 不要把下面这一段配置放到SpringMVC对应的xml当中，必须放置到Spring Bean的xml当中 </font>
 ```xml
-<import resource="classpath:ss-uniauth-client.xml" /> //导入ss-client中的Spring配置文件
+    <import resource="classpath:ss-uniauth-client.xml" /> //导入ss-client中的Spring配置文件
     <bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">      
       <property name="domainCode" value="techops">
       </property> //定义自身域编码，和Uniauth的zookper（有domains.前缀），TechOps中的域定义保持一致      
@@ -255,9 +257,9 @@ AttributePrincipal principal = assertion.getPrincipal(); // principal中有�
 ```
 说明：其中CONST_CAS_ASSERTION为字符串“_const_cas_assertion_”，可以直接使用AbstractCasFilter.CONST_CAS_ASSERTION获取。
 ####5.2.3登陆用户信息获取
-a) 首先通过第2.3步得到的AttributePrincipal对象
-b) 获取principal的attribute属性：principal.getAttributes().get("tenancyid"),返回一个字符串，即为租户的id
-c) call uniauth的api获取用户信息：
+* 1) 首先通过第2.3步得到的AttributePrincipal对象
+* 2) 获取principal的attribute属性,如：principal.getAttributes().get("tenancyid"),返回租户的id
+* 3) call uniauth的api获取用户信息：
 ```java
 // 构造登陆参数
 LoginParam loginParam = new LoginParam();
@@ -271,7 +273,7 @@ idCxfHeaderHolder.TENANCYID.set(null);
 ```
 <a id='sdk'/>
 ## 六. SDK使用
-`common`模块针对`uniauth-server`提供的Rest API进行了客户端封装，客户系统引入`com.dianrong.common.uniauth.common.client.UniClientFacade`即可获取人员，组，域，角色，权限等信息，如下：
+`common`模块针对`uniauth-server`提供的Rest API进行了客户端封装，客户系统引入`com.dianrong.common.uniauth.common.client.UniClientFacade`即可获取人员，组，域，角色，权限等信息，具体参[UniClientFacade](http://xxx/com/dianrong/common/uniauth/common/client/UniClientFacade.java)看如下：
 ```java
 public static void main(String args[]) {
  //这个构造函数中的字符串是uniauth-server的webservice endpoint
@@ -279,3 +281,16 @@ public static void main(String args[]) {
     System.out.println(uniClientFacade.getConfigResource().getAllCfgTypes().getData());
 }
 ```
+<a id='attention'/>
+##七. 系统说明
+###7.1 Uniauth内置的3种PermissionType说明
+ 1. **URI_PATTERN**：
+>效果和Spring Security配置文件中的`<sec:intercept-url pattern="/xxx" access="hasAnyRole('ROLE_XXX','ROLE_YYY','ROLE_ZZZ')" />`一样，主要用于Web形式的URL资源定义。可用于保护真实URL访问地址，或者用于`<sec:authorize url="/xxx">`的标签中。
+需要尤其指明的是，如果你的多个role共享了一个role_code，则使用URL_PATTERN可能会有影响。
+注意：无论在Spring Security中还是在db中都可以定义url pattern的允许访问的http method，如GET，POST等等，如果不指定则该url默认支持所有类型的http method。比如在配置文件中：`<sec:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" **method="GET"**/>`在使用method定义时，这里面有一个注意点，就是Spring Security默认会优先比较请求的http method和定义中的是否匹配，如果不匹配则该条定义就直接被忽略掉了，哪怕url本身是匹配的。所以如果你要使用http method保护你的url，则应该把controller中需要受保护的url模式和可访问方法进行完整定义(在配置文件或db中)，这样才能起到应有的作用。
+ 2. **DOMAIN**：
+>TechOps使用的专有Permission Type，其他业务系统可以忽略此种类型的Permission。
+ 3. **PRIVILEGE**：
+>各个业务系统可以根据自己的需要定义权限控制点列表，这些权限用于保护任何需要保护的资源，比如通过SpEL表达式principal.hasPrivilege('xxx')。注意：不像` URI_PATTERN`，这种权限类型不参与Spring Security的内部权限控制机制，适用于纯业务级别权限控制点的定义。
+
+    上述3种权限类型已经基本涵盖了大部分业务需要，如果不满足，可以和我们联系，双方讨论后可以依需添加新的权限类型。
