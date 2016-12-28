@@ -29,8 +29,7 @@ public class UserParam extends Operator {
     
     private String groupCode;
     private Boolean includeSubGrp;
-    private List<String> includeRoleNames;
-    private String roleDomainCode;
+    private List<Integer> includeRoleIds;
     
 	public List<Integer> getTagIds() {
 		return tagIds;
@@ -167,28 +166,18 @@ public class UserParam extends Operator {
         return this;
     }
 
-    public List<String> getIncludeRoleNames() {
-        return includeRoleNames;
+    public List<Integer> getIncludeRoleIds() {
+        return includeRoleIds;
     }
 
-    public UserParam setIncludeRoleNames(List<String> includeRoleNames) {
-        this.includeRoleNames = includeRoleNames;
-        return this;
-    }
-
-    public String getRoleDomainCode() {
-        return roleDomainCode;
-    }
-
-    public UserParam setRoleDomainCode(String roleDomainCode) {
-        this.roleDomainCode = roleDomainCode;
-        return this;
+    public void setIncludeRoleIds(List<Integer> includeRoleIds) {
+        this.includeRoleIds = includeRoleIds;
     }
 
     @Override
     public String toString() {
         return "UserParam [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", password=" + password + ", originPassword=" + originPassword + ", status=" + status
                 + ", tenancyId=" + tenancyId + ", tenancyCode=" + tenancyCode + ", userActionEnum=" + userActionEnum + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds
-                + ", groupCode=" + groupCode + ", includeSubGrp=" + includeSubGrp + ", includeRoleNames=" + includeRoleNames + ", roleDomainCode=" + roleDomainCode + "]";
+                + ", groupCode=" + groupCode + ", includeSubGrp=" + includeSubGrp + ", includeRoleIds=" + includeRoleIds + "]";
     }
 }

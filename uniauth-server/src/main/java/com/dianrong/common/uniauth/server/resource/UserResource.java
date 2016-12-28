@@ -140,7 +140,7 @@ public class UserResource implements IUserRWResource {
 	}
 
     @Override
-    public Response<List<UserDto>> getUserByGroupCodeRoleName(UserParam userParam) {
-        return Response.success(userService.getUserByGroupCodeRoleName(userParam.getGroupCode(), userParam.getIncludeSubGrp(), userParam.getIncludeRoleNames(), userParam.getRoleDomainCode()));
+    public Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam) {
+        return Response.success(userService.getUsersByGroupCodeRoleIds(userParam.getGroupCode(), userParam.getIncludeSubGrp(), userParam.getIncludeRoleIds()));
     }
 }

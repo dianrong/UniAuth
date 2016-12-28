@@ -29,14 +29,14 @@ public class SessionManageBeanPostProcessor implements BeanPostProcessor {
 	        log.info("config SessionManagementFilter manually");
 	        SessionManagementFilter sessionManagementFilter = (SessionManagementFilter)bean;
 	        InvalidSessionStrategy invalidSessionStrategy = (InvalidSessionStrategy)ReflectionUtils.getField(sessionManagementFilter, "invalidSessionStrategy");
-	        List<InvalidSessionStrategy> invalidSessionStrategys = new ArrayList<InvalidSessionStrategy>();
+	        List<InvalidSessionStrategy> invalidSessionStrategies = new ArrayList<InvalidSessionStrategy>();
 	        if(invalidSessionStrategy != null) {
-	            invalidSessionStrategys.add(invalidSessionStrategy);
-	            log.info("SessionManagementFilter has original InvalidSessionStrategy : " + invalidSessionStrategys);
+	            invalidSessionStrategies.add(invalidSessionStrategy);
+	            log.info("SessionManagementFilter has original InvalidSessionStrategy : " + invalidSessionStrategy);
 	        }
-	        invalidSessionStrategys.add(new RequestCacheInvalidSessionStrategy());
+	        invalidSessionStrategies.add(new RequestCacheInvalidSessionStrategy());
 	        CompositeInvalidSessionStrategy compositeInvalidSessionStrategy = new CompositeInvalidSessionStrategy();
-	        compositeInvalidSessionStrategy.setInvalidSessionStrategys(invalidSessionStrategys);
+	        compositeInvalidSessionStrategy.setInvalidSessionStrategies(invalidSessionStrategies);
 	        sessionManagementFilter.setInvalidSessionStrategy(compositeInvalidSessionStrategy);
 	    }
 		return bean;

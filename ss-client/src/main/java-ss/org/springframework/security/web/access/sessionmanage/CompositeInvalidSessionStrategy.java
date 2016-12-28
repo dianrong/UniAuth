@@ -17,23 +17,23 @@ import org.springframework.security.web.session.InvalidSessionStrategy;
  */
 public final class CompositeInvalidSessionStrategy implements InvalidSessionStrategy {
     
-    private List<InvalidSessionStrategy> invalidSessionStrategys;
+    private List<InvalidSessionStrategy> invalidSessionStrategies;
     
-    public List<InvalidSessionStrategy> getInvalidSessionStrategys() {
-        if (invalidSessionStrategys == null) {
+    public List<InvalidSessionStrategy> getInvalidSessionStrategies() {
+        if (invalidSessionStrategies == null) {
             return null;
         }
-        return Collections.unmodifiableList(invalidSessionStrategys);
+        return Collections.unmodifiableList(invalidSessionStrategies);
     }
 
-    public void setInvalidSessionStrategys(List<InvalidSessionStrategy> invalidSessionStrategys) {
-        this.invalidSessionStrategys = new ArrayList<InvalidSessionStrategy>(invalidSessionStrategys);
+    public void setInvalidSessionStrategies(List<InvalidSessionStrategy> invalidSessionStrategies) {
+        this.invalidSessionStrategies = new ArrayList<InvalidSessionStrategy>(invalidSessionStrategies);
     }
 
     @Override
     public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if (this.invalidSessionStrategys != null && !this.invalidSessionStrategys .isEmpty()) {
-            for (InvalidSessionStrategy invalidSessionStrategy: this.invalidSessionStrategys) {
+        if (this.invalidSessionStrategies != null && !this.invalidSessionStrategies .isEmpty()) {
+            for (InvalidSessionStrategy invalidSessionStrategy: this.invalidSessionStrategies) {
                 invalidSessionStrategy.onInvalidSessionDetected(request, response);
             }
         }
