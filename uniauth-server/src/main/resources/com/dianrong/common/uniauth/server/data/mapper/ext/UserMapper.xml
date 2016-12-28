@@ -51,6 +51,54 @@
     	select id from tenancy where code = #{tenancyCode, jdbcType=VARCHAR} and status = 0 
     )
     </if>
-   
+  </select>
+  
+  <!-- get user by group info and role info -->
+  <select id="getUserByGroupCodeRoleName" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		 	select
+		    <include refid="Base_Column_List" />
+		    from user where 
+		    <!--  filter group -->
+		    id in (
+		    		select user_id from user_grp where  grp_id in (
+			    		 <choose>
+			                <when test="includeSubGrp != null and includeSubGrp">
+				                select id from grp  where id in (
+										select descendant from grp_path where ancestor in (
+												select id from grp where code = #{groupCode, jdbcType=VARCHAR}  
+											     and status = 0  and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+										)								    			
+					    			)
+						     	and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+			                </when>
+			                <otherwise>
+			                      select id from grp where  code = #{groupCode, jdbcType=VARCHAR}  
+							      and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+			                 </otherwise>
+			         </choose>
+		         )
+		        and  type = 0 
+		) 
+		<!--  filter role -->
+		and id in (
+			select user_id from user_role where role_id in 
+			<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+	            	#{item}  
+        	 </foreach>
+        	 union
+        	 select user_id from user_grp where grp_id in (
+				select id from grp  where id in (
+						select descendant from grp_path where ancestor in (
+								select grp_id from grp_role where role_id in 
+								<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+					            		#{item}  
+				        	 	</foreach>
+						)								    			
+				)
+				and status =  0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+			)
+		   and type = 0  
+      	)
+		and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
   </select>
 </mapper>

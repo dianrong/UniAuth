@@ -2,10 +2,10 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
-import com.codahale.metrics.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
@@ -138,4 +138,9 @@ public class UserResource implements IUserRWResource {
 		List<UserDto> userDtos = userService.searchUserByTagIds(userParam.getTagIds());
 		return Response.success(userDtos);
 	}
+
+    @Override
+    public Response<List<UserDto>> getUserByGroupCodeRoleName(UserParam userParam) {
+        return Response.success(userService.getUserByGroupCodeRoleName(userParam.getGroupCode(), userParam.getIncludeSubGrp(), userParam.getIncludeRoleNames(), userParam.getRoleDomainCode()));
+    }
 }

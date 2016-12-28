@@ -1263,4 +1263,54 @@ public class UserService extends TenancyBasedService {
             }
         });
     }
+    
+    /**
+     * get user list by group code and role names
+     * @param groupCode groupCode can not be null
+     * @param includeSubGrp include sub group or not
+     * @param includeRoleNames role names can not be null
+     * @param roleDomainCode code of the role can not be null
+     * @return List<UserDto>
+     */
+    public List<UserDto> getUserByGroupCodeRoleName(String groupCode, Boolean includeSubGrp, List<String> includeRoleNames, String roleDomainCode) {
+        CheckEmpty.checkEmpty(groupCode, "groupCode");
+        CheckEmpty.checkEmpty(includeRoleNames, "roleNames");
+        CheckEmpty.checkEmpty(roleDomainCode, "roleDomainCode");
+        // query domain info
+        DomainExample domainExample = new DomainExample();
+        DomainExample.Criteria criteria = domainExample.createCriteria();
+        criteria.andCodeEqualTo(roleDomainCode.trim()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+        List<Domain>  domains =  domainMapper.selectByExample(domainExample);
+        if (domains == null || domains.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        Integer domainId = domains.get(0).getId();
+        // query role id
+        RoleExample roleExample = new RoleExample();
+        RoleExample.Criteria roleCriteria = roleExample.createCriteria();
+        roleCriteria.andDomainIdEqualTo(domainId).andNameIn(includeRoleNames).
+        andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+        List<Role> roles = roleMapper.selectByExample(roleExample);
+        if (roles == null || roles.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        List<Integer> roleIds = Lists.newArrayList();
+        for (Role role: roles) {
+            roleIds.add(role.getId());
+        }
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("roleIds", roleIds);
+        param.put("groupCode", groupCode);
+        param.put("includeSubGrp", includeSubGrp);
+        param.put("tenancyId", tenancyService.getTenancyIdWithCheck());
+        List<User> users = userMapper.getUserByGroupCodeRoleName(param);
+        if (users == null || users.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        List<UserDto> userDtos = Lists.newArrayList();
+        for (User user: users) {
+            userDtos.add(BeanConverter.convert(user));
+        }
+        return userDtos;
+    }
 }
