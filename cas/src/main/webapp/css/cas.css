@@ -384,6 +384,10 @@ header h1 {
 	border-radius: 4px;
 }
 
+#login .btn-submit:disabled {
+	background: #BDE2B6;
+}
+
 #login .btn-reset {
 	background: #eee;
 	padding: 10px 20px;

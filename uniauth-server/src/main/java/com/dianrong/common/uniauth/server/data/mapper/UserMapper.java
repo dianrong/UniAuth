@@ -1,15 +1,13 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
-import com.dianrong.common.uniauth.server.data.entity.Domain;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserExample;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import org.apache.ibatis.annotations.Param;
+
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 
 public interface UserMapper {
     /**
@@ -105,4 +103,6 @@ public interface UserMapper {
     List<UserExt> getUsersByParentGrpIdByUserType(Map params);
     
      List<User> selectByEmailOrPhone(Map<String, String> map);
+     
+     List<User> getUsersByGroupCodeRoleIds(Map<String, Object> param);
 }

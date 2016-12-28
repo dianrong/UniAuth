@@ -79,4 +79,5 @@
     <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor"/>
     <b:bean id="ssRegularBeanPostProcessor" class="org.springframework.security.web.access.regular.SSRegularFilterBeanPostProcessor"/>
     <b:bean id="ssRegularPermissionFilter" class="org.springframework.security.web.access.regular.SSRegularPermissionFilter" />
+    <b:bean id="sessionManageBeanPostProcessor" class="org.springframework.security.web.access.sessionmanage.SessionManageBeanPostProcessor" />
 </b:beans>

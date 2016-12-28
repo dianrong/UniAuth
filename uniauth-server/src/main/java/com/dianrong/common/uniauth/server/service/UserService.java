@@ -1263,4 +1263,30 @@ public class UserService extends TenancyBasedService {
             }
         });
     }
+    
+    /**
+     * get user list by group code and role names
+     * @param groupCode groupCode can not be null
+     * @param includeSubGrp include sub group or not
+     * @param includeRoleIds roleIds can not be null
+     * @return List<UserDto>
+     */
+    public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp, List<Integer> includeRoleIds) {
+        CheckEmpty.checkEmpty(groupCode, "groupCode");
+        CheckEmpty.checkEmpty(includeRoleIds, "roleIds");
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("roleIds", includeRoleIds);
+        param.put("groupCode", groupCode);
+        param.put("includeSubGrp", includeSubGrp);
+        param.put("tenancyId", tenancyService.getTenancyIdWithCheck());
+        List<User> users = userMapper.getUsersByGroupCodeRoleIds(param);
+        if (users == null || users.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        List<UserDto> userDtos = Lists.newArrayList();
+        for (User user: users) {
+            userDtos.add(BeanConverter.convert(user));
+        }
+        return userDtos;
+    }
 }
