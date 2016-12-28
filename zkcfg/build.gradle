@@ -1,19 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
-apply plugin: 'io.spring.dependency-management'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'maven-publish'
 
 group 'com.dianrong.platform'
-
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-allprojects {
-    sourceCompatibility = '1.7'
-    targetCompatibility = '1.7'
-}
 
 repositories {
     maven { url 'http://archiva.dianrong.com/repository/mirror' }
@@ -39,8 +30,6 @@ dependencies {
             'org.apache.logging.log4j:log4j-slf4j-impl',
             'junit:junit'
 }
-
-
 // package the sources to be a jar file.
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
