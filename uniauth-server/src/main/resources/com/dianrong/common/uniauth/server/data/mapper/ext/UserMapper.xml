@@ -54,7 +54,7 @@
   </select>
   
   <!-- get user by group info and role info -->
-  <select id="getUserByGroupCodeRoleName" resultMap="BaseResultMap" parameterType="java.util.Map">
+  <select id="getUsersByGroupCodeRoleIds" resultMap="BaseResultMap" parameterType="java.util.Map">
   		 	select
 		    <include refid="Base_Column_List" />
 		    from user where 

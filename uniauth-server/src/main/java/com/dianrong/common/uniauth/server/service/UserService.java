@@ -1279,7 +1279,7 @@ public class UserService extends TenancyBasedService {
         param.put("groupCode", groupCode);
         param.put("includeSubGrp", includeSubGrp);
         param.put("tenancyId", tenancyService.getTenancyIdWithCheck());
-        List<User> users = userMapper.getUserByGroupCodeRoleName(param);
+        List<User> users = userMapper.getUsersByGroupCodeRoleIds(param);
         if (users == null || users.isEmpty()) {
             return Lists.newArrayList();
         }
