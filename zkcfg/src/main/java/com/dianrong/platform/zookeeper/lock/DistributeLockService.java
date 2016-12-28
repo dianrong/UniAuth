@@ -1,0 +1,49 @@
+package com.dianrong.platform.zookeeper.lock;
+
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+@Component
+public class DistributeLockService {
+
+  private static final Logger logger = LoggerFactory.getLogger(DistributeLockService.class);
+
+  @Value("#{curatorClientFactory.getClient()}")
+  private CuratorFramework client;
+
+  private ExecutorService executorService = Executors.newFixedThreadPool(3);
+
+  public Object tryAcquiredLockAndExcute(String path, Callable callable) {
+    InterProcessMutex lock = new InterProcessMutex(client, path);
+    try {
+      if (lock.acquire(5, TimeUnit.SECONDS)) {
+        logger.info(Thread.currentThread().getName() + " acquired and hold Lock,path:{}", path);
+        Future future = executorService.submit(callable);
+        return future.get();
+      } else {
+        logger.info(Thread.currentThread().getName() + " can't acquired lock,path:{}", path);
+        return null;
+      }
+    } catch (Exception e) {
+      logger.error("Try Acquired Lock And Excute Exception,path:{}", path, e);
+      return null;
+    } finally {
+      try {
+        lock.release();
+        logger.info(Thread.currentThread().getName() + " Release Lock,,path:{}", path);
+      } catch (Exception e) {
+      }
+    }
+  }
+
+}

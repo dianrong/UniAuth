@@ -8,6 +8,8 @@ src/main/webapp/META-INF
 *.iml
 .gradle
 */bin/
+*.class
+*.jar
 out
 build
 logs

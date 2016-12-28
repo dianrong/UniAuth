@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.hibernate" level="ERROR"/>
+        <Logger name="org.springframework" level="ERROR"/>
+        <Logger name="org.apache.commons" level="ERROR"/>
+        <Logger name="org.dozer" level="ERROR"/>
+        <Logger name="org.mybatis.spring" level="ERROR"/>
+        <Logger name="io.netty" level="ERROR"/>
+        <Logger name="org.apache.zookeeper" level="ERROR"/>
+        <Logger name="com.dangdang.config" level="ERROR"/>
+        <!--for mybatis sql out-->
+        <Logger name="log4j.logger.java.sql.Statement" level="DEBUG"/>
+        <Root level="DEBUG">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
