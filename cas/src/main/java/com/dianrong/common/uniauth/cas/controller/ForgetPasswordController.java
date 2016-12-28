@@ -123,10 +123,10 @@ public class ForgetPasswordController extends AbstractBaseController {
         }
 
         // 必须要邮箱验证码通过
-        Object verfyObj = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY);
-        if (verfyObj != null && verfyObj instanceof DateSessionObjModel) {
+        Object verfiyObj = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY);
+        if (verfiyObj != null && verfiyObj instanceof DateSessionObjModel) {
             @SuppressWarnings("unchecked")
-            DateSessionObjModel<String> tobj = (DateSessionObjModel<String>) verfyObj;
+            DateSessionObjModel<String> tobj = (DateSessionObjModel<String>) verfiyObj;
             if (!tobj.isExpired()) {
                 // 进入第三步
                 return getPwdForgetStep3Page();
@@ -204,11 +204,11 @@ public class ForgetPasswordController extends AbstractBaseController {
 
         // 往session里面放email
         putValToSession(session, AppConstants.PWDFORGET_MAIL_VAL_KEY, email);
-        putValToSession(session, AppConstants.PWDFORGET_TENAYC_ID_KEY, user.getTenancyId());
+        putValToSession(session, AppConstants.PWDFORGET_TENAYC_ID_KEY, StringUtil.translateIntegerToLong(user.getTenancyId()));
         // 成功进入第二步
         setResponseResultJson(response, "0");
     }
-
+    
     /**
      * . process step 2
      * 

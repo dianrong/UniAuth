@@ -52,6 +52,32 @@ public class StringUtil {
 		return null;
 	}
 	
+	/**
+	 * Translate Integer object to Long object
+	 * @param intNum Integer 
+	 * @return null if intNum is null
+	 *                     Long  if intNum is not null
+	 */
+	public static Long translateIntegerToLong(Integer intNum){
+		if(intNum == null){
+			return null;
+		}
+		return new Long(intNum);
+	}
+	
+	/**
+	 * Translate Long object to Integer object
+	 * @param intNum Integer 
+	 * @return null if intNum is null
+	 *                     Long  if intNum is not null
+	 */
+	public static Integer translateLongToInteger(Long longNum){
+		if(longNum == null){
+			return null;
+		}
+		return new Integer(longNum.toString());
+	}
+	
 	/**.
 	 * 生成目标长度的数字字符串
 	 * @param length 
