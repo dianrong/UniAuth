@@ -201,7 +201,7 @@ project(':ss-client') {
     }
 }
 
-project(':subsystem') {
+project('examples:subsystem') {
 	apply plugin: 'war'
 	
 	dependencies {
