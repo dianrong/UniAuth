@@ -1,8 +1,38 @@
 package com.dianrong.common.uniauth.server.util;
 
-import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.common.bean.request.*;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
+import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
+import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
+import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
+import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.common.uniauth.server.data.entity.Audit;
+import com.dianrong.common.uniauth.server.data.entity.Cfg;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.Tenancy;
+import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
@@ -166,7 +196,7 @@ public class BeanConverter {
                     .setCreateDate(user.getCreateDate())
                     .setStatus(user.getStatus())
                     .setLastUpdate(user.getLastUpdate())
-                    .setTenancyId(user.getTenancyId() == null ? null : new Integer(user.getTenancyId().toString()));
+                    .setTenancyId(StringUtil.translateLongToInteger(user.getTenancyId()));
             return userDto;
         }
     }
