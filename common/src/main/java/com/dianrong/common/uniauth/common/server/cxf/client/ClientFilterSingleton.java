@@ -71,7 +71,13 @@ public final class ClientFilterSingleton {
 			Collections.sort(producers, new Comparator<HeaderProducer>(){
 				@Override
 				public int compare(HeaderProducer o1, HeaderProducer o2) {
-					return o1.getOrder() - o2.getOrder();
+				    if (o2.getOrder() > o1.getOrder()) {
+				        return 1;
+				    }
+				    if (o2.getOrder() == o1.getOrder()) {
+				        return 0;
+				    }
+				    return -1;
 				}
 			});
 			Map<String, HeaderProducer> _map = new HashMap<String, HeaderProducer>();
