@@ -68,10 +68,16 @@ public final class ServerFilterSingletion {
 			}
 			consumers = new ArrayList<HeaderConsumer>(consumers);
 			Collections.sort(consumers, new Comparator<HeaderConsumer>(){
-				@Override
-				public int compare(HeaderConsumer o1, HeaderConsumer o2) {
-					return o1.getOrder() - o2.getOrder();
-				}
+			    @Override
+                public int compare(HeaderConsumer o1, HeaderConsumer o2) {
+                    if (o2.getOrder() > o1.getOrder()) {
+                        return 1;
+                    }
+                    if (o2.getOrder() == o1.getOrder()) {
+                        return 0;
+                    }
+                    return -1;
+                }
 			});
 			LinkedHashMap<String, HeaderConsumer> _consumers = new LinkedHashMap<String, HeaderConsumer>();
 			for (HeaderConsumer hc : consumers) {
