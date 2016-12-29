@@ -241,6 +241,7 @@ project(':cas') {
 		providedCompile 'org.jasig.cas:cas-server-security-filter:2.0.4'
 		providedCompile 'org.jasig.cas:cas-server-webapp-support:4.1.3'
 		providedCompile 'org.jasig.cas:cas-server-integration-restlet:4.1.3'
+		compile 'com.dianrong.loanbusiness:kaptcha:1.1'
 
 		//Http Components for deploy on local
 		compile 'org.apache.httpcomponents:httpclient'
