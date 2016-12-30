@@ -31,7 +31,7 @@ public enum CxfHeaderHolder {
 	public void set(Object val) {
 		if (val != null) {
 			if (!this.type.isAssignableFrom(val.getClass())){
-			    holder.set(null);
+			    holder.remove();
 				throw new IllegalArgumentException("val's type is not right, need " + this.type.getName());
 			}
 			holder.set(val);
