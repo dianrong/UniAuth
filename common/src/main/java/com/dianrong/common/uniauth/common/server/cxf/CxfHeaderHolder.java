@@ -34,8 +34,10 @@ public enum CxfHeaderHolder {
 			    holder.set(null);
 				throw new IllegalArgumentException("val's type is not right, need " + this.type.getName());
 			}
+			holder.set(val);
+		} else {
+		    holder.remove();
 		}
-		holder.set(val);
 	}
 	
 	// 清空所有holder 信息
