@@ -1079,17 +1079,21 @@ public class UserService extends TenancyBasedService {
         if (userList == null || userList.isEmpty()) {
             throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
         }
+        
+        // search enable user
         int enableUserCount = 0;
+        User enableUser = null;
         for (User user: userList) {
         	if (user.getStatus() == AppConstants.STATUS_ENABLED) {
+        		enableUser = user;
         		enableUserCount++;
         	}
         }
         if (enableUserCount > 1) {
             throw new AppException(InfoName.LOGIN_ERROR_MULTI_USER_FOUND, UniBundle.getMsg("user.login.multiuser.found"));
         }
-
-        User user = userList.get(0);
+        
+        User user = enableUser == null ? userList.get(0) : enableUser;
         // 手动设置tenancyId -- important
         CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         return user;
