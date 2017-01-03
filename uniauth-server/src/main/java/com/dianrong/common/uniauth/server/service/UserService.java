@@ -528,7 +528,7 @@ public class UserService extends TenancyBasedService {
         CheckEmpty.checkEmpty(password, "密码");
         CheckEmpty.checkEmpty(ip, "IP地址");
 
-        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,null);
+        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true, null);
         if (AppConstants.ONE_Byte.equals(user.getStatus())) {
             throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
         }
@@ -1055,7 +1055,7 @@ public class UserService extends TenancyBasedService {
      * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
      * @return 用户信息
      */
-    private User getUserByAccount(String account, String tenancyCode, Long tenancyId, boolean withPhoneChecked,Byte status) {
+    private User getUserByAccount(String account, String tenancyCode, Long tenancyId, boolean withPhoneChecked, Byte status) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("email", account);
 
@@ -1079,7 +1079,13 @@ public class UserService extends TenancyBasedService {
         if (userList == null || userList.isEmpty()) {
             throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
         }
-        if (userList.size() > 1) {
+        int enableUserCount = 0;
+        for (User user: userList) {
+        	if (user.getStatus() == AppConstants.STATUS_ENABLED) {
+        		enableUserCount++;
+        	}
+        }
+        if (enableUserCount > 1) {
             throw new AppException(InfoName.LOGIN_ERROR_MULTI_USER_FOUND, UniBundle.getMsg("user.login.multiuser.found"));
         }
 
