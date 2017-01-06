@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentit
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
@@ -22,13 +23,19 @@ public class ForgetPasswordService extends BaseService{
 	
 	@Autowired
 	private UniClientFacade uniClientFacade;
-	
+	/**
+	 * check user exist
+	 * @param accountId email or phone number
+	 * @param tenancyCode
+	 * @return
+	 * @throws Exception
+	 */
 	@TenancyIdentity(type=Type.CODE, index=1)
-	public UserDto checkUser(String email, String tenancyCode) throws Exception {
-		UserParam userParam = new UserParam();
-		userParam.setEmail(email);
-		userParam.setTenancyCode(tenancyCode);
-		Response<UserDto> response = uniClientFacade.getUserResource().getSingleUser(userParam);
+	public UserDto checkUser(String accountId, String tenancyCode) throws Exception {
+	    LoginParam loginParam = new LoginParam();
+		loginParam.setAccount(accountId);
+		loginParam.setTenancyCode(tenancyCode);
+		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);//.getSingleUser(userParam);
 		List<Info> infoList = response.getInfo();
 
 		checkInfoList(infoList);

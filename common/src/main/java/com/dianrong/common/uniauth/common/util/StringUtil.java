@@ -112,4 +112,22 @@ public class StringUtil {
 		}
 		return detailMessage.substring(0, firstIndex);
 	}
+	/**
+	 * verify phone number
+	 * @param phoneNumber
+	 * @return
+	 */
+	public static boolean isPhoneNumber(String phoneNumber){
+	    String regExp = "^((13[0-9])|(15[^4])|(18[0-9])|(17[0-8])|(147))\\d{8}$";
+	    return phoneNumber.matches(regExp);
+	}
+	/**
+	 * verify phone number
+	 * @param phoneNumber
+	 * @return
+	 */
+	public static boolean isEmailAddress(String emailAddress){
+	    String regExp = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+	    return emailAddress.matches(regExp);
+	}
 }
