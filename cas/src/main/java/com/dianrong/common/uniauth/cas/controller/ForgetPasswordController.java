@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,10 +14,22 @@ import com.dianrong.common.uniauth.cas.service.ForgetPasswordService;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.platform.challenge.domain.VerifyResult;
+import com.dianrong.platform.challenge.facade.DefaultChallengeClient;
+import com.dianrong.platform.challenge.facade.EventType;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ForgetPasswordController extends AbstractBaseController {
 
     private ForgetPasswordService forgetPasswordService;
+    /**
+     * verify code generator and verify the code
+     */
+    @Autowired
+    @Qualifier("defaultChallengeClient")
+    private DefaultChallengeClient verifyCodeClient;
 
     /**
      * . 进入第一页开始验证 清空所有的验证缓存
@@ -236,23 +250,27 @@ public class ForgetPasswordController extends AbstractBaseController {
         }
 
         // 验证验证码
-        Object verfyObj = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_CODE_KEY);
+        VerifyResult verifyResult = verifyCodeClient.verifyCode(email, EventType.EVENT_RESET_PASSWORD_DIANRONG, verifyCode);
+        log.info("verify target :{} code result:{}",email,verifyResult);
+        if(VerifyResult.MATCHED.equals(verifyResult)){
+            // 验证通过 进入步骤3
+            // 将验证通过的结果放入session中
+            putValToSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY, new DateSessionObjModel<String>("pass", AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES));
+            // 成功进入第二步
+            setResponseResultJson(response, "0");
+            return;
+        }
+        /*Object verfyObj = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_CODE_KEY);
         if (verfyObj != null && verfyObj instanceof DateSessionObjModel) {
             @SuppressWarnings("unchecked")
             DateSessionObjModel<String> tobj = (DateSessionObjModel<String>) verfyObj;
             if (!tobj.isExpired()) {
                 // 比较验证码是否一致
                 if (verifyCode.equals(tobj.getContent())) {
-                    // 验证通过 进入步骤3
-                    // 将验证通过的结果放入session中
-                    putValToSession(session, AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY, new DateSessionObjModel<String>("pass", AppConstants.PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES));
-                    // 成功进入第二步
-                    setResponseResultJson(response, "0");
-                    return;
                 }
 
             }
-        }
+        }*/
         // 验证没通过 需要继续验证
         setResponseResultJson(response, "3");
     }
@@ -266,7 +284,7 @@ public class ForgetPasswordController extends AbstractBaseController {
      */
     private void handleStep3(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession(false);
-        // 必须要有邮箱
+        // 必须要有邮箱or phone number
         String email = getValFromSession(session, AppConstants.PWDFORGET_MAIL_VAL_KEY, String.class);
         Long tenancyId = getValFromSession(session, AppConstants.PWDFORGET_TENAYC_ID_KEY, Long.class);
         if (StringUtil.strIsNullOrEmpty(email)) {
@@ -289,7 +307,7 @@ public class ForgetPasswordController extends AbstractBaseController {
             if (!tobj.isExpired()) {
                 // 后端修改密码
                 try {
-                    forgetPasswordService.resetPassword(email, tenancyId, newPwd);
+                    forgetPasswordService.resetPasswordByIdentity(email, tenancyId, newPwd);
                 } catch (Exception ex) {
                     setResponseResultJson(response, "3", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
                     return;

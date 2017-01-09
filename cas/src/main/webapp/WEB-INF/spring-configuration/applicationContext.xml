@@ -54,7 +54,7 @@
         The default, if not set, is none which forces ISO-8859-1 of java.util.ResourceBundle.
     -->
     <context:component-scan base-package="com.dianrong.platform.challenge" />
-    <bean class="com.dianrong.common.uniauth.sharerw.message.EmailSender" />
+    <!-- <bean class="com.dianrong.common.uniauth.sharerw.message.EmailSender" /> -->
     <!-- for send sms -->
     <bean class="com.dianrong.platform.notification.sms.SmsHttpClient" >
         <constructor-arg value="#{uniauthConfig['notification_endpoint']}"></constructor-arg>

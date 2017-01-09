@@ -92,6 +92,10 @@ public interface AppConstants {
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
 	String PWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
 	String PWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
+	/**
+	 * useless after integrate notification and challage
+	 */
+	@Deprecated
 	String PWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
 	String PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
 	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";

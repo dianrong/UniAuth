@@ -8,20 +8,19 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.dianrong.common.uniauth.cas.model.DateSessionObjModel;
+import com.dianrong.common.uniauth.cas.config.NotificationConfig;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-import com.dianrong.common.uniauth.sharerw.message.EmailSender;
 import com.dianrong.platform.challenge.domain.ChallengeResult;
 import com.dianrong.platform.challenge.facade.DefaultChallengeClient;
 import com.dianrong.platform.challenge.facade.EventType;
@@ -37,13 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CaptchaController extends AbstractBaseController {
 
-    private static final String UNIAUTH_CAS = "UNIAUTH_CAS";
-    private static final String FIND_PWD = "FIND_PWD";
-    private static final String SMS_TEMPLATE_NAME = "SMS_BOST_NOTIFY_TEST";
-    @Value("#{uniauthConfig['notification_key']}")
-    private String notificationUserKey; 
+    
     @Autowired
-    private EmailSender emailSender;
+    private NotificationConfig notifyCfg;
     /**
      * verify code generator and verify the code
      */
@@ -80,12 +75,12 @@ public class CaptchaController extends AbstractBaseController {
                 return null;
             }
             if(!StringUtil.isEmailAddress(target) && !StringUtil.isPhoneNumber(target)){
-                setResponseResultJson(response, "invalid Email Or Phone Number");
+                setResponseResultJson(response, "invalid email or phone number");
                 return null;                
             }
-            ChallengeResult codeResult = generateVerifyCode(target);
+            ChallengeResult codeResult = generateVerifyCode(target, HttpRequestUtil.ipAddress(request));
             if(!codeResult.isOk()){
-                setResponseResultJson(response, "2", "send ");
+                setResponseResultJson(response, "2","verify code generate error");
                 return null;
             }
             String code = codeResult.getCode();
@@ -133,7 +128,7 @@ public class CaptchaController extends AbstractBaseController {
 
     /**
      * . 用于发送邮箱验证码
-     */
+     *//*
     private void sendEmailVerifyCode(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
 
@@ -160,30 +155,33 @@ public class CaptchaController extends AbstractBaseController {
         } catch (Exception ex) {
             setResponseResultJson(response, "2", ex.getMessage());
         }
-    }
+    }*/
     /**
      * generate verify code use challenge
-     * @param targetId user unique identity  ,may be email,phone number
+     * @param identity user unique identity  ,may be email,phone number
+     * @param ip for ratelimit controlled by challage endpoint, may be 5 times per minutes/ip
      * @return
      */
-    private ChallengeResult generateVerifyCode(String targetId){
-        //phone/email or unique id，ip address，biz type
-        //ip address affect rate limit 
-        ChallengeResult fetchCode = verifyCodeClient.fetchCode(targetId, UNIAUTH_CAS+FIND_PWD, EventType.EVENT_RESET_PASSWORD_DIANRONG);
+    private ChallengeResult generateVerifyCode(String identity,String ip){
+        ChallengeResult fetchCode = verifyCodeClient.fetchCode(identity,ip, EventType.EVENT_RESET_PASSWORD_DIANRONG);
         return fetchCode;
     }
     
     private void sendSmsVerifyCode(String phoneNumber,String verifyCode){
-        log.info("send phone:{} verify code:{}",phoneNumber,verifyCode);
+        log.info("send sms:{} verify code:{}",phoneNumber,verifyCode);
         SendSmsRequest arg1 = new SendSmsRequest();
         HashSet<String> phoneSet = new HashSet<String>(1);
         phoneSet.add(phoneNumber);
         arg1.setCellphones(phoneSet);
-        arg1.setTemplateName(SMS_TEMPLATE_NAME);
+        arg1.setTemplateName(notifyCfg.getSmsTemplateName());
+        //template parameters
         Map<String, String> param = new HashMap<String,String>(1);
-        param.put("VERIFY_CODE", verifyCode);
+        param.put("CODE", verifyCode);
         arg1.setParams(param);
-        smsClient.send(notificationUserKey, arg1);
+        //TODO hadle sms send result and return error msg when send failed,
+        //but the feature of how to determine result is failed should provided by Notification
+        String sendResult = smsClient.send(notifyCfg.getNotificationUserKey(), arg1);
+        log.info("send sms:{} result:{}",phoneNumber,sendResult);
     }
     private void sendEmailVerifyCode(String emailAddress,String verifyCode){
         log.info("send email:{} verify code:{}",emailAddress,verifyCode);
@@ -193,7 +191,13 @@ public class CaptchaController extends AbstractBaseController {
         StringBuffer emailInfo = new StringBuffer(UniBundleUtil.getMsg(messageSource, "captcha.controller.captcha.email.content", verifyCode, "\r\n", AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES / (60L * 1000L)));
         arg1.setTo(emailAddress);
         arg1.setSubject(title);
+        arg1.setFrom("noreply@dianrong.com");
+        arg1.setFromName("TechOps-noreplay");
         arg1.setText(emailInfo.toString());
-        emailClient.send(notificationUserKey, arg1);
+        String sendResult = emailClient.send(notifyCfg.getNotificationUserKey(), arg1);
+        log.info("send mail:{} result:{}",emailAddress,sendResult);
+        if(StringUtils.isNotBlank(sendResult)){
+            throw new RuntimeException(" send mail failed");
+        }
     }
 }
