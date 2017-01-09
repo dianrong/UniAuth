@@ -67,27 +67,31 @@ var cookieOperation = (function(){
 	};
 	var cookie_service = "cas_cookie_service";
 	var cookie_tenancy_code = "cas_cookie_tenancy_code";
+	var cookie_cookie_enable = "cas_cookie_enable";
 	var obj = {
 			setService: function(service){cookie_set(cookie_service, service);},
 			getService: function(){return cookie_get(cookie_service)},
 			setTenancyCode:function(tenancyCode){cookie_set(cookie_tenancy_code, tenancyCode);},
-			getTenancyCode:function(){return cookie_get(cookie_tenancy_code)}
+			getTenancyCode:function(){return cookie_get(cookie_tenancy_code)},
+			setCookieEnable:function(enableVal){cookie_set(cookie_cookie_enable, enableVal);},
+			getCookieEnable:function(){return cookie_get(cookie_cookie_enable)}
 	};
 	return obj;
 })();
 
 // log
 var logOperation = (function(){
+	// 兼容ie
+	window.console = window.console || {  
+	    log: function(){},
+	    error: function(){}  
+	};  
 	var obj = {
 			log: function(msg){
-				if (console && console.log) {
 					console.log(msg);
-				}
 			},
 			error: function(msg){
-				if (console && console.error) {
 					console.error(msg);
-				}
 			}
 	};
 	return obj;
@@ -154,11 +158,10 @@ $(function() {
 						callBackInit(data.content);
 					} else {
 						logOperation.log('init failed, server return wrong info, ' + data);
-						alert('sever error, please refresh page');
 					}
 				},
 				error: function() {
-					alert('sever error, please refresh page');
+					logOperation.error('sever error, please refresh page');
 				}
 			});
 		};
