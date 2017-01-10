@@ -31,11 +31,13 @@ public enum CxfHeaderHolder {
 	public void set(Object val) {
 		if (val != null) {
 			if (!this.type.isAssignableFrom(val.getClass())){
-			    holder.set(null);
+			    holder.remove();
 				throw new IllegalArgumentException("val's type is not right, need " + this.type.getName());
 			}
+			holder.set(val);
+		} else {
+		    holder.remove();
 		}
-		holder.set(val);
 	}
 	
 	// 清空所有holder 信息

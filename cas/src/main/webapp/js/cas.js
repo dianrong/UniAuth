@@ -1,9 +1,9 @@
 $(function() {
 	function areCookiesEnabled() {
-		$.cookie('cookiesEnabled', 'true');
-		var value = $.cookie('cookiesEnabled');
-		if (value != undefined) {
-			$.removeCookie('cookiesEnabled');
+		cookieOperation.setCookieEnable('true');
+		var value = cookieOperation.getCookieEnable();
+		if (value === 'true') {
+			cookieOperation.setCookieEnable('');
 			return true;
 		}
 		return false;

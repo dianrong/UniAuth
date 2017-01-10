@@ -58,7 +58,7 @@ $(function() {
             	$('#cas-ad-div').removeClass("hiddenbtn");
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             },
         });  
 	}

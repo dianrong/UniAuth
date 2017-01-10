@@ -188,11 +188,11 @@ $(function() {
                     	return;
                     }
                 } else {  
-                    alert($.i18n.prop('frontpage.common.error.msg'));
+                	logOperation.error($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             },
         });  
 	};
@@ -253,11 +253,11 @@ $(function() {
                     	return;
                     }
                 } else {  
-                	 alert($.i18n.prop('frontpage.common.error.msg'));
+                	logOperation.error($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             },
             complete: function(XMLHttpRequest, textStatus) {
             	refresh_verfypic($('#verfypic'));
@@ -309,11 +309,11 @@ $(function() {
                     	return;
                     }
                 } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg'));
+                	logOperation.error($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             }
         });  
 	};
@@ -369,11 +369,11 @@ $(function() {
                     	return;
                     }
                 } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg'));
+                	logOperation.error($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             }
         });  
 	};

@@ -130,7 +130,7 @@ $(function() {
             	window.change_edit_btn_state(false);
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             },
         });  
 	}
@@ -240,7 +240,7 @@ $(function() {
             }
             ,
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             },
         });  
 	}
