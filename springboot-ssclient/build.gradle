@@ -25,6 +25,9 @@ dependencies {
 	compile ("javax.servlet:jstl")
 
 	compile project(":ss-client")
+	compile('org.springframework.boot:spring-boot-starter-actuator'){
+    	 exclude  module:'spring-boot-starter-logging'
+    }
 }
 
 task wrapper(type: Wrapper) {
