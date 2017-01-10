@@ -66,7 +66,7 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter{
 		// filter configure
 		http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
 		http.addFilter(beanCreator.create(CasAuthenticationFilter.class));
-		http.addFilter(beanCreator.create(LogoutFilter.class));
+		http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
 		http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class), ExceptionTranslationFilter.class);
 		http.addFilterBefore(beanCreator.create(SingleSignOutFilter.class), CasAuthenticationFilter.class);
 		

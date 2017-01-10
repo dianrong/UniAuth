@@ -1,7 +1,5 @@
 package com.dianrong.common.uniauth.client.config;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -22,12 +20,10 @@ public class ConfigureBeanCreator implements ApplicationContextAware{
 
 	private volatile  ApplicationContext applicationContext;
 	
-	private CountDownLatch lock = new CountDownLatch(1);
-	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 			this.applicationContext = applicationContext;
-			lock.countDown();
+			log.info("ConfigureBeanCreator already set");
 	}
 	
 	/**
@@ -38,13 +34,7 @@ public class ConfigureBeanCreator implements ApplicationContextAware{
 	 */
 	public <T> T  create(Class<T> cls) {
 		Assert.notNull(cls);
-		try {
-			log.debug("create " + cls + " supended, until ApplicationContext is setted");
-			lock.await();
-		} catch (InterruptedException e) {
-			log.error("failed to create " + cls);
-			throw new RuntimeException(e);
-		}
+		Assert.notNull(applicationContext, "nedd set applicationContext before calling create(Class<T> cls)");
 		String[] names = applicationContext.getBeanNamesForType(Configure.class, true, false);
 		if (names.length == 0) {
 			throw new NoSuchConfigureException("no configure for class " + cls);
