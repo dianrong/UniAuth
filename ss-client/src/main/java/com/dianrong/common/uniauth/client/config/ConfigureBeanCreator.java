@@ -33,8 +33,8 @@ public class ConfigureBeanCreator implements ApplicationContextAware{
 	 * @throws 
 	 */
 	public <T> T  create(Class<T> cls) {
-		Assert.notNull(cls);
-		Assert.notNull(applicationContext, "nedd set applicationContext before calling create(Class<T> cls)");
+		Assert.notNull(cls, "cls can not be null");
+		Assert.notNull(applicationContext, "need set applicationContext before calling create(Class<T> cls)");
 		String[] names = applicationContext.getBeanNamesForType(Configure.class, true, false);
 		if (names.length == 0) {
 			throw new NoSuchConfigureException("no configure for class " + cls);
