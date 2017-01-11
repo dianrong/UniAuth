@@ -3,7 +3,7 @@ define(['../../utils/constant'], function (constant) {
      * A module representing a User controller.
      * @exports controllers/User
      */
-    var Controller = function ($scope, $rootScope, GroupService) {
+    var Controller = function ($scope, $rootScope, $state, GroupService) {
         $scope.treedata = GroupService.tree;
         $scope.opts = {
             isLeaf: function(node) {
@@ -18,6 +18,9 @@ define(['../../utils/constant'], function (constant) {
                     return false;
                 } else if(!node.ownerMarkup) {
                     return false;
+                } else if (node.isRootGrp && ($state.includes('group.modify') || $state.includes('group.delete'))) {
+                	// root group is unmodifiable
+                	return false;
                 } else {
                     return true;
                 }
@@ -89,7 +92,6 @@ define(['../../utils/constant'], function (constant) {
 
     return {
         name: "GroupController",
-        fn: ["$scope", "$rootScope", "GroupService", Controller]
+        fn: ["$scope", "$rootScope", "$state", "GroupService", Controller]
     };
-
 });

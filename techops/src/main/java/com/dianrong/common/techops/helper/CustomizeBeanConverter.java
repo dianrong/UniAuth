@@ -46,6 +46,7 @@ public class CustomizeBeanConverter {
                     groupNode.setChecked(groupDto.getTagChecked());
                 }
                 groupNode.setOwnerMarkup(groupDto.getOwnerMarkup());
+                groupNode.setIsRootGrp(groupDto.getIsRootGrp());
                 nodes.add(groupNode);
                 List<UserDto> userDtos = groupDto.getUsers();
                 List<GroupDto> groupDtos = groupDto.getGroups();

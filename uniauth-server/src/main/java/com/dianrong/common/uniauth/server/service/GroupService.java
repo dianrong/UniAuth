@@ -382,6 +382,11 @@ public class GroupService extends TenancyBasedService{
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
         }
         
+        // 根组不能进行修改，修改只能走数据库修改
+        if (AppConstants.GRP_ROOT.equals(grp.getCode())) {
+        	throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.rootgrp.unmodifiable"));
+        }
+        
         //启用或者启用状态的修改
         if((status != null && status == AppConstants.STATUS_ENABLED) || (status == null && grp.getStatus() == AppConstants.STATUS_ENABLED)){
 	        //判断是否存在重复的code
@@ -587,6 +592,10 @@ public class GroupService extends TenancyBasedService{
             for(Grp grp : grps) {
                 GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName())
                         .setDescription(grp.getDescription());
+                // mark root group unmodifiable
+                if (AppConstants.GRP_ROOT.equals(groupDto.getCode())) {
+                	groupDto.setIsRootGrp(Boolean.TRUE);
+                }
                 if(!CollectionUtils.isEmpty(ownGrpIds)) {
                     if(ownGrpIds.contains(grp.getId())) {
                         groupDto.setOwnerMarkup(Boolean.TRUE);
