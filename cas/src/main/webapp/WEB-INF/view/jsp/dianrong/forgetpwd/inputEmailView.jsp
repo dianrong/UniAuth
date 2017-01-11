@@ -41,7 +41,7 @@
 					<form action="<%=path %>/uniauth/forgetPassword" id="step1Post" class="form-horizontal">
 					  <div class="form-group">
 					  	<div class="col-sm-offset-4 col-sm-4">
-					    	<input type="email" class="form-control" placeholder="Email" id="temail">
+					    	<input type="text" class="form-control" placeholder="Email Or Phone Number" id="temail">
 					    </div>
 					  </div>
 					  <div class="form-group">

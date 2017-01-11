@@ -934,13 +934,22 @@ public class UserService extends TenancyBasedService {
         return userDto;
     }
 
+    /**
+     * rest password and identify by phone number or email 
+     * @param userParam
+     */
     @Transactional
     public void resetPassword(UserParam userParam) {
         String email = userParam.getEmail();
         String password = userParam.getPassword();
-        CheckEmpty.checkEmpty(email, "邮件");
+        CheckEmpty.checkAllBlank("邮件手机", email, userParam.getPhone());
         CheckEmpty.checkEmpty(password, "密码");
-        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false,AppConstants.STATUS_ENABLED);
+        User user = null;
+        if (email != null) {
+            user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false, AppConstants.STATUS_ENABLED);
+        } else {
+            user = getUserByAccount(userParam.getPhone(), userParam.getTenancyCode(), userParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
+        }
         if (!AuthUtils.validatePasswordRule(password)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
         }

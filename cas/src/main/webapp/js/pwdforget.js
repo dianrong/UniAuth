@@ -37,14 +37,17 @@ $(function() {
 		$('#btn_step3').click(processStep3);
 	}
 	
+	function isEmailOrPhoneNumber(number){
+	    var filter  = /(^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$)|(^((13[0-9])|(15[^4])|(18[0-9])|(17[0-8])|(147))\d{8}$)/;
+	    return filter.test(number);
+	}
 	// step1 btn show
 	var process_step1_btn = function(){
 		var mailval = $('#temail').val();
 		var input_verifycode = $('#tverfynotice').val();
-		// filter email
-		var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		// filter email 
 		var stepbtn = $('#btn_step1');
-		if(input_verifycode && mailval && filter.test(mailval)) {
+		if(input_verifycode && mailval && isEmailOrPhoneNumber(mailval)) {
 			stepbtn.removeAttr("disabled","disabled");
 			stepbtn.removeClass('cursordefault');
 		} else {
@@ -205,8 +208,7 @@ $(function() {
 		}
 		
 		// filter email
-		var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-		if (!filter.test(temalval)) {
+		if (!isEmailOrPhoneNumber(temalval)) {
 			return;
 		}
 		
