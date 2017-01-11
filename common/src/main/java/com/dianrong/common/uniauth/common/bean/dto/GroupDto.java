@@ -25,6 +25,7 @@ public class GroupDto extends TenancyBaseDto {
 	//whether this group connected with a tag
 	private Boolean tagChecked;
 	private Boolean ownerMarkup;
+	private Boolean isRootGrp;
 
 	public Integer getId() {
 		return id;
@@ -151,12 +152,22 @@ public class GroupDto extends TenancyBaseDto {
 		this.parentId = parentId;
 		return this;
 	}
+	
+	public Boolean getIsRootGrp() {
+		return isRootGrp;
+	}
+
+	public GroupDto setIsRootGrp(Boolean isRootGrp) {
+		this.isRootGrp = isRootGrp;
+		return this;
+	}
 
 	@Override
 	public String toString() {
 		return "GroupDto [id=" + id + ", code=" + code + ", name=" + name + ", createDate=" + createDate
 				+ ", lastUpdate=" + lastUpdate + ", status=" + status + ", description=" + description + ", tags="
 				+ tags + ", parentId=" + parentId + ", users=" + users + ", groups=" + groups + ", roleChecked="
-				+ roleChecked + ", tagChecked=" + tagChecked + ", ownerMarkup=" + ownerMarkup + "]";
+				+ roleChecked + ", tagChecked=" + tagChecked + ", ownerMarkup=" + ownerMarkup + ", isRootGrp="
+				+ isRootGrp + "]";
 	}
 }
