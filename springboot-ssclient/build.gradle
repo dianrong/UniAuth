@@ -24,7 +24,9 @@ dependencies {
 	compile ("org.apache.tomcat.embed:tomcat-embed-jasper")
 	compile ("javax.servlet:jstl")
 
-	compile project(":ss-client")
+	// compile project(":ss-client")
+    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.69"
+    
 	compile('org.springframework.boot:spring-boot-starter-actuator'){
     	 exclude  module:'spring-boot-starter-logging'
     }
