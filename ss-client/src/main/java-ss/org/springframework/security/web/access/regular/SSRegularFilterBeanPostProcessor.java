@@ -39,9 +39,6 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
 	@Autowired
 	private DomainDefine domainDefine;
 	
-	@Autowired
-	private SSRegularPermissionFilter regularPermissionFilter;
-	
 	/**.
 	 * 最低优先级，最后执行
 	 */
@@ -88,7 +85,7 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
 			if (destFilterChain == null) {
 				@SuppressWarnings("unchecked")
 				List<SecurityFilterChain> _filterChains = (List<SecurityFilterChain>)ReflectionUtils.getField(_filterChainProxy, "filterChains", false);
-				_filterChains.add(new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, regularPermissionFilter));
+				_filterChains.add(new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE,  new SSRegularPermissionFilter()));
 			} else {
 				int index = 0;
 				List<Filter> _filters =  destFilterChain.getFilters();
@@ -99,7 +96,7 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
 					index++;
 				}
 				// 放到org.springframework.security.web.access.intercept.FilterSecurityInterceptor 这个filter前面
-				_filters.add(index, regularPermissionFilter);
+				_filters.add(index, new SSRegularPermissionFilter());
 			}
 		}
 		return bean;
