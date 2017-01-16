@@ -36,9 +36,6 @@ public class DomainDefine implements Serializable {
 	 @Autowired
 	 private UniClientFacade uniClientFacade;
 	 
-	 // default is null
-	 private Boolean isCreateFilterManully;
-	 
 	/**
 	 * 权限控制类型定义,默认为使用uri_pattern
 	 */
@@ -132,14 +129,6 @@ public class DomainDefine implements Serializable {
 	
 	public void setUseAllDomainUserInfoShareMode(boolean useAllDomainUserInfoShareMode) {
 	  this.useAllDomainUserInfoShareMode = useAllDomainUserInfoShareMode;
-	}
-	
-	public Boolean isCreateFilterManully() {
-		return isCreateFilterManully;
-	}
-
-	public void setCreateFilterManully(Boolean isCreateFilterManully) {
-		this.isCreateFilterManully = isCreateFilterManully;
 	}
 
 	/**
