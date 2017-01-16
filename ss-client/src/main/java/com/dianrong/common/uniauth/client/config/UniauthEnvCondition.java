@@ -9,11 +9,12 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 判断成立都是在uniauth加载的环境下 
+ * 作为uniauth的所有condition父类，用于定义一个统一的 condition判断过滤
+ * 
  * @author wanglin
  */
 @Slf4j
-public abstract class UniauthEnvCondition implements  ConfigurationCondition{
+public abstract class UniauthEnvCondition implements ConfigurationCondition {
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
 		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
@@ -28,6 +29,6 @@ public abstract class UniauthEnvCondition implements  ConfigurationCondition{
 		log.info("loaded uniauth spring environment");
 		return doMatchesProcess(context, metadata);
 	}
-	
+
 	abstract boolean doMatchesProcess(ConditionContext context, AnnotatedTypeMetadata metadata);
 }

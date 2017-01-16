@@ -7,10 +7,11 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
  * decide whether create filter type bean auto
+ * 
  * @author wanglin
  */
-public class UniauthFilterBeanCreateCondtion extends  UniauthEnvCondition{
-	
+public class UniauthFilterBeanCreateCondtion extends UniauthEnvCondition {
+
 	@Override
 	public ConfigurationPhase getConfigurationPhase() {
 		return ConfigurationPhase.REGISTER_BEAN;
