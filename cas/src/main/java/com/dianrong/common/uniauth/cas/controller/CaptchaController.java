@@ -191,7 +191,7 @@ public class CaptchaController extends AbstractBaseController {
         StringBuffer emailInfo = new StringBuffer(UniBundleUtil.getMsg(messageSource, "captcha.controller.captcha.email.content", verifyCode, "\r\n", AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES / (60L * 1000L)));
         arg1.setTo(emailAddress);
         arg1.setSubject(title);
-        arg1.setFrom("noreply@dianrong.com");
+        arg1.setFrom(notifyCfg.getInternalSmtpFromEmail());
         arg1.setFromName("TechOps-noreplay");
         arg1.setText(emailInfo.toString());
         String sendResult = emailClient.send(notifyCfg.getNotificationUserKey(), arg1);
