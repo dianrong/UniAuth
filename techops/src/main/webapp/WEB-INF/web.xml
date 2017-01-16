@@ -22,7 +22,7 @@
 		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>  
 	</listener>  
 
-	<filter>
+	 <filter>
         <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>

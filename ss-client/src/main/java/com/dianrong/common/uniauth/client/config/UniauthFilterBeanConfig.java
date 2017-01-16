@@ -12,19 +12,17 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
  * @author wanglin
  */
 @Configuration
+@Conditional(UniauthFilterBeanCreateCondtion.class)
 public class UniauthFilterBeanConfig {
-	
 	@Autowired
 	private ConfigureBeanCreator configureBeanCreator;
-	
+
 	@Bean(name="singleLogoutFilter")
-	@Conditional(UniauthFilterBeanCreateCondtion.class)
 	public SingleSignOutFilter getSingleLogoutFilter() {
 		return configureBeanCreator.create(SingleSignOutFilter.class);
 	}
 	
 	@Bean(name="requestSingleLogoutFilter")
-	@Conditional(UniauthFilterBeanCreateCondtion.class)
 	public LogoutFilter getLogoutFilter() {
 		return configureBeanCreator.create(LogoutFilter.class);
 	}
