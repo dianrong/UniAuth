@@ -5,17 +5,17 @@ package com.dianrong.common.uniauth.common.cons;
  */
 public interface AppConstants {
     	// 0 = 启用
-        Byte ZERO_Byte = (byte)0;
+        Byte ZERO_BYTE = (byte)0;
     	// 1 = 禁用
-        Byte ONE_Byte = (byte)1;
+        Byte ONE_BYTE = (byte)1;
     	// 0 = 启用
-        byte ZERO_Byte_Primitive = (byte)0;
+        byte ZERO_BYTE_PRIMITIVE = (byte)0;
     	// 1 = 禁用
-        byte ONE_Byte_Primitive = (byte)1;
+        byte ONE_BYTE_PRIMITIVE = (byte)1;
         
         // 人性化设计
-        byte STATUS_ENABLED= ZERO_Byte_Primitive;
-        byte STATUS_DISABLED=ONE_Byte_Primitive;
+        byte STATUS_ENABLED= ZERO_BYTE_PRIMITIVE;
+        byte STATUS_DISABLED=ONE_BYTE_PRIMITIVE;
 
 	String API_UUID = "api-uuid";
 

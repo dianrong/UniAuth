@@ -159,7 +159,7 @@ public class GroupService extends TenancyBasedService{
             if(userGroupType != null ) {
                 userGrpExampleCriteria.andTypeEqualTo(userGroupType);
             } else {
-                userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
+                userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_BYTE);
             }
             List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
             List<Integer> grpIds = new ArrayList<>();
@@ -322,7 +322,7 @@ public class GroupService extends TenancyBasedService{
             }
             if(needParentId != null && needParentId) {
                 GrpPathExample grpPathExample = new GrpPathExample();
-                grpPathExample.createCriteria().andDescendantIn(new ArrayList<>(groupIdGroupDtoPair.keySet())).andDeepthEqualTo(AppConstants.ONE_Byte);
+                grpPathExample.createCriteria().andDescendantIn(new ArrayList<>(groupIdGroupDtoPair.keySet())).andDeepthEqualTo(AppConstants.ONE_BYTE);
                 List<GrpPath> grpPaths = grpPathMapper.selectByExample(grpPathExample);
                 if(!CollectionUtils.isEmpty(grpPaths)) {
                     for(GrpPath grpPath : grpPaths) {
@@ -359,7 +359,7 @@ public class GroupService extends TenancyBasedService{
         grp.setTenancyId(tenancyService.getTenancyIdWithCheck());
         grpMapper.insert(grp);
         GrpPath grpPath = new GrpPath();
-        grpPath.setDeepth(AppConstants.ZERO_Byte);
+        grpPath.setDeepth(AppConstants.ZERO_BYTE);
         grpPath.setDescendant(grp.getId());
         grpPath.setAncestor(targetGroupId);
         grpPathMapper.insertNewNode(grpPath);
@@ -414,10 +414,10 @@ public class GroupService extends TenancyBasedService{
         UserGrpExample userGrpExample = new UserGrpExample();
         List<UserGrpKey> userGrpKeys;
         if(normalMember == null || normalMember) {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ZERO_Byte);
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ZERO_BYTE);
             userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         } else {
-            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ONE_Byte);
+            userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ONE_BYTE);
             userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         }
         Set<Long> userIdSet = new HashSet<>();
@@ -454,9 +454,9 @@ public class GroupService extends TenancyBasedService{
             UserGrpExample userGrpExample = new UserGrpExample();
             userGrpExample.createCriteria().andGrpIdEqualTo(grpId).andUserIdEqualTo(userId);
             if(normalMember == null || normalMember) {
-                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ZERO_Byte_Primitive);
+                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ZERO_BYTE_PRIMITIVE);
             } else {
-                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_Byte_Primitive);
+                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_BYTE_PRIMITIVE);
             }
             userGrpMapper.deleteByExample(userGrpExample);
         }
@@ -509,7 +509,7 @@ public class GroupService extends TenancyBasedService{
         if(!CollectionUtils.isEmpty(roles)) {
             List<RoleDto> roleDtos = new ArrayList<>();
             for(Role role : roles) {
-                if(role.getStatus().equals(AppConstants.ONE_Byte)) {
+                if(role.getStatus().equals(AppConstants.ONE_BYTE)) {
                     continue;
                 }
                 RoleDto roleDto = BeanConverter.convert(role);
@@ -531,7 +531,7 @@ public class GroupService extends TenancyBasedService{
         if(!CollectionUtils.isEmpty(users)) {
             List<UserDto> userDtos = new ArrayList<>();
             for(User user : users) {
-                if(user.getStatus().equals(AppConstants.ONE_Byte)) {
+                if(user.getStatus().equals(AppConstants.ONE_BYTE)) {
                     continue;
                 }
                 UserDto userDto = BeanConverter.convert(user);
@@ -576,7 +576,7 @@ public class GroupService extends TenancyBasedService{
         } else {
             //else if(groupCode == null && groupId != null)
             rootGrp = grpMapper.selectByPrimaryKey(groupId);
-            if(rootGrp == null || !AppConstants.ZERO_Byte.equals(rootGrp.getStatus())) {
+            if(rootGrp == null || !AppConstants.ZERO_BYTE.equals(rootGrp.getStatus())) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
             }
         }

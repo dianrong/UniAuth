@@ -12,7 +12,7 @@ public class ParamCheck {
     public static void checkStatus(Byte b){
         if(b == null){
             throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "status"));
-        } else if(!AppConstants.ONE_Byte.equals(b) && !AppConstants.ZERO_Byte.equals(b)) {
+        } else if(!AppConstants.ONE_BYTE.equals(b) && !AppConstants.ZERO_BYTE.equals(b)) {
             throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.status.invalid"));
         }
     }
