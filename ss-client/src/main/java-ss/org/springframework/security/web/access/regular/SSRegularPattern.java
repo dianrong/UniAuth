@@ -1,5 +1,6 @@
 package org.springframework.security.web.access.regular;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
@@ -10,8 +11,10 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
  * regular pattern model
  * @author wanglin
  */
-public  class SSRegularPattern {
-	private final String method;
+public  class SSRegularPattern implements Serializable {
+    private static final long serialVersionUID = -7951897758674120206L;
+    
+    private final String method;
 	private final Pattern pattern;
 	private SSRegularPattern(String method, Pattern pattern) {
 		Assert.notNull(method);
@@ -27,7 +30,7 @@ public  class SSRegularPattern {
 	 * @return true or false
 	 */
 	public boolean permissonCheck(String method, String requestUrl) {
-		boolean methodCheck = false;
+		boolean methodCheck;
 		if (this.method.equalsIgnoreCase(AppConstants.HTTP_METHOD_ALL)) {
 			methodCheck = true;
 		} else {
@@ -77,9 +80,8 @@ public  class SSRegularPattern {
 		if (pattern == null) {
 			if (other.pattern != null)
 				return false;
-		} else if (other.pattern == null) {
-			return false;
-		} else if (!pattern.pattern().equalsIgnoreCase(other.pattern.pattern())) {
+		} else if (other.pattern == null ||
+		        !pattern.pattern().equalsIgnoreCase(other.pattern.pattern())) {
 			return false;
 		}
 		return true;

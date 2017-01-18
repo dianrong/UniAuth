@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class PageDto<T> implements Serializable {
+public class PageDto<T extends Serializable> implements Serializable {
 
 	private static final long serialVersionUID = 578665277377363989L;
 	private int currentPage;       // current page number, from 0
@@ -12,6 +12,7 @@ public class PageDto<T> implements Serializable {
     private List<T> data;   // current page data
 
     public PageDto() {
+        super();
     }
 
     public PageDto(int currentPage, int pageSize, int totalCount, List<T> data) {

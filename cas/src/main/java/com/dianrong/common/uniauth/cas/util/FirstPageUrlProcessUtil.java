@@ -28,7 +28,7 @@ public final class FirstPageUrlProcessUtil {
 			throw new NullPointerException("HttpServletRequest can not be null");
 		}
 		// 记录跳转的上下文url
-		String savedLoginContext = request.getParameter(AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_KEY);
+		String savedLoginContext = request.getParameter(AppConstants.PSWDFORGET_DISPATCHER_CONTEXTURL_KEY);
 		//刷新主页登陆跳转的参数
 		if (!StringUtil.strIsNullOrEmpty(savedLoginContext)) {
 			HttpSession session = request.getSession();
@@ -37,7 +37,7 @@ public final class FirstPageUrlProcessUtil {
 				savedLoginContext = savedLoginContext.substring(1);
 			}
 			
-			putValToSession(session, AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
+			putValToSession(session, AppConstants.PSWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
 		}
 	}
 	
@@ -55,11 +55,11 @@ public final class FirstPageUrlProcessUtil {
 			return;
 		}
 		if (StringUtils.isEmpty(service)) {
-			session.removeAttribute(AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY);
+			session.removeAttribute(AppConstants.PSWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY);
 		} else {
 			try {
 				String savedLoginContext = "service="+URLEncoder.encode(service, "utf-8");
-				putValToSession(session, AppConstants.PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
+				putValToSession(session, AppConstants.PSWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY,  savedLoginContext);
 			} catch (Exception e) {
 				// ignore
 				log.warn("failed to refreshServiceInSession", e);

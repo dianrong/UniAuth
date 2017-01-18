@@ -186,7 +186,7 @@ public class TagService extends TenancyBasedService{
         Date now = new Date();
         tag.setCreateDate(now);
         tag.setLastUpdate(now);
-        tag.setStatus(AppConstants.ZERO_Byte);
+        tag.setStatus(AppConstants.ZERO_BYTE);
         tag.setTagTypeId(tagTypeId);
         tag.setDescription(description);
         tag.setCode(code);
@@ -204,7 +204,7 @@ public class TagService extends TenancyBasedService{
         }
 
         // 除了禁用的情况
-        if(!(status != null && status != AppConstants.ZERO_Byte)) {
+        if(!(status != null && status != AppConstants.ZERO_BYTE)) {
 	       // 过滤重复数据 启用状态的才管
 	        tagDataFilter.updateFieldsCheck(tagId, 
 	        		new FilterData(FieldType.FIELD_TYPE_CODE, StringUtil.strIsNullOrEmpty(code) ? tag.getCode() : code),

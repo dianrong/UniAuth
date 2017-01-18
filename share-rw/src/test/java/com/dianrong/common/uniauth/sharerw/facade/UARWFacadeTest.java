@@ -30,6 +30,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ContextConfiguration(locations={"classpath*:ss-uniauth-common.xml"})
 public class UARWFacadeTest {
 
+    static {
+        System.setProperty("DR_CFG_ZOOKEEPER_ENV_URL", "127.0.0.1:2181");
+    }
+    
     @Autowired
     private UniClientFacade facade;
     

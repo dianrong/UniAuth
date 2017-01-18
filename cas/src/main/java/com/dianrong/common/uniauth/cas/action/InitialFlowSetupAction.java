@@ -23,7 +23,7 @@ import com.dianrong.common.uniauth.cas.service.DomainService;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
-import lombok.extern.slf4j.Slf4j;;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class InitialFlowSetupAction extends AbstractAction {

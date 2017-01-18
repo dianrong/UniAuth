@@ -20,12 +20,12 @@ public class CasGetServiceTicketModel implements Serializable{
 	
 	// 定义异常的常量
 	public static final String LOGIN_EXCEPTION_USER_NOT_FOUND = "101";
-	public static final String LOGIN_EXCEPTION_USER_NAME_PASSWD_NOT_MATCH = "102";
+	public static final String LOGIN_EXCEPTION_USER_NAME_PSWD_NOT_MATCH = "102";
 	public static final String LOGIN_EXCEPTION_MUTILE_USER_FOUND = "103";
 	public static final String LOGIN_EXCEPTION_USER_DISABLED = "104";
 	public static final String LOGIN_EXCEPTION_TOO_MANY_FAILED = "105";
-	public static final String LOGIN_EXCEPTION_NEED_INIT_PWD = "106";
-	public static final String LOGIN_EXCEPTION_NEED_UPDATE_PWD = "107";
+	public static final String LOGIN_EXCEPTION_NEED_INIT_PSWD = "106";
+	public static final String LOGIN_EXCEPTION_NEED_UPDATE_PSWD = "107";
 	public static final String LOGIN_EXCEPTION_LOGINFAILED = "108";
 	
 	// 创建st失败

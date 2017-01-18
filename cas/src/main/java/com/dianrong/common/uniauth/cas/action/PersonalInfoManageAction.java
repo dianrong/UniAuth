@@ -126,8 +126,8 @@ public class PersonalInfoManageAction extends AbstractAction {
 
 		// 走更新密码的分支
 		if ("password".equals(updateType)) {
-			String password = request.getParameter(AppConstants.CAS_USERINFO_MANGE_UPDATE_PASSWORD_TAG);
-			String origin_password = request.getParameter(AppConstants.CAS_USERINFO_MANGE_UPDATE_ORIGINPASSWORD_TAG);
+			String password = request.getParameter(AppConstants.CAS_USERINFO_MANGE_UPDATE_PSWD_TAG);
+			String origin_password = request.getParameter(AppConstants.CAS_USERINFO_MANGE_UPDATE_ORIGINPSWD_TAG);
 			try {
 				userInfoManageService.updateUserPassword(Long.parseLong(id), password, origin_password);
 			} catch (Exception ex) {

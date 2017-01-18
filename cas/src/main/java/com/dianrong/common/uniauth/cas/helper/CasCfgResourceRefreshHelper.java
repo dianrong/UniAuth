@@ -21,7 +21,9 @@ import com.dianrong.common.uniauth.cas.util.SpringContextHolder;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.google.common.collect.Lists;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,14 +37,13 @@ public final class CasCfgResourceRefreshHelper {
     /**
      * . singleton
      */
-    public static CasCfgResourceRefreshHelper instance = new CasCfgResourceRefreshHelper();
+    public static  final CasCfgResourceRefreshHelper INSTANCE = new CasCfgResourceRefreshHelper();
 
     /**
      * . 缓存的图片cfg key 列表
      */
     private static List<String> imgCacheCfgKeyList = new ArrayList<String>() {
         private static final long serialVersionUID = -2609958017102569295L;
-
         {
             add(AppConstants.CAS_CFG_KEY_LOGO);
             add(AppConstants.CAS_CFG_KEY_ICON);
@@ -120,11 +121,11 @@ public final class CasCfgResourceRefreshHelper {
                     null,  getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, "#153e50"),
                     Arrays.asList(new CasLoginAdConfigModel(getConfigDto(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG + "_1", AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG, FileUtil.readFiles(getRelativePath("images", "spring_festival.jpg"))), AppConstants.CAS_CFG_HREF_DEFALT_VAL)));
         } catch (Exception ex) {
-            log.error("init default cas cfg error:" + ex.getMessage());
+            log.error("init default cas cfg error:" + ex.getMessage(), ex);
         }
 
         if (this.defaultCasCfg == null) {
-            throw new RuntimeException("load default cas cfg error");
+            throw new UniauthCommonException("load default cas cfg error");
         }
 
         // 设置默认值
@@ -137,7 +138,7 @@ public final class CasCfgResourceRefreshHelper {
      * @throws ResetPasswordException
      */
     public void refreshCache() throws Exception {
-        final List<String> tempAllImgList = new ArrayList<String>(allCacheCfgKeyList);
+        final List<String> tempAllImgList = new ArrayList<>(allCacheCfgKeyList);
         // 去掉登陆首页的滚动img
         tempAllImgList.remove(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG);
         List<ConfigDto> standardCaches = cfgService.queryConfigDtoByCfgKeys(tempAllImgList);
@@ -170,15 +171,14 @@ public final class CasCfgResourceRefreshHelper {
         filterInvalidFileData(loginImages);
 
         try {
-            CasCfgCacheModel cacheModel = new CasCfgCacheModel(
+            return new CasCfgCacheModel(
                     getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE, this.defaultCasCfg.getPageTitle(), AppConstants.CAS_CFG_TYPE_TEXT),
                     getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON, this.defaultCasCfg.getPageIcon(), AppConstants.CAS_CFG_TYPE_FILE), 
                     getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO, this.defaultCasCfg.getLogo(), AppConstants.CAS_CFG_TYPE_FILE),
                     getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT, this.defaultCasCfg.getBottomAllRightText(), AppConstants.CAS_CFG_TYPE_TEXT),
                     getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR, this.defaultCasCfg.getBackgroundColorText(), AppConstants.CAS_CFG_TYPE_TEXT), getLoginImges(loginImages));
-            return cacheModel;
         } catch (Exception ex) {
-            log.error("构造cas定制化数据缓存异常:" + ex.getMessage());
+            log.error("构造cas定制化数据缓存异常:" + ex.getMessage(), ex);
         }
         return null;
     }
@@ -190,7 +190,7 @@ public final class CasCfgResourceRefreshHelper {
         if (filterList == null || filterList.isEmpty()) {
             return;
         }
-        List<ConfigDto> tempList = new ArrayList<ConfigDto>();
+        List<ConfigDto> tempList = new ArrayList<>();
         for (ConfigDto cto : filterList) {
             // 过滤文件类型但是文件内容为空的脏数据
             if (cto.getCfgTypeId() != null && AppConstants.CAS_CFG_TYPE_FILE.equalsIgnoreCase(cto.getCfgType()))  {
@@ -199,12 +199,9 @@ public final class CasCfgResourceRefreshHelper {
                 }
             }
         }
-        if (tempList.size() > 0) {
+        if (!tempList.isEmpty()) {
             filterList.removeAll(tempList);
         }
-
-        // clear
-        tempList = null;
     }
 
     /**

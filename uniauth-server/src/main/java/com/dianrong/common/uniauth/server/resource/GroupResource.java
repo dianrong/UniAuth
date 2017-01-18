@@ -85,7 +85,7 @@ public class GroupResource implements IGroupRWResource {
 					if(grp.getId().equals(groupParam.getId())){
 						continue;
 					}
-					groupService.updateGroup(grp.getId(), grp.getCode(), grp.getName(), AppConstants.ONE_Byte, grp.getDescription());
+					groupService.updateGroup(grp.getId(), grp.getCode(), grp.getName(), AppConstants.ONE_BYTE, grp.getDescription());
 				}
 			}
 		}catch(Exception e){

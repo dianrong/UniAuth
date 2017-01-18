@@ -69,7 +69,7 @@ public class CaptchaController extends AbstractBaseController {
 
         // send email verify code
         if ("1".equals(captchaType)) {
-            String target = getValFromSession(request.getSession(false), AppConstants.PWDFORGET_MAIL_VAL_KEY, String.class);
+            String target = getValFromSession(request.getSession(false), AppConstants.PSWDFORGET_MAIL_VAL_KEY, String.class);
             if (StringUtil.strIsNullOrEmpty(target)) {
                 setResponseResultJson(response, "1");
                 return null;
@@ -188,7 +188,7 @@ public class CaptchaController extends AbstractBaseController {
         SendEmailRequest arg1 = new SendEmailRequest();
         //定义发送的内容
         String title = UniBundleUtil.getMsg(messageSource, "captcha.controller.captcha.email.title");
-        StringBuffer emailInfo = new StringBuffer(UniBundleUtil.getMsg(messageSource, "captcha.controller.captcha.email.content", verifyCode, "\r\n", AppConstants.PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES / (60L * 1000L)));
+        StringBuffer emailInfo = new StringBuffer(UniBundleUtil.getMsg(messageSource, "captcha.controller.captcha.email.content", verifyCode, "\r\n", AppConstants.PSWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES / (60L * 1000L)));
         arg1.setTo(emailAddress);
         arg1.setSubject(title);
         arg1.setFrom(notifyCfg.getInternalSmtpFromEmail());

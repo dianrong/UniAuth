@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class DomainDefine implements Serializable {
 	private static String staticDomainCode;
 	 
 	 @Autowired
-	 private UniClientFacade uniClientFacade;
+	 private transient UniClientFacade uniClientFacade;
 	 
 	/**
 	 * 权限控制类型定义,默认为使用uri_pattern
@@ -50,13 +51,13 @@ public class DomainDefine implements Serializable {
 			codes.add(this.domainCode);
 			Response<List<DomainDto>> result= uniClientFacade.getDomainResource().getAllLoginDomains(new DomainParam().setDomainCodeList(codes));
 			if (result == null || (result.getInfo() != null && !result.getInfo().isEmpty())) {
-				throw new RuntimeException("query domain info by configed domainCode failed, please check domainCode is correct or uniauth-server is alreay running");
+				throw new UniauthCommonException("query domain info by configed domainCode failed, please check domainCode is correct or uniauth-server is alreay running");
 			}
 			List<DomainDto> data = result.getData();
 			if (data == null || data.isEmpty()) {
-				throw new RuntimeException("please check the configed domainCode is correct or not");
+				throw new UniauthCommonException("please check the configed domainCode is correct or not");
 			}
-			domainId = data.get(0).getId();
+			DomainDefine.domainId = data.get(0).getId();
 			log.info("DomainDefine init, query domainId success");
 		} else {
 			log.info("domainCode is null or empty, so do not query domainId");
@@ -118,7 +119,7 @@ public class DomainDefine implements Serializable {
 	
 	public static String getStaticDomainCode() {
 	     if (DomainDefine.staticDomainCode == null) {
-	       throw new RuntimeException("before call getStaticDomainCode, need set domainCode first");
+	       throw new UniauthCommonException("before call getStaticDomainCode, need set domainCode first");
 	     }
 	     return DomainDefine.staticDomainCode;
 	}

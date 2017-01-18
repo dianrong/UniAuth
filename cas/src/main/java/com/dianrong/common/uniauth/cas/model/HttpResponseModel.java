@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 定义一个标准的http response返回model的格式
  * @author wanglin
  */
-public class HttpResponseModel<T>  implements Serializable{
+public class HttpResponseModel<T extends Serializable>  implements Serializable{
 
 	private static final long serialVersionUID = 788863139426941179L;
 	
@@ -54,7 +54,7 @@ public class HttpResponseModel<T>  implements Serializable{
 		return this;
 	}
 	
-	public static <T> HttpResponseModel<T> buildSuccessResponse() {
+	public static <T extends Serializable> HttpResponseModel<T> buildSuccessResponse() {
 		return new HttpResponseModel<T>().setSuccess(true);
 	}
 }

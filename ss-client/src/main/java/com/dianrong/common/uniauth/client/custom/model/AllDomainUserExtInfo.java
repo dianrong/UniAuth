@@ -1,10 +1,14 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
 import java.io.Serializable;
+import java.util.Enumeration;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.util.Assert;
+
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import com.google.common.collect.Sets;
 
 /**
  * 当前登陆用户的所有域下的权限集合的信息
@@ -54,15 +58,20 @@ public final class AllDomainUserExtInfo implements Serializable {
     	for(String code : userExtInfoMap.keySet()){
     		return userExtInfoMap.get(code);
     	}
-    	throw new RuntimeException("userExtInfoMap is empty");
+    	throw new UniauthCommonException("userExtInfoMap is empty");
     }
     
     /**
      * get all domain code
-     * @return Set<DomainCode>
+     * @return Set not null
      */
     public Set<String> getAllDomainCode() {
-    	return userExtInfoMap.keySet();
+        Set<String> keySet = Sets.newHashSet();
+        Enumeration<String> keys = userExtInfoMap.keys();
+        while (keys.hasMoreElements()) {
+            keySet.add(keys.nextElement());
+        }
+        return keySet;
     }
     
     /**

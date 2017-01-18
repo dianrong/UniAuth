@@ -156,7 +156,7 @@ public class UserService extends TenancyBasedService {
         user.setName(name);
         user.setTenancyId(tenancyService.getTenancyIdWithCheck());
         Date now = new Date();
-        user.setFailCount(AppConstants.ZERO_Byte);
+        user.setFailCount(AppConstants.ZERO_BYTE);
 
         String randomPassword = AuthUtils.randomPassword();
         byte salt[] = AuthUtils.createSalt();
@@ -185,7 +185,7 @@ public class UserService extends TenancyBasedService {
         User user = getUserByPrimaryKey(id);
         if (user == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", id, User.class.getSimpleName()));
-        } else if (AppConstants.ONE_Byte.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
+        } else if (AppConstants.ONE_BYTE.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", id, User.class.getSimpleName()));
         }
         switch (userActionEnum) {
@@ -193,7 +193,7 @@ public class UserService extends TenancyBasedService {
                 user.setFailCount(AppConstants.MAX_AUTH_FAIL_COUNT);
                 break;
             case UNLOCK :
-                user.setFailCount(AppConstants.ZERO_Byte);
+                user.setFailCount(AppConstants.ZERO_BYTE);
                 break;
             case RESET_PASSWORD :
                 checkUserPwd(id, password);
@@ -202,7 +202,7 @@ public class UserService extends TenancyBasedService {
                 user.setPasswordSalt(Base64.encode(salt));
                 user.setPasswordDate(new Date());
                 // reset failed count
-                user.setFailCount(AppConstants.ZERO_Byte);
+                user.setFailCount(AppConstants.ZERO_BYTE);
                 // log
                 asynAddUserPwdLog(user);
                 break;
@@ -233,7 +233,7 @@ public class UserService extends TenancyBasedService {
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
                 user.setPasswordSalt(Base64.encode(salttemp));
                 user.setPasswordDate(new Date());
-                user.setFailCount(AppConstants.ZERO_Byte);
+                user.setFailCount(AppConstants.ZERO_BYTE);
                 // log
                 asynAddUserPwdLog(user);
                 break;
@@ -249,7 +249,7 @@ public class UserService extends TenancyBasedService {
         }
         // 1. get all roles under the domain
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_BYTE).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Role> roles = roleMapper.selectByExample(roleExample);
         if (CollectionUtils.isEmpty(roles)) {
             return null;
@@ -366,7 +366,7 @@ public class UserService extends TenancyBasedService {
                     } else {
                         // 默认需要过滤掉禁用的组
                         GrpExample grpExample = new GrpExample();
-                        grpExample.createCriteria().andIdIn(descendantIds).andStatusEqualTo(AppConstants.ZERO_Byte).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+                        grpExample.createCriteria().andIdIn(descendantIds).andStatusEqualTo(AppConstants.ZERO_BYTE).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                         List<Grp> grps = grpMapper.selectByExample(grpExample);
                         if (CollectionUtils.isEmpty(grps)) {
                             return null;
@@ -382,7 +382,7 @@ public class UserService extends TenancyBasedService {
             } else {
                 userGrpExampleCriteria.andGrpIdEqualTo(groupId);
             }
-            userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
+            userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_BYTE);
             List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
             if (CollectionUtils.isEmpty(userGrpKeys)) {
                 return null;
@@ -529,7 +529,7 @@ public class UserService extends TenancyBasedService {
         CheckEmpty.checkEmpty(ip, "IP地址");
 
         User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true, null);
-        if (AppConstants.ONE_Byte.equals(user.getStatus())) {
+        if (AppConstants.ONE_BYTE.equals(user.getStatus())) {
             throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
         }
         if (user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT) {
@@ -957,7 +957,7 @@ public class UserService extends TenancyBasedService {
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
         user.setPasswordSalt(Base64.encode(salt));
         user.setPasswordDate(new Date());
-        user.setFailCount(AppConstants.ZERO_Byte);
+        user.setFailCount(AppConstants.ZERO_BYTE);
         userMapper.updateByPrimaryKey(user);
     }
 
@@ -1147,9 +1147,9 @@ public class UserService extends TenancyBasedService {
         tagTypeExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
         if (tagTypes == null || tagTypes.isEmpty()) {
-            return new ArrayList<TagDto>();
+            return new ArrayList<>();
         }
-        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+        Map<Integer, TagType> tagTypeIdMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(tagTypes)) {
             for (TagType tagType : tagTypes) {
                 tagTypeIdMap.put(tagType.getId(), tagType);
@@ -1160,8 +1160,8 @@ public class UserService extends TenancyBasedService {
         UserTagExample userTagExample = new UserTagExample();
         userTagExample.createCriteria().andUserIdEqualTo(userId);
         List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
-        List<TagDto> tagDtos = new ArrayList<TagDto>();
-        Set<Integer> tagIdLinkedToUser = new HashSet<Integer>();
+        List<TagDto> tagDtos = new ArrayList<>();
+        Set<Integer> tagIdLinkedToUser = new HashSet<>();
         if (!CollectionUtils.isEmpty(userTagKeys)) {
             for (UserTagKey userTagKey : userTagKeys) {
                 tagIdLinkedToUser.add(userTagKey.getTagId());
@@ -1179,7 +1179,7 @@ public class UserService extends TenancyBasedService {
 
         // 优化
         if (allTags == null || allTags.isEmpty()) {
-            return new ArrayList<TagDto>();
+            return new ArrayList<>();
         }
 
         for (Tag tag : allTags) {
@@ -1215,7 +1215,7 @@ public class UserService extends TenancyBasedService {
             return;
         }
 
-        List<UserTagKey> infoes = new ArrayList<UserTagKey>();
+        List<UserTagKey> infoes = new ArrayList<>();
         for (Integer tagId : tagIds) {
             infoes.add(new UserTagKey().setUserId(userId).setTagId(tagId));
         }
@@ -1293,7 +1293,7 @@ public class UserService extends TenancyBasedService {
     public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp, List<Integer> includeRoleIds) {
         CheckEmpty.checkEmpty(groupCode, "groupCode");
         CheckEmpty.checkEmpty(includeRoleIds, "roleIds");
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         param.put("roleIds", includeRoleIds);
         param.put("groupCode", groupCode);
         param.put("includeSubGrp", includeSubGrp);

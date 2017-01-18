@@ -54,8 +54,10 @@ public final class FileUtil {
         if (file.exists() && file.isFile()) {
             byte[] bytes = new byte[(int) file.length()];
             BufferedInputStream bufferedInputStream = null;
+            FileInputStream fileInputStream = null;
             try {
-                bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+                fileInputStream =  new FileInputStream(file);
+                bufferedInputStream = new BufferedInputStream(fileInputStream);
                 int r = bufferedInputStream.read(bytes);
                 if (r != file.length())
                     throw new IOException("读取文件不正确");
@@ -64,6 +66,9 @@ public final class FileUtil {
             } finally {
                 if (bufferedInputStream != null) {
                     bufferedInputStream.close();
+                }
+                if (fileInputStream != null) {
+                    fileInputStream.close();
                 }
             }
             return bytes;
