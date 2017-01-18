@@ -1147,9 +1147,9 @@ public class UserService extends TenancyBasedService {
         tagTypeExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
         if (tagTypes == null || tagTypes.isEmpty()) {
-            return new ArrayList<TagDto>();
+            return new ArrayList<>();
         }
-        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+        Map<Integer, TagType> tagTypeIdMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(tagTypes)) {
             for (TagType tagType : tagTypes) {
                 tagTypeIdMap.put(tagType.getId(), tagType);
@@ -1160,8 +1160,8 @@ public class UserService extends TenancyBasedService {
         UserTagExample userTagExample = new UserTagExample();
         userTagExample.createCriteria().andUserIdEqualTo(userId);
         List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
-        List<TagDto> tagDtos = new ArrayList<TagDto>();
-        Set<Integer> tagIdLinkedToUser = new HashSet<Integer>();
+        List<TagDto> tagDtos = new ArrayList<>();
+        Set<Integer> tagIdLinkedToUser = new HashSet<>();
         if (!CollectionUtils.isEmpty(userTagKeys)) {
             for (UserTagKey userTagKey : userTagKeys) {
                 tagIdLinkedToUser.add(userTagKey.getTagId());
@@ -1179,7 +1179,7 @@ public class UserService extends TenancyBasedService {
 
         // 优化
         if (allTags == null || allTags.isEmpty()) {
-            return new ArrayList<TagDto>();
+            return new ArrayList<>();
         }
 
         for (Tag tag : allTags) {
@@ -1215,7 +1215,7 @@ public class UserService extends TenancyBasedService {
             return;
         }
 
-        List<UserTagKey> infoes = new ArrayList<UserTagKey>();
+        List<UserTagKey> infoes = new ArrayList<>();
         for (Integer tagId : tagIds) {
             infoes.add(new UserTagKey().setUserId(userId).setTagId(tagId));
         }
@@ -1293,7 +1293,7 @@ public class UserService extends TenancyBasedService {
     public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp, List<Integer> includeRoleIds) {
         CheckEmpty.checkEmpty(groupCode, "groupCode");
         CheckEmpty.checkEmpty(includeRoleIds, "roleIds");
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         param.put("roleIds", includeRoleIds);
         param.put("groupCode", groupCode);
         param.put("includeSubGrp", includeSubGrp);

@@ -1,17 +1,12 @@
 package com.dianrong.common.uniauth.common.bean;
 
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Arc on 14/1/16.
  */
-public class Response<T> implements Serializable {
-
-    private static final long serialVersionUID = 4391955854748049770L;
+public class Response<T> {
     private static final Info internalError = Info.build(InfoName.INTERNAL_ERROR, "Internal error");
     private String uuid;
     /** 返回数据 */
@@ -20,6 +15,7 @@ public class Response<T> implements Serializable {
     private List<Info> info;
 
     public Response() {
+        super();
     }
 
     public Response(List<Info> info) {
@@ -47,7 +43,7 @@ public class Response<T> implements Serializable {
         return info;
     }
 
-    public Response setInfo(List<Info> info) {
+    public Response<T> setInfo(List<Info> info) {
         this.info = info;
         return this;
     }
@@ -56,29 +52,29 @@ public class Response<T> implements Serializable {
         return uuid;
     }
 
-    public Response setUuid(String uuid) {
+    public Response<T> setUuid(String uuid) {
         this.uuid = uuid;
         return this;
     }
 
     public static <T> Response<T> success(T result) {
-        return new Response<T>(result);
+        return new Response<>(result);
     }
 
     public static Response<Void> success() {
-        return new Response<Void>();
+        return new Response<>();
     }
 
     public static <T> Response<T> failure(Info info) {
-        return new Response<T>(info);
+        return new Response<>(info);
     }
 
     public static <T> Response<T> failure(List<Info> info) {
-        return new Response<T>(info);
+        return new Response<>(info);
     }
 
     public static <T> Response<T> failure() {
-        return new Response<T>(internalError);
+        return new Response<>(internalError);
     }
 
     public static <T> Response<T> failure(InfoName name, String errMsg) {

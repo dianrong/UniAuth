@@ -32,7 +32,7 @@ public class I18NAction {
 	public Response<I18NResultModel> query(){
 		List<LangDto> supportLangs = techOpsResourceService.getLanguageList();
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-		Object lang = request.getSession().getAttribute(UniauthLocaleChangeInterceptor.sessionName);
+		Object lang = request.getSession().getAttribute(UniauthLocaleChangeInterceptor.SESSION_NAME);
 		if(lang == null){
 			lang = Locale.getDefault().getLanguage();
 		}
@@ -42,7 +42,7 @@ public class I18NAction {
 	@RequestMapping(value = "changeLanguage",produces = MediaType.APPLICATION_JSON_VALUE)
 	public Response<?> changeLanguage(@RequestParam(name = "lang", required = false)String lang){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-		request.getSession().setAttribute(UniauthLocaleChangeInterceptor.sessionName,org.springframework.util.StringUtils.parseLocaleString(lang));
+		request.getSession().setAttribute(UniauthLocaleChangeInterceptor.SESSION_NAME,org.springframework.util.StringUtils.parseLocaleString(lang));
 		return Response.success();
 	}
 	
@@ -50,7 +50,7 @@ public class I18NAction {
 	@RequestMapping(value = "getCurrentLanguage",produces = MediaType.APPLICATION_JSON_VALUE)
 	public Response<String> getCurrentLanguage(){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-		Object lang = request.getSession().getAttribute(UniauthLocaleChangeInterceptor.sessionName);
+		Object lang = request.getSession().getAttribute(UniauthLocaleChangeInterceptor.SESSION_NAME);
 		if(lang == null){
 			lang = Locale.getDefault().getLanguage();
 		}

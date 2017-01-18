@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -36,6 +35,7 @@ import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -51,21 +51,18 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 	private int perQueryTenancyCount = 10;
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+	public Object postProcessBeforeInitialization(Object bean, String beanName) {
 		return bean;
 	}
 
 	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+	public Object postProcessAfterInitialization(Object bean, String beanName) {
 		if (!isOn()) {
 			return bean;
 		}
 		String currentDomainCode = domainDefine.getDomainCode();
-		String beanClazzName = bean.getClass().getName();
-		
-		if(beanClazzName.equals(FilterSecurityInterceptor.class.getName())){
+		if(bean instanceof FilterSecurityInterceptor){
 			CheckDomainDefine.checkDomainDefine(currentDomainCode);
-			//currentDomainCode = currentDomainCode.substring(AppConstants.ZK_DOMAIN_PREFIX.length());
 			
 			FilterSecurityInterceptor filterSecurityInterceptor = (FilterSecurityInterceptor)bean;
 			//note: access public secure object is not allowed, this is a bit too overkilled if set to be true
@@ -94,7 +91,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 	private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> getAppendMap(String currentDomainCode){
 		TenancyParam tenancyParam = new TenancyParam();
         tenancyParam.setStatus(AppConstants.STATUS_ENABLED);
-        List<Long> enableTenancyIds =  new ArrayList<Long>();
+        List<Long> enableTenancyIds =  new ArrayList<>();
 		while(true){
     		try{
     		    Response<List<TenancyDto>> enableTenancys = uniClientFacade.getTenancyResource().searchTenancy(tenancyParam);
@@ -103,7 +100,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
     		        break;
     		    }
     		    List<TenancyDto> tenancys = enableTenancys.getData();
-    		    Set<Long> tids =  new HashSet<Long>();
+    		    Set<Long> tids =  new HashSet<>();
     		    for (TenancyDto tenancy: tenancys) {
     		        tids.add(tenancy.getId());
     		    }
@@ -115,13 +112,14 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
                 try {
                     Thread.sleep(2000L);
                 } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
                 }
             }
 		}
 		int startIndex = 0;
 		DomainParam domainParam = new DomainParam();
         domainParam.setCode(currentDomainCode);
-        Map<Long, List<UrlRoleMappingDto>> allUrlRoleMappings = new HashMap<Long, List<UrlRoleMappingDto>>();
+        Map<Long, List<UrlRoleMappingDto>> allUrlRoleMappings = new HashMap<>();
 		while(true){
 			try{
 			    if (startIndex >= enableTenancyIds.size()) {
@@ -133,7 +131,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 			    Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
 				// query error
 				if (response.getInfo() != null && !response.getInfo().isEmpty()) {
-				    throw new RuntimeException("failed to getUrlRoleMapping");
+				    throw new UniauthCommonException("failed to getUrlRoleMapping");
 				}
 				List<UrlRoleMappingDto> urlRoleMappings = response.getData();
 				if (urlRoleMappings != null) {
@@ -141,7 +139,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 				        Long tenancyId = urlRoleMaping.getTenancyId();
 				        List<UrlRoleMappingDto> domainUrlRoleMappings =  allUrlRoleMappings.get(tenancyId);
 				        if (domainUrlRoleMappings == null) {
-				            domainUrlRoleMappings = new ArrayList<UrlRoleMappingDto>();
+				            domainUrlRoleMappings = new ArrayList<>();
 				            allUrlRoleMappings.put(tenancyId, domainUrlRoleMappings);
 				        }
 				        domainUrlRoleMappings.add(urlRoleMaping);
@@ -153,11 +151,11 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 				try {
 					Thread.sleep(2000L);
 				} catch (InterruptedException ie) {
+				    Thread.currentThread().interrupt();
 				}
 			}
 		}
-		Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> appendMap = convert2StandardMap(allUrlRoleMappings);
-		return appendMap;
+		return convert2StandardMap(allUrlRoleMappings);
 	}
 	
 	
@@ -166,28 +164,21 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 	    Set<Long> tenancyIds =  allUrlRoleMappings.keySet();
 	    for (Long tenancyId : tenancyIds) {
 	        List<UrlRoleMappingDto>  urlRoleMappingList =  allUrlRoleMappings.get(tenancyId);
-	        LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+	        LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> appendMap = new LinkedHashMap<>();
             SpelExpressionParser spelParser = new SpelExpressionParser();
-            Map<SSUrlAndMethod,Set<String>> plainMap = new HashMap<SSUrlAndMethod,Set<String>>();
+            Map<SSUrlAndMethod,Set<String>> plainMap = new HashMap<>();
             for(UrlRoleMappingDto urlRoleMappingDto: urlRoleMappingList){
                 String permUrl = urlRoleMappingDto.getPermUrl();
                 String roleCode = urlRoleMappingDto.getRoleCode();
-                String permType = urlRoleMappingDto.getPermType();
                 String httpMethod = urlRoleMappingDto.getHttpMethod();
                 
                 SSUrlAndMethod urlAndMethod = new SSUrlAndMethod();
                 urlAndMethod.setHttpMethod(httpMethod);
                 urlAndMethod.setPermUrl(permUrl);
-                /*
-                 * 
-                if(PermTypeEnum.PRIVILEGE.toString().equals(permType)){
-                    permUrl = permUrl.startsWith("/") ? permUrl : "/" + permUrl;
-                }
-                */
                 
                 Set<String> roleCodeSet = plainMap.get(urlAndMethod);
                 if(roleCodeSet == null){
-                    roleCodeSet = new HashSet<String>();
+                    roleCodeSet = new HashSet<>();
                     roleCodeSet.add(roleCode);
                     plainMap.put(urlAndMethod, roleCodeSet);
                 }
@@ -243,7 +234,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
                 }
                 
                 WebExpressionConfigAttribute weca = new WebExpressionConfigAttribute(spelParser.parseExpression(sb.toString()));
-                List<ConfigAttribute> wecaList = new ArrayList<ConfigAttribute>();
+                List<ConfigAttribute> wecaList = new ArrayList<>();
                 wecaList.add(weca);
                 
                 appendMap.put(rrm, wecaList);
@@ -265,12 +256,14 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 			this.currentDomainCode = currentDomainCode;
 		}
 		
+		@Override
 		public void run(){
 			while(true){
 				try {
 					sleep(10L * 60 * 1000);
 				} catch (InterruptedException e) {
-					log.error("RefreshDomainResourceThread error.", e);
+				    log.error("RefreshDomainResourceThread error.", e);
+				    Thread.currentThread().interrupt();
 				}
 				composeMetadataSource(filterSecurityInterceptor, originRequestMap, currentDomainCode);
 				log.info("Refresh domain resource completed at " + new Date() + " .");

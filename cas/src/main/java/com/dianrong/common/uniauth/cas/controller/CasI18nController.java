@@ -58,7 +58,7 @@ public class CasI18nController {
             HttpSession session = request.getSession(false);
             String newLocaleStr =  request.getParameter(setLocaleParameterKey);
             if(session != null && newLocaleStr != null) {
-                session.setAttribute(UniauthLocaleChangeInterceptor.sessionName ,StringUtils.parseLocaleString(newLocaleStr));
+                session.setAttribute(UniauthLocaleChangeInterceptor.SESSION_NAME ,StringUtils.parseLocaleString(newLocaleStr));
             }
             response.getWriter().write("success");
         } catch (IOException e) {

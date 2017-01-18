@@ -8,10 +8,9 @@ import java.io.Serializable;
  * @author R9GBP97
  *
  */
-public class DateSessionObjModel<T> implements Serializable {
-	/**
-	 */
-	private static final long serialVersionUID = -5592978188308898593L;
+public class DateSessionObjModel<T extends Serializable> implements Serializable {
+
+    private static final long serialVersionUID = -5592978188308898593L;
 
 	/**
 	 * . 时间戳
@@ -26,7 +25,7 @@ public class DateSessionObjModel<T> implements Serializable {
 	/**
 	 * . 内容
 	 */
-	private T content;
+	private  T content;
 
 	/**
 	 * . 构造函数

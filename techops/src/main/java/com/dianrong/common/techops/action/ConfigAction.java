@@ -1,5 +1,25 @@
 package com.dianrong.common.techops.action;
 
+import java.io.IOException;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -7,19 +27,6 @@ import com.dianrong.common.uniauth.common.bean.request.CfgParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Arc on 28/3/2016.
@@ -93,7 +100,7 @@ public class ConfigAction {
                         mimeType = javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM;
                     }
                     response.setContentType(mimeType);
-                    response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + fileName + "\""));
+                    response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
                     response.setContentLength(file.length);
                     response.getOutputStream().write(file);
                 } else {
@@ -104,7 +111,7 @@ public class ConfigAction {
         }
         return Response.success();
     }
-
+    
     @RequestMapping(value = "/cfg-types" , method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')")
     public Response<Map<Integer, String>>  getAllCfgTypes() {

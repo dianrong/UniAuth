@@ -16,7 +16,7 @@ String version = (String)application.getAttribute("cas_v");
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%=CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_TITLE")==null?"":CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_TITLE").getValue()%></title>
+  <title><%=CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_TITLE")==null?"":CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_TITLE").getValue()%></title>
   
   <spring:theme code="standard.custom.css.file" var="customCssFile" />
   <link rel="stylesheet" href="<c:url value="${customCssFile}" />" />
@@ -28,7 +28,7 @@ String version = (String)application.getAttribute("cas_v");
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
   <![endif]-->
 </head>
-<body   id="cas"  style="background-color:<%=CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_BACKGROUND_COLOR")==null?"":CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_BACKGROUND_COLOR").getValue()%>">
+<body   id="cas"  style="background-color:<%=CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_BACKGROUND_COLOR")==null?"":CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_BACKGROUND_COLOR").getValue()%>">
    	<!-- 租户选择 -->
 	<div class="tenancy_show" id="tenancy_show">
 		<p>

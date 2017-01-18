@@ -40,7 +40,7 @@ public class CasCfgController {
             return;
         }
         // 获取缓存
-        ConfigDto imgCache = CasCfgResourceRefreshHelper.instance.getImageCacheDto(cfgType);
+        ConfigDto imgCache = CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto(cfgType);
         if (imgCache != null) {
             byte[] file = imgCache.getFile();
             if (file != null) {
@@ -74,7 +74,7 @@ public class CasCfgController {
      */
     @RequestMapping(value = "/imges/login/scrolling", method = RequestMethod.GET)
     public ModelAndView getLoginScrollImges(HttpServletRequest request, HttpServletResponse response) {
-        CasCfgCacheModel loginAdCaches = CasCfgResourceRefreshHelper.instance.getCache();
+        CasCfgCacheModel loginAdCaches = CasCfgResourceRefreshHelper.INSTANCE.getCache();
         ModelAndView modelAndView = new ModelAndView("dianrong/login/scrollImges");
         List<CasLoginAdConfigModel> loginAd = loginAdCaches == null ? null : loginAdCaches.getLoginPageAd();
         modelAndView.addObject(AppConstants.LOGIN_SCROLL_IMAGES_MODEL_KEY, loginAd == null ? new ArrayList<ConfigDto>() : loginAd);

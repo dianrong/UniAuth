@@ -454,9 +454,9 @@ public class GroupService extends TenancyBasedService{
             UserGrpExample userGrpExample = new UserGrpExample();
             userGrpExample.createCriteria().andGrpIdEqualTo(grpId).andUserIdEqualTo(userId);
             if(normalMember == null || normalMember) {
-                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ZERO_byte);
+                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ZERO_Byte_Primitive);
             } else {
-                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_byte);
+                userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_Byte_Primitive);
             }
             userGrpMapper.deleteByExample(userGrpExample);
         }

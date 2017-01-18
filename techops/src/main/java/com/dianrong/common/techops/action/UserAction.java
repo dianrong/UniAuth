@@ -61,7 +61,7 @@ public class UserAction {
             return userDtoResponse;
         }
         UserDto userDto = userDtoResponse.getData();
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("====================================================<br />");
         buffer.append("            ");
         buffer.append("     系统管理员为您创建了系统账户<br />");
@@ -77,7 +77,7 @@ public class UserAction {
         if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
             return Response.success(buffer);
         } else {
-            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), buffer);
+            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), new StringBuffer(buffer));
             return Response.success();
         }
     }
@@ -119,7 +119,7 @@ public class UserAction {
             return userDtoResponse;
         }
         UserDto userDto = userDtoResponse.getData();
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("====================================================<br />");
         buffer.append("            ");
         buffer.append("      系统管理员重置了您的系统账户密码<br />");
@@ -135,7 +135,7 @@ public class UserAction {
         if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
             return Response.success(buffer);
         } else {
-            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), buffer);
+            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), new StringBuffer(buffer));
             return Response.success();
         }
     }

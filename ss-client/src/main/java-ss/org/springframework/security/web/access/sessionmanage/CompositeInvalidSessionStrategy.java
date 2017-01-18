@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.web.session.InvalidSessionStrategy;
 
+import com.google.common.collect.Lists;
+
 /**
  * 组合InvalidSessionStrategy
  * @author wanglin
@@ -21,13 +23,13 @@ public final class CompositeInvalidSessionStrategy implements InvalidSessionStra
     
     public List<InvalidSessionStrategy> getInvalidSessionStrategies() {
         if (invalidSessionStrategies == null) {
-            return null;
+            return Lists.newArrayList();
         }
         return Collections.unmodifiableList(invalidSessionStrategies);
     }
 
     public void setInvalidSessionStrategies(List<InvalidSessionStrategy> invalidSessionStrategies) {
-        this.invalidSessionStrategies = new ArrayList<InvalidSessionStrategy>(invalidSessionStrategies);
+        this.invalidSessionStrategies = new ArrayList<>(invalidSessionStrategies);
     }
 
     @Override

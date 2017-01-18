@@ -68,3 +68,9 @@ dependencies {
     testCompile "org.springframework:spring-test:${spring_version}"
     testCompile "org.springframework:spring-web:${spring_version}"
 }
+
+sonarqube {
+    properties {
+        property "sonar.exclusions", "src/main/java/com/dianrong/common/uniauth/server/data/entity/**"
+    }
+}
