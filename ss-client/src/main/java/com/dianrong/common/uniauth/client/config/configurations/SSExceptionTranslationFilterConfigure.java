@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
+import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
 import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
+import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +27,12 @@ public class SSExceptionTranslationFilterConfigure implements Configure<SSExcept
 	@Autowired
 	private CasAuthenticationEntryPoint casAuthEntryPoint;
 	
+	@Autowired
+	private ZooKeeperConfig zooKeeperConfig;
+	
+	@Autowired(required = false)
+	private CustomizedRedirectFormat customizedRedirectFormat;
+	
 	@Override
 	public SSExceptionTranslationFilter create() {
 		if (accessDeniedHandlerImpl == null) {
@@ -36,6 +44,8 @@ public class SSExceptionTranslationFilterConfigure implements Configure<SSExcept
 		
 		SSExceptionTranslationFilter ssExceptionTranslationFilter = new SSExceptionTranslationFilter(casAuthEntryPoint);
 		ssExceptionTranslationFilter.setAccessDeniedHandler(accessDeniedHandlerImpl);
+		ssExceptionTranslationFilter.setZooKeeperConfig(zooKeeperConfig);
+		ssExceptionTranslationFilter.setCustomizedRedirectFormat(customizedRedirectFormat);
 		return ssExceptionTranslationFilter;
 	}
 

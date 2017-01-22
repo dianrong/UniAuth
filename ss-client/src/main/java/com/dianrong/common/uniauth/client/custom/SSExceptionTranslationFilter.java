@@ -28,7 +28,15 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 	
 	@Autowired(required = false)
 	private CustomizedRedirectFormat customizedRedirectFormat;
+
+	public void setZooKeeperConfig(ZooKeeperConfig zooKeeperConfig) {
+		this.zooKeeperConfig = zooKeeperConfig;
+	}
 	
+	public void setCustomizedRedirectFormat(CustomizedRedirectFormat customizedRedirectFormat) {
+		this.customizedRedirectFormat = customizedRedirectFormat;
+	}
+
 	public SSExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint, RequestCache requestCache) {
 		super(authenticationEntryPoint, requestCache);
 	}
