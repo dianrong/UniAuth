@@ -4,13 +4,16 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.annotation.Conditional;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
 
 @Component
+@Conditional(UniauthConfigEnvLoadCondtion.class)
 public class ConcurrentSessionFilterConfigure implements Configure<ConcurrentSessionFilter>{
 
 	@Resource(name="sessionRegistry")

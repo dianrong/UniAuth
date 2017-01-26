@@ -1,13 +1,38 @@
 $(function() {
 	var processUrl = context_path+"/login";
-	
 	//初始化函数
 	var init = function(){
-		//显示提示框
-		$('#user_info_edit_ok_btn').click(modal_confirm_btn_process);
+		//去改姓名
+		$('#go_update_name_btn').click(function(){
+			update_user_name_show(true);
+		});
+		// 改姓名确认
+		$('#update_name_confirm_btn').click(update_user_name_process);
 		
-		//显示更新密码的模态框
-		$('#go_update_password_btn').click(modal_update_password_process);
+		// 取消改姓名
+		$('#update_name_cancel_btn').click(function() {
+			update_user_name_show(false);
+		});
+		
+		// 去改邮箱
+		$('#go_update_email_btn').click(to_update_email);
+		// 获取邮箱验证码
+		$('#get_email_captcha').click(update_email_get_captcha)
+		// 到第二步
+		$('#update_email_btn_step1').click(update_email_to_step2);
+		
+		// 确认修改邮箱
+		
+		// 去改电话
+		
+		// 获取改电话验证码
+		
+		// 确认修改电话
+		
+		// 去修改密码
+		$('#go_update_password_btn').click(function(){
+			$('#modal-new-password').modal('show');
+		});
 		
 		//显示编辑和取消编辑状态
 		$('#go_user_info_edit_btn').click( function(){
@@ -44,14 +69,21 @@ $(function() {
 		$('#modal-new-password').on('hidden.bs.modal', modal_update_password_close_event);
 	}
 	
-	//弹出用于确认的模态框
-	var modal_confirm_btn_process = function(){
-		$('#modal-confirm-edit').modal('show');
+	// 显示和隐藏修改姓名框
+	var update_user_name_show = function(show) {
+		if (show) {
+			$('.info_name_edit').removeClass('hidden-element');
+			$('.info_name_show').addClass('hidden-element');
+		} else {
+			$('.info_name_show').removeClass('hidden-element');
+			$('.info_name_edit').addClass('hidden-element');
+		}
 	}
 	
-	//弹出更新密码的提示框
-	var modal_update_password_process = function() {
-		$('#modal-new-password').modal('show');
+	// 修改密码
+	var update_user_name_process = function() {
+		var data = {};
+		window.infonotice('1', 'process ok');
 	}
 	
 	//更新密码框被关闭的时候触发的事件
@@ -68,6 +100,37 @@ $(function() {
 		btn_update_password_ok_show();
 	}
 	
+	// ready show update email modal
+	var to_update_email = function(){
+		switch_step1_step2(false);
+		$('#update_email_captcha').val('');
+		
+		$('#modal-new-email').modal('show');
+	}
+	
+	// get email captcha
+	var update_email_get_captcha = function(){}
+	
+	// check captcha and to step2
+	var update_email_to_step2 = function () {
+		// check captcha
+		
+		// to step2
+		switch_step1_step2(true);
+	}
+	
+	// helper function for switch update_email steps
+	var switch_step1_step2 = function(toStep2) {
+		if (toStep2) {
+			$('.update-email-step1').addClass('hidden-element');
+			$('.update-email-step2').removeClass('hidden-element');
+		} else {
+			$('.update-email-step2').addClass('hidden-element');
+			$('.update-email-step1').removeClass('hidden-element');
+		}
+	}
+	
+	// support
 	//修改编辑信息相关按钮的状态
 	window.change_edit_btn_state = function(show_edit){
 		if(show_edit){
@@ -257,7 +320,7 @@ $(function() {
 		bg_info_length:9,
 		//定义提示信息显示的时长 毫秒
 		notice_show_milles : 2000,
-		//设置settimeout返回的handle
+		//设置setTimeout返回的handle
 		notice_settimeout_handle : '',
 		//函数  是否在显示
 		isShowState : function() {
@@ -278,7 +341,7 @@ $(function() {
 		}
 	};
 	
-	//进行settimeout的显示处理  所有的setTimeout都走这里
+	//进行setTimeout的显示处理  所有的setTimeout都走这里
 	window.process_notice_div_handle = function(){
 		var currentTimeout = notice_div_state_info.notice_settimeout_handle;
 		//有一个事件  先取消掉
