@@ -87,7 +87,7 @@ public final class ApiControlHeaderHolder {
         @Override
         public List<String> getAllKeys() {
             return Arrays.asList(HeaderKey.REQUEST_ACCOUNT, HeaderKey.REQUEST_CONTENT,
-                    HeaderKey.REQUEST_PASSWORD, HeaderKey.REQUEST_TYPE);
+                    HeaderKey.REQUEST_PSWD, HeaderKey.REQUEST_TYPE);
         }
         
     };

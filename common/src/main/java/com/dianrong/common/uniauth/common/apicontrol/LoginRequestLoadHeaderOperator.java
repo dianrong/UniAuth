@@ -18,13 +18,13 @@ public class LoginRequestLoadHeaderOperator implements PtHeaderOperator<LoginReq
     @Override
     public LoginRequestLoad getHeader(String key) {
         return  new LoginRequestLoad(stringHeaderOperator.getHeader(HeaderKey.REQUEST_ACCOUNT),
-                stringHeaderOperator.getHeader(HeaderKey.REQUEST_PASSWORD) );
+                stringHeaderOperator.getHeader(HeaderKey.REQUEST_PSWD) );
     }
 
     @Override
     public void setHeader(String key, LoginRequestLoad value) {
         Assert.notNull(value);
         stringHeaderOperator.setHeader(HeaderKey.REQUEST_ACCOUNT, value.getAccount());
-        stringHeaderOperator.setHeader(HeaderKey.REQUEST_PASSWORD, value.getPassword());
+        stringHeaderOperator.setHeader(HeaderKey.REQUEST_PSWD, value.getPassword());
     }
 }
