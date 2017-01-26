@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 import com.dianrong.common.uniauth.common.apicontrol.HeaderKey;
 import com.dianrong.common.uniauth.common.apicontrol.LoginRequestLoadHeaderOperator;
@@ -22,11 +23,9 @@ import com.dianrong.common.uniauth.common.apicontrol.exp.InsufficientPrivilegesE
 import com.dianrong.common.uniauth.common.apicontrol.model.LoginRequestLoad;
 import com.dianrong.common.uniauth.common.apicontrol.model.LoginResponseLoad;
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.common.util.UnsafeUtil;
 import com.google.common.collect.Maps;
 
 import lombok.extern.slf4j.Slf4j;
-import sun.misc.Unsafe;
 
 /**
  * 管理api权限访问客户端的状态信息
@@ -79,12 +78,11 @@ public final class ApiCallCtlManager {
     private String password;
     
     // 设置status字段
-    private static final Unsafe unsafe = UnsafeUtil.getUnsafe();
-    private static final long statusOffset;
+    private static AtomicReferenceFieldUpdater<ApiCallCtlManager, ClientStatus> referenceClientStatus;
     static {
         try {
-            statusOffset = unsafe.objectFieldOffset (ApiCallCtlManager.class.getDeclaredField("status"));
-        } catch (Exception ex) { 
+            referenceClientStatus = AtomicReferenceFieldUpdater.newUpdater(ApiCallCtlManager.class, ClientStatus.class, "status");
+        } catch (Throwable ex) { 
             throw new Error(ex); 
         }
     }
@@ -377,6 +375,6 @@ public final class ApiCallCtlManager {
     public boolean setStatus(ClientStatus expect, ClientStatus update) {
         Assert.notNull(expect);
         Assert.notNull(update);
-        return unsafe.compareAndSwapObject(this, statusOffset, expect, update);
+        return referenceClientStatus.compareAndSet(this, expect, update);
     }
 }
