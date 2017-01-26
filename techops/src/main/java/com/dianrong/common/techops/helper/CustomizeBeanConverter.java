@@ -78,9 +78,9 @@ public class CustomizeBeanConverter {
                     subUserNode.setChecked(userDto.getTagChecked());
                 }
                 Byte userGroupType = userDto.getUserGroupType();
-                if(AppConstants.ZERO_Byte.equals(userGroupType)) {
+                if(AppConstants.ZERO_BYTE.equals(userGroupType)) {
                     subUserNode.setType(AppConstants.NODE_TYPE_MEMBER_USER);
-                } else if(AppConstants.ONE_Byte.equals(userGroupType)){
+                } else if(AppConstants.ONE_BYTE.equals(userGroupType)){
                     subUserNode.setType(AppConstants.NODE_TYPE_OWNER_USER);
                 }
                 subNodes.add(subUserNode);

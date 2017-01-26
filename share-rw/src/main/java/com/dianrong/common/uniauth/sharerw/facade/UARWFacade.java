@@ -6,11 +6,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.client.ClientRequestFilter;
 
-import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
+import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
 import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
@@ -50,15 +50,15 @@ public class UARWFacade {
         ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
         UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
         List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
-        domainRWResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
-        groupRWResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, providers);
-        permissionRWResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, providers);
-        userRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, providers);
-        roleRWResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, providers);
-        auditResource = JAXRSClientFactory.create(uniWsEndpoint, IAuditResource.class, providers);
-        configRWResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, providers);
-        tagRWResource = JAXRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
-        tenancyRWResource = JAXRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
+        domainRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
+        groupRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, providers);
+        permissionRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, providers);
+        userRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, providers);
+        roleRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, providers);
+        auditResource = UniauthRSClientFactory.create(uniWsEndpoint, IAuditResource.class, providers);
+        configRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, providers);
+        tagRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
+        tenancyRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {

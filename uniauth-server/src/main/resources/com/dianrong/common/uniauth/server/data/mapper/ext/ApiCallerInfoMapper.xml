@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.ApiCallerInfoMapper" >
+   <select id="searchApiCaller" resultMap="BaseResultMap" parameterType="java.lang.String" >
+   		SELECT 
+   		<include refid="Base_Column_List" />
+   		 FROM api_caller_info WHERE domain_id IN (
+   			SELECT id FROM domain 
+   			WHERE code =  #{account, jdbcType=VARCHAR} 
+   			AND status = 0 
+   		) AND status = 0 
+    </select>
+</mapper>

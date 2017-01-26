@@ -190,4 +190,7 @@ public interface AppConstants {
 	Long TENANCY_UNRELATED_TENANCY_ID= -1L;
 	// 配置项，指定是否强制监测租户信息
 	String CHECK_TENANCY_IDENTITY_FORCIBLY = "tenancyIdentity.check.switch";
+	
+	// 2 hours
+	long DEFAULT_API_CALL_TOKEN_AVAILABLE_MILLiSECONDS = 1000L * 60L *  60l  * 2L;  
 }

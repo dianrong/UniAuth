@@ -11,6 +11,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.bean.Info;
@@ -19,6 +20,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.TenancyService;
+import com.dianrong.common.uniauth.server.support.apicontrl.CallerAccountHolder;
 import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
 import com.dianrong.common.uniauth.server.track.RequestManager;
@@ -32,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Component
 @Slf4j
+@Order(0)
 public class ServerExAOPHandler {
     //todo: should migrate to zoo keeper
     private static final boolean IS_PRINT_STACKTRACE = true;
@@ -61,7 +64,8 @@ public class ServerExAOPHandler {
         	Long nextSeq =  invokeSeq + 1;
         	gv.setInvokeSeq(nextSeq);
         	origin.setInvokeSeq(nextSeq);
-        	
+        	gv.setRequestDomainCode(CallerAccountHolder.get());
+        	origin.setRequestDomainCode(CallerAccountHolder.get());
         	try{
             	Object[] args = joinPoint.getArgs();
             	if(args != null && args.length > 0){
