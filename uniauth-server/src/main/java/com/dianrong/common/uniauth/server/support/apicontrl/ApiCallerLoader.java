@@ -21,8 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ApiCallerLoader implements LoadCredential<ApiCtlPermission>{
     
-    @Autowired
-    private ServerPermissionCacher serverPermissionCacher;
+//    @Autowired
+//    private ServerPermissionCacher serverPermissionCacher;
     
     @Autowired
     private ApiCallerService ApiCallerService;
@@ -39,8 +39,9 @@ public class ApiCallerLoader implements LoadCredential<ApiCtlPermission>{
             }
             // get private permissions
             List<ApiPermissionDto> privatePermissions = apiPermissionService.searchPrivatePermissions(apiCallerInfo.getId());
+            
             // get public permissions
-            Set<ApiCtlPermissionItem> publicPermissions = serverPermissionCacher.getPublicPermissions();
+//            Set<ApiCtlPermissionItem> publicPermissions = serverPermissionCacher.getPublicPermissions();
             Set<ApiCtlPermissionItem> allPermissions = Sets.newHashSet();
             
             // combination private permissions and public permissions
@@ -51,9 +52,9 @@ public class ApiCallerLoader implements LoadCredential<ApiCtlPermission>{
                     allPermissions.add(item);
                 }
             }
-            for (ApiCtlPermissionItem item : publicPermissions) {
-                allPermissions.add(item);
-            }
+//            for (ApiCtlPermissionItem item : publicPermissions) {
+//                allPermissions.add(item);
+//            }
             CallerCredential<ApiCtlPermission>  apiCallerCredential = new ApiCaller(apiCallerInfo.getDomainCode(), apiCallerInfo.getDomainName(), allPermissions);
             return apiCallerCredential;
         } catch(Throwable t) {

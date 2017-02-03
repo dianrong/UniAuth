@@ -1,24 +1,19 @@
-package com.dianrong.common.uniauth.server.support.apicontrl;
+package com.dianrong.common.uniauth.server.support.apicontrl.pejudger;
 
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.apicontrol.server.CallerCredential;
 import com.dianrong.common.uniauth.common.apicontrol.server.PermissionJudger;
 import com.dianrong.common.uniauth.common.bean.dto.ApiPermissionDto.UriMethod;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
+import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermission;
+import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermissionItem;
 
-@Component
-public class UniauthServerPermissionJudger implements PermissionJudger<ApiCtlPermission, HttpServletRequest>{
-    
-    @Autowired
-    private ServerPermissionCacher serverPermissionCacher;
-    
+public abstract class AbstractHttpRequestPermissionJudger implements PermissionJudger<ApiCtlPermission, HttpServletRequest>{
     @Override
     public boolean judge(CallerCredential<ApiCtlPermission> Credential, HttpServletRequest request) {
         Assert.notNull(Credential);
@@ -26,7 +21,7 @@ public class UniauthServerPermissionJudger implements PermissionJudger<ApiCtlPer
         Assert.notNull(request);
         String requestUrl = HttpRequestUtil.extractRequestUrl(request, false);
         String requestMethod = request.getMethod();
-        ApiCtlPermission permissionInfo = Credential.getPermissionInfo();
+        ApiCtlPermission permissionInfo =getPermissionInfo(Credential);
         for(ApiCtlPermissionItem item:permissionInfo.getPermissions()) {
             if (checkPermission(requestUrl, requestMethod, item)) {
                 return true;
@@ -45,10 +40,24 @@ public class UniauthServerPermissionJudger implements PermissionJudger<ApiCtlPer
             }
         }
         // check request url
-        Pattern pattern = serverPermissionCacher.getPattern(item.getUri());
+        Pattern pattern = getPattern(item.getUri());
         if (!pattern.matcher(requestUrl).matches()) {
             return false;
         }
         return true;
     }
+    
+    /**
+     * get pattern 
+     * @param patternStr patternStr
+     * @return pattern
+     * @throws PatternSyntaxException - If the expression's syntax is invalid
+     */
+    protected Pattern getPattern(String patternStr) {
+        Assert.notNull(patternStr);
+        Assert.notNull(patternStr);
+        return Pattern.compile(patternStr);
+    }
+    
+    protected abstract ApiCtlPermission getPermissionInfo(CallerCredential<ApiCtlPermission> credential);
 }
