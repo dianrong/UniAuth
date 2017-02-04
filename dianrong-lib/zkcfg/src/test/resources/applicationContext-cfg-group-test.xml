@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+    <context:property-placeholder
+            ignore-unresolvable="true"
+            system-properties-mode="OVERRIDE"/>
+
+    <!--
+        <bean id="listener1" class="dianrong.cfg.zookeeper.MyCfgEventListener"/>
+
+        <util:set id="listeners">
+            <ref bean="listener1"/>
+        </util:set>
+
+
+    <bean id="mainappGroupWithListener" class="com.dianrong.platform.cfg.CfgGroup">
+        <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/mainapp"/>
+        <property name="needKeepAlive" value="true"/>
+        <property name="listeners" ref="listeners"/>
+    </bean>
+
+    -->
+
+
+    <bean id="mainappGroup" class="com.dianrong.platform.cfg.CfgGroup">
+        <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/mainapp"/>
+        <property name="needKeepAlive" value="true"/>
+    </bean>
+
+    <bean id="ossGroup" class="com.dianrong.platform.cfg.CfgGroup">
+        <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/oss/profile-demo"/>
+        <property name="needKeepAlive" value="false"/>
+    </bean>
+
+    <bean id="testGroup" class="com.dianrong.platform.cfg.CfgGroup">
+        <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/test"/>
+        <property name="location" value="env.test.properties"/>
+        <property name="needKeepAlive" value="false"/>
+        <property name="internalCfgGroup" ref="ossGroup"/>
+    </bean>
+
+
+</beans>

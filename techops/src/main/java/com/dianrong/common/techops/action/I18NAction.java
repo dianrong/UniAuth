@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.dianrong.common.uniauth.common.bean.I18NResultModel;
 import com.dianrong.common.uniauth.common.bean.LangDto;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.server.UniauthResourceService;
 import com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor;
+import com.dianrong.common.uniauth.common.server.UniauthResourceService;
 
 @RestController
 @RequestMapping("i18n")

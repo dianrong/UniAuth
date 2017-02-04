@@ -1,0 +1,7 @@
+*jquery* linguist-vendored=true
+cas/src/main/webapp/angular-tree-control/* linguist-vendored=true
+cas/src/main/webapp/bootstrap-3.3.5/* linguist-vendored=true
+cas/src/main/webapp/imgscroll/* linguist-vendored=true
+cas/src/main/webapp/jquery/* linguist-vendored=true
+techops/src/main/webapp/scripts/lib/* linguist-vendored=true
+techops/src/main/webapp/swagger-ui/* linguist-vendored=true

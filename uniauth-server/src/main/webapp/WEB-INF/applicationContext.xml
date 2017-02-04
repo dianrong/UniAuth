@@ -19,8 +19,8 @@
                         ">
     <import resource="classpath:ss-uniauth-common.xml"/>
     <import resource="cxf-beans.xml" />
-    <import resource="db-beans.xml" />
     <import resource="spring-mq.xml" />
+    <import resource="db-beans.xml" />
     <import resource="metrics-beans.xml" />
 
     <!-- aop -->

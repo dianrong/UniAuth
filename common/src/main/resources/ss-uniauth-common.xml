@@ -23,8 +23,4 @@
 		<property name="needKeepAlive" value="true" />
 	</bean>
 
-	<bean id="commonRabbitConfig" class="com.dianrong.platform.cfg.CfgGroup">
-		<property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/common/rabbitmq" />
-		<property name="needKeepAlive" value="false" />
-	</bean>
 </beans>
