@@ -24,7 +24,7 @@ dependencies {
     
     //zoo keeper
     //compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
-    compile project(":zkcfg")
+    compile project(":dianrong-lib:zkcfg")
 
 	compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'

@@ -95,7 +95,7 @@ dependencies {
     compile "org.springframework:spring-aop"
 
     // zookeeper util.
-    compile project(":zkcfg")
+    compile project(":dianrong-lib:zkcfg")
 
     //Aspectj
     compile "org.aspectj:aspectjrt:1.8.8"

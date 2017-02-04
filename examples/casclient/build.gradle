@@ -7,7 +7,7 @@ dependencies {
     
 	//zoo keeper
     //compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
-    compile project(":zkcfg")
+    compile project(":dianrong-lib:zkcfg")
     compile 'commons-logging:commons-logging'
     
     //Http Components
