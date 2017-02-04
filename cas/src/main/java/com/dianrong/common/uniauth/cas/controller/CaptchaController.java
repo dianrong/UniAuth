@@ -25,11 +25,6 @@ import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-import com.dianrong.common.uniauth.sharerw.message.EmailSender;
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.Producer;
-import com.google.code.kaptcha.impl.WaterRipple;
-import com.google.code.kaptcha.util.Config;
 import com.dianrong.platform.challenge.domain.ChallengeResult;
 import com.dianrong.platform.challenge.facade.DefaultChallengeClient;
 import com.dianrong.platform.challenge.facade.EventType;
@@ -37,8 +32,10 @@ import com.dianrong.platform.notification.email.EmailHttpClient;
 import com.dianrong.platform.notification.email.SendEmailRequest;
 import com.dianrong.platform.notification.sms.SendSmsRequest;
 import com.dianrong.platform.notification.sms.SmsHttpClient;
-import com.google.code.kaptcha.CaptchaProducer;
-import com.google.code.kaptcha.util.Helper;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.Producer;
+import com.google.code.kaptcha.impl.WaterRipple;
+import com.google.code.kaptcha.util.Config;
 
 import lombok.extern.slf4j.Slf4j;
 
