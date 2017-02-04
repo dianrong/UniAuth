@@ -47,7 +47,8 @@ public class LoginTypeDecisionAction extends AbstractAction {
         	// 业务系统的地址
         	final String serviceUrl =  service.getId().trim();
         	// 通过业务地址反找其是否走自定制的页面
-        	for(String key: allZkNodeMap.keySet() ){
+        	for(Map.Entry<String,String> entry: allZkNodeMap.entrySet() ){
+        	    String key = entry.getKey();
         		if(ZkNodeUtils.isDomainNode(key)) {
         			String domainUrl = allZkNodeMap.get(key);
         			if(WebScopeUtil.judgeTwoServiceIsEqual(domainUrl, serviceUrl)) {

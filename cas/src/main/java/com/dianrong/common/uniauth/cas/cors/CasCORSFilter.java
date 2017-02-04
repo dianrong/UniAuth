@@ -88,10 +88,10 @@ public class CasCORSFilter implements Filter {
 
 
     public CasCORSFilter() {
-        this.allowedOrigins = new HashSet<String>();
-        this.allowedHttpMethods = new HashSet<String>();
-        this.allowedHttpHeaders = new HashSet<String>();
-        this.exposedHeaders = new HashSet<String>();
+        this.allowedOrigins = new HashSet<>();
+        this.allowedHttpMethods = new HashSet<>();
+        this.allowedHttpHeaders = new HashSet<>();
+        this.exposedHeaders = new HashSet<>();
     }
 
 
@@ -117,10 +117,8 @@ public class CasCORSFilter implements Filter {
         }
         switch (requestType) {
             case SIMPLE:
-                // Handles a Simple CORS request.
-                this.handleSimpleCORS(request, response, filterChain);
-                break;
             case ACTUAL:
+                // Handles a Simple CORS request.
                 // Handles an Actual CORS request.
                 this.handleSimpleCORS(request, response, filterChain);
                 break;
@@ -158,21 +156,6 @@ public class CasCORSFilter implements Filter {
              String configPreflightMaxAge = this.getCors_preflight_maxage();
              String configDecorateRequest = this.getCors_request_decorate();
         	
-//            String configAllowedOrigins = filterConfig
-//                    .getInitParameter(PARAM_CORS_ALLOWED_ORIGINS);
-//            String configAllowedHttpMethods = filterConfig
-//                    .getInitParameter(PARAM_CORS_ALLOWED_METHODS);
-//            String configAllowedHttpHeaders = filterConfig
-//                    .getInitParameter(PARAM_CORS_ALLOWED_HEADERS);
-//            String configExposedHeaders = filterConfig
-//                    .getInitParameter(PARAM_CORS_EXPOSED_HEADERS);
-//            String configSupportsCredentials = filterConfig
-//                    .getInitParameter(PARAM_CORS_SUPPORT_CREDENTIALS);
-//            String configPreflightMaxAge = filterConfig
-//                    .getInitParameter(PARAM_CORS_PREFLIGHT_MAXAGE);
-//            String configDecorateRequest = filterConfig
-//                    .getInitParameter(PARAM_CORS_REQUEST_DECORATE);
-
             parseAndStore(configAllowedOrigins, configAllowedHttpMethods,
                     configAllowedHttpHeaders, configExposedHeaders,
                     configSupportsCredentials, configPreflightMaxAge,
@@ -255,7 +238,7 @@ public class CasCORSFilter implements Filter {
         // If the list of exposed headers is not empty add one or more
         // Access-Control-Expose-Headers headers, with as values the header
         // field names given in the list of exposed headers.
-        if ((exposedHeaders != null) && (exposedHeaders.size() > 0)) {
+        if ((exposedHeaders != null) && (!exposedHeaders.isEmpty())) {
             String exposedHeadersString = join(exposedHeaders, ",");
             response.addHeader(
                     CasCORSFilter.RESPONSE_HEADER_ACCESS_CONTROL_EXPOSE_HEADERS,

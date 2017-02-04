@@ -5,17 +5,17 @@ package com.dianrong.common.uniauth.common.cons;
  */
 public interface AppConstants {
     	// 0 = 启用
-        Byte ZERO_Byte = (byte)0;
+        Byte ZERO_BYTE = (byte)0;
     	// 1 = 禁用
-        Byte ONE_Byte = (byte)1;
+        Byte ONE_BYTE = (byte)1;
     	// 0 = 启用
-        byte ZERO_byte = (byte)0;
+        byte ZERO_BYTE_PRIMITIVE = (byte)0;
     	// 1 = 禁用
-        byte ONE_byte = (byte)1;
+        byte ONE_BYTE_PRIMITIVE = (byte)1;
         
         // 人性化设计
-        byte STATUS_ENABLED= ZERO_byte;
-        byte STATUS_DISABLED=ONE_byte;
+        byte STATUS_ENABLED= ZERO_BYTE_PRIMITIVE;
+        byte STATUS_DISABLED=ONE_BYTE_PRIMITIVE;
 
 	String API_UUID = "api-uuid";
 
@@ -71,8 +71,8 @@ public interface AppConstants {
 	//constants for password forget
 
 	//dispatcher parameter
-	String PWDFORGET_DISPATCHER_STEP_KEY = "step";
-	String PWDFORGET_DISPATCHER_CONTEXTURL_KEY = "savedLoginContext";
+	String PSWDFORGET_DISPATCHER_STEP_KEY = "step";
+	String PSWDFORGET_DISPATCHER_CONTEXTURL_KEY = "savedLoginContext";
 	String CAS_CAPTCHA_SESSION_TYPE_KEY = "captchaType";
 
 	//request
@@ -82,25 +82,29 @@ public interface AppConstants {
 	String REQUEST_ATTRIBUTE_KEY_CREDENTIAL="credential";
 	String REQUEST_ATTRIBUTE_KEY_INITMSG="initMsg";
 	
-	String PWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
-	String PWDFORGET_MAIL_VAL_CLIENT_KEY="email";
-	String PWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
-	String PWDFORGET_NEW_PASSWORD_KEY = "newPassword";
+	String PSWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
+	String PSWDFORGET_MAIL_VAL_CLIENT_KEY="email";
+	String PSWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
+	String PSWDFORGET_NEW_PSWD_KEY = "newPassword";
 	String LOGIN_SCROLL_IMAGES_MODEL_KEY = "loginImges";
 
 	//session
 	String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
-	String PWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
-	String PWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
-	String PWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
-	String PWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
-	String PWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
-	String PWDEXPIRE_SESSION_KEY = "pwdg_passwrod_expire";
+	String PSWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
+	String PSWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
+	/**
+	 * useless after integrate notification and challage
+	 */
+	@Deprecated
+	String PSWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
+	String PSWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
+	String PSWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
+	String PSWDEXPIRE_SESSION_KEY = "pwdg_passwrod_expire";
 
 	//60 seconds
-	long PWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
+	long PSWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
 	//5 minutes
-	long PWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
+	long PSWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
 	
 	//tag for UserInfo edit in request
 	String CAS_USERINFO_MANAGE_EDIT_KEY = "edituserinfo";
@@ -116,8 +120,8 @@ public interface AppConstants {
 	String CAS_USERINFO_MANAGE_UPDATE_EMAIL_TAG = "email";
 	String CAS_USERINFO_MANAGE_UPDATE_PHONE_TAG = "phone";
 	String CAS_USERINFO_MANAGE_UPDATE_NAME_TAG = "name";
-	String CAS_USERINFO_MANGE_UPDATE_PASSWORD_TAG = "password";
-	String CAS_USERINFO_MANGE_UPDATE_ORIGINPASSWORD_TAG = "orign_password";
+	String CAS_USERINFO_MANGE_UPDATE_PSWD_TAG = "password";
+	String CAS_USERINFO_MANGE_UPDATE_ORIGINPSWD_TAG = "orign_password";
 	
 	//cas登陆Captcha的session值的key
 	String CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY = "cas_login_captcha_validation_session_key";

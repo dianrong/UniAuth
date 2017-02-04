@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthUtils {
     private static final String SALT_GENERATION_ALGORITHM = "SHA1PRNG";
-    private static final String PASSWORD_DIGEST_ALGORITHM = "SHA";
+    private static final String PSWD_DIGEST_ALGORITHM = "SHA";
 
     private static final int MIN_PASSWORD_LENGTH = 8;
     private static final int MAX_PASSWORD_LENGTH = 20;
@@ -36,7 +36,7 @@ public class AuthUtils {
 
     public static byte[] digest(String password, byte[] salt) {
         try {
-            MessageDigest msgDigest = MessageDigest.getInstance(PASSWORD_DIGEST_ALGORITHM);
+            MessageDigest msgDigest = MessageDigest.getInstance(PSWD_DIGEST_ALGORITHM);
             if (salt != null && salt.length > 0) {
                 msgDigest.update(salt);
             }

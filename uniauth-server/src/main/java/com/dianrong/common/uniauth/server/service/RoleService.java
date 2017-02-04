@@ -114,7 +114,7 @@ public class RoleService extends TenancyBasedService{
         role.setDomainId(domainId);
         role.setName(name);
         role.setRoleCodeId(roleCodeId);
-        role.setStatus(AppConstants.ZERO_Byte);
+        role.setStatus(AppConstants.ZERO_BYTE);
         role.setDescription(description);
         role.setTenancyId(tenancyService.getTenancyIdWithCheck());
         roleMapper.insert(role);

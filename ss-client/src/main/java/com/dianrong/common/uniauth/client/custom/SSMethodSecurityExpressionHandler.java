@@ -18,5 +18,4 @@ public class SSMethodSecurityExpressionHandler extends DefaultMethodSecurityExpr
 	public void setPermissionEvaluator(UniauthPermissionEvaluator permissionEvaluator) {
 		this.permissionEvaluator = permissionEvaluator;
 	}
-	
 }

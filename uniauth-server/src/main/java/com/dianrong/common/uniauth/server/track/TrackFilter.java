@@ -43,7 +43,7 @@ public class TrackFilter implements Filter {
         gv.setIp(ip);
         gv.setReqUrl(reqUrl);
         gv.setUuid(uuid);
-        gv.setSuccess(AppConstants.ONE_Byte);
+        gv.setSuccess(AppConstants.ONE_BYTE);
         gv.setInvokeSeq(-1L);
         
         RequestManager.setGlobalVar(gv);

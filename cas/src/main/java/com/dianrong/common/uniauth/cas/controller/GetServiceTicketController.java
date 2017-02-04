@@ -200,7 +200,7 @@ public class GetServiceTicketController {
 	private CasGetServiceTicketModel beforeLoginValidation(HttpServletRequest request, HttpServletResponse response) {
 		// 校验验证码
 		CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getValFromSession(request.getSession(),
-				AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY, CasLoginCaptchaInfoModel.class);
+				AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
 		if (captchaInfo == null) {
 			WebScopeUtil.putCaptchaInfoToSession(request.getSession(), new CasLoginCaptchaInfoModel());
 		} else {
@@ -232,12 +232,12 @@ public class GetServiceTicketController {
 		{
 			put(AccountNotFoundException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NOT_FOUND);
 			put(UserPasswordNotMatchException.class,
-					CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NAME_PASSWD_NOT_MATCH);
+					CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NAME_PSWD_NOT_MATCH);
 			put(MultiUsersFoundException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_MUTILE_USER_FOUND);
 			put(AccountDisabledException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_DISABLED);
 			put(AccountLockedException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_TOO_MANY_FAILED);
-			put(FreshUserException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_INIT_PWD);
-			put(CredentialExpiredException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_UPDATE_PWD);
+			put(FreshUserException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_INIT_PSWD);
+			put(CredentialExpiredException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_UPDATE_PSWD);
 			put(FailedLoginException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_LOGINFAILED);
 		}
 	};

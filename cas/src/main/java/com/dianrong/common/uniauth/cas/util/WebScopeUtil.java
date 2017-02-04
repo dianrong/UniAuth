@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.cas.util;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLDecoder;
 
@@ -21,7 +22,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public final class WebScopeUtil {
-	/**
+	private WebScopeUtil() {
+        super();
+    }
+
+    /**
 	 * . set captcha to session
 	 * @param session
 	 * @param val
@@ -38,7 +43,7 @@ public final class WebScopeUtil {
 	 * @return
 	 */
 	public static String getCaptchaFromSession(HttpSession session) {
-		return getValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY,  String.class);
+		return getValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY);
 	}
 	
 	/**
@@ -58,7 +63,7 @@ public final class WebScopeUtil {
 	 * @return
 	 */
 	public static CasLoginCaptchaInfoModel getCaptchaInfoFromSession(HttpSession session) {
-		return getValFromSession(session, AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY,  CasLoginCaptchaInfoModel.class);
+		return getValFromSession(session, AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
 	}
 	
 	/**
@@ -82,7 +87,7 @@ public final class WebScopeUtil {
 	 * @param val
 	 * @return
 	 */
-	public static boolean putValToSession(HttpSession session, String key, Object val) {
+	public static boolean putValToSession(HttpSession session, String key, Serializable val) {
 		if (session == null) {
 			return false;
 		}
@@ -97,12 +102,10 @@ public final class WebScopeUtil {
 	 *            HttpSession
 	 * @param key
 	 *            key
-	 * @param clsT
-	 *            classType
 	 * @return Object
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getValFromSession(HttpSession session, String key, Class<T> classT) {
+	public static <T> T getValFromSession(HttpSession session, String key) {
 		if (session == null) {
 			return null;
 		}

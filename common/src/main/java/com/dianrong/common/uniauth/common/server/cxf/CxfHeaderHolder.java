@@ -21,7 +21,7 @@ public enum CxfHeaderHolder {
 	private <T> CxfHeaderHolder(Class<?> type) {
 		Assert.notNull(type);
 		this.type = type;
-		holder =new managedHolder<Object>();
+		holder =new MANAGED_HOLDER<>();
 	}
 	
 	public Object get() {
@@ -31,30 +31,32 @@ public enum CxfHeaderHolder {
 	public void set(Object val) {
 		if (val != null) {
 			if (!this.type.isAssignableFrom(val.getClass())){
-			    holder.set(null);
+			    holder.remove();
 				throw new IllegalArgumentException("val's type is not right, need " + this.type.getName());
 			}
+			holder.set(val);
+		} else {
+		    holder.remove();
 		}
-		holder.set(val);
 	}
 	
 	// 清空所有holder 信息
 	public static void clearAllHolder() {
-		managedHolder.managedHoldersClear();
+		MANAGED_HOLDER.managedHoldersClear();
 	}
 	// 受管理的holder
-	private static  class managedHolder<T> extends ThreadLocal<T> {
-		private static final List<ThreadLocal<?>> holders = new ArrayList<ThreadLocal<?>>();
+	private static  class MANAGED_HOLDER<T> extends ThreadLocal<T> {
+		private static final List<ThreadLocal<?>> holders = new ArrayList<>();
 		public static final void managedHoldersClear() {
 			for (ThreadLocal<?> h : holders) {
 				try {
 					h.remove();
 				} catch (Exception ex) {
-					log.warn("failed to clear holder :" + h.getClass().getName());
+					log.warn("failed to clear holder :" + h.getClass().getName(), ex);
 				}
 			}
 		}
-		public managedHolder() {
+		MANAGED_HOLDER() {
 			super();
 			holders.add(this);
 		}

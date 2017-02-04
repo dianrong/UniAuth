@@ -137,7 +137,7 @@ public class DomainService extends TenancyBasedService{
 		List<String> domainCodeList = domainParam.getDomainCodeList();
 		DomainExample example = new DomainExample();
 		DomainExample.Criteria criteria=  example.createCriteria();
-		criteria.andStatusEqualTo(AppConstants.ZERO_Byte);
+		criteria.andStatusEqualTo(AppConstants.ZERO_BYTE);
 		if(domainCodeList != null){
 			criteria.andCodeIn(domainCodeList);
 		}
@@ -179,7 +179,7 @@ public class DomainService extends TenancyBasedService{
 			throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "域ID"));
 		}
 		
-		if((domainParam.getStatus() != null && domainParam.getStatus() == AppConstants.ZERO_Byte)|| domainParam.getStatus() == null){
+		if((domainParam.getStatus() != null && domainParam.getStatus() == AppConstants.ZERO_BYTE)|| domainParam.getStatus() == null){
 			//如果需要更新code,则加入判断
 			if(!StringUtil.strIsNullOrEmpty(domainParam.getCode())){
 				//检查code

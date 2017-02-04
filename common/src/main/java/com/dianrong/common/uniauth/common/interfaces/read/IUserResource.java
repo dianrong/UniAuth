@@ -85,4 +85,8 @@ public interface IUserResource {
     @POST
     @Path("search-user-by-tagid")
     Response<List<UserDto>> searchUserByTagId(UserParam userParam);
+    
+    @POST
+    @Path("query-user/group-and-role")
+    Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam);
 }

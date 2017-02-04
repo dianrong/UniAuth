@@ -117,8 +117,7 @@
 	<!-- trick: must be same id or name, not more than one PermissionEvaluators 
 		allowed, see AccessControlListTag.java -->
 	<bean id="uniauthPermissionEvaluator"
-		class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator"
-		primary="true"></bean>
+		class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
 
 
 	<bean id="handlerMappingC"

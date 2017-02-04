@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.cas.controller;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -151,7 +152,7 @@ public class InitPasswordController {
      * @throws IOException  HttpServletResponse  IOException
      */
     private void responseVal(HttpServletResponse response, boolean processSuccess, String msg) throws IOException {
-    	HttpResponseModel<Void>  result = HttpResponseModel.buildSuccessResponse();
+    	HttpResponseModel<Serializable>  result = HttpResponseModel.buildSuccessResponse();
     	result.setCode(processSuccess?INITPWDSUCCESSCODE:INITPWDFAILEDCODE);
     	result.setMsg(msg);
     	// send message

@@ -83,7 +83,7 @@ public class ServerMapperAOPHandler {
             long end = System.currentTimeMillis();
             long elapse = end - start;
             gv.setElapse(elapse);
-            gv.setSuccess(AppConstants.ZERO_Byte);
+            gv.setSuccess(AppConstants.ZERO_BYTE);
             
             globalVarQueue.add(gv);
             return result;

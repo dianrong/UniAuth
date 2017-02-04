@@ -31,6 +31,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,7 +96,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 			}
 		}
     	Map<String, Object> attributes = new HashMap<String, Object>();
-    	attributes.put(CasProtocal.DianRongCas.getTenancyIdName(), response.getData().getTenancyId());
+    	attributes.put(CasProtocal.DianRongCas.getTenancyIdName(), StringUtil.translateIntegerToLong(response.getData().getTenancyId()));
     	return createHandlerResult(credential, this.principalFactory.createPrincipal(userName, attributes), null);
 	}
 	

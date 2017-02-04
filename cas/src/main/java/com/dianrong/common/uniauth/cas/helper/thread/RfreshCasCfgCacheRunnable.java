@@ -28,7 +28,7 @@ public final class RfreshCasCfgCacheRunnable implements Runnable{
 	@Override
 	public void run() {
 		try {
-			 CasCfgResourceRefreshHelper.instance.refreshCache();
+			 CasCfgResourceRefreshHelper.INSTANCE.refreshCache();
 //			if(cacheModel != null){
 //				//刷新缓存  不考虑线程安全的问题  因为只要是把最新的数据刷进去就OK
 //				application.setAttribute(AppConstants.CAS_CFG_CACHE_MODEL_APPLICATION_KEY, cacheModel);

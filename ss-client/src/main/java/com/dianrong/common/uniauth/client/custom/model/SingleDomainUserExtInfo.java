@@ -116,29 +116,32 @@ public final class SingleDomainUserExtInfo extends User {
 		if (permissions == null || permissions.isEmpty()) {
 			return Collections.emptySet();
 		}
-		Set<SSRegularPattern> patterns = new HashSet<SSRegularPattern>();
+		Set<SSRegularPattern> patterns = new HashSet<>();
 		for (PermissionDto p: permissions) {
-			String httpMethod = p.getValueExt();
-			if(httpMethod != null){
-				httpMethod = httpMethod.trim();
-				// exclude ALL
-				if(!AppConstants.HTTP_METHOD_ALL.equalsIgnoreCase(httpMethod)){
-					try{
-						HttpMethod.valueOf(httpMethod);
-					}catch(IllegalArgumentException e){
-						log.warn("'" + httpMethod + "' is not a valid http method.", e);
-						// ignore invalid httpMethod configuration
-						continue;
-					}
-				}
-				Pattern pattern = PatternCacheManager.getPattern(p.getValue());
-				if (pattern != null) {
-					patterns.add(SSRegularPattern.build(httpMethod, pattern));
-				}
-			}
+			checkAndAddPattern(patterns, p);
 		}
 		return patterns;
 	}
+
+    private void checkAndAddPattern(Set<SSRegularPattern> patterns, PermissionDto p) {
+        String httpMethod = p.getValueExt();
+        if(httpMethod != null){
+        	httpMethod = httpMethod.trim();
+        	// exclude ALL
+        	if(!AppConstants.HTTP_METHOD_ALL.equalsIgnoreCase(httpMethod)){
+        		try{
+        			HttpMethod.valueOf(httpMethod);
+        		}catch(IllegalArgumentException e){
+        			log.warn("'" + httpMethod + "' is not a valid http method.", e);
+        			return;
+        		}
+        	}
+        	Pattern pattern = PatternCacheManager.getPattern(p.getValue());
+        	if (pattern != null) {
+        		patterns.add(SSRegularPattern.build(httpMethod, pattern));
+        	}
+        }
+    }
 	
 	/**
 	 * used for pattern cache

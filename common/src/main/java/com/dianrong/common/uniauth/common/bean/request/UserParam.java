@@ -27,6 +27,10 @@ public class UserParam extends Operator {
     
     private List<Integer> tagIds;
     
+    private String groupCode;
+    private Boolean includeSubGrp;
+    private List<Integer> includeRoleIds;
+    
 	public List<Integer> getTagIds() {
 		return tagIds;
 	}
@@ -121,30 +125,59 @@ public class UserParam extends Operator {
 		return originPassword;
 	}
 
-	public void setOriginPassword(String originPassword) {
+	public UserParam setOriginPassword(String originPassword) {
 		this.originPassword = originPassword;
-	}
-
-	@Override
-	public String toString() {
-		return "UserParam [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", password="
-				+ password + ", originPassword=" + originPassword + ", status=" + status + ", userActionEnum="
-				+ userActionEnum + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds + "]";
+		return this;
 	}
 
 	public String getTenancyCode() {
 		return tenancyCode;
 	}
 
-	public void setTenancyCode(String tenancyCode) {
+	public UserParam setTenancyCode(String tenancyCode) {
 		this.tenancyCode = tenancyCode;
+		return this;
 	}
 
     public Long getTenancyId() {
         return tenancyId;
     }
 
-    public void setTenancyId(Long tenancyId) {
+    public UserParam setTenancyId(Long tenancyId) {
         this.tenancyId = tenancyId;
+        return this;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public UserParam setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+        return this;
+    }
+
+    public Boolean getIncludeSubGrp() {
+        return includeSubGrp;
+    }
+
+    public UserParam setIncludeSubGrp(Boolean includeSubGrp) {
+        this.includeSubGrp = includeSubGrp;
+        return this;
+    }
+
+    public List<Integer> getIncludeRoleIds() {
+        return includeRoleIds;
+    }
+
+    public void setIncludeRoleIds(List<Integer> includeRoleIds) {
+        this.includeRoleIds = includeRoleIds;
+    }
+
+    @Override
+    public String toString() {
+        return "UserParam [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", password=" + password + ", originPassword=" + originPassword + ", status=" + status
+                + ", tenancyId=" + tenancyId + ", tenancyCode=" + tenancyCode + ", userActionEnum=" + userActionEnum + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds
+                + ", groupCode=" + groupCode + ", includeSubGrp=" + includeSubGrp + ", includeRoleIds=" + includeRoleIds + "]";
     }
 }
