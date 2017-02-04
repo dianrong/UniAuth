@@ -44,7 +44,7 @@ public class CaptchaController extends AbstractBaseController {
 
     
  
-    private Producer captchaProducer ;
+    private Producer captchaProducer;
     @Autowired
     private NotificationConfig notifyCfg;
     /**
@@ -65,16 +65,17 @@ public class CaptchaController extends AbstractBaseController {
     
     @PostConstruct
     public void initCaptcha() {
-      Properties props = new Properties();
-      props.put(Constants.KAPTCHA_BORDER, "no");
-      props.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_STRING, "02345689");
-      props.put(Constants.KAPTCHA_BACKGROUND_CLR_TO, Color.WHITE);
-      props.put(Constants.KAPTCHA_BACKGROUND_CLR_FROM, Color.WHITE);
-      props.put(Constants.KAPTCHA_OBSCURIFICATOR_IMPL, WaterRipple.class.getName());
-      props.put(Constants.KAPTCHA_NOISE_COLOR, Color.BLACK);
-      Config config = new Config(props);
-      captchaProducer = config.getProducerImpl();
+        Properties props = new Properties();
+        props.put(Constants.KAPTCHA_BORDER, "no");
+        props.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_STRING, "02345689");
+        props.put(Constants.KAPTCHA_BACKGROUND_CLR_TO, Color.WHITE);
+        props.put(Constants.KAPTCHA_BACKGROUND_CLR_FROM, Color.WHITE);
+        props.put(Constants.KAPTCHA_OBSCURIFICATOR_IMPL, WaterRipple.class.getName());
+        props.put(Constants.KAPTCHA_NOISE_COLOR, Color.BLACK);
+        Config config = new Config(props);
+        captchaProducer = config.getProducerImpl();
     }
+  
     public MessageSource getMessageSource() {
         return messageSource;
     }
