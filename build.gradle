@@ -249,8 +249,8 @@ project(':cas') {
 		  'redis.clients:jedis:2.8.2',
 		  'javax.servlet:jstl:1.2',
 		)
-		compile 'com.dianrong.loanbusiness:kaptcha:1.1'
-
+		//compile 'com.dianrong.loanbusiness:kaptcha:1.1'
+        compile "com.github.penggle:kaptcha:2.3.2"
 		//Http Components for deploy on local
 		compile 'org.apache.httpcomponents:httpclient'
 		compile 'org.apache.httpcomponents:fluent-hc'

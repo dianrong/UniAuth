@@ -1,8 +1,12 @@
 package com.dianrong.common.uniauth.cas.controller;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,8 +21,10 @@ import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.message.EmailSender;
-import com.google.code.kaptcha.CaptchaProducer;
-import com.google.code.kaptcha.util.Helper;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.Producer;
+import com.google.code.kaptcha.impl.WaterRipple;
+import com.google.code.kaptcha.util.Config;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,9 +33,22 @@ public class CaptchaController extends AbstractBaseController {
 
     @Autowired
     private EmailSender emailSender;
+    private Producer captchaProducer ;
 
     private MessageSource messageSource;
-
+    
+    @PostConstruct
+    public void initCaptcha() {
+      Properties props = new Properties();
+      props.put(Constants.KAPTCHA_BORDER, "no");
+      props.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_STRING, "02345689");
+      props.put(Constants.KAPTCHA_BACKGROUND_CLR_TO, Color.WHITE);
+      props.put(Constants.KAPTCHA_BACKGROUND_CLR_FROM, Color.WHITE);
+      props.put(Constants.KAPTCHA_OBSCURIFICATOR_IMPL, WaterRipple.class.getName());
+      props.put(Constants.KAPTCHA_NOISE_COLOR, Color.BLACK);
+      Config config = new Config(props);
+      captchaProducer = config.getProducerImpl();
+    }
     public MessageSource getMessageSource() {
         return messageSource;
     }
@@ -37,7 +56,6 @@ public class CaptchaController extends AbstractBaseController {
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
-
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String captchaType = getParamFromRequest(request, AppConstants.CAS_CAPTCHA_SESSION_TYPE_KEY);
@@ -48,21 +66,14 @@ public class CaptchaController extends AbstractBaseController {
             return null;
         }
 
-        Properties props = new Properties();
-        props.put("cap.border", "n.");
-        props.put("cap.char.arr", "0,2,3,4,5,6,8,9");
-        props.put("cap.background.c.to", "white");
-        props.put("cap.background.c.from", "white");
-        props.put("cap.obscurificator", "com.google.code.kaptcha.impl.WaterRiple");
-        props.put("cap.noise.c", "255,96,0");
-        CaptchaProducer captchaProducer = (CaptchaProducer) Helper.ThingFactory.loadImpl(6, props);
         String capText = captchaProducer.createText();
         WebScopeUtil.putCaptchaToSession(request.getSession(), capText);
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
         response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
         response.setContentType("image/jpeg");
         try {
-            captchaProducer.createImage(response.getOutputStream(), capText);
+          BufferedImage bi = captchaProducer.createImage(capText);
+          ImageIO.write(bi, "jpg", response.getOutputStream());
         } catch (IOException e) {
             try {
                 response.sendError(500, "captcha creation failed");
