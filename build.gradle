@@ -252,10 +252,16 @@ project(':cas') {
 		)
         compile "com.github.penggle:kaptcha:2.3.2"
 
+		/**
 		compile(
-		"com.dianrong.platform:challenge-client:1.0.1",
-		"com.dianrong.platform:notification-client:1.0.2",
+		  "com.dianrong.platform:challenge-client:1.0.1",
+		  "com.dianrong.platform:notification-client:1.0.2",
 		)
+		**/
+		compile fileTree('../dianrong-lib/lib') {
+	        include 'dianrong-challenge-client-1.0.1.jar'
+	        include 'dianrong-notification-client-1.0.2.jar'
+	    }
 
 		//Http Components for deploy on local
 		compile 'org.apache.httpcomponents:httpclient'
