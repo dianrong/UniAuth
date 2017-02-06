@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.client.config;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Component
+@Conditional(UniauthConfigEnvLoadCondtion.class)
 @Slf4j
 public class ConfigureBeanCreator implements ApplicationContextAware{
 
