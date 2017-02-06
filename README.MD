@@ -101,8 +101,8 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 邮箱主要是为了验证码发送，密码重置
 ``` shell
    /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.host    邮箱服务器host，比如：smtp-dev.sl.com（默认值）
-   /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.port    邮箱服务器port，比如：[2](http://smtp-dev.sl.com/)5（默认值）
-   /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.femail   uniauth系统邮件的发送者，比如：TechOps-Notification<noreply@[dianrong.com](http://dianrong.com/)>（默认值）
+   /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.port    邮箱服务器port，比如：25（默认值）
+   /com/dianrong/cfg/1.0.0/uniauth/internal.mail.smtp.femail   uniauth系统邮件的发送者，比如：TechOps-Notification<noreply@dianrong.com>（默认值）
 ```
 ### 4.2. redis配置
 ``` shell
@@ -288,9 +288,11 @@ public static void main(String args[]) {
 >效果和Spring Security配置文件中的`<sec:intercept-url pattern="/xxx" access="hasAnyRole('ROLE_XXX','ROLE_YYY','ROLE_ZZZ')" />`一样，主要用于Web形式的URL资源定义。可用于保护真实URL访问地址，或者用于`<sec:authorize url="/xxx">`的标签中。
 需要尤其指明的是，如果你的多个role共享了一个role_code，则使用URL_PATTERN可能会有影响。
 注意：无论在Spring Security中还是在db中都可以定义url pattern的允许访问的http method，如GET，POST等等，如果不指定则该url默认支持所有类型的http method。比如在配置文件中：`<sec:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" **method="GET"**/>`在使用method定义时，这里面有一个注意点，就是Spring Security默认会优先比较请求的http method和定义中的是否匹配，如果不匹配则该条定义就直接被忽略掉了，哪怕url本身是匹配的。所以如果你要使用http method保护你的url，则应该把controller中需要受保护的url模式和可访问方法进行完整定义(在配置文件或db中)，这样才能起到应有的作用。
- 2. **DOMAIN**：
+ 
+ 2. **DOMAIN**：
 >TechOps使用的专有Permission Type，其他业务系统可以忽略此种类型的Permission。
- 3. **PRIVILEGE**：
+ 
+ 3. **PRIVILEGE**：
 >各个业务系统可以根据自己的需要定义权限控制点列表，这些权限用于保护任何需要保护的资源，比如通过SpEL表达式principal.hasPrivilege('xxx')。注意：不像` URI_PATTERN`，这种权限类型不参与Spring Security的内部权限控制机制，适用于纯业务级别权限控制点的定义。
 
     上述3种权限类型已经基本涵盖了大部分业务需要，如果不满足，可以和我们联系，双方讨论后可以依需添加新的权限类型。
