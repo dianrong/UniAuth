@@ -6,7 +6,6 @@ dependencies {
     compile 'org.jasig.cas.client:cas-client-core:3.4.1'
     
 	//zoo keeper
-	compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
     compile 'commons-logging:commons-logging:1.2'
     
     //Http Components

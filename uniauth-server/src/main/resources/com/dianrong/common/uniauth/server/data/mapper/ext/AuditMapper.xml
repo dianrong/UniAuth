@@ -6,7 +6,7 @@
 	      domain_id, req_ip, req_uuid, 
 	      req_url, req_seq, req_class, 
 	      req_method, req_success, req_exp, 
-	      req_elapse, req_param, req_result, tenancy_id
+	      req_elapse, req_param, req_result, tenancy_id, request_domain_code
 	      )
 	    values
 	    <foreach collection="list" item="item" index="index" separator="," >
@@ -15,7 +15,7 @@
       		#{item.reqUrl,jdbcType=VARCHAR}, #{item.reqSeq,jdbcType=BIGINT}, #{item.reqClass,jdbcType=VARCHAR}, 
       		#{item.reqMethod,jdbcType=VARCHAR}, #{item.reqSuccess,jdbcType=TINYINT}, #{item.reqExp,jdbcType=VARCHAR}, 
       		#{item.reqElapse,jdbcType=BIGINT}, #{item.reqParam,jdbcType=VARCHAR}, #{item.reqResult,jdbcType=VARCHAR},
-      		#{item.tenancyId,jdbcType=BIGINT}
+      		#{item.tenancyId,jdbcType=BIGINT}, #{item.requestDomainCode,jdbcType=VARCHAR}
       	)
 	    </foreach>
 	</insert>

@@ -20,6 +20,6 @@ public interface IConfigRWResource extends IConfigResource {
 
     @POST
     @Path("/del")
-    Response delConfig(PrimaryKeyParam primaryKeyParam);
+    Response<Void> delConfig(PrimaryKeyParam primaryKeyParam);
 
 }

@@ -1,28 +1,44 @@
 $(function() {
-	var processUrl = context_path+"/login";
+	var updateInfoUrl = context_path+"/uniauth/userinfo";
+	var verifyProcessUrl = context_path+"/uniauth/verification";
 	
+	// define constant
+	var showSuccessTag = "success";
+	var showFailTag = "fail";
 	//初始化函数
 	var init = function(){
-		//显示提示框
-		$('#user_info_edit_ok_btn').click(modal_confirm_btn_process);
-		
-		//显示更新密码的模态框
-		$('#go_update_password_btn').click(modal_update_password_process);
-		
-		//显示编辑和取消编辑状态
-		$('#go_user_info_edit_btn').click( function(){
-			window.change_edit_btn_state(true);
+		//去改姓名
+		$('#go_update_name_btn').click(function(){
+			update_user_name_show(true);
 		});
-		$('#user_info_edit_cancel_btn').click( function(){
-			window.change_edit_btn_state(false);
+		// 改姓名确认
+		$('#update_name_confirm_btn').click(update_user_name_process);
+		// 取消改姓名
+		$('#update_name_cancel_btn').click(function() {
+			update_user_name_show(false);
 		});
 		
-		//绑定处理信息编辑确定的按钮事件
-		$('#modal_confirm_ok_btn').click(btn_userinfo_ok_process);
+		// 去改邮箱
+		$('#go_update_email_btn').click(to_update_email);
+		// 获取邮箱验证码
+		$('#get_email_captcha').click(update_email_get_captcha)
+		// 确认修改邮箱
+		$('#update_email_btn_confirm').click(update_email_to_check_verifycode);
+		
+		// 去改电话
+		$('#go_update_phone_btn').click(to_update_phone);
+		// 获取电话验证码
+		$('#get_phone_captcha').click(update_phone_get_captcha)
+		// 确认修改电话
+		$('#update_phone_btn_confirm').click(update_phone_to_check_verifycode);
 		
 		//给与电话输入框进行输入事件处理
-		$('#inputPhone').keyup(phone_input_keyup_event);
+		$('#update_phone_new_phone').keyup(phone_input_keyup_event);
 		
+		// 去修改密码
+		$('#go_update_password_btn').click(function(){
+			$('#modal-new-password').modal('show');
+		});
 		//更新密码按钮显示与否
 		$('#modal-new-password #orign_password').keyup(btn_update_password_ok_show);
 		$('#modal-new-password #password').keyup(btn_update_password_ok_show);
@@ -37,23 +53,296 @@ $(function() {
 		$('#modal-new-password #repassword').blur(function(){
 			update_password_state_check(true, 3);
 		});
-		
 		//确定修改密码
 		$('#modal_new_password_ok_btn').click(btn_update_password_ok_process);
 		//关闭事件
 		$('#modal-new-password').on('hidden.bs.modal', modal_update_password_close_event);
+		
+		// 各种交互性的显示
+		// update email
+		$('#update_email_captcha').keyup(update_email_verify_btn_process);
+		// update phone
+		$('#update_phone_captcha').keyup(update_phone_verify_btn_process);
+	}
+	// 显示和隐藏修改姓名框
+	var update_user_name_show = function(show) {
+		if (show) {
+			$('.info_name_edit').removeClass('hidden-element');
+			$('.info_name_show').addClass('hidden-element');
+		} else {
+			$('.info_name_show').removeClass('hidden-element');
+			$('.info_name_edit').addClass('hidden-element');
+		}
+	}
+	// 修改个人姓名
+	var update_user_name_process = function() {
+		var data = {
+				name : $('#update_name_new_name').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : updateInfoUrl+'/update',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+            	   if(data.info) {
+            		   infonotice(showFailTag, data.info[0].msg);
+            	   } else {
+            		   infonotice(showSuccessTag, $.i18n.prop('frontpage.userinfo.edit.update.ok'));
+            		   $('#name_label').html($('#update_name_new_name').val());
+            	   }
+            },
+            complete : function(){
+            	update_user_name_show(false);
+            },
+            error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
 	}
 	
-	//弹出用于确认的模态框
-	var modal_confirm_btn_process = function(){
-		$('#modal-confirm-edit').modal('show');
+	// 自动退出
+	var autoLogout = function(milles){
+		if (isNaN(milles)) {
+			milles = 3000;
+		}
+		if (milles <= 0) {
+			window.location=context_path+'/logout';
+		} else {
+			 setTimeout(function(){
+				   window.location=context_path+'/logout';
+			   }, 3000);
+		}
+	}
+	// 交互性的验证函数
+	function isEmail(email){
+	    var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	    return filter.test(email);
 	}
 	
-	//弹出更新密码的提示框
-	var modal_update_password_process = function() {
-		$('#modal-new-password').modal('show');
+	// update email
+	// 显示发送验证码按钮
+	var update_email_new_email_check = function(){
+		var new_email = $('#update_email_new_email').val();
+		if (isEmail(new_email)) {
+				return true;
+		} else {
+				return false;
+		}
 	}
 	
+	var update_email_verify_btn_process = function(){
+		var verifyCode = $('#update_email_captcha').val();
+		var stepbtn = $('#update_email_btn_confirm');
+		if(verifyCode && update_email_new_email_check()) {
+			stepbtn.removeAttr("disabled","disabled");
+		} else {
+			stepbtn.attr("disabled","disabled"); 
+		}
+	}
+	
+	// ready show update email modal
+	var to_update_email = function(){
+		$('#update_email_captcha').val('');
+		$('#update_email_warninfo').val('');
+		$('#modal-new-email').modal('show');
+	}
+	// get email verify code
+	var update_email_get_captcha = function(){
+		if (!update_email_new_email_check()) {
+			$('#update_email_warninfo').html($.i18n.prop('frontpage.userinfo.edit.update.invalid.email'));
+			return;
+		}
+		var data = {
+				identity : $('#update_email_new_email').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : verifyProcessUrl+'/send',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+            	   if(data.info) {
+            		   $('#update_email_warninfo').html(data.info[0].msg);
+            	   } else {
+            		   // success
+            		   var count_btn = $('#get_email_captcha');
+	                   	countBtn(count_btn, function(new_label){
+	                   		count_btn.html(new_label)
+	                   	},function(){
+	                   		return count_btn.html();
+	                   	}, 120);
+            	   }
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	// confirm
+	var update_email_to_check_verifycode = function () {
+		// check verification
+		var data = {
+				identity : $('#update_email_new_email').val(),
+				verifyCode: $('#update_email_captcha').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : verifyProcessUrl+'/verify',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+            	   if(data.info) {
+            		   $('#update_email_warninfo').html(data.info[0].msg);
+            	   } else {
+            		   // success, submit update
+            		   update_email_confirm();
+            	   }
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	
+	// update email confirm
+	var update_email_confirm = function() {
+		var data = {
+				email: $('#update_email_new_email').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : updateInfoUrl+'/email',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+            	   if(data.info) {
+            		   $('#update_email_warninfo').html(data.info[0].msg);
+            	   } else {
+            		   // success
+            			$('#modal-new-email').modal('hide');
+            		   $('#email_label').html($('#update_email_new_email').val());
+            		   infonotice(showSuccessTag, $.i18n.prop('frontpage.userinfo.edit.update.email.success'));
+            		   autoLogout();
+            	   }
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	
+	// update phone
+	function isPhoneNumber(number){
+	    var filter  = /^((13[0-9])|(15[^4])|(18[0-9])|(17[0-8])|(147))\d{8}$/;
+	    return filter.test(number);
+	}
+	
+	var update_phone_new_phone_check = function(){
+		var new_phone = $('#update_phone_new_phone').val();
+		if (isPhoneNumber(new_phone)) {
+				return true;
+		} else {
+			return false;
+		}
+	}
+	
+	var update_phone_verify_btn_process = function(){
+		var verifyCode = $('#update_phone_captcha').val();
+		var stepbtn = $('#update_phone_btn_confirm');
+		if(verifyCode && update_phone_new_phone_check()) {
+			stepbtn.removeAttr("disabled","disabled");
+		} else {
+			stepbtn.attr("disabled","disabled"); 
+		}
+	}
+	
+	// ready show update phone modal
+	var to_update_phone = function(){
+		$('#update_phone_captcha').val('');
+		$('#update_phone_warninfo').val('');
+		$('#modal-new-phone').modal('show');
+	}
+	// get phone verify code
+	var update_phone_get_captcha = function(){
+		if (!update_phone_new_phone_check()) {
+			$('#update_phone_warninfo').html($.i18n.prop('frontpage.userinfo.edit.update.invalid.phone'));
+			return;
+		}
+		var data = {
+				identity : $('#update_phone_hidden_input').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : verifyProcessUrl+'/send',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+            	   if(data.info) {
+            		   $('#update_phone_warninfo').html(data.info[0].msg);
+            	   } else {
+            		   // success
+            		   var count_btn = $('#get_phone_captcha');
+	                   	countBtn(count_btn, function(new_label){
+	                   		count_btn.html(new_label)
+	                   	},function(){
+	                   		return count_btn.html();
+	                   	}, 120);
+            	   }
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	// check verification 
+	var update_phone_to_check_verifycode = function () {
+		// check verification
+		var data = {
+				identity : $('#update_phone_new_phone').val(),
+				verifyCode: $('#update_phone_captcha').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : verifyProcessUrl+'/verify',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+            	   if(data.info) {
+            		   $('#update_phone_warninfo').html(data.info[0].msg);
+            	   } else {
+            		   // success, submit confirm
+            		   update_phone_confirm();
+            	   }
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	// update phone confirm
+	var update_phone_confirm = function() {
+		// check verification
+		var data = {
+				phone: $('#update_phone_new_phone').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : updateInfoUrl+'/phone',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+            	   if(data.info) {
+            		   $('#update_email_warninfo').html(data.info[0].msg);
+            	   } else {
+            		   // success
+            		   $('#modal-new-phone').modal('hide');
+            		   $('#phone_label').html($('#update_phone_new_phone').val());
+            		   infonotice(showSuccessTag, $.i18n.prop('frontpage.userinfo.edit.update.phone.success'));
+            		   autoLogout();
+            	   }
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	
+	// update password
 	//更新密码框被关闭的时候触发的事件
 	var modal_update_password_close_event = function() {
 		// 清空还原密码输入框
@@ -68,71 +357,11 @@ $(function() {
 		btn_update_password_ok_show();
 	}
 	
-	//修改编辑信息相关按钮的状态
-	window.change_edit_btn_state = function(show_edit){
-		if(show_edit){
-			//显示编辑框
-			$('.common-wizard .form-group input[type="text"]').removeAttr("disabled"); 
-			//显示确定和取消按钮
-			$('.common-wizard .form-group .myedit').removeClass('hiddenbtn');
-			$('.common-wizard .form-group .mynoedit').addClass('hiddenbtn');
-		} else {
-			//disable 编辑框
-			$('.common-wizard .form-group input[type="text"]').attr('disabled', 'disabled');
-			//显示编辑按钮
-			$('.common-wizard .form-group .myedit').addClass('hiddenbtn');
-			$('.common-wizard .form-group .mynoedit').removeClass('hiddenbtn');
-		}
-	}
-	
 	//处理电话输入框只能输入数字的事件
 	var phone_input_keyup_event = function() {
 		var obj = $(this);
 		//如果输入非数字，则替换为''，如果输入数字，则在每4位之后添加一个空格分隔
 		obj.val(obj.val().replace(/[^\d]/g, ''));
-	}
-	
-	//处理编辑信息确认的按钮
-	var btn_userinfo_ok_process = function(){
-		var posturl = processUrl;
-		
-		var data = {
-				//分之管理数据
-				'edituserinfo' : 'go',
-				'updatetype' : 'userinfo',
-				//用户数据
-				'id' : $('#hidden_userinfo_keyid').val(),
-				'email' : $('#inputEmail').html(),
-				'phone' : $('#inputPhone').val(),
-				'name' : $('#inputName').val()
-		};
-		
-		$.ajax({  
-            type : "POST", 
-            url : processUrl,
-            data : data,
-            dataType : 'json',
-            success : function(data) {
-            	if (data.code == '1') { 
-                	window.infonotice('1', $.i18n.prop('frontpage.userinfo.edit.update.ok'));
-                } else {
-                	window.infonotice('2', data.msg);
-                }
-                
-                //添加关闭事件
-                window.process_notice_div_handle();
-            },
-            complete : function(){
-            	//关闭模态框
-            	$('#modal-confirm-edit').modal('hide');
-            	
-            	//将编辑框变一下
-            	window.change_edit_btn_state(false);
-            },
-            error: function(jqXHR, textStatus, errorMsg){
-            	logOperation.error(errorMsg);
-            },
-        });  
 	}
 	
 	//检测输入密码框的状态
@@ -175,9 +404,7 @@ $(function() {
 		if(!obj){
 			return;
 		}
-		
 		var parent_group = $(obj).parent().parent('.form-group');
-		
 		//隐藏提示框
 		if(!warn_info || warn_info == ''){
 			if(parent_group){
@@ -207,139 +434,133 @@ $(function() {
 	
 	//处理编辑信息确认的按钮
 	var btn_update_password_ok_process = function(){
-		var posturl = processUrl;
-		
+		// check verification
 		var data = {
-				//分支  更新密码
-				'edituserinfo' : 'go',
-				'updatetype' : 'password',
-				//用户数据
-				'id' : $('#hidden_userinfo_keyid').val(),
-				'password' : $('#modal-new-password #password').val(),
-				'orign_password' : $('#modal-new-password #orign_password').val(),
+				identity : $('#update_phone_hidden_input').val(),
+				password: $('#password').val(),
+				originPassword: $('#orign_password').val()
 		};
-		
 		$.ajax({  
             type : "POST", 
-            url : processUrl,
+            url : updateInfoUrl+'/password',
             data : data,
             dataType : 'json',
             success : function(data) {
-                if (data.code == '1') { 
-                	window.infonotice('1',  $.i18n.prop('frontpage.userinfo.edit.update.pwdok'));
-                } else {
-                	window.infonotice('2', data.msg);
-                }
-                
-                //添加关闭事件
-                window.process_notice_div_handle();
-            },
-            complete : function(){
+               if(data.info) {
+          		  infonotice(showFailTag, data.info[0].msg);
+          	   } else {
+          		   // success
+          		   infonotice(showSuccessTag, $.i18n.prop('frontpage.userinfo.edit.update.pwdok'));
+          	   }
+            }, complete : function(){
             	//关闭模态框
             	$('#modal-new-password').modal('hide');
-            }
-            ,
-            error: function(jqXHR, textStatus, errorMsg){
+            },error: function(jqXHR, textStatus, errorMsg){
             	logOperation.error(errorMsg);
-            },
+            }
         });  
 	}
 	
-	//用于控制展示提示框的展示  闭包
-	var notice_div_state_info = {
-		// 1 没显示  2 显示
-		show_state : "1",
-		//当前显示的提示级别
-		current_warn_class : '',
-		//信息长度管理相关class
-		info_length_class : '',
-		//定义常量  少量信息的字符串长度
-		bg_info_length:9,
-		//定义提示信息显示的时长 毫秒
-		notice_show_milles : 2000,
-		//设置settimeout返回的handle
-		notice_settimeout_handle : '',
-		//函数  是否在显示
-		isShowState : function() {
-			if(this.show_state == '1'){
-				return false;
-			}
-			return true;
-		},
-		setShowState : function(isshow, warn_class, length_class) {
-			this.current_warn_class = warn_class;
-			this.info_length_class = length_class;
-			if(isshow){
-				this.show_state = '2';
-			} else {
-				//清空样式
-				this.show_state = '1';
-			}
-		}
-	};
-	
-	//进行settimeout的显示处理  所有的setTimeout都走这里
-	window.process_notice_div_handle = function(){
-		var currentTimeout = notice_div_state_info.notice_settimeout_handle;
-		//有一个事件  先取消掉
-		if(currentTimeout){
-			clearTimeout(currentTimeout);
-		}
-		
-		//重新设置显示事件
-		var newTimeoutHandle = setTimeout("window.infonotice_close()", notice_div_state_info.notice_show_milles);
-		//重新赋值
-		notice_div_state_info.notice_settimeout_handle = newTimeoutHandle;
-	}
-	
 	//帮window实现一个自动提示的功能
-	window.infonotice = function(infolevel,message){
-		//先关闭
-		window.infonotice_close();
-		
-		var infoclass = "alert-success";
-		//异常级别
-		if(!!infolevel && infolevel == "2"){
-			infoclass = "alert-danger";
+	var infonotice = (function(){
+		// 数据结构
+		var notice_div_state_info = {
+			// 1 没显示  2 显示
+			show_state : "1",
+			//当前显示的提示级别
+			current_warn_class : '',
+			//信息长度管理相关class
+			info_length_class : '',
+			//定义常量  少量信息的字符串长度
+			bg_info_length:9,
+			//定义提示信息显示的时长 毫秒
+			notice_show_milles : 3000,
+			//设置setTimeout返回的handle
+			notice_settimeout_handle : '',
+			//函数  是否在显示
+			isShowState : function() {
+				if(this.show_state == '1'){
+					return false;
+				}
+				return true;
+			},
+			setShowState : function(isshow, warn_class, length_class) {
+				this.current_warn_class = warn_class;
+				this.info_length_class = length_class;
+				if(isshow){
+					this.show_state = '2';
+				} else {
+					//清空样式
+					this.show_state = '1';
+				}
+			}
 		}
 		
-		var infolength_class="top-browser-bg ";
-		//信息长度定义
-		if(!!message && message.length > notice_div_state_info.bg_info_length){
-			infolength_class="top-browser-md ";
+		var infonotice_close = function(){
+			//先尝试清除样式
+			if(notice_div_state_info.isShowState()){
+				var showmodal = $('#window_notice_div');
+				//隐藏
+				showmodal.toggle(false);
+				//清空状态
+				showmodal.removeClass(notice_div_state_info.current_warn_class);
+				showmodal.removeClass(notice_div_state_info.info_length_class);
+				//清空提示信息
+				$('#top_show_info').html('');
+				
+				//重置状态
+				notice_div_state_info.setShowState(false, '','');
+			}		
+		}	
+		
+		// 延迟关闭modal
+		var process_notice_div_handle = function(){
+			var currentTimeout = notice_div_state_info.notice_settimeout_handle;
+			//有一个事件  先取消掉
+			if(currentTimeout){
+				clearTimeout(currentTimeout);
+			}
+			//重新设置显示事件
+			var newTimeoutHandle = setTimeout(
+					function(){
+						infonotice_close();
+					}, notice_div_state_info.notice_show_milles);
+			//重新赋值
+			notice_div_state_info.notice_settimeout_handle = newTimeoutHandle;
 		}
 		
-		var showmodal = $('#window_notice_div');
-		//展示处理
-		//修改class
-		showmodal.addClass(infoclass);
-		showmodal.addClass(infolength_class);
-		//添加内容
-		$('#top_show_info').html(message);
-		
-		//进行展示 采用toggle来做
-		showmodal.show();
-		
-		//设置状态
-		notice_div_state_info.setShowState(true, infoclass,infolength_class);
-	}
-	
-	window.infonotice_close = function(){
-		//先尝试清除样式
-		if(notice_div_state_info.isShowState()){
-			var showmodal = $('#window_notice_div');
-			//隐藏
-			showmodal.toggle(false);
-			//清空状态
-			showmodal.removeClass(notice_div_state_info.current_warn_class);
-			showmodal.removeClass(notice_div_state_info.info_length_class);
-			//清空提示信息
-			$('#top_show_info').html('');
+		return function(infolevel, message){
+			//先关闭
+			infonotice_close();
+			var infoclass = "alert-success";
+			//异常级别
+			if(!!infolevel && infolevel == showFailTag){
+				infoclass = "alert-danger";
+			}
 			
-			//重置状态
-			notice_div_state_info.setShowState(false, '','');
-		}		
-	}	
+			var infolength_class="top-browser-bg ";
+			//信息长度定义
+			if(!!message && message.length > notice_div_state_info.bg_info_length){
+				infolength_class="top-browser-md ";
+			}
+			var showmodal = $('#window_notice_div');
+			//展示处理
+			showmodal.addClass(infoclass);
+			showmodal.addClass(infolength_class);
+			//添加内容
+			$('#top_show_info').html(message);
+			
+			//进行展示 采用toggle来做
+			showmodal.show();
+			
+			//设置状态
+			notice_div_state_info.setShowState(true, infoclass,infolength_class);
+			
+			// 定时关闭
+			process_notice_div_handle();
+		}
+	})();
+	
 	//初始化操作
 	init();
 });

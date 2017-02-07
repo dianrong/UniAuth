@@ -4,9 +4,12 @@ import java.util.List;
 
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 
-public class UserParam extends Operator {
+import lombok.ToString;
 
+@ToString
+public class UserParam extends Operator {
 	private static final long serialVersionUID = 8550894865549572653L;
+	
 	private Long id;
     private String name;
     private String phone;
@@ -15,6 +18,7 @@ public class UserParam extends Operator {
     private String originPassword;
     private Byte status;
     
+    private String account;
     private Long tenancyId;
     
     private String tenancyCode;
@@ -170,14 +174,17 @@ public class UserParam extends Operator {
         return includeRoleIds;
     }
 
-    public void setIncludeRoleIds(List<Integer> includeRoleIds) {
+    public UserParam setIncludeRoleIds(List<Integer> includeRoleIds) {
         this.includeRoleIds = includeRoleIds;
+        return this;
     }
 
-    @Override
-    public String toString() {
-        return "UserParam [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", password=" + password + ", originPassword=" + originPassword + ", status=" + status
-                + ", tenancyId=" + tenancyId + ", tenancyCode=" + tenancyCode + ", userActionEnum=" + userActionEnum + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds
-                + ", groupCode=" + groupCode + ", includeSubGrp=" + includeSubGrp + ", includeRoleIds=" + includeRoleIds + "]";
+    public String getAccount() {
+        return account;
+    }
+
+    public UserParam setAccount(String account) {
+        this.account = account;
+        return this;
     }
 }

@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.util;
 
+import com.dianrong.common.uniauth.common.bean.dto.ApiPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -20,6 +21,7 @@ import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.common.uniauth.server.data.entity.ApiPermission;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
@@ -330,6 +332,19 @@ public class BeanConverter {
             		.setName(tenancy.getName())
             		.setPhone(tenancy.getPhone())
             		.setStatus(tenancy.getStatus());
+        }
+    }
+    
+    public static ApiPermissionDto convert(ApiPermission apiPermission) {
+        if(apiPermission == null) {
+            return null;
+        } else {
+            return new ApiPermissionDto()
+                    .setId(apiPermission.getId())
+                    .setMethod(apiPermission.getMethod())
+                    .setStatus(apiPermission.getStatus())
+                    .setType(apiPermission.getType())
+                    .setUri(apiPermission.getUri());
         }
     }
     

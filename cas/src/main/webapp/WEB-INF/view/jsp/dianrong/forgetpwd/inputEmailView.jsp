@@ -50,7 +50,7 @@
 					  	</div>
 					  	<div class="col-sm-2">
 					  		<div class="captcha-img">
-					    		<img alt="picture" src="<%=path %>/uniauth/captcha" title="picture" id="verfypic" >
+					    		<img alt="picture" src="<%=path %>/uniauth/verification/captcha" title="picture" id="verfypic" >
 					    		<button type="button" class="btn btn-primary glyphicon glyphicon-refresh" id="refreshverfypic"></button>
 					    	</div>
 					  	</div>

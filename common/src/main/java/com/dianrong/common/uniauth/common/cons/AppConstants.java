@@ -93,7 +93,7 @@ public interface AppConstants {
 	String PSWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
 	String PSWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
 	/**
-	 * useless after integrate notification and challage
+	 * useless after integrate notification and challenge
 	 */
 	@Deprecated
 	String PSWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
@@ -101,7 +101,7 @@ public interface AppConstants {
 	String PSWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
 	String PSWDEXPIRE_SESSION_KEY = "pwdg_passwrod_expire";
 
-	//60 seconds
+	//60 minutes
 	long PSWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
 	//5 minutes
 	long PSWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
@@ -109,6 +109,7 @@ public interface AppConstants {
 	//tag for UserInfo edit in request
 	String CAS_USERINFO_MANAGE_EDIT_KEY = "edituserinfo";
 	String CAS_USERINFO_MANAGE_REQUEST_METHOD_KEY = "form_method";
+	@Deprecated
 	String CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY = "user_mangage_flow_request_type";
 	String CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG = "user_manage_errormsg";
 	
@@ -190,4 +191,11 @@ public interface AppConstants {
 	Long TENANCY_UNRELATED_TENANCY_ID= -1L;
 	// 配置项，指定是否强制监测租户信息
 	String CHECK_TENANCY_IDENTITY_FORCIBLY = "tenancyIdentity.check.switch";
+	// 配置项，指定是否开启uniauth-server的监控开关
+    String UNIAUTH_SERVER_API_CALL_SWITCH = "apicall.check.switch";
+    // 配置项, 指定是否使用notification实现的通知发送
+    String UNIAUTH_NOTIFY_USE_NOTIFICATION = "notify.notification";
+	
+	// 2 hours
+	long DEFAULT_API_CALL_TOKEN_AVAILABLE_MILLiSECONDS = 1000L * 60L *  60l  * 2L;  
 }

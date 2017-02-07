@@ -1,14 +1,12 @@
 package com.dianrong.common.uniauth.sharerw.interfaces;
 
-import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.request.GroupTreeParam;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
-import com.dianrong.common.uniauth.common.bean.request.RoleParam;
-import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+
+import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.request.RoleParam;
+import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
 
 
 public interface IRoleRWResource extends IRoleResource {

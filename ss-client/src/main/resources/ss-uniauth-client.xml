@@ -30,8 +30,8 @@
 	 -->
 	
 	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
-	  <b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
-	  <b:property name="serviceProperties" ref="casService"/>    
+		<b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
+		<b:property name="serviceProperties" ref="casService"/>    
 	</b:bean>  
 	
 	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    

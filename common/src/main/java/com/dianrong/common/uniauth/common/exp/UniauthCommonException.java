@@ -23,4 +23,12 @@ public class UniauthCommonException extends RuntimeException {
     public UniauthCommonException(String msg) {
         super(msg);
     }
+    
+    /**
+     * define method for parameter msg
+     * @param msg msg
+     */
+    public UniauthCommonException(String msg, Throwable t) {
+        super(msg, t);
+    }
 }

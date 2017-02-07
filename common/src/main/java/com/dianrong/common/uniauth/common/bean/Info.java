@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public final class Info implements Serializable {
 
+    private static final long serialVersionUID = -1527808041715597462L;
+    
     private InfoName name;
     private String msg;
 
