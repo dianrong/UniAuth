@@ -7,7 +7,7 @@ import com.dianrong.common.uniauth.sharerw.notification.exp.NotificationNotAvail
  * 
  * @author wanglin
  */
-public interface SmsNotify extends Notify {
+public interface SmsNotification extends Notification {
 
     /**
      * 发短信

@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.sharerw.notification.impl.email;
 
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.sharerw.notification.EmailNotify;
+import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
 import com.dianrong.common.uniauth.sharerw.notification.exp.SendNotificationFailedException;
 import com.dianrong.platform.notification.email.EmailHttpClient;
 import com.dianrong.platform.notification.email.SendEmailRequest;
@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Slf4j
-public class NotificationEmailNotify implements EmailNotify {
+public class NotificationEmailNotify implements EmailNotification {
     // default email sender
     private static final String DEFAULT_FROM_EMAIL = "noreply@dianrong.com";
     private static final String DEFAULT_FROM_EMAIL_NAME = "TechOps-Notification";

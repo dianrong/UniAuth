@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.sharerw.notification.impl.sms;
 import java.util.HashSet;
 
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.sharerw.notification.SmsNotify;
+import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
 import com.dianrong.common.uniauth.sharerw.notification.exp.SendNotificationFailedException;
 import com.dianrong.platform.notification.http.ResponseMsg;
 import com.dianrong.platform.notification.sms.SendSmsContentRequest;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Slf4j
-public class NotificationSmsNotify implements SmsNotify {
+public class NotificationSmsNotify implements SmsNotification {
 
     // notification颁发的userKey
     private final String notificationUserKey;

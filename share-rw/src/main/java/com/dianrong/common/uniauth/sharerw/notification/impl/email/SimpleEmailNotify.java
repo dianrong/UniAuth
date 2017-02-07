@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.sharerw.notification.EmailNotify;
+import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Slf4j
-public class SimpleEmailNotify implements EmailNotify {
+public class SimpleEmailNotify implements EmailNotification {
     // default values
     public static final String DEFAULT_SMTP_HOST = "smtp-dev.sl.com";
     public static final String DEFAULT_FROM_EMAIL = "TechOps-Notification<noreply@dianrong.com>";

@@ -8,7 +8,7 @@ import com.dianrong.common.uniauth.sharerw.notification.exp.SendNotificationFail
  * 
  * @author wanglin
  */
-public interface EmailNotify extends Notify {
+public interface EmailNotification extends Notification {
 
     /**
      * 发送通知消息

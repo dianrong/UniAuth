@@ -5,5 +5,5 @@ package com.dianrong.common.uniauth.sharerw.notification;
  * 
  * @author wanglin
  */
-public interface Notify {
+public interface Notification {
 }

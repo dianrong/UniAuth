@@ -27,8 +27,8 @@ import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-import com.dianrong.common.uniauth.sharerw.notification.EmailNotify;
-import com.dianrong.common.uniauth.sharerw.notification.SmsNotify;
+import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
+import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
 import com.dianrong.common.uniauth.sharerw.notification.exp.NotificationNotAvailableException;
 import com.dianrong.common.uniauth.sharerw.notification.exp.SendNotificationFailedException;
 import com.google.code.kaptcha.Constants;
@@ -51,10 +51,10 @@ public class VerificationController {
     private static final int VERIFICATION_LENGHT = 6;
     
     @Autowired
-    private SmsNotify smsNotify;
+    private SmsNotification smsNotify;
     
     @Autowired
-    private EmailNotify emailNotify;
+    private EmailNotification emailNotify;
     
     @Autowired
     private MessageSource messageSource;

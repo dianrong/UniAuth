@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.sharerw.notification.impl.email;
 
 import org.springframework.util.StringUtils;
 
-import com.dianrong.common.uniauth.sharerw.notification.EmailNotify;
+import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,9 +12,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Slf4j
-public class DelegateUniauthEmailNotify implements EmailNotify {
+public class DelegateUniauthEmailNotification implements EmailNotification {
 
-    private final EmailNotify emailNotify;
+    private final EmailNotification emailNotify;
 
     /**
      * 根据配置configuration选择创建EmailNotify
@@ -26,7 +26,7 @@ public class DelegateUniauthEmailNotify implements EmailNotify {
      * @param notificationUserKey notification办法的userKey
      * @param notificationEndpoint notification服务器的地址
      */
-    public DelegateUniauthEmailNotify(String config, String fromEmail, String smtpHost, int smtpPort, String notificationUserKey, String notificationEndpoint) {
+    public DelegateUniauthEmailNotification(String config, String fromEmail, String smtpHost, int smtpPort, String notificationUserKey, String notificationEndpoint) {
         if (useNotificationNotify(config)) {
             log.info(String.format("apply SmsNotify implement is : %s", NotificationEmailNotify.class.getName()));
             NotificationEmailNotify notify = new NotificationEmailNotify(notificationUserKey, notificationEndpoint);

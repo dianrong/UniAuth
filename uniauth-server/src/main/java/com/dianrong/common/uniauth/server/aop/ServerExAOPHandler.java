@@ -54,6 +54,7 @@ public class ServerExAOPHandler {
     	GlobalVar origin = RequestManager.getGlobalVar();
     	GlobalVar gv = null;
         try {
+        	origin.setRequestDomainCode(CallerAccountHolder.get());
         	gv = (GlobalVar)origin.clone();
         	gv.setReqDate(new Date());
         	gv.setTenancyId(tenancyService.getOneCanUsedTenancyId());
@@ -64,8 +65,6 @@ public class ServerExAOPHandler {
         	Long nextSeq =  invokeSeq + 1;
         	gv.setInvokeSeq(nextSeq);
         	origin.setInvokeSeq(nextSeq);
-        	gv.setRequestDomainCode(CallerAccountHolder.get());
-        	origin.setRequestDomainCode(CallerAccountHolder.get());
         	try{
             	Object[] args = joinPoint.getArgs();
             	if(args != null && args.length > 0){

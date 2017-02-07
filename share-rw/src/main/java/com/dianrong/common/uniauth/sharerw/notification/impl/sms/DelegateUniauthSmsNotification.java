@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.sharerw.notification.impl.sms;
 
-import com.dianrong.common.uniauth.sharerw.notification.SmsNotify;
+import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Slf4j
-public class DelegateUniauthSmsNotify implements SmsNotify {
+public class DelegateUniauthSmsNotification implements SmsNotification {
     // 被代理的实现
-    private final SmsNotify smsNotify;
+    private final SmsNotification smsNotify;
 
-    public DelegateUniauthSmsNotify(String config, String notificationUserKey, String notificationEndpoint) {
+    public DelegateUniauthSmsNotification(String config, String notificationUserKey, String notificationEndpoint) {
         if (useNotificationNotify(config)) {
             log.info(String.format("apply SmsNotify implement is : %s", NotificationSmsNotify.class.getName()));
             this.smsNotify = new NotificationSmsNotify(notificationUserKey, notificationEndpoint);

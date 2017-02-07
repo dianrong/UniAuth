@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.sharerw.notification.impl.sms;
 
-import com.dianrong.common.uniauth.sharerw.notification.SmsNotify;
+import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
 import com.dianrong.common.uniauth.sharerw.notification.exp.NotificationNotAvailableException;
 
 /**
@@ -8,7 +8,7 @@ import com.dianrong.common.uniauth.sharerw.notification.exp.NotificationNotAvail
  * 
  * @author wanglin
  */
-public class NotAvailableSmsNotify implements SmsNotify {
+public class NotAvailableSmsNotify implements SmsNotification {
 
     @Override
     public void send(String phoneNumber, String notification) {
