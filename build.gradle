@@ -22,7 +22,7 @@ plugins {
 }
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.71-SNAPSHOT'
+    version = '1.0.72-SNAPSHOT'
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -263,8 +263,8 @@ project(':cas') {
 			exclude group: 'com.fasterxml.jackson.core'
 		}
 		compile(
-		"com.dianrong.platform:challenge-client:1.0.1",
-		"com.dianrong.platform:notification-client:1.0.2",
+			"com.dianrong.platform:challenge-client:1.0.1",
+			"com.dianrong.platform:notification-client:1.0.2",
 		)
 		providedCompile "org.apache.tomcat:tomcat-catalina:7.0.63"
 		providedCompile 'javax.servlet:javax.servlet-api:3.1.0'  

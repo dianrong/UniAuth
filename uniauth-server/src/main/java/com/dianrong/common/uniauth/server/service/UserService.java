@@ -178,15 +178,30 @@ public class UserService extends TenancyBasedService {
     }
 
     @Transactional
-    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String name, String phone, String email, String password, String orginPassword, Byte status) {
-        if (userActionEnum == null || id == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum, userId"));
+    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId, String name, String phone, String email, String password, String orginPassword, Byte status) {
+        if (userActionEnum == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
         }
-        User user = getUserByPrimaryKey(id);
+        User user = null;
+        String userIdentity = "";
+        // 通过账号的查找当前的用户信息
+        if (UserActionEnum.isUpdateByAccount(userActionEnum)) {
+            if (account == null || tenancyId == null) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "account, tenancyId"));
+            }
+            user = getUserByAccount(account, null, tenancyId, true, AppConstants.STATUS_ENABLED);
+            userIdentity = account;
+        } else {
+            if (id == null) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userId"));
+            }
+            user = getUserByPrimaryKey(id);
+            userIdentity = String.valueOf(id);
+        }
         if (user == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", id, User.class.getSimpleName()));
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", userIdentity, User.class.getSimpleName()));
         } else if (AppConstants.ONE_BYTE.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", id, User.class.getSimpleName()));
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", userIdentity, User.class.getSimpleName()));
         }
         switch (userActionEnum) {
             case LOCK :
@@ -196,7 +211,7 @@ public class UserService extends TenancyBasedService {
                 user.setFailCount(AppConstants.ZERO_BYTE);
                 break;
             case RESET_PASSWORD :
-                checkUserPwd(id, password);
+                checkUserPwd(user.getId(), password);
                 byte salt[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
                 user.setPasswordSalt(Base64.encode(salt));
@@ -214,11 +229,24 @@ public class UserService extends TenancyBasedService {
                 user.setStatus(status);
                 break;
             case UPDATE_INFO :
-                this.checkPhoneAndEmail(phone, email, id);
+                this.checkPhoneAndEmail(phone, email, user.getId());
                 user.setName(name);
                 user.setEmail(email);
                 user.setPhone(phone);
                 break;
+            case UPDATE_INFO_BY_ACCOUNT :
+                user.setName(name);
+                break;
+            case UPDATE_EMAIL_BY_ACCOUNT :
+                this.checkEmail(email, user.getId());
+                user.setEmail(email);
+                break;
+            case UPDATE_PHONE_BY_ACCOUNT :
+                this.checkPhone(phone, user.getId());
+                user.setPhone(phone);
+                break;
+            case UPDATE_PASSWORD_BY_ACCOUNT :
+                // same as case:RESET_PASSWORD_AND_CHECK
             case RESET_PASSWORD_AND_CHECK :
                 // 原始密码验证通过
                 if (orginPassword == null) {
@@ -228,7 +256,7 @@ public class UserService extends TenancyBasedService {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
                 }
                 // 验证新密码
-                checkUserPwd(id, password);
+                checkUserPwd(user.getId(), password);
                 byte salttemp[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
                 user.setPasswordSalt(Base64.encode(salttemp));
@@ -236,6 +264,8 @@ public class UserService extends TenancyBasedService {
                 user.setFailCount(AppConstants.ZERO_BYTE);
                 // log
                 asynAddUserPwdLog(user);
+                break;
+            default:
                 break;
         }
         user.setLastUpdate(new Date());
@@ -497,7 +527,25 @@ public class UserService extends TenancyBasedService {
         }
     }
 
+    /**
+     * check email and phone, composed by checkEmail and checkPhone
+     * @param phone phone
+     * @param email email
+     * @param userId userId
+     * @throws AppException if email or phone is invalid  
+     */
     private void checkPhoneAndEmail(String phone, String email, Long userId) {
+        checkEmail(email, userId);
+        checkPhone(phone, userId);
+    }
+    
+    /**
+     * email can not be null
+     * @param email email
+     * @param userId userId
+     * @throws AppException if email is invalid  
+     */
+    private void checkEmail(String email, Long userId) {
         if (email == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "email"));
         }
@@ -510,6 +558,15 @@ public class UserService extends TenancyBasedService {
         } else {
             dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL, email);
         }
+    }
+    
+    /**
+     *  phone can be null
+     * @param phone phone number
+     * @param userId userId
+     * @throws AppException if phone is invalid  
+     */
+    private void checkPhone(String phone, Long userId) {
         if (phone != null) {
             // check duplicate phone
             if (userId == null) {

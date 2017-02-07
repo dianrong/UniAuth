@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * Created by Arc on 10/3/2016.
  */
 @Slf4j
+@Deprecated
 public class EmailSender implements InitializingBean{
     // default values
     private static final String DEFAULTSMTPHOST = "smtp-dev.sl.com";

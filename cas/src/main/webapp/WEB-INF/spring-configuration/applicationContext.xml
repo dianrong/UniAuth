@@ -55,12 +55,19 @@
     -->
     <context:component-scan base-package="com.dianrong.platform.challenge" />
     <!-- <bean class="com.dianrong.common.uniauth.sharerw.message.EmailSender" /> -->
-    <!-- for send sms -->
-    <bean class="com.dianrong.platform.notification.sms.SmsHttpClient" >
-        <constructor-arg value="#{uniauthConfig['notification_endpoint']}"></constructor-arg>
+    <!-- for notification -->
+    <bean id="smsNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.sms.DelegateUniauthSmsNotify">
+    	<constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+    	<constructor-arg index="1" value="#{uniauthConfig['notification_key']}"/>
+    	<constructor-arg index="2" value="#{uniauthConfig['notification_endpoint']}"/>
     </bean>
-    <bean class="com.dianrong.platform.notification.email.EmailHttpClient" >
-        <constructor-arg value="#{uniauthConfig['notification_endpoint']}"></constructor-arg>
+     <bean id="emailNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.email.DelegateUniauthEmailNotify">
+	     <constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+	     <constructor-arg index="1" value="#{uniauthConfig['internal.mail.smtp.femail']}"/>
+	     <constructor-arg index="2" value="#{uniauthConfig['internal.mail.smtp.host']}"/>
+	     <constructor-arg index="3" value="#{uniauthConfig['internal.mail.smtp.port']?:'0'}"/>
+	     <constructor-arg index="4" value="#{uniauthConfig['notification_key']}"/>
+	     <constructor-arg index="5" value="#{uniauthConfig['notification_endpoint']}"/>
     </bean>
 	<!-- cas的国际化实现 -->
     <bean id="messageSource" class="org.jasig.cas.web.view.CasReloadableMessageBundle"

@@ -9,9 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.util.StringUtils;
+
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
+import com.dianrong.common.uniauth.cas.model.ExpiredSessionObj;
 import com.dianrong.common.uniauth.cas.model.HttpResponseModel;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +70,92 @@ public final class WebScopeUtil {
 	public static CasLoginCaptchaInfoModel getCaptchaInfoFromSession(HttpSession session) {
 		return getValFromSession(session, AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
 	}
+	
+	// sms
+	/**
+     *  set sms verification to session
+     * @param session
+     * @param verification
+     * @return true or false
+     */
+    public static boolean putSmsVerificationToSession(HttpSession session, ExpiredSessionObj<String> verification) {
+        return putValToSession(session, CasConstants.SMS_VERIFICATION_SESSION_KEY, verification);
+    }
+    
+    /**
+     *  get sms verification from session
+     * @param session
+     * @return verification
+     */
+    public static ExpiredSessionObj<String> getSmsVerificationFromSession(HttpSession session) {
+        return getValFromSession(session, CasConstants.SMS_VERIFICATION_SESSION_KEY);
+    }
+    
+    /**
+     * remove sms verification from session
+     * @param session
+     */
+    public static void removeSmsVerification(HttpSession session) {
+        session.removeAttribute(CasConstants.SMS_VERIFICATION_SESSION_KEY);
+    }
+    
+    // email
+    /**
+  *  set email verification to session
+  * @param session
+  * @param verification
+  * @return true or false
+  */
+ public static boolean putEmailVerificationToSession(HttpSession session, ExpiredSessionObj<String> verification) {
+     return putValToSession(session, CasConstants.EMAIL_VERIFICATION_SESSION_KEY, verification);
+ }
+ 
+ /**
+  *  get email verification from session
+  * @param session
+  * @return verification
+  */
+ public static ExpiredSessionObj<String> getEmailVerificationFromSession(HttpSession session) {
+     return getValFromSession(session, CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
+ }
+ 
+ /**
+  * remove email verification from session
+  * @param session
+  */
+ public static void removeEmailVerification(HttpSession session) {
+     session.removeAttribute(CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
+ }
+ 
+ /**
+  *  set a flag to session, represent the identity is verified
+  * @param session can not be null
+  * @param identity can not be null
+  */
+ public static void setVerificationChecked(HttpSession session, String identity) {
+     Assert.notNull(session);
+     Assert.notNull(identity);
+     String sessionKey = Base64.encode(identity.getBytes());
+     putValToSession(session, sessionKey, Boolean.TRUE);
+ }
+ 
+ /**
+  * get flag from session, check whether the identity is verified
+  * @param session can not be null
+  * @return true or false
+  */
+ public static boolean getVerificationIsChecked(HttpSession session, String identity) {
+     Assert.notNull(session);
+     if (!StringUtils.hasText(identity)) {
+         return false;
+     }
+     String sessionKey = Base64.encode(identity.getBytes());
+     Boolean checked = getValFromSession(session, sessionKey);
+     if (checked != null && checked) {
+         return true;
+     }
+     return false;
+ }
 	
 	/**
 	 * . get captchaInfo from session

@@ -448,6 +448,11 @@
 	font-weight: bold;
 }
 
+.black-font {
+	color: black;
+	font-weight: bold;
+}
+
 .i18n-div span {
 	padding-left: 10px;
 	padding-right: 10px;

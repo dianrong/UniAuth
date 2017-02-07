@@ -1,6 +1,8 @@
+apply plugin: 'war'
 
 dependencies {
     compile project(":common")
+
     //Java Mail
     compile "javax.mail:mail:1.5.0-b01"
     // compile 'org.freemarker:freemarker:2.3.23'
@@ -10,6 +12,7 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test:4.1.6.RELEASE"
 
+    providedCompile 'com.dianrong.platform:notification-client:1.0.3'
 }
 
 jar {
