@@ -68,10 +68,6 @@ public class UserInfoManageController {
         return Response.success();
     }
     
-    public static void main(String[] args) {
-        System.out.println(JsonUtil.object2Jason(Response.success()));
-    }
-
     /**
      * 更新 email 信息
      * @param indentity 发送验证码的邮箱
