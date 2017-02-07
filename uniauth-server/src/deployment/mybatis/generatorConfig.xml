@@ -9,7 +9,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/uniauth"
+                        connectionURL="jdbc:mysql://localhost:3306/ssuniauth"
                         userId="root" password="123456">
         </jdbcConnection>
 
@@ -34,7 +34,7 @@
         </javaClientGenerator>
 
 
-        <table tableName="%" enableCountByExample="true"
+        <table tableName="audit" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>

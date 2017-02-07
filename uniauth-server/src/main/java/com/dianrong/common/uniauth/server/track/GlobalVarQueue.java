@@ -74,6 +74,7 @@ public class GlobalVarQueue {
 							audit.setReqSeq(gv.getInvokeSeq());
 							audit.setDomainId(gv.getDomainId());
 							audit.setTenancyId(gv.getTenancyId());
+							audit.setRequestDomainCode(gv.getRequestDomainCode());
 							synchronized(lock){
 								auditList.add(audit);
 							}

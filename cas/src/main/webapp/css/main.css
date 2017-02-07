@@ -89,6 +89,10 @@
 	display: none;	
 }
 
+.hidden-element {
+	display: none;	
+}
+
 .cursordefault{
 	cursor: default;
 }
@@ -120,9 +124,7 @@
 }
 
 .find-pwd-container .find-pwd-content .infoedit .form-horizontal .horizontal {
-	margin : 0px;
-	margin-bottom:35px;
-	margin-top : 35px;
+	  margin: 15px 0px;
 }
 
 .margin-bottom-0 {
@@ -134,16 +136,27 @@
 }
 
 .find-pwd-container .find-pwd-content .infoedit   .form-group {
-	margin-bottom:15px;
-	margin-top : 15px;
+	padding: 15px 0px;
 }
 
 .find-pwd-container .find-pwd-content .infoedit .showlabel {
 	text-align: right;
 }
 
-.find-pwd-container .find-pwd-content .infoedit .infolabel {
+.find-pwd-container .find-pwd-content .infoedit .btn {
+	min-width: 100px;
+}
+
+.find-pwd-container .find-pwd-content .infoedit button span {
+	padding-right: 3px;
+}
+
+.form-horizontal .form-group .infolabel {
 	text-align: left;
+}
+
+.form-horizontal .form-group .btn-wide {
+	width: 100%;
 }
 
 .find-pwd-container .find-pwd-content .steps {
@@ -431,6 +444,11 @@
 }
 
 .find-pwd-container .find-pwd-content .steps .balckfont{
+	color: black;
+	font-weight: bold;
+}
+
+.black-font {
 	color: black;
 	font-weight: bold;
 }

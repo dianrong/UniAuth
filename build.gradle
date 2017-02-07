@@ -19,7 +19,7 @@ allprojects {
     ext{
         spring_version = '4.1.6.RELEASE'
     }
-    version = '1.0.71-SNAPSHOT'
+    version = '1.0.72-SNAPSHOT'
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -236,6 +236,9 @@ project(':cas') {
 			exclude group: 'org.springframework.security'
 			exclude group: 'com.fasterxml.jackson.core'
 		}
+		compile(
+			"com.dianrong.platform:notification-client:1.0.2",
+		)
 		providedCompile( "org.apache.tomcat:tomcat-catalina:7.0.63")
 		compile (
 		 'javax.servlet:javax.servlet-api:3.1.0'  ,
@@ -253,8 +256,7 @@ project(':cas') {
         compile "com.github.penggle:kaptcha:2.3.2"
 
 		compile(
-		"com.dianrong.platform:challenge-client:1.0.1",
-		"com.dianrong.platform:notification-client:1.0.2",
+				"com.dianrong.platform:notification-client:1.0.3",
 		)
 
 		//Http Components for deploy on local

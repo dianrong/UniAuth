@@ -92,7 +92,7 @@
 				            <label for="captcha"><spring:message code="screen.welcome.label.captcha" /></label>
 				            <div class="captcha-class">
 						            <input type="text" size="12" tabindex="3" id="captcha" name="captcha">
-						    		<img alt="picture" src="<%=path %>/uniauth/captcha" title="<spring:message code="screen.init.password.step1.content.verifycode.title"/>"  id="cas_login_captcha_change_img" >
+						    		<img alt="picture" src="<%=path %>/uniauth/verification/captcha" title="<spring:message code="screen.init.password.step1.content.verifycode.title"/>"  id="cas_login_captcha_change_img" >
 									 <a  href="javascript:void(0);" tabindex="4"  id="cas_login_captcha_change_a"><spring:message code="screen.welcome.button.captcha.change"/></a>
 				            </div>
 				        </section>

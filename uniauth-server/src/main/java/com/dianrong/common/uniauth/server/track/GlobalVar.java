@@ -19,6 +19,7 @@ public class GlobalVar implements Cloneable {
 	private Long invokeSeq;
 	private Integer domainId;
 	private Long tenancyId;
+	private String requestDomainCode;
 	
 	public Integer getDomainId() {
 		return domainId;
@@ -143,4 +144,12 @@ public class GlobalVar implements Cloneable {
 	public void setTenancyId(Long tenancyId) {
 		this.tenancyId = tenancyId;
 	}
+
+    public String getRequestDomainCode() {
+        return requestDomainCode;
+    }
+
+    public void setRequestDomainCode(String requestDomainCode) {
+        this.requestDomainCode = requestDomainCode;
+    }
 }

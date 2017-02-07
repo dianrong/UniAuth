@@ -65,11 +65,6 @@ public final class InitialFlowSetupAction extends AbstractAction {
 		if (!StringUtil.strIsNullOrEmpty(requestType)) {
 			// 往flowscope中放入一个标识符用于区分不同的流程
 			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY, "go");
-			// 获取请求的方式 采用一个模拟的字段来模拟请求的method 优先采用该字段
-			String smulateReqMethod = request.getParameter(AppConstants.CAS_USERINFO_MANAGE_REQUEST_METHOD_KEY);
-			// 缓存一个初始请求的方式到flow范围中
-			context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY,
-					StringUtil.strIsNullOrEmpty(smulateReqMethod) ? request.getMethod() : smulateReqMethod);
 		} 
 		if (!this.pathPopulated) {
 			final String contextPath = context.getExternalContext().getContextPath();

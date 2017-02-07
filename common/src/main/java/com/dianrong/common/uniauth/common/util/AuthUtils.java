@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Random;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,34 @@ public class AuthUtils {
         } catch (NoSuchAlgorithmException e) {
             return null;
         }
+    }
+    
+    /**
+     * 生成密码
+     * @param length 密码长度
+     * @return 密码
+     */
+    public static String generatePassword(int length) {
+        if(length <= 0) {
+            return "";
+        }
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        String exCludeChar = "'<>&";
+        String[] charSets = {DIGITS, LETTERS, SPECIALS};
+        for (int i = 0; i < length; i++) {
+            int r = random.nextInt(charSets.length);
+            String charSet = charSets[r];
+            r = random.nextInt(charSet.length());
+            char c = charSet.charAt(r);
+            if (exCludeChar.contains(String.valueOf(c))) {
+                // exclude
+                i--;
+                continue;
+            }
+            sb.append(charSet.charAt(r));
+        }
+        return sb.toString();
     }
 
     public static byte[] digest(String password, byte[] salt) {
