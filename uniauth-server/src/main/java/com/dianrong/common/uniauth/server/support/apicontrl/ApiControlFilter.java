@@ -124,7 +124,7 @@ public class ApiControlFilter extends GenericFilterBean {
                 try {
                     headerOperator.setHeader(HeaderKey.RESPONSE_TYPE, ResponseVerifiedType.LOGIN_SUCCESS.toString());
                     PtHeaderOperator<LoginResponseLoad> responseLoginHeaderOperator = new LoginResponseLoadHeaderOperator(headerOperator);
-                    responseLoginHeaderOperator.setHeader(HeaderKey.RESPONSE_REULST, new LoginResponseLoad(jwtProcessor.marshal(apiCaller), apiCaller.getExpiredTime()));
+                    responseLoginHeaderOperator.setHeader(HeaderKey.RESPONSE_REULST, new LoginResponseLoad(jwtProcessor.marshal(apiCaller), apiCaller.getExpireTime()));
                 } catch (TokenCreateFailedException e) {
                     log.error("failed create token + " + apiCaller, e);
                     // client 端重新登陆

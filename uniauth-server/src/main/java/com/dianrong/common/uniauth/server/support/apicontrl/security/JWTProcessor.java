@@ -43,7 +43,7 @@ public class JWTProcessor implements TokenProcessor<ApiCtlPermission> {
         Assert.notNull(credential);
         JwtInfo jwtInfo = new JwtInfo(ISSUER, AUDIENCE, SUBJECT, credential.getCallerName() ,
                 credential.getAccount(), JsonUtil.object2Jason(credential.getPermissionInfo()),
-                credential.getCreateTime(), credential.getExpiredTime());
+                credential.getCreateTime(), credential.getExpireTime());
         return JWT.createJwt(jwtInfo);
     }
     @Override

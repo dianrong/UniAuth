@@ -16,5 +16,5 @@ public interface WillExpired {
      * 获取过期时间
      * @return 过期时间
      */
-    long getExpiredTime();
+    long getExpireTime();
 }

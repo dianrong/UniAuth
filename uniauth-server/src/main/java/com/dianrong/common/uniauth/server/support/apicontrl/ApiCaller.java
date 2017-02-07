@@ -97,7 +97,7 @@ public class ApiCaller implements CallerCredential<ApiCtlPermission> {
     }
 
     @Override
-    public long getExpiredTime() {
+    public long getExpireTime() {
         return this.expiredTime;
     }
 }
