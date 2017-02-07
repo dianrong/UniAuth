@@ -36,7 +36,7 @@ final class JWTSecurity {
     JWTSecurity() throws JWTVerifierCreateFailedException {
         try {
             verifier= JWT.require(Algorithm.HMAC512(SECURITY_KEY)).build();
-        } catch(Throwable e) {
+        } catch(Exception e) {
             log.error("failed to create JWTVerifier ", e);
             throw new JWTVerifierCreateFailedException("failed create JWTVerifier ", e);
         }
@@ -62,7 +62,7 @@ final class JWTSecurity {
                     .withClaim(JwtInfo.USER_ACCOUNT_KEY, jwt.getAccount())
                     .withClaim(JwtInfo.PERMISSION_KEY, jwt.getPermission())
                     .sign(Algorithm.HMAC512(SECURITY_KEY));
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.error("failed create jwt ", e);
             throw new TokenCreateFailedException("failed create jwt", e);
         }

@@ -82,7 +82,7 @@ public final class ApiCallCtlManager {
     static {
         try {
             referenceClientStatus = AtomicReferenceFieldUpdater.newUpdater(ApiCallCtlManager.class, ClientStatus.class, "status");
-        } catch (Throwable ex) { 
+        } catch (Exception ex) { 
             throw new Error(ex); 
         }
     }

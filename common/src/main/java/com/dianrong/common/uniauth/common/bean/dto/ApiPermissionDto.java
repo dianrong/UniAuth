@@ -41,8 +41,8 @@ public class ApiPermissionDto implements Serializable{
         return method;
     }
     public ApiPermissionDto setMethod(String method) {
-        String methdoUpper = method == null ? "" : method.toUpperCase();
-        this.method = UriMethod.valueOf(methdoUpper);
+        String methodUpperCase = method == null ? "" : method.toUpperCase();
+        this.method = UriMethod.valueOf(methodUpperCase);
         return this;
     }
     public Byte getType() {

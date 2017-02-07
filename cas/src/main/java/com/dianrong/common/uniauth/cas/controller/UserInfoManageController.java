@@ -23,7 +23,6 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
-import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 import lombok.extern.slf4j.Slf4j;
 

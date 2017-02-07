@@ -34,7 +34,7 @@ public final class UniauthRSClientFactory {
         // default
         Object[] providersArray = {};
         if (providers != null) {
-            providersArray = providers.toArray(new Object[0]);
+            providersArray = providers.toArray();
         } 
         
         // append two provider
@@ -43,7 +43,7 @@ public final class UniauthRSClientFactory {
         providersArray[tempArrayLength] = API_CTL_REQ_FILTER;
         providersArray[tempArrayLength+1] = API_CTL_RES_FILTER;
         List<?> cxfProviders = Arrays.asList(providersArray);
-        Object proxy = JAXRSClientFactory.create(baseAddress, cls , cxfProviders);
+        T proxy = JAXRSClientFactory.create(baseAddress, cls , cxfProviders);
         ClassLoader loader = UniauthRSClientFactory.class.getClassLoader();
         ApiControlInvocationHandler handler = new ApiControlInvocationHandler(proxy);
         return (T)ProxyHelper.getProxy(loader, new Class<?>[]{cls}, handler);

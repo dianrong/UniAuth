@@ -11,12 +11,12 @@ public interface PtHeaderOperator<T> {
      * @param key key
      * @return value
      */
-   T getHeader(String key);
+	T getHeader(String key);
     
    /**
     * set header: key - > value
     * @param key key 
     * @param value value
     */
-    void setHeader(String key, T value);
+	void setHeader(String key, T value);
 }

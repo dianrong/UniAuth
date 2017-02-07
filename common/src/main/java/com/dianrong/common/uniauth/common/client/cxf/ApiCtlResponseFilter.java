@@ -5,14 +5,12 @@ import java.io.IOException;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.client.ClientResponseFilter;
-import javax.ws.rs.ext.Provider;
 
 import com.dianrong.common.uniauth.common.client.cxf.ApiControlHeaderHolder.HeaderHolder;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Provider
 public final class ApiCtlResponseFilter implements ClientResponseFilter {
 
     @Override

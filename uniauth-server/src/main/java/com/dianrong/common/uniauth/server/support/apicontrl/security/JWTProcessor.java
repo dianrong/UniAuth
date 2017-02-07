@@ -39,7 +39,7 @@ public class JWTProcessor implements TokenProcessor<ApiCtlPermission> {
         }  
     }
     @Override
-    public String marshal(CallerCredential<ApiCtlPermission> credential) throws TokenCreateFailedException {
+    public String sign(CallerCredential<ApiCtlPermission> credential) throws TokenCreateFailedException {
         Assert.notNull(credential);
         JwtInfo jwtInfo = new JwtInfo(ISSUER, AUDIENCE, SUBJECT, credential.getCallerName() ,
                 credential.getAccount(), JsonUtil.object2Jason(credential.getPermissionInfo()),
@@ -47,7 +47,7 @@ public class JWTProcessor implements TokenProcessor<ApiCtlPermission> {
         return JWT.createJwt(jwtInfo);
     }
     @Override
-    public CallerCredential<ApiCtlPermission> unMarshal(String token) throws InvalidTokenException, TokenExpiredException {
+    public CallerCredential<ApiCtlPermission> verify(String token) throws InvalidTokenException, TokenExpiredException {
         JwtInfo jwtInfo = JWT.getInfoFromJwt(token);
         // customized token check
         if (!ISSUER.equals(jwtInfo.getIssuer()) || !AUDIENCE.equals(jwtInfo.getAudience())
