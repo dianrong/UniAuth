@@ -30,5 +30,16 @@ public interface IUserExtendValResource {
     @POST
     @Path("searchbyuseridandcode")
     Response<PageDto<UserExtendValDto>> searchByUserIdAndCode(UserExtendValParam userExtendValParam);
+    /**
+     * search user extend val by user identity,identity include:phone number,email
+     * @param userExtendValParam only concerned about status and identity 
+     * @return
+     * @see #searchByUserId(UserExtendValParam)
+     */
+    @POST
+    @Path("searchbyuseridentity")
+    Response<List<UserExtendValDto>> searchByUserIdentity(UserExtendValParam userExtendValParam);
+    
+    
 }
 
