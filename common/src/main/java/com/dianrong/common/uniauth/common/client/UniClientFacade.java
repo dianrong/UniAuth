@@ -6,10 +6,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.client.ClientRequestFilter;
 
-import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
+import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
 import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
@@ -39,6 +41,9 @@ public class UniClientFacade {
 
     @Value("#{uniauthConfig['uniauth_api_key']}")
     private String apiKey;
+    
+    @Autowired(required = false)
+    private ApiCtrlAccountHolder apiCtrlAccountHolder;
 
 	public UniClientFacade(){}
 	public UniClientFacade(String uniWsEndpoint){
@@ -74,21 +79,25 @@ public class UniClientFacade {
 		jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
 		ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
+		// set api control account
+		if (apiCtrlAccountHolder != null) {
+		    ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword());
+		}
         List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
-        userExtendResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, providers);
-        userExtendValResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValResource.class, providers);
-		domainResource = JAXRSClientFactory.create(uniWsEndpoint, IDomainResource.class, providers);
-		groupResource = JAXRSClientFactory.create(uniWsEndpoint, IGroupResource.class, providers);
-		permissionResource = JAXRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, providers);
-		userResource = JAXRSClientFactory.create(uniWsEndpoint, IUserResource.class, providers);
-		roleResource = JAXRSClientFactory.create(uniWsEndpoint, IRoleResource.class, providers);
-		tagResource = JAXRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
-		configResource = JAXRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
-		tenancyResource = JAXRSClientFactory.create(uniWsEndpoint, ITenancyResource.class, providers);
+        userExtendResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, providers);
+        userExtendValResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendValResource.class, providers);
+		domainResource = UniauthRSClientFactory.create(uniWsEndpoint, IDomainResource.class, providers);
+		groupResource = UniauthRSClientFactory.create(uniWsEndpoint, IGroupResource.class, providers);
+		permissionResource = UniauthRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, providers);
+		userResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserResource.class, providers);
+		roleResource = UniauthRSClientFactory.create(uniWsEndpoint, IRoleResource.class, providers);
+		tagResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
+		configResource = UniauthRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
+		tenancyResource = UniauthRSClientFactory.create(uniWsEndpoint, ITenancyResource.class, providers);
 		
 		// write
-		userExtendRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
-		userExtendValRWResource = JAXRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
+		userExtendRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
+		userExtendValRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
 		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,
 				configResource,userExtendResource,userExtendValResource, userExtendRWResource, userExtendValRWResource);
 	}

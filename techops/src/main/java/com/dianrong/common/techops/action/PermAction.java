@@ -1,14 +1,9 @@
 package com.dianrong.common.techops.action;
 
-import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
-import com.dianrong.common.uniauth.common.bean.request.RoleParam;
-import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import java.util.List;
+import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
+import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 
 /**
  * Created by Arc on 8/3/2016.

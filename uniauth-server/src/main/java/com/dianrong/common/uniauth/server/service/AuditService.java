@@ -30,7 +30,7 @@ public class AuditService extends TenancyBasedService{
     public PageDto<AuditDto> searchAudit(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid,
                                          String reqUrl, Long reqSequence, String reqClass, String reqMethod, Byte reqSuccess, String reqException,
                                          Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult, String orderBy, Boolean ascOrDesc,
-                                         Integer pageNumber, Integer pageSize) {
+                                         Integer pageNumber, Integer pageSize, String requestDomainCode) {
 
         AuditExample auditExample = new AuditExample();
         if(orderBy != null) {
@@ -46,7 +46,7 @@ public class AuditService extends TenancyBasedService{
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
 
-        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse, maxReqElapse, reqParam, reqResult, auditExample);
+        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse, maxReqElapse, reqParam, reqResult, requestDomainCode, auditExample);
         int count = auditMapper.countByExample(auditExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Audit> audits = auditMapper.selectByExample(auditExample);
@@ -63,18 +63,18 @@ public class AuditService extends TenancyBasedService{
 
     public Integer deleteAudit(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid,
                             String reqUrl, Long reqSequence, String reqClass, String reqMethod, Byte reqSuccess, String reqException,
-                            Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult){
+                            Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult, String requestDomainCode){
         CheckEmpty.checkEmpty(minRequestDate, "minRequestDate");
         CheckEmpty.checkEmpty(maxRequestDate, "maxRequestDate");
         AuditExample auditExample = new AuditExample();
-        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse, maxReqElapse, reqParam, reqResult, auditExample);
+        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse, maxReqElapse, reqParam, reqResult, requestDomainCode, auditExample);
         return auditMapper.deleteByExample(auditExample);
     }
 
     private void constructExample(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp,
                                   String reqUuid, String reqUrl, Long reqSequence, String reqClass, String reqMethod,
                                   Byte reqSuccess, String reqException, Long minReqElapse, Long maxReqElapse, String reqParam,
-                                  String reqResult, AuditExample auditExample) {
+                                  String reqResult, String requestDomainCode, AuditExample auditExample) {
 
         AuditExample.Criteria criteria = auditExample.createCriteria();
         if(minReqElapse != null) {
@@ -125,6 +125,9 @@ public class AuditService extends TenancyBasedService{
         }
         if(!StringUtils.isEmpty(reqException)) {
             criteria.andReqExpLike("%" + reqException + "%");
+        }
+        if(!StringUtils.isEmpty(requestDomainCode)) {
+            criteria.andRequestDomainCodeEqualTo(requestDomainCode);
         }
         criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     }

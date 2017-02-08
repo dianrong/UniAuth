@@ -87,4 +87,31 @@ public class HttpRequestUtil {
         return ip;
     }
     
+    public static String extractRequestUrl(HttpServletRequest request){
+        return extractRequestUrl(request, true);
+    }
+    
+    /**
+     *  get request url
+     * @param request
+     * @param includingQuery
+     * @return request url
+     */
+    public static String extractRequestUrl(HttpServletRequest request, boolean includingQuery){
+        String url = request.getServletPath();
+        String pathInfo = request.getPathInfo();
+        String query = request.getQueryString();
+        if (pathInfo != null || (query != null && includingQuery)) {
+            StringBuilder sb = new StringBuilder(url);
+            if (pathInfo != null) {
+                sb.append(pathInfo);
+            }
+            if (query != null && includingQuery) {
+                sb.append('?').append(query);
+            }
+            url = sb.toString();
+        }
+        return url;
+    }
+    
 }

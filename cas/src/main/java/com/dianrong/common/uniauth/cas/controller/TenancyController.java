@@ -18,8 +18,6 @@ import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * . tenancy处理相关
  * 
@@ -27,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Controller
 @RequestMapping("/tenancy")
-@Slf4j
 public class TenancyController {
 	
 	@Autowired

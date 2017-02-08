@@ -26,7 +26,7 @@ public class AuditResource implements IAuditResource {
                 auditParam.getReqMethod(),auditParam.getReqSuccess(),auditParam.getReqException(),
                 auditParam.getMinReqElapse(),auditParam.getMaxReqElapse(),auditParam.getReqParam(),
                 auditParam.getReqResult(),auditParam.getOrderBy(),auditParam.getAscOrDesc(),
-                auditParam.getPageNumber(),auditParam.getPageSize());
+                auditParam.getPageNumber(),auditParam.getPageSize(), auditParam.getRequestDomainCode());
         return Response.success(auditDtoPageDto);
     }
 
@@ -37,7 +37,7 @@ public class AuditResource implements IAuditResource {
                 auditParam.getReqUrl(),auditParam.getReqSequence(),auditParam.getReqClass(),
                 auditParam.getReqMethod(),auditParam.getReqSuccess(),auditParam.getReqException(),
                 auditParam.getMinReqElapse(),auditParam.getMaxReqElapse(),auditParam.getReqParam(),
-                auditParam.getReqResult());
+                auditParam.getReqResult(), auditParam.getRequestDomainCode());
         return Response.success(affectedRows);
     }
 

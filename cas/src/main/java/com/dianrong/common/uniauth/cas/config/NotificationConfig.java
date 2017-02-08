@@ -17,6 +17,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @Component
+@Deprecated
 public class NotificationConfig {
     /**
      * sms template name to send a verify code

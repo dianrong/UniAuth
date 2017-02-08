@@ -20,8 +20,9 @@ public class LoginParam extends Operator {
         return tenancyId;
     }
 
-    public void setTenancyId(Long tenancyId) {
+    public LoginParam setTenancyId(Long tenancyId) {
         this.tenancyId = tenancyId;
+        return this;
     }
 
     public String getAccount() {
@@ -54,7 +55,8 @@ public class LoginParam extends Operator {
 		return tenancyCode;
 	}
 
-	public void setTenancyCode(String tenancyCode) {
+	public LoginParam setTenancyCode(String tenancyCode) {
 		this.tenancyCode = tenancyCode;
+		return this;
 	}
 }

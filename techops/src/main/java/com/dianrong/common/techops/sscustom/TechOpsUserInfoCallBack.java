@@ -1,9 +1,10 @@
 package com.dianrong.common.techops.sscustom;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
-import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,6 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.PermTypeEnum;
-import org.springframework.util.CollectionUtils;
 
 @Component
 public class TechOpsUserInfoCallBack implements UserInfoCallBack {

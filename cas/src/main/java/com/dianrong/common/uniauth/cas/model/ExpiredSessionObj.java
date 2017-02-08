@@ -3,12 +3,9 @@ package com.dianrong.common.uniauth.cas.model;
 import java.io.Serializable;
 
 /**
- * . 用于存储某些有时间要求的model
- * 
- * @author R9GBP97
- *
+ * 会过期的session的model
  */
-public class DateSessionObjModel<T extends Serializable> implements Serializable {
+public class ExpiredSessionObj<T extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = -5592978188308898593L;
 
@@ -32,7 +29,7 @@ public class DateSessionObjModel<T extends Serializable> implements Serializable
 	 * 
 	 * @param content
 	 */
-	public DateSessionObjModel(T content, long lifeMilles) {
+	public ExpiredSessionObj(T content, long lifeMilles) {
 		this.content = content;
 		this.startMilles = System.currentTimeMillis();
 		this.lifeMilles = lifeMilles < 0 ? 0 : lifeMilles;
@@ -55,5 +52,15 @@ public class DateSessionObjModel<T extends Serializable> implements Serializable
 	public boolean isExpired() {
 		long nowMilles = System.currentTimeMillis();
 		return nowMilles - startMilles > lifeMilles;
+	}
+	
+	/**
+	 *  build a new ExpiredSessionObj
+	 * @param content the content
+	 * @param lifeMilles  the content alive milliseconds
+	 * @return a new ExpiredSessionObj
+	 */
+	public static <E extends Serializable> ExpiredSessionObj<E> build(E content, long lifeMilles) {
+	    return new ExpiredSessionObj<E>(content, lifeMilles);
 	}
 }

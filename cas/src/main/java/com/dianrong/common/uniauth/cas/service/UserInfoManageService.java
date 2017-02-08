@@ -64,25 +64,82 @@ public class UserInfoManageService extends BaseService{
 	}
 
 	/**
-	 * . 根据邮箱获取用户信息
-	 * 
-	 * @param email
-	 *            邮箱
-	 * @return user
-	 * @throws Exception 
+	 * 根据账号信息更新用户名
+	 * @param account 账号 
+	 * @param tenancyId 租户id
+	 * @param newName 新的姓名
+	 * @throws Exception 异常
 	 */
-	public void updateUserInfo(Long id, String email, String name, String phone)
-			throws Exception {
+	@TenancyIdentity(index=1)
+	public void updateUserInfo(String account, Long tenancyId, String newName) throws Exception {
 		UserParam userParam = new UserParam();
-		userParam.setId(id);
-		userParam.setEmail(email);
-		userParam.setName(name);
-		userParam.setPhone(phone);
-		userParam.setUserActionEnum(UserActionEnum.UPDATE_INFO);
+		userParam.setAccount(account);
+		userParam.setTenancyId(tenancyId);
+		userParam.setName(newName);
+		userParam.setUserActionEnum(UserActionEnum.UPDATE_INFO_BY_ACCOUNT);
 		Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
 		List<Info> infoList = response.getInfo();
 		checkInfoList(infoList);
 	}
+	
+	   /**
+     * 根据账号信息更新用户名
+     * @param account 账号 
+     * @param tenancyId 租户id
+     * @param email 新的邮箱
+     * @throws Exception 异常
+     */
+    @TenancyIdentity(index=1)
+    public void updateEmail(String account, Long tenancyId, String email) throws Exception {
+        UserParam userParam = new UserParam();
+        userParam.setAccount(account);
+        userParam.setTenancyId(tenancyId);
+        userParam.setEmail(email);
+        userParam.setUserActionEnum(UserActionEnum.UPDATE_EMAIL_BY_ACCOUNT);
+        Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
+        List<Info> infoList = response.getInfo();
+        checkInfoList(infoList);
+    }
+    
+    /**
+     * 根据账号信息更新电话号码
+     * @param account 账号 
+     * @param tenancyId 租户id
+     * @param phone 新的电话号码
+     * @throws Exception 异常
+     */
+    @TenancyIdentity(index=1)
+    public void updatePhone(String account, Long tenancyId, String phone) throws Exception {
+        UserParam userParam = new UserParam();
+        userParam.setAccount(account);
+        userParam.setTenancyId(tenancyId);
+        userParam.setPhone(phone);
+        userParam.setUserActionEnum(UserActionEnum.UPDATE_PHONE_BY_ACCOUNT);
+        Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
+        List<Info> infoList = response.getInfo();
+        checkInfoList(infoList);
+    }
+    
+    /**
+     * 根据账号更新密码
+     * @param account 账号 
+     * @param tenancyId 租户id
+     * @param newPassword 新密码
+     * @param originPassword 原始密码
+     * @throws Exception 异常
+     */
+    @TenancyIdentity(index=1)
+    public void updatePassword(String account, Long tenancyId, String newPassword, String originPassword) throws Exception {
+        UserParam userParam = new UserParam();
+        userParam.setAccount(account);
+        userParam.setTenancyId(tenancyId);
+        userParam.setPassword(newPassword);
+        userParam.setOriginPassword(originPassword);
+        userParam.setUserActionEnum(UserActionEnum.UPDATE_PASSWORD_BY_ACCOUNT);
+        Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
+        List<Info> infoList = response.getInfo();
+        checkInfoList(infoList);
+    }
 	
 	/**
 	 * . 根据邮箱获取用户信息
