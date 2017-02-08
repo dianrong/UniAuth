@@ -8,7 +8,7 @@ src/main/webapp/META-INF
 *.iml
 .gradle
 *.class
-*.jar
+**/build/*.jar
 **/bin/
 out
 build
