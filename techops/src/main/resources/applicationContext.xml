@@ -37,6 +37,7 @@
 	<sec:http pattern="/i18n/**" security="none" />
 	<sec:http pattern="/images/**" security="none" />
 	<sec:http pattern="/swagger-ui/**" security="none" />
+	<sec:http pattern="/v2/api-docs" security="none" />
 
 	<sec:http pattern="/metrics" security="none" />
 	<sec:http pattern="/health" security="none" />

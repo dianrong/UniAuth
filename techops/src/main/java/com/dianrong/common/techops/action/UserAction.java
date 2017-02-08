@@ -1,5 +1,19 @@
 package com.dianrong.common.techops.action;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.dianrong.common.techops.bean.LoginUser;
 import com.dianrong.common.techops.service.TechOpsService;
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -12,24 +26,16 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import com.dianrong.common.uniauth.sharerw.message.EmailSender;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import java.util.List;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * Created by Arc on 16/2/16.
  */
 @RestController
 @RequestMapping("user")
+@Api(value="用户接口", description="用户信息操作接口")
 public class UserAction {
 
     @Autowired
@@ -46,6 +52,7 @@ public class UserAction {
     private TechOpsService techOpsService;
 
     // perm double checked
+    @ApiOperation(value="查询用户信息")
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<PageDto<UserDto>> searchUser(@RequestBody UserQuery userQuery) {

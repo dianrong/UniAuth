@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,15 +21,20 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * Created by Arc on 14/1/16.
  */
+@Api(value="用户接口", description="用户信息操作接口")
 @RestController
 public class UserResource implements IUserRWResource {
 
 	@Autowired
 	private UserService userService;
 
+	@ApiOperation(value="新增用户", httpMethod="POST", produces=MediaType.APPLICATION_JSON)
 	@Override
 	public Response<UserDto> addNewUser(UserParam userParam) {
 		UserDto userDto = userService.addNewUser(userParam.getName(),userParam.getPhone(),userParam.getEmail());
