@@ -137,9 +137,8 @@ $(function() {
 	
 	var sendEmailVerifyCode = function(){
 		$.ajax({  
-            type : "POST", 
+            type : "GET", 
             url : captchaUrl + '/send/session',
-            data : {},
             dataType : 'json',
             success : function(data) {
             	if(data.info) {

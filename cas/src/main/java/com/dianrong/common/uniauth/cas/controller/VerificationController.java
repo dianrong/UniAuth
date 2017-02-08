@@ -81,7 +81,7 @@ public class VerificationController {
      * @return 结果
      */
     @ResponseBody
-    @RequestMapping(value = "send/session",  method = RequestMethod.POST)
+    @RequestMapping(value = "send/session",  method = RequestMethod.GET)
     public Response<Void> sendVerification(HttpServletRequest request, HttpServletResponse response) {
         String identity = WebScopeUtil.getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
         if (!StringUtils.hasText(identity)) {
