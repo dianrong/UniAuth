@@ -20,7 +20,10 @@ public class UserExtendValParam extends PageParam {
     private Byte status;
     
     private String extendCode;
-
+    /**
+     * phone number or email address
+     */
+    private String identity;
     /**.
      * 是否只查询被用户使用了的属性
      */
@@ -82,10 +85,26 @@ public class UserExtendValParam extends PageParam {
         this.queryOnlyUsed = queryOnlyUsed;
     }
 
-	@Override
-	public String toString() {
-		return "UserExtendValParam [id=" + id + ", userId=" + userId + ", extendId=" + extendId + ", value=" + value
-				+ ", status=" + status + ", extendCode=" + extendCode + ", queryOnlyUsed=" + queryOnlyUsed + "]";
-	}
+	/**
+	 * phone number or email address
+     * @return the identity
+     */
+    public String getIdentity() {
+      return identity;
+    }
+
+    /**
+     * @param identity phone number or email address
+     */
+    public void setIdentity(String identity) {
+      this.identity = identity;
+    }
+
+    @Override
+    public String toString() {
+      return "UserExtendValParam [id=" + id + ", userId=" + userId + ", extendId=" + extendId + ", value=" + value + ", status=" + status
+          + ", extendCode=" + extendCode + ", identity=" + identity + ", queryOnlyUsed=" + queryOnlyUsed + "]";
+    }
+
 }
 

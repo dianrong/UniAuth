@@ -1115,13 +1115,14 @@ public class UserService extends TenancyBasedService {
      * @param account 帐号唯一编号：邮箱或手机
      * @param tenancyCode 
      * @param tenancyId
-     * @param withPhoneChecked
+     * @param withPhoneChecked 是否根据手机查询true是，false 否
      * @param status 用户启用禁用状态,null表示任意状态
      * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
      * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
      * @return 用户信息
+     * @throws AppException not found or find multi user
      */
-    private User getUserByAccount(String account, String tenancyCode, Long tenancyId, boolean withPhoneChecked, Byte status) {
+    public User getUserByAccount(String account, String tenancyCode, Long tenancyId, boolean withPhoneChecked, Byte status) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("email", account);
 
