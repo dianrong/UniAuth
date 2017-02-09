@@ -6,10 +6,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.client.ClientRequestFilter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.dianrong.common.uniauth.common.client.ApiCtrlAccountHolder;
 import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
+import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
 import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
@@ -42,12 +45,19 @@ public class UARWFacade {
     private IConfigRWResource configRWResource;
     private ITagRWResource tagRWResource;
     private ITenancyRWResource tenancyRWResource;
+    
+    @Autowired(required = false)
+    private ApiCtrlAccountHolder apiCtrlAccountHolder;
 
     @PostConstruct
     public void init(){
         JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
         jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
+    	// set api control account
+		if (apiCtrlAccountHolder != null) {
+		    ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword());
+		}
         UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
         List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
         domainRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
@@ -104,5 +114,9 @@ public class UARWFacade {
 
 	public ITenancyRWResource getTenancyRWResource() {
 		return tenancyRWResource;
+	}
+
+	public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
+		this.apiCtrlAccountHolder = apiCtrlAccountHolder;
 	}
 }

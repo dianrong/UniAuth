@@ -43,7 +43,7 @@ public class UserInfoManageService extends BaseService{
 		checkInfoList(infoList);
 		return response.getData();
 	}
-	
+	  
 	/**
 	 * . 根据用户邮箱或者电话获取用户信息
 	 * 

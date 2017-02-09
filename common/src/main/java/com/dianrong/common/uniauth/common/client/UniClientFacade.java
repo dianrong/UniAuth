@@ -44,7 +44,7 @@ public class UniClientFacade {
     
     @Autowired(required = false)
     private ApiCtrlAccountHolder apiCtrlAccountHolder;
-
+    
 	public UniClientFacade(){}
 	public UniClientFacade(String uniWsEndpoint){
 		this.uniWsEndpoint = uniWsEndpoint;
@@ -102,6 +102,10 @@ public class UniClientFacade {
 				configResource,userExtendResource,userExtendValResource, userExtendRWResource, userExtendValRWResource);
 	}
 
+	public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
+		this.apiCtrlAccountHolder = apiCtrlAccountHolder;
+	}
+	
     public IDomainResource getDomainResource() {
         return domainResource;
     }
