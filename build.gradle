@@ -236,9 +236,7 @@ project(':cas') {
 			exclude group: 'org.springframework.security'
 			exclude group: 'com.fasterxml.jackson.core'
 		}
-		compile(
-			"com.dianrong.platform:notification-client:1.0.2",
-		)
+
 		providedCompile( "org.apache.tomcat:tomcat-catalina:7.0.63")
 		compile (
 		 'javax.servlet:javax.servlet-api:3.1.0'  ,
@@ -258,6 +256,11 @@ project(':cas') {
 		compile(
 				"com.dianrong.platform:notification-client:1.0.3",
 		)
+		/** end user should open below block,and close above block
+		compile fileTree('../dianrong-lib/lib') {
+	        include 'dianrong-notification-client-1.0.3.jar'
+	    }
+		**/
 
 		//Http Components for deploy on local
 		compile 'org.apache.httpcomponents:httpclient'

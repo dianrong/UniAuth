@@ -182,5 +182,6 @@ public class UserExtendValService extends TenancyBasedService{
         PageDto<UserExtendValDto> pageDto=new PageDto<UserExtendValDto>(pageNumber,pageSize, count, userExtendDtos);
         return pageDto;
     }
+
 }
 

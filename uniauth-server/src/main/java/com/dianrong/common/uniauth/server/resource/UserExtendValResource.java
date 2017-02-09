@@ -9,8 +9,11 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendValParam;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
+import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.service.UserExtendValService;
+import com.dianrong.common.uniauth.server.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -27,6 +30,9 @@ public class UserExtendValResource implements IUserExtendValRWResource {
 
     @Autowired
     private UserExtendValService userExtendValService;
+    
+    @Autowired
+    private UserService userService;
     
     @ApiOperation(value="根据用户id查询所有的扩展属于值")
     @ApiImplicitParams(value = {
@@ -104,7 +110,14 @@ public class UserExtendValResource implements IUserExtendValRWResource {
                 userExtendValParam.isQueryOnlyUsed());
         return Response.success(pageDto);
     }
-    
+
+    @Override
+    public Response<List<UserExtendValDto>> searchByUserIdentity(UserExtendValParam userExtendValParam) {
+        User user = userService.getUserByAccount(userExtendValParam.getIdentity(), userExtendValParam.getTenancyCode(), userExtendValParam.getTenancyId(),
+            true, AppConstants.STATUS_ENABLED);
+        List<UserExtendValDto> userExtendValDtos = userExtendValService.searchByUserId(user.getId(), userExtendValParam.getStatus());
+        return Response.success(userExtendValDtos);
+    }
     
 }
 
