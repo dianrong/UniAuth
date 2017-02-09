@@ -10,9 +10,12 @@ import com.dianrong.common.uniauth.common.bean.request.AuditParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.server.service.AuditService;
 
+import io.swagger.annotations.Api;
+
 /**
  * Created by Arc on 24/3/2016.
  */
+@Api("Uniauth的Api调用日志操作接口")
 @RestController
 public class AuditResource implements IAuditResource {
     @Autowired

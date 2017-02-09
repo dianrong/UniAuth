@@ -60,13 +60,13 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck{
 		switch (ftype) {
 		case FILTER_TYPE_EXSIT_DATA:
 			if (multiFieldsDuplicateCheck(equalsField)) {
-				throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", 
+				throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", 
 						getProcessTableName(), getFieldTypeKeyAndValue(equalsField)));
 			}
 			break;
 		case FILTER_TYPE_NO_DATA:
 			if (!multiFieldsDuplicateCheck(equalsField)) {
-				throw new AppException(InfoName.INTERNAL_ERROR, UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", 
+				throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error", 
 						getProcessTableName(), getFieldTypeKeyAndValue(equalsField)));
 			}
 			break;

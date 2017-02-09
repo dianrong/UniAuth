@@ -3,28 +3,46 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import java.util.Date;
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel("组信息")
 public class GroupDto extends TenancyBaseDto {
 	private static final long serialVersionUID = 892184382591361189L;
+	@ApiModelProperty("主键id")
 	private Integer id;
+	@ApiModelProperty("组code")
 	private String code;
+	@ApiModelProperty("组名称")
 	private String name;
+	@ApiModelProperty("组的创建时间")
 	private Date createDate;
+	@ApiModelProperty("组最近更新的时间")
 	private Date lastUpdate;
+	@ApiModelProperty("组的状态(0:启用,1:禁用)")
 	private Byte status;
+	@ApiModelProperty("组描述")
 	private String description;
+	@ApiModelProperty("组对应的标签信息")
 	private List<TagDto> tags;
+	@ApiModelProperty("父组id")
 	private Integer parentId;
 	/**
 	private List<UserDto> ownerList;
 	**/
+	@ApiModelProperty("与组关联的用户")
 	private List<UserDto> users;
 	private List<GroupDto> groups;
 	
 	//whether this group connected with a role
+	@ApiModelProperty("辅助字段,判断组是否与某个角色有关联关系")
 	private Boolean roleChecked;
 	//whether this group connected with a tag
+	@ApiModelProperty("辅助字段,判断组是否与某个标签有关联关系")
 	private Boolean tagChecked;
+	@ApiModelProperty("辅助字段,判断某个人是否是该组的owner")
 	private Boolean ownerMarkup;
+	@ApiModelProperty("是否是根组")
 	private Boolean isRootGrp;
 
 	public Integer getId() {

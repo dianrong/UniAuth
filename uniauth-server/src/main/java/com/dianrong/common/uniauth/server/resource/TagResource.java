@@ -16,9 +16,12 @@ import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import com.dianrong.common.uniauth.server.service.TagService;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
 
+import io.swagger.annotations.Api;
+
 /**
  * Created by Arc on 7/4/2016.
  */
+@Api("标签操作接口")
 @RestController
 public class TagResource implements ITagRWResource {
 

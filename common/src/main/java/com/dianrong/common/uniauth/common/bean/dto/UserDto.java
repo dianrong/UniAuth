@@ -5,25 +5,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by Arc on 13/1/16.
  */
+@ApiModel("用户信息")
 public class UserDto extends TenancyBaseDto {
-    
     private static final long serialVersionUID = -1969133233179816584L;
     
+    @ApiModelProperty("主键id")
     private Long id;
+    @ApiModelProperty("姓名")
 	private String name;
+    @ApiModelProperty("密码")
 	private String password;
+    @ApiModelProperty("密码盐")
 	private String passwordSalt;
+	@ApiModelProperty("邮箱")
 	private String email;
+	@ApiModelProperty("电话")
 	private String phone;
+	@ApiModelProperty("创建时间")
 	private Date createDate;
+	@ApiModelProperty("最新更新时间")
 	private Date lastUpdate;
+	@ApiModelProperty("状态(0:启用,1:禁用)")
 	private Byte status;
 	private Byte userGroupType;
+	@ApiModelProperty("用户对应的标签")
 	private List<TagDto> tagDtos;
+	@ApiModelProperty("用户对应的扩展属性值")
 	private List<UserExtendValDto> userExtendValDtos;
+	@ApiModelProperty("辅助字段,与userExtendValDtos内容一致")
 	private Map<String,String> userExtendValMap;
 
 	public List<UserExtendValDto> getUserExtendValDtos() {
@@ -35,8 +50,10 @@ public class UserDto extends TenancyBaseDto {
     }
 
     //whether this user directly connected with a role
+    @ApiModelProperty("辅助字段,判断是否与某个角色有关联关系")
 	private Boolean roleChecked;
 	//whether this user directly connected with a tag
+    @ApiModelProperty("辅助字段,判断是否与某个标签有关联关系")
 	private Boolean tagChecked;
 
 	public Boolean getTagChecked() {

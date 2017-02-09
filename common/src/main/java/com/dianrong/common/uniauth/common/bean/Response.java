@@ -3,15 +3,22 @@ package com.dianrong.common.uniauth.common.bean;
 import java.util.Arrays;
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by Arc on 14/1/16.
  */
+@ApiModel(value = "接口返回结果model", description="返回结果中包含 data 和 info 两部分。如果info有值，不为空，则代表操作发生了异常")
 public class Response<T> {
     private static final Info internalError = Info.build(InfoName.INTERNAL_ERROR, "Internal error");
+    @ApiModelProperty("每一次请求的uuid")
     private String uuid;
     /** 返回数据 */
+    @ApiModelProperty("成功请求返回结果")
     private T data;
     /** 返回信息 */
+    @ApiModelProperty("请求失败的异常信息")
     private List<Info> info;
 
     public Response() {

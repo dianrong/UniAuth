@@ -15,6 +15,9 @@ import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 import com.dianrong.common.uniauth.server.service.RoleService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
 
+import io.swagger.annotations.Api;
+
+@Api("角色信息操作接口")
 @RestController
 public class RoleResource implements IRoleRWResource {
 	

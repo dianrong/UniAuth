@@ -2,9 +2,12 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
-public class GroupParam extends Operator {
+import io.swagger.annotations.ApiModel;
 
+@ApiModel("组操作请求参数")
+public class GroupParam extends Operator {
 	private static final long serialVersionUID = -4261321484001881493L;
+	
 	private Integer id;
 	private String code;
 	private String name;

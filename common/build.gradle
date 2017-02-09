@@ -39,6 +39,9 @@ dependencies {
 	
 	// spring
 	providedCompile   "org.springframework:spring-webmvc"
+	
+	// swagger
+	providedCompile 'io.swagger:swagger-annotations:1.5.12'
 }
 
 jar {

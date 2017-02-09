@@ -4,19 +4,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by Arc on 14/1/16.
  */
+@ApiModel("角色信息")
 public class RoleDto extends TenancyBaseDto {
 	private static final long serialVersionUID = 1578124776064866724L;
+	
+	@ApiModelProperty("主键id")
 	private Integer id;
+	
+	@ApiModelProperty("名称")
 	private String name;
+	
+	@ApiModelProperty("描述")
 	private String description;
+	
+	@ApiModelProperty("状态(0,1)")
 	private Byte status;
+	
+	@ApiModelProperty("角色所在域的id")
 	private Integer domainId;
+	
+	@ApiModelProperty("角色类型的id")
 	private Integer roleCodeId;
+	
 	private Integer permissionId;
 	
+	@ApiModelProperty("对应的域信息")
 	private DomainDto domain;
 	private String roleCode;
 

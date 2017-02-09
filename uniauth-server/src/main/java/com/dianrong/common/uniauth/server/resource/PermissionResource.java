@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
+
+import io.swagger.annotations.Api;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +18,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.server.service.PermissionService;
 
+@Api("权限信息操作接口")
 @RestController
 public class PermissionResource implements IPermissionRWResource {
 

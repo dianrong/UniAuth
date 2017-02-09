@@ -27,15 +27,11 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import com.dianrong.common.uniauth.sharerw.message.EmailSender;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
 /**
  * Created by Arc on 16/2/16.
  */
 @RestController
 @RequestMapping("user")
-@Api(value="用户接口", description="用户信息操作接口")
 public class UserAction {
 
     @Autowired
@@ -52,7 +48,6 @@ public class UserAction {
     private TechOpsService techOpsService;
 
     // perm double checked
-    @ApiOperation(value="查询用户信息")
     @RequestMapping(value = "/query" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
     public Response<PageDto<UserDto>> searchUser(@RequestBody UserQuery userQuery) {
