@@ -11,6 +11,9 @@ import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 import com.dianrong.common.uniauth.server.service.TenancyService;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITenancyRWResource;
 
+import io.swagger.annotations.Api;
+
+@Api("租户信息操作接口")
 @RestController
 public class TenancyResource implements ITenancyRWResource {
 

@@ -93,7 +93,7 @@ public class UserExtendValService extends TenancyBasedService{
      * @param status
      * @return
      */
-    public int updateById(Long id,Long userId,Long extendId,String value,Byte status){
+    public int updateById(Long id, Long userId,Long extendId,String value,Byte status){
         CheckEmpty.checkEmpty(id,"id");
         // 过滤数据
         List<FilterData> filterFileds = new ArrayList<FilterData>();

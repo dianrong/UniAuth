@@ -2,25 +2,56 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by Arc on 3/3/2016.
  */
+@ApiModel("组查询信息")
 public class GroupQuery extends PageParam  {
-
 	private static final long serialVersionUID = -6174713703363466941L;
+	
+	@ApiModelProperty("主键id")
 	private Integer id;
+	
+	@ApiModelProperty("辅助查询字段,组id列表")
     private List<Integer> groupIds;
+	
+	@ApiModelProperty("编码")
     private String code;
+	
+	@ApiModelProperty("组名")
     private String name;
+	
+	@ApiModelProperty("描述")
     private String description;
+	
+	@ApiModelProperty("状态(0,1)")
     private Byte status;
+	
+	@ApiModelProperty("用户组的关系类型(0,1)")
     private Byte userGroupType;
+	
+	@ApiModelProperty("用户id")
     private Long userId;
+	
+	@ApiModelProperty("角色id")
     private Integer roleId;
+	
+	@ApiModelProperty("标签id")
     private Integer tagId;
+	
+	@ApiModelProperty("是否需要查询tag信息")
     private Boolean needTag;
+	
+	@ApiModelProperty("是否需要查询user信息")
     private Boolean needUser;
+	
+	@ApiModelProperty("是否需要查询父组id")
     private Boolean needParentId;
+	
+	@ApiModelProperty("是否包含有owner关系的组")
     private Boolean includeOwner;
     
     public List<Integer> getGroupIds() {

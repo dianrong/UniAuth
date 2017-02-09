@@ -7,6 +7,9 @@ import com.dianrong.common.uniauth.common.bean.request.CfgParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.server.service.ConfigService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
+
+import io.swagger.annotations.Api;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +18,7 @@ import java.util.Map;
 /**
  * Created by Arc on 25/3/2016.
  */
+@Api("Uniauth中的配置相关操作接口")
 @RestController
 public class ConfigResource implements IConfigRWResource {
 

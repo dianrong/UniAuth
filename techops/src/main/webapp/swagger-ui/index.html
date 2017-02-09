@@ -36,7 +36,11 @@
         url = decodeURIComponent(url[1]);
       } else {
         //url = "http://petstore.swagger.io/v2/swagger.json";
-        url = window.location.origin + "/v2/api-docs";
+          var origin = window.location.origin;
+    	  if (!(origin.indexOf('techops')>0)) {
+    		  origin = origin + '/techops';
+    	  }
+        url = origin + "/v2/api-docs";
       }
 
       // Pre load translate...

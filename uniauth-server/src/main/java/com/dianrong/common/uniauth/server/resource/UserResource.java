@@ -19,9 +19,12 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 
+import io.swagger.annotations.Api;
+
 /**
  * Created by Arc on 14/1/16.
  */
+@Api("用户信息操作接口")
 @RestController
 public class UserResource implements IUserRWResource {
 
