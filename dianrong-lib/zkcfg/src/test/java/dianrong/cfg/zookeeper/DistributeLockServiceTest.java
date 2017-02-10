@@ -1,7 +1,5 @@
 package dianrong.cfg.zookeeper;
 
-import com.dianrong.platform.zookeeper.lock.DistributeLockService;
-
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.After;
 import org.junit.Assert;
@@ -13,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.dianrong.platform.open.zookeeper.lock.DistributeLockService;
 
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;

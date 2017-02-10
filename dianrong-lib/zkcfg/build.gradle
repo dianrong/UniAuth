@@ -4,17 +4,11 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-group 'com.dianrong.platform'
-
-repositories {
-    maven { url 'http://archiva.dianrong.com/repository/mirror' }
-    maven { url 'http://archiva.dianrong.com/repository/internal' }
-    maven { url 'http://archiva.dianrong.com/repository/snapshots' }
+ jar {
+        baseName = 'dianrong-lib-cfg'
 }
 
-
 dependencies {
-
     compile 'org.springframework:spring-context',
             'org.springframework:spring-beans',
             //curator
@@ -33,4 +27,15 @@ dependencies {
 // package the sources to be a jar file.
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
+}
+//publish
+publishing {
+    publications {
+        common(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
 }

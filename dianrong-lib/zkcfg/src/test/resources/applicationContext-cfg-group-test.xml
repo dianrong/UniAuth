@@ -22,7 +22,7 @@
         </util:set>
 
 
-    <bean id="mainappGroupWithListener" class="com.dianrong.platform.cfg.CfgGroup">
+    <bean id="mainappGroupWithListener" class="com.dianrong.platform.open.cfg.CfgGroup">
         <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/mainapp"/>
         <property name="needKeepAlive" value="true"/>
         <property name="listeners" ref="listeners"/>
@@ -31,17 +31,17 @@
     -->
 
 
-    <bean id="mainappGroup" class="com.dianrong.platform.cfg.CfgGroup">
+    <bean id="mainappGroup" class="com.dianrong.platform.open.cfg.CfgGroup">
         <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/mainapp"/>
         <property name="needKeepAlive" value="true"/>
     </bean>
 
-    <bean id="ossGroup" class="com.dianrong.platform.cfg.CfgGroup">
+    <bean id="ossGroup" class="com.dianrong.platform.open.cfg.CfgGroup">
         <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/oss/profile-demo"/>
         <property name="needKeepAlive" value="false"/>
     </bean>
 
-    <bean id="testGroup" class="com.dianrong.platform.cfg.CfgGroup">
+    <bean id="testGroup" class="com.dianrong.platform.open.cfg.CfgGroup">
         <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/test"/>
         <property name="location" value="env.test.properties"/>
         <property name="needKeepAlive" value="false"/>

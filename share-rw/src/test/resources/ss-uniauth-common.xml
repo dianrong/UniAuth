@@ -17,7 +17,7 @@
 	<context:property-placeholder
 		ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
 
-	<bean id="uniauthConfig" class="com.dianrong.platform.cfg.CfgGroup">
+	<bean id="uniauthConfig" class="com.dianrong.platform.open.cfg.CfgGroup">
 		<property name="cfgRootNodeName"
 			value="#{systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] == null? '/com/dianrong/cfg/1.0.0/uniauth' : systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] + '/uniauth'}" />
 		<property name="needKeepAlive" value="true" />

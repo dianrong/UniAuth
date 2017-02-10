@@ -1,7 +1,7 @@
 package dianrong.cfg.zookeeper;
 
-import com.dianrong.platform.cfg.CfgEvent;
-import com.dianrong.platform.cfg.CfgEventListener;
+import com.dianrong.platform.open.cfg.CfgEvent;
+import com.dianrong.platform.open.cfg.CfgEventListener;
 
 /**
  * Created by klose on 16-7-27.

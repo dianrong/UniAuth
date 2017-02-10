@@ -9,9 +9,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.dianrong.platform.cfg.CfgEvent;
-import com.dianrong.platform.cfg.CfgEventListener;
-import com.dianrong.platform.cfg.CfgGroup;
+import com.dianrong.platform.open.cfg.CfgEvent;
+import com.dianrong.platform.open.cfg.CfgEventListener;
+import com.dianrong.platform.open.cfg.CfgGroup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"classpath:applicationContext-cfg-group-test.xml",})

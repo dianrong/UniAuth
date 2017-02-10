@@ -1,4 +1,4 @@
-package com.dianrong.platform.cfg;
+package com.dianrong.platform.open.cfg;
 
 import java.nio.charset.Charset;
 
