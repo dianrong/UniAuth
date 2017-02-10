@@ -53,7 +53,7 @@ public class UserExtInfo implements UserDetails {
 				currentDomainUserExtInfo = exsitOne;
 			}
 		}
-		log.info("current domain user extention info :" +  currentDomainUserExtInfo);
+		log.debug("current domain user extention info :" +  currentDomainUserExtInfo);
 		return currentDomainUserExtInfo;
 	}
 

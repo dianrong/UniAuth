@@ -68,7 +68,8 @@ public class ConfigAction {
         if(configDtoResponse.getInfo() != null) {
             return Response.success(configDtoResponse);
         } else {
-            List<ConfigDto> configDtos = configDtoResponse.getData().getData();
+        	PageDto<ConfigDto> result =  configDtoResponse.getData();
+            List<ConfigDto> configDtos = result == null ? null : result.getData();
             if(("TECHOPS_ICON".equals(cfgKey) || "TECHOPS_LOGO".equals(cfgKey))
                     && (CollectionUtils.isEmpty(configDtos) || configDtos.get(0).getFile() == null)) {
                 // if there are no favicon and logo pictures configured, then use the default one.
