@@ -111,6 +111,11 @@ public class UserExtendValResource implements IUserExtendValRWResource {
         return Response.success(pageDto);
     }
 
+    @ApiOperation(value="根据账号和租户信息获取用户的扩展值")
+    @ApiImplicitParams(value={
+    		@ApiImplicitParam(name="tenancyId", value="租户id(或租户code)", required=true, dataType="long", paramType="query"),
+    		@ApiImplicitParam(name="identity", value="用户账号(邮箱或电话)", required = true, dataType="string", paramType="query"),
+    })
     @Override
     public Response<List<UserExtendValDto>> searchByUserIdentity(UserExtendValParam userExtendValParam) {
         User user = userService.getUserByAccount(userExtendValParam.getIdentity(), userExtendValParam.getTenancyCode(), userExtendValParam.getTenancyId(),
