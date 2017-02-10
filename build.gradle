@@ -16,10 +16,10 @@ plugins {
 }
 allprojects {
     group = 'com.dianrong.common.uniauth'
+    version = '1.0.74-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
     }
-    version = '1.0.72-SNAPSHOT'
 
     apply plugin: 'java'
     apply plugin: 'idea'
@@ -55,6 +55,42 @@ allprojects {
     repositories{
 		mavenCentral()
 	}
+	
+	publishing {
+    	publications.all {
+			pom.withXml {
+				asNode().dependencies.'*'.findAll() {
+					it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+						dep.name == it.artifactId.text()
+					}
+				}.each { it.scope*.value = 'compile'}
+			}
+		}
+        repositories {
+            maven {
+                url 'http://archiva.dianrong.com/repository/mirror'
+                credentials {
+                    username = 'developer'
+                    password = '#a1GiRoKJnG'
+                }
+            }
+            maven {
+                url 'http://archiva.dianrong.com/repository/internal'
+                credentials {
+                    username = 'developer'
+                    password = '#a1GiRoKJnG'
+                }
+            }
+            maven {
+                url 'http://archiva.dianrong.com/repository/snapshots'
+                credentials {
+                    username = 'developer'
+                    password = '#a1GiRoKJnG'
+                }
+            }
+        }
+    }
+	
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
