@@ -1,13 +1,13 @@
 apply plugin: 'war'
 
 dependencies {
+	compile project(":common")
+
     providedCompile 'javax.servlet:javax.servlet-api'
     compile 'org.springframework:spring-webmvc'
     compile 'org.jasig.cas.client:cas-client-core:3.4.1'
     
 	//zoo keeper
-    //compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
-    compile project(":dianrong-lib:zkcfg")
     compile 'commons-logging:commons-logging'
     
     //Http Components

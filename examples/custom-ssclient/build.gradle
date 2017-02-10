@@ -5,7 +5,6 @@ dependencies {
     compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
     
 	//zoo keeper
-	compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
     compile 'commons-logging:commons-logging:1.2'
     
     //Http Components
