@@ -71,6 +71,15 @@ public final class ApiCallCtlManager {
      */
     private final Object loginMutex = new Object();
     
+    // api访问控制开关
+    private ApiCallCtlSwitch ctlSwitch = new ApiCallCtlSwitch() {
+    	// 默认实现总是开启的
+		@Override
+		public boolean apiCtlOn() {
+			return true;
+		}
+    };
+    
     // login account
     private String  account;
     
@@ -336,6 +345,10 @@ public final class ApiCallCtlManager {
      * @return Invoke handler not null
      */
     public InvokeHandlerDelegate getInvoker() {
+    	// 采用匿名方式进行访问
+		if (!ctlSwitch.apiCtlOn()) {
+			return handlers.get(ClientStatus.ANONYMOUS);
+		}
         if (ClientStatus.NEED_LOGIN.equals(status)) {
             // 尝试去登陆
             if (setStatus(ClientStatus.NEED_LOGIN, ClientStatus.LOGGING)) {
@@ -352,7 +365,7 @@ public final class ApiCallCtlManager {
             synchronized (loginMutex) {
                 while(ClientStatus.LOGGING.equals(status)) {
                     try {
-                        this.wait();
+                    	loginMutex.wait();
                     } catch (InterruptedException e) {
                         log.warn("InterruptedException ", e);
                         // ignore
@@ -377,4 +390,10 @@ public final class ApiCallCtlManager {
         Assert.notNull(update);
         return referenceClientStatus.compareAndSet(this, expect, update);
     }
+
+    // 设置开关
+	public ApiCallCtlManager setCtlSwitch(ApiCallCtlSwitch ctlSwitch) {
+		this.ctlSwitch = ctlSwitch;
+		return this;
+	}
 }

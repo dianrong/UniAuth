@@ -2,8 +2,10 @@ package com.dianrong.common.uniauth.common.client;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ws.rs.client.ClientRequestFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
+import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlSwitch;
 import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
@@ -44,6 +48,9 @@ public class UniClientFacade {
     
     @Autowired(required = false)
     private ApiCtrlAccountHolder apiCtrlAccountHolder;
+    
+    @Resource(name = "uniauthConfig")
+    private Map<String, String> allZkNodeMap;
     
 	public UniClientFacade(){}
 	public UniClientFacade(String uniWsEndpoint){
@@ -81,7 +88,14 @@ public class UniClientFacade {
 		ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
 		// set api control account
 		if (apiCtrlAccountHolder != null) {
-		    ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword());
+		    ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword())
+		    // 设置开关
+		    .setCtlSwitch(new ApiCallCtlSwitch() {
+				@Override
+				public boolean apiCtlOn() {
+					return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+				}
+			});
 		}
         List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
         userExtendResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, providers);

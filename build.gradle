@@ -29,6 +29,8 @@ allprojects {
 
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
+
         maven {
             url 'http://archiva.dianrong.com/repository/mirror'
 			credentials {
@@ -88,6 +90,19 @@ allprojects {
                     password = '#a1GiRoKJnG'
                 }
             }
+            
+            maven {
+            	if(project.version.endsWith('-SNAPSHOT')) {  
+            				url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' }
+           		 else { 
+           		 			url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' }
+            }
+            maven {
+	            if(project.version.endsWith('-SNAPSHOT')) {  
+	            			url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' }
+	            else {
+	            			 url 'http://nexus.dianrong.com/nexus/content/repositories/internal/' }
+	            }
         }
     }
 	

@@ -2,8 +2,10 @@ package com.dianrong.common.uniauth.sharerw.facade;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ws.rs.client.ClientRequestFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Component;
 import com.dianrong.common.uniauth.common.client.ApiCtrlAccountHolder;
 import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
 import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
+import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlSwitch;
 import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
 import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
@@ -35,6 +39,9 @@ public class UARWFacade {
 	
 	@Value("#{uniauthConfig['uniauth_ws_endpoint']}")
     private String uniWsEndpoint;
+	
+    @Resource(name = "uniauthConfig")
+    private Map<String, String> allZkNodeMap;
 
     private IDomainRWResource domainRWResource;
     private IGroupRWResource groupRWResource;
@@ -56,7 +63,13 @@ public class UARWFacade {
         ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
     	// set api control account
 		if (apiCtrlAccountHolder != null) {
-		    ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword());
+		    ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword())
+		    .setCtlSwitch(new ApiCallCtlSwitch() {
+				@Override
+				public boolean apiCtlOn() {
+					return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+				}
+			});
 		}
         UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
         List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
