@@ -1,7 +1,7 @@
 apply plugin: 'war'
 
 dependencies {
-
+	compile project(":dianrong-lib:zkcfg")
     //Google Jar
     //compile 'org.apache.commons:commons-lang3:3.4'
 
@@ -22,10 +22,6 @@ dependencies {
     testCompile "org.springframework:spring-test"
     testCompile "org.springframework:spring-web"
     
-    //zoo keeper
-    //compile "com.dianrong.platform:cfg-zk-client:${zk_cfg_version}"
-    compile project(":dianrong-lib:zkcfg")
-
 	compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
 	compile 'commons-httpclient:commons-httpclient'
@@ -34,6 +30,7 @@ dependencies {
 	
 	//fastjson
 	compile 'com.alibaba:fastjson:1.2.12'
+	
 	// cas
 	providedCompile 'org.jasig.cas.client:cas-client-core:3.4.1'
 	

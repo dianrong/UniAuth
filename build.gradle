@@ -28,9 +28,7 @@ allprojects {
 	apply plugin: 'io.spring.dependency-management'
 
     repositories {
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
-
         maven {
             url 'http://archiva.dianrong.com/repository/mirror'
 			credentials {
@@ -52,6 +50,7 @@ allprojects {
 				password = '#a1GiRoKJnG'
 			}
         }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     }
 
     repositories{
@@ -92,17 +91,22 @@ allprojects {
             }
             
             maven {
-            	if(project.version.endsWith('-SNAPSHOT')) {  
-            				url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' }
-           		 else { 
-           		 			url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' }
+            	if(project.version.endsWith('-SNAPSHOT')) {
+            		url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' 
+            	}
+           		else {
+           		 	url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' 
+           		}
             }
+            
             maven {
-	            if(project.version.endsWith('-SNAPSHOT')) {  
-	            			url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' }
-	            else {
-	            			 url 'http://nexus.dianrong.com/nexus/content/repositories/internal/' }
+	            if(project.version.endsWith('-SNAPSHOT')) {
+	            	url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
 	            }
+	            else {
+	            	url 'http://nexus.dianrong.com/nexus/content/repositories/internal/'
+	            }
+	        }
         }
     }
 	
