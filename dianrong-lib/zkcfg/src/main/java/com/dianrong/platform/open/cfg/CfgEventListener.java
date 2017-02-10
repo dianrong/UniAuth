@@ -1,4 +1,4 @@
-package com.dianrong.platform.cfg;
+package com.dianrong.platform.open.cfg;
 
 /**
  * Created by klose on 16-7-27.

@@ -1,4 +1,4 @@
-package com.dianrong.platform.zookeeper.lock;
+package com.dianrong.platform.open.zookeeper.lock;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
