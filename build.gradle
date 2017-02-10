@@ -29,9 +29,7 @@ allprojects {
 
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' }
-        maven { url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' }
-        maven { url 'http://nexus.dianrong.com/nexus/content/repositories/internal/' }
+        maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
 
         maven {
             url 'http://archiva.dianrong.com/repository/mirror'
