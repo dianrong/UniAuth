@@ -113,6 +113,8 @@ insert into api_permission(uri,status,method,type,comment,create_date,last_updat
 values('^/ws/rs/userextendval/searchbyuseridandstatus$',0,'POST',1,'',now(),now());
 insert into api_permission(uri,status,method,type,comment,create_date,last_update) 
 values('^/ws/rs/userextendval/searchbyuseridandcode$',0,'POST',1,'',now(),now());
+insert into api_permission(uri,status,method,type,comment,create_date,last_update) 
+values('^/ws/rs/userextendval/searchbyuseridentity$',0,'POST',1,'',now(),now());
 
 -- user
 insert into api_permission(uri,status,method,type,comment,create_date,last_update) 

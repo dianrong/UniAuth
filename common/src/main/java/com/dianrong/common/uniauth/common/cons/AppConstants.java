@@ -193,6 +193,11 @@ public interface AppConstants {
 	String CHECK_TENANCY_IDENTITY_FORCIBLY = "tenancyIdentity.check.switch";
 	// 配置项，指定是否开启uniauth-server的监控开关
     String UNIAUTH_SERVER_API_CALL_SWITCH = "apicall.check.switch";
+    // 配置jwt的秘钥
+    String UNIAUTH_APICTL_JWT_SECKEY = "apicall.jwt.security.key";
+    // 配置techops的api访问密码
+    String UNIAUTH_APICTL_TECHOPS_PSWD = "apicall.techops.pwd";
+    
     // 配置项, 指定是否使用notification实现的通知发送
     String UNIAUTH_NOTIFY_USE_NOTIFICATION = "notify.notification";
 	

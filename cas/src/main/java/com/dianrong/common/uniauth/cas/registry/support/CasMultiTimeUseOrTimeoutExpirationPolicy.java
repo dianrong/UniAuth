@@ -30,7 +30,7 @@ public class CasMultiTimeUseOrTimeoutExpirationPolicy extends AbstractCasExpirat
 	private Map<String, String> allZkNodeMap;
 
     /** No-arg constructor for serialization support. */
-    private CasMultiTimeUseOrTimeoutExpirationPolicy() {
+    public CasMultiTimeUseOrTimeoutExpirationPolicy() {
         this.timeToKillInMilliSeconds = 0;
         this.numberOfUses = 0;
     }
