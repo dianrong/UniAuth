@@ -24,8 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 final class JWTSecurity {
     
-    // 指定秘钥
-    private static final String SECURITY_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCud_DotADycQRhsiMSViewAxUJx3buJZLqd-VF0fO1N5dfZUJljxhgn7XU8itVV5dyTY-9nKgY6X0GLy2kB8K0yoszmaEhppAxumOkTNZnoyRHNstr4Osau-LZwRd2tzOmiVFB2hocmST3ewsmEVWOhS26ST-MwAVex7KzCroSYwIDAQAB";
+    // 默认的秘钥
+    public static final String DEFAULT_SECURITY_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCud_DotADycQRhsiMSViewAxUJx3buJZLqd-VF0fO1N5dfZUJljxhgn7XU8itVV5dyTY-9nKgY6X0GLy2kB8K0yoszmaEhppAxumOkTNZnoyRHNstr4Osau-LZwRd2tzOmiVFB2hocmST3ewsmEVWOhS26ST-MwAVex7KzCroSYwIDAQAB";
+    
+    /**
+     * 秘钥
+     */
+    private final String securityKey;
     
     // jwt verifier
     private final JWTVerifier verifier;
@@ -34,8 +39,18 @@ final class JWTSecurity {
      * @throws JWTVerifierCreateFailedException failed to create JWTVerifier
      */
     JWTSecurity() throws JWTVerifierCreateFailedException {
+        this(DEFAULT_SECURITY_KEY);
+    }
+    
+    /**
+     * @param securityKey specify the secret key
+     * @throws JWTVerifierCreateFailedException failed to create JWTVerifier
+     */
+    JWTSecurity(String securityKey) throws JWTVerifierCreateFailedException {
+    	Assert.notNull(securityKey);
+    	this.securityKey = securityKey;
         try {
-            verifier= JWT.require(Algorithm.HMAC512(SECURITY_KEY)).build();
+            verifier= JWT.require(Algorithm.HMAC512(this.securityKey)).build();
         } catch(Exception e) {
             log.error("failed to create JWTVerifier ", e);
             throw new JWTVerifierCreateFailedException("failed create JWTVerifier ", e);
@@ -61,7 +76,7 @@ final class JWTSecurity {
                     .withClaim(JwtInfo.USER_NAME_KEY, jwt.getName())
                     .withClaim(JwtInfo.USER_ACCOUNT_KEY, jwt.getAccount())
                     .withClaim(JwtInfo.PERMISSION_KEY, jwt.getPermission())
-                    .sign(Algorithm.HMAC512(SECURITY_KEY));
+                    .sign(Algorithm.HMAC512(this.securityKey));
         } catch (Exception e) {
             log.error("failed create jwt ", e);
             throw new TokenCreateFailedException("failed create jwt", e);

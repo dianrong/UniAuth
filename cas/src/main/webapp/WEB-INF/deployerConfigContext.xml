@@ -165,6 +165,6 @@
     <!-- set api control account -->
     <bean class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
     	<property name="account" value="techops"/>
-    	<property name="password" value="=610{8(lxt42nslg*k9q9|5z!:3@~9e72#|rw1*6arz5zad@7+muh!e-w792"/>
+    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']}"/>
     </bean>
 </beans>

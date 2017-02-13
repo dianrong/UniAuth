@@ -97,7 +97,8 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 		}
     	Map<String, Object> attributes = new HashMap<String, Object>();
     	attributes.put(CasProtocal.DianRongCas.getTenancyIdName(), StringUtil.translateIntegerToLong(response.getData().getTenancyId()));
-    	return createHandlerResult(credential, this.principalFactory.createPrincipal(userName, attributes), null);
+    	// 防止userName中有空格
+    	return createHandlerResult(credential, this.principalFactory.createPrincipal(userName.trim(), attributes), null);
 	}
 	
     @Override
