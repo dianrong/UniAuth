@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dianrong.common.techops.bean.LoginUser;
+import com.dianrong.common.techops.service.NotificationService;
 import com.dianrong.common.techops.service.TechOpsService;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -25,7 +25,6 @@ import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
-import com.dianrong.common.uniauth.sharerw.message.EmailSender;
 
 /**
  * Created by Arc on 16/2/16.
@@ -33,13 +32,11 @@ import com.dianrong.common.uniauth.sharerw.message.EmailSender;
 @RestController
 @RequestMapping("user")
 public class UserAction {
-
+    /**
+     *  发送消息的服务
+     */
     @Autowired
-    private EmailSender emailSender;
-    @Value("#{uniauthConfig['cas_server']}")
-    private String casServerURL;
-    @Value("#{uniauthConfig['domains.techops.email_switch']}")
-    private String emailSwitch;
+    private NotificationService notificationService;
 
     @Resource
     private UARWFacade uARWFacade;
@@ -63,25 +60,8 @@ public class UserAction {
             return userDtoResponse;
         }
         UserDto userDto = userDtoResponse.getData();
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("====================================================<br />");
-        buffer.append("            ");
-        buffer.append("     系统管理员为您创建了系统账户<br />");
-        buffer.append("            ");
-        buffer.append(" 您的登录账号为: " + userDto.getEmail() + "        <br />");
-        buffer.append("            ");
-        buffer.append(" 您的账户密码为: " + userDto.getPassword() + "        <br />");
-        if(casServerURL != null) {
-            buffer.append("            ");
-            buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
-        }
-        buffer.append("====================================================<br />");
-        if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
-            return Response.success(buffer);
-        } else {
-            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), new StringBuffer(buffer));
-            return Response.success();
-        }
+        notificationService.addUserNotification(userDto);
+        return Response.success();
     }
 
     // perm double checked
@@ -121,25 +101,8 @@ public class UserAction {
             return userDtoResponse;
         }
         UserDto userDto = userDtoResponse.getData();
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("====================================================<br />");
-        buffer.append("            ");
-        buffer.append("      系统管理员重置了您的系统账户密码<br />");
-        buffer.append("            ");
-        buffer.append(" 您的登录账号为: " + userDto.getEmail() + "        <br />");
-        buffer.append("            ");
-        buffer.append(" 您的账户密码为: " + userDto.getPassword() + "        <br />");
-        if(casServerURL != null) {
-            buffer.append("            ");
-            buffer.append(" 请到: " + casServerURL + " 登录您想要登录的系统.       <br />");
-        }
-        buffer.append("====================================================<br />");
-        if(Boolean.FALSE.toString().equalsIgnoreCase(emailSwitch)) {
-            return Response.success(buffer);
-        } else {
-            emailSender.sendEmail("内部账号系统通知.", userDto.getEmail(), new StringBuffer(buffer));
-            return Response.success();
-        }
+        notificationService.updateUserPwdNotification(userDto);
+        return Response.success();
     }
 
     // perm double checked
