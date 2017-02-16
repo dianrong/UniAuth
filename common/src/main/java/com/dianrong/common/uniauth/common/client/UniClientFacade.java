@@ -113,7 +113,7 @@ public class UniClientFacade {
 		userExtendRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
 		userExtendValRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
 		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,
-				configResource,userExtendResource,userExtendValResource, userExtendRWResource, userExtendValRWResource);
+				configResource,tenancyResource,userExtendResource,userExtendValResource, userExtendRWResource, userExtendValRWResource);
 	}
 
 	public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
