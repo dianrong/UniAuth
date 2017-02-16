@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.cxf.common.util.ProxyHelper;
+import org.apache.cxf.jaxrs.client.Client;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 
 /**
@@ -46,6 +47,6 @@ public final class UniauthRSClientFactory {
         T proxy = JAXRSClientFactory.create(baseAddress, cls , cxfProviders);
         ClassLoader loader = UniauthRSClientFactory.class.getClassLoader();
         ApiControlInvocationHandler handler = new ApiControlInvocationHandler(proxy);
-        return (T)ProxyHelper.getProxy(loader, new Class<?>[]{cls}, handler);
+        return (T)ProxyHelper.getProxy(loader, new Class<?>[]{cls, Client.class}, handler);
     }
 }

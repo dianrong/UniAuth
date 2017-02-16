@@ -20,6 +20,7 @@ import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
+import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
 import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
@@ -39,6 +40,12 @@ public class UARWFacade {
 	
 	@Value("#{uniauthConfig['uniauth_ws_endpoint']}")
     private String uniWsEndpoint;
+	
+	 @Value("#{uniauthConfig['uniauth_api_name']}")
+	    private String apiName;
+
+	    @Value("#{uniauthConfig['uniauth_api_key']}")
+	    private String apiKey;
 	
     @Resource(name = "uniauthConfig")
     private Map<String, String> allZkNodeMap;
@@ -82,6 +89,9 @@ public class UARWFacade {
         configRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, providers);
         tagRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
         tenancyRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
+        
+        ClientFacadeUtil.addApiKey(apiName,apiKey,domainRWResource,groupRWResource,permissionRWResource,userRWResource,roleRWResource,auditResource,
+                configRWResource,tagRWResource,tenancyRWResource);
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
