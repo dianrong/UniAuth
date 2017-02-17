@@ -222,4 +222,19 @@ public class UserExtInfo implements UserDetails {
 		this.allDomainUserExtInfo = allDomainUserExtInfo;
 		return this;
 	}
+	
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof UserExtInfo) {
+            UserExtInfo userInfo = (UserExtInfo)obj;
+            // tenancyId and email must be equal
+            return this.loginDomainUserExtInfo.equals(userInfo.getLoginDomainUserExtInfo());
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.loginDomainUserExtInfo.hashCode();
+    }
 }
