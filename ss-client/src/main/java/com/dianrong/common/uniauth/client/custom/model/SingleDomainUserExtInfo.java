@@ -22,6 +22,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Maps;
 
 import lombok.extern.slf4j.Slf4j;
@@ -199,6 +200,7 @@ public final class SingleDomainUserExtInfo extends User {
 			   Collection<? extends GrantedAuthority> authorities,
 			   Long id, UserDto userDto, DomainDto domainDto, Map<String, Set<String>> permMap, Map<String, Set<PermissionDto>> permDtoMap) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+		Assert.notNull(userDto);
 		this.id = id;
 		this.userDto = userDto;
 		this.domainDto = domainDto;
@@ -259,4 +261,24 @@ public final class SingleDomainUserExtInfo extends User {
 				+ ", permDtoMap=" + permDtoMap + ", regularPatterns="
 				+ regularPatterns + "]";
 	}
+
+    @Override
+    public boolean equals(Object rhs) {
+        if (rhs instanceof SingleDomainUserExtInfo) {
+            SingleDomainUserExtInfo rhsUser = (SingleDomainUserExtInfo)rhs;
+            // tenancyId and email must be equal
+            return this.userDto.getTenancyId().equals(rhsUser.getUserDto().getTenancyId()) &&
+                    this.userDto.getEmail().equals(rhsUser.getUserDto().getEmail());
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.userDto.getTenancyId() == null) ? 0 : this.userDto.getTenancyId().hashCode());
+        result = prime * result + (( this.userDto.getEmail() == null) ? 0 :  this.userDto.getEmail().hashCode());
+        return result;
+    }
 }
