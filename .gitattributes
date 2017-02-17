@@ -5,3 +5,4 @@ cas/src/main/webapp/imgscroll/* linguist-vendored=true
 cas/src/main/webapp/jquery/* linguist-vendored=true
 techops/src/main/webapp/scripts/lib/* linguist-vendored=true
 techops/src/main/webapp/swagger-ui/* linguist-vendored=true
+uniauth-server/src/main/webapp/swagger-ui/* linguist-vendored=true
