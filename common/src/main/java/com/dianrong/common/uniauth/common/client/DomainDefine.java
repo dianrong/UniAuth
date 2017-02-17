@@ -16,7 +16,6 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
-import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,25 +43,44 @@ public class DomainDefine implements Serializable {
 
 	@PostConstruct
 	public void init(){
-		if (!StringUtil.strIsNullOrEmpty(domainCode)) {
-			// init static field domainId
-			log.info("DomainDefine init, query domainId");
-			List<String> codes = new ArrayList<String>();
-			codes.add(this.domainCode);
-			Response<List<DomainDto>> result= uniClientFacade.getDomainResource().getAllLoginDomains(new DomainParam().setDomainCodeList(codes));
-			if (result == null || (result.getInfo() != null && !result.getInfo().isEmpty())) {
-				throw new UniauthCommonException("query domain info by configed domainCode failed, please check domainCode is correct or uniauth-server is alreay running");
-			}
-			List<DomainDto> data = result.getData();
-			if (data == null || data.isEmpty()) {
-				throw new UniauthCommonException("please check the configed domainCode is correct or not");
-			}
-			DomainDefine.domainId = data.get(0).getId();
-			log.info("DomainDefine init, query domainId success");
-		} else {
-			log.info("domainCode is null or empty, so do not query domainId");
-		}
+	    Assert.notNull(this.domainCode, "please config domain code , it can not be null");
+		// init static field domainId
+	    log.info("DomainDefine init, query domainId");
+	    domainId = getDomainId(this.domainCode);
 	}
+	
+	// domainCode can not be null
+    private Integer getDomainId(String domainCode) {
+        Assert.notNull(domainCode);
+        List<String> codes = new ArrayList<String>();
+        codes.add(this.domainCode);
+        Response<List<DomainDto>> result = null;
+        while (true) {
+            try {
+                result = uniClientFacade.getDomainResource().getAllLoginDomains(new DomainParam().setDomainCodeList(codes));
+                if (result == null) {
+                    throw new UniauthCommonException("call api , query domain info failed, request body is null");
+                } else {
+                    break;
+                }
+            } catch (Exception ex) {
+                log.warn("failed to get domain Id by domain code, retry after 1 minitue", ex);
+            }
+            try {
+                Thread.sleep(1000L * 60L);
+            } catch (InterruptedException e) {
+                log.warn("thread error", e);
+            }
+        }
+        if (result.getInfo() != null && !result.getInfo().isEmpty()) {
+            throw new UniauthCommonException("query domain info by configed domainCode failed, please check domainCode is correct or uniauth-server is alreay running");
+        }
+        List<DomainDto> data = result.getData();
+        if (data == null || data.isEmpty()) {
+            throw new UniauthCommonException("please check the configed domainCode is correct or not");
+        }
+        return data.get(0).getId();
+    }
 	
 	public String getDomainCode() {
 		return domainCode;
