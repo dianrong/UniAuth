@@ -1,5 +1,9 @@
 package dianrong.cfg.zookeeper;
 
+import java.math.BigDecimal;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.After;
 import org.junit.Assert;
@@ -14,11 +18,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.dianrong.platform.open.zookeeper.lock.DistributeLockService;
 
-import java.math.BigDecimal;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"classpath:applicationContext-test.xml"})
 @SuppressWarnings("rawtypes")
@@ -29,7 +28,7 @@ public class DistributeLockServiceTest {
   @Autowired
   private DistributeLockService distributeLockService;
 
-  @Value("#{curatorClientFactory.getClient()}")
+  @Value("#{openCuratorClientFactory.getClient()}")
   private CuratorFramework client;
 
   @Test

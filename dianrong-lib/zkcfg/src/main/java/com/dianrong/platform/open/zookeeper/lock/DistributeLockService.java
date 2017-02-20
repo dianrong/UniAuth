@@ -18,7 +18,7 @@ public class DistributeLockService {
 
   private static final Logger logger = LoggerFactory.getLogger(DistributeLockService.class);
 
-  @Value("#{curatorClientFactory.getClient()}")
+  @Value("#{openCuratorClientFactory.getClient()}")
   private CuratorFramework client;
 
   private ExecutorService executorService = Executors.newFixedThreadPool(3);

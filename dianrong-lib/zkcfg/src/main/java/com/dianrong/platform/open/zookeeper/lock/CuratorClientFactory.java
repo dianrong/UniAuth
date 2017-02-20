@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-@Component
+@Component("openCuratorClientFactory")
 public class CuratorClientFactory {
 
   private static final Logger log = LoggerFactory.getLogger(CuratorClientFactory.class);
