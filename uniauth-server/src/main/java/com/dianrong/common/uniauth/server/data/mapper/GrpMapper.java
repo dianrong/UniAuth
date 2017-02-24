@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
 
@@ -110,4 +111,6 @@ public interface GrpMapper {
     Set<Integer> getOwnGrpIds(Long ownerId);
     
     Integer getUserIdInGroupOrSub(Map<String, Object> paramMap);
+    
+    List<GroupDto> listGroupsRelateToUser(Map<String, Object> paramMap);
 }
