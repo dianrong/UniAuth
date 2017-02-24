@@ -72,4 +72,23 @@
 				)
 		)
     </select>
+    
+    <select id="listGroupsRelateToUser" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+            <include refid="Base_Column_List" />
+        from grp 
+        where id in (
+            <if test="includeIndirectAncestors != null and includeIndirectAncestors == 'true'">
+                    select descendant from grp_path where ancestor in (
+            </if>
+		            select grp_id from user_grp where user_id = #{userId, jdbcType=BIGINT}
+		            <if test="includeOwner == null or includeOwner == 'false'">
+		                and type = 0 
+		            </if>
+            <if test="includeIndirectAncestors != null and includeIndirectAncestors == 'true'">
+                    )
+            </if>
+        )
+        and status = 0
+    </select>
 </mapper>

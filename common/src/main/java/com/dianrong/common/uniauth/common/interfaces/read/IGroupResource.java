@@ -64,4 +64,13 @@ public interface IGroupResource {
     @POST
     @Path("userInGroupOrSub")
     Response<Boolean>  isUserInGroupOrSub(GroupQuery query);
+    
+   /**
+    *  根据userId查询用户关联的组
+    * @param query 查询参数
+    * @return 用户关联组的集合
+    */
+    @POST
+    @Path("list-group-relate-to-user")
+    Response<List<GroupDto>>  listGroupsRelateToUser(GroupQuery query);
 }

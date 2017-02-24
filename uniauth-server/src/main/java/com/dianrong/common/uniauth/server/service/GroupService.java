@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -765,6 +766,7 @@ public class GroupService extends TenancyBasedService{
             for(GrpRoleKey grpRoleKey : grpRoleKeys) {
                 dbRoleIds.add(grpRoleKey.getRoleId());
             }
+            @SuppressWarnings("unchecked")
             ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
             //step 3. get the intersection of param roleIds and dbRoleIds.
             intersections.retainAll(roleIds);
@@ -924,5 +926,25 @@ public class GroupService extends TenancyBasedService{
 				 return true;
 			 }
 			 return false;
+		}
+		
+		/**
+		 *  根据用户id查询关联的组的信息集合
+		 * @param userId 用户id 不能为空
+		 * @param includeOwner 是否包含owner的从属关系(默认为false)
+		 * @param includeIndirectAncestors 是否查询非直属的关系
+		 * @return 符合条件的组信息列表
+		 */
+		public List<GroupDto> listGroupsRelateToUser(Long userId, Boolean includeOwner, Boolean includeIndirectAncestors) {
+		    CheckEmpty.checkEmpty(userId, "userId");
+		    Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("userId", userId);
+            paramMap.put("includeOwner", String.valueOf(includeOwner));
+            paramMap.put("includeIndirectAncestors", String.valueOf(includeIndirectAncestors));
+            List<GroupDto> groupList = grpMapper.listGroupsRelateToUser(paramMap);
+            if (groupList != null) {
+                return groupList;
+            }
+            return Collections.emptyList();
 		}
 }

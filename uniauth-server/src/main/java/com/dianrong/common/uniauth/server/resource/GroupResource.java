@@ -275,4 +275,16 @@ public class GroupResource implements IGroupRWResource {
 		Boolean result = groupService.isUserInGroupOrSub(query.getUserId(), query.getCode(), query.getIncludeOwner() == null ? false : query.getIncludeOwner());
 		return Response.success(result);
 	}
+
+	@ApiOperation(value="根据用户id获取用户关联的组信息列表")
+    @ApiImplicitParams(value={
+                @ApiImplicitParam(name="userId", value="用户id", required=true, dataType="long", paramType="query"),
+                @ApiImplicitParam(name="includeOwner", value="关系关系是否包含own关系",  dataType="boolean", paramType="query", defaultValue="false"),
+                @ApiImplicitParam(name="includeIndirectAncestors", value="是否包含非直属关系", dataType="boolean", paramType="query", defaultValue="false"),
+        })
+    @Override
+    public Response<List<GroupDto>> listGroupsRelateToUser(GroupQuery query) {
+        List<GroupDto> groupList = groupService.listGroupsRelateToUser(query.getUserId(), query.getIncludeOwner(), query.getIncludeIndirectAncestors());
+        return Response.success(groupList);
+    }
 }

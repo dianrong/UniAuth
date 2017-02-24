@@ -53,7 +53,19 @@ public class GroupQuery extends PageParam  {
 	
 	@ApiModelProperty("是否包含有owner关系的组")
     private Boolean includeOwner;
+	
+	@ApiModelProperty("是否查询非直属的父组信息")
+    private Boolean includeIndirectAncestors;
     
+    public Boolean getIncludeIndirectAncestors() {
+        return includeIndirectAncestors;
+    }
+
+    public GroupQuery setIncludeIndirectAncestors(Boolean includeIndirectAncestors) {
+        this.includeIndirectAncestors = includeIndirectAncestors;
+        return this;
+    }
+
     public List<Integer> getGroupIds() {
         return groupIds;
     }
@@ -180,11 +192,9 @@ public class GroupQuery extends PageParam  {
 		 return this;
 	}
 
-	@Override
-	public String toString() {
-		return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name
-				+ ", description=" + description + ", status=" + status + ", userGroupType=" + userGroupType
-				+ ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId + ", needTag=" + needTag
-				+ ", needUser=" + needUser + ", needParentId=" + needParentId + ", includeOwner=" + includeOwner + "]";
-	}
+    @Override
+    public String toString() {
+        return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name + ", description=" + description + ", status=" + status + ", userGroupType=" + userGroupType + ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId + ", needTag=" + needTag
+                + ", needUser=" + needUser + ", needParentId=" + needParentId + ", includeOwner=" + includeOwner + ", includeIndirectAncestors=" + includeIndirectAncestors + "]";
+    }
 }
