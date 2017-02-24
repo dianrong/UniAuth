@@ -69,17 +69,18 @@ public class GroupResource implements IGroupRWResource {
     		@ApiImplicitParam(name="id", value="根组id(如果和code都不传，则查整棵树)", dataType="long", paramType="query"),
     		@ApiImplicitParam(name="code", value="根组code(如果和id都不传，则查整棵树)", dataType="string", paramType="query"),
     		@ApiImplicitParam(name="onlyShowGroup", value="是否只显示组信息(不然将会返回最关联的用户和标签信息)", dataType="boolean", paramType="query"),
-    		@ApiImplicitParam(name="userGroupType", value="用户与组的关联关系(0,1),在onlyShowGroup=true的时候必传", dataType="integer", paramType="query", allowableValues="0,1"),
+    		@ApiImplicitParam(name="userGroupType", value="用户与组的关联关系(0,1),在onlyShowGroup=false的时候必传", dataType="integer", paramType="query", allowableValues="0,1"),
     		@ApiImplicitParam(name="roleId", value="返回树中每个组该roleId的关联关系", dataType="long", paramType="query"),
     		@ApiImplicitParam(name="tagId", value="返回树中每个组该tagId的关联关系", dataType="long", paramType="query"),
     		@ApiImplicitParam(name="needOwnerMarkup", value="是否将userId与树中每个组的owner关系返回", dataType="boolean", paramType="query"),
     		@ApiImplicitParam(name="opUserId", value="查询组与该userId的owner关系", dataType="long", paramType="query"),
+    		@ApiImplicitParam(name="includeDisableUser", value="当onlyShowGroup=false时,用于指定返回的用户列表是否包含禁用用户", dataType="boolean", paramType="query", defaultValue="false"),
     })
 	@Override
 	public Response<GroupDto> getGroupTree(GroupParam groupParam) {
 		GroupDto grpDto = groupService.getGroupTree(groupParam.getId(), groupParam.getCode(),
 				groupParam.getOnlyShowGroup(), groupParam.getUserGroupType(), groupParam.getRoleId(), groupParam.getTagId(),
-				groupParam.getNeedOwnerMarkup(), groupParam.getOpUserId());
+				groupParam.getNeedOwnerMarkup(), groupParam.getOpUserId(), groupParam.getIncludeDisableUser());
 		return Response.success(grpDto);
 	}
 
@@ -272,7 +273,7 @@ public class GroupResource implements IGroupRWResource {
 	    })
 	@Override
 	public Response<Boolean> isUserInGroupOrSub(GroupQuery query) {
-		Boolean result = groupService.isUserInGroupOrSub(query.getUserId(), query.getCode(), query.getIncludeOwner() == null ? false : query.getIncludeOwner());
+		Boolean result = groupService.isUserInGroupOrSub(query.getUserId(), query.getCode(), query.getIncludeOwner());
 		return Response.success(result);
 	}
 

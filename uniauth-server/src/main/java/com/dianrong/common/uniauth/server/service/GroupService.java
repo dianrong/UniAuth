@@ -545,7 +545,7 @@ public class GroupService extends TenancyBasedService{
     }
 
     public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId,
-                                 Integer tagId, Boolean needOwnerMarkup, Long ownerId) {
+                                 Integer tagId, Boolean needOwnerMarkup, Long ownerId, Boolean includeDisableUser) {
         Grp rootGrp;
         if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
@@ -655,6 +655,7 @@ public class GroupService extends TenancyBasedService{
                 Map<String, Object> groupIdAndUserType = new HashMap<String, Object>();
                 groupIdAndUserType.put("id", realGroupId);
                 groupIdAndUserType.put("userGroupType", userGroupType);
+                groupIdAndUserType.put("includeDisableUser", includeDisableUser);
                 List<UserExt> userExts = userMapper.getUsersByParentGrpIdByUserType(groupIdAndUserType);
                 // construct the users on the tree
                 if(!CollectionUtils.isEmpty(userExts)) {
@@ -685,7 +686,8 @@ public class GroupService extends TenancyBasedService{
                         }
                     }
                     for(UserExt userExt : userExts) {
-                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName()).setPhone(userExt.getPhone()).setCreateDate(userExt.getCreateDate());
+                        UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName())
+                                .setPhone(userExt.getPhone()).setCreateDate(userExt.getCreateDate()).setStatus(userExt.getStatus());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
                         if(groupDto != null) {
                             List<UserDto> userDtos = groupDto.getUsers();
@@ -702,7 +704,6 @@ public class GroupService extends TenancyBasedService{
                             }
                         }
                     }
-
                 }
             }
 
@@ -913,12 +914,12 @@ public class GroupService extends TenancyBasedService{
 		 * @return true or false
 		 * @throws AppException  the input parameter is null
 		 */
-		public boolean isUserInGroupOrSub(Long userId, String code, boolean includeOwner) {
+		public boolean isUserInGroupOrSub(Long userId, String code, Boolean includeOwner) {
 			 CheckEmpty.checkEmpty(userId, "userId");
 			 CheckEmpty.checkEmpty(code, "groupCode");
 			 Map<String, Object> paramMap = new HashMap<String, Object>();
 			 paramMap.put("userId", userId);
-			 paramMap.put("includeOwner", String.valueOf(includeOwner));
+			 paramMap.put("includeOwner", includeOwner);
 			 paramMap.put("code", code);
 			 paramMap.put("tenancyId", tenancyService.getTenancyIdWithCheck());
 			 Integer count = grpMapper.getUserIdInGroupOrSub(paramMap);
@@ -939,8 +940,8 @@ public class GroupService extends TenancyBasedService{
 		    CheckEmpty.checkEmpty(userId, "userId");
 		    Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("userId", userId);
-            paramMap.put("includeOwner", String.valueOf(includeOwner));
-            paramMap.put("includeIndirectAncestors", String.valueOf(includeIndirectAncestors));
+            paramMap.put("includeOwner", includeOwner);
+            paramMap.put("includeIndirectAncestors", includeIndirectAncestors);
             List<GroupDto> groupList = grpMapper.listGroupsRelateToUser(paramMap);
             if (groupList != null) {
                 return groupList;

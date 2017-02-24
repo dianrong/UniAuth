@@ -38,6 +38,11 @@ public class GroupParam extends Operator {
 
 	private Boolean onlyNeedGrpInfo;
 	
+	/**
+	 *  在返回的user信息列表中是否包含禁用的用户信息
+	 */
+	private Boolean includeDisableUser;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -180,11 +185,22 @@ public class GroupParam extends Operator {
   public GroupParam setOnlyNeedGrpInfo(Boolean onlyNeedGrpInfo) {
       this.onlyNeedGrpInfo = onlyNeedGrpInfo;
       return this;
-  }
+    }
 
-  @Override
-  public String toString() {
-    return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description=" + description + ", status=" + status + ", targetGroupId=" + targetGroupId + ", targetGroupIds=" + targetGroupIds + ", onlyShowGroup=" + onlyShowGroup
-        + ", userGroupType=" + userGroupType + ", needOwnerMarkup=" + needOwnerMarkup + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds + ", onlyNeedGrpInfo=" + onlyNeedGrpInfo + "]";
-  }
+    public Boolean getIncludeDisableUser() {
+        return includeDisableUser;
+    }
+
+    public GroupParam setIncludeDisableUser(Boolean includeDisableUser) {
+        this.includeDisableUser = includeDisableUser;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description=" + description + ", status=" + status + ", targetGroupId=" + targetGroupId
+                + ", targetGroupIds=" + targetGroupIds + ", onlyShowGroup=" + onlyShowGroup + ", userGroupType=" + userGroupType + ", needOwnerMarkup=" + needOwnerMarkup
+                + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds=" + roleIds + ", tagIds=" + tagIds + ", onlyNeedGrpInfo=" + onlyNeedGrpInfo
+                + ", includeDisableUser=" + includeDisableUser + "]";
+    }
 }
