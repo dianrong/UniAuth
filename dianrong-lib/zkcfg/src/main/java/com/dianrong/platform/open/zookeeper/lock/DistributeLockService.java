@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Component("openDistributeLockService")
 public class DistributeLockService {
 
   private static final Logger logger = LoggerFactory.getLogger(DistributeLockService.class);
