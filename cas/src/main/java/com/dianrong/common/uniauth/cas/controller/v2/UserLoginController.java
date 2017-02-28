@@ -101,10 +101,10 @@ public class UserLoginController {
         try {
             // try to login with identity and password
             if (service == null) {
-                loginSupport.loginAndQueryTgt(credential, true, request, response);
+                loginSupport.loginAndQueryTgt(credential, false, request, response);
                 return ApiResponse.success();
             } else {
-                String serviceTicket = loginSupport.loginAndQueryTicket(credential, true, request, response);
+                String serviceTicket = loginSupport.loginAndQueryTicket(credential, false, request, response);
                 boolean isLoginRedirect = loginSupport.loginRedirect(request, response, serviceTicket);
                 if (isLoginRedirect) {
                     return ApiResponse.success();

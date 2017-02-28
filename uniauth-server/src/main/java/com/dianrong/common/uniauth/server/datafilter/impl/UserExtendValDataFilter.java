@@ -33,7 +33,7 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExten
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
 		UserExtendValExample condition = new UserExtendValExample();
 		UserExtendValExample.Criteria criteria = condition.createCriteria();
-		criteria.andTenancyIdEqualTo(getTenancyId());
+		criteria.andTenancyIdEqualTo(getTenancyId()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		// 构造查询条件
 		for (FilterData fd : equalsField) {
 			switch (fd.getType()) {
