@@ -23,7 +23,6 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-import com.google.common.collect.Lists;
 
 import lombok.extern.slf4j.Slf4j;
 

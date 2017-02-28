@@ -50,9 +50,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin 用于获取登陆使用的service ticket处理的controller
  */
 
+@Deprecated
+@Slf4j
 @Controller
 @RequestMapping("/serviceticket")
-@Slf4j
 public class GetServiceTicketController {
 
 	/** Extractors for finding the service. */

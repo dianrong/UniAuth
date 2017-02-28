@@ -25,7 +25,7 @@ dependencies {
 	compile ("javax.servlet:jstl")
 
       // compile project(":ss-client")
-      compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.78-SNAPSHOT"
+       compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.79-SNAPSHOT"
     
 	compile('org.springframework.boot:spring-boot-starter-actuator'){
     	 exclude  module:'spring-boot-starter-logging'

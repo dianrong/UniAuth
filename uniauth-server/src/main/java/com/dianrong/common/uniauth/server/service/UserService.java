@@ -1098,6 +1098,7 @@ public class UserService extends TenancyBasedService {
         user.setLastLoginTime(new Date());
         user.setLastLoginIp(ip);
         user.setFailCount((byte) failCount);
+        user.setLastUpdate(new Date());
         if (sync) {
             return userMapper.updateByPrimaryKeySelective(user);
         }

@@ -103,7 +103,7 @@ public class UserExtendValService extends TenancyBasedService{
         if(extendId != null) {
         	filterFileds.add(FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
         }
-        if(filterFileds.size() > 0) {
+        if(!filterFileds.isEmpty()) {
         	dataFilter.updateFieldsCheck(TypeParseUtil.parseToIntegerFromObject(id), filterFileds.toArray(new FilterData[filterFileds.size()]));
         }
         
