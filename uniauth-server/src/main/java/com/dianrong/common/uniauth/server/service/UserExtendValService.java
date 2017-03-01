@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -14,6 +15,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.UserExtend;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample.Criteria;
@@ -28,6 +30,9 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * @author wenlongchen
@@ -183,5 +188,63 @@ public class UserExtendValService extends TenancyBasedService{
         return pageDto;
     }
 
+    /**
+     * 根据条件查询用户扩展属性值列表
+     * @param extendId 扩展属性id
+     * @param value 扩展属性值
+     * @param status 状态
+     * @return 符合条件的扩展属性值列表
+     */
+    public List<UserExtendValDto> search(Long extendId, String value, Byte status) {
+        CheckEmpty.checkEmpty(extendId, "extendId");
+        CheckEmpty.checkEmpty(value,"value");
+        
+        UserExtendValExample example=new UserExtendValExample();
+        Criteria criteria=example.createCriteria();
+        criteria.andExtendIdEqualTo(extendId).andValueEqualTo(value);
+        if(status!=null){
+            criteria.andStatusEqualTo(status);
+        }
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        List<UserExtendVal> userExtendVals=userExtendValMapper.selectByExample(example);
+        
+        List<UserExtendValDto> userExtendValDtos=Lists.newArrayList();
+        if (userExtendVals == null || userExtendVals.isEmpty()) {
+            return userExtendValDtos;
+        }
+        
+        Set<Long> extendIds = Sets.newHashSet();
+        for (UserExtendVal extendVal : userExtendVals) {
+            extendIds.add(extendVal.getExtendId());
+        }
+        
+        // query userExtend list
+        UserExtendExample extendExample = new UserExtendExample();
+        com.dianrong.common.uniauth.server.data.entity.UserExtendExample.Criteria extendCriteria = extendExample.createCriteria();
+        extendCriteria.andIdIn(new ArrayList<>(extendIds)).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        List<UserExtend> extendList = userExtendMapper.selectByExample(extendExample);
+        
+        if (extendList == null || extendList.isEmpty()) {
+            return userExtendValDtos;
+        }
+        
+        // set code and description
+        Map<Long, UserExtend> extendMap = Maps.newHashMap();
+        for (UserExtend extend : extendList) {
+            extendMap.put(extend.getId(), extend);
+        }
+        for (UserExtendVal extendVal : userExtendVals) {
+            UserExtend extend = extendMap.get(extendVal.getExtendId());
+            if (extend == null) {
+                continue;
+            }
+            UserExtendValDto userExtendValDto=BeanConverter.convert(extendVal, UserExtendValDto.class);
+            userExtendValDto.setExtendCode(extend.getCode());
+            userExtendValDto.setExtendDescription(extend.getDescription());
+            userExtendValDtos.add(userExtendValDto);
+        }
+        
+        return userExtendValDtos;
+    }
 }
 

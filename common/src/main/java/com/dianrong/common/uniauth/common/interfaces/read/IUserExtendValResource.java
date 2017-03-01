@@ -41,6 +41,13 @@ public interface IUserExtendValResource {
     @Path("searchbyuseridentity")
     Response<List<UserExtendValDto>> searchByUserIdentity(UserExtendValParam userExtendValParam);
     
-    
+    /**
+     * 根据查询条件查询用户扩展属性值
+     * @param userExtendValParam 查询条件对象
+     * @return 符合条件的用户扩展属性值列表
+     */
+    @POST
+    @Path("search")
+    Response<List<UserExtendValDto>> search(UserExtendValParam userExtendValParam);
 }
 
