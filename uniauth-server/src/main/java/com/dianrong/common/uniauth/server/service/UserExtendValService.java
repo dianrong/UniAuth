@@ -14,7 +14,6 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.UserExtend;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample.Criteria;
@@ -210,17 +209,11 @@ public class UserExtendValService extends TenancyBasedService{
             return userExtendValDtos;
         }
         
-        // query userExtend list
-        UserExtendExample extendExample = new UserExtendExample();
-        com.dianrong.common.uniauth.server.data.entity.UserExtendExample.Criteria extendCriteria = extendExample.createCriteria();
-        extendCriteria.andIdEqualTo(extendId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-        List<UserExtend> extendList = userExtendMapper.selectByExample(extendExample);
-        
-        if (extendList == null || extendList.isEmpty()) {
+        UserExtend extend = userExtendMapper.selectByPrimaryKey(extendId);
+        if (extend == null) {
             return userExtendValDtos;
         }
         
-        UserExtend extend = extendList.get(0);
         for (UserExtendVal extendVal : userExtendVals) {
             UserExtendValDto userExtendValDto=BeanConverter.convert(extendVal, UserExtendValDto.class);
             userExtendValDto.setExtendCode(extend.getCode());
