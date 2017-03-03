@@ -174,6 +174,10 @@ public class CasLoginSupport {
         if (!StringUtil.strIsNullOrEmpty(tgtId)) {
             centralAuthenticationService.destroyTicketGrantingTicket(tgtId);
         }
+        // remove tgt
+        this.ticketGrantingTicketCookieGenerator.removeCookie(response);
+        // remove warn cookie
+        this.warnCookieGenerator.removeCookie(response);
     }
     
     /**
