@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.cas.model.vo;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 
@@ -21,7 +23,7 @@ public class ApiResponse<T extends Serializable> implements Serializable {
     /**
      * 登陆失败
      */
-    private static final String RESULT_FAILURE = "failure";
+    private static final String RESULT_FAILURE = "error";
 
     /**
      * 结果code
@@ -42,6 +44,11 @@ public class ApiResponse<T extends Serializable> implements Serializable {
      * 登陆失败返回的message
      */
     private final String message;
+    
+    /**
+     * 具体异常信息
+     */
+    private final List<String> errors;
 
     /**
      * 构造登陆返回结果
@@ -60,7 +67,8 @@ public class ApiResponse<T extends Serializable> implements Serializable {
             this.result = RESULT_FAILURE;
         }
         this.content = content;
-        this.message = message;
+        this.message = String.valueOf(code);
+        this.errors = Arrays.asList(message);
     }
 
     public Integer getCode() {
@@ -77,6 +85,10 @@ public class ApiResponse<T extends Serializable> implements Serializable {
 
     public String getMessage() {
         return message;
+    }
+
+    public List<String> getErrors() {
+        return errors;
     }
     
     /**

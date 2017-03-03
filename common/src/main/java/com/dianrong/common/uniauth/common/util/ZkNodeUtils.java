@@ -54,4 +54,16 @@ public class ZkNodeUtils {
 		String key =  AppConstants.ZK_DOMAIN_PREFIX + nodeName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_SHOW_IN_HOME_PAGE;
 		return DEFAULT_TRUE.equalsIgnoreCase(infoes.get(key));
 	}
+	
+    /**
+     * 按照配置规则计算出对应domain的登出地址的节点
+     * 
+     * @param domainName 域名,比如techops, crm等. 不能为空
+     * @return 返回在zk配置中对应domain的登出路径的节点. 比如: domains.techops.logout-address
+     */
+    public static String getDomainLogoutNodeKey(final String domainName) {
+        Assert.notNull(domainName);
+        String nodeKey = AppConstants.ZK_DOMAIN_PREFIX + domainName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_LOGOUT_ADDRESS_NODE_SUFFIX;
+        return nodeKey;
+    }
 }

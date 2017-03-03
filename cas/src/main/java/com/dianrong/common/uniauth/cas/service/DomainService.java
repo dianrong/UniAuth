@@ -55,7 +55,7 @@ public class DomainService extends BaseService {
 			for (DomainDto domainDto : domainDtoList) {
 				String domainCode = domainDto.getCode();
 				String zkDomainUrl = allZkNodeMap.get(AppConstants.ZK_DOMAIN_PREFIX + domainCode);
-				zkDomainUrl += AppConstants.SERVICE_LOGIN_POSTFIX;
+				zkDomainUrl += AppConstants.SERVICE_LOGIN_SUFFIX;
 				domainDto.setZkDomainUrl(zkDomainUrl);
 				String zkDomainUrlEncoded = null;
 				try {

@@ -12,9 +12,6 @@ import org.springframework.util.Assert;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class CasMultiTimeUseOrTimeoutExpirationPolicy extends AbstractCasExpirationPolicy{
 
     /** Serialization support. */

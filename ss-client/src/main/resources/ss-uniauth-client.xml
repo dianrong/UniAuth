@@ -51,7 +51,7 @@
 	</b:bean>
 	
 	<b:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
-		<b:constructor-arg value="#{uniauthConfig['cas_server']}/"/>    
+		<b:constructor-arg value="#{uniauthConfig['cas_server.internal_address']?:uniauthConfig['cas_server']}"/>    
 	</b:bean>
 	
 	<b:bean id="authenticationUserDetailsService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsWrapper">    
