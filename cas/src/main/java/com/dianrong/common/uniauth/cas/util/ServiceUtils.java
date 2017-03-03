@@ -13,8 +13,8 @@ public final class ServiceUtils {
     public static String getRegularServiceUrl(final String serviceUrl) {
         Assert.notNull(serviceUrl);
         String regularServiceUrl = serviceUrl.trim();
-        if (regularServiceUrl.endsWith(AppConstants.SERVICE_LOGIN_POSTFIX)) {
-            regularServiceUrl = regularServiceUrl.substring(0, regularServiceUrl.length() - AppConstants.SERVICE_LOGIN_POSTFIX.length());
+        if (regularServiceUrl.endsWith(AppConstants.SERVICE_LOGIN_SUFFIX)) {
+            regularServiceUrl = regularServiceUrl.substring(0, regularServiceUrl.length() - AppConstants.SERVICE_LOGIN_SUFFIX.length());
         }
         while(regularServiceUrl.endsWith("/")) {
             regularServiceUrl = regularServiceUrl.substring(0, regularServiceUrl.length() -1);

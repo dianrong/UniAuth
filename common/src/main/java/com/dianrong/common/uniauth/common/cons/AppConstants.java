@@ -74,7 +74,7 @@ public interface AppConstants {
 	String ZK_NODE_NAME_ST_USED_TIMES = "cas.st_use_times";
 
 	
-	String SERVICE_LOGIN_POSTFIX = "/login/cas";
+	String SERVICE_LOGIN_SUFFIX = "/login/cas";
 	
 	String ROLE_ADMIN = "ROLE_ADMIN";
 	String ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";

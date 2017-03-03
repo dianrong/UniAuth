@@ -24,7 +24,7 @@ public interface RegisteredServiceBuilder {
      * 
      * @return 一个新的RegisteredService
      */
-    RegisteredService buid();
+    RegisteredService build();
     
     /**
      * 设置生成的RegisteredService的RegisteredServiceProxyPolicy

@@ -89,7 +89,7 @@ public class UniauthRegexRegisteredServiceBuilder implements RegisteredServiceBu
      }
 
     @Override
-    public RegisteredService buid() {
+    public RegisteredService build() {
         UniauthRegexRegisteredService registeredService = new UniauthRegexRegisteredService();
         registeredService.setAccessStrategy(this.accessStrategy);
         registeredService.setAttributeReleasePolicy(this.attributeReleasePolicy);
