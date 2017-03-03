@@ -28,6 +28,7 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
+import com.google.common.collect.Lists;
 
 /**
  * @author wenlongchen
@@ -183,5 +184,44 @@ public class UserExtendValService extends TenancyBasedService{
         return pageDto;
     }
 
+    /**
+     * 根据条件查询用户扩展属性值列表
+     * @param extendId 扩展属性id
+     * @param value 扩展属性值
+     * @param status 状态
+     * @return 符合条件的扩展属性值列表
+     */
+    public List<UserExtendValDto> search(Long extendId, String value, Byte status) {
+        CheckEmpty.checkEmpty(extendId, "extendId");
+        CheckEmpty.checkEmpty(value,"value");
+        
+        UserExtendValExample example=new UserExtendValExample();
+        Criteria criteria=example.createCriteria();
+        criteria.andExtendIdEqualTo(extendId).andValueEqualTo(value);
+        if(status!=null){
+            criteria.andStatusEqualTo(status);
+        }
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        List<UserExtendVal> userExtendVals=userExtendValMapper.selectByExample(example);
+        
+        List<UserExtendValDto> userExtendValDtos=Lists.newArrayList();
+        if (userExtendVals == null || userExtendVals.isEmpty()) {
+            return userExtendValDtos;
+        }
+        
+        UserExtend extend = userExtendMapper.selectByPrimaryKey(extendId);
+        if (extend == null) {
+            return userExtendValDtos;
+        }
+        
+        for (UserExtendVal extendVal : userExtendVals) {
+            UserExtendValDto userExtendValDto=BeanConverter.convert(extendVal, UserExtendValDto.class);
+            userExtendValDto.setExtendCode(extend.getCode());
+            userExtendValDto.setExtendDescription(extend.getDescription());
+            userExtendValDtos.add(userExtendValDto);
+        }
+        
+        return userExtendValDtos;
+    }
 }
 
