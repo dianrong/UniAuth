@@ -49,7 +49,8 @@ public class ServerMapperAOPHandler {
         try {
         	gv = (GlobalVar)origin.clone();
         	gv.setReqDate(new Date());
-        	gv.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+        	// TODO  处理租户id的问题,可以通过缓存的方案解决
+        	//gv.setTenancyId(tenancyService.getOneCanUsedTenancyId());
         	gv.setMapper(joinPoint.getSignature().getDeclaringType().getSimpleName());
         	String invokeMethod = joinPoint.getSignature().getName();
         	gv.setMethod(invokeMethod);
