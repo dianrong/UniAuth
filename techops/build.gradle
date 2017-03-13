@@ -2,6 +2,8 @@ apply plugin: 'war'
 
 buildscript {
     repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
    	 	mavenCentral()
         maven {
             url "https://maven.eveoh.nl/content/repositories/releases"
@@ -17,9 +19,9 @@ buildscript {
 
 apply plugin: 'js'
 
-
 project.ext {
     aspectjVersion = '1.8.8'
+    dianrongRepoEnable = false;
 }
 apply plugin: 'aspectj'
 combineJs {
@@ -56,6 +58,28 @@ task updateIncludes(dependsOn: ['gzipJs']) {
     // replace stuffs in index.html
 }
 
+// init dianrong repo status
+task checkDianrongRepoStatus()  {
+    URL url = new URL("http://nexus.dianrong.com/nexus/#welcome");
+    URLConnection rulConnection = url.openConnection();
+    HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+    try {
+      def responseCode = httpUrlConnection.getResponseCode();
+       if (responseCode == 200 ) {
+            dianrongRepoEnable = true;
+       } else {
+            dianrongRepoEnable = false;
+       }
+    } catch(Exception ex) {
+        dianrongRepoEnable = false;
+    }
+    if (dianrongRepoEnable) {
+        println 'DianRong repository is enable'
+    } else {
+        println 'DianRong repository is unable'
+    }
+}
+
 sourceSets {
     deployment {
         java {
@@ -71,15 +95,16 @@ configurations.all {
 }
 
 dependencies {
-
     // This is the first project to use the release version of cas&uniauth-server,
     // so if there is a version upgrade, we should make sure the release version is work for techops system first then ask other teams to upgrade.
-
-       compile "com.dianrong.common.uniauth:share-rw:1.0.80-SNAPSHOT"
-       compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.80-SNAPSHOT"
-    
-     // compile project(":ss-client")
-     // compile project(":share-rw")
+        
+        if (dianrongRepoEnable) {
+               compile "com.dianrong.common.uniauth:share-rw:1.0.80-SNAPSHOT"
+               compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.80-SNAPSHOT"
+        } else {
+               compile project(":ss-client")
+               compile project(":share-rw")
+        }
 
     //Spring
     //def spring_version = '4.1.6.RELEASE'
@@ -202,35 +227,6 @@ task tomcatRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
             config.tomcat.tomcatUsername,
             config.tomcat.tomcatPassword,
             config.tomcat.tomcatHost]
-    classpath = sourceSets.deployment.runtimeClasspath
-}
-
-
-task tomcatCWLDeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
-    doFirst {
-        println "deploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
-    }
-    main = 'gradle.TomcatDeploy'
-    args = ['deploy',
-            config.tomcat.tomcatAppName,
-            config.tomcat.tomcatWarFile,
-            config.tomcat.tomcatUsername,
-            config.tomcat.tomcatPassword,
-            config.tomcat.cwlTomcatHost]
-    classpath = sourceSets.deployment.runtimeClasspath
-}
-
-task tomcatCWLRedeploy(type: JavaExec, dependsOn: warTechopsWebsite) {
-    doFirst {
-        println "redeploying war file " + config.tomcat.tomcatWarFile + " to Tomcat."
-    }
-    main = 'gradle.TomcatDeploy'
-    args = ['redeploy',
-            config.tomcat.tomcatAppName,
-            config.tomcat.tomcatWarFile,
-            config.tomcat.tomcatUsername,
-            config.tomcat.tomcatPassword,
-            config.tomcat.cwlTomcatHost]
     classpath = sourceSets.deployment.runtimeClasspath
 }
 
