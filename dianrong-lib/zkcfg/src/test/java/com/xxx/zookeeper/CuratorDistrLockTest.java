@@ -16,7 +16,7 @@ public class CuratorDistrLockTest {
   /**
    * Zookeeper info
    */
-  private static final String ZK_ADDRESS = "192.168.71.137:2181";
+  private static final String ZK_ADDRESS = "10.18.19.64:12181";
   private static final String ZK_LOCK_PATH = "/temp/lock";
 
   public static void main(String[] args) throws InterruptedException {

@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.bean;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
  * Created by Arc on 14/1/16.
  */
 @ApiModel(value = "接口返回结果model", description="返回结果中包含 data 和 info 两部分。如果info有值，不为空，则代表操作发生了异常")
-public class Response<T> {
+public class Response<T> implements Serializable{
+    private static final long serialVersionUID = -7608658495072131893L;
+    
     private static final Info internalError = Info.build(InfoName.INTERNAL_ERROR, "Internal error");
     @ApiModelProperty("每一次请求的uuid")
     private String uuid;

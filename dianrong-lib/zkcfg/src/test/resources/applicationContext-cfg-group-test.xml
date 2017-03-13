@@ -10,9 +10,8 @@
 		http://www.springframework.org/schema/util
 		http://www.springframework.org/schema/util/spring-util-4.0.xsd">
 
-    <context:property-placeholder
-            ignore-unresolvable="true"
-            system-properties-mode="OVERRIDE"/>
+    <context:property-placeholder location="classpath:application-test.properties" ignore-unresolvable="true" system-properties-mode="OVERRIDE"/>
+    <context:property-placeholder ignore-unresolvable="true" system-properties-mode="OVERRIDE"/>
 
     <!--
         <bean id="listener1" class="dianrong.cfg.zookeeper.MyCfgEventListener"/>
@@ -47,6 +46,4 @@
         <property name="needKeepAlive" value="false"/>
         <property name="internalCfgGroup" ref="ossGroup"/>
     </bean>
-
-
 </beans>

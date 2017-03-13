@@ -10,9 +10,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 文件处理相关util.主要用于cas的子系统
@@ -20,8 +20,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  *
  */
-@Slf4j
 public final class FileUtil {
+    
+    private static Logger log = LoggerFactory.getLogger(FileUtil.class);
+    
     /**
      * . 返回webApp文件夹所在路径
      * 
