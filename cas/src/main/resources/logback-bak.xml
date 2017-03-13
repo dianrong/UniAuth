@@ -32,7 +32,7 @@
         </encoder>
     </appender>
 
-	<logger name="org.jasig.inspektr.audit.support" additivity="false">
+	<logger name="org.jasig.inspektr.audit.support" additivity="true">
 		<level value="DEBUG" />
 		<appender-ref ref="casAppender" />
 		<appender-ref ref="consoleAppender"/>
