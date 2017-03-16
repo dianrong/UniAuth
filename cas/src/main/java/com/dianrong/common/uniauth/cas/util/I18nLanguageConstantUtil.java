@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 定义i18n所有支持的语言
+ * 
  * @author wanglin
  */
 @Slf4j
@@ -30,7 +31,7 @@ public final class I18nLanguageConstantUtil {
         try {
             LOCAL_MAP = new LinkedHashMap<>(FileUtil.loadProperties(MENU_PATH));
         } catch (Exception ex) {
-            log.error("failed load i18n menues from filepath : " + MENU_PATH +", please check whether it is exsists." + ex);
+            log.error("failed load i18n menues from filepath : " + MENU_PATH + ", please check whether it is exsists." + ex);
             throw ex;
         }
     }
@@ -42,7 +43,7 @@ public final class I18nLanguageConstantUtil {
      */
     public static List<I18nContent> getAllI18nLanguages() {
         List<I18nContent> data = new ArrayList<>();
-        for (Map.Entry<String,String> entry : LOCAL_MAP.entrySet()) {
+        for (Map.Entry<String, String> entry : LOCAL_MAP.entrySet()) {
             String localeStr = entry.getKey();
             data.add(new I18nContent(localeStr, LOCAL_MAP.get(localeStr), UniBundleUtil.isSelected(localeStr)));
         }

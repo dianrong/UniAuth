@@ -3,8 +3,8 @@ package com.dianrong.common.uniauth.cas.model;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jasig.cas.authentication.RememberMeCredential;
 
-public class CasRememberMeUsernamePasswordCredential extends CasUsernamePasswordCredential implements RememberMeCredential{
-	private static final long serialVersionUID = -5552074507929396707L;
+public class CasRememberMeUsernamePasswordCredential extends CasUsernamePasswordCredential implements RememberMeCredential {
+    private static final long serialVersionUID = -5552074507929396707L;
 
     private boolean rememberMe;
 
@@ -14,10 +14,7 @@ public class CasRememberMeUsernamePasswordCredential extends CasUsernamePassword
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
-                .append(rememberMe)
-                .toHashCode();
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(rememberMe).toHashCode();
     }
 
     @Override

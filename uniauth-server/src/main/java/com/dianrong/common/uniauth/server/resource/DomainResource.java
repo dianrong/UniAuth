@@ -21,62 +21,61 @@ import java.util.List;
 @RestController
 public class DomainResource implements IDomainRWResource {
 
-	@Autowired
-	private DomainService domainService;
+    @Autowired
+    private DomainService domainService;
 
-	@Override
-	public Response<List<StakeholderDto>> getAllStakeholdersInDomain(DomainParam domainParam) {
-		List<StakeholderDto> stakeholderDtos = domainService.getAllStakeholdersInDomain(domainParam.getId());
-		return Response.success(stakeholderDtos);
-	}
+    @Override
+    public Response<List<StakeholderDto>> getAllStakeholdersInDomain(DomainParam domainParam) {
+        List<StakeholderDto> stakeholderDtos = domainService.getAllStakeholdersInDomain(domainParam.getId());
+        return Response.success(stakeholderDtos);
+    }
 
-	@Override
-	public Response<PageDto<DomainDto>> searchDomain(DomainParam domainParam) {
-		PageDto<DomainDto> pageDto = domainService.searchDomain(domainParam.getDomainIds(),domainParam.getId(),domainParam.getCode(),
-				domainParam.getDisplayName(),domainParam.getStatus(),domainParam.getDescription(),
-				domainParam.getPageNumber(),domainParam.getPageSize());
-		return Response.success(pageDto);
-	}
+    @Override
+    public Response<PageDto<DomainDto>> searchDomain(DomainParam domainParam) {
+        PageDto<DomainDto> pageDto = domainService.searchDomain(domainParam.getDomainIds(), domainParam.getId(), domainParam.getCode(), domainParam.getDisplayName(),
+                domainParam.getStatus(), domainParam.getDescription(), domainParam.getPageNumber(), domainParam.getPageSize());
+        return Response.success(pageDto);
+    }
 
-	@Override
-	public Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam) {
-		List<DomainDto> domainDtoList = domainService.getAllLoginDomains(domainParam);
-		return new Response<List<DomainDto>>(domainDtoList);
-	}
+    @Override
+    public Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam) {
+        List<DomainDto> domainDtoList = domainService.getAllLoginDomains(domainParam);
+        return new Response<List<DomainDto>>(domainDtoList);
+    }
 
-	@Override
-	public Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam) {
-		DomainDto domainDto = domainService.getDomainInfo(primaryKeyParam);
-		return new Response<DomainDto>(domainDto);
-	}
+    @Override
+    public Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam) {
+        DomainDto domainDto = domainService.getDomainInfo(primaryKeyParam);
+        return new Response<DomainDto>(domainDto);
+    }
 
-	@Override
-	public Response<DomainDto> addNewDomain(DomainParam domainParam) {
-		DomainDto domainDto = domainService.addNewDomain(domainParam);
-		return new Response<DomainDto>(domainDto);
-	}
+    @Override
+    public Response<DomainDto> addNewDomain(DomainParam domainParam) {
+        DomainDto domainDto = domainService.addNewDomain(domainParam);
+        return new Response<DomainDto>(domainDto);
+    }
 
-	@Override
-	public Response<Void> updateDomain(DomainParam domainParam) {
-		domainService.updateDomain(domainParam);
-		return Response.success();
-	}
+    @Override
+    public Response<Void> updateDomain(DomainParam domainParam) {
+        domainService.updateDomain(domainParam);
+        return Response.success();
+    }
 
-	@Override
-	public Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam) {
-		StakeholderDto stakeholderDto = domainService.addNewStakeholder(stakeholderParam);
-		return new Response<StakeholderDto>(stakeholderDto);
-	}
+    @Override
+    public Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam) {
+        StakeholderDto stakeholderDto = domainService.addNewStakeholder(stakeholderParam);
+        return new Response<StakeholderDto>(stakeholderDto);
+    }
 
-	@Override
-	public Response<Void> updateStakeholder(StakeholderParam stakeholderParam) {
-		domainService.updateStakeholder(stakeholderParam);
-		return Response.success();
-	}
+    @Override
+    public Response<Void> updateStakeholder(StakeholderParam stakeholderParam) {
+        domainService.updateStakeholder(stakeholderParam);
+        return Response.success();
+    }
 
-	@Override
-	public Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam) {
-		domainService.deleteStakeholder(primaryKeyParam);
-		return Response.success();
-	}
+    @Override
+    public Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam) {
+        domainService.deleteStakeholder(primaryKeyParam);
+        return Response.success();
+    }
 }

@@ -12,8 +12,9 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**.
- * 用于生成客户自定义的登陆页面的登陆ticket的生成
+/**
+ * . 用于生成客户自定义的登陆页面的登陆ticket的生成
+ * 
  * @author wanglin
  */
 @Slf4j

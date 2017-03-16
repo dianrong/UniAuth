@@ -8,10 +8,10 @@ import com.google.common.io.BaseEncoding;
 public class Base64 {
 
     public static String encode(byte[] bytes) {
-    	 return bytes == null ? null : BaseEncoding.base64().encode(bytes);
+        return bytes == null ? null : BaseEncoding.base64().encode(bytes);
     }
 
     public static byte[] decode(String chars) {
-    	return (chars == null || "".equals(chars.trim())) ? null : BaseEncoding.base64().decode(chars);
+        return (chars == null || "".equals(chars.trim())) ? null : BaseEncoding.base64().decode(chars);
     }
 }

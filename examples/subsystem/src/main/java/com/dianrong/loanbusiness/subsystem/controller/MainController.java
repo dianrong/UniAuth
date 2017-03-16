@@ -17,50 +17,50 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/main")
 @Slf4j
 public class MainController {
-	@Autowired
-	private MyService myService;
-	
-	@Autowired
-	private UniClientFacade uniClientFacade;
-	
-	@Autowired
-	private ZooKeeperConfig zooKeeperConfig;
+    @Autowired
+    private MyService myService;
+
+    @Autowired
+    private UniClientFacade uniClientFacade;
+
+    @Autowired
+    private ZooKeeperConfig zooKeeperConfig;
 
 
-	@RequestMapping(value = "/common", method = RequestMethod.GET)
-	public String getCommonPage() {
-		log.debug("Received request to show common page");
-		//myService.testService();
-		return "commonpage";
-	}
-	
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")   
-	public String getAadminPage() {
-		for(int i = 0;i < 100;i++){
-			System.out.println("----------------------------------------------");
-		}
+    @RequestMapping(value = "/common", method = RequestMethod.GET)
+    public String getCommonPage() {
+        log.debug("Received request to show common page");
+        // myService.testService();
+        return "commonpage";
+    }
 
-		System.out.println(zooKeeperConfig.getDomainUrl());
-		System.out.println(zooKeeperConfig.getCasServerUrl());
-		
-		TestModel tm = new TestModel();
-		myService.testModel(tm);
-		log.debug("Received request to show admin page");
-		return "adminpage";
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    public String getAadminPage() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println("----------------------------------------------");
+        }
 
-	}
+        System.out.println(zooKeeperConfig.getDomainUrl());
+        System.out.println(zooKeeperConfig.getCasServerUrl());
+
+        TestModel tm = new TestModel();
+        myService.testModel(tm);
+        log.debug("Received request to show admin page");
+        return "adminpage";
+
+    }
 
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test() {
-		for(int i = 0;i < 100;i++){
-			System.out.println("----------------------------------------------");
-		}
-		
-		System.out.println(zooKeeperConfig.getDomainUrl());
-		System.out.println(zooKeeperConfig.getCasServerUrl());
-		
-		return "adminpage";
-	}
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test() {
+        for (int i = 0; i < 100; i++) {
+            System.out.println("----------------------------------------------");
+        }
+
+        System.out.println(zooKeeperConfig.getDomainUrl());
+        System.out.println(zooKeeperConfig.getCasServerUrl());
+
+        return "adminpage";
+    }
 }

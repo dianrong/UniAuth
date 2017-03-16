@@ -7,24 +7,25 @@ import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 
-/**.
- * 消费local header的默认实现
+/**
+ * . 消费local header的默认实现
+ * 
  * @author wanglin
  */
 @Component
-public class LocalHeaderConsumer extends AbstractLocalHeaderConsumer{
-	@Override
-	public void consume(String localeStr) {
-		 if(localeStr != null) {
-	            UniauthLocaleInfoHolder.setLocale(StringUtils.parseLocaleString(localeStr));
-	        } else {
-	            // set default
-	            UniauthLocaleInfoHolder.setLocale(Locale.getDefault());
-	        }
-	}
+public class LocalHeaderConsumer extends AbstractLocalHeaderConsumer {
+    @Override
+    public void consume(String localeStr) {
+        if (localeStr != null) {
+            UniauthLocaleInfoHolder.setLocale(StringUtils.parseLocaleString(localeStr));
+        } else {
+            // set default
+            UniauthLocaleInfoHolder.setLocale(Locale.getDefault());
+        }
+    }
 
-	@Override
-	public int getOrder() {
-		return LOWEST_PRECEDENCE;
-	}
+    @Override
+    public int getOrder() {
+        return LOWEST_PRECEDENCE;
+    }
 }

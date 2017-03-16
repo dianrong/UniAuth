@@ -16,15 +16,15 @@ import java.util.Map;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IConfigResource {
-        /**
-         * 获取文件list
-         */
-        @POST
-        @Path("/query")
-        Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam);
+    /**
+     * 获取文件list
+     */
+    @POST
+    @Path("/query")
+    Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam);
 
-        @GET
-        @Path("/cfg-types")
-        Response<Map<Integer, String>> getAllCfgTypes();
+    @GET
+    @Path("/cfg-types")
+    Response<Map<Integer, String>> getAllCfgTypes();
 
 }

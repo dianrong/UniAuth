@@ -6,8 +6,8 @@ import java.util.List;
  * Created by Arc on 12/4/2016.
  */
 public class TagParam extends Operator {
-	private static final long serialVersionUID = 8630107970908020377L;
-	private Integer id;
+    private static final long serialVersionUID = 8630107970908020377L;
+    private Integer id;
     private String code;
     private Byte status;
     private Integer tagTypeId;
@@ -15,25 +15,25 @@ public class TagParam extends Operator {
     private String description;
     private List<Integer> grpIds;
     private List<Long> userIds;
-    
+
     // 默认是全部都要处理
     private Boolean needProcessGoupIds = Boolean.TRUE;
     private Boolean needProcessUserIds = Boolean.TRUE;
 
     public Boolean getNeedProcessGoupIds() {
-      return needProcessGoupIds;
+        return needProcessGoupIds;
     }
 
     public void setNeedProcessGoupIds(Boolean needProcessGoupIds) {
-      this.needProcessGoupIds = needProcessGoupIds;
+        this.needProcessGoupIds = needProcessGoupIds;
     }
 
     public Boolean getNeedProcessUserIds() {
-      return needProcessUserIds;
+        return needProcessUserIds;
     }
 
     public void setNeedProcessUserIds(Boolean needProcessUserIds) {
-      this.needProcessUserIds = needProcessUserIds;
+        this.needProcessUserIds = needProcessUserIds;
     }
 
     public Integer getId() {
@@ -110,7 +110,7 @@ public class TagParam extends Operator {
 
     @Override
     public String toString() {
-      return "TagParam [id=" + id + ", code=" + code + ", status=" + status + ", tagTypeId=" + tagTypeId + ", domainId=" + domainId + ", description=" + description + ", grpIds=" + grpIds + ", userIds=" + userIds + ", needProcessGoupIds=" + needProcessGoupIds
-          + ", needProcessUserIds=" + needProcessUserIds + "]";
+        return "TagParam [id=" + id + ", code=" + code + ", status=" + status + ", tagTypeId=" + tagTypeId + ", domainId=" + domainId + ", description=" + description + ", grpIds="
+                + grpIds + ", userIds=" + userIds + ", needProcessGoupIds=" + needProcessGoupIds + ", needProcessUserIds=" + needProcessUserIds + "]";
     }
 }

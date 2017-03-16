@@ -20,42 +20,43 @@ import lombok.extern.slf4j.Slf4j;
 @Service("mqSenderFactory")
 @Slf4j
 public class MQSenderFactory {
-	@Value("#{uniauthConfig['rabbit.switch']}")
-	private String mq_switch;
-	
+    @Value("#{uniauthConfig['rabbit.switch']}")
+    private String mq_switch;
+
     @Autowired
     @Qualifier("uniauth_mq_template")
     private RabbitTemplate template;
-    
+
     @Autowired
     @Qualifier("uniauth_admin")
     private RabbitAdmin admin;
-    
+
     @Value("#{uniauthConfig['rabbit.exchange']}")
     private String exchangeName;
 
-	/**
-	 * 根据template获取消息发送服务
-	 * 
-	 * @param template
-	 * @return
-	 */
-	public MQSender getSender() {
-		if (isOn()) {
-			return MQSenderDefaultImpl.build(template, admin, exchangeName);
-		}
-		log.warn("rabbit_mq服务并没有开启，hit：#{uniauthConfig['rabbit.switch']}==on.......");
-		return MQSenderNotWorkImpl.getInstance();
-	}
+    /**
+     * 根据template获取消息发送服务
+     * 
+     * @param template
+     * @return
+     */
+    public MQSender getSender() {
+        if (isOn()) {
+            return MQSenderDefaultImpl.build(template, admin, exchangeName);
+        }
+        log.warn("rabbit_mq服务并没有开启，hit：#{uniauthConfig['rabbit.switch']}==on.......");
+        return MQSenderNotWorkImpl.getInstance();
+    }
 
-	/**.
-	 * 判断是否开启了rabbitmq 发送消息的功能
-	 * @return true or false
-	 */
-	private boolean isOn() {
-		if ("on".equalsIgnoreCase(mq_switch)) {
-			return true;
-		}
-		return false;
-	}
+    /**
+     * . 判断是否开启了rabbitmq 发送消息的功能
+     * 
+     * @return true or false
+     */
+    private boolean isOn() {
+        if ("on".equalsIgnoreCase(mq_switch)) {
+            return true;
+        }
+        return false;
+    }
 }

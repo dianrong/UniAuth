@@ -4,8 +4,8 @@ package com.dianrong.common.uniauth.common.bean.dto;
  * Created by Arc on 7/4/2016.
  */
 public class TagTypeDto extends TenancyBaseDto {
-	private static final long serialVersionUID = 4681756553353785511L;
-	private Integer id;
+    private static final long serialVersionUID = 4681756553353785511L;
+    private Integer id;
     private String code;
     private Integer domainId;
     private String domainName;
@@ -46,9 +46,8 @@ public class TagTypeDto extends TenancyBaseDto {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "TagTypeDto [id=" + id + ", code=" + code + ", domainId=" + domainId + ", domainName=" + domainName
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "TagTypeDto [id=" + id + ", code=" + code + ", domainId=" + domainId + ", domainName=" + domainName + "]";
+    }
 }

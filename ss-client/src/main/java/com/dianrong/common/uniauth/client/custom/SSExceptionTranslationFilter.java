@@ -23,65 +23,65 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
-	@Autowired
-	private ZooKeeperConfig zooKeeperConfig;
-	
-	@Autowired(required = false)
-	private CustomizedRedirectFormat customizedRedirectFormat;
+    @Autowired
+    private ZooKeeperConfig zooKeeperConfig;
 
-	public void setZooKeeperConfig(ZooKeeperConfig zooKeeperConfig) {
-		this.zooKeeperConfig = zooKeeperConfig;
-	}
-	
-	public void setCustomizedRedirectFormat(CustomizedRedirectFormat customizedRedirectFormat) {
-		this.customizedRedirectFormat = customizedRedirectFormat;
-	}
+    @Autowired(required = false)
+    private CustomizedRedirectFormat customizedRedirectFormat;
 
-	public SSExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint, RequestCache requestCache) {
-		super(authenticationEntryPoint, requestCache);
-	}
+    public void setZooKeeperConfig(ZooKeeperConfig zooKeeperConfig) {
+        this.zooKeeperConfig = zooKeeperConfig;
+    }
 
-	public SSExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint) {
-		super(authenticationEntryPoint);
-	}
+    public void setCustomizedRedirectFormat(CustomizedRedirectFormat customizedRedirectFormat) {
+        this.customizedRedirectFormat = customizedRedirectFormat;
+    }
 
-	protected void sendStartAuthentication(HttpServletRequest request,	HttpServletResponse response, FilterChain chain, AuthenticationException reason) throws ServletException, IOException {
-		// SEC-112: Clear the SecurityContextHolder's Authentication, as the
-		// existing Authentication is no longer considered valid
-		SecurityContextHolder.getContext().setAuthentication(null);
-		if(HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)){
-			log.debug("This ia an ajax or cors request, return json to client side.");
-			
-			String casServerUrl = zooKeeperConfig.getCasServerUrl();
-			String domainUrl = zooKeeperConfig.getDomainUrl();
-			domainUrl += "/login/cas";
-			domainUrl = HttpRequestUtil.encodeUrl(domainUrl);
-			casServerUrl = casServerUrl.endsWith("/") ? casServerUrl + "login" : casServerUrl + "/login";
-			String loginUrl = casServerUrl + "?service=" + domainUrl;
-			
-			response.setContentType("application/json");
-			response.addHeader("Cache-Control", "no-store");
-			response.setStatus(200);
-			
-			if(customizedRedirectFormat == null){
-				response.getWriter().println("{");
-				response.getWriter().println("\"info\":");
-				response.getWriter().println("[");
-				response.getWriter().println("{");
-				response.getWriter().println("\"name\": \"" + AppConstants.LOGIN_REDIRECT_URL +"\",");
-				response.getWriter().println("\"msg\": \"" + loginUrl +"\"");
-				response.getWriter().println("}");
-				response.getWriter().println("]");
-				response.getWriter().println("}");
-			} else {
-				Object redirectObj = customizedRedirectFormat.getRedirectInfo(request, loginUrl);
-				if(redirectObj != null){
-					response.getWriter().println(JsonUtil.object2Jason(redirectObj));
-				}
-			}
-		}
-		else{
-			super.sendStartAuthentication(request, response, chain, reason);
-		}
-	}
+    public SSExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint, RequestCache requestCache) {
+        super(authenticationEntryPoint, requestCache);
+    }
+
+    public SSExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint) {
+        super(authenticationEntryPoint);
+    }
+
+    protected void sendStartAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, AuthenticationException reason)
+            throws ServletException, IOException {
+        // SEC-112: Clear the SecurityContextHolder's Authentication, as the
+        // existing Authentication is no longer considered valid
+        SecurityContextHolder.getContext().setAuthentication(null);
+        if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)) {
+            log.debug("This ia an ajax or cors request, return json to client side.");
+
+            String casServerUrl = zooKeeperConfig.getCasServerUrl();
+            String domainUrl = zooKeeperConfig.getDomainUrl();
+            domainUrl += "/login/cas";
+            domainUrl = HttpRequestUtil.encodeUrl(domainUrl);
+            casServerUrl = casServerUrl.endsWith("/") ? casServerUrl + "login" : casServerUrl + "/login";
+            String loginUrl = casServerUrl + "?service=" + domainUrl;
+
+            response.setContentType("application/json");
+            response.addHeader("Cache-Control", "no-store");
+            response.setStatus(200);
+
+            if (customizedRedirectFormat == null) {
+                response.getWriter().println("{");
+                response.getWriter().println("\"info\":");
+                response.getWriter().println("[");
+                response.getWriter().println("{");
+                response.getWriter().println("\"name\": \"" + AppConstants.LOGIN_REDIRECT_URL + "\",");
+                response.getWriter().println("\"msg\": \"" + loginUrl + "\"");
+                response.getWriter().println("}");
+                response.getWriter().println("]");
+                response.getWriter().println("}");
+            } else {
+                Object redirectObj = customizedRedirectFormat.getRedirectInfo(request, loginUrl);
+                if (redirectObj != null) {
+                    response.getWriter().println(JsonUtil.object2Jason(redirectObj));
+                }
+            }
+        } else {
+            super.sendStartAuthentication(request, response, chain, reason);
+        }
+    }
 }

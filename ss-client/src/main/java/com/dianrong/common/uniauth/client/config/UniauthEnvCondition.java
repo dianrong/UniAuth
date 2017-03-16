@@ -15,20 +15,20 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class UniauthEnvCondition implements ConfigurationCondition {
-	@Override
-	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
-		try {
-			// 需要存在Uniauth的特征beanDefinition才行
-			beanFactory.getBeanDefinition("methodSecurityExpressionHandler");
-			beanFactory.getBeanDefinition("ssAuthenticationSuccessHandler");
-		} catch (NoSuchBeanDefinitionException e) {
-			log.warn("need load uniauth spring env first", e);
-			return false;
-		}
-		log.info("loaded uniauth spring environment");
-		return doMatchesProcess(context, metadata);
-	}
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+        try {
+            // 需要存在Uniauth的特征beanDefinition才行
+            beanFactory.getBeanDefinition("methodSecurityExpressionHandler");
+            beanFactory.getBeanDefinition("ssAuthenticationSuccessHandler");
+        } catch (NoSuchBeanDefinitionException e) {
+            log.warn("need load uniauth spring env first", e);
+            return false;
+        }
+        log.info("loaded uniauth spring environment");
+        return doMatchesProcess(context, metadata);
+    }
 
-	abstract boolean doMatchesProcess(ConditionContext context, AnnotatedTypeMetadata metadata);
+    abstract boolean doMatchesProcess(ConditionContext context, AnnotatedTypeMetadata metadata);
 }

@@ -15,7 +15,7 @@ public class PrivatePermissionJudger extends AbstractHttpRequestPermissionJudger
         Assert.notNull(serverPermissionCacher);
         this.serverPermissionCacher = serverPermissionCacher;
     }
-    
+
     @Override
     protected Pattern getPattern(String patternStr) {
         return serverPermissionCacher.getPattern(patternStr);

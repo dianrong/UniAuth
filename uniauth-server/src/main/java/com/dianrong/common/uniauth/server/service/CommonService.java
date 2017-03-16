@@ -17,35 +17,35 @@ import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 
 @Service
 public class CommonService {
-	
-	@Autowired
-	private PermTypeMapper permTypeMapper;
-	@Autowired
-	private RoleCodeMapper roleCodeMapper;
-	
-	@Cacheable(value="commonService")
-	public Map<Integer, PermType> getPermTypeMap(){
-		Map<Integer, PermType>	permTypeMap = new HashMap<Integer, PermType>();
-		PermTypeExample example = new PermTypeExample();
-		List<PermType> permTypeList = permTypeMapper.selectByExample(example);
-		if(permTypeList != null && !permTypeList.isEmpty()){
-			for(PermType permType: permTypeList){
-				permTypeMap.put(permType.getId(), permType);
-			}
-		}
-		return permTypeMap;
-		
-	}
-	
-	public Map<Integer, RoleCode> getRoleCodeMap(){
-		Map<Integer, RoleCode>	roleCodeMap = new HashMap<Integer, RoleCode>();
-		RoleCodeExample example = new RoleCodeExample();
-		List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
-		if(roleCodeList != null && !roleCodeList.isEmpty()){
-			for(RoleCode rc: roleCodeList){
-				roleCodeMap.put(rc.getId(), rc);
-			}
-		}
-		return roleCodeMap;
-	}
+
+    @Autowired
+    private PermTypeMapper permTypeMapper;
+    @Autowired
+    private RoleCodeMapper roleCodeMapper;
+
+    @Cacheable(value = "commonService")
+    public Map<Integer, PermType> getPermTypeMap() {
+        Map<Integer, PermType> permTypeMap = new HashMap<Integer, PermType>();
+        PermTypeExample example = new PermTypeExample();
+        List<PermType> permTypeList = permTypeMapper.selectByExample(example);
+        if (permTypeList != null && !permTypeList.isEmpty()) {
+            for (PermType permType : permTypeList) {
+                permTypeMap.put(permType.getId(), permType);
+            }
+        }
+        return permTypeMap;
+
+    }
+
+    public Map<Integer, RoleCode> getRoleCodeMap() {
+        Map<Integer, RoleCode> roleCodeMap = new HashMap<Integer, RoleCode>();
+        RoleCodeExample example = new RoleCodeExample();
+        List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
+        if (roleCodeList != null && !roleCodeList.isEmpty()) {
+            for (RoleCode rc : roleCodeList) {
+                roleCodeMap.put(rc.getId(), rc);
+            }
+        }
+        return roleCodeMap;
+    }
 }

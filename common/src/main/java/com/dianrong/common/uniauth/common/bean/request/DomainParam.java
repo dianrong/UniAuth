@@ -89,8 +89,7 @@ public class DomainParam extends PageParam {
 
     @Override
     public String toString() {
-        return "DomainParam [domainIds=" + domainIds + ", id=" + id + ", code=" + code + ", displayName=" + displayName
-                + ", description=" + description + ", status=" + status + ", domainCodeList=" + domainCodeList
-                + ", includeTenancyIds=" + includeTenancyIds + "]";
+        return "DomainParam [domainIds=" + domainIds + ", id=" + id + ", code=" + code + ", displayName=" + displayName + ", description=" + description + ", status=" + status
+                + ", domainCodeList=" + domainCodeList + ", includeTenancyIds=" + includeTenancyIds + "]";
     }
 }

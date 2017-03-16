@@ -95,8 +95,8 @@ public final class UniauthServiceRegistryDao implements ServiceRegistryDao {
                 String serviceId = ServiceUtils.getRegularServiceUrl(domainUrl);
                 long id = CRC32.getCRC32(serviceId);
                 // add a default registeredService
-                RegisteredService registeredService = new UniauthRegexRegisteredServiceBuilder().setName(domainName)
-                        .setServiceId(serviceId).setId(id).setLogoutUrl(logoutUrl).build();
+                RegisteredService registeredService =
+                        new UniauthRegexRegisteredServiceBuilder().setName(domainName).setServiceId(serviceId).setId(id).setLogoutUrl(logoutUrl).build();
                 registeredServiceMap.put(registeredService.getId(), registeredService);
             }
         }

@@ -7,7 +7,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
  */
 public class ClientFacadeUtil {
     public static void addApiKey(String apiName, String apiKey, Object... objs) {
-        if(objs != null && apiName != null && apiKey !=null) {
+        if (objs != null && apiName != null && apiKey != null) {
             for (Object obj : objs) {
                 WebClient.client(obj).header(apiName, apiKey);
             }

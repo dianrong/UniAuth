@@ -47,7 +47,7 @@ public class CasLoginSupport {
 
     @Autowired
     private CookieRetrievingCookieGenerator warnCookieGenerator;
-    
+
     @Autowired
     private CookieRetrievingCookieGenerator ticketGrantingTicketCookieGenerator;
 
@@ -57,25 +57,26 @@ public class CasLoginSupport {
     /** Ticket registry searched for TGT by ID. */
     @Autowired
     private TicketRegistry ticketRegistry;
-    
+
     /**
      * 标志位, 用于判断是否已经初始化过cookie path
      */
     private volatile boolean pathPopulated;
-    
+
     /** 登陆跳转相关的parameter 常量定义 **/
     /**
      * 标志位,用于判断登陆成功之后是否跳转
      */
     private static final String SERVICE_REDIRECT_PARAMETER = "loginRedirect";
-   
+
     /**
      * 进行跳转的参数值
      */
     private static final String NEED_REDIRECT_VALUE = "true";
 
     /**
-     *  在登陆的状态下获取tgt对象
+     * 在登陆的状态下获取tgt对象
+     * 
      * @return TicketGrantingTicket 对象
      * @throws NotLoginException if not login
      */
@@ -92,9 +93,10 @@ public class CasLoginSupport {
         // 校验登陆完成 获取当前登陆账号
         return (TicketGrantingTicket) ticket;
     }
-    
+
     /**
      * 生成service ticket
+     * 
      * @param request HttpServletRequest
      * @param ticketGrantingTicketId 当前登陆人对应的ticket granted ticket
      * @return 新生成的service ticket
@@ -109,9 +111,10 @@ public class CasLoginSupport {
         ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicketId, service);
         return serviceTicket.getId();
     }
-    
+
     /**
      * 获取当前登陆用户的信息
+     * 
      * @param ticketGrantingTicketId tgt
      * @return Principal
      * @throws NotLoginException if not login
@@ -120,14 +123,15 @@ public class CasLoginSupport {
         try {
             final TicketGrantingTicket ticketGrantingTicket = this.centralAuthenticationService.getTicket(ticketGrantingTicketId, TicketGrantingTicket.class);
             return ticketGrantingTicket.getAuthentication().getPrincipal();
-        } catch (final InvalidTicketException e){
+        } catch (final InvalidTicketException e) {
             log.warn(e.getMessage());
             throw new NotLoginException("not login");
         }
     }
-    
+
     /**
      * 通过账号密码登陆,并返回生成的tgt
+     * 
      * @param credential 登陆的credential
      * @param warnCookie warnCookie值
      * @param request HttpServletRequest
@@ -136,7 +140,8 @@ public class CasLoginSupport {
      * @throws AuthenticationException 登陆失败了
      * @throws TicketException tgt创建失败
      */
-    public String loginAndQueryTgt(Credential credential, boolean warnCookie, HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, TicketException {
+    public String loginAndQueryTgt(Credential credential, boolean warnCookie, HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException, TicketException {
         if (!pathPopulated) {
             final String contextPath = request.getContextPath();
             final String cookiePath = !StringUtil.strIsNullOrEmpty(contextPath) ? contextPath + "/" : "/";
@@ -148,7 +153,7 @@ public class CasLoginSupport {
             }
             this.pathPopulated = true;
         }
-        
+
         TicketGrantingTicket ticketGrantingTicket = this.centralAuthenticationService.createTicketGrantingTicket(credential);
         String ticketGrantingTicketId = ticketGrantingTicket.getId();
 
@@ -160,7 +165,7 @@ public class CasLoginSupport {
         this.warnCookieGenerator.addCookie(request, response, String.valueOf(warnCookie));
 
         return ticketGrantingTicketId;
-      }
+    }
 
     /**
      * 登出操作
@@ -179,7 +184,7 @@ public class CasLoginSupport {
         // remove warn cookie
         this.warnCookieGenerator.removeCookie(response);
     }
-    
+
     /**
      * 从HttpServletRequest中获取service
      * 
@@ -189,9 +194,10 @@ public class CasLoginSupport {
     public Service queryService(HttpServletRequest request) {
         return WebUtils.getService(this.argumentExtractors, request);
     }
-    
+
     /**
      * 根据credential登陆,并生成tgt和st,最后返回st
+     * 
      * @param credential 登陆凭证(账号,密码等)
      * @param warnCookie warnCookie的值
      * @param request HttpServletRequest
@@ -211,11 +217,11 @@ public class CasLoginSupport {
         }
         return this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicketId, service).getId();
     }
-    
+
     /**
-     * 判断某个登陆成功的请求是否需要进行跳转(http code 302).并且检测
-     * 判断依据为参数主动指定
-     * @param request 
+     * 判断某个登陆成功的请求是否需要进行跳转(http code 302).并且检测 判断依据为参数主动指定
+     * 
+     * @param request
      * @return true or false
      */
     public boolean isLoginRedirect(HttpServletRequest request) {
@@ -229,9 +235,10 @@ public class CasLoginSupport {
         }
         return false;
     }
-    
+
     /**
-     *  判断当前登陆是否需要跳转,并且主动跳转
+     * 判断当前登陆是否需要跳转,并且主动跳转
+     * 
      * @param request
      * @param response
      * @param serviceTicket 登陆成功生成的service ticket. 如果该参数为空,则不进行跳转

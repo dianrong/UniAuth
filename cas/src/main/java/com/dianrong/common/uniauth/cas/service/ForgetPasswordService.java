@@ -37,7 +37,7 @@ public class ForgetPasswordService extends BaseService{
 		loginParam.setAccount(accountId);
 		loginParam.setTenancyCode(tenancyCode);
 		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);//.getSingleUser(userParam);
-		List<Info> infoList = response.getInfo();
+        List<Info> infoList = response.getInfo();
 
 		checkInfoList(infoList);
 		return response.getData();

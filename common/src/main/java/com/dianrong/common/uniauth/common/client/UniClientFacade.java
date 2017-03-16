@@ -45,24 +45,26 @@ public class UniClientFacade {
 
     @Value("#{uniauthConfig['uniauth_api_key']}")
     private String apiKey;
-    
+
     @Autowired(required = false)
     private ApiCtrlAccountHolder apiCtrlAccountHolder;
-    
+
     @Resource(name = "uniauthConfig")
     private Map<String, String> allZkNodeMap;
-    
-	public UniClientFacade(){}
-	public UniClientFacade(String uniWsEndpoint){
-		this.uniWsEndpoint = uniWsEndpoint;
-		init();
-	}
-	public UniClientFacade(String uniWsEndpoint, String apiName, String apiKey){
-		this.uniWsEndpoint = uniWsEndpoint;
-		this.apiName = apiName;
-		this.apiKey = apiKey;
-		init();
-	}
+
+    public UniClientFacade() {}
+
+    public UniClientFacade(String uniWsEndpoint) {
+        this.uniWsEndpoint = uniWsEndpoint;
+        init();
+    }
+
+    public UniClientFacade(String uniWsEndpoint, String apiName, String apiKey) {
+        this.uniWsEndpoint = uniWsEndpoint;
+        this.apiName = apiName;
+        this.apiKey = apiKey;
+        init();
+    }
 
     private IDomainResource domainResource;
     private IGroupResource groupResource;
@@ -74,52 +76,52 @@ public class UniClientFacade {
     private IUserExtendResource userExtendResource;
     private IUserExtendValResource userExtendValResource;
     private ITenancyResource tenancyResource;
-    
+
     // read and write
     private IUserExtendRWResource userExtendRWResource;
     private IUserExtendValRWResource userExtendValRWResource;
 
-	@PostConstruct
-	public void init(){
-		CheckSDKCfg.checkSDKCfg(uniWsEndpoint);
-		JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
-		jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
-		ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
-		// set api control account
-		if (apiCtrlAccountHolder != null) {
-		    ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword())
-		    // 设置开关
-		    .setCtlSwitch(new ApiCallCtlSwitch() {
-				@Override
-				public boolean apiCtlOn() {
-					return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
-				}
-			});
-		}
-        List<?> providers = Arrays.asList(jacksonJsonProvider,uUIDHeaderClientRequestFilter,cxfHeaderFilter);
+    @PostConstruct
+    public void init() {
+        CheckSDKCfg.checkSDKCfg(uniWsEndpoint);
+        JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
+        jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
+        ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
+        // set api control account
+        if (apiCtrlAccountHolder != null) {
+            ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword())
+                    // 设置开关
+                    .setCtlSwitch(new ApiCallCtlSwitch() {
+                        @Override
+                        public boolean apiCtlOn() {
+                            return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+                        }
+                    });
+        }
+        List<?> providers = Arrays.asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
         userExtendResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendResource.class, providers);
         userExtendValResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendValResource.class, providers);
-		domainResource = UniauthRSClientFactory.create(uniWsEndpoint, IDomainResource.class, providers);
-		groupResource = UniauthRSClientFactory.create(uniWsEndpoint, IGroupResource.class, providers);
-		permissionResource = UniauthRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, providers);
-		userResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserResource.class, providers);
-		roleResource = UniauthRSClientFactory.create(uniWsEndpoint, IRoleResource.class, providers);
-		tagResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
-		configResource = UniauthRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
-		tenancyResource = UniauthRSClientFactory.create(uniWsEndpoint, ITenancyResource.class, providers);
-		
-		// write
-		userExtendRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
-		userExtendValRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
-		ClientFacadeUtil.addApiKey(apiName,apiKey,domainResource,groupResource,permissionResource,userResource,roleResource,tagResource,
-				configResource,tenancyResource,userExtendResource,userExtendValResource, userExtendRWResource, userExtendValRWResource);
-	}
+        domainResource = UniauthRSClientFactory.create(uniWsEndpoint, IDomainResource.class, providers);
+        groupResource = UniauthRSClientFactory.create(uniWsEndpoint, IGroupResource.class, providers);
+        permissionResource = UniauthRSClientFactory.create(uniWsEndpoint, IPermissionResource.class, providers);
+        userResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserResource.class, providers);
+        roleResource = UniauthRSClientFactory.create(uniWsEndpoint, IRoleResource.class, providers);
+        tagResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
+        configResource = UniauthRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
+        tenancyResource = UniauthRSClientFactory.create(uniWsEndpoint, ITenancyResource.class, providers);
 
-	public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
-		this.apiCtrlAccountHolder = apiCtrlAccountHolder;
-	}
-	
+        // write
+        userExtendRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
+        userExtendValRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
+        ClientFacadeUtil.addApiKey(apiName, apiKey, domainResource, groupResource, permissionResource, userResource, roleResource, tagResource, configResource, tenancyResource,
+                userExtendResource, userExtendValResource, userExtendRWResource, userExtendValRWResource);
+    }
+
+    public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
+        this.apiCtrlAccountHolder = apiCtrlAccountHolder;
+    }
+
     public IDomainResource getDomainResource() {
         return domainResource;
     }
@@ -159,19 +161,24 @@ public class UniClientFacade {
     public IUserExtendValResource getUserExtendValResource() {
         return userExtendValResource;
     }
-	public IUserExtendRWResource getUserExtendRWResource() {
-		return userExtendRWResource;
-	}
-	public void setUserExtendRWResource(IUserExtendRWResource userExtendRWResource) {
-		this.userExtendRWResource = userExtendRWResource;
-	}
-	public IUserExtendValRWResource getUserExtendValRWResource() {
-		return userExtendValRWResource;
-	}
-	public void setUserExtendValRWResource(IUserExtendValRWResource userExtendValRWResource) {
-		this.userExtendValRWResource = userExtendValRWResource;
-	}
-	public ITenancyResource getTenancyResource() {
-		return tenancyResource;
-	}
+
+    public IUserExtendRWResource getUserExtendRWResource() {
+        return userExtendRWResource;
+    }
+
+    public void setUserExtendRWResource(IUserExtendRWResource userExtendRWResource) {
+        this.userExtendRWResource = userExtendRWResource;
+    }
+
+    public IUserExtendValRWResource getUserExtendValRWResource() {
+        return userExtendValRWResource;
+    }
+
+    public void setUserExtendValRWResource(IUserExtendValRWResource userExtendValRWResource) {
+        this.userExtendValRWResource = userExtendValRWResource;
+    }
+
+    public ITenancyResource getTenancyResource() {
+        return tenancyResource;
+    }
 }

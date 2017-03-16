@@ -18,12 +18,13 @@ public class ApiCallerService {
 
     @Autowired
     private ApiCallerInfoMapper apiCallerInfoMapper;
-    
+
     @Autowired
     private DomainMapper domainMapper;
-    
+
     /**
      * get api caller info
+     * 
      * @param account account
      * @param password password
      * @return ApiCallerInfoDto or null
@@ -38,7 +39,7 @@ public class ApiCallerService {
                 if (domain == null) {
                     return null;
                 }
-                ApiCallerInfoDto dto =  BeanConverter.convert(apiCaller, ApiCallerInfoDto.class);
+                ApiCallerInfoDto dto = BeanConverter.convert(apiCaller, ApiCallerInfoDto.class);
                 dto.setDomainCode(domain.getCode()).setDomainName(domain.getDisplayName());
                 return dto;
             }

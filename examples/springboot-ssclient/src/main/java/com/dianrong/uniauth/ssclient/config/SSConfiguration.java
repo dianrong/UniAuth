@@ -6,12 +6,12 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 public class SSConfiguration {
-	// 配置view resolver
-	@Bean
-	public InternalResourceViewResolver internalResourceViewResolver(){
-		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		viewResolver.setPrefix("/WEB-INF/jsp/");
-		viewResolver.setSuffix(".jsp");
-		return viewResolver;
-	}
+    // 配置view resolver
+    @Bean
+    public InternalResourceViewResolver internalResourceViewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/jsp/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
+    }
 }

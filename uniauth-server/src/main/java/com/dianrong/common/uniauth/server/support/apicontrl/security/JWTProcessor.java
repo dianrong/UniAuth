@@ -21,7 +21,8 @@ import com.mysql.jdbc.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * jwt token processor 
+ * jwt token processor
+ * 
  * @author wanglin
  */
 @Slf4j
@@ -31,43 +32,42 @@ public class JWTProcessor implements TokenProcessor<ApiCtlPermission> {
     public static final String ISSUER = "uniauth-server";
     public static final String AUDIENCE = "all-uniauth-integrate-domains";
     public static final String SUBJECT = "uniauth-server-api-call-token";
-    
+
     @Value("#{uniauthConfig['apicall.jwt.security.key']}")
     private String configSecurityKey;
-    
-    // init jwt 
+
+    // init jwt
     private JWTSecurity jwt;
-    
+
     @PostConstruct
-	public void init() {
-    	 try {
-    		 if (StringUtils.isNullOrEmpty(configSecurityKey)) {
-    			 this.jwt = new JWTSecurity();
-    			 log.info("init JWTSecurity with default security key");
-    		 } else {
-    			 log.info("init JWTSecurity with configured security key");
-    			 this.jwt = new JWTSecurity(this.configSecurityKey);
-    		 }
-         } catch (JWTVerifierCreateFailedException e) {
-             log.error("failed to create JWTSecurity", e);
-             throw new UniauthCommonException(e.getMessage(), e);
-         }  
-	}
+    public void init() {
+        try {
+            if (StringUtils.isNullOrEmpty(configSecurityKey)) {
+                this.jwt = new JWTSecurity();
+                log.info("init JWTSecurity with default security key");
+            } else {
+                log.info("init JWTSecurity with configured security key");
+                this.jwt = new JWTSecurity(this.configSecurityKey);
+            }
+        } catch (JWTVerifierCreateFailedException e) {
+            log.error("failed to create JWTSecurity", e);
+            throw new UniauthCommonException(e.getMessage(), e);
+        }
+    }
 
     @Override
     public String sign(CallerCredential<ApiCtlPermission> credential) throws TokenCreateFailedException {
         Assert.notNull(credential);
-        JwtInfo jwtInfo = new JwtInfo(ISSUER, AUDIENCE, SUBJECT, credential.getCallerName() ,
-                credential.getAccount(), JsonUtil.object2Jason(credential.getPermissionInfo()),
+        JwtInfo jwtInfo = new JwtInfo(ISSUER, AUDIENCE, SUBJECT, credential.getCallerName(), credential.getAccount(), JsonUtil.object2Jason(credential.getPermissionInfo()),
                 credential.getCreateTime(), credential.getExpireTime());
         return this.jwt.createJwt(jwtInfo);
     }
+
     @Override
     public CallerCredential<ApiCtlPermission> verify(String token) throws InvalidTokenException, TokenExpiredException {
         JwtInfo jwtInfo = this.jwt.getInfoFromJwt(token);
         // customized token check
-        if (!ISSUER.equals(jwtInfo.getIssuer()) || !AUDIENCE.equals(jwtInfo.getAudience())
-                || !SUBJECT.equals(jwtInfo.getSubject())) {
+        if (!ISSUER.equals(jwtInfo.getIssuer()) || !AUDIENCE.equals(jwtInfo.getAudience()) || !SUBJECT.equals(jwtInfo.getSubject())) {
             log.error(token + " is a invalid token string");
             throw new InvalidTokenException();
         }

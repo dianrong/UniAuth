@@ -36,7 +36,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	            	 criteria.andIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
 					break;
 				case FIELD_TYPE_CODE:
-					criteria.andCodeEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
+                    criteria.andCodeEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
 					break;
 	             default:
                     break;

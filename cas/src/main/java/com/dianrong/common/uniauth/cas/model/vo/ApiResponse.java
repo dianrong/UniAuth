@@ -14,12 +14,12 @@ import com.dianrong.common.uniauth.common.util.Assert;
 public class ApiResponse<T extends Serializable> implements Serializable {
     private static final long serialVersionUID = -8045161535931878288L;
 
-     /** 定义结果常量     **/
+    /** 定义结果常量 **/
     /**
      * 登陆成功
      */
     private static final String RESULT_SUCCESS = "success";
-    
+
     /**
      * 登陆失败
      */
@@ -44,7 +44,7 @@ public class ApiResponse<T extends Serializable> implements Serializable {
      * 登陆失败返回的message
      */
     private final String message;
-    
+
     /**
      * 具体异常信息
      */
@@ -90,17 +90,19 @@ public class ApiResponse<T extends Serializable> implements Serializable {
     public List<String> getErrors() {
         return errors;
     }
-    
+
     /**
      * 生成一个成功的结果
+     * 
      * @return 表示成功的返回结果
      */
     public static <T extends Serializable> ApiResponse<T> success() {
         return new ApiResponse<T>(true, null, ResponseCode.SUCCESS, null);
     }
-    
+
     /**
      * 便利方法, 用于生成一个成功的返回结果,采用默认的结果code
+     * 
      * @param content 返回结果内容, 必须是一个序列化的对象类型
      * @return 表示成功的返回结果
      */

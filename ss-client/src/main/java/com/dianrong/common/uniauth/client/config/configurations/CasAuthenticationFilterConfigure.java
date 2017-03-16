@@ -16,30 +16,30 @@ import com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticati
 @Component
 @Conditional(UniauthConfigEnvLoadCondtion.class)
 public class CasAuthenticationFilterConfigure implements Configure<CasAuthenticationFilter> {
-	
-	private static final String DEFAULT_FILTER_PROCESS_URL = "/login/cas";
-	
-	@Autowired
-	private SSSavedRequestAwareAuthenticationSuccessHandler ssAuthenticationSuccessHandler;
 
-	@Resource(name="authenticationManager")
-	private AuthenticationManager authenticationManager;
-	
-	@Resource(name="sas")
-	private SessionAuthenticationStrategy sas;
-	
-	@Override
-	public CasAuthenticationFilter create() {
-		CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
-		casAuthenticationFilter.setAuthenticationManager(authenticationManager);
-		casAuthenticationFilter.setFilterProcessesUrl(DEFAULT_FILTER_PROCESS_URL);
-		casAuthenticationFilter.setAuthenticationSuccessHandler(ssAuthenticationSuccessHandler);
-		casAuthenticationFilter.setSessionAuthenticationStrategy(sas);
-		return casAuthenticationFilter;
-	}
+    private static final String DEFAULT_FILTER_PROCESS_URL = "/login/cas";
 
-	@Override
-	public boolean isSupport(Class<?> cls) {
-		return CasAuthenticationFilter.class.equals(cls);
-	}
+    @Autowired
+    private SSSavedRequestAwareAuthenticationSuccessHandler ssAuthenticationSuccessHandler;
+
+    @Resource(name = "authenticationManager")
+    private AuthenticationManager authenticationManager;
+
+    @Resource(name = "sas")
+    private SessionAuthenticationStrategy sas;
+
+    @Override
+    public CasAuthenticationFilter create() {
+        CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
+        casAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        casAuthenticationFilter.setFilterProcessesUrl(DEFAULT_FILTER_PROCESS_URL);
+        casAuthenticationFilter.setAuthenticationSuccessHandler(ssAuthenticationSuccessHandler);
+        casAuthenticationFilter.setSessionAuthenticationStrategy(sas);
+        return casAuthenticationFilter;
+    }
+
+    @Override
+    public boolean isSupport(Class<?> cls) {
+        return CasAuthenticationFilter.class.equals(cls);
+    }
 }

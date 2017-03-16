@@ -9,22 +9,24 @@ import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 
 /**
  * 用于创建接口的代理对象
+ * 
  * @author wanglin
  */
 public final class UniauthRSClientFactory {
-    
+
     /**
      * api control filter
      */
     private static final ApiCtlRequestFilter API_CTL_REQ_FILTER = new ApiCtlRequestFilter();
-    
+
     /**
      * api control filter
      */
     private static final ApiCtlResponseFilter API_CTL_RES_FILTER = new ApiCtlResponseFilter();
-    
+
     /**
      * create 代理对象
+     * 
      * @param baseAddress
      * @param cls
      * @param providers
@@ -36,17 +38,17 @@ public final class UniauthRSClientFactory {
         Object[] providersArray = {};
         if (providers != null) {
             providersArray = providers.toArray();
-        } 
-        
+        }
+
         // append two provider
         int tempArrayLength = providersArray.length;
         providersArray = Arrays.copyOf(providersArray, tempArrayLength + 2);
         providersArray[tempArrayLength] = API_CTL_REQ_FILTER;
-        providersArray[tempArrayLength+1] = API_CTL_RES_FILTER;
+        providersArray[tempArrayLength + 1] = API_CTL_RES_FILTER;
         List<?> cxfProviders = Arrays.asList(providersArray);
-        T proxy = JAXRSClientFactory.create(baseAddress, cls , cxfProviders);
+        T proxy = JAXRSClientFactory.create(baseAddress, cls, cxfProviders);
         ClassLoader loader = UniauthRSClientFactory.class.getClassLoader();
         ApiControlInvocationHandler handler = new ApiControlInvocationHandler(proxy);
-        return (T)ProxyHelper.getProxy(loader, new Class<?>[]{cls, Client.class}, handler);
+        return (T) ProxyHelper.getProxy(loader, new Class<?>[] {cls, Client.class}, handler);
     }
 }

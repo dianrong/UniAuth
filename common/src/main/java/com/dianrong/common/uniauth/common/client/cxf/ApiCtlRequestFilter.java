@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class ApiCtlRequestFilter implements ClientRequestFilter {
-    
+
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         HeaderHolder requestHeaderHolder = ApiControlHeaderHolder.getRequestHeaderHolder();

@@ -15,15 +15,15 @@ import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
 @Component
 @Conditional(UniauthConfigEnvLoadCondtion.class)
 public final class SingleSignOutFilterConfigure implements Configure<SingleSignOutFilter> {
-	@Override
-	public SingleSignOutFilter create() {
-		SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
-		singleLogoutFilter.setIgnoreInitConfiguration(true);
-		return singleLogoutFilter;
-	}
+    @Override
+    public SingleSignOutFilter create() {
+        SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
+        singleLogoutFilter.setIgnoreInitConfiguration(true);
+        return singleLogoutFilter;
+    }
 
-	@Override
-	public boolean isSupport(Class<?> cls) {
-		return SingleSignOutFilter.class.equals(cls);
-	}
+    @Override
+    public boolean isSupport(Class<?> cls) {
+        return SingleSignOutFilter.class.equals(cls);
+    }
 }

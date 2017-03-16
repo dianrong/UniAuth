@@ -34,14 +34,15 @@ public class AuthUtils {
             return null;
         }
     }
-    
+
     /**
      * 生成密码
+     * 
      * @param length 密码长度
      * @return 密码
      */
     public static String generatePassword(int length) {
-        if(length <= 0) {
+        if (length <= 0) {
             return "";
         }
         Random random = new Random();
@@ -73,7 +74,7 @@ public class AuthUtils {
             byte[] digest = msgDigest.digest(password.getBytes());
             return digest;
         } catch (NoSuchAlgorithmException e) {
-        	log.warn("digest exception",e);
+            log.warn("digest exception", e);
             return null;
         }
     }
@@ -81,15 +82,15 @@ public class AuthUtils {
     public static String randomPassword() {
         StringBuilder sb = new StringBuilder();
         sb.append(SPECIALS.charAt(RandomUtils.nextInt(0, SPECIALS.length()))); // 1
-        sb.append(DIGITS.charAt(RandomUtils.nextInt(0, DIGITS.length())));     // 2
-        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length())));    // 3
-        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length())));    // 4
-        sb.append(Character.toUpperCase(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length()))));    // 5
-        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length())));    // 6
-        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length())));    // 7
-        sb.append(Character.toUpperCase(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length()))));    // 8
-        sb.append(DIGITS.charAt(RandomUtils.nextInt(0, DIGITS.length())));     // 9
-        sb.append(DIGITS.charAt(RandomUtils.nextInt(0, DIGITS.length())));     // 10
+        sb.append(DIGITS.charAt(RandomUtils.nextInt(0, DIGITS.length()))); // 2
+        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length()))); // 3
+        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length()))); // 4
+        sb.append(Character.toUpperCase(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length())))); // 5
+        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length()))); // 6
+        sb.append(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length()))); // 7
+        sb.append(Character.toUpperCase(LETTERS.charAt(RandomUtils.nextInt(0, LETTERS.length())))); // 8
+        sb.append(DIGITS.charAt(RandomUtils.nextInt(0, DIGITS.length()))); // 9
+        sb.append(DIGITS.charAt(RandomUtils.nextInt(0, DIGITS.length()))); // 10
         return sb.toString();
     }
 
@@ -98,8 +99,7 @@ public class AuthUtils {
             return false;
         }
 
-        if (password.length() < MIN_PASSWORD_LENGTH
-            || password.length() > MAX_PASSWORD_LENGTH) {
+        if (password.length() < MIN_PASSWORD_LENGTH || password.length() > MAX_PASSWORD_LENGTH) {
             return false;
         }
 
