@@ -149,6 +149,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "GroupModifyController",
             templateUrl: 'views/group/group-modify.html'
         }).
+        state('group.move', {
+            url: '/move',
+            controller: "GroupMoveController",
+            templateUrl: 'views/group/group-move.html'
+        }).
         state('group.delete', {
             url: '/delete',
             controller: "GroupDeleteController",

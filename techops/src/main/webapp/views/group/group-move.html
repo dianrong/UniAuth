@@ -1,0 +1,20 @@
+<div class="control-panel">
+    <div class="panel-header modal-header dialog-header-group">
+        <h4 class="modal-title text-center">
+            <i class="fa fa-pencil-square-o"></i> 移动组
+        </h4>
+    </div>
+    <div>
+        <ng-form name="moveGroupForm" novalidate role="form">
+            <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[modifyGroupForm.code.$dirty && modifyGroupForm.code.$invalid]">
+                <label class="panel-label">需要移动的组:</label>
+                <input type="text" class="panel-input form-control" name="fromGroup" ng-model="moveGroup.from.label" required disabled>
+                <label class="panel-label">移动到:</label>
+                <input type="text" class="panel-input form-control" name="toGroup" ng-model="moveGroup.to.label" required disabled>
+            </div>
+        </ng-form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info" ng-click="move()" ng-disabled="fromGroup.$dirty && toGroup.$dirty">确认移动</button>
+    </div>
+</div>

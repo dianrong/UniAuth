@@ -36,6 +36,13 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 },
                 timeout: constant.reqTimeout
             },
+            move: {
+                method: 'POST',
+                params: {
+                    method: 'move'
+                },
+                timeout: constant.reqTimeout
+            },
             getGrpDetails: {
                 method: 'GET',
                 params: {

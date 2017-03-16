@@ -44,12 +44,20 @@ define(['../../utils/constant'], function (constant) {
                 $scope.selected = node;
                 $rootScope.shareGroup.selected = $scope.selected;
                 // if user is modifying the group, load the group's description
-                if($rootScope.$state.current.name == 'group.modify') {
+                if($rootScope.$state.current.name.search("group.modify | group.move")) {
                     GroupService.getGrpDetails({
                         id: $rootScope.shareGroup.selected.id
                     }, function (result) {
                         $scope.selected = result.data;
                         $rootScope.shareGroup.selected = $scope.selected;
+
+                        //groupMove
+                        if($rootScope.moveFLag){
+                            $rootScope.shareGroup.from = $scope.selected;
+                        }else{
+                            $rootScope.shareGroup.to = $scope.selected;
+                        }
+                        $rootScope.moveFLag = !$rootScope.moveFLag;
                     }, function (err) {
                         console.log(err);
                     });

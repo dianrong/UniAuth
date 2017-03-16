@@ -49,7 +49,6 @@ define(['../../utils/constant'], function(constant) {
                 $scope.modifidGroup = {};
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.groupModifyFailure'));
             });
-            $scope.getTree(paramsCtlLevel);
         };
     };
 
