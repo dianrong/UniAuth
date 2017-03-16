@@ -80,7 +80,7 @@ public final class FileUtil {
 
     
     /**
-     * . it equals loadProperties(filePath , null)
+     * Equals loadProperties(filePath , null)
      * @param filePath filePath
      * @return LinkedHashMap<String, String>
      */
@@ -89,7 +89,7 @@ public final class FileUtil {
     }
     
     /**
-     * . load map from properties file. if defaultMap is null, new a LinkedHashMap
+     * load map from properties file. if defaultMap is null, new a LinkedHashMap
      * 
      * @param filePath filePath
      * @param defaultMap
