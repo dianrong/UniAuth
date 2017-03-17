@@ -19,17 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
-public class ApiCallerLoader implements LoadCredential<ApiCtlPermission>{
-    
-//    @Autowired
-//    private ServerPermissionCacher serverPermissionCacher;
-    
+public class ApiCallerLoader implements LoadCredential<ApiCtlPermission> {
+
+    // @Autowired
+    // private ServerPermissionCacher serverPermissionCacher;
+
     @Autowired
     private ApiCallerService ApiCallerService;
-    
+
     @Autowired
     private ApiPermissionService apiPermissionService;
-    
+
     @Override
     public CallerCredential<ApiCtlPermission> loadCredential(String account, String password) throws LoadCredentialFailedException {
         try {
@@ -39,11 +39,12 @@ public class ApiCallerLoader implements LoadCredential<ApiCtlPermission>{
             }
             // get private permissions
             List<ApiPermissionDto> privatePermissions = apiPermissionService.searchPrivatePermissions(apiCallerInfo.getId());
-            
+
             // get public permissions
-//            Set<ApiCtlPermissionItem> publicPermissions = serverPermissionCacher.getPublicPermissions();
+            // Set<ApiCtlPermissionItem> publicPermissions =
+            // serverPermissionCacher.getPublicPermissions();
             Set<ApiCtlPermissionItem> allPermissions = Sets.newHashSet();
-            
+
             // combination private permissions and public permissions
             if (privatePermissions != null && !privatePermissions.isEmpty()) {
                 for (ApiPermissionDto dto : privatePermissions) {
@@ -52,12 +53,12 @@ public class ApiCallerLoader implements LoadCredential<ApiCtlPermission>{
                     allPermissions.add(item);
                 }
             }
-//            for (ApiCtlPermissionItem item : publicPermissions) {
-//                allPermissions.add(item);
-//            }
-            CallerCredential<ApiCtlPermission>  apiCallerCredential = new ApiCaller(apiCallerInfo.getDomainCode(), apiCallerInfo.getDomainName(), allPermissions);
+            // for (ApiCtlPermissionItem item : publicPermissions) {
+            // allPermissions.add(item);
+            // }
+            CallerCredential<ApiCtlPermission> apiCallerCredential = new ApiCaller(apiCallerInfo.getDomainCode(), apiCallerInfo.getDomainName(), allPermissions);
             return apiCallerCredential;
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             log.error("loadCredential failed, account " + account, t);
             throw new LoadCredentialFailedException();
         }

@@ -77,7 +77,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * Created by Arc on 14/1/16.
  */
 @Service
-public class GroupService extends TenancyBasedService{
+public class GroupService extends TenancyBasedService {
     @Autowired
     private GrpMapper grpMapper;
     @Autowired
@@ -101,11 +101,11 @@ public class GroupService extends TenancyBasedService{
     @Autowired
     private TagTypeMapper tagTypeMapper;
 
-    /**.
-	 * 进行组数据过滤的filter
-	 */
-	@Resource(name="groupDataFilter")
-	private DataFilter dataFilter;
+    /**
+     * . 进行组数据过滤的filter
+     */
+    @Resource(name = "groupDataFilter")
+    private DataFilter dataFilter;
 
     @Transactional
     public void moveGroup(Integer sourceGroup, Integer targetGroup) {
@@ -118,11 +118,10 @@ public class GroupService extends TenancyBasedService{
         grpPathMapper.moveTreeStepTwo(moveParam);
     }
 
-    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer roleId, Integer id, List<Integer> groupIds, String name, String code,
-                                         String description, Byte status, Integer tagId, Boolean needTag, Boolean needUser, Boolean needParentId,
-                                         Integer pageNumber, Integer pageSize) {
+    public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer roleId, Integer id, List<Integer> groupIds, String name, String code, String description,
+            Byte status, Integer tagId, Boolean needTag, Boolean needUser, Boolean needParentId, Integer pageNumber, Integer pageSize) {
 
-        if(pageNumber == null || pageSize == null) {
+        if (pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
 
@@ -131,83 +130,83 @@ public class GroupService extends TenancyBasedService{
         grpExample.setPageOffSet(pageNumber * pageSize);
         grpExample.setPageSize(pageSize);
         GrpExample.Criteria criteria = grpExample.createCriteria();
-        if(!StringUtils.isEmpty(name)) {
+        if (!StringUtils.isEmpty(name)) {
             criteria.andNameLike("%" + name + "%");
         }
-        if(!StringUtils.isEmpty(description)) {
+        if (!StringUtils.isEmpty(description)) {
             criteria.andDescriptionLike("%" + description + "%");
         }
-        if(status != null) {
+        if (status != null) {
             criteria.andStatusEqualTo(status);
         }
 
-        if(id != null) {
+        if (id != null) {
             criteria.andIdEqualTo(id);
         }
 
-        if(code != null) {
+        if (code != null) {
             criteria.andCodeEqualTo(code);
         }
-        if(!CollectionUtils.isEmpty(groupIds)) {
+        if (!CollectionUtils.isEmpty(groupIds)) {
             criteria.andIdIn(groupIds);
         }
         criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         // join user table to find group
-        if(userId != null) {
+        if (userId != null) {
             UserGrpExample userGrpExample = new UserGrpExample();
             UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
             userGrpExampleCriteria.andUserIdEqualTo(userId);
-            if(userGroupType != null ) {
+            if (userGroupType != null) {
                 userGrpExampleCriteria.andTypeEqualTo(userGroupType);
             } else {
                 userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_BYTE);
             }
             List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
             List<Integer> grpIds = new ArrayList<>();
-            if(!CollectionUtils.isEmpty(userGrpKeys)) {
+            if (!CollectionUtils.isEmpty(userGrpKeys)) {
                 for (UserGrpKey userGrpKey : userGrpKeys) {
                     grpIds.add(userGrpKey.getGrpId());
                 }
             }
-            if(grpIds.isEmpty()) {
+            if (grpIds.isEmpty()) {
                 return null;
             } else {
                 criteria.andIdIn(grpIds);
             }
         }
-        if(roleId != null) {
-        	// query all groupIds which's roleId equals parameter roleId  
-        	GrpRoleExample grpRoleExample = new GrpRoleExample();
-        	GrpRoleExample.Criteria grpRoleCriteria = grpRoleExample.createCriteria();
-        	grpRoleCriteria.andRoleIdEqualTo(roleId);
-        	List<GrpRoleKey> grpRoles =  grpRoleMapper.selectByExample(grpRoleExample);
+        if (roleId != null) {
+            // query all groupIds which's roleId equals parameter roleId
+            GrpRoleExample grpRoleExample = new GrpRoleExample();
+            GrpRoleExample.Criteria grpRoleCriteria = grpRoleExample.createCriteria();
+            grpRoleCriteria.andRoleIdEqualTo(roleId);
+            List<GrpRoleKey> grpRoles = grpRoleMapper.selectByExample(grpRoleExample);
             if (CollectionUtils.isEmpty(grpRoles)) {
-            	return null;
+                return null;
             }
             List<Integer> rootGrpIds = new ArrayList<Integer>();
             for (GrpRoleKey grpRole : grpRoles) {
-            	rootGrpIds.add(grpRole.getGrpId());
+                rootGrpIds.add(grpRole.getGrpId());
             }
-            
+
             // query all sub groupIds from group table
             GrpPathExample _grpPathCondtion = new GrpPathExample();
             GrpPathExample.Criteria _grpPathCriteria = _grpPathCondtion.createCriteria();
             _grpPathCriteria.andAncestorIn(rootGrpIds);
-        	 List<GrpPath> _grppaths =  grpPathMapper.selectByExample(_grpPathCondtion);
-        	if (CollectionUtils.isEmpty(_grppaths)) {
-        		return null;
-        	}
-        	List<Integer> grpIds = new ArrayList<Integer>();
-        	for (GrpPath _grpPath: _grppaths) {
-        		grpIds.add(_grpPath.getDescendant());
-        	}
+            List<GrpPath> _grppaths = grpPathMapper.selectByExample(_grpPathCondtion);
+            if (CollectionUtils.isEmpty(_grppaths)) {
+                return null;
+            }
+            List<Integer> grpIds = new ArrayList<Integer>();
+            for (GrpPath _grpPath : _grppaths) {
+                grpIds.add(_grpPath.getDescendant());
+            }
             criteria.andIdIn(grpIds);
         }
-        if(tagId != null) {
+        if (tagId != null) {
             GrpTagExample grpTagExample = new GrpTagExample();
             grpTagExample.createCriteria().andTagIdEqualTo(tagId);
-            List<GrpTagKey>  grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-            if(!CollectionUtils.isEmpty(grpTagKeys)) {
+            List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+            if (!CollectionUtils.isEmpty(grpTagKeys)) {
                 List<Integer> grpTagKeysGrpIds = new ArrayList<>();
                 for (GrpTagKey grpTagKey : grpTagKeys) {
                     grpTagKeysGrpIds.add(grpTagKey.getGrpId());
@@ -220,22 +219,22 @@ public class GroupService extends TenancyBasedService{
         int count = grpMapper.countByExample(grpExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Grp> grps = grpMapper.selectByExample(grpExample);
-        if(!CollectionUtils.isEmpty(grps)) {
+        if (!CollectionUtils.isEmpty(grps)) {
             List<GroupDto> groupDtos = new ArrayList<>();
             Map<Integer, GroupDto> groupIdGroupDtoPair = new HashMap<>();
-            for(Grp grp : grps) {
+            for (Grp grp : grps) {
                 GroupDto groupDto = BeanConverter.convert(grp);
                 groupIdGroupDtoPair.put(grp.getId(), groupDto);
                 groupDtos.add(groupDto);
             }
-            if(needUser != null && needUser) {
+            if (needUser != null && needUser) {
                 // 1. query all userIds and index them with grpIds
                 UserGrpExample userGrpExample = new UserGrpExample();
                 userGrpExample.createCriteria().andGrpIdIn(new ArrayList<Integer>(groupIdGroupDtoPair.keySet()));
                 List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
                 Map<Long, List<Integer>> userGrpIdsPair = new HashMap<>();
-                if(!CollectionUtils.isEmpty(userGrpKeys)) {
-                    for(UserGrpKey userGrpKey : userGrpKeys) {
+                if (!CollectionUtils.isEmpty(userGrpKeys)) {
+                    for (UserGrpKey userGrpKey : userGrpKeys) {
                         Integer grpId = userGrpKey.getGrpId();
                         Long grpUserId = userGrpKey.getUserId();
                         List<Integer> grpIds = userGrpIdsPair.get(grpUserId);
@@ -247,15 +246,16 @@ public class GroupService extends TenancyBasedService{
                     }
                     // 2. query all users in the groups
                     UserExample userExample = new UserExample();
-                    userExample.createCriteria().andIdIn(new ArrayList<Long>(userGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+                    userExample.createCriteria().andIdIn(new ArrayList<Long>(userGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+                            .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                     List<User> users = userMapper.selectByExample(userExample);
-                    for(User user : users) {
+                    for (User user : users) {
                         UserDto userDto = BeanConverter.convert(user);
                         List<Integer> grpIds = userGrpIdsPair.get(user.getId());
-                        for(Integer grpId : grpIds) {
+                        for (Integer grpId : grpIds) {
                             GroupDto groupDto = groupIdGroupDtoPair.get(grpId);
                             List<UserDto> userDtoList = groupDto.getUsers();
-                            if(userDtoList == null) {
+                            if (userDtoList == null) {
                                 userDtoList = new ArrayList<>();
                                 groupDto.setUsers(userDtoList);
                             }
@@ -265,18 +265,18 @@ public class GroupService extends TenancyBasedService{
                 }
             }
 
-            if(needTag != null && needTag) {
+            if (needTag != null && needTag) {
                 // 1. query all tagIds and index them with grpIds
                 GrpTagExample grpTagExample = new GrpTagExample();
                 grpTagExample.createCriteria().andGrpIdIn(new ArrayList<Integer>(groupIdGroupDtoPair.keySet()));
                 List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-                if(!CollectionUtils.isEmpty(grpTagKeys)) {
+                if (!CollectionUtils.isEmpty(grpTagKeys)) {
                     Map<Integer, List<Integer>> tagIdGrpIdsPair = new HashMap<>();
-                    for (GrpTagKey grpTagKey:grpTagKeys) {
+                    for (GrpTagKey grpTagKey : grpTagKeys) {
                         Integer grpId = grpTagKey.getGrpId();
                         Integer grpTagId = grpTagKey.getTagId();
                         List<Integer> grpIds = tagIdGrpIdsPair.get(grpTagId);
-                        if(grpIds == null) {
+                        if (grpIds == null) {
                             grpIds = new ArrayList<>();
                             tagIdGrpIdsPair.put(grpTagId, grpIds);
                         }
@@ -284,12 +284,13 @@ public class GroupService extends TenancyBasedService{
                     }
                     // 2. query all tags, convert into dto and index them with tagIds
                     TagExample tagExample = new TagExample();
-                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdGrpIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+                            .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                     List<Tag> tags = tagMapper.selectByExample(tagExample);
-                    if(!CollectionUtils.isEmpty(tags)) {
+                    if (!CollectionUtils.isEmpty(tags)) {
                         Map<Integer, TagDto> tagIdTagDtoPair = new HashMap<>();
                         List<Integer> tagTypeIds = new ArrayList<>();
-                        for(Tag tag:tags) {
+                        for (Tag tag : tags) {
                             tagTypeIds.add(tag.getTagTypeId());
                             tagIdTagDtoPair.put(tag.getId(), BeanConverter.convert(tag));
                         }
@@ -297,21 +298,21 @@ public class GroupService extends TenancyBasedService{
                         TagTypeExample tagTypeExample = new TagTypeExample();
                         tagTypeExample.createCriteria().andIdIn(tagTypeIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
-                        Map<Integer,String> tagTypeIdTagCodePair = new HashMap<>();
-                        for(TagType tagType : tagTypes) {
-                            tagTypeIdTagCodePair.put(tagType.getId(),tagType.getCode());
+                        Map<Integer, String> tagTypeIdTagCodePair = new HashMap<>();
+                        for (TagType tagType : tagTypes) {
+                            tagTypeIdTagCodePair.put(tagType.getId(), tagType.getCode());
                         }
                         Collection<TagDto> tagDtos = tagIdTagDtoPair.values();
-                        for(TagDto tagDto : tagDtos) {
-                            //4. construct tagtype info into tagDto
+                        for (TagDto tagDto : tagDtos) {
+                            // 4. construct tagtype info into tagDto
                             String tagTypeCode = tagTypeIdTagCodePair.get(tagDto.getTagTypeId());
                             tagDto.setTagTypeCode(tagTypeCode);
-                            //5. construct tagDto into groupDto
+                            // 5. construct tagDto into groupDto
                             List<Integer> grpIds = tagIdGrpIdsPair.get(tagDto.getId());
-                            for(Integer grpId : grpIds) {
+                            for (Integer grpId : grpIds) {
                                 GroupDto groupDto = groupIdGroupDtoPair.get(grpId);
                                 List<TagDto> tagDtoList = groupDto.getTags();
-                                if(tagDtoList == null) {
+                                if (tagDtoList == null) {
                                     tagDtoList = new ArrayList<>();
                                     groupDto.setTags(tagDtoList);
                                 }
@@ -321,18 +322,18 @@ public class GroupService extends TenancyBasedService{
                     }
                 }
             }
-            if(needParentId != null && needParentId) {
+            if (needParentId != null && needParentId) {
                 GrpPathExample grpPathExample = new GrpPathExample();
                 grpPathExample.createCriteria().andDescendantIn(new ArrayList<>(groupIdGroupDtoPair.keySet())).andDeepthEqualTo(AppConstants.ONE_BYTE);
                 List<GrpPath> grpPaths = grpPathMapper.selectByExample(grpPathExample);
-                if(!CollectionUtils.isEmpty(grpPaths)) {
-                    for(GrpPath grpPath : grpPaths) {
+                if (!CollectionUtils.isEmpty(grpPaths)) {
+                    for (GrpPath grpPath : grpPaths) {
                         GroupDto groupDto = groupIdGroupDtoPair.get(grpPath.getDescendant());
                         groupDto.setParentId(grpPath.getAncestor());
                     }
                 }
             }
-            return new PageDto<>(pageNumber,pageSize,count,groupDtos);
+            return new PageDto<>(pageNumber, pageSize, count, groupDtos);
         } else {
             return null;
         }
@@ -343,15 +344,15 @@ public class GroupService extends TenancyBasedService{
     public GroupDto createDescendantGroup(GroupParam groupParam) {
         Integer targetGroupId = groupParam.getTargetGroupId();
         String groupCode = groupParam.getCode();
-        if(targetGroupId == null || groupCode == null) {
+        if (targetGroupId == null || groupCode == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "targetGroupId, groupCode"));
         }
-        
-        //父group需要存在
+
+        // 父group需要存在
         dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, targetGroupId);
-        //子group不能存在
-        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, groupCode );
-        
+        // 子group不能存在
+        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, groupCode);
+
         Grp grp = BeanConverter.convert(groupParam);
         Date now = new Date();
         grp.setStatus(AppConstants.STATUS_ENABLED);
@@ -365,7 +366,7 @@ public class GroupService extends TenancyBasedService{
         grpPath.setAncestor(targetGroupId);
         grpPathMapper.insertNewNode(grpPath);
         Integer count = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());
-        if(count !=null && count > 1) {
+        if (count != null && count > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.name", grp.getName()));
         }
         return BeanConverter.convert(grp);
@@ -373,35 +374,35 @@ public class GroupService extends TenancyBasedService{
 
     @Transactional
     public GroupDto updateGroup(Integer groupId, String groupCode, String groupName, Byte status, String description) {
-    	CheckEmpty.checkEmpty(groupId, "groupId");
+        CheckEmpty.checkEmpty(groupId, "groupId");
         Grp grp = grpMapper.selectByPrimaryKey(groupId);
         CheckEmpty.checkEmpty(groupCode, "groupCode");
-        if(status != null) {
+        if (status != null) {
             ParamCheck.checkStatus(status);
-        } 
-        if(grp == null) {
+        }
+        if (grp == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
         }
-        
+
         // 根组不能进行修改，修改只能走数据库修改
         if (AppConstants.GRP_ROOT.equals(grp.getCode())) {
-        	throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.rootgrp.unmodifiable"));
+            throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.rootgrp.unmodifiable"));
         }
-        
-        //启用或者启用状态的修改
-        if((status != null && status == AppConstants.STATUS_ENABLED) || (status == null && grp.getStatus() == AppConstants.STATUS_ENABLED)){
-	        //判断是否存在重复的code
-	        dataFilter.updateFieldCheck(groupId, FieldType.FIELD_TYPE_CODE, groupCode);
+
+        // 启用或者启用状态的修改
+        if ((status != null && status == AppConstants.STATUS_ENABLED) || (status == null && grp.getStatus() == AppConstants.STATUS_ENABLED)) {
+            // 判断是否存在重复的code
+            dataFilter.updateFieldCheck(groupId, FieldType.FIELD_TYPE_CODE, groupCode);
         }
-        
+
         grp.setName(groupName);
         grp.setStatus(status);
         grp.setDescription(description);
         grp.setCode(groupCode);
         grp.setLastUpdate(new Date());
         grpMapper.updateByPrimaryKeySelective(grp);
-        Integer count  = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());
-        if(count !=null && count > 1) {
+        Integer count = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());
+        if (count != null && count > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.name", grp.getName()));
         }
         return BeanConverter.convert(grp);
@@ -409,12 +410,12 @@ public class GroupService extends TenancyBasedService{
 
     @Transactional
     public void addUsersIntoGroup(Integer groupId, List<Long> userIds, Boolean normalMember) {
-        if(groupId == null || CollectionUtils.isEmpty(userIds)) {
+        if (groupId == null || CollectionUtils.isEmpty(userIds)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
         }
         UserGrpExample userGrpExample = new UserGrpExample();
         List<UserGrpKey> userGrpKeys;
-        if(normalMember == null || normalMember) {
+        if (normalMember == null || normalMember) {
             userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(AppConstants.ZERO_BYTE);
             userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         } else {
@@ -422,20 +423,20 @@ public class GroupService extends TenancyBasedService{
             userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         }
         Set<Long> userIdSet = new HashSet<>();
-        if(!CollectionUtils.isEmpty(userGrpKeys)) {
+        if (!CollectionUtils.isEmpty(userGrpKeys)) {
             for (UserGrpKey userGrpKey : userGrpKeys) {
                 userIdSet.add(userGrpKey.getUserId());
             }
         }
-        for(Long userId : userIds) {
-            if(!userIdSet.contains(userId)) {
+        for (Long userId : userIds) {
+            if (!userIdSet.contains(userId)) {
                 UserGrp userGrp = new UserGrp();
                 userGrp.setGrpId(groupId);
                 userGrp.setUserId(userId);
-                if(normalMember == null || normalMember) {
-                    userGrp.setType((byte)0);
+                if (normalMember == null || normalMember) {
+                    userGrp.setType((byte) 0);
                 } else {
-                    userGrp.setType((byte)1);
+                    userGrp.setType((byte) 1);
                 }
                 userGrpMapper.insert(userGrp);
             }
@@ -443,18 +444,18 @@ public class GroupService extends TenancyBasedService{
     }
 
     @Transactional
-    public void removeUsersFromGroup(List<Linkage<Long, Integer>> userIdGrpIdPairs , Boolean normalMember) {
+    public void removeUsersFromGroup(List<Linkage<Long, Integer>> userIdGrpIdPairs, Boolean normalMember) {
 
-        if(CollectionUtils.isEmpty(userIdGrpIdPairs)) {
+        if (CollectionUtils.isEmpty(userIdGrpIdPairs)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
         }
 
-        for(Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
+        for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
             Long userId = linkage.getEntry1();
             Integer grpId = linkage.getEntry2();
             UserGrpExample userGrpExample = new UserGrpExample();
             userGrpExample.createCriteria().andGrpIdEqualTo(grpId).andUserIdEqualTo(userId);
-            if(normalMember == null || normalMember) {
+            if (normalMember == null || normalMember) {
                 userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ZERO_BYTE_PRIMITIVE);
             } else {
                 userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_BYTE_PRIMITIVE);
@@ -466,20 +467,20 @@ public class GroupService extends TenancyBasedService{
 
     @Transactional
     public void saveRolesToGroup(Integer groupId, List<Integer> roleIds) {
-        if(groupId == null || CollectionUtils.isEmpty(roleIds)) {
+        if (groupId == null || CollectionUtils.isEmpty(roleIds)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, roleIds"));
         }
         GrpRoleExample grpRoleExample = new GrpRoleExample();
         grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
         List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
         Set<Integer> roleIdSet = new TreeSet<>();
-        if(!CollectionUtils.isEmpty(grpRoleKeys)) {
-            for(GrpRoleKey grpRoleKey : grpRoleKeys) {
+        if (!CollectionUtils.isEmpty(grpRoleKeys)) {
+            for (GrpRoleKey grpRoleKey : grpRoleKeys) {
                 roleIdSet.add(grpRoleKey.getRoleId());
             }
         }
-        for(Integer roleId : roleIds) {
-            if(!roleIdSet.contains(roleId)) {
+        for (Integer roleId : roleIds) {
+            if (!roleIdSet.contains(roleId)) {
                 GrpRoleKey grpRoleKey = new GrpRoleKey();
                 grpRoleKey.setGrpId(groupId);
                 grpRoleKey.setRoleId(roleId);
@@ -489,32 +490,32 @@ public class GroupService extends TenancyBasedService{
     }
 
     public List<RoleDto> getAllRolesToGroupAndDomain(Integer groupId, Integer domainId) {
-        if(groupId == null || domainId == null) {
+        if (groupId == null || domainId == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, domainId"));
         }
-        if(grpMapper.selectByPrimaryKey(groupId) == null) {
+        if (grpMapper.selectByPrimaryKey(groupId) == null) {
             return null;
         }
         GrpRoleExample grpRoleExample = new GrpRoleExample();
         grpRoleExample.createCriteria().andGrpIdEqualTo(groupId);
         List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
         Set<Integer> checkedRoleIds = new HashSet<>();
-        if(!CollectionUtils.isEmpty(grpRoleKeys)) {
-            for(GrpRoleKey grpRoleKey : grpRoleKeys) {
+        if (!CollectionUtils.isEmpty(grpRoleKeys)) {
+            for (GrpRoleKey grpRoleKey : grpRoleKeys) {
                 checkedRoleIds.add(grpRoleKey.getRoleId());
             }
         }
         RoleExample roleExample = new RoleExample();
         roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Role> roles = roleMapper.selectByExample(roleExample);
-        if(!CollectionUtils.isEmpty(roles)) {
+        if (!CollectionUtils.isEmpty(roles)) {
             List<RoleDto> roleDtos = new ArrayList<>();
-            for(Role role : roles) {
-                if(role.getStatus().equals(AppConstants.ONE_BYTE)) {
+            for (Role role : roles) {
+                if (role.getStatus().equals(AppConstants.ONE_BYTE)) {
                     continue;
                 }
                 RoleDto roleDto = BeanConverter.convert(role);
-                if(checkedRoleIds.contains(roleDto.getId())) {
+                if (checkedRoleIds.contains(roleDto.getId())) {
                     roleDto.setChecked(Boolean.TRUE);
                 } else {
                     roleDto.setChecked(Boolean.FALSE);
@@ -529,10 +530,10 @@ public class GroupService extends TenancyBasedService{
 
     public List<UserDto> getGroupOwners(Integer groupId) {
         List<User> users = userMapper.getGroupOwners(groupId);
-        if(!CollectionUtils.isEmpty(users)) {
+        if (!CollectionUtils.isEmpty(users)) {
             List<UserDto> userDtos = new ArrayList<>();
-            for(User user : users) {
-                if(user.getStatus().equals(AppConstants.ONE_BYTE)) {
+            for (User user : users) {
+                if (user.getStatus().equals(AppConstants.ONE_BYTE)) {
                     continue;
                 }
                 UserDto userDto = BeanConverter.convert(user);
@@ -544,29 +545,30 @@ public class GroupService extends TenancyBasedService{
         }
     }
 
-    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId,
-                                 Integer tagId, Boolean needOwnerMarkup, Long ownerId, Boolean includeDisableUser) {
+    public GroupDto getGroupTree(Integer groupId, String groupCode, Boolean onlyShowGroup, Byte userGroupType, Integer roleId, Integer tagId, Boolean needOwnerMarkup, Long ownerId,
+            Boolean includeDisableUser) {
         Grp rootGrp;
-        if(groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
+        if (groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
             GrpExample grpExample = new GrpExample();
-            grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+            grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+                    .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
             rootGrp = grpMapper.selectByExample(grpExample).get(0);
-        } else if(groupCode != null && groupId != null) {
+        } else if (groupCode != null && groupId != null) {
             GrpExample grpExample = new GrpExample();
             grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
             List<Grp> grps = grpMapper.selectByExample(grpExample);
             Grp grp = grpMapper.selectByPrimaryKey(groupId);
-            if(grp == null) {
+            if (grp == null) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
             }
             if (CollectionUtils.isEmpty(grps)) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.code.notfound", groupCode, Grp.class.getSimpleName()));
             }
-            if(!grp.getId().equals(grps.get(0).getId())) {
+            if (!grp.getId().equals(grps.get(0).getId())) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.code.id.dif", groupCode, groupId));
             }
             rootGrp = grp;
-        } else if(groupCode != null && groupId == null) {
+        } else if (groupCode != null && groupId == null) {
             GrpExample grpExample = new GrpExample();
             grpExample.createCriteria().andCodeEqualTo(groupCode).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
             List<Grp> grps = grpMapper.selectByExample(grpExample);
@@ -575,30 +577,29 @@ public class GroupService extends TenancyBasedService{
             }
             rootGrp = grps.get(0);
         } else {
-            //else if(groupCode == null && groupId != null)
+            // else if(groupCode == null && groupId != null)
             rootGrp = grpMapper.selectByPrimaryKey(groupId);
-            if(rootGrp == null || !AppConstants.ZERO_BYTE.equals(rootGrp.getStatus())) {
+            if (rootGrp == null || !AppConstants.ZERO_BYTE.equals(rootGrp.getStatus())) {
                 throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
             }
         }
         Integer realGroupId = rootGrp.getId();
         List<Grp> grps = grpMapper.getGroupTree(realGroupId);
-        if(!CollectionUtils.isEmpty(grps)) {
+        if (!CollectionUtils.isEmpty(grps)) {
             Set<Integer> ownGrpIds = null;
-            if(needOwnerMarkup != null && needOwnerMarkup && ownerId != null) {
+            if (needOwnerMarkup != null && needOwnerMarkup && ownerId != null) {
                 ownGrpIds = grpMapper.getOwnGrpIds(ownerId);
             }
-            List<HashMap<String,Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
+            List<HashMap<String, Integer>> descendantAncestorPairs = grpMapper.getGroupTreeLinks(realGroupId);
             Map<Integer, GroupDto> idGroupDtoPair = new HashMap<Integer, GroupDto>();
-            for(Grp grp : grps) {
-                GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName())
-                        .setDescription(grp.getDescription());
+            for (Grp grp : grps) {
+                GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode()).setName(grp.getName()).setDescription(grp.getDescription());
                 // mark root group unmodifiable
                 if (AppConstants.GRP_ROOT.equals(groupDto.getCode())) {
-                	groupDto.setIsRootGrp(Boolean.TRUE);
+                    groupDto.setIsRootGrp(Boolean.TRUE);
                 }
-                if(!CollectionUtils.isEmpty(ownGrpIds)) {
-                    if(ownGrpIds.contains(grp.getId())) {
+                if (!CollectionUtils.isEmpty(ownGrpIds)) {
+                    if (ownGrpIds.contains(grp.getId())) {
                         groupDto.setOwnerMarkup(Boolean.TRUE);
                     }
                 }
@@ -606,31 +607,31 @@ public class GroupService extends TenancyBasedService{
             }
 
             // construct the tree
-            if(!CollectionUtils.isEmpty(descendantAncestorPairs)) {
-                for(HashMap<String,Integer> descendantAncestorPair : descendantAncestorPairs) {
+            if (!CollectionUtils.isEmpty(descendantAncestorPairs)) {
+                for (HashMap<String, Integer> descendantAncestorPair : descendantAncestorPairs) {
                     Integer descendantId = descendantAncestorPair.get("descendant");
                     Integer ancestorId = descendantAncestorPair.get("ancestor");
                     GroupDto ancestorDto = idGroupDtoPair.get(ancestorId);
                     GroupDto descendantDto = idGroupDtoPair.get(descendantId);
-                    if(ancestorDto != null) {
+                    if (ancestorDto != null) {
                         List<GroupDto> groupDtos = ancestorDto.getGroups();
                         if (groupDtos == null && descendantDto != null) {
                             groupDtos = new ArrayList<>();
                             ancestorDto.setGroups(groupDtos);
                         }
-                        if(descendantDto != null) {
+                        if (descendantDto != null) {
                             groupDtos.add(descendantDto);
                         }
                     }
                 }
             }
 
-            if(roleId != null) {
-                //role checked on group
+            if (roleId != null) {
+                // role checked on group
                 GrpRoleExample grpRoleExample = new GrpRoleExample();
                 grpRoleExample.createCriteria().andRoleIdEqualTo(roleId).andGrpIdIn(new ArrayList<Integer>(idGroupDtoPair.keySet()));
                 List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
-                if(!CollectionUtils.isEmpty(grpRoleKeys)) {
+                if (!CollectionUtils.isEmpty(grpRoleKeys)) {
                     for (GrpRoleKey grpRoleKey : grpRoleKeys) {
                         Integer checkedGroupId = grpRoleKey.getGrpId();
                         idGroupDtoPair.get(checkedGroupId).setRoleChecked(Boolean.TRUE);
@@ -638,11 +639,11 @@ public class GroupService extends TenancyBasedService{
                 }
             }
 
-            if(tagId != null) {
+            if (tagId != null) {
                 GrpTagExample grpTagExample = new GrpTagExample();
                 grpTagExample.createCriteria().andTagIdEqualTo(tagId).andGrpIdIn(new ArrayList<Integer>(idGroupDtoPair.keySet()));
                 List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-                if(!CollectionUtils.isEmpty(grpTagKeys)) {
+                if (!CollectionUtils.isEmpty(grpTagKeys)) {
                     for (GrpTagKey grpTagKey : grpTagKeys) {
                         Integer checkedGroupId = grpTagKey.getGrpId();
                         idGroupDtoPair.get(checkedGroupId).setTagChecked(Boolean.TRUE);
@@ -650,7 +651,7 @@ public class GroupService extends TenancyBasedService{
                 }
             }
 
-            if(onlyShowGroup != null && !onlyShowGroup) {
+            if (onlyShowGroup != null && !onlyShowGroup) {
                 CheckEmpty.checkEmpty(userGroupType, "user's type in the group");
                 Map<String, Object> groupIdAndUserType = new HashMap<String, Object>();
                 groupIdAndUserType.put("id", realGroupId);
@@ -658,38 +659,38 @@ public class GroupService extends TenancyBasedService{
                 groupIdAndUserType.put("includeDisableUser", includeDisableUser);
                 List<UserExt> userExts = userMapper.getUsersByParentGrpIdByUserType(groupIdAndUserType);
                 // construct the users on the tree
-                if(!CollectionUtils.isEmpty(userExts)) {
-                    //role checked on users
+                if (!CollectionUtils.isEmpty(userExts)) {
+                    // role checked on users
                     Set<Long> userIdsOnRole = null;
-                    if(roleId != null) {
+                    if (roleId != null) {
                         UserRoleExample userRoleExample = new UserRoleExample();
                         userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
                         List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
-                        if(!CollectionUtils.isEmpty(userRoleKeys)) {
+                        if (!CollectionUtils.isEmpty(userRoleKeys)) {
                             userIdsOnRole = new TreeSet<>();
                             for (UserRoleKey userRoleKey : userRoleKeys) {
                                 userIdsOnRole.add(userRoleKey.getUserId());
                             }
                         }
                     }
-                    //tag checked on users
+                    // tag checked on users
                     Set<Long> userIdsOnTag = null;
-                    if(tagId != null) {
+                    if (tagId != null) {
                         UserTagExample userTagExample = new UserTagExample();
                         userTagExample.createCriteria().andTagIdEqualTo(tagId);
                         List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
-                        if(!CollectionUtils.isEmpty(userTagKeys)) {
+                        if (!CollectionUtils.isEmpty(userTagKeys)) {
                             userIdsOnTag = new TreeSet<>();
                             for (UserTagKey userTagKey : userTagKeys) {
                                 userIdsOnTag.add(userTagKey.getUserId());
                             }
                         }
                     }
-                    for(UserExt userExt : userExts) {
+                    for (UserExt userExt : userExts) {
                         UserDto userDto = new UserDto().setEmail(userExt.getEmail()).setId(userExt.getId()).setUserGroupType(userExt.getUserGroupType()).setName(userExt.getName())
                                 .setPhone(userExt.getPhone()).setCreateDate(userExt.getCreateDate()).setStatus(userExt.getStatus());
                         GroupDto groupDto = idGroupDtoPair.get(userExt.getGroupId());
-                        if(groupDto != null) {
+                        if (groupDto != null) {
                             List<UserDto> userDtos = groupDto.getUsers();
                             if (userDtos == null) {
                                 userDtos = new ArrayList<>();
@@ -699,7 +700,7 @@ public class GroupService extends TenancyBasedService{
                             if (userIdsOnRole != null && userIdsOnRole.contains(userDto.getId())) {
                                 userDto.setRoleChecked(Boolean.TRUE);
                             }
-                            if(userIdsOnTag != null && userIdsOnTag.contains(userDto.getId())) {
+                            if (userIdsOnTag != null && userIdsOnTag.contains(userDto.getId())) {
                                 userDto.setTagChecked(Boolean.TRUE);
                             }
                         }
@@ -712,12 +713,12 @@ public class GroupService extends TenancyBasedService{
             return null;
         }
     }
-    
-    public void checkOwner(Long opUserId, List<Integer> targetGroupIds) {
-		CheckEmpty.checkEmpty(opUserId, "当前用户");
-		CheckEmpty.checkEmpty(targetGroupIds, "添加的目标组(s)");
 
-        for(Integer targetGroupId : targetGroupIds) {
+    public void checkOwner(Long opUserId, List<Integer> targetGroupIds) {
+        CheckEmpty.checkEmpty(opUserId, "当前用户");
+        CheckEmpty.checkEmpty(targetGroupIds, "添加的目标组(s)");
+
+        for (Integer targetGroupId : targetGroupIds) {
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("userId", opUserId);
             paramMap.put("targetGroupId", targetGroupId);
@@ -734,13 +735,13 @@ public class GroupService extends TenancyBasedService{
 
         CheckEmpty.checkEmpty(grpId, "grpId");
         CheckEmpty.checkEmpty(domainId, "domainId");
-        //step 1. get roleIds in the specific domain.
+        // step 1. get roleIds in the specific domain.
         RoleExample roleExample = new RoleExample();
         roleExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Role> roles = roleMapper.selectByExample(roleExample);
         List<Integer> roleIdsInDomain = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(roles)) {
-            for(Role role:roles) {
+        if (!CollectionUtils.isEmpty(roles)) {
+            for (Role role : roles) {
                 roleIdsInDomain.add(role.getId());
             }
         }
@@ -751,56 +752,56 @@ public class GroupService extends TenancyBasedService{
         GrpRoleExample.Criteria criteria = grpRoleExample.createCriteria();
         criteria.andGrpIdEqualTo(grpId).andRoleIdIn(roleIdsInDomain);
         // no roleIds means delete all the links of the role to group under the domain
-        if(CollectionUtils.isEmpty(roleIds)) {
+        if (CollectionUtils.isEmpty(roleIds)) {
             grpRoleMapper.deleteByExample(grpRoleExample);
             return;
         }
         // if the input roleIds is not under the domain, then it is an invalid call
-        if(!roleIdsInDomain.containsAll(roleIds)){
+        if (!roleIdsInDomain.containsAll(roleIds)) {
             throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.ids.invalid", roleIds));
         }
 
         // step 2. get the roleIds in the specific domain and linked to group
         List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
-        if(!CollectionUtils.isEmpty(grpRoleKeys)) {
+        if (!CollectionUtils.isEmpty(grpRoleKeys)) {
             ArrayList<Integer> dbRoleIds = new ArrayList<>();
-            for(GrpRoleKey grpRoleKey : grpRoleKeys) {
+            for (GrpRoleKey grpRoleKey : grpRoleKeys) {
                 dbRoleIds.add(grpRoleKey.getRoleId());
             }
             @SuppressWarnings("unchecked")
-            ArrayList<Integer> intersections = ((ArrayList<Integer>)dbRoleIds.clone());
-            //step 3. get the intersection of param roleIds and dbRoleIds.
+            ArrayList<Integer> intersections = ((ArrayList<Integer>) dbRoleIds.clone());
+            // step 3. get the intersection of param roleIds and dbRoleIds.
             intersections.retainAll(roleIds);
             List<Integer> roleIdsNeedAddToDB = new ArrayList<>();
             List<Integer> roleIdsNeedDeleteFromDB = new ArrayList<>();
-            //step 4. get the roleIds need to add
-            for(Integer roleId : roleIds) {
-                if(!intersections.contains(roleId)) {
+            // step 4. get the roleIds need to add
+            for (Integer roleId : roleIds) {
+                if (!intersections.contains(roleId)) {
                     roleIdsNeedAddToDB.add(roleId);
                 }
             }
-            //step 5. get the roleIds need to delete
-            for(Integer dbRoleId : dbRoleIds) {
-                if(!intersections.contains(dbRoleId)) {
+            // step 5. get the roleIds need to delete
+            for (Integer dbRoleId : dbRoleIds) {
+                if (!intersections.contains(dbRoleId)) {
                     roleIdsNeedDeleteFromDB.add(dbRoleId);
                 }
             }
-            //step 6. add and delete them.
-            if(!CollectionUtils.isEmpty(roleIdsNeedAddToDB)) {
-                for(Integer roleIdNeedAddToDB : roleIdsNeedAddToDB) {
+            // step 6. add and delete them.
+            if (!CollectionUtils.isEmpty(roleIdsNeedAddToDB)) {
+                for (Integer roleIdNeedAddToDB : roleIdsNeedAddToDB) {
                     GrpRoleKey grpRoleKey = new GrpRoleKey();
                     grpRoleKey.setRoleId(roleIdNeedAddToDB);
                     grpRoleKey.setGrpId(grpId);
                     grpRoleMapper.insert(grpRoleKey);
                 }
             }
-            if(!CollectionUtils.isEmpty(roleIdsNeedDeleteFromDB)) {
+            if (!CollectionUtils.isEmpty(roleIdsNeedDeleteFromDB)) {
                 GrpRoleExample grpRoleDeleteExample = new GrpRoleExample();
                 grpRoleDeleteExample.createCriteria().andGrpIdEqualTo(grpId).andRoleIdIn(roleIdsNeedDeleteFromDB);
                 grpRoleMapper.deleteByExample(grpRoleDeleteExample);
             }
         } else {
-            for(Integer roleId : roleIds) {
+            for (Integer roleId : roleIds) {
                 GrpRoleKey grpRoleKey = new GrpRoleKey();
                 grpRoleKey.setRoleId(roleId);
                 grpRoleKey.setGrpId(grpId);
@@ -808,144 +809,147 @@ public class GroupService extends TenancyBasedService{
             }
         }
     }
-    
-	    
-	    /**.
-	     * 获取所有的tags，并且根据groupId打上对应的checked标签
-	     * @param groupId 组id
-	     * @param domainId 域idd
-	     * @return List<TagDto>
-	     */
-	    public List<TagDto> searchTagsWithrChecked(Integer groupId, Integer domainId) {
-	        CheckEmpty.checkEmpty(groupId, "groupId");
-	        CheckEmpty.checkEmpty(domainId, "domainId");
-	        
-	        // 获取tagType信息
-	        TagTypeExample tagTypeExample = new TagTypeExample();
-	        //添加查询条件
-	        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-	        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
-	        if(tagTypes == null || tagTypes.isEmpty()){
-	        	return new ArrayList<TagDto>();
-	        }
-	        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
-	        if(!CollectionUtils.isEmpty(tagTypes)) {
-	            for(TagType tagType : tagTypes) {
-	            	tagTypeIdMap.put(tagType.getId(), tagType);
-	            }
-	        }
-	        
-	        // 查询组和tag的关联关系信息
-	        GrpTagExample grpTagExample = new GrpTagExample();
-	        grpTagExample.createCriteria().andGrpIdEqualTo(groupId);
-	        List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-	        List<TagDto> tagDtos = new ArrayList<TagDto>();
-	        
-	        Set<Integer> tagIdLinkedToGrp = new HashSet<Integer>();
-	        if(!CollectionUtils.isEmpty(grpTagKeys)) {
-	            for(GrpTagKey grpTagKey : grpTagKeys) {
-	            	tagIdLinkedToGrp.add(grpTagKey.getTagId());
-	            }
-	        }
-	        
-	        // 查询tag信息
-	        TagExample tagConditon = new TagExample();
-	        Criteria andStatusEqualTo = tagConditon.createCriteria();
-	        andStatusEqualTo.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-	        
-	        // 加入domainId的限制
-	        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet()));
-	        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
-	        
-	        // 优化
-	        if(allTags == null || allTags.isEmpty()) {
-	        	return new ArrayList<TagDto>();
-	        }
-	        
-	        for(Tag tag : allTags) {
-	            TagDto tagDto = BeanConverter.convert(tag);
-	            if(tagIdLinkedToGrp.contains(tagDto.getId())) {
-	            	tagDto.setTagGrouprChecked(Boolean.TRUE);
-	            }
-	            
-	            if(tagTypeIdMap.get(tagDto.getTagTypeId()) != null) {
-	            	tagDto.setTagTypeCode(tagTypeIdMap.get(tagDto.getTagTypeId()).getCode());
-	            } else {
-	            	tagDto.setTagTypeCode("UNKNOW");
-	            }
-	            tagDtos.add(tagDto);
-	        }
-	        return tagDtos;
-	    }
-	    
-	    @Transactional
-	    public void replaceTagsToGroup(Integer grpId, List<Integer> tagIds) {
-	        CheckEmpty.checkEmpty(grpId, "groupId");
-	        //step 1. delete all relationship
-	        GrpTagExample delCondtion = new GrpTagExample();
-	        delCondtion.createCriteria().andGrpIdEqualTo(grpId);
-	        grpTagMapper.deleteByExample(delCondtion);
-	        
-	        //step2 .batch insert relationship
-	        if(tagIds == null){
-	        	throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "tagIds"));
-	        }
-	        
-	        if(tagIds.isEmpty()) {
-	        	return;
-	        }
-	        
-	        List<GrpTagKey> infoes = new ArrayList<GrpTagKey>();
-	        for(Integer tagId : tagIds){
-	        	infoes.add(new GrpTagKey().setGrpId(grpId).setTagId(tagId));
-	        }
-	        grpTagMapper.bacthInsert(infoes);
-	    }
 
-		public List<Grp> queryGroupByAncestor(Integer id) {
-			return grpMapper.getGroupTree(id);
-		}
-		
-		/**
-		 * check if the user witch's id is userId is in group or in the sub group
-		 * @param userId  can not be null
-		 * @param code  can not be null
-		 * @param includeOwner if group-user owner relationship is include 
-		 * @return true or false
-		 * @throws AppException  the input parameter is null
-		 */
-		public boolean isUserInGroupOrSub(Long userId, String code, Boolean includeOwner) {
-			 CheckEmpty.checkEmpty(userId, "userId");
-			 CheckEmpty.checkEmpty(code, "groupCode");
-			 Map<String, Object> paramMap = new HashMap<String, Object>();
-			 paramMap.put("userId", userId);
-			 paramMap.put("includeOwner", includeOwner);
-			 paramMap.put("code", code);
-			 paramMap.put("tenancyId", tenancyService.getTenancyIdWithCheck());
-			 Integer count = grpMapper.getUserIdInGroupOrSub(paramMap);
-			 if (count != null && count > 0) {
-				 return true;
-			 }
-			 return false;
-		}
-		
-		/**
-		 *  根据用户id查询关联的组的信息集合
-		 * @param userId 用户id 不能为空
-		 * @param includeOwner 是否包含owner的从属关系(默认为false)
-		 * @param includeIndirectAncestors 是否查询非直属的关系
-		 * @return 符合条件的组信息列表
-		 */
-		public List<GroupDto> listGroupsRelateToUser(Long userId, Boolean includeOwner, Boolean includeIndirectAncestors) {
-		    CheckEmpty.checkEmpty(userId, "userId");
-		    Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("userId", userId);
-            paramMap.put("includeOwner", includeOwner);
-            paramMap.put("includeIndirectAncestors", includeIndirectAncestors);
-            List<GroupDto> groupList = grpMapper.listGroupsRelateToUser(paramMap);
-            if (groupList != null) {
-                return groupList;
+
+    /**
+     * . 获取所有的tags，并且根据groupId打上对应的checked标签
+     * 
+     * @param groupId 组id
+     * @param domainId 域idd
+     * @return List<TagDto>
+     */
+    public List<TagDto> searchTagsWithrChecked(Integer groupId, Integer domainId) {
+        CheckEmpty.checkEmpty(groupId, "groupId");
+        CheckEmpty.checkEmpty(domainId, "domainId");
+
+        // 获取tagType信息
+        TagTypeExample tagTypeExample = new TagTypeExample();
+        // 添加查询条件
+        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+        if (tagTypes == null || tagTypes.isEmpty()) {
+            return new ArrayList<TagDto>();
+        }
+        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+        if (!CollectionUtils.isEmpty(tagTypes)) {
+            for (TagType tagType : tagTypes) {
+                tagTypeIdMap.put(tagType.getId(), tagType);
             }
-            return Collections.emptyList();
-		}
+        }
+
+        // 查询组和tag的关联关系信息
+        GrpTagExample grpTagExample = new GrpTagExample();
+        grpTagExample.createCriteria().andGrpIdEqualTo(groupId);
+        List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+        List<TagDto> tagDtos = new ArrayList<TagDto>();
+
+        Set<Integer> tagIdLinkedToGrp = new HashSet<Integer>();
+        if (!CollectionUtils.isEmpty(grpTagKeys)) {
+            for (GrpTagKey grpTagKey : grpTagKeys) {
+                tagIdLinkedToGrp.add(grpTagKey.getTagId());
+            }
+        }
+
+        // 查询tag信息
+        TagExample tagConditon = new TagExample();
+        Criteria andStatusEqualTo = tagConditon.createCriteria();
+        andStatusEqualTo.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+
+        // 加入domainId的限制
+        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet()));
+        List<Tag> allTags = tagMapper.selectByExample(tagConditon);
+
+        // 优化
+        if (allTags == null || allTags.isEmpty()) {
+            return new ArrayList<TagDto>();
+        }
+
+        for (Tag tag : allTags) {
+            TagDto tagDto = BeanConverter.convert(tag);
+            if (tagIdLinkedToGrp.contains(tagDto.getId())) {
+                tagDto.setTagGrouprChecked(Boolean.TRUE);
+            }
+
+            if (tagTypeIdMap.get(tagDto.getTagTypeId()) != null) {
+                tagDto.setTagTypeCode(tagTypeIdMap.get(tagDto.getTagTypeId()).getCode());
+            } else {
+                tagDto.setTagTypeCode("UNKNOW");
+            }
+            tagDtos.add(tagDto);
+        }
+        return tagDtos;
+    }
+
+    @Transactional
+    public void replaceTagsToGroup(Integer grpId, List<Integer> tagIds) {
+        CheckEmpty.checkEmpty(grpId, "groupId");
+        // step 1. delete all relationship
+        GrpTagExample delCondtion = new GrpTagExample();
+        delCondtion.createCriteria().andGrpIdEqualTo(grpId);
+        grpTagMapper.deleteByExample(delCondtion);
+
+        // step2 .batch insert relationship
+        if (tagIds == null) {
+            throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", "tagIds"));
+        }
+
+        if (tagIds.isEmpty()) {
+            return;
+        }
+
+        List<GrpTagKey> infoes = new ArrayList<GrpTagKey>();
+        for (Integer tagId : tagIds) {
+            infoes.add(new GrpTagKey().setGrpId(grpId).setTagId(tagId));
+        }
+        grpTagMapper.bacthInsert(infoes);
+    }
+
+    public List<Grp> queryGroupByAncestor(Integer id) {
+        return grpMapper.getGroupTree(id);
+    }
+
+    /**
+     * check if the user witch's id is userId is in group or in the sub group
+     * 
+     * @param userId can not be null
+     * @param code can not be null
+     * @param includeOwner if group-user owner relationship is include
+     * @return true or false
+     * @throws AppException the input parameter is null
+     */
+    public boolean isUserInGroupOrSub(Long userId, String code, Boolean includeOwner) {
+        CheckEmpty.checkEmpty(userId, "userId");
+        CheckEmpty.checkEmpty(code, "groupCode");
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", userId);
+        paramMap.put("includeOwner", includeOwner);
+        paramMap.put("code", code);
+        paramMap.put("tenancyId", tenancyService.getTenancyIdWithCheck());
+        Integer count = grpMapper.getUserIdInGroupOrSub(paramMap);
+        if (count != null && count > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 根据用户id查询关联的组的信息集合
+     * 
+     * @param userId 用户id 不能为空
+     * @param includeOwner 是否包含owner的从属关系(默认为false)
+     * @param includeIndirectAncestors 是否查询非直属的关系
+     * @return 符合条件的组信息列表
+     */
+    public List<GroupDto> listGroupsRelateToUser(Long userId, Boolean includeOwner, Boolean includeIndirectAncestors) {
+        CheckEmpty.checkEmpty(userId, "userId");
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", userId);
+        paramMap.put("includeOwner", includeOwner);
+        paramMap.put("includeIndirectAncestors", includeIndirectAncestors);
+        List<GroupDto> groupList = grpMapper.listGroupsRelateToUser(paramMap);
+        if (groupList != null) {
+            return groupList;
+        }
+        return Collections.emptyList();
+    }
 }

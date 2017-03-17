@@ -24,8 +24,7 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
     private Map<RequestMatcher, Collection<ConfigAttribute>> originRequestMap;
     private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap;
 
-    public SSExpressionSecurityMetadataSource(
-            LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap,
+    public SSExpressionSecurityMetadataSource(LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap,
             Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap) {
         Assert.notNull(originRequestMap);
         Assert.notNull(configedRequestMap);
@@ -55,7 +54,7 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) {
-        Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap =  new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+        Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
         final HttpServletRequest request = ((FilterInvocation) object).getRequest();
         for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : originRequestMap.entrySet()) {
             if (entry.getKey().matches(request)) {

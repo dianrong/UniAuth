@@ -22,19 +22,18 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
  * Created by Arc on 24/3/2016.
  */
 @Service
-public class AuditService extends TenancyBasedService{
+public class AuditService extends TenancyBasedService {
 
     @Autowired
     private AuditMapper auditMapper;
-    
-    public PageDto<AuditDto> searchAudit(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid,
-                                         String reqUrl, Long reqSequence, String reqClass, String reqMethod, Byte reqSuccess, String reqException,
-                                         Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult, String orderBy, Boolean ascOrDesc,
-                                         Integer pageNumber, Integer pageSize, String requestDomainCode) {
+
+    public PageDto<AuditDto> searchAudit(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid, String reqUrl, Long reqSequence,
+            String reqClass, String reqMethod, Byte reqSuccess, String reqException, Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult, String orderBy,
+            Boolean ascOrDesc, Integer pageNumber, Integer pageSize, String requestDomainCode) {
 
         AuditExample auditExample = new AuditExample();
-        if(orderBy != null) {
-            if(ascOrDesc == null || Boolean.FALSE.equals(ascOrDesc)) {
+        if (orderBy != null) {
+            if (ascOrDesc == null || Boolean.FALSE.equals(ascOrDesc)) {
                 auditExample.setOrderByClause(orderBy + " desc");
             } else {
                 auditExample.setOrderByClause(orderBy + " asc");
@@ -46,87 +45,88 @@ public class AuditService extends TenancyBasedService{
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
 
-        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse, maxReqElapse, reqParam, reqResult, requestDomainCode, auditExample);
+        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse,
+                maxReqElapse, reqParam, reqResult, requestDomainCode, auditExample);
         int count = auditMapper.countByExample(auditExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Audit> audits = auditMapper.selectByExample(auditExample);
-        if(!CollectionUtils.isEmpty(audits)) {
+        if (!CollectionUtils.isEmpty(audits)) {
             List<AuditDto> auditDtos = new ArrayList<>();
-            for(Audit audit : audits) {
+            for (Audit audit : audits) {
                 auditDtos.add(BeanConverter.convert(audit));
             }
-            return new PageDto<>(pageNumber,pageSize,count,auditDtos);
+            return new PageDto<>(pageNumber, pageSize, count, auditDtos);
         } else {
             return null;
         }
     }
 
-    public Integer deleteAudit(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid,
-                            String reqUrl, Long reqSequence, String reqClass, String reqMethod, Byte reqSuccess, String reqException,
-                            Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult, String requestDomainCode){
+    public Integer deleteAudit(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid, String reqUrl, Long reqSequence,
+            String reqClass, String reqMethod, Byte reqSuccess, String reqException, Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult,
+            String requestDomainCode) {
         CheckEmpty.checkEmpty(minRequestDate, "minRequestDate");
         CheckEmpty.checkEmpty(maxRequestDate, "maxRequestDate");
         AuditExample auditExample = new AuditExample();
-        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse, maxReqElapse, reqParam, reqResult, requestDomainCode, auditExample);
+        this.constructExample(userId, minRequestDate, maxRequestDate, domainId, reqIp, reqUuid, reqUrl, reqSequence, reqClass, reqMethod, reqSuccess, reqException, minReqElapse,
+                maxReqElapse, reqParam, reqResult, requestDomainCode, auditExample);
         return auditMapper.deleteByExample(auditExample);
     }
 
-    private void constructExample(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp,
-                                  String reqUuid, String reqUrl, Long reqSequence, String reqClass, String reqMethod,
-                                  Byte reqSuccess, String reqException, Long minReqElapse, Long maxReqElapse, String reqParam,
-                                  String reqResult, String requestDomainCode, AuditExample auditExample) {
+    private void constructExample(Long userId, Date minRequestDate, Date maxRequestDate, Integer domainId, String reqIp, String reqUuid, String reqUrl, Long reqSequence,
+            String reqClass, String reqMethod, Byte reqSuccess, String reqException, Long minReqElapse, Long maxReqElapse, String reqParam, String reqResult,
+            String requestDomainCode, AuditExample auditExample) {
 
         AuditExample.Criteria criteria = auditExample.createCriteria();
-        if(minReqElapse != null) {
+        if (minReqElapse != null) {
             criteria.andReqElapseGreaterThanOrEqualTo(minReqElapse);
         }
-        if(maxReqElapse != null) {
+        if (maxReqElapse != null) {
             criteria.andReqElapseLessThanOrEqualTo(maxReqElapse);
         }
 
-        if(!StringUtils.isEmpty(reqParam)) {
+        if (!StringUtils.isEmpty(reqParam)) {
             criteria.andReqParamLike("%" + reqParam + "%");
         }
-        if(!StringUtils.isEmpty(reqResult)) {
+        if (!StringUtils.isEmpty(reqResult)) {
             criteria.andReqResultLike("%" + reqResult + "%");
         }
-        if(userId != null) {
+        if (userId != null) {
             criteria.andUserIdEqualTo(userId);
         }
-        if(minRequestDate != null) {
+        if (minRequestDate != null) {
             criteria.andReqDateGreaterThanOrEqualTo(minRequestDate);
         }
-        if(maxRequestDate != null) {
+        if (maxRequestDate != null) {
             criteria.andReqDateLessThanOrEqualTo(maxRequestDate);
         }
-        if(domainId != null) {
+        if (domainId != null) {
             criteria.andDomainIdEqualTo(domainId);
         }
-        if(!StringUtils.isEmpty(reqIp)) {
+        if (!StringUtils.isEmpty(reqIp)) {
             criteria.andReqIpEqualTo(reqIp);
         }
-        if(!StringUtils.isEmpty(reqUuid)) {
+        if (!StringUtils.isEmpty(reqUuid)) {
             criteria.andReqUuidEqualTo(reqUuid);
         }
-        if(!StringUtils.isEmpty(reqUrl)) {
+        if (!StringUtils.isEmpty(reqUrl)) {
             criteria.andReqUrlLike("%" + reqUrl + "%");
         }
-        if(reqSequence != null) {
+        if (reqSequence != null) {
             criteria.andReqSeqEqualTo(reqSequence);
         }
-        if(!StringUtils.isEmpty(reqClass)) {
+        if (!StringUtils.isEmpty(reqClass)) {
             criteria.andReqClassEqualTo(reqClass);
         }
-        if(!StringUtils.isEmpty(reqMethod)) {
+        if (!StringUtils.isEmpty(reqMethod)) {
             criteria.andReqMethodEqualTo(reqMethod);
         }
-        if(reqSuccess != null) {
+        if (reqSuccess != null) {
             criteria.andReqSuccessEqualTo(reqSuccess);
         }
-        if(!StringUtils.isEmpty(reqException)) {
+        if (!StringUtils.isEmpty(reqException)) {
             criteria.andReqExpLike("%" + reqException + "%");
         }
-        if(!StringUtils.isEmpty(requestDomainCode)) {
+        if (!StringUtils.isEmpty(requestDomainCode)) {
             criteria.andRequestDomainCodeEqualTo(requestDomainCode);
         }
         criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());

@@ -4,6 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface CustomizedRedirectFormat {
 
-	public Object getRedirectInfo(HttpServletRequest request, String loginUrl);
-	
+    public Object getRedirectInfo(HttpServletRequest request, String loginUrl);
+
 }

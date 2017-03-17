@@ -9,21 +9,22 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 /**
  * 配置uniauth中的filter类型的bean
+ * 
  * @author wanglin
  */
 @Configuration
 @Conditional(UniauthFilterBeanCreateCondtion.class)
 public class UniauthFilterBeanConfig {
-	@Autowired
-	private ConfigureBeanCreator configureBeanCreator;
+    @Autowired
+    private ConfigureBeanCreator configureBeanCreator;
 
-	@Bean(name="singleLogoutFilter")
-	public SingleSignOutFilter getSingleLogoutFilter() {
-		return configureBeanCreator.create(SingleSignOutFilter.class);
-	}
-	
-	@Bean(name="requestSingleLogoutFilter")
-	public LogoutFilter getLogoutFilter() {
-		return configureBeanCreator.create(LogoutFilter.class);
-	}
+    @Bean(name = "singleLogoutFilter")
+    public SingleSignOutFilter getSingleLogoutFilter() {
+        return configureBeanCreator.create(SingleSignOutFilter.class);
+    }
+
+    @Bean(name = "requestSingleLogoutFilter")
+    public LogoutFilter getLogoutFilter() {
+        return configureBeanCreator.create(LogoutFilter.class);
+    }
 }

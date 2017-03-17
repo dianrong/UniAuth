@@ -7,8 +7,8 @@ import java.util.List;
  */
 public class UserQuery extends PageParam {
 
-	private static final long serialVersionUID = -9186367883822216088L;
-	private Long userId;
+    private static final long serialVersionUID = -9186367883822216088L;
+    private Long userId;
     private List<Long> userIds;
     private String name;
     private String phone;
@@ -20,13 +20,13 @@ public class UserQuery extends PageParam {
     private Boolean needDescendantGrpUser;
     // 是否需要被禁用掉的组的user
     private Boolean needDisabledGrpUser;
-    
+
     private Integer roleId;
     private Boolean needTag;
-    
+
     private List<Long> excludeUserIds;
 
-	public Integer getGroupId() {
+    public Integer getGroupId() {
         return groupId;
     }
 
@@ -107,42 +107,43 @@ public class UserQuery extends PageParam {
         return this;
     }
 
-	public Integer getRoleId() {
-		return roleId;
-	}
+    public Integer getRoleId() {
+        return roleId;
+    }
 
-	public UserQuery setRoleId(Integer roleId) {
-		this.roleId = roleId;
-		return this;
-	}
+    public UserQuery setRoleId(Integer roleId) {
+        this.roleId = roleId;
+        return this;
+    }
 
-	public Boolean getNeedDescendantGrpUser() {
-		return needDescendantGrpUser;
-	}
+    public Boolean getNeedDescendantGrpUser() {
+        return needDescendantGrpUser;
+    }
 
-	public void setNeedDescendantGrpUser(Boolean needDescendantGrpUser) {
-		this.needDescendantGrpUser = needDescendantGrpUser;
-	}
+    public void setNeedDescendantGrpUser(Boolean needDescendantGrpUser) {
+        this.needDescendantGrpUser = needDescendantGrpUser;
+    }
 
-	public Boolean getNeedDisabledGrpUser() {
-		return needDisabledGrpUser;
-	}
+    public Boolean getNeedDisabledGrpUser() {
+        return needDisabledGrpUser;
+    }
 
-	public void setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
-		this.needDisabledGrpUser = needDisabledGrpUser;
-	}
+    public void setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
+        this.needDisabledGrpUser = needDisabledGrpUser;
+    }
 
-	public List<Long> getExcludeUserIds() {
-		return excludeUserIds;
-	}
+    public List<Long> getExcludeUserIds() {
+        return excludeUserIds;
+    }
 
-	public void setExcludeUserIds(List<Long> excludeUserIds) {
-		this.excludeUserIds = excludeUserIds;
-	}
+    public void setExcludeUserIds(List<Long> excludeUserIds) {
+        this.excludeUserIds = excludeUserIds;
+    }
 
-  @Override
-  public String toString() {
-    return "UserQuery [userId=" + userId + ", userIds=" + userIds + ", name=" + name + ", phone=" + phone + ", email=" + email + ", status=" + status + ", tagId=" + tagId + ", groupId=" + groupId + ", needDescendantGrpUser=" + needDescendantGrpUser
-        + ", needDisabledGrpUser=" + needDisabledGrpUser + ", roleId=" + roleId + ", needTag=" + needTag + ", excludeUserIds=" + excludeUserIds + "]";
-  }
+    @Override
+    public String toString() {
+        return "UserQuery [userId=" + userId + ", userIds=" + userIds + ", name=" + name + ", phone=" + phone + ", email=" + email + ", status=" + status + ", tagId=" + tagId
+                + ", groupId=" + groupId + ", needDescendantGrpUser=" + needDescendantGrpUser + ", needDisabledGrpUser=" + needDisabledGrpUser + ", roleId=" + roleId + ", needTag="
+                + needTag + ", excludeUserIds=" + excludeUserIds + "]";
+    }
 }

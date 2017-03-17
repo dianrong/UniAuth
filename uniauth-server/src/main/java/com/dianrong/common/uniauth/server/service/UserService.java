@@ -178,7 +178,8 @@ public class UserService extends TenancyBasedService {
     }
 
     @Transactional
-    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId, String name, String phone, String email, String password, String orginPassword, Byte status) {
+    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId, String name, String phone, String email, String password,
+            String orginPassword, Byte status) {
         if (userActionEnum == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
         }
@@ -204,13 +205,13 @@ public class UserService extends TenancyBasedService {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", userIdentity, User.class.getSimpleName()));
         }
         switch (userActionEnum) {
-            case LOCK :
+            case LOCK:
                 user.setFailCount(AppConstants.MAX_AUTH_FAIL_COUNT);
                 break;
-            case UNLOCK :
+            case UNLOCK:
                 user.setFailCount(AppConstants.ZERO_BYTE);
                 break;
-            case RESET_PASSWORD :
+            case RESET_PASSWORD:
                 checkUserPwd(user.getId(), password);
                 byte salt[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
@@ -221,33 +222,33 @@ public class UserService extends TenancyBasedService {
                 // log
                 asynAddUserPwdLog(user);
                 break;
-            case STATUS_CHANGE :
+            case STATUS_CHANGE:
                 // 只处理启用的情况
                 if (status != null && status == AppConstants.STATUS_ENABLED) {
                     this.checkPhoneAndEmail(user.getPhone(), user.getEmail(), user.getId());
                 }
                 user.setStatus(status);
                 break;
-            case UPDATE_INFO :
+            case UPDATE_INFO:
                 this.checkPhoneAndEmail(phone, email, user.getId());
                 user.setName(name);
                 user.setEmail(email);
                 user.setPhone(phone);
                 break;
-            case UPDATE_INFO_BY_ACCOUNT :
+            case UPDATE_INFO_BY_ACCOUNT:
                 user.setName(name);
                 break;
-            case UPDATE_EMAIL_BY_ACCOUNT :
+            case UPDATE_EMAIL_BY_ACCOUNT:
                 this.checkEmail(email, user.getId());
                 user.setEmail(email);
                 break;
-            case UPDATE_PHONE_BY_ACCOUNT :
+            case UPDATE_PHONE_BY_ACCOUNT:
                 this.checkPhone(phone, user.getId());
                 user.setPhone(phone);
                 break;
-            case UPDATE_PASSWORD_BY_ACCOUNT :
+            case UPDATE_PASSWORD_BY_ACCOUNT:
                 // same as case:RESET_PASSWORD_AND_CHECK
-            case RESET_PASSWORD_AND_CHECK :
+            case RESET_PASSWORD_AND_CHECK:
                 // 原始密码验证通过
                 if (orginPassword == null) {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.origin.password.wrong"));
@@ -344,8 +345,8 @@ public class UserService extends TenancyBasedService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds, String name, String phone, String email, Byte status, Integer tagId,
-            Boolean needTag, Integer pageNumber, Integer pageSize) {
+    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds,
+            List<Long> excludeUserIds, String name, String phone, String email, Byte status, Integer tagId, Boolean needTag, Integer pageNumber, Integer pageSize) {
         if (pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
@@ -484,7 +485,8 @@ public class UserService extends TenancyBasedService {
                     // 2. query all tags, convert into dto and index them with
                     // tagIds
                     TagExample tagExample = new TagExample();
-                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdUserIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdUserIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+                            .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                     List<Tag> tags = tagMapper.selectByExample(tagExample);
                     if (!CollectionUtils.isEmpty(tags)) {
                         Map<Integer, TagDto> tagIdTagDtoPair = new HashMap<>();
@@ -529,21 +531,23 @@ public class UserService extends TenancyBasedService {
 
     /**
      * check email and phone, composed by checkEmail and checkPhone
+     * 
      * @param phone phone
      * @param email email
      * @param userId userId
-     * @throws AppException if email or phone is invalid  
+     * @throws AppException if email or phone is invalid
      */
     private void checkPhoneAndEmail(String phone, String email, Long userId) {
         checkEmail(email, userId);
         checkPhone(phone, userId);
     }
-    
+
     /**
      * email can not be null
+     * 
      * @param email email
      * @param userId userId
-     * @throws AppException if email is invalid  
+     * @throws AppException if email is invalid
      */
     private void checkEmail(String email, Long userId) {
         if (email == null) {
@@ -559,12 +563,13 @@ public class UserService extends TenancyBasedService {
             dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL, email);
         }
     }
-    
+
     /**
-     *  phone can be null
+     * phone can be null
+     * 
      * @param phone phone number
      * @param userId userId
-     * @throws AppException if phone is invalid  
+     * @throws AppException if phone is invalid
      */
     private void checkPhone(String phone, Long userId) {
         if (phone != null) {
@@ -576,7 +581,7 @@ public class UserService extends TenancyBasedService {
             }
         }
     }
-    
+
     public UserDto login(LoginParam loginParam) {
         String account = loginParam.getAccount();
         String password = loginParam.getPassword();
@@ -608,7 +613,8 @@ public class UserService extends TenancyBasedService {
             calendar.add(Calendar.MONTH, AppConstants.MAX_PASSWORD_VALID_MONTH);
             Date currentDate = new Date();
             if (currentDate.after(calendar.getTime())) {
-                throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH, UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
+                throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH,
+                        UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
             }
         }
         return BeanConverter.convert(user);
@@ -735,17 +741,18 @@ public class UserService extends TenancyBasedService {
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
     }
-    
+
     /**
-     * get user info by primary id 
-     * @param id  primary id
+     * get user info by primary id
+     * 
+     * @param id primary id
      * @return user or null
      */
     private User getUserByPrimaryKey(Long id) {
         CheckEmpty.checkEmpty(id, "userId");
         User user = userMapper.selectByPrimaryKey(id);
         if (user != null) {
-            // 手动设置tenancyId  important
+            // 手动设置tenancyId important
             CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         }
         return user;
@@ -754,7 +761,7 @@ public class UserService extends TenancyBasedService {
     public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
         String account = loginParam.getAccount();
         CheckEmpty.checkEmpty(account, "账号");
-        User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_ENABLED);
+        User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
     }
@@ -833,8 +840,7 @@ public class UserService extends TenancyBasedService {
     /**
      * 获取角色下面所有的权限
      * 
-     * @param enableRoleIds
-     *            可用的角色id集合
+     * @param enableRoleIds 可用的角色id集合
      * @return roleId与对应的权限集合映射;<br/>
      *         1.如果角色没有任何权限,那么角色的权限是空;<br/>
      *         2.如果没有任何角色,那么返回empty map
@@ -891,15 +897,13 @@ public class UserService extends TenancyBasedService {
         }
         return roleIdPermissionsMap;
     }
+
     /**
      * 将domain数据库实体对象转为dto对象
      * 
-     * @param domainList
-     *            domain的数据库实体对象
-     * @param roleIdPermissionsMap
-     *            角色id/角色的权限集合的映射关系
-     * @param domainRoleMap
-     *            domain id/domain的角色集合的映射关系
+     * @param domainList domain的数据库实体对象
+     * @param roleIdPermissionsMap 角色id/角色的权限集合的映射关系
+     * @param domainRoleMap domain id/domain的角色集合的映射关系
      * @return
      */
     private List<DomainDto> domainBean2DtoList(List<Domain> domainList, Map<Integer, List<Permission>> roleIdPermissionsMap, Map<Integer, List<Role>> domainRoleMap) {
@@ -933,18 +937,14 @@ public class UserService extends TenancyBasedService {
     /**
      * 封装角色的权限数据,最终确定某个role有某个domain的某些permission
      * 
-     * @param roleDto
-     *            角色dto,已经封装了角色名称等基本信息
-     * @param permTypeMap
-     *            权限类型映射数据
-     * @param roleIdPermissionsMap
-     *            角色id/权限集合映射关系，确定一个角色有哪些权限
-     * @param domainId
-     *            domainId用来映射domain的权限数据
-     * @param roleId
-     *            角色id
+     * @param roleDto 角色dto,已经封装了角色名称等基本信息
+     * @param permTypeMap 权限类型映射数据
+     * @param roleIdPermissionsMap 角色id/权限集合映射关系，确定一个角色有哪些权限
+     * @param domainId domainId用来映射domain的权限数据
+     * @param roleId 角色id
      */
-    private void buildRolePermissionDto(RoleDto roleDto, Map<Integer, PermType> permTypeMap, Map<Integer, List<Permission>> roleIdPermissionsMap, Integer domainId, Integer roleId) {
+    private void buildRolePermissionDto(RoleDto roleDto, Map<Integer, PermType> permTypeMap, Map<Integer, List<Permission>> roleIdPermissionsMap, Integer domainId,
+            Integer roleId) {
         List<Permission> permissionList = roleIdPermissionsMap.get(roleId);
         List<Permission> permList = new ArrayList<>();
         if (permissionList != null) {
@@ -985,14 +985,15 @@ public class UserService extends TenancyBasedService {
     public UserDto getSingleUser(UserParam userParam) {
         String email = userParam.getEmail();
         CheckEmpty.checkEmpty(email, "邮件");
-        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false,AppConstants.STATUS_ENABLED);
+        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false, AppConstants.STATUS_ENABLED);
         UserDto userDto = BeanConverter.convert(user);
         setUserExtendVal(userDto);
         return userDto;
     }
 
     /**
-     * rest password and identify by phone number or email 
+     * rest password and identify by phone number or email
+     * 
      * @param userParam
      */
     @Transactional
@@ -1111,10 +1112,12 @@ public class UserService extends TenancyBasedService {
         });
         return 1;
     }
+
     /**
      * 根据帐号获取用户信息，注意判断用户状态
+     * 
      * @param account 帐号唯一编号：邮箱或手机
-     * @param tenancyCode 
+     * @param tenancyCode
      * @param tenancyId
      * @param withPhoneChecked 是否根据手机查询true是，false 否
      * @param status 用户启用禁用状态,null表示任意状态
@@ -1140,27 +1143,27 @@ public class UserService extends TenancyBasedService {
                 map.put("tenancyId", tenancyId.toString());
             }
         }
-        if(status != null) {
+        if (status != null) {
             map.put("status", Integer.toString(status));
         }
         List<User> userList = userMapper.selectByEmailOrPhone(map);
         if (userList == null || userList.isEmpty()) {
             throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
         }
-        
+
         // search enable user
         int enableUserCount = 0;
         User enableUser = null;
-        for (User user: userList) {
-        	if (user.getStatus() == AppConstants.STATUS_ENABLED) {
-        		enableUser = user;
-        		enableUserCount++;
-        	}
+        for (User user : userList) {
+            if (user.getStatus() == AppConstants.STATUS_ENABLED) {
+                enableUser = user;
+                enableUserCount++;
+            }
         }
         if (enableUserCount > 1) {
             throw new AppException(InfoName.LOGIN_ERROR_MULTI_USER_FOUND, UniBundle.getMsg("user.login.multiuser.found"));
         }
-        
+
         User user = enableUser == null ? userList.get(0) : enableUser;
         // 手动设置tenancyId -- important
         CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
@@ -1175,13 +1178,12 @@ public class UserService extends TenancyBasedService {
     /**
      * . 根据email或phone获取用户信息
      * 
-     * @param loginParam
-     *            email或phone
+     * @param loginParam email或phone
      * @return 信息model
      */
     public UserDto getUserByEmailOrPhone(LoginParam loginParam) {
         CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
-        User user = getUserByAccount(loginParam.getAccount(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_ENABLED);
+        User user = getUserByAccount(loginParam.getAccount(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
         UserDto userDto = BeanConverter.convert(user);
         setUserExtendVal(userDto);
         return userDto;
@@ -1190,10 +1192,8 @@ public class UserService extends TenancyBasedService {
     /**
      * . 获取所有的tags，并且根据用户id打上对应的checked标签
      * 
-     * @param userId
-     *            用户id
-     * @param domainId
-     *            域名id
+     * @param userId 用户id
+     * @param domainId 域名id
      * @return List<TagDto>
      */
     public List<TagDto> searchTagsWithUserChecked(Long userId, Integer domainId) {
@@ -1284,10 +1284,8 @@ public class UserService extends TenancyBasedService {
     /**
      * . 检验密码是否符合要求
      * 
-     * @param userId
-     *            userId
-     * @param password
-     *            the new password
+     * @param userId userId
+     * @param password the new password
      */
     private void checkUserPwd(Long userId, String password) {
         CheckEmpty.checkEmpty(userId, "userId");
@@ -1318,8 +1316,7 @@ public class UserService extends TenancyBasedService {
     /**
      * . 异步记录用户的密码设置记录
      * 
-     * @param user
-     *            info
+     * @param user info
      */
     private void asynAddUserPwdLog(final User user) {
         Assert.notNull(user);
@@ -1341,9 +1338,10 @@ public class UserService extends TenancyBasedService {
             }
         });
     }
-    
+
     /**
      * get user list by group code and role names
+     * 
      * @param groupCode groupCode can not be null
      * @param includeSubGrp include sub group or not
      * @param includeRoleIds roleIds can not be null
@@ -1362,7 +1360,7 @@ public class UserService extends TenancyBasedService {
             return Lists.newArrayList();
         }
         List<UserDto> userDtos = Lists.newArrayList();
-        for (User user: users) {
+        for (User user : users) {
             userDtos.add(BeanConverter.convert(user));
         }
         return userDtos;

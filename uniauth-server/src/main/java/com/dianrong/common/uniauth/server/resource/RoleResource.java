@@ -20,58 +20,58 @@ import io.swagger.annotations.Api;
 @Api("角色信息操作接口")
 @RestController
 public class RoleResource implements IRoleRWResource {
-	
-	@Autowired
-	private RoleService roleService;
 
-	@Override
-	public Response<List<RoleCodeDto>> getAllRoleCodes() {
-		List<RoleCodeDto> roleCodeDtos = roleService.getAllRoleCodes();
-		return Response.success(roleCodeDtos);
-	}
+    @Autowired
+    private RoleService roleService;
 
-	@Override
-	public Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam) {
-		List<PermissionDto> permissionDtos = roleService.getAllPermsToRole(roleParam.getDomainId(), roleParam.getId());
-		return Response.success(permissionDtos);
-	}
+    @Override
+    public Response<List<RoleCodeDto>> getAllRoleCodes() {
+        List<RoleCodeDto> roleCodeDtos = roleService.getAllRoleCodes();
+        return Response.success(roleCodeDtos);
+    }
 
-	@Override
-	public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
-		PageDto<RoleDto> roleDtos = roleService.searchRole(roleQuery.getRoleIds(), roleQuery.getId(), roleQuery.getDomainId(),roleQuery.getName(),
-				roleQuery.getRoleCodeId(),roleQuery.getStatus(),roleQuery.getPageNumber(),roleQuery.getPageSize());
-		return Response.success(roleDtos);
-	}
+    @Override
+    public Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam) {
+        List<PermissionDto> permissionDtos = roleService.getAllPermsToRole(roleParam.getDomainId(), roleParam.getId());
+        return Response.success(permissionDtos);
+    }
 
-	@Override
-	public Response<RoleDto> addNewRole(RoleParam roleParam) {
-		RoleDto roleDto = roleService.addNewRole(roleParam.getDomainId(), roleParam.getRoleCodeId(),roleParam.getName(),roleParam.getDescription());
-		return Response.success(roleDto);
-	}
+    @Override
+    public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
+        PageDto<RoleDto> roleDtos = roleService.searchRole(roleQuery.getRoleIds(), roleQuery.getId(), roleQuery.getDomainId(), roleQuery.getName(), roleQuery.getRoleCodeId(),
+                roleQuery.getStatus(), roleQuery.getPageNumber(), roleQuery.getPageSize());
+        return Response.success(roleDtos);
+    }
 
-	@Override
-	public Response<Void> updateRole(RoleParam roleParam) {
-		roleService.updateRole(roleParam.getId(), roleParam.getRoleCodeId(),
-				roleParam.getName(), roleParam.getDescription(), roleParam.getStatus());
-		return Response.success();
-	}
+    @Override
+    public Response<RoleDto> addNewRole(RoleParam roleParam) {
+        RoleDto roleDto = roleService.addNewRole(roleParam.getDomainId(), roleParam.getRoleCodeId(), roleParam.getName(), roleParam.getDescription());
+        return Response.success(roleDto);
+    }
 
-	@Override
-	public Response<Void> replacePermsToRole(RoleParam roleParam) {
-		roleService.replacePermsToRole(roleParam.getId(),roleParam.getPermIds());
-		return Response.success();
-	}
+    @Override
+    public Response<Void> updateRole(RoleParam roleParam) {
+        roleService.updateRole(roleParam.getId(), roleParam.getRoleCodeId(), roleParam.getName(), roleParam.getDescription(), roleParam.getStatus());
+        return Response.success();
+    }
 
-	@Override
-	public Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam) {
-		roleService.replaceGroupsAndUsersToRole(roleParam.getId(),roleParam.getGrpIds(),roleParam.getUserIds(), roleParam.getNeedProcessGoupIds(), roleParam.getNeedProcessUserIds());
-		return Response.success();
-	}
+    @Override
+    public Response<Void> replacePermsToRole(RoleParam roleParam) {
+        roleService.replacePermsToRole(roleParam.getId(), roleParam.getPermIds());
+        return Response.success();
+    }
 
-	@Override
-	public Response<Void> savePermsToRole(RoleParam roleParam) {
-		roleService.savePermsToRole(roleParam.getId(),roleParam.getPermIds());
-		return Response.success();
-	}
+    @Override
+    public Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam) {
+        roleService.replaceGroupsAndUsersToRole(roleParam.getId(), roleParam.getGrpIds(), roleParam.getUserIds(), roleParam.getNeedProcessGoupIds(),
+                roleParam.getNeedProcessUserIds());
+        return Response.success();
+    }
+
+    @Override
+    public Response<Void> savePermsToRole(RoleParam roleParam) {
+        roleService.savePermsToRole(roleParam.getId(), roleParam.getPermIds());
+        return Response.success();
+    }
 
 }

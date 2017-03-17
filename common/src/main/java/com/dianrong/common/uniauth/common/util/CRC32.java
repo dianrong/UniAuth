@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.common.util;
 
-public class CRC32 {  
+public class CRC32 {
     private static final int[] TABLE = {0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e,
             0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7, 0x136c9856,
             0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5, 0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd,
@@ -20,19 +20,20 @@ public class CRC32 {
             0xf862ae69, 0x616bffd3, 0x166ccf45, 0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db, 0xaed16a4a, 0xd9d65adc, 0x40df0b66,
             0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9, 0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf, 0xb3667a2e,
             0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,};
-    
+
     /**
      * CRC32实现
+     * 
      * @param str 编码字符串
      * @return 结果
      */
-    public static int getCRC32(String str){   
-        byte[] bytes = str.getBytes();   
-        int crc = 0xffffffff;   
-        for (byte b : bytes) {   
-        crc = (crc >>>8 ^ TABLE[(crc ^ b) & 0xff]);   
-        }   
-        crc = crc ^ 0xffffffff;   
-        return crc;   
-    }  
+    public static int getCRC32(String str) {
+        byte[] bytes = str.getBytes();
+        int crc = 0xffffffff;
+        for (byte b : bytes) {
+            crc = (crc >>> 8 ^ TABLE[(crc ^ b) & 0xff]);
+        }
+        crc = crc ^ 0xffffffff;
+        return crc;
+    }
 }

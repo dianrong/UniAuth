@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
  * Created by Arc on 12/7/2016.
  */
 @Provider
-// 10 means the provider's priority is very high, log first before every request, log first after every response.
+// 10 means the provider's priority is very high, log first before every request, log first after
+// every response.
 // in jax-rs, If you don't config the priority the default value is 5000.
 @Priority(10)
 @Slf4j
@@ -48,7 +49,8 @@ public class UUIDHeaderClientRequestFilter implements ClientRequestFilter, Clien
         String requestURI = requestContext.getUri().toString();
         String method = requestContext.getMethod();
         Integer httpResponseStatus = responseContext.getStatus();
-        String logstr = "Ending sdk call--- " + method + " -> " + requestURI + " consumed " + consumeTime + "ms " + " httpStatus: " + httpResponseStatus + " UUID: " + uuid + " ---";
+        String logstr =
+                "Ending sdk call--- " + method + " -> " + requestURI + " consumed " + consumeTime + "ms " + " httpStatus: " + httpResponseStatus + " UUID: " + uuid + " ---";
         if (consumeTime > SLOW_CALL_MILLIS) {
             log.warn(logstr);
         } else {

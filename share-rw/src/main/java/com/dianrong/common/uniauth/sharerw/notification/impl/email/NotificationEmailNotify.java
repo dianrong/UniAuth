@@ -66,13 +66,15 @@ public class NotificationEmailNotify implements EmailNotification {
             response = emailClient.send(this.notificationUserKey, arg);
         } catch (Throwable t) {
             log.warn(String.format("failed send email, from %s to %s, the subject is %s, the content is:%s", this.fromEmail, toEmail, subject, notification));
-            throw new SendNotificationFailedException(String.format("failed send email, from %s to %s, the subject is %s, the content is:%s", this.fromEmail, toEmail, subject, notification), t);
+            throw new SendNotificationFailedException(
+                    String.format("failed send email, from %s to %s, the subject is %s, the content is:%s", this.fromEmail, toEmail, subject, notification), t);
         }
         if (response != null && response.isSuccess()) {
             log.info(String.format("success send email, from %s to %s, subject is %s", this.fromEmail, toEmail, subject));
         } else {
             log.warn(String.format("failed send email, from %s to %s, the subject is %s, the content is:%s", this.fromEmail, toEmail, subject, notification));
-            throw new SendNotificationFailedException(String.format("failed send email, from %s to %s, the subject is %s, the content is:%s", this.fromEmail, toEmail, subject, notification));
+            throw new SendNotificationFailedException(
+                    String.format("failed send email, from %s to %s, the subject is %s, the content is:%s", this.fromEmail, toEmail, subject, notification));
         }
     }
 }

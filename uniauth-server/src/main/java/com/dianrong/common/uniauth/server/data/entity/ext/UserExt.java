@@ -13,7 +13,7 @@ public class UserExt {
     private Integer groupId;
     private Byte userGroupType;
     private String phone;
-    private Date createDate; 
+    private Date createDate;
     private Byte status;
 
     public Integer getGroupId() {
@@ -42,6 +42,7 @@ public class UserExt {
         this.email = email;
         return this;
     }
+
     public Byte getUserGroupType() {
         return userGroupType;
     }
@@ -60,14 +61,14 @@ public class UserExt {
         return this;
     }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public UserExt setPhone(String phone) {
-		this.phone = phone;
-		return this;
-	}
+    public UserExt setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
 
     public Date getCreateDate() {
         return createDate;

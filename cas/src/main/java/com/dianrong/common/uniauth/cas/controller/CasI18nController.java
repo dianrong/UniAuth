@@ -25,9 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/i18n")
 @Slf4j
 public class CasI18nController {
-    
-    /**.
-     * 参数
+
+    /**
+     * . 参数
      */
     private final String setLocaleParameterKey = "locale";
 
@@ -56,9 +56,9 @@ public class CasI18nController {
     public void setLocaleLanguage(HttpServletRequest request, HttpServletResponse response) {
         try {
             HttpSession session = request.getSession(false);
-            String newLocaleStr =  request.getParameter(setLocaleParameterKey);
-            if(session != null && newLocaleStr != null) {
-                session.setAttribute(UniauthLocaleChangeInterceptor.SESSION_NAME ,StringUtils.parseLocaleString(newLocaleStr));
+            String newLocaleStr = request.getParameter(setLocaleParameterKey);
+            if (session != null && newLocaleStr != null) {
+                session.setAttribute(UniauthLocaleChangeInterceptor.SESSION_NAME, StringUtils.parseLocaleString(newLocaleStr));
             }
             response.getWriter().write("success");
         } catch (IOException e) {

@@ -2,20 +2,21 @@ package com.dianrong.common.uniauth.common.apicontrol.exp;
 
 /**
  * token is expired
+ * 
  * @author wanglin
  */
-public class TokenExpiredException extends Exception{
+public class TokenExpiredException extends Exception {
     private static final long serialVersionUID = -4557600302758367094L;
 
-    public TokenExpiredException(){
+    public TokenExpiredException() {
         super();
     }
-    
-    public TokenExpiredException(String msg){
+
+    public TokenExpiredException(String msg) {
         super(msg);
     }
-    
-    public TokenExpiredException(String msg, Throwable t){
+
+    public TokenExpiredException(String msg, Throwable t) {
         super(msg, t);
     }
 }

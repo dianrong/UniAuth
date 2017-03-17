@@ -15,6 +15,7 @@ public enum UserActionEnum {
     
     /**
      * check the action is update info by account
+     * 
      * @param action UserActionEnum
      * @return true or false
      */

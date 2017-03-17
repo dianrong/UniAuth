@@ -6,8 +6,8 @@ import java.io.Serializable;
  * Created by Arc on 15/1/16.
  */
 public class RoleCodeDto implements Serializable {
-	private static final long serialVersionUID = -644318011242242347L;
-	private Integer id;
+    private static final long serialVersionUID = -644318011242242347L;
+    private Integer id;
     private String code;
     private String description;
 
@@ -38,8 +38,8 @@ public class RoleCodeDto implements Serializable {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "RoleCodeDto [id=" + id + ", code=" + code + ", description=" + description + "]";
-	}
+    @Override
+    public String toString() {
+        return "RoleCodeDto [id=" + id + ", code=" + code + ", description=" + description + "]";
+    }
 }

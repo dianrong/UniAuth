@@ -16,13 +16,13 @@ import com.dianrong.common.uniauth.server.support.apicontrl.pejudger.PublicPermi
 import com.google.common.collect.Sets;
 
 @Component
-public class ComposedPermissionJudger implements PermissionJudger<ApiCtlPermission, HttpServletRequest>{
-    
+public class ComposedPermissionJudger implements PermissionJudger<ApiCtlPermission, HttpServletRequest> {
+
     @Autowired
     private ServerPermissionCacher serverPermissionCacher;
-    
+
     private Set<PermissionJudger<ApiCtlPermission, HttpServletRequest>> permissionJudgers = Sets.newConcurrentHashSet();;
-    
+
     @Override
     public boolean judge(CallerCredential<ApiCtlPermission> Credential, HttpServletRequest request) {
         for (PermissionJudger<ApiCtlPermission, HttpServletRequest> judger : permissionJudgers) {
@@ -32,15 +32,15 @@ public class ComposedPermissionJudger implements PermissionJudger<ApiCtlPermissi
         }
         return false;
     }
-    
+
     @PostConstruct
     public void init() {
-        this.addJudger(new PublicPermissionJudger(this.serverPermissionCacher))
-        .addJudger(new PrivatePermissionJudger(this.serverPermissionCacher));
+        this.addJudger(new PublicPermissionJudger(this.serverPermissionCacher)).addJudger(new PrivatePermissionJudger(this.serverPermissionCacher));
     }
-    
+
     /**
      * add a new judger
+     * 
      * @param judger new judger
      * @return ComposedPermissionJudger
      */

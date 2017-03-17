@@ -34,7 +34,7 @@ public class RequestIdentityAOPHandler {
             for (int i = args.length - 1; i >= 0; i--) {
                 // 从后到前覆盖
                 Object param = args[i];
-                
+
                 // tenancy identity
                 if (param instanceof TenancyBasedParam) {
                     TenancyBasedParam tp = (TenancyBasedParam) param;
@@ -51,6 +51,6 @@ public class RequestIdentityAOPHandler {
                 }
             }
         }
-       return joinPoint.proceed();
+        return joinPoint.proceed();
     }
 }

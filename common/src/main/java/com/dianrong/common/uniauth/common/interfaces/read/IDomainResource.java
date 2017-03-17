@@ -22,12 +22,12 @@ public interface IDomainResource {
 
     @POST
     @Path("login/alldomains")
-    //scenario: domain drop down list for login
+    // scenario: domain drop down list for login
     Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam);
-    
+
     @POST
     @Path("domaininfo")
-    //scenario: get domain info and it's related stakeholders
+    // scenario: get domain info and it's related stakeholders
     Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam);
 
     @POST

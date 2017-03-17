@@ -131,7 +131,8 @@ public class DomainDto implements Serializable {
 
     @Override
     public String toString() {
-        return "DomainDto [id=" + id + ", code=" + code + ", displayName=" + displayName + ", description=" + description + ", status=" + status + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate + ", roleList=" + roleList + ", stakeholderList=" + stakeholderList + ", zkDomainUrl="
-                + zkDomainUrl + ", zkDomainUrlEncoded=" + zkDomainUrlEncoded + ", isCustomizedLoginPage=" + isCustomizedLoginPage + "]";
+        return "DomainDto [id=" + id + ", code=" + code + ", displayName=" + displayName + ", description=" + description + ", status=" + status + ", createDate=" + createDate
+                + ", lastUpdate=" + lastUpdate + ", roleList=" + roleList + ", stakeholderList=" + stakeholderList + ", zkDomainUrl=" + zkDomainUrl + ", zkDomainUrlEncoded="
+                + zkDomainUrlEncoded + ", isCustomizedLoginPage=" + isCustomizedLoginPage + "]";
     }
 }

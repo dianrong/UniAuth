@@ -93,9 +93,9 @@ public class UserLoginController {
      * @throws IOException
      */
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ApiResponse<String> login(@RequestParam(value = "identity", required = true) String identity,
-            @RequestParam(value = "password", required = true) String password, @RequestParam(value = "tenancyCode", required = true) String tenancyCode,
-            @RequestParam(value = "service", required = false) String service, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ApiResponse<String> login(@RequestParam(value = "identity", required = true) String identity, @RequestParam(value = "password", required = true) String password,
+            @RequestParam(value = "tenancyCode", required = true) String tenancyCode, @RequestParam(value = "service", required = false) String service, HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
         // construct login credential, ignore domain info
         UsernamePasswordCredential credential = new CasUsernamePasswordCredential(identity, password, null, tenancyCode);
         try {
@@ -124,10 +124,12 @@ public class UserLoginController {
             return ApiResponse.failure(codeMessage.code, UniBundleUtil.getMsg(messageSource, codeMessage.messageCode));
         }
     }
-    
+
     /**
-     * 登出. 
-     * <P>如果当前处于登陆状态,则直接登出. 如果不处于登陆状态,则直接忽略</p>
+     * 登出.
+     * <P>
+     * 如果当前处于登陆状态,则直接登出. 如果不处于登陆状态,则直接忽略
+     * </p>
      * 
      * @param request HttpServletRequest
      * @param response HttpServletResponse
@@ -138,9 +140,10 @@ public class UserLoginController {
         loginSupport.casLoginOut(request, response);
         return ApiResponse.success();
     }
-    
+
     /**
      * 生成service ticket(该接口调用必须在用户登陆的状态下)
+     * 
      * @param service 用于生成service ticket的service参数
      * @param request HttpServletRequest
      * @param response HttpServletResponse

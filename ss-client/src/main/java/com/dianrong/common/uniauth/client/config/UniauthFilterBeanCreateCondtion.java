@@ -12,24 +12,24 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  */
 public class UniauthFilterBeanCreateCondtion extends UniauthEnvCondition {
 
-	@Override
-	public ConfigurationPhase getConfigurationPhase() {
-		return ConfigurationPhase.REGISTER_BEAN;
-	}
+    @Override
+    public ConfigurationPhase getConfigurationPhase() {
+        return ConfigurationPhase.REGISTER_BEAN;
+    }
 
-	@Override
-	boolean doMatchesProcess(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
-		// 使用比较笨的方式来增加一种判断机制
-		String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthFilterBeanCreateAutoSign.class, true, true);
-		if (names.length > 0) {
-			return true;
-		}
-		// 自动判断
-		names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthSecurityConfig.class, true, true);
-		if (names.length > 0) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    boolean doMatchesProcess(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+        // 使用比较笨的方式来增加一种判断机制
+        String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthFilterBeanCreateAutoSign.class, true, true);
+        if (names.length > 0) {
+            return true;
+        }
+        // 自动判断
+        names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthSecurityConfig.class, true, true);
+        if (names.length > 0) {
+            return false;
+        }
+        return true;
+    }
 }

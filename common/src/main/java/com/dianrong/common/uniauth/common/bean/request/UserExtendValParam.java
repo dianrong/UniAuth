@@ -26,15 +26,15 @@ public class UserExtendValParam extends PageParam {
 
     @ApiModelProperty("该属性值状态(0:启用,1:禁用)")
     private Byte status;
-    
+
     @ApiModelProperty("对应扩展属性的code")
     private String extendCode;
     /**
      * phone number or email address
      */
     private String identity;
-    /**.
-     * 是否只查询被用户使用了的属性
+    /**
+     * . 是否只查询被用户使用了的属性
      */
     @ApiModelProperty("查询条件:是否只返回用户关联了的属性(用于接口:searchbyuseridandcode)")
     private boolean queryOnlyUsed;
@@ -95,25 +95,26 @@ public class UserExtendValParam extends PageParam {
         this.queryOnlyUsed = queryOnlyUsed;
     }
 
-	/**
-	 * phone number or email address
+    /**
+     * phone number or email address
+     * 
      * @return the identity
      */
     public String getIdentity() {
-      return identity;
+        return identity;
     }
 
     /**
      * @param identity phone number or email address
      */
     public void setIdentity(String identity) {
-      this.identity = identity;
+        this.identity = identity;
     }
 
     @Override
     public String toString() {
-      return "UserExtendValParam [id=" + id + ", userId=" + userId + ", extendId=" + extendId + ", value=" + value + ", status=" + status
-          + ", extendCode=" + extendCode + ", identity=" + identity + ", queryOnlyUsed=" + queryOnlyUsed + "]";
+        return "UserExtendValParam [id=" + id + ", userId=" + userId + ", extendId=" + extendId + ", value=" + value + ", status=" + status + ", extendCode=" + extendCode
+                + ", identity=" + identity + ", queryOnlyUsed=" + queryOnlyUsed + "]";
     }
 
 }

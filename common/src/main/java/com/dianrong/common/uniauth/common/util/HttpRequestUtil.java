@@ -15,11 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpRequestUtil {
     public static Boolean isAjaxRequest(HttpServletRequest httpServletRequest) {
-        if(httpServletRequest == null) {
+        if (httpServletRequest == null) {
             return Boolean.FALSE;
         }
         String ajaxValue = httpServletRequest.getHeader(AppConstants.AJAX_HEADER);
-        if(AppConstants.JQUERY_XMLHttpRequest_HEADER.equalsIgnoreCase(ajaxValue)) {
+        if (AppConstants.JQUERY_XMLHttpRequest_HEADER.equalsIgnoreCase(ajaxValue)) {
             return Boolean.TRUE;
         } else {
             return Boolean.FALSE;
@@ -27,43 +27,44 @@ public class HttpRequestUtil {
     }
 
     public static Boolean isCORSRequest(HttpServletRequest httpServletRequest) {
-        if(httpServletRequest == null) {
+        if (httpServletRequest == null) {
             return Boolean.FALSE;
         }
 
         String originValue = httpServletRequest.getHeader(AppConstants.CROSS_RESOURCE_ORIGIN_HEADER);
 
-        if(originValue == null) {
+        if (originValue == null) {
             return Boolean.FALSE;
         } else {
-            String baseUrl = httpServletRequest.getScheme()+"://"+httpServletRequest.getServerName()+":"+httpServletRequest.getServerPort();
+            String baseUrl = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort();
             String baseUrlStr = baseUrl.replaceAll("https|http", "");
             String ajaxCrossStr = originValue.replaceAll("https|http", "");
-            if(baseUrlStr.startsWith(ajaxCrossStr)){
+            if (baseUrlStr.startsWith(ajaxCrossStr)) {
                 return Boolean.FALSE;
             } else {
                 return Boolean.TRUE;
             }
         }
     }
-    
-    private HttpRequestUtil(){
-    	
+
+    private HttpRequestUtil() {
+
     }
-    
-    public static String encodeUrl(String originalUrl){
-    	if(originalUrl != null){
-        	try {
-    			return URLEncoder.encode(originalUrl, "utf-8");
-    		} catch (UnsupportedEncodingException e) {
-    			log.error("Url encode error for " + originalUrl, e);
-    		}
-    	}
-    	return originalUrl;
+
+    public static String encodeUrl(String originalUrl) {
+        if (originalUrl != null) {
+            try {
+                return URLEncoder.encode(originalUrl, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                log.error("Url encode error for " + originalUrl, e);
+            }
+        }
+        return originalUrl;
     }
 
     /**
      * get client ip address
+     * 
      * @param request client request
      * @return ip address
      */
@@ -86,18 +87,19 @@ public class HttpRequestUtil {
         }
         return ip;
     }
-    
-    public static String extractRequestUrl(HttpServletRequest request){
+
+    public static String extractRequestUrl(HttpServletRequest request) {
         return extractRequestUrl(request, true);
     }
-    
+
     /**
-     *  get request url
+     * get request url
+     * 
      * @param request
      * @param includingQuery
      * @return request url
      */
-    public static String extractRequestUrl(HttpServletRequest request, boolean includingQuery){
+    public static String extractRequestUrl(HttpServletRequest request, boolean includingQuery) {
         String url = request.getServletPath();
         String pathInfo = request.getPathInfo();
         String query = request.getQueryString();
@@ -113,5 +115,5 @@ public class HttpRequestUtil {
         }
         return url;
     }
-    
+
 }

@@ -28,7 +28,7 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
     /**
      * . session name
      */
-    public static final  String SESSION_NAME =UniauthLocaleChangeInterceptor.class.getName()+ ".sessionKey";
+    public static final String SESSION_NAME = UniauthLocaleChangeInterceptor.class.getName() + ".sessionKey";
 
     /**
      * . cookie max age seconds default: 30 days

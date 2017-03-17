@@ -5,17 +5,16 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
 
 public class SSMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
 
-	@Autowired
-	private UniauthPermissionEvaluator permissionEvaluator;
-	
-	public SSMethodSecurityExpressionHandler() {
-	}
+    @Autowired
+    private UniauthPermissionEvaluator permissionEvaluator;
 
-	public UniauthPermissionEvaluator getPermissionEvaluator() {
-		return permissionEvaluator;
-	}
+    public SSMethodSecurityExpressionHandler() {}
 
-	public void setPermissionEvaluator(UniauthPermissionEvaluator permissionEvaluator) {
-		this.permissionEvaluator = permissionEvaluator;
-	}
+    public UniauthPermissionEvaluator getPermissionEvaluator() {
+        return permissionEvaluator;
+    }
+
+    public void setPermissionEvaluator(UniauthPermissionEvaluator permissionEvaluator) {
+        this.permissionEvaluator = permissionEvaluator;
+    }
 }

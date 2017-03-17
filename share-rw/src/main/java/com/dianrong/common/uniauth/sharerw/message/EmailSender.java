@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Deprecated
-public class EmailSender implements InitializingBean{
+public class EmailSender implements InitializingBean {
     // default values
     private static final String DEFAULTSMTPHOST = "smtp-dev.sl.com";
     private static final String DEFAULTFROMEMAIL = "TechOps-Notification<noreply@dianrong.com>";
@@ -34,61 +34,62 @@ public class EmailSender implements InitializingBean{
 
     @Value("#{uniauthConfig['internal.mail.smtp.host']}")
     private String internalSmtpHost;
-    
+
     @Value("#{uniauthConfig['internal.mail.smtp.port']}")
     private String internalSmtpPort;
-    
+
     @Value("#{uniauthConfig['internal.mail.smtp.femail']}")
     private String internalSmtpFromEmail;
-    
+
     private String smtpHost;
     private String fromEmail;
     private int smtpPort;
-    
+
     // init value
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		this.smtpHost = getConfig(internalSmtpHost, DEFAULTSMTPHOST);
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.smtpHost = getConfig(internalSmtpHost, DEFAULTSMTPHOST);
         this.smtpPort = getConfig(internalSmtpPort, DEFAULTSMPTPORT);
         this.fromEmail = getConfig(internalSmtpFromEmail, DEFAULTFROMEMAIL);
-	}
-	
+    }
+
     /**
-     *  get integer configuration  
+     * get integer configuration
+     * 
      * @param config
      * @param defaultVal
      * @return integer configuration
      */
     private int getConfig(String config, int defaultVal) {
-    	if (StringUtil.strIsNullOrEmpty(config)) {
-    		return defaultVal;
-    	}
-    	Integer val =  StringUtil.tryToTranslateStrToInt(config);
-    	if (val == null) {
-    		return defaultVal;
-    	}
-    	return val;
+        if (StringUtil.strIsNullOrEmpty(config)) {
+            return defaultVal;
+        }
+        Integer val = StringUtil.tryToTranslateStrToInt(config);
+        if (val == null) {
+            return defaultVal;
+        }
+        return val;
     }
-    
+
     /**
-     *  get string configuration  
+     * get string configuration
+     * 
      * @param config
      * @param defaultVal
      * @return string configuration
      */
     private String getConfig(String config, String defaultVal) {
-    	if (StringUtil.strIsNullOrEmpty(config)) {
-    		return defaultVal;
-    	}
-    	return config.trim();
+        if (StringUtil.strIsNullOrEmpty(config)) {
+            return defaultVal;
+        }
+        return config.trim();
     }
 
-    /**.
-     *  邮件发送线程池
-     *  初始化5个线程池
+    /**
+     * . 邮件发送线程池 初始化5个线程池
      */
     private static final ExecutorService executor = Executors.newFixedThreadPool(5);
-    
+
     class EmailWorker implements Runnable {
         private String subject;
         private String toEmail;
@@ -120,7 +121,7 @@ public class EmailSender implements InitializingBean{
             this.buffer = buffer;
             return this;
         }
-        
+
         @Override
         public void run() {
             try {
@@ -128,38 +129,38 @@ public class EmailSender implements InitializingBean{
                 log.debug("Content: \n " + buffer);
                 // 配置发送邮件的环境属性
                 final Properties props = new Properties();
-        /*
-         * 可用的属性： mail.store.protocol / mail.transport.protocol / mail.host /
-         * mail.user / mail.from
-         */
+                /*
+                 * 可用的属性： mail.store.protocol / mail.transport.protocol / mail.host / mail.user /
+                 * mail.from
+                 */
                 // 表示SMTP发送邮件，需要进行身份验证
-//                props.put("mail.smtp.auth", "true");
-//                props.put("mail.smtp.host", "smtp.sendcloud.net");
-//                props.put("mail.smtp.port", "25");
+                // props.put("mail.smtp.auth", "true");
+                // props.put("mail.smtp.host", "smtp.sendcloud.net");
+                // props.put("mail.smtp.port", "25");
                 // 发件人的账号
-//                props.put("mail.user", "postmaster@dianrong.sendcloud.org");
-//                // 访问SMTP服务时需要提供的密码
-//                props.put("mail.password", "mONh8xRTosRPJYC3");
+                // props.put("mail.user", "postmaster@dianrong.sendcloud.org");
+                // // 访问SMTP服务时需要提供的密码
+                // props.put("mail.password", "mONh8xRTosRPJYC3");
 
                 // 构建授权信息，用于进行SMTP进行身份验证
-//                Authenticator authenticator = new Authenticator() {
-//                    @Override
-//                    protected PasswordAuthentication getPasswordAuthentication() {
-//                        // 用户名、密码
-//                        String userName = props.getProperty("mail.user");
-//                        String password = props.getProperty("mail.password");
-//                        return new PasswordAuthentication(userName, password);
-//                    }
-//                };
-//                // 使用环境属性和授权信息，创建邮件会话
-//                Session mailSession = Session.getInstance(props, authenticator);
+                // Authenticator authenticator = new Authenticator() {
+                // @Override
+                // protected PasswordAuthentication getPasswordAuthentication() {
+                // // 用户名、密码
+                // String userName = props.getProperty("mail.user");
+                // String password = props.getProperty("mail.password");
+                // return new PasswordAuthentication(userName, password);
+                // }
+                // };
+                // // 使用环境属性和授权信息，创建邮件会话
+                // Session mailSession = Session.getInstance(props, authenticator);
                 props.put("mail.smtp.host", smtpHost);
                 props.put("mail.smtp.port", smtpPort);
                 props.put("mail.user", fromEmail);
-                
+
                 props.put("mail.smtp.connectiontimeout", EMAIL_CONNECTION_TIMEOUT);
                 props.put("mail.smtp.timeout", EMAIL_READ_TIMEOUT);
-                
+
                 Session mailSession = Session.getInstance(props);
                 // 创建邮件消息
                 MimeMessage message = new MimeMessage(mailSession);
@@ -191,7 +192,7 @@ public class EmailSender implements InitializingBean{
         log.debug("Starting to asynchronous send email to : " + toEmail);
         EmailWorker emailWorker = new EmailWorker().setSubject(subject).setToEmail(toEmail).setBuffer(buffer);
         executor.submit(emailWorker);
-//        new Thread(emailWorker).start();
+        // new Thread(emailWorker).start();
         log.debug("End of asynchronous sending email to : " + toEmail);
         log.debug("Content: \n " + buffer);
     }

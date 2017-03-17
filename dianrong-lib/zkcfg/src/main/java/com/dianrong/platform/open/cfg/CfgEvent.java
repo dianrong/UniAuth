@@ -5,7 +5,5 @@ package com.dianrong.platform.open.cfg;
  *
  */
 public enum CfgEvent {
-  ADD,
-  UPDATE,
-  DELETE
+    ADD, UPDATE, DELETE
 }

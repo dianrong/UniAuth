@@ -26,9 +26,11 @@ public interface ITagRWResource extends ITagResource {
     @POST
     @Path("add-new-tag-type")
     Response<TagTypeDto> addNewTagType(TagTypeParam tagTypeParam);
+
     @POST
     @Path("update-tag-type")
     Response<TagTypeDto> updateTagType(TagTypeParam tagTypeParam);
+
     @POST
     @Path("delete-tag-type")
     Response<Void> deleteTagType(TagTypeParam tagTypeParam);

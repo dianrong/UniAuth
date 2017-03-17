@@ -6,8 +6,8 @@ import java.util.Date;
  * Created by Arc on 24/3/2016.
  */
 public class AuditDto extends TenancyBaseDto {
-	private static final long serialVersionUID = -1081049216491108772L;
-	private Integer id;
+    private static final long serialVersionUID = -1081049216491108772L;
+    private Integer id;
     private Long userId;
     private Date requestDate;
     private Integer domainId;
@@ -158,12 +158,10 @@ public class AuditDto extends TenancyBaseDto {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "AuditDto [id=" + id + ", userId=" + userId + ", requestDate=" + requestDate + ", domainId=" + domainId
-				+ ", reqIp=" + reqIp + ", reqUuid=" + reqUuid + ", reqUrl=" + reqUrl + ", reqSequence=" + reqSequence
-				+ ", reqClass=" + reqClass + ", reqMethod=" + reqMethod + ", reqSuccess=" + reqSuccess
-				+ ", reqException=" + reqException + ", reqElapse=" + reqElapse + ", reqParam=" + reqParam
-				+ ", reqResult=" + reqResult + "]";
-	}
+    @Override
+    public String toString() {
+        return "AuditDto [id=" + id + ", userId=" + userId + ", requestDate=" + requestDate + ", domainId=" + domainId + ", reqIp=" + reqIp + ", reqUuid=" + reqUuid + ", reqUrl="
+                + reqUrl + ", reqSequence=" + reqSequence + ", reqClass=" + reqClass + ", reqMethod=" + reqMethod + ", reqSuccess=" + reqSuccess + ", reqException=" + reqException
+                + ", reqElapse=" + reqElapse + ", reqParam=" + reqParam + ", reqResult=" + reqResult + "]";
+    }
 }

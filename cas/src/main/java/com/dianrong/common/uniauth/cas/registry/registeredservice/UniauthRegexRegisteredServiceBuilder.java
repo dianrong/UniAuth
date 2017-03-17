@@ -20,56 +20,58 @@ import org.jasig.cas.services.ReturnAllowedAttributeReleasePolicy;
 
 /**
  * 
- * 一个属性可配的类,用于生成RegexRegisteredService 
- * <p>默认值完全来自于文件: HTTPSandIMAPS-10000001.json</p>
+ * 一个属性可配的类,用于生成RegexRegisteredService
+ * <p>
+ * 默认值完全来自于文件: HTTPSandIMAPS-10000001.json
+ * </p>
  * 
  * @author wanglin
  *
  */
 public class UniauthRegexRegisteredServiceBuilder implements RegisteredServiceBuilder {
-    /**设置所有属性的默认值**/
+    /** 设置所有属性的默认值 **/
     private String serviceId = "^(http|https|imaps)://.*";
-    
+
     private String name = "HTTP/HTTPS and IMAPS";
-    
+
     private long id = Long.MAX_VALUE;
-    
+
     private String description = "";
-    
-    private String  theme = "";
-    
+
+    private String theme = "";
+
     private int evaluationOrder = 0;
-    
-    private Set<String>requiredHandlers;
+
+    private Set<String> requiredHandlers;
 
     private LogoutType logoutType = LogoutType.BACK_CHANNEL;
 
     private RegisteredServiceProxyPolicy serviceProxyPolicy;
-    
+
     private RegisteredServiceUsernameAttributeProvider usernameAttributeProvider;
-    
+
     private AttributeReleasePolicy attributeReleasePolicy;
-    
+
     private RegisteredServiceAccessStrategy accessStrategy;
-    
-    private URL logotUrl; 
+
+    private URL logotUrl;
 
     /**
      * 默认对应的logouUrl为空
      */
-    private URL logoutUrl; 
-    
+    private URL logoutUrl;
+
     /**
      * 此标识用于判定serviceId的值是否是初始化的默认值
      */
     private boolean serviceIdIsDefault = true;
-    
+
     private RegisteredServicePublicKey pulickKey;
-    
+
     public UniauthRegexRegisteredServiceBuilder() {
         init();
     }
-    
+
     /**
      * 初始化属性中的对象
      */
@@ -78,15 +80,15 @@ public class UniauthRegexRegisteredServiceBuilder implements RegisteredServiceBu
         this.serviceProxyPolicy = new RefuseRegisteredServiceProxyPolicy();
         this.usernameAttributeProvider = new DefaultRegisteredServiceUsernameProvider();
         this.accessStrategy = new DefaultRegisteredServiceAccessStrategy();
-        
+
         // init attributeReleasePolicy
-        ReturnAllowedAttributeReleasePolicy attributeReleasePolicy  = new ReturnAllowedAttributeReleasePolicy();
+        ReturnAllowedAttributeReleasePolicy attributeReleasePolicy = new ReturnAllowedAttributeReleasePolicy();
         attributeReleasePolicy.setAllowedAttributes(Arrays.asList("tenancyid"));
         attributeReleasePolicy.setPrincipalAttributesRepository(new DefaultPrincipalAttributesRepository());
         attributeReleasePolicy.setAuthorizedToReleaseCredentialPassword(false);
         attributeReleasePolicy.setAuthorizedToReleaseProxyGrantingTicket(false);
         this.attributeReleasePolicy = attributeReleasePolicy;
-     }
+    }
 
     @Override
     public RegisteredService build() {

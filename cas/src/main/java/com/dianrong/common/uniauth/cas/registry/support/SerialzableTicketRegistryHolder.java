@@ -4,26 +4,30 @@ import java.io.Serializable;
 
 import org.jasig.cas.ticket.Ticket;
 
-/**.
- * 需要序列化存储ticket的registry的辅助holder
+/**
+ * . 需要序列化存储ticket的registry的辅助holder
+ * 
  * @author wanglin
  */
-public interface SerialzableTicketRegistryHolder extends Serializable{
-	/**.
-	 * 序列化之前处理
-	 * @param ticket
-	 */
-	void beforeSerializable(Ticket ticket);
-	
-	/**.
-	 * 序列化之后处理
-	 * @param ticket
-	 */
-	void afterSerializable(Ticket ticket);
-	
-	/**.
-	 * 反序列化之后处理
-	 * @param ticket
-	 */
-	void afterDserializable(Ticket ticket);
+public interface SerialzableTicketRegistryHolder extends Serializable {
+    /**
+     * . 序列化之前处理
+     * 
+     * @param ticket
+     */
+    void beforeSerializable(Ticket ticket);
+
+    /**
+     * . 序列化之后处理
+     * 
+     * @param ticket
+     */
+    void afterSerializable(Ticket ticket);
+
+    /**
+     * . 反序列化之后处理
+     * 
+     * @param ticket
+     */
+    void afterDserializable(Ticket ticket);
 }

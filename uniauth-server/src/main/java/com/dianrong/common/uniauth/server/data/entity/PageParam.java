@@ -1,27 +1,28 @@
 package com.dianrong.common.uniauth.server.data.entity;
 
-/**.
- * 分页相关的字段定义
+/**
+ * . 分页相关的字段定义
+ * 
  * @author wanglin
  */
 public class PageParam {
-	private int pageSize;
-	
-	private int pageOffSet;
+    private int pageSize;
 
-	public int getPageSize() {
-		return pageSize;
-	}
+    private int pageOffSet;
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public int getPageSize() {
+        return pageSize;
+    }
 
-	public int getPageOffSet() {
-		return pageOffSet;
-	}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public void setPageOffSet(int pageOffSet) {
-		this.pageOffSet = pageOffSet;
-	}
+    public int getPageOffSet() {
+        return pageOffSet;
+    }
+
+    public void setPageOffSet(int pageOffSet) {
+        this.pageOffSet = pageOffSet;
+    }
 }

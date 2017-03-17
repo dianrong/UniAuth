@@ -5,10 +5,10 @@ import java.util.List;
 /**
  * Created by Arc on 8/4/2016.
  */
-public class TagTypeQuery extends Operator{
+public class TagTypeQuery extends Operator {
 
-	private static final long serialVersionUID = -3924943487606336730L;
-	private Integer id;
+    private static final long serialVersionUID = -3924943487606336730L;
+    private Integer id;
     private List<Integer> domainIds;
     private Integer domainId;
     private String code;
@@ -49,9 +49,8 @@ public class TagTypeQuery extends Operator{
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "TagTypeQuery [id=" + id + ", domainIds=" + domainIds + ", domainId=" + domainId + ", code=" + code
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "TagTypeQuery [id=" + id + ", domainIds=" + domainIds + ", domainId=" + domainId + ", code=" + code + "]";
+    }
 }

@@ -27,15 +27,14 @@ public class ConfigResource implements IConfigRWResource {
 
     @Override
     public Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam) {
-        ConfigDto configDto = configService.addOrUpdateConfig(cfgParam.getId(),cfgParam.getCfgKey(),cfgParam.getCfgTypeId(),
-                cfgParam.getValue(),cfgParam.getFile());
+        ConfigDto configDto = configService.addOrUpdateConfig(cfgParam.getId(), cfgParam.getCfgKey(), cfgParam.getCfgTypeId(), cfgParam.getValue(), cfgParam.getFile());
         return Response.success(configDto);
     }
 
     @Override
     public Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam) {
-        PageDto<ConfigDto> configDtoPageDto = configService.queryConfig(cfgParam.getCfgKeys(), cfgParam.getCfgKeyLike(), cfgParam.getId(),cfgParam.getCfgKey(),cfgParam.getCfgTypeId(),
-                cfgParam.getValue(), cfgParam.getNeedBLOBs(), cfgParam.getPageSize(),cfgParam.getPageNumber());
+        PageDto<ConfigDto> configDtoPageDto = configService.queryConfig(cfgParam.getCfgKeys(), cfgParam.getCfgKeyLike(), cfgParam.getId(), cfgParam.getCfgKey(),
+                cfgParam.getCfgTypeId(), cfgParam.getValue(), cfgParam.getNeedBLOBs(), cfgParam.getPageSize(), cfgParam.getPageNumber());
         return Response.success(configDtoPageDto);
     }
 

@@ -16,34 +16,34 @@ import java.util.concurrent.TimeUnit;
 @Component("openDistributeLockService")
 public class DistributeLockService {
 
-  private static final Logger logger = LoggerFactory.getLogger(DistributeLockService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DistributeLockService.class);
 
-  @Value("#{openCuratorClientFactory.getClient()}")
-  private CuratorFramework client;
+    @Value("#{openCuratorClientFactory.getClient()}")
+    private CuratorFramework client;
 
-  private ExecutorService executorService = Executors.newFixedThreadPool(3);
+    private ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-  public Object tryAcquiredLockAndExcute(String path, Callable callable) {
-    InterProcessMutex lock = new InterProcessMutex(client, path);
-    try {
-      if (lock.acquire(5, TimeUnit.SECONDS)) {
-        logger.info(Thread.currentThread().getName() + " acquired and hold Lock,path:{}", path);
-        Future future = executorService.submit(callable);
-        return future.get();
-      } else {
-        logger.info(Thread.currentThread().getName() + " can't acquired lock,path:{}", path);
-        return null;
-      }
-    } catch (Exception e) {
-      logger.error("Try Acquired Lock And Excute Exception,path:{}", path, e);
-      return null;
-    } finally {
-      try {
-        lock.release();
-        logger.info(Thread.currentThread().getName() + " Release Lock,,path:{}", path);
-      } catch (Exception e) {
-      }
+    public Object tryAcquiredLockAndExcute(String path, Callable callable) {
+        InterProcessMutex lock = new InterProcessMutex(client, path);
+        try {
+            if (lock.acquire(5, TimeUnit.SECONDS)) {
+                logger.info(Thread.currentThread().getName() + " acquired and hold Lock,path:{}", path);
+                Future future = executorService.submit(callable);
+                return future.get();
+            } else {
+                logger.info(Thread.currentThread().getName() + " can't acquired lock,path:{}", path);
+                return null;
+            }
+        } catch (Exception e) {
+            logger.error("Try Acquired Lock And Excute Exception,path:{}", path, e);
+            return null;
+        } finally {
+            try {
+                lock.release();
+                logger.info(Thread.currentThread().getName() + " Release Lock,,path:{}", path);
+            } catch (Exception e) {
+            }
+        }
     }
-  }
 
 }
