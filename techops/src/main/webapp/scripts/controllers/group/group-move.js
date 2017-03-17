@@ -14,13 +14,13 @@ define(['../../utils/constant'], function(constant) {
         $scope.getTree(paramsCtlLevel);
 
         $scope.move = function () {
-            if(!$scope.moveGroup.from){
-                AlertService.addAutoDismissAlert(constant.messageType.warning, "请选择当前组");
+            if(!$scope.moveGroup.from.id){
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectCurrentGroup'));
                 return;
             }
 
-            if(!$scope.moveGroup.to){
-                AlertService.addAutoDismissAlert(constant.messageType.warning, "请选择目标组");
+            if(!$scope.moveGroup.to.id){
+                AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectTargetGroup'));
                 return;
             }
             GroupService.move({
@@ -34,13 +34,15 @@ define(['../../utils/constant'], function(constant) {
                     }
                     return;
                 }
-                AlertService.addAutoDismissAlert(constant.messageType.info, "移动成功");
-                //clear movegroup
-                // $scope.moveGroup = {};
+                AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.groupMoveSuccess'));
+                //reset
+                $scope.moveGroup.from = {};
+                $scope.moveGroup.to = {};
+                $rootScope.moveFLag = true;
                 //sync the tree
                 $scope.getTree(paramsCtlLevel);
             }, function () {
-                AlertService.addAutoDismissAlert(constant.messageType.danger, "移动失败");
+                AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.groupMoveFailure'));
             });
         };
 
