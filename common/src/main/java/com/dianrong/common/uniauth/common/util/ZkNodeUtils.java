@@ -56,7 +56,14 @@ public class ZkNodeUtils {
         String key = AppConstants.ZK_DOMAIN_PREFIX + nodeName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_SHOW_IN_HOME_PAGE;
         return DEFAULT_TRUE.equalsIgnoreCase(infoes.get(key));
     }
-
+   /**
+     * 获取业务系统在service ticket认证失败时配置跳转url的节点名称
+     * @param domainName 域编号
+     * @return
+     */
+    public static String domainAuthFailUrlNodeKey(String domainName){
+        return AppConstants.ZK_DOMAIN_PREFIX + domainName + AppConstants.ZK_CFG_SPLIT + AppConstants.ZK_DOMAIN_AUTH_FAIL_URL;
+    }
     /**
      * 按照配置规则计算出对应domain的登出地址的节点
      * 

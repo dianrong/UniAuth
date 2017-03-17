@@ -58,6 +58,10 @@ public interface AppConstants {
      */
     String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
     /**
+     * ticket 验证失败url
+     **/
+    String ZK_DOMAIN_AUTH_FAIL_URL="auth_fail_url";
+    /**
      * 是否在主页显示登陆项
      */
     String ZK_DOMAIN_SHOW_IN_HOME_PAGE = "showInHomePage";
