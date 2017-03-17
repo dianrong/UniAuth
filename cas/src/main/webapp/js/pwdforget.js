@@ -1,6 +1,6 @@
 $(function() {
 	var processUrl = context_path+"/uniauth/forgetPassword";
-	var captchaUrl = context_path+"/uniauth/captcha";
+	var captchaUrl = context_path+"/uniauth/verification";
 	
 	//初始化函数
 	var init = function() {
@@ -37,14 +37,17 @@ $(function() {
 		$('#btn_step3').click(processStep3);
 	}
 	
+	function isEmailOrPhoneNumber(number){
+	    var filter  = /(^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$)|(^((13[0-9])|(15[^4])|(18[0-9])|(17[0-8])|(147))\d{8}$)/;
+	    return filter.test(number);
+	}
 	// step1 btn show
 	var process_step1_btn = function(){
 		var mailval = $('#temail').val();
 		var input_verifycode = $('#tverfynotice').val();
-		// filter email
-		var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		// filter email 
 		var stepbtn = $('#btn_step1');
-		if(input_verifycode && mailval && filter.test(mailval)) {
+		if(input_verifycode && mailval && isEmailOrPhoneNumber(mailval)) {
 			stepbtn.removeAttr("disabled","disabled");
 			stepbtn.removeClass('cursordefault');
 		} else {
@@ -132,68 +135,31 @@ $(function() {
 		obj.html(newHtml);
 	}
 	
-	// change verify status  需要注册到外部  让外部的调用
-	window.changeVerifyStats = function(){
-		var send_email_btn = $('.find-pwd-container .steps #input2');
-		var btn_showval = send_email_btn.attr('showval');
-		if(!btn_showval || isNaN(btn_showval)){
-			//init 120s
-			refresh_send_email_btn_val(send_email_btn, '120');
-			//disable 按钮
-			send_email_btn.attr("disabled","disabled"); 
-			send_email_btn.addClass('cursordefault').addClass('balckfont');
-		} else {
-			if(btn_showval < 1){
-				send_email_btn.removeAttr('showval');
-				send_email_btn.html(send_email_btn.attr('backupstr'));
-				
-				//显示按钮
-				send_email_btn.removeAttr("disabled", "disabled");
-				send_email_btn.removeClass('cursordefault').removeClass('balckfont');
-				return;
-			}
-			var newbtn_showval = btn_showval -1;
-			refresh_send_email_btn_val(send_email_btn, '' + newbtn_showval);
-			
-		}
-		setTimeout("changeVerifyStats()", 1000);
-	}
-	
-	var refresh_send_email_btn_val = function(send_email_btn, showval){
-		send_email_btn.attr('showval', showval);
-		send_email_btn.html(showval);
-	}
-	
 	var sendEmailVerifyCode = function(){
 		$.ajax({  
-            type : "POST", 
-            url : captchaUrl,
-            data : {'captchaType': '1'},
+            type : "GET", 
+            url : captchaUrl + '/send/session',
             dataType : 'json',
-            success : function(result) {
-                if (result.issuccess == 'true') {  
-                    if(result.code == '0'){
-                    	// 设置60秒之后 可以继续发送
-                    	setTimeout("changeVerifyStats()", 1000);
-                    	return;
-                    }
-                    // 重新跳转到首页登录
-                    if(result.code == '1') {
-                    	window.location = processUrl;
-                    	return;
-                    }
-                    
-                    if(result.code == '2') {
-                    	setWarnLabel($('#emailverfywarn'), result.msg);
-                    	return;
-                    }
-                } else {  
-                    alert($.i18n.prop('frontpage.common.error.msg'));
-                }  
+            success : function(data) {
+            	if(data.info) {
+         		   if('IDENTITY_REQUIRED' === data.info[0].name) {
+         			   // 重新跳转到首页登录
+         			  window.location = processUrl;
+         		   } else {
+         			  setWarnLabel($('#emailverfywarn'), data.info[0].msg);
+         		   }
+         	   } else {
+         		 	var count_btn = $('.find-pwd-container .steps #input2');
+                	countBtn(count_btn, function(new_label){
+                		count_btn.html(new_label)
+                	},function(){
+                		return count_btn.html();
+                	}, 120);
+         	   }
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
-            },
+            	logOperation.error(errorMsg);
+            }
         });  
 	};
 
@@ -205,8 +171,7 @@ $(function() {
 		}
 		
 		// filter email
-		var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-		if (!filter.test(temalval)) {
+		if (!isEmailOrPhoneNumber(temalval)) {
 			return;
 		}
 		
@@ -253,11 +218,11 @@ $(function() {
                     	return;
                     }
                 } else {  
-                	 alert($.i18n.prop('frontpage.common.error.msg'));
+                	logOperation.error($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             },
             complete: function(XMLHttpRequest, textStatus) {
             	refresh_verfypic($('#verfypic'));
@@ -267,64 +232,44 @@ $(function() {
 	
 	var processStep2 = function(){
 		var verifyCode = $('.find-pwd-container .steps #input1').val();
-		if(!verifyCode){
+		if (!verifyCode) {
 			return;
 		}
-		
-		var turl = $('#step2Post').attr('action');
-		var data = {
-				'verifyCode' : verifyCode,
-				'step' : '2'
-		};
 		$.ajax({  
             type : "POST", 
-            url : turl,
-            data : data,
+            url : captchaUrl + '/verify/session',
+            data : {verifyCode : verifyCode},
             dataType : 'json',
             beforeSend : function () {
             	//清空提示信息
             	setWarnLabel($('#emailverfywarn'), '');
             },
-            success : function(result) {// 返回数据根据结果进行相应的处理
-                if (result.issuccess == 'true') {  
-                    if(result.code == '0'){
-                    	// 跳转到第三步
-                    	window.location = processUrl + '?step=3';
-                    	return;
-                    }
-                    // 重新跳转到首页登录
-                    if(result.code == '1') {
-                    	// 跳转到第一步
-                    	window.location = processUrl + '?step=1';
-                    	return;
-                    }
-                    
-                    if(result.code == '2') {
-                    	setWarnLabel($('#emailverfywarn'), $.i18n.prop('frontpage.pwdforget.edit.need.captcha'));
-                    	return;
-                    }
-                    
-                    if(result.code == '3') {
-                    	setWarnLabel($('#emailverfywarn'), $.i18n.prop('frontpage.pwdforget.edit.wrong.captcha'));
-                    	return;
-                    }
-                } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg'));
-                }  
+            success : function(data) {
+            	if(data.info) {
+          		   if('IDENTITY_REQUIRED' === data.info[0].name) {
+          			   // 重新跳转到首页登录
+          			  window.location = processUrl;
+          		   } else {
+          			  setWarnLabel($('#emailverfywarn'), data.info[0].msg);
+          		   }
+          	   } else {
+	          		// 跳转到第三步
+	               	window.location = processUrl + '?step=3';
+          	   }
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             }
         });  
 	};
 	
+	// 提交新密码
 	var processStep3 = function(){
 		var newpwd = $('#newpwd').val();
 		var rnewpwd = $('#rnewpwd').val();
 		if(!newpwd || !rnewpwd){
 			return;
 		}
-		
 		var turl = $('#step3Post').attr('action');
 		var data = {
 				'newPassword' : newpwd,
@@ -369,11 +314,11 @@ $(function() {
                     	return;
                     }
                 } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg'));
+                	logOperation.error($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             }
         });  
 	};

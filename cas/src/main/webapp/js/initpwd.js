@@ -1,7 +1,7 @@
 $(function() {
 	var processUrl = context_path+"/uniauth/initPassword/process";
 	var successUrl = context_path+"/uniauth/initPassword/initSuccess";
-	var captchaUrl = context_path+"/uniauth/captcha";
+	var captchaUrl = context_path+"/uniauth/verification/captcha";
 	
 	//初始化函数
 	var init = function() {
@@ -165,11 +165,11 @@ $(function() {
                     	setWarnLabel(result.msg, $('#init_pwd_warn_info'));
                     }
                 } else {  
-                	alert($.i18n.prop('frontpage.common.error.msg'));
+                	logOperation.error($.i18n.prop('frontpage.common.error.msg'));
                 }  
             },
             error: function(jqXHR, textStatus, errorMsg){
-            	alert(errorMsg);
+            	logOperation.error(errorMsg);
             },
             complete: function(XMLHttpRequest, textStatus) {
             	refresh_verfypic($('#init_pwd_verfypic'));

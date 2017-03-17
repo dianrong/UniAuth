@@ -17,7 +17,6 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +36,7 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
@@ -89,21 +89,20 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.mq.UniauthSender;
-import com.dianrong.common.uniauth.server.support.CxfHeaderHolder;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Created by Arc on 14/1/16.
  */
 @Service
+@Slf4j
 public class UserService extends TenancyBasedService {
-
-    private final static Logger logger = Logger.getLogger(UserService.class);
-
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -155,9 +154,9 @@ public class UserService extends TenancyBasedService {
         User user = new User();
         user.setEmail(email);
         user.setName(name);
-        user.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+        user.setTenancyId(tenancyService.getTenancyIdWithCheck());
         Date now = new Date();
-        user.setFailCount(AppConstants.ZERO_Byte);
+        user.setFailCount(AppConstants.ZERO_BYTE);
 
         String randomPassword = AuthUtils.randomPassword();
         byte salt[] = AuthUtils.createSalt();
@@ -179,48 +178,77 @@ public class UserService extends TenancyBasedService {
     }
 
     @Transactional
-    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String name, String phone, String email, String password, String orginPassword, Byte status) {
-        if (userActionEnum == null || id == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum, userId"));
+    public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId, String name, String phone, String email, String password,
+            String orginPassword, Byte status) {
+        if (userActionEnum == null) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
         }
-        User user = userMapper.selectByPrimaryKey(id);
+        User user = null;
+        String userIdentity = "";
+        // 通过账号的查找当前的用户信息
+        if (UserActionEnum.isUpdateByAccount(userActionEnum)) {
+            if (account == null || tenancyId == null) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "account, tenancyId"));
+            }
+            user = getUserByAccount(account, null, tenancyId, true, AppConstants.STATUS_ENABLED);
+            userIdentity = account;
+        } else {
+            if (id == null) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userId"));
+            }
+            user = getUserByPrimaryKey(id);
+            userIdentity = String.valueOf(id);
+        }
         if (user == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", id, User.class.getSimpleName()));
-        } else if (AppConstants.ONE_Byte.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", id, User.class.getSimpleName()));
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", userIdentity, User.class.getSimpleName()));
+        } else if (AppConstants.ONE_BYTE.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", userIdentity, User.class.getSimpleName()));
         }
         switch (userActionEnum) {
-            case LOCK :
+            case LOCK:
                 user.setFailCount(AppConstants.MAX_AUTH_FAIL_COUNT);
                 break;
-            case UNLOCK :
-                user.setFailCount(AppConstants.ZERO_Byte);
+            case UNLOCK:
+                user.setFailCount(AppConstants.ZERO_BYTE);
                 break;
-            case RESET_PASSWORD :
-                checkUserPwd(id, password);
+            case RESET_PASSWORD:
+                checkUserPwd(user.getId(), password);
                 byte salt[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
                 user.setPasswordSalt(Base64.encode(salt));
                 user.setPasswordDate(new Date());
                 // reset failed count
-                user.setFailCount(AppConstants.ZERO_Byte);
+                user.setFailCount(AppConstants.ZERO_BYTE);
                 // log
                 asynAddUserPwdLog(user);
                 break;
-            case STATUS_CHANGE :
+            case STATUS_CHANGE:
                 // 只处理启用的情况
                 if (status != null && status == AppConstants.STATUS_ENABLED) {
                     this.checkPhoneAndEmail(user.getPhone(), user.getEmail(), user.getId());
                 }
                 user.setStatus(status);
                 break;
-            case UPDATE_INFO :
-                this.checkPhoneAndEmail(phone, email, id);
+            case UPDATE_INFO:
+                this.checkPhoneAndEmail(phone, email, user.getId());
                 user.setName(name);
                 user.setEmail(email);
                 user.setPhone(phone);
                 break;
-            case RESET_PASSWORD_AND_CHECK :
+            case UPDATE_INFO_BY_ACCOUNT:
+                user.setName(name);
+                break;
+            case UPDATE_EMAIL_BY_ACCOUNT:
+                this.checkEmail(email, user.getId());
+                user.setEmail(email);
+                break;
+            case UPDATE_PHONE_BY_ACCOUNT:
+                this.checkPhone(phone, user.getId());
+                user.setPhone(phone);
+                break;
+            case UPDATE_PASSWORD_BY_ACCOUNT:
+                // same as case:RESET_PASSWORD_AND_CHECK
+            case RESET_PASSWORD_AND_CHECK:
                 // 原始密码验证通过
                 if (orginPassword == null) {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.origin.password.wrong"));
@@ -229,14 +257,16 @@ public class UserService extends TenancyBasedService {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
                 }
                 // 验证新密码
-                checkUserPwd(id, password);
+                checkUserPwd(user.getId(), password);
                 byte salttemp[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
                 user.setPasswordSalt(Base64.encode(salttemp));
                 user.setPasswordDate(new Date());
-                user.setFailCount(AppConstants.ZERO_Byte);
+                user.setFailCount(AppConstants.ZERO_BYTE);
                 // log
                 asynAddUserPwdLog(user);
+                break;
+            default:
                 break;
         }
         user.setLastUpdate(new Date());
@@ -250,7 +280,7 @@ public class UserService extends TenancyBasedService {
         }
         // 1. get all roles under the domain
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_Byte).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.ZERO_BYTE).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Role> roles = roleMapper.selectByExample(roleExample);
         if (CollectionUtils.isEmpty(roles)) {
             return null;
@@ -315,8 +345,8 @@ public class UserService extends TenancyBasedService {
         }
     }
 
-    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds, String name, String phone, String email, Byte status, Integer tagId,
-            Boolean needTag, Integer pageNumber, Integer pageSize) {
+    public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds,
+            List<Long> excludeUserIds, String name, String phone, String email, Byte status, Integer tagId, Boolean needTag, Integer pageNumber, Integer pageSize) {
         if (pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
@@ -346,7 +376,7 @@ public class UserService extends TenancyBasedService {
         if (!CollectionUtils.isEmpty(excludeUserIds)) {
             criteria.andIdNotIn(excludeUserIds);
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         if (groupId != null) {
             UserGrpExample userGrpExample = new UserGrpExample();
             UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
@@ -367,7 +397,7 @@ public class UserService extends TenancyBasedService {
                     } else {
                         // 默认需要过滤掉禁用的组
                         GrpExample grpExample = new GrpExample();
-                        grpExample.createCriteria().andIdIn(descendantIds).andStatusEqualTo(AppConstants.ZERO_Byte).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+                        grpExample.createCriteria().andIdIn(descendantIds).andStatusEqualTo(AppConstants.ZERO_BYTE).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                         List<Grp> grps = grpMapper.selectByExample(grpExample);
                         if (CollectionUtils.isEmpty(grps)) {
                             return null;
@@ -383,7 +413,7 @@ public class UserService extends TenancyBasedService {
             } else {
                 userGrpExampleCriteria.andGrpIdEqualTo(groupId);
             }
-            userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_Byte);
+            userGrpExampleCriteria.andTypeEqualTo(AppConstants.ZERO_BYTE);
             List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
             if (CollectionUtils.isEmpty(userGrpKeys)) {
                 return null;
@@ -455,7 +485,8 @@ public class UserService extends TenancyBasedService {
                     // 2. query all tags, convert into dto and index them with
                     // tagIds
                     TagExample tagExample = new TagExample();
-                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdUserIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+                    tagExample.createCriteria().andIdIn(new ArrayList<Integer>(tagIdUserIdsPair.keySet())).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+                            .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                     List<Tag> tags = tagMapper.selectByExample(tagExample);
                     if (!CollectionUtils.isEmpty(tags)) {
                         Map<Integer, TagDto> tagIdTagDtoPair = new HashMap<>();
@@ -466,7 +497,7 @@ public class UserService extends TenancyBasedService {
                         }
                         // 3. query tagTypes info and index them with tagTypeId
                         TagTypeExample tagTypeExample = new TagTypeExample();
-                        tagTypeExample.createCriteria().andIdIn(tagTypeIds).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+                        tagTypeExample.createCriteria().andIdIn(tagTypeIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
                         Map<Integer, String> tagTypeIdTagCodePair = new HashMap<>();
                         for (TagType tagType : tagTypes) {
@@ -498,7 +529,27 @@ public class UserService extends TenancyBasedService {
         }
     }
 
+    /**
+     * check email and phone, composed by checkEmail and checkPhone
+     * 
+     * @param phone phone
+     * @param email email
+     * @param userId userId
+     * @throws AppException if email or phone is invalid
+     */
     private void checkPhoneAndEmail(String phone, String email, Long userId) {
+        checkEmail(email, userId);
+        checkPhone(phone, userId);
+    }
+
+    /**
+     * email can not be null
+     * 
+     * @param email email
+     * @param userId userId
+     * @throws AppException if email is invalid
+     */
+    private void checkEmail(String email, Long userId) {
         if (email == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "email"));
         }
@@ -511,6 +562,16 @@ public class UserService extends TenancyBasedService {
         } else {
             dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL, email);
         }
+    }
+
+    /**
+     * phone can be null
+     * 
+     * @param phone phone number
+     * @param userId userId
+     * @throws AppException if phone is invalid
+     */
+    private void checkPhone(String phone, Long userId) {
         if (phone != null) {
             // check duplicate phone
             if (userId == null) {
@@ -520,7 +581,7 @@ public class UserService extends TenancyBasedService {
             }
         }
     }
-    
+
     public UserDto login(LoginParam loginParam) {
         String account = loginParam.getAccount();
         String password = loginParam.getPassword();
@@ -529,8 +590,8 @@ public class UserService extends TenancyBasedService {
         CheckEmpty.checkEmpty(password, "密码");
         CheckEmpty.checkEmpty(ip, "IP地址");
 
-        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,null);
-        if (AppConstants.ONE_Byte.equals(user.getStatus())) {
+        User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true, null);
+        if (AppConstants.ONE_BYTE.equals(user.getStatus())) {
             throw new AppException(InfoName.LOGIN_ERROR_STATUS_1, UniBundle.getMsg("user.login.status.lock"));
         }
         if (user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT) {
@@ -552,7 +613,8 @@ public class UserService extends TenancyBasedService {
             calendar.add(Calendar.MONTH, AppConstants.MAX_PASSWORD_VALID_MONTH);
             Date currentDate = new Date();
             if (currentDate.after(calendar.getTime())) {
-                throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH, UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
+                throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH,
+                        UniBundle.getMsg("user.login.password.usetoolong", String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
             }
         }
         return BeanConverter.convert(user);
@@ -561,7 +623,7 @@ public class UserService extends TenancyBasedService {
     public List<UserDto> searchUsersWithRoleCheck(Integer roleId) {
         CheckEmpty.checkEmpty(roleId, "roleId");
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<User> allUsers = userMapper.selectByExample(userExample);
 
         UserRoleExample userRoleExample = new UserRoleExample();
@@ -603,7 +665,7 @@ public class UserService extends TenancyBasedService {
                 userIdsLinkedToRole.add(userRoleKey.getUserId());
             }
             UserExample userExample = new UserExample();
-            userExample.createCriteria().andIdIn(userIdsLinkedToRole).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+            userExample.createCriteria().andIdIn(userIdsLinkedToRole).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
             List<User> users = userMapper.selectByExample(userExample);
             if (users != null && !users.isEmpty()) {
                 for (User user : users) {
@@ -617,7 +679,7 @@ public class UserService extends TenancyBasedService {
     public List<UserDto> searchUsersWithTagCheck(Integer tagId) {
         CheckEmpty.checkEmpty(tagId, "tagId");
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<User> allUsers = userMapper.selectByExample(userExample);
 
         UserTagExample userTagExample = new UserTagExample();
@@ -660,7 +722,7 @@ public class UserService extends TenancyBasedService {
                 userIdsLinkedToTag.add(usertagKey.getUserId());
             }
             UserExample userExample = new UserExample();
-            userExample.createCriteria().andIdIn(userIdsLinkedToTag).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+            userExample.createCriteria().andIdIn(userIdsLinkedToTag).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
             List<User> users = userMapper.selectByExample(userExample);
             if (users != null && !users.isEmpty()) {
                 for (User user : users) {
@@ -672,21 +734,34 @@ public class UserService extends TenancyBasedService {
     }
 
     public UserDetailDto getUserDetailInfoByUid(Long paramUserId) {
-        CheckEmpty.checkEmpty(paramUserId, "userId");
-        User user = userMapper.selectByPrimaryKey(paramUserId);
+        User user = getUserByPrimaryKey(paramUserId);
         if (user == null) {
             return null;
         }
-        // 手动设置tenancyId
-        CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
+    }
+
+    /**
+     * get user info by primary id
+     * 
+     * @param id primary id
+     * @return user or null
+     */
+    private User getUserByPrimaryKey(Long id) {
+        CheckEmpty.checkEmpty(id, "userId");
+        User user = userMapper.selectByPrimaryKey(id);
+        if (user != null) {
+            // 手动设置tenancyId important
+            CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
+        }
+        return user;
     }
 
     public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
         String account = loginParam.getAccount();
         CheckEmpty.checkEmpty(account, "账号");
-        User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_ENABLED);
+        User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
         UserDetailDto userDetailDto = getUserDetailDto(user);
         return userDetailDto;
     }
@@ -723,7 +798,7 @@ public class UserService extends TenancyBasedService {
 
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria roleCriteria = roleExample.createCriteria();
-        roleCriteria.andIdIn(new ArrayList<>(userAllRoleIds)).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        roleCriteria.andIdIn(new ArrayList<>(userAllRoleIds)).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Role> roles = roleMapper.selectByExample(roleExample);
 
         if (CollectionUtils.isEmpty(roles)) {
@@ -747,7 +822,7 @@ public class UserService extends TenancyBasedService {
 
         DomainExample domainExample = new DomainExample();
         DomainExample.Criteria criteria = domainExample.createCriteria();
-        criteria.andIdIn(domainIds).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getDefaultTenancy().getId());
+        criteria.andIdIn(domainIds).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
         List<Domain> domainList = domainMapper.selectByExample(domainExample);
         List<DomainDto> domainDtoList = null;
         if (domainList == null || domainList.isEmpty()) {
@@ -765,8 +840,7 @@ public class UserService extends TenancyBasedService {
     /**
      * 获取角色下面所有的权限
      * 
-     * @param enableRoleIds
-     *            可用的角色id集合
+     * @param enableRoleIds 可用的角色id集合
      * @return roleId与对应的权限集合映射;<br/>
      *         1.如果角色没有任何权限,那么角色的权限是空;<br/>
      *         2.如果没有任何角色,那么返回empty map
@@ -804,7 +878,7 @@ public class UserService extends TenancyBasedService {
         }
         PermissionExample permissionExample = new PermissionExample();
         PermissionExample.Criteria permissionExampleCriteria = permissionExample.createCriteria();
-        permissionExampleCriteria.andIdIn(allPermissionIds).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        permissionExampleCriteria.andIdIn(allPermissionIds).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
 
         // map role permissions
@@ -823,15 +897,13 @@ public class UserService extends TenancyBasedService {
         }
         return roleIdPermissionsMap;
     }
+
     /**
      * 将domain数据库实体对象转为dto对象
      * 
-     * @param domainList
-     *            domain的数据库实体对象
-     * @param roleIdPermissionsMap
-     *            角色id/角色的权限集合的映射关系
-     * @param domainRoleMap
-     *            domain id/domain的角色集合的映射关系
+     * @param domainList domain的数据库实体对象
+     * @param roleIdPermissionsMap 角色id/角色的权限集合的映射关系
+     * @param domainRoleMap domain id/domain的角色集合的映射关系
      * @return
      */
     private List<DomainDto> domainBean2DtoList(List<Domain> domainList, Map<Integer, List<Permission>> roleIdPermissionsMap, Map<Integer, List<Role>> domainRoleMap) {
@@ -865,18 +937,14 @@ public class UserService extends TenancyBasedService {
     /**
      * 封装角色的权限数据,最终确定某个role有某个domain的某些permission
      * 
-     * @param roleDto
-     *            角色dto,已经封装了角色名称等基本信息
-     * @param permTypeMap
-     *            权限类型映射数据
-     * @param roleIdPermissionsMap
-     *            角色id/权限集合映射关系，确定一个角色有哪些权限
-     * @param domainId
-     *            domainId用来映射domain的权限数据
-     * @param roleId
-     *            角色id
+     * @param roleDto 角色dto,已经封装了角色名称等基本信息
+     * @param permTypeMap 权限类型映射数据
+     * @param roleIdPermissionsMap 角色id/权限集合映射关系，确定一个角色有哪些权限
+     * @param domainId domainId用来映射domain的权限数据
+     * @param roleId 角色id
      */
-    private void buildRolePermissionDto(RoleDto roleDto, Map<Integer, PermType> permTypeMap, Map<Integer, List<Permission>> roleIdPermissionsMap, Integer domainId, Integer roleId) {
+    private void buildRolePermissionDto(RoleDto roleDto, Map<Integer, PermType> permTypeMap, Map<Integer, List<Permission>> roleIdPermissionsMap, Integer domainId,
+            Integer roleId) {
         List<Permission> permissionList = roleIdPermissionsMap.get(roleId);
         List<Permission> permList = new ArrayList<>();
         if (permissionList != null) {
@@ -917,19 +985,29 @@ public class UserService extends TenancyBasedService {
     public UserDto getSingleUser(UserParam userParam) {
         String email = userParam.getEmail();
         CheckEmpty.checkEmpty(email, "邮件");
-        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false,AppConstants.STATUS_ENABLED);
+        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false, AppConstants.STATUS_ENABLED);
         UserDto userDto = BeanConverter.convert(user);
         setUserExtendVal(userDto);
         return userDto;
     }
 
+    /**
+     * rest password and identify by phone number or email
+     * 
+     * @param userParam
+     */
     @Transactional
     public void resetPassword(UserParam userParam) {
         String email = userParam.getEmail();
         String password = userParam.getPassword();
-        CheckEmpty.checkEmpty(email, "邮件");
+        CheckEmpty.checkAllBlank("邮件手机", email, userParam.getPhone());
         CheckEmpty.checkEmpty(password, "密码");
-        User user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false,AppConstants.STATUS_ENABLED);
+        User user = null;
+        if (email != null) {
+            user = getUserByAccount(email, userParam.getTenancyCode(), userParam.getTenancyId(), false, AppConstants.STATUS_ENABLED);
+        } else {
+            user = getUserByAccount(userParam.getPhone(), userParam.getTenancyCode(), userParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
+        }
         if (!AuthUtils.validatePasswordRule(password)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
         }
@@ -937,7 +1015,7 @@ public class UserService extends TenancyBasedService {
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
         user.setPasswordSalt(Base64.encode(salt));
         user.setPasswordDate(new Date());
-        user.setFailCount(AppConstants.ZERO_Byte);
+        user.setFailCount(AppConstants.ZERO_BYTE);
         userMapper.updateByPrimaryKey(user);
     }
 
@@ -947,7 +1025,7 @@ public class UserService extends TenancyBasedService {
         CheckEmpty.checkEmpty(domainId, "domainId");
         // step 1. get roleIds in the specific domain.
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Role> roles = roleMapper.selectByExample(roleExample);
         List<Integer> roleIdsInDomain = new ArrayList<>();
         if (!CollectionUtils.isEmpty(roles)) {
@@ -1021,6 +1099,7 @@ public class UserService extends TenancyBasedService {
         user.setLastLoginTime(new Date());
         user.setLastLoginIp(ip);
         user.setFailCount((byte) failCount);
+        user.setLastUpdate(new Date());
         if (sync) {
             return userMapper.updateByPrimaryKeySelective(user);
         }
@@ -1033,18 +1112,21 @@ public class UserService extends TenancyBasedService {
         });
         return 1;
     }
+
     /**
      * 根据帐号获取用户信息，注意判断用户状态
+     * 
      * @param account 帐号唯一编号：邮箱或手机
-     * @param tenancyCode 
+     * @param tenancyCode
      * @param tenancyId
-     * @param withPhoneChecked
+     * @param withPhoneChecked 是否根据手机查询true是，false 否
      * @param status 用户启用禁用状态,null表示任意状态
      * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
      * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
      * @return 用户信息
+     * @throws AppException not found or find multi user
      */
-    private User getUserByAccount(String account, String tenancyCode, Integer tenancyId, boolean withPhoneChecked,Byte status) {
+    public User getUserByAccount(String account, String tenancyCode, Long tenancyId, boolean withPhoneChecked, Byte status) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("email", account);
 
@@ -1052,7 +1134,7 @@ public class UserService extends TenancyBasedService {
             map.put("phone", account);
         }
         if (tenancyCode == null && tenancyId == null) {
-            map.put("tenancyId", tenancyService.getOneCanUsedTenancyId().toString());
+            map.put("tenancyId", tenancyService.getTenancyIdWithCheck().toString());
         } else {
             if (tenancyId == null) {
                 CheckEmpty.checkEmpty(tenancyCode, "租户code");
@@ -1061,18 +1143,28 @@ public class UserService extends TenancyBasedService {
                 map.put("tenancyId", tenancyId.toString());
             }
         }
-        if(status != null)
+        if (status != null) {
             map.put("status", Integer.toString(status));
+        }
         List<User> userList = userMapper.selectByEmailOrPhone(map);
         if (userList == null || userList.isEmpty()) {
             throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND, UniBundle.getMsg("user.login.notfound", account));
         }
-        if (userList.size() > 1) {
+
+        // search enable user
+        int enableUserCount = 0;
+        User enableUser = null;
+        for (User user : userList) {
+            if (user.getStatus() == AppConstants.STATUS_ENABLED) {
+                enableUser = user;
+                enableUserCount++;
+            }
+        }
+        if (enableUserCount > 1) {
             throw new AppException(InfoName.LOGIN_ERROR_MULTI_USER_FOUND, UniBundle.getMsg("user.login.multiuser.found"));
         }
 
-        User user = userList.get(0);
-
+        User user = enableUser == null ? userList.get(0) : enableUser;
         // 手动设置tenancyId -- important
         CxfHeaderHolder.TENANCYID.set(user.getTenancyId());
         return user;
@@ -1086,13 +1178,12 @@ public class UserService extends TenancyBasedService {
     /**
      * . 根据email或phone获取用户信息
      * 
-     * @param loginParam
-     *            email或phone
+     * @param loginParam email或phone
      * @return 信息model
      */
     public UserDto getUserByEmailOrPhone(LoginParam loginParam) {
         CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
-        User user = getUserByAccount(loginParam.getAccount(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true,AppConstants.STATUS_ENABLED);
+        User user = getUserByAccount(loginParam.getAccount(), loginParam.getTenancyCode(), loginParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
         UserDto userDto = BeanConverter.convert(user);
         setUserExtendVal(userDto);
         return userDto;
@@ -1101,10 +1192,8 @@ public class UserService extends TenancyBasedService {
     /**
      * . 获取所有的tags，并且根据用户id打上对应的checked标签
      * 
-     * @param userId
-     *            用户id
-     * @param domainId
-     *            域名id
+     * @param userId 用户id
+     * @param domainId 域名id
      * @return List<TagDto>
      */
     public List<TagDto> searchTagsWithUserChecked(Long userId, Integer domainId) {
@@ -1114,12 +1203,12 @@ public class UserService extends TenancyBasedService {
         // 获取tagType信息
         TagTypeExample tagTypeExample = new TagTypeExample();
         // 添加查询条件
-        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        tagTypeExample.createCriteria().andDomainIdEqualTo(domainId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
         if (tagTypes == null || tagTypes.isEmpty()) {
-            return new ArrayList<TagDto>();
+            return new ArrayList<>();
         }
-        Map<Integer, TagType> tagTypeIdMap = new HashMap<Integer, TagType>();
+        Map<Integer, TagType> tagTypeIdMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(tagTypes)) {
             for (TagType tagType : tagTypes) {
                 tagTypeIdMap.put(tagType.getId(), tagType);
@@ -1130,8 +1219,8 @@ public class UserService extends TenancyBasedService {
         UserTagExample userTagExample = new UserTagExample();
         userTagExample.createCriteria().andUserIdEqualTo(userId);
         List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
-        List<TagDto> tagDtos = new ArrayList<TagDto>();
-        Set<Integer> tagIdLinkedToUser = new HashSet<Integer>();
+        List<TagDto> tagDtos = new ArrayList<>();
+        Set<Integer> tagIdLinkedToUser = new HashSet<>();
         if (!CollectionUtils.isEmpty(userTagKeys)) {
             for (UserTagKey userTagKey : userTagKeys) {
                 tagIdLinkedToUser.add(userTagKey.getTagId());
@@ -1144,12 +1233,12 @@ public class UserService extends TenancyBasedService {
         andStatusEqualTo.andStatusEqualTo(AppConstants.STATUS_ENABLED);
 
         // 加入domainId的限制
-        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet())).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet())).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Tag> allTags = tagMapper.selectByExample(tagConditon);
 
         // 优化
         if (allTags == null || allTags.isEmpty()) {
-            return new ArrayList<TagDto>();
+            return new ArrayList<>();
         }
 
         for (Tag tag : allTags) {
@@ -1185,7 +1274,7 @@ public class UserService extends TenancyBasedService {
             return;
         }
 
-        List<UserTagKey> infoes = new ArrayList<UserTagKey>();
+        List<UserTagKey> infoes = new ArrayList<>();
         for (Integer tagId : tagIds) {
             infoes.add(new UserTagKey().setUserId(userId).setTagId(tagId));
         }
@@ -1195,10 +1284,8 @@ public class UserService extends TenancyBasedService {
     /**
      * . 检验密码是否符合要求
      * 
-     * @param userId
-     *            userId
-     * @param password
-     *            the new password
+     * @param userId userId
+     * @param password the new password
      */
     private void checkUserPwd(Long userId, String password) {
         CheckEmpty.checkEmpty(userId, "userId");
@@ -1229,8 +1316,7 @@ public class UserService extends TenancyBasedService {
     /**
      * . 异步记录用户的密码设置记录
      * 
-     * @param user
-     *            info
+     * @param user info
      */
     private void asynAddUserPwdLog(final User user) {
         Assert.notNull(user);
@@ -1247,9 +1333,36 @@ public class UserService extends TenancyBasedService {
                     log.setTenancyId(user.getTenancyId());
                     userPwdLogMapper.insert(log);
                 } catch (Exception ex) {
-                    logger.error("failed to log add new user pwd log", ex);
+                    log.error("failed to log add new user pwd log", ex);
                 }
             }
         });
+    }
+
+    /**
+     * get user list by group code and role names
+     * 
+     * @param groupCode groupCode can not be null
+     * @param includeSubGrp include sub group or not
+     * @param includeRoleIds roleIds can not be null
+     * @return List<UserDto>
+     */
+    public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp, List<Integer> includeRoleIds) {
+        CheckEmpty.checkEmpty(groupCode, "groupCode");
+        CheckEmpty.checkEmpty(includeRoleIds, "roleIds");
+        Map<String, Object> param = new HashMap<>();
+        param.put("roleIds", includeRoleIds);
+        param.put("groupCode", groupCode);
+        param.put("includeSubGrp", includeSubGrp);
+        param.put("tenancyId", tenancyService.getTenancyIdWithCheck());
+        List<User> users = userMapper.getUsersByGroupCodeRoleIds(param);
+        if (users == null || users.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        List<UserDto> userDtos = Lists.newArrayList();
+        for (User user : users) {
+            userDtos.add(BeanConverter.convert(user));
+        }
+        return userDtos;
     }
 }

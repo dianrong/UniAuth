@@ -49,7 +49,7 @@
 						    	<input type="text" class="form-control" id="input1" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
 						  	</div>
 						  	<div class="col-sm-2">
-						    		<button type="button" class="btn btn-primary btn-sendemail" id="input2"  backupstr="<spring:message code="screen.password.reset.get.verfycode"/>"><spring:message code="screen.password.reset.get.verfycode"/></button>
+						    		<button type="button" class="btn btn-primary btn-sendemail" id="input2"><spring:message code="screen.password.reset.get.verfycode"/></button>
 						  	</div>
 					  </div>
 					  <div class="form-group">

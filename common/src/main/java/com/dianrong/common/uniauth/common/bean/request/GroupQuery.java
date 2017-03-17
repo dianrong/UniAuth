@@ -2,27 +2,70 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by Arc on 3/3/2016.
  */
-public class GroupQuery extends PageParam  {
+@ApiModel("组查询信息")
+public class GroupQuery extends PageParam {
+    private static final long serialVersionUID = -6174713703363466941L;
 
-	private static final long serialVersionUID = -6174713703363466941L;
-	private Integer id;
+    @ApiModelProperty("主键id")
+    private Integer id;
+
+    @ApiModelProperty("辅助查询字段,组id列表")
     private List<Integer> groupIds;
+
+    @ApiModelProperty("编码")
     private String code;
+
+    @ApiModelProperty("组名")
     private String name;
+
+    @ApiModelProperty("描述")
     private String description;
+
+    @ApiModelProperty("状态(0,1)")
     private Byte status;
+
+    @ApiModelProperty("用户组的关系类型(0,1)")
     private Byte userGroupType;
+
+    @ApiModelProperty("用户id")
     private Long userId;
+
+    @ApiModelProperty("角色id")
     private Integer roleId;
+
+    @ApiModelProperty("标签id")
     private Integer tagId;
+
+    @ApiModelProperty("是否需要查询tag信息")
     private Boolean needTag;
+
+    @ApiModelProperty("是否需要查询user信息")
     private Boolean needUser;
+
+    @ApiModelProperty("是否需要查询父组id")
     private Boolean needParentId;
+
+    @ApiModelProperty("是否包含有owner关系的组")
     private Boolean includeOwner;
-    
+
+    @ApiModelProperty("是否查询非直属的父组信息")
+    private Boolean includeIndirectAncestors;
+
+    public Boolean getIncludeIndirectAncestors() {
+        return includeIndirectAncestors;
+    }
+
+    public GroupQuery setIncludeIndirectAncestors(Boolean includeIndirectAncestors) {
+        this.includeIndirectAncestors = includeIndirectAncestors;
+        return this;
+    }
+
     public List<Integer> getGroupIds() {
         return groupIds;
     }
@@ -122,14 +165,14 @@ public class GroupQuery extends PageParam  {
         return this;
     }
 
-	public Integer getRoleId() {
-		return roleId;
-	}
+    public Integer getRoleId() {
+        return roleId;
+    }
 
-	public GroupQuery setRoleId(Integer roleId) {
-		this.roleId = roleId;
-		return this;
-	}
+    public GroupQuery setRoleId(Integer roleId) {
+        this.roleId = roleId;
+        return this;
+    }
 
     public Boolean getNeedParentId() {
         return needParentId;
@@ -140,20 +183,19 @@ public class GroupQuery extends PageParam  {
         return this;
     }
 
-	public Boolean getIncludeOwner() {
-		return includeOwner;
-	}
+    public Boolean getIncludeOwner() {
+        return includeOwner;
+    }
 
-	public GroupQuery setIncludeOwner(Boolean includeOwner) {
-		this.includeOwner = includeOwner;
-		 return this;
-	}
+    public GroupQuery setIncludeOwner(Boolean includeOwner) {
+        this.includeOwner = includeOwner;
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name
-				+ ", description=" + description + ", status=" + status + ", userGroupType=" + userGroupType
-				+ ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId + ", needTag=" + needTag
-				+ ", needUser=" + needUser + ", needParentId=" + needParentId + ", includeOwner=" + includeOwner + "]";
-	}
+    @Override
+    public String toString() {
+        return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name + ", description=" + description + ", status=" + status + ", userGroupType="
+                + userGroupType + ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId + ", needTag=" + needTag + ", needUser=" + needUser + ", needParentId="
+                + needParentId + ", includeOwner=" + includeOwner + ", includeIndirectAncestors=" + includeIndirectAncestors + "]";
+    }
 }

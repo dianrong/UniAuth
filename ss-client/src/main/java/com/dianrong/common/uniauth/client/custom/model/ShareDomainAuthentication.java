@@ -10,23 +10,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
 /**
- * 用于共享域的实现 
+ * 用于共享域的实现
+ * 
  * @author wanglin
  */
-public class ShareDomainAuthentication extends CasAuthenticationToken{
-	private static final long serialVersionUID = -9091689502132190220L;
+public class ShareDomainAuthentication extends CasAuthenticationToken {
+    private static final long serialVersionUID = -9091689502132190220L;
 
-	private UserDetails userDetails;
-	
-	public ShareDomainAuthentication(String key, Object principal, Object credentials,
-			Collection<? extends GrantedAuthority> authorities, UserDetails userDetails, Assertion assertion) {
-		super(key, principal, credentials, authorities, userDetails, assertion);
-		Assert.notNull(userDetails);
-		this.userDetails = userDetails;
-	}
-	
-	@Override
-	public Collection<GrantedAuthority> getAuthorities() {
-		return Collections.unmodifiableCollection(userDetails.getAuthorities());
-	}
+    private UserDetails userDetails;
+
+    public ShareDomainAuthentication(String key, Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities, UserDetails userDetails,
+            Assertion assertion) {
+        super(key, principal, credentials, authorities, userDetails, assertion);
+        Assert.notNull(userDetails);
+        this.userDetails = userDetails;
+    }
+
+    @Override
+    public Collection<GrantedAuthority> getAuthorities() {
+        return Collections.unmodifiableCollection(userDetails.getAuthorities());
+    }
 }

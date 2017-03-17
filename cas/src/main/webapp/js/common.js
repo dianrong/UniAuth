@@ -37,7 +37,7 @@ var refresh_verfypic = function(capatchElement) {
 		return;
 	}
 	$(capatchElement).attr('src',
-			context_path + '/uniauth/captcha?rnd=' + Math.random());
+			context_path + '/uniauth/verification/captcha?rnd=' + Math.random());
 }
 
 //cookie operation function
@@ -67,27 +67,31 @@ var cookieOperation = (function(){
 	};
 	var cookie_service = "cas_cookie_service";
 	var cookie_tenancy_code = "cas_cookie_tenancy_code";
+	var cookie_cookie_enable = "cas_cookie_enable";
 	var obj = {
 			setService: function(service){cookie_set(cookie_service, service);},
 			getService: function(){return cookie_get(cookie_service)},
 			setTenancyCode:function(tenancyCode){cookie_set(cookie_tenancy_code, tenancyCode);},
-			getTenancyCode:function(){return cookie_get(cookie_tenancy_code)}
+			getTenancyCode:function(){return cookie_get(cookie_tenancy_code)},
+			setCookieEnable:function(enableVal){cookie_set(cookie_cookie_enable, enableVal);},
+			getCookieEnable:function(){return cookie_get(cookie_cookie_enable)}
 	};
 	return obj;
 })();
 
 // log
 var logOperation = (function(){
+	// 兼容ie
+	window.console = window.console || {  
+	    log: function(){},
+	    error: function(){}  
+	};  
 	var obj = {
 			log: function(msg){
-				if (console && console.log) {
 					console.log(msg);
-				}
 			},
 			error: function(msg){
-				if (console && console.error) {
 					console.error(msg);
-				}
 			}
 	};
 	return obj;
@@ -135,12 +139,11 @@ $(function() {
 					if(data.success && data.success !== 'false') {
 						callBackInit(data.content);
 					} else {
-						logOperation.log('init failed, can not find default tenancy')
-						alert('sever error, please refresh page');
+						logOperation.error('init failed, can not find default tenancy')
 					}
 				},
 				error: function() {
-					alert('sever error, please refresh page');
+					logOperation.error('sever error, please refresh page');
 				}
 			});
 		};
@@ -155,11 +158,10 @@ $(function() {
 						callBackInit(data.content);
 					} else {
 						logOperation.log('init failed, server return wrong info, ' + data);
-						alert('sever error, please refresh page');
 					}
 				},
 				error: function() {
-					alert('sever error, please refresh page');
+					logOperation.error('sever error, please refresh page');
 				}
 			});
 		};
@@ -230,3 +232,44 @@ $(function() {
 	tenancy_code_cookie_init();
 	bind_tenancy_select_event();
 });
+
+//tool functions
+
+// change verify status
+var countBtn = (function(){
+	var backup_lable = "";
+	var default_init_count = 120;
+	var count_btn_ele = undefined;
+	// a random number
+	var call_by_self_tag_constant = new Date().getTime();
+	return function(count_btn, set_label_fun, get_label_fun, init_count, call_by_self_tag) {
+		if (!init_count || isNaN(init_count)) {
+			init_count = default_init_count;
+		}
+		var current_label = get_label_fun();
+		// call by self
+		if (call_by_self_tag === call_by_self_tag_constant) {
+			if(current_label < 1){
+				set_label_fun(backup_lable);
+				//显示按钮
+				count_btn.removeAttr("disabled", "disabled");
+				count_btn.removeClass('cursordefault').removeClass('black');
+				return;
+			}
+			var new_count = current_label-1;
+			set_label_fun(new_count);
+		} else {
+			// init
+			backup_lable = current_label;
+			set_label_fun(init_count);
+			// translate to jquery element
+			count_btn_ele = $(count_btn);
+			//disable element
+			count_btn.attr("disabled","disabled"); 
+			count_btn.addClass('cursordefault').addClass('black-font');
+		}
+		setTimeout(function(){
+			countBtn(count_btn_ele, set_label_fun, get_label_fun, init_count, call_by_self_tag_constant);
+		}, 1000);
+	};
+})();

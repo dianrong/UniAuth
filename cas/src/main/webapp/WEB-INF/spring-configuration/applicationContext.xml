@@ -24,9 +24,10 @@
        xmlns:c="http://www.springframework.org/schema/c"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     <description>
@@ -52,8 +53,22 @@
         Also, explicitly set the default encoding to be UTF-8 when parsing message bundles.
         The default, if not set, is none which forces ISO-8859-1 of java.util.ResourceBundle.
     -->
-    <bean class="com.dianrong.common.uniauth.sharerw.message.EmailSender" />
-
+    <context:component-scan base-package="com.dianrong.platform.challenge" />
+    <!-- <bean class="com.dianrong.common.uniauth.sharerw.message.EmailSender" /> -->
+    <!-- for notification -->
+    <bean id="smsNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.sms.DelegateUniauthSmsNotification">
+    	<constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+    	<constructor-arg index="1" value="#{uniauthConfig['notification_key']}"/>
+    	<constructor-arg index="2" value="#{uniauthConfig['notification_endpoint']}"/>
+    </bean>
+     <bean id="emailNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.email.DelegateUniauthEmailNotification">
+	     <constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+	     <constructor-arg index="1" value="#{uniauthConfig['internal.mail.smtp.femail']}"/>
+	     <constructor-arg index="2" value="#{uniauthConfig['internal.mail.smtp.host']}"/>
+	     <constructor-arg index="3" value="#{uniauthConfig['internal.mail.smtp.port']?:'0'}"/>
+	     <constructor-arg index="4" value="#{uniauthConfig['notification_key']}"/>
+	     <constructor-arg index="5" value="#{uniauthConfig['notification_endpoint']}"/>
+    </bean>
 	<!-- cas的国际化实现 -->
     <bean id="messageSource" class="org.jasig.cas.web.view.CasReloadableMessageBundle"
           p:basenames-ref="basenames" p:fallbackToSystemLocale="false" p:defaultEncoding="UTF-8"

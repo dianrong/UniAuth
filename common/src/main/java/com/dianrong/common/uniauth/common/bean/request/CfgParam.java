@@ -6,10 +6,10 @@ import java.util.List;
 /**
  * Created by Arc on 25/3/2016.
  */
-public class CfgParam extends PageParam{
+public class CfgParam extends PageParam {
 
-	private static final long serialVersionUID = -1765107973570952500L;
-	private Integer id;
+    private static final long serialVersionUID = -1765107973570952500L;
+    private Integer id;
     private String cfgKey;
     private List<String> cfgKeys;
     private String cfgKeyLike;
@@ -91,19 +91,18 @@ public class CfgParam extends PageParam{
         return this;
     }
 
-	public String getCfgKeyLike() {
-		return cfgKeyLike;
-	}
+    public String getCfgKeyLike() {
+        return cfgKeyLike;
+    }
 
-	public CfgParam setCfgKeyLike(String cfgKeyLike) {
-		this.cfgKeyLike = cfgKeyLike;
-		 return this;
-	}
+    public CfgParam setCfgKeyLike(String cfgKeyLike) {
+        this.cfgKeyLike = cfgKeyLike;
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return "CfgParam [id=" + id + ", cfgKey=" + cfgKey + ", cfgKeys=" + cfgKeys + ", cfgKeyLike=" + cfgKeyLike
-				+ ", cfgTypeId=" + cfgTypeId + ", cfgTypeCode=" + cfgTypeCode + ", value=" + value + ", file="
-				+ Arrays.toString(file) + ", needBLOBs=" + needBLOBs + "]";
-	}
+    @Override
+    public String toString() {
+        return "CfgParam [id=" + id + ", cfgKey=" + cfgKey + ", cfgKeys=" + cfgKeys + ", cfgKeyLike=" + cfgKeyLike + ", cfgTypeId=" + cfgTypeId + ", cfgTypeCode=" + cfgTypeCode
+                + ", value=" + value + ", file=" + Arrays.toString(file) + ", needBLOBs=" + needBLOBs + "]";
+    }
 }

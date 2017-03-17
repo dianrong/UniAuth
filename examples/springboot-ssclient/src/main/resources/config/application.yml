@@ -1,0 +1,5 @@
+DR_CFG_ZOOKEEPER_ENV_URL: "localhost:2181"
+server: 
+  port: 8180
+  session:
+    timeout: 1200

@@ -1,9 +1,10 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DomainDto extends TenancyBaseDto {
+public class DomainDto implements Serializable {
     private static final long serialVersionUID = -7455679107780186680L;
     private Integer id;
     private String code;
@@ -130,7 +131,8 @@ public class DomainDto extends TenancyBaseDto {
 
     @Override
     public String toString() {
-        return "DomainDto [id=" + id + ", code=" + code + ", displayName=" + displayName + ", description=" + description + ", status=" + status + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate + ", roleList=" + roleList + ", stakeholderList=" + stakeholderList + ", zkDomainUrl="
-                + zkDomainUrl + ", zkDomainUrlEncoded=" + zkDomainUrlEncoded + ", isCustomizedLoginPage=" + isCustomizedLoginPage + "]";
+        return "DomainDto [id=" + id + ", code=" + code + ", displayName=" + displayName + ", description=" + description + ", status=" + status + ", createDate=" + createDate
+                + ", lastUpdate=" + lastUpdate + ", roleList=" + roleList + ", stakeholderList=" + stakeholderList + ", zkDomainUrl=" + zkDomainUrl + ", zkDomainUrlEncoded="
+                + zkDomainUrlEncoded + ", isCustomizedLoginPage=" + isCustomizedLoginPage + "]";
     }
 }

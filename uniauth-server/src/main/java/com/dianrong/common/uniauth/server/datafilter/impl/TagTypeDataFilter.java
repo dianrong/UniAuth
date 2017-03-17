@@ -18,25 +18,25 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  */
 @Service("tagTypeDataFilter")
 public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
-	/**.
-	 * tagType处理的mapper
-	 */
-	@Autowired
+    /**
+     * . tagType处理的mapper
+     */
+    @Autowired
     private TagTypeMapper tagTypeMapper;
 
-	@Override
-	protected String getProcessTableName() {
-		return  UniBundle.getMsg("data.filter.table.name.tagtype");
-	}
-	
-	@Override
-	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
-		TagTypeExample condition = new TagTypeExample();
-        TagTypeExample.Criteria criteria =  condition.createCriteria();
+    @Override
+    protected String getProcessTableName() {
+        return UniBundle.getMsg("data.filter.table.name.tagtype");
+    }
+
+    @Override
+    protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
+        TagTypeExample condition = new TagTypeExample();
+        TagTypeExample.Criteria criteria = condition.createCriteria();
         criteria.andTenancyIdEqualTo(getTenancyId());
-        //构造查询条件
-        for(FilterData fd: equalsField){
-            switch(fd.getType()) {
+        // 构造查询条件
+        for (FilterData fd : equalsField) {
+            switch (fd.getType()) {
                 case FIELD_TYPE_CODE:
                     criteria.andCodeEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
                     break;
@@ -47,24 +47,24 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
                     break;
             }
         }
-        //查询
+        // 查询
         int count = tagTypeMapper.countByExample(condition);
-        if(count > 0){
+        if (count > 0) {
             return true;
         }
         return false;
-	}
+    }
 
-	@Override
-	protected TagType getEnableRecordByPrimaryKey(Integer id) {
-		CheckEmpty.checkEmpty(id, "tagTypeId");
-		TagTypeExample condition = new TagTypeExample();
-		condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(getTenancyId());
-		List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
-		
-		if(selectByExample != null && !selectByExample.isEmpty()){
-			return selectByExample.get(0);
-		}
-		return null;
-	};
+    @Override
+    protected TagType getEnableRecordByPrimaryKey(Integer id) {
+        CheckEmpty.checkEmpty(id, "tagTypeId");
+        TagTypeExample condition = new TagTypeExample();
+        condition.createCriteria().andIdEqualTo(id);
+        List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
+
+        if (selectByExample != null && !selectByExample.isEmpty()) {
+            return selectByExample.get(0);
+        }
+        return null;
+    };
 }

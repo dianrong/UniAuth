@@ -1,0 +1,26 @@
+apply plugin: 'war'
+
+dependencies {
+	// compile project(":common")
+	compile(group: 'com.dianrong.common.uniauth', name: 'common', version:'1.0.80-SNAPSHOT')
+
+    providedCompile 'javax.servlet:javax.servlet-api'
+    compile 'org.springframework:spring-webmvc'
+    compile 'org.jasig.cas.client:cas-client-core:3.4.1'
+    
+	//zoo keeper
+    compile 'commons-logging:commons-logging'
+    
+    //Http Components
+    compile 'org.apache.httpcomponents:httpclient'
+    compile 'org.apache.httpcomponents:fluent-hc:4.5.2'
+    compile 'org.apache.httpcomponents:httpmime'
+    
+    //Log
+     compile 'ch.qos.logback:logback-classic'
+}
+
+war {
+    archiveName = project.name + '.war'
+    destinationDir = file('build')
+}

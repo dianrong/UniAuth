@@ -11,6 +11,7 @@
         <result column="tenancy_id" property="tenancyId" jdbcType="BIGINT" />
         <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="create_date" property="createDate" jdbcType="DATE" />
+        <result column="status" property="status" jdbcType="TINYINT" />
     </resultMap>
 
     <select id="getGroupOwners" resultMap="BaseResultMap">
@@ -21,12 +22,15 @@
     </select>
 
     <select id="getUsersByParentGrpIdByUserType" resultMap="GroupUsersResultMap" parameterType="map">
-        select t1.id, t1.email, t1.name, t2.id as groupId, t2.type, t1.phone, t1.create_date  from user t1 join
+        select t1.id, t1.email, t1.name, t2.id as groupId, t2.type, t1.phone, t1.create_date, t1.status  from user t1 join
           (select ug.user_id, gid.id, ug.type from user_grp ug
           join (select grp.id from grp
           join grp_path on (grp.id = grp_path.descendant)
           where grp_path.ancestor = #{id,jdbcType=INTEGER}) gid on ug.grp_id = gid.id where ug.type = #{userGroupType,jdbcType=TINYINT})
-          t2 on t1.id=t2.user_id where t1.status=0
+          t2 on t1.id=t2.user_id
+          <if test="includeDisableUser == null || !includeDisableUser">
+               where t1.status=0
+          </if>
     </select>
     
   <select id="selectByEmailOrPhone" resultMap="BaseResultMap" parameterType="java.util.Map">
@@ -51,6 +55,54 @@
     	select id from tenancy where code = #{tenancyCode, jdbcType=VARCHAR} and status = 0 
     )
     </if>
-   
+  </select>
+  
+  <!-- get user by group info and role info -->
+  <select id="getUsersByGroupCodeRoleIds" resultMap="BaseResultMap" parameterType="java.util.Map">
+  		 	select
+		    <include refid="Base_Column_List" />
+		    from user where 
+		    <!--  filter group -->
+		    id in (
+		    		select user_id from user_grp where  grp_id in (
+			    		 <choose>
+			                <when test="includeSubGrp != null and includeSubGrp">
+				                select id from grp  where id in (
+										select descendant from grp_path where ancestor in (
+												select id from grp where code = #{groupCode, jdbcType=VARCHAR}  
+											     and status = 0  and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+										)								    			
+					    			)
+						     	and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+			                </when>
+			                <otherwise>
+			                      select id from grp where  code = #{groupCode, jdbcType=VARCHAR}  
+							      and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+			                 </otherwise>
+			         </choose>
+		         )
+		        and  type = 0 
+		) 
+		<!--  filter role -->
+		and id in (
+			select user_id from user_role where role_id in 
+			<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+	            	#{item}  
+        	 </foreach>
+        	 union
+        	 select user_id from user_grp where grp_id in (
+				select id from grp  where id in (
+						select descendant from grp_path where ancestor in (
+								select grp_id from grp_role where role_id in 
+								<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+					            		#{item}  
+				        	 	</foreach>
+						)								    			
+				)
+				and status =  0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+			)
+		   and type = 0  
+      	)
+		and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
   </select>
 </mapper>

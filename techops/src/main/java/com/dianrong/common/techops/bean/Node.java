@@ -14,6 +14,7 @@ public class Node {
     private Boolean checked;
     private String description;
     private Boolean ownerMarkup;
+    private Boolean isRootGrp;
     private List<Node> children;
 
     public String getId() {
@@ -87,4 +88,13 @@ public class Node {
         this.ownerMarkup = ownerMarkup;
         return this;
     }
+
+	public Boolean getIsRootGrp() {
+		return isRootGrp;
+	}
+
+	public Node setIsRootGrp(Boolean isRootGrp) {
+		this.isRootGrp = isRootGrp;
+		return this;
+	}
 }

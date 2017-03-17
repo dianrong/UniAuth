@@ -94,6 +94,63 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         svc.tree = {};
         svc.roleUserGrpTree = {};
         svc.tagUserGrpTree = {};
+        
+        // 获取expandedNodes
+        var getExpandedNodes = (function(){
+        	var childrenEleName = 'children';
+        	var dataEleName = 'checked';
+        	var expandEleVal = true;
+        	// 特定的一个对象,代表当前node和子node都不应该expand
+        	// 非该对象的数组,至少代表当前的node是应该expand的.
+        	var nullArray = [];
+        	// 处理每一个元素,辅助函数fun
+        	var processItem = function(data, chEleName, eleName, eleVal) {
+        		if (!data) {
+        			return nullArray;
+        		}
+        		chEleName = chEleName | childrenEleName;
+        		eleName = eleName | dataEleName;
+        		eleVal = eleVal | expandEleVal;
+        		var currentNodeOk = false;
+        		if (data[dataEleName] === expandEleVal) {
+        			currentNodeOk = true;
+        		}
+        		if (data[childrenEleName]  instanceof Array) {
+        			var childExpandedNodes = processArray(data[childrenEleName], chEleName, eleName, eleVal);
+        			if (childExpandedNodes !== nullArray) {
+        				//  add current node
+        				var expandedNodes = [data];
+        				return expandedNodes.concat(childExpandedNodes);
+        			}
+        		} 
+        		if (currentNodeOk) {
+					return [];
+				} else {
+					return nullArray;
+				}
+        	};
+        	// 处理数组
+        	var processArray = function(data, chEleName, eleName, eleVal) {
+        		if (!(data instanceof Array)) {
+        			return nullArray;
+        		}
+        		var currentArrayOk = false;
+        		var expandedNodes = [];
+        		for ( var i = 0; i<data.length; i++){
+        			var currentArrayExpNodes = processItem(data[i], chEleName, eleName, eleVal);
+        			if (currentArrayExpNodes !== nullArray ) {
+        				currentArrayOk = true;
+        				expandedNodes = expandedNodes.concat(currentArrayExpNodes);
+        			}
+        		}
+        		if (currentArrayOk) {
+        			return expandedNodes;
+        		} else {
+        			return nullArray;
+        		}
+        	};
+        	return processArray;
+        })();
         svc.syncTree = function(params, roleUserGrpTreeOrTree) {
             // separate the variable that different module use.
             if(!roleUserGrpTreeOrTree) {
@@ -120,9 +177,10 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     //this is for force the tree to update data.
                     svc.roleUserGrpTree.data[0].date = new Date();
                     // only expand the first layer of the tree, reduce the rendering nodes for browser.
-                    var expandedNodes = [];
-                    expandedNodes.push(svc.roleUserGrpTree.data[0]);
-                    svc.roleUserGrpTree.expandedNodes = expandedNodes;
+                    // var expandedNodes = [];
+                    // expandedNodes.push(svc.roleUserGrpTree.data[0]);
+                    // svc.roleUserGrpTree.expandedNodes = expandedNodes;
+                    svc.roleUserGrpTree.expandedNodes = getExpandedNodes(svc.roleUserGrpTree.data);
                     svc.roleUserGrpTree.msg = '';
                 }, function (res) {
                     svc.roleUserGrpTree.msg = $rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
@@ -136,15 +194,17 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                 //this is for force the tree to update data.
                 svc.tagUserGrpTree.data[0].date = new Date();
                 // only expand the first layer of the tree, reduce the rendering nodes for browser.
-                var expandedNodes = [];
-                expandedNodes.push(svc.tagUserGrpTree.data[0]);
-                svc.tagUserGrpTree.expandedNodes = expandedNodes;
+                // var expandedNodes = [];
+                // expandedNodes.push(svc.tagUserGrpTree.data[0]);
+                // svc.tagUserGrpTree.expandedNodes = expandedNodes;
+                svc.tagUserGrpTree.expandedNodes = getExpandedNodes(svc.tagUserGrpTree.data);
                 svc.tagUserGrpTree.msg = '';
             }, function (res) {
                 svc.tagUserGrpTree.msg = $rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
                 console.log('syncTree failed' + res);
             });
         };
+        
         return svc;
     };
 

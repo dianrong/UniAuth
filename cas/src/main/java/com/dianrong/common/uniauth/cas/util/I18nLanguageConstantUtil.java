@@ -3,34 +3,36 @@ package com.dianrong.common.uniauth.cas.util;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 定义i18n所有支持的语言
  * 
  * @author wanglin
  */
+@Slf4j
 public final class I18nLanguageConstantUtil {
+
+    private I18nLanguageConstantUtil() {
+        super();
+    }
 
     /**
      * . i18n menu配置文件路径
      */
-    private static final String menuPath = "menus.properties";
+    private static final String MENU_PATH = "menus.properties";
 
-    /** Logger instance. */
-    private static final Logger logger = LoggerFactory.getLogger(I18nLanguageConstantUtil.class);
-
-    public static final LinkedHashMap<String, String> localeMap;
+    private static final Map<String, String> LOCAL_MAP;
 
     // init
     static {
         try {
-            localeMap = new LinkedHashMap<String, String>(FileUtil.loadProperties(menuPath));
+            LOCAL_MAP = new LinkedHashMap<>(FileUtil.loadProperties(MENU_PATH));
         } catch (Exception ex) {
-            logger.error("failed load i18n menues from filepath : " + menuPath +", please check whether it is exsists." + ex);
-            throw new RuntimeException(ex);
+            log.error("failed load i18n menues from filepath : " + MENU_PATH + ", please check whether it is exsists." + ex);
+            throw ex;
         }
     }
 
@@ -40,15 +42,12 @@ public final class I18nLanguageConstantUtil {
      * @return
      */
     public static List<I18nContent> getAllI18nLanguages() {
-        List<I18nContent> data = new ArrayList<I18nContent>();
-        for (String localeStr : localeMap.keySet()) {
-            data.add(new I18nContent(localeStr, localeMap.get(localeStr), UniBundleUtil.isSelected(localeStr)));
+        List<I18nContent> data = new ArrayList<>();
+        for (Map.Entry<String, String> entry : LOCAL_MAP.entrySet()) {
+            String localeStr = entry.getKey();
+            data.add(new I18nContent(localeStr, LOCAL_MAP.get(localeStr), UniBundleUtil.isSelected(localeStr)));
         }
         return data;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getAllI18nLanguages());
     }
 
     public static class I18nContent {
@@ -86,6 +85,7 @@ public final class I18nLanguageConstantUtil {
             this.isSelected = isSelected;
         }
 
+        @Override
         public String toString() {
             return this.localeStr + ":" + this.language + ":" + this.isSelected;
         }

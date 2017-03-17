@@ -2,31 +2,37 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.io.Serializable;
 
-public class TenancyBaseDto  implements Serializable{
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-	private static final long serialVersionUID = 7612408066715418041L;
-	
-	// 租户id
-	private Integer tenancyId;
-	
-	// 租户Code
-	private String tenancyCode;
+@ApiModel("租户信息")
+public class TenancyBaseDto implements Serializable {
 
-	public Integer getTenancyId() {
-		return tenancyId;
-	}
+    private static final long serialVersionUID = 7612408066715418041L;
 
-	public TenancyBaseDto setTenancyId(Integer tenancyId) {
-		this.tenancyId = tenancyId;
-		return this;
-	}
+    // 租户id
+    @ApiModelProperty("租户id")
+    private Integer tenancyId;
 
-	public String getTenancyCode() {
-		return tenancyCode;
-	}
+    // 租户Code
+    @ApiModelProperty("租户code")
+    private String tenancyCode;
 
-	public TenancyBaseDto setTenancyCode(String tenancyCode) {
-		this.tenancyCode = tenancyCode;
-		return this;
-	}
+    public Integer getTenancyId() {
+        return tenancyId;
+    }
+
+    public TenancyBaseDto setTenancyId(Integer tenancyId) {
+        this.tenancyId = tenancyId;
+        return this;
+    }
+
+    public String getTenancyCode() {
+        return tenancyCode;
+    }
+
+    public TenancyBaseDto setTenancyCode(String tenancyCode) {
+        this.tenancyCode = tenancyCode;
+        return this;
+    }
 }

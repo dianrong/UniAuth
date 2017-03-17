@@ -2,10 +2,10 @@ package com.dianrong.common.uniauth.server.resource;
 
 import java.util.List;
 
-import com.codahale.metrics.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
@@ -19,9 +19,12 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 
+import io.swagger.annotations.Api;
+
 /**
  * Created by Arc on 14/1/16.
  */
+@Api("用户信息操作接口")
 @RestController
 public class UserResource implements IUserRWResource {
 
@@ -37,7 +40,8 @@ public class UserResource implements IUserRWResource {
 
 	@Override
 	public Response<UserDto> updateUser(UserParam userParam) {
-		UserDto userDto = userService.updateUser(userParam.getUserActionEnum(),userParam.getId(),
+		UserDto userDto = userService.updateUser(userParam.getUserActionEnum(),userParam.getId(), 
+		        userParam.getAccount(), userParam.getTenancyId(),
 				userParam.getName(),userParam.getPhone(),userParam.getEmail(),
 				userParam.getPassword(),userParam.getOriginPassword(),userParam.getStatus());
 		return Response.success(userDto);
@@ -138,4 +142,9 @@ public class UserResource implements IUserRWResource {
 		List<UserDto> userDtos = userService.searchUserByTagIds(userParam.getTagIds());
 		return Response.success(userDtos);
 	}
+
+    @Override
+    public Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam) {
+        return Response.success(userService.getUsersByGroupCodeRoleIds(userParam.getGroupCode(), userParam.getIncludeSubGrp(), userParam.getIncludeRoleIds()));
+    }
 }

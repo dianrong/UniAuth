@@ -48,7 +48,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * Created by Arc on 7/4/2016.
  */
 @Service
-public class TagService extends TenancyBasedService{
+public class TagService extends TenancyBasedService {
     @Autowired
     private UserTagMapper userTagMapper;
     @Autowired
@@ -59,16 +59,15 @@ public class TagService extends TenancyBasedService{
     private GrpTagMapper grpTagMapper;
     @Autowired
     private DomainMapper domainMapper;
-    
-    @Resource(name="tagTypeDataFilter")
+
+    @Resource(name = "tagTypeDataFilter")
     private DataFilter dataFilter;
-    
-    @Resource(name="tagDataFilter")
+
+    @Resource(name = "tagDataFilter")
     private DataFilter tagDataFilter;
 
-    public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, String fuzzyTagCode, Byte tagStatus,
-                                      Integer tagTypeId, Long userId, Integer domainId, String domainCode, List<Integer> domainIds, Integer grpId,
-                                      Integer pageNumber, Integer pageSize) {
+    public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode, String fuzzyTagCode, Byte tagStatus, Integer tagTypeId, Long userId, Integer domainId,
+            String domainCode, List<Integer> domainIds, Integer grpId, Integer pageNumber, Integer pageSize) {
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
         TagExample tagExample = new TagExample();
@@ -76,33 +75,33 @@ public class TagService extends TenancyBasedService{
         tagExample.setPageOffSet(pageNumber * pageSize);
         tagExample.setPageSize(pageSize);
         TagExample.Criteria criteria = tagExample.createCriteria();
-        if(tagId != null) {
+        if (tagId != null) {
             criteria.andIdEqualTo(tagId);
         }
-        if(!CollectionUtils.isEmpty(tagIds)) {
+        if (!CollectionUtils.isEmpty(tagIds)) {
             criteria.andIdIn(tagIds);
         }
-        if(!StringUtils.isEmpty(tagCode)) {
+        if (!StringUtils.isEmpty(tagCode)) {
             criteria.andCodeEqualTo(tagCode);
         }
-        if(tagStatus != null) {
+        if (tagStatus != null) {
             criteria.andStatusEqualTo(tagStatus);
         }
-        if(tagTypeId != null) {
+        if (tagTypeId != null) {
             criteria.andTagTypeIdEqualTo(tagTypeId);
         }
-        if(!StringUtils.isEmpty(fuzzyTagCode)) {
+        if (!StringUtils.isEmpty(fuzzyTagCode)) {
             criteria.andCodeLike("%" + fuzzyTagCode + "%");
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
 
-        if(userId != null) {
+        if (userId != null) {
             UserTagExample userTagExample = new UserTagExample();
             userTagExample.createCriteria().andUserIdEqualTo(userId);
             List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
-            if(!CollectionUtils.isEmpty(userTagKeys)) {
+            if (!CollectionUtils.isEmpty(userTagKeys)) {
                 List<Integer> tagIdsQueryByUserId = new ArrayList<>();
-                for(UserTagKey userTagKey : userTagKeys) {
+                for (UserTagKey userTagKey : userTagKeys) {
                     tagIdsQueryByUserId.add(userTagKey.getTagId());
                 }
                 criteria.andIdIn(tagIdsQueryByUserId);
@@ -111,20 +110,20 @@ public class TagService extends TenancyBasedService{
             }
         }
 
-        if(domainId != null || !CollectionUtils.isEmpty(domainIds) || domainCode != null) {
+        if (domainId != null || !CollectionUtils.isEmpty(domainIds) || domainCode != null) {
             List<Integer> unionDomainIds = new ArrayList<Integer>();
-            if(domainId != null) {
+            if (domainId != null) {
                 unionDomainIds.add(domainId);
             }
-            if(!CollectionUtils.isEmpty(domainIds)) {
+            if (!CollectionUtils.isEmpty(domainIds)) {
                 unionDomainIds.addAll(domainIds);
             }
-            if(domainCode != null) {
+            if (domainCode != null) {
                 DomainExample domainExample = new DomainExample();
-                domainExample.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+                domainExample.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                 List<Domain> domains = domainMapper.selectByExample(domainExample);
-                if(!CollectionUtils.isEmpty(domains)) {
-                    for(Domain domain : domains) {
+                if (!CollectionUtils.isEmpty(domains)) {
+                    for (Domain domain : domains) {
                         unionDomainIds.add(domain.getId());
                     }
                 } else {
@@ -132,7 +131,7 @@ public class TagService extends TenancyBasedService{
                 }
             }
             TagTypeExample tagTypeExample = new TagTypeExample();
-            tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+            tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
             List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
             if (!CollectionUtils.isEmpty(tagTypes)) {
                 List<Integer> tagTypeIds = new ArrayList<>();
@@ -145,11 +144,11 @@ public class TagService extends TenancyBasedService{
             }
         }
 
-        if(grpId != null) {
+        if (grpId != null) {
             GrpTagExample grpTagExample = new GrpTagExample();
             grpTagExample.createCriteria().andGrpIdEqualTo(grpId);
-            List<GrpTagKey>  grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-            if(!CollectionUtils.isEmpty(grpTagKeys)) {
+            List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+            if (!CollectionUtils.isEmpty(grpTagKeys)) {
                 List<Integer> grpTagKeysTagIds = new ArrayList<>();
                 for (GrpTagKey grpTagKey : grpTagKeys) {
                     grpTagKeysTagIds.add(grpTagKey.getTagId());
@@ -162,12 +161,12 @@ public class TagService extends TenancyBasedService{
         int count = tagMapper.countByExample(tagExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Tag> tags = tagMapper.selectByExample(tagExample);
-        if(!CollectionUtils.isEmpty(tags)) {
+        if (!CollectionUtils.isEmpty(tags)) {
             List<TagDto> tagDtos = new ArrayList<>();
-            for(Tag tag : tags) {
+            for (Tag tag : tags) {
                 tagDtos.add(BeanConverter.convert(tag));
             }
-            return new PageDto<>(pageNumber,pageSize,count,tagDtos);
+            return new PageDto<>(pageNumber, pageSize, count, tagDtos);
         } else {
             return null;
         }
@@ -176,41 +175,39 @@ public class TagService extends TenancyBasedService{
     public TagDto addNewTag(String code, Integer tagTypeId, String description) {
         CheckEmpty.checkEmpty(code, "code");
         CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
-        
+
         // 不能存在重复的数据
-        tagDataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA , 
-        		new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId) ,
-        		new FilterData(FieldType.FIELD_TYPE_CODE, code));
-        
+        tagDataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId),
+                new FilterData(FieldType.FIELD_TYPE_CODE, code));
+
         Tag tag = new Tag();
         Date now = new Date();
         tag.setCreateDate(now);
         tag.setLastUpdate(now);
-        tag.setStatus(AppConstants.ZERO_Byte);
+        tag.setStatus(AppConstants.ZERO_BYTE);
         tag.setTagTypeId(tagTypeId);
         tag.setDescription(description);
         tag.setCode(code);
-        tag.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+        tag.setTenancyId(tenancyService.getTenancyIdWithCheck());
         tagMapper.insert(tag);
         return BeanConverter.convert(tag);
     }
 
     public TagDto updateTag(Integer tagId, String code, Byte status, Integer tagTypeId, String description) {
         CheckEmpty.checkEmpty(tagId, "tagId");
-        
+
         Tag tag = tagMapper.selectByPrimaryKey(tagId);
-        if(tag == null) {
+        if (tag == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagId, Tag.class.getSimpleName()));
         }
 
         // 除了禁用的情况
-        if(!(status != null && status != AppConstants.ZERO_Byte)) {
-	       // 过滤重复数据 启用状态的才管
-	        tagDataFilter.updateFieldsCheck(tagId, 
-	        		new FilterData(FieldType.FIELD_TYPE_CODE, StringUtil.strIsNullOrEmpty(code) ? tag.getCode() : code),
-	        		new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId == null ? tag.getTagTypeId(): tagTypeId));
+        if (!(status != null && status != AppConstants.ZERO_BYTE)) {
+            // 过滤重复数据 启用状态的才管
+            tagDataFilter.updateFieldsCheck(tagId, new FilterData(FieldType.FIELD_TYPE_CODE, StringUtil.strIsNullOrEmpty(code) ? tag.getCode() : code),
+                    new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId == null ? tag.getTagTypeId() : tagTypeId));
         }
-        
+
         tag.setStatus(status);
         tag.setCode(code);
         tag.setTagTypeId(tagTypeId);
@@ -222,23 +219,23 @@ public class TagService extends TenancyBasedService{
     public List<TagTypeDto> searchTagTypes(Integer tagId, List<Integer> domainIds, Integer domainId, String code) {
         TagTypeExample tagTypeExample = new TagTypeExample();
         TagTypeExample.Criteria criteria = tagTypeExample.createCriteria();
-        if(domainId != null) {
+        if (domainId != null) {
             criteria.andDomainIdEqualTo(domainId);
         }
-        if(tagId != null) {
+        if (tagId != null) {
             criteria.andIdEqualTo(tagId);
         }
-        if(domainIds != null) {
+        if (domainIds != null) {
             criteria.andDomainIdIn(domainIds);
         }
-        if(code != null) {
+        if (code != null) {
             criteria.andCodeEqualTo(code);
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
-        if(!CollectionUtils.isEmpty(tagTypes)) {
+        if (!CollectionUtils.isEmpty(tagTypes)) {
             List<TagTypeDto> tagTypeDtos = new ArrayList<>();
-            for(TagType tagType : tagTypes) {
+            for (TagType tagType : tagTypes) {
                 tagTypeDtos.add(BeanConverter.convert(tagType));
             }
             return tagTypeDtos;
@@ -250,13 +247,12 @@ public class TagService extends TenancyBasedService{
     public TagTypeDto addNewTagType(String code, Integer domainId) {
         CheckEmpty.checkEmpty(domainId, "domainId");
         CheckEmpty.checkEmpty(code, "code");
-        dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
-                FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
+        dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
                 FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
         TagType tagType = new TagType();
         tagType.setDomainId(domainId);
         tagType.setCode(code);
-        tagType.setTenancyId(tenancyService.getOneCanUsedTenancyId());
+        tagType.setTenancyId(tenancyService.getTenancyIdWithCheck());
         tagTypeMapper.insert(tagType);
         return BeanConverter.convert(tagType);
     }
@@ -265,19 +261,18 @@ public class TagService extends TenancyBasedService{
         CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
         CheckEmpty.checkEmpty(code, "code");
         TagType tagType = tagTypeMapper.selectByPrimaryKey(tagTypeId);
-        if(tagType == null) {
+        if (tagType == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
         }
         tagType.setCode(code);
-        if(domainId != null) {
+        if (domainId != null) {
             tagType.setDomainId(domainId);
         }
-        
+
         // 判断
-        dataFilter.updateFieldsCheck(tagTypeId,
-                FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
+        dataFilter.updateFieldsCheck(tagTypeId, FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
                 FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, tagType.getDomainId()));
-        
+
         tagTypeMapper.updateByPrimaryKey(tagType);
         return BeanConverter.convert(tagType);
     }
@@ -285,22 +280,22 @@ public class TagService extends TenancyBasedService{
     public void deleteTagType(Integer tagTypeId) {
         CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
         TagType tagType = tagTypeMapper.selectByPrimaryKey(tagTypeId);
-        if(tagType == null) {
+        if (tagType == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
         }
         TagExample tagExample = new TagExample();
-        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         int count = tagMapper.countByExample(tagExample);
-        if(count > 0) {
+        if (count > 0) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("tagtype.delete.linked-tag.error"));
         }
 
         TagExample tagExample2 = new TagExample();
-        tagExample2.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_DISABLED).andTenancyIdEqualTo(tenancyService.getOneCanUsedTenancyId());
+        tagExample2.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_DISABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Tag> tags = tagMapper.selectByExample(tagExample2);
-        if(!CollectionUtils.isEmpty(tags)) {
+        if (!CollectionUtils.isEmpty(tags)) {
             List<Integer> tagIds = new ArrayList<>();
-            for(Tag tag : tags) {
+            for (Tag tag : tags) {
                 tagIds.add(tag.getId());
             }
 
@@ -322,112 +317,112 @@ public class TagService extends TenancyBasedService{
         List<Integer> grpIds = null;
         List<Long> userIds = null;
         if (needProcessGoupIds != null && needProcessGoupIds) {
-        	grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
+            grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
         }
         if (needProcessUserIds != null && needProcessUserIds) {
-        	userIds = new ArrayList<>(new HashSet<>(userIdsDup));
+            userIds = new ArrayList<>(new HashSet<>(userIdsDup));
         }
-        
-	    if (grpIds != null) {
-	        GrpTagExample grpTagExample = new GrpTagExample();
-	        grpTagExample.createCriteria().andTagIdEqualTo(tagId);
-	        if(CollectionUtils.isEmpty(grpIds)) {
-	            grpTagMapper.deleteByExample(grpTagExample);
-	        } else {
-	            List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
-	            if (!CollectionUtils.isEmpty(grpTagKeys)) {
-	                ArrayList<Integer> dbGrpIds = new ArrayList<>();
-	                for (GrpTagKey grpTagKey : grpTagKeys) {
-	                    dbGrpIds.add(grpTagKey.getGrpId());
-	                }
-	                ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
-	                intersections.retainAll(grpIds);
-	                List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
-	                List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
-	                for (Integer grpId : grpIds) {
-	                    if (!intersections.contains(grpId)) {
-	                        grpIdsNeedAddToDB.add(grpId);
-	                    }
-	                }
-	                for (Integer dbGrpId : dbGrpIds) {
-	                    if (!intersections.contains(dbGrpId)) {
-	                        grpIdsNeedDeleteFromDB.add(dbGrpId);
-	                    }
-	                }
-	
-	                if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
-	                    for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
-	                        GrpTagKey grpTagKey = new GrpTagKey();
-	                        grpTagKey.setTagId(tagId);
-	                        grpTagKey.setGrpId(grpIdNeedAddToDB);
-	                        grpTagMapper.insert(grpTagKey);
-	                    }
-	                }
-	                if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
-	                    GrpTagExample grpTagDeleteExample = new GrpTagExample();
-	                    grpTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andGrpIdIn(grpIdsNeedDeleteFromDB);
-	                    grpTagMapper.deleteByExample(grpTagDeleteExample);
-	                }
-	            } else {
-	                for (Integer grpId : grpIds) {
-	                    GrpTagKey grpTagKey = new GrpTagKey();
-	                    grpTagKey.setTagId(tagId);
-	                    grpTagKey.setGrpId(grpId);
-	                    grpTagMapper.insert(grpTagKey);
-	                }
-	            }
-	        }
-	    }
 
-	    if (userIds != null) {
-	        UserTagExample userTagExample = new UserTagExample();
-	        userTagExample.createCriteria().andTagIdEqualTo(tagId);
-	        if(CollectionUtils.isEmpty(userIds)) {
-	            userTagMapper.deleteByExample(userTagExample);
-	        } else {
-	            List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
-	            if (!CollectionUtils.isEmpty(userTagKeys)) {
-	                ArrayList<Long> dbUserIds = new ArrayList<>();
-	                for (UserTagKey userTagKey : userTagKeys) {
-	                    dbUserIds.add(userTagKey.getUserId());
-	                }
-	                ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
-	                intersections.retainAll(userIds);
-	                List<Long> userIdsNeedAddToDB = new ArrayList<>();
-	                List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
-	                for (Long userId : userIds) {
-	                    if (!intersections.contains(userId)) {
-	                        userIdsNeedAddToDB.add(userId);
-	                    }
-	                }
-	                for (Long dbUserId : dbUserIds) {
-	                    if (!intersections.contains(dbUserId)) {
-	                        userIdsNeedDeleteFromDB.add(dbUserId);
-	                    }
-	                }
-	
-	                if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
-	                    for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
-	                        UserTagKey userTagKey = new UserTagKey();
-	                        userTagKey.setTagId(tagId);
-	                        userTagKey.setUserId(userIdNeedAddToDB);
-	                        userTagMapper.insert(userTagKey);
-	                    }
-	                }
-	                if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
-	                    UserTagExample userTagDeleteExample = new UserTagExample();
-	                    userTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andUserIdIn(userIdsNeedDeleteFromDB);
-	                    userTagMapper.deleteByExample(userTagDeleteExample);
-	                }
-	            } else {
-	                for (Long userId : userIds) {
-	                    UserTagKey userTagKey = new UserTagKey();
-	                    userTagKey.setTagId(tagId);
-	                    userTagKey.setUserId(userId);
-	                    userTagMapper.insert(userTagKey);
-	                }
-	            }
-	        }
-	    }
+        if (grpIds != null) {
+            GrpTagExample grpTagExample = new GrpTagExample();
+            grpTagExample.createCriteria().andTagIdEqualTo(tagId);
+            if (CollectionUtils.isEmpty(grpIds)) {
+                grpTagMapper.deleteByExample(grpTagExample);
+            } else {
+                List<GrpTagKey> grpTagKeys = grpTagMapper.selectByExample(grpTagExample);
+                if (!CollectionUtils.isEmpty(grpTagKeys)) {
+                    ArrayList<Integer> dbGrpIds = new ArrayList<>();
+                    for (GrpTagKey grpTagKey : grpTagKeys) {
+                        dbGrpIds.add(grpTagKey.getGrpId());
+                    }
+                    ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
+                    intersections.retainAll(grpIds);
+                    List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
+                    List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
+                    for (Integer grpId : grpIds) {
+                        if (!intersections.contains(grpId)) {
+                            grpIdsNeedAddToDB.add(grpId);
+                        }
+                    }
+                    for (Integer dbGrpId : dbGrpIds) {
+                        if (!intersections.contains(dbGrpId)) {
+                            grpIdsNeedDeleteFromDB.add(dbGrpId);
+                        }
+                    }
+
+                    if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
+                        for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
+                            GrpTagKey grpTagKey = new GrpTagKey();
+                            grpTagKey.setTagId(tagId);
+                            grpTagKey.setGrpId(grpIdNeedAddToDB);
+                            grpTagMapper.insert(grpTagKey);
+                        }
+                    }
+                    if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
+                        GrpTagExample grpTagDeleteExample = new GrpTagExample();
+                        grpTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andGrpIdIn(grpIdsNeedDeleteFromDB);
+                        grpTagMapper.deleteByExample(grpTagDeleteExample);
+                    }
+                } else {
+                    for (Integer grpId : grpIds) {
+                        GrpTagKey grpTagKey = new GrpTagKey();
+                        grpTagKey.setTagId(tagId);
+                        grpTagKey.setGrpId(grpId);
+                        grpTagMapper.insert(grpTagKey);
+                    }
+                }
+            }
+        }
+
+        if (userIds != null) {
+            UserTagExample userTagExample = new UserTagExample();
+            userTagExample.createCriteria().andTagIdEqualTo(tagId);
+            if (CollectionUtils.isEmpty(userIds)) {
+                userTagMapper.deleteByExample(userTagExample);
+            } else {
+                List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+                if (!CollectionUtils.isEmpty(userTagKeys)) {
+                    ArrayList<Long> dbUserIds = new ArrayList<>();
+                    for (UserTagKey userTagKey : userTagKeys) {
+                        dbUserIds.add(userTagKey.getUserId());
+                    }
+                    ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
+                    intersections.retainAll(userIds);
+                    List<Long> userIdsNeedAddToDB = new ArrayList<>();
+                    List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
+                    for (Long userId : userIds) {
+                        if (!intersections.contains(userId)) {
+                            userIdsNeedAddToDB.add(userId);
+                        }
+                    }
+                    for (Long dbUserId : dbUserIds) {
+                        if (!intersections.contains(dbUserId)) {
+                            userIdsNeedDeleteFromDB.add(dbUserId);
+                        }
+                    }
+
+                    if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
+                        for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
+                            UserTagKey userTagKey = new UserTagKey();
+                            userTagKey.setTagId(tagId);
+                            userTagKey.setUserId(userIdNeedAddToDB);
+                            userTagMapper.insert(userTagKey);
+                        }
+                    }
+                    if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
+                        UserTagExample userTagDeleteExample = new UserTagExample();
+                        userTagDeleteExample.createCriteria().andTagIdEqualTo(tagId).andUserIdIn(userIdsNeedDeleteFromDB);
+                        userTagMapper.deleteByExample(userTagDeleteExample);
+                    }
+                } else {
+                    for (Long userId : userIds) {
+                        UserTagKey userTagKey = new UserTagKey();
+                        userTagKey.setTagId(tagId);
+                        userTagKey.setUserId(userId);
+                        userTagMapper.insert(userTagKey);
+                    }
+                }
+            }
+        }
     }
 }

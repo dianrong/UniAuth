@@ -73,7 +73,7 @@
 						  	</div>
 						  	<div class="col-sm-2">
 						  		<div class="captcha-img">
-						    		<img alt="picture" src="<%=path %>/uniauth/captcha" title="<spring:message code="screen.init.password.step1.content.verifycode.title"/>"  id="init_pwd_verfypic" >
+						    		<img alt="picture" src="<%=path %>/uniauth/verification/captcha" title="<spring:message code="screen.init.password.step1.content.verifycode.title"/>"  id="init_pwd_verfypic" >
 						    		<button type="button" class="btn btn-primary glyphicon glyphicon-refresh" id="init_pwd_refreshverfypic"></button>
 						    	</div>
 						  	</div>

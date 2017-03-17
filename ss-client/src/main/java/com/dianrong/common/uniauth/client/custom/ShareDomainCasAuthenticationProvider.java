@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,59 +18,63 @@ import com.dianrong.common.uniauth.client.custom.model.ShareDomainAuthentication
 import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * 用于处理多域共享信息的情况 
+ * 用于处理多域共享信息的情况
+ * 
  * @author wanglin
  */
-public final class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvider{
-	private static final Logger logger = Logger.getLogger(ShareDomainCasAuthenticationProvider.class);
-	
-	@Override
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		Authentication authenticate = super.authenticate(authentication);
-		if (needShareDomainSupport(authenticate)) {
-			CasAuthenticationToken orginalAuthentication = (CasAuthenticationToken)authenticate;
-			grantAuthoritesMapperProcess(orginalAuthentication.getUserDetails());
-			return new ShareDomainAuthentication(this.getKey(),  orginalAuthentication.getPrincipal(), orginalAuthentication.getCredentials(),
-					orginalAuthentication.getAuthorities(), orginalAuthentication.getUserDetails(), orginalAuthentication.getAssertion());
-		} else {
-			return authenticate;
-		}
-	}
-	
-	public boolean needShareDomainSupport(Object obj){
-		return obj instanceof CasAuthenticationToken;
-	}
-	
-	public void grantAuthoritesMapperProcess(UserDetails userDetails){
-		if (!(userDetails instanceof  UserExtInfo)) {
-				return;
-		}
-		GrantedAuthoritiesMapper authoritiesMapper =  (GrantedAuthoritiesMapper)ReflectionUtils.getField(this, "authoritiesMapper");
-		if (authoritiesMapper == null ) {
-			logger.warn("please check AuthenticationProvider implementation, whether there is a fied type of  GrantedAuthoritiesMapper not name of authoritiesMapper. GrantedAuthoritiesMapper is not effective");
-			return;
-		}
-		
-		UserExtInfo userExtInfo = (UserExtInfo)userDetails;
-		SingleDomainUserExtInfo loginDomainUserExtInfo = userExtInfo.getLoginDomainUserExtInfo();
-		if (loginDomainUserExtInfo != null) {
-			userExtInfo.setLoginDomainUserExtInfo(replaceAuthorities(loginDomainUserExtInfo, authoritiesMapper.mapAuthorities(loginDomainUserExtInfo.getAuthorities())));
-		}
-		AllDomainUserExtInfo allDomainUserExtInfo = userExtInfo.getAllDomainUserExtInfo();
-		if (allDomainUserExtInfo != null) {
-			Set<String> allDomainCodes =  allDomainUserExtInfo.getAllDomainCode();
-			for (String key : allDomainCodes) {
-				SingleDomainUserExtInfo domainUserExtInfo = allDomainUserExtInfo.getUserDetail(key);
-				allDomainUserExtInfo.replaceUserExtInfo(key, replaceAuthorities(domainUserExtInfo, authoritiesMapper.mapAuthorities(domainUserExtInfo.getAuthorities())));
-			}
-		}
-	}
-	
-	private SingleDomainUserExtInfo replaceAuthorities(final SingleDomainUserExtInfo orginalOne, final Collection<? extends GrantedAuthority> newAuthorities){
-		Assert.notNull(orginalOne);
-		Collection<? extends GrantedAuthority>  _newAuthorities = newAuthorities == null? new ArrayList<GrantedAuthority>() : newAuthorities;
-		return new SingleDomainUserExtInfo(orginalOne.getUsername(), orginalOne.getPassword(), orginalOne.isEnabled(), orginalOne.isAccountNonExpired(), orginalOne.isCredentialsNonExpired() ,
-				orginalOne.isAccountNonLocked(), _newAuthorities, orginalOne.getId(), orginalOne.getUserDto(), orginalOne.getDomainDto(), orginalOne.getPermMap(), orginalOne.getPermDtoMap());
-	}
+@Slf4j
+public final class ShareDomainCasAuthenticationProvider extends CasAuthenticationProvider {
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        Authentication authenticate = super.authenticate(authentication);
+        if (needShareDomainSupport(authenticate)) {
+            CasAuthenticationToken orginalAuthentication = (CasAuthenticationToken) authenticate;
+            grantAuthoritesMapperProcess(orginalAuthentication.getUserDetails());
+            return new ShareDomainAuthentication(this.getKey(), orginalAuthentication.getPrincipal(), orginalAuthentication.getCredentials(),
+                    orginalAuthentication.getAuthorities(), orginalAuthentication.getUserDetails(), orginalAuthentication.getAssertion());
+        } else {
+            return authenticate;
+        }
+    }
+
+    public boolean needShareDomainSupport(Object obj) {
+        return obj instanceof CasAuthenticationToken;
+    }
+
+    public void grantAuthoritesMapperProcess(UserDetails userDetails) {
+        if (!(userDetails instanceof UserExtInfo)) {
+            return;
+        }
+        GrantedAuthoritiesMapper authoritiesMapper = (GrantedAuthoritiesMapper) ReflectionUtils.getField(this, "authoritiesMapper");
+        if (authoritiesMapper == null) {
+            log.warn(
+                    "please check AuthenticationProvider implementation, whether there is a fied type of  GrantedAuthoritiesMapper not name of authoritiesMapper. GrantedAuthoritiesMapper is not effective");
+            return;
+        }
+
+        UserExtInfo userExtInfo = (UserExtInfo) userDetails;
+        SingleDomainUserExtInfo loginDomainUserExtInfo = userExtInfo.getLoginDomainUserExtInfo();
+        if (loginDomainUserExtInfo != null) {
+            userExtInfo.setLoginDomainUserExtInfo(replaceAuthorities(loginDomainUserExtInfo, authoritiesMapper.mapAuthorities(loginDomainUserExtInfo.getAuthorities())));
+        }
+        AllDomainUserExtInfo allDomainUserExtInfo = userExtInfo.getAllDomainUserExtInfo();
+        if (allDomainUserExtInfo != null) {
+            Set<String> allDomainCodes = allDomainUserExtInfo.getAllDomainCode();
+            for (String key : allDomainCodes) {
+                SingleDomainUserExtInfo domainUserExtInfo = allDomainUserExtInfo.getUserDetail(key);
+                allDomainUserExtInfo.replaceUserExtInfo(key, replaceAuthorities(domainUserExtInfo, authoritiesMapper.mapAuthorities(domainUserExtInfo.getAuthorities())));
+            }
+        }
+    }
+
+    private SingleDomainUserExtInfo replaceAuthorities(final SingleDomainUserExtInfo orginalOne, final Collection<? extends GrantedAuthority> newAuthorities) {
+        Assert.notNull(orginalOne);
+        Collection<? extends GrantedAuthority> _newAuthorities = newAuthorities == null ? new ArrayList<GrantedAuthority>() : newAuthorities;
+        return new SingleDomainUserExtInfo(orginalOne.getUsername(), orginalOne.getPassword(), orginalOne.isEnabled(), orginalOne.isAccountNonExpired(),
+                orginalOne.isCredentialsNonExpired(), orginalOne.isAccountNonLocked(), _newAuthorities, orginalOne.getId(), orginalOne.getUserDto(), orginalOne.getDomainDto(),
+                orginalOne.getPermMap(), orginalOne.getPermDtoMap());
+    }
 }

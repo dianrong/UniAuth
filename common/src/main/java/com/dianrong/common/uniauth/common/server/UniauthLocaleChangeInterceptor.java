@@ -28,7 +28,7 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
     /**
      * . session name
      */
-    public static final  String sessionName =UniauthLocaleChangeInterceptor.class.getName()+ ".sessionKey";
+    public static final String SESSION_NAME = UniauthLocaleChangeInterceptor.class.getName() + ".sessionKey";
 
     /**
      * . cookie max age seconds default: 30 days
@@ -43,19 +43,18 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
         }
         Locale newLocale = null;
         try {
-            newLocale = computeLocale(request, response);
+            newLocale = computeLocale(request);
             // 设置新值
             localeResolver.setLocale(request, response, newLocale);
             // 设置thread locale值 从localeResolver中获取
             UniauthLocaleInfoHolder.setLocale(localeResolver.resolveLocale(request));
         } finally {
-            if (newLocale == null) {
-                return true;
+            if (newLocale != null) {
+                // refresh session
+                request.getSession().setAttribute(SESSION_NAME, newLocale);
+                // refresh cookie
+                refreshLocaleCookie(request, response, newLocale.toString());
             }
-            // refresh session
-            request.getSession().setAttribute(sessionName, newLocale);
-            // refresh cookie
-            refreshLocaleCookie(request, response, newLocale == null ? "" : newLocale.toString());
         }
         return true;
     }
@@ -64,14 +63,13 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
      * . 计算出locale对象
      * 
      * @param request HttpServletRequest
-     * @param response HttpServletResponse
      * @return Locale not null
      */
-    private Locale computeLocale(HttpServletRequest request, HttpServletResponse response) {
+    private Locale computeLocale(HttpServletRequest request) {
         // step 1: get from request parameter
         HttpSession session = request.getSession(false);
         if (session != null) {
-            Locale sessionLocale = (Locale) session.getAttribute(sessionName);
+            Locale sessionLocale = (Locale) session.getAttribute(SESSION_NAME);
             if (sessionLocale != null) {
                 return sessionLocale;
             }
@@ -123,7 +121,9 @@ public class UniauthLocaleChangeInterceptor extends HandlerInterceptorAdapter {
         if (cookieLocaleStr != null && cookieLocaleStr.equals(newLocaleStr)) {
             return;
         }
+        boolean localSecure = false;
         Cookie cookie = new Cookie(cookieName, newLocaleStr);
+        cookie.setSecure(localSecure);
         cookie.setMaxAge(cookieMaxAge);
         cookie.setPath("/");
         response.addCookie(cookie);

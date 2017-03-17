@@ -22,7 +22,7 @@ public interface IUserExtendResource {
 
     @POST
     @Path("searchuserextend")
-    //scenario: search role
+    // scenario: search role
     Response<PageDto<UserExtendDto>> searchUserExtend(UserExtendPageParam pageParam);
 }
 

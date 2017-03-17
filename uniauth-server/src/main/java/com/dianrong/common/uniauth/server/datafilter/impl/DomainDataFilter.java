@@ -28,8 +28,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         DomainExample condition = new DomainExample();
         DomainExample.Criteria criteria =  condition.createCriteria();
-        
-        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+        criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
         //构造查询条件
         for(FilterData fd: equalsField){
             switch(fd.getType()) {
@@ -37,7 +36,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	            	 criteria.andIdEqualTo(TypeParseUtil.parseToIntegerFromObject(fd.getValue()));
 					break;
 				case FIELD_TYPE_CODE:
-					criteria.andCodeEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
+                    criteria.andCodeEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
 					break;
 	             default:
                     break;
@@ -60,7 +59,7 @@ public class DomainDataFilter extends CurrentAbstractDataFilter<Domain> {
 	protected Domain getEnableRecordByPrimaryKey(Integer id) {
 		CheckEmpty.checkEmpty(id, "domainId");
 		DomainExample condition = new DomainExample();
-		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+		condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED);
 		List<Domain> selectByExample = domainMapper.selectByExample(condition);
 		if (selectByExample != null && !selectByExample.isEmpty()) {
 			return  selectByExample.get(0);

@@ -140,8 +140,11 @@
         </entry>
     </util:map>
 
-    <bean id="serviceRegistryDao" class="org.jasig.cas.services.JsonServiceRegistryDao"
-          c:configDirectory="${service.registry.config.location:classpath:services}" />
+<!--     <bean id="serviceRegistryDao" class="org.jasig.cas.services.JsonServiceRegistryDao" -->
+<!--           c:configDirectory="${service.registry.config.location:classpath:services}" /> -->
+  <bean id="serviceRegistryDao" class="com.dianrong.common.uniauth.cas.registry.UniauthServiceRegistryDao">
+    <constructor-arg ref="uniauthConfig"/>
+  </bean>
 
     <bean id="auditTrailManager" class="org.jasig.inspektr.audit.support.Slf4jLoggingAuditTrailManager" />
 
@@ -161,4 +164,10 @@
               p:serviceTicketCountWarnThreshold="5000"
               p:sessionCountWarnThreshold="100000" />
     </util:list>
+    
+    <!-- set api control account -->
+    <bean class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
+    	<property name="account" value="techops"/>
+    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']}"/>
+    </bean>
 </beans>

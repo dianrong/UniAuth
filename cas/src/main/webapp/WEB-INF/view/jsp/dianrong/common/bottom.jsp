@@ -9,7 +9,7 @@ String bversion = (String)application.getAttribute("cas_v");
 %>   
 <footer class="footer">
     <div>
-		<p><%=CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_ALL_RIGHT") == null? "":CasCfgResourceRefreshHelper.instance.getImageCacheDto("CAS_ALL_RIGHT").getValue() %></p>
+		<p><%=CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_ALL_RIGHT") == null? "":CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_ALL_RIGHT").getValue() %></p>
     </div>
      <div class="i18n-div">
     	<%

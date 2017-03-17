@@ -7,25 +7,35 @@
       <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
       <result column="perm_type" property="permType" jdbcType="VARCHAR" />
       <result column="http_method" property="httpMethod" jdbcType="VARCHAR" />
+      <result column="tenancy_id" property="tenancyId" jdbcType="BIGINT" />
   </resultMap>
   
-  <select id="selectUrlRoleMapping" resultMap="UrlRoleMappingExtResultMap" parameterType="java.lang.String" >
-	select p.value perm_url,  rc.code role_code, pt.type perm_type, p.value_ext http_method
+  <select id="selectUrlRoleMapping" resultMap="UrlRoleMappingExtResultMap" parameterType="java.util.Map" >
+	select p.value perm_url,  rc.code role_code, pt.type perm_type, p.value_ext http_method, p.tenancy_id tenancy_id
 	from permission p, perm_type pt, role_permission rp, domain d,
 	role r, role_code rc
 	where d.status = 0
-	and d.code = #{domainCode, jdbcType=VARCHAR}
-	and d.tenancy_id = #{tenancyId, jdbcType = BIGINT}
-	and pt.type = 'URI_PATTERN'
-	and pt.id = p.perm_type_id
-	and p.status = 0
-	and p.tenancy_id = #{tenancyId, jdbcType = BIGINT}
-	and p.domain_id = d.id
-	and p.id = rp.permission_id
-	and rp.role_id = r.id
-	and r.tenancy_id = #{tenancyId, jdbcType = BIGINT}
-	and r.status = 0
-	and r.domain_id = d.id
-	and r.role_code_id = rc.id
+		and d.code = #{domainCode, jdbcType=VARCHAR}
+		and pt.type = 'URI_PATTERN'
+		and pt.id = p.perm_type_id
+		and p.status = 0
+		<if test="tenancyIds != null">
+	     		and p.tenancy_id in 
+     			<foreach item="item" collection="tenancyIds" separator="," open="(" close=")" index="">  
+			      			#{item, jdbcType=BIGINT}  
+			    </foreach>  
+	    </if>
+		and p.domain_id = d.id
+		and p.id = rp.permission_id
+		and rp.role_id = r.id
+		<if test="tenancyIds != null">
+	     		and r.tenancy_id in 
+     			<foreach item="item" collection="tenancyIds" separator="," open="(" close=")" index="">  
+			      			#{item, jdbcType=BIGINT}  
+			    </foreach>  
+	    </if>
+		and r.status = 0
+		and r.domain_id = d.id
+		and r.role_code_id = rc.id
   </select>
 </mapper>

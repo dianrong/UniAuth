@@ -7,8 +7,8 @@ import java.util.Date;
  */
 public class AuditParam extends PageParam {
 
-	private static final long serialVersionUID = 8772883664818679757L;
-	private Long userId;
+    private static final long serialVersionUID = 8772883664818679757L;
+    private Long userId;
     private Date minRequestDate;
     private Date maxRequestDate;
     private Integer domainId;
@@ -26,6 +26,7 @@ public class AuditParam extends PageParam {
     private String reqResult;
     private String orderBy;
     private Boolean ascOrDesc;
+    private String requestDomainCode;
 
     public Long getUserId() {
         return userId;
@@ -189,13 +190,20 @@ public class AuditParam extends PageParam {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "AuditParam [userId=" + userId + ", minRequestDate=" + minRequestDate + ", maxRequestDate="
-				+ maxRequestDate + ", domainId=" + domainId + ", reqIp=" + reqIp + ", reqUuid=" + reqUuid + ", reqUrl="
-				+ reqUrl + ", reqSequence=" + reqSequence + ", reqClass=" + reqClass + ", reqMethod=" + reqMethod
-				+ ", reqSuccess=" + reqSuccess + ", reqException=" + reqException + ", minReqElapse=" + minReqElapse
-				+ ", maxReqElapse=" + maxReqElapse + ", reqParam=" + reqParam + ", reqResult=" + reqResult
-				+ ", orderBy=" + orderBy + ", ascOrDesc=" + ascOrDesc + "]";
-	}
+    public String getRequestDomainCode() {
+        return requestDomainCode;
+    }
+
+    public AuditParam setRequestDomainCode(String requestDomainCode) {
+        this.requestDomainCode = requestDomainCode;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "AuditParam [userId=" + userId + ", minRequestDate=" + minRequestDate + ", maxRequestDate=" + maxRequestDate + ", domainId=" + domainId + ", reqIp=" + reqIp
+                + ", reqUuid=" + reqUuid + ", reqUrl=" + reqUrl + ", reqSequence=" + reqSequence + ", reqClass=" + reqClass + ", reqMethod=" + reqMethod + ", reqSuccess="
+                + reqSuccess + ", reqException=" + reqException + ", minReqElapse=" + minReqElapse + ", maxReqElapse=" + maxReqElapse + ", reqParam=" + reqParam + ", reqResult="
+                + reqResult + ", orderBy=" + orderBy + ", ascOrDesc=" + ascOrDesc + ", requestDomainCode=" + requestDomainCode + "]";
+    }
 }

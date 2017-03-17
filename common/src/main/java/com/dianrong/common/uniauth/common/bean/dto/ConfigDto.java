@@ -1,13 +1,14 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by Arc on 25/3/2016.
  */
-public class ConfigDto extends TenancyBaseDto {
-	private static final long serialVersionUID = -5735868920727388059L;
-	private Integer id;
+public class ConfigDto implements Serializable {
+    private static final long serialVersionUID = -5735868920727388059L;
+    private Integer id;
     private String cfgKey;
     private Integer cfgTypeId;
     private String cfgType;
@@ -68,9 +69,8 @@ public class ConfigDto extends TenancyBaseDto {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "ConfigDto [id=" + id + ", cfgKey=" + cfgKey + ", cfgTypeId=" + cfgTypeId + ", cfgType=" + cfgType
-				+ ", value=" + value + ", file=" + Arrays.toString(file) + "]";
-	}
+    @Override
+    public String toString() {
+        return "ConfigDto [id=" + id + ", cfgKey=" + cfgKey + ", cfgTypeId=" + cfgTypeId + ", cfgType=" + cfgType + ", value=" + value + ", file=" + Arrays.toString(file) + "]";
+    }
 }

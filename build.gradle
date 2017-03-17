@@ -1,37 +1,35 @@
-//buildscript {
-//	repositories { jcenter() }
-//
-//	dependencies {
-//		classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
-//	}
-//}
 buildscript {
 	repositories {
-		maven { url 'http://archiva.dianrong.com/repository/internal' }
-		maven { url 'http://archiva.dianrong.com/repository/snapshots' }
+	    maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
+	    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 		jcenter()
+		mavenCentral()
 	}
 	dependencies {
-//		classpath 'io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE'
-//		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
-		classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.0-snapshots'
+		classpath 'io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE'
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
+		classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.0'
 	}
 }
 plugins {
 	id "org.sonarqube" version "2.0.1"
 }
+
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.62-SNAPSHOT'
-
+    version = '1.0.81-SNAPSHOT'
+    ext{
+        spring_version = '4.1.6.RELEASE'
+    }
 
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
-//	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'io.spring.dependency-management'
 
     repositories {
+        maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
         maven {
             url 'http://archiva.dianrong.com/repository/mirror'
 			credentials {
@@ -53,14 +51,12 @@ allprojects {
 				password = '#a1GiRoKJnG'
 			}
         }
-    }
-
-    repositories{
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
 		mavenCentral()
-	}
-
-    publishing {
-		publications.all {
+    }
+	
+	publishing {
+    	publications.all {
 			pom.withXml {
 				asNode().dependencies.'*'.findAll() {
 					it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
@@ -71,40 +67,49 @@ allprojects {
 		}
         repositories {
             maven {
-                url 'http://archiva.dianrong.com/repository/mirror'
-                credentials {
-                    username = 'developer'
-                    password = '#a1GiRoKJnG'
-                }
+            	if(project.version.endsWith('-SNAPSHOT')) {
+            		url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' 
+            	}
+           		else {
+           		 	url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' 
+           		}
             }
+            
             maven {
-                url 'http://archiva.dianrong.com/repository/internal'
-                credentials {
-                    username = 'developer'
-                    password = '#a1GiRoKJnG'
-                }
-            }
-            maven {
-                url 'http://archiva.dianrong.com/repository/snapshots'
-                credentials {
-                    username = 'developer'
-                    password = '#a1GiRoKJnG'
-                }
-            }
+	            if(project.version.endsWith('-SNAPSHOT')) {
+	            	url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
+	            }
+	            else {
+	            	url 'http://nexus.dianrong.com/nexus/content/repositories/internal/'
+	            }
+	        }
         }
     }
+	
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
     
-//    configurations.all {
-//    	resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
-//	}
+    dependencyManagement {
+	    imports {
+	       //see dependencies http://docs.spring.io/platform/docs/2.0.8.RELEASE/reference/htmlsingle/#appendix-dependency-versions
+	        mavenBom 'io.spring.platform:platform-bom:2.0.8.RELEASE'
+	    }
+	    dependencies {
+          dependency 'org.projectlombok:lombok:1.16.10'
+          dependency 'org.apache.httpcomponents:fluent-hc:4.5.2'
+          dependency 'com.google.guava:guava:18.0'
+          dependency 'org.apache.commons:commons-lang3:3.4'
+          dependency 'org.mybatis:mybatis:3.2.8'
+          dependency 'org.mybatis:mybatis-spring:1.2.2'
+          dependency "javax.mail:mail:1.5.0-b01"
+        }
+	}
+
 	dependencies {
-		//Test Suite
-    	testCompile 'junit:junit:4.12'
+    	testCompile 'junit:junit'
 	}
 
 	sonarqube {
@@ -146,18 +151,16 @@ project(':ss-client') {
 	dependencies {
 		compile project(":common")
 	    compile 'org.apache.curator:curator-recipes:2.9.1'
-	    compile 'org.springframework.security:spring-security-web:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-config:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-core:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-remoting:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-ldap:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-acl:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-cas:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-openid:4.0.3.RELEASE'
-		compile 'org.springframework.security:spring-security-taglibs:4.0.3.RELEASE'
-		
-		
-		compile 'org.hibernate:hibernate-validator:5.2.4.Final'
+	    compile 'org.springframework.security:spring-security-web'
+		compile 'org.springframework.security:spring-security-config'
+		compile 'org.springframework.security:spring-security-core'
+		compile 'org.springframework.security:spring-security-remoting'
+		compile 'org.springframework.security:spring-security-ldap'
+		compile 'org.springframework.security:spring-security-acl'
+		compile 'org.springframework.security:spring-security-cas'
+		compile 'org.springframework.security:spring-security-openid'
+		compile 'org.springframework.security:spring-security-taglibs'
+		compile 'org.hibernate:hibernate-validator'
 	}
 
 	sourceSets {
@@ -201,14 +204,14 @@ project(':ss-client') {
     }
 }
 
-project(':subsystem') {
+project('examples:subsystem') {
 	apply plugin: 'war'
 	
 	dependencies {
 	    compile project(":ss-client")
-	    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
-	    compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
-	    compile 'ch.qos.logback:logback-classic:1.1.3'
+	    providedCompile 'javax.servlet:javax.servlet-api'
+	    compile 'org.springframework:spring-webmvc'
+	    compile 'ch.qos.logback:logback-classic'
 	     
 	}
 	configurations{
@@ -264,20 +267,39 @@ project(':cas') {
 			exclude group: 'org.springframework.security'
 			exclude group: 'com.fasterxml.jackson.core'
 		}
-		providedCompile "org.apache.tomcat:tomcat-catalina:7.0.63"
-		providedCompile 'javax.servlet:javax.servlet-api:3.1.0'  
-		providedCompile 'org.jasig.cas:cas-server-core:4.1.3'
-		providedCompile 'org.jasig.cas:cas-server-security-filter:2.0.4'
-		providedCompile 'org.jasig.cas:cas-server-webapp-support:4.1.3'
-		providedCompile 'org.jasig.cas:cas-server-integration-restlet:4.1.3'
-		compile 'com.dianrong.loanbusiness:kaptcha:1.1'
+
+		providedCompile( "org.apache.tomcat:tomcat-catalina:7.0.63")
+		compile (
+		 'javax.servlet:javax.servlet-api:3.1.0'  ,
+		 'org.jasig.cas:cas-server-core:4.1.3',
+		 'org.jasig.cas:cas-server-security-filter:2.0.4',
+		 'org.jasig.cas:cas-server-webapp-support:4.1.3',
+		 'org.jasig.cas:cas-server-integration-restlet:4.1.3',
+		)
+		
+		compile(
+		  "com.ryantenney.metrics:metrics-spring:3.1.3",
+		  'org.apache.commons:commons-pool2:2.4.2',
+		  'redis.clients:jedis:2.8.2',
+		  'javax.servlet:jstl:1.2',
+		)
+        compile "com.github.penggle:kaptcha:2.3.2"
+
+		compile(
+				"com.dianrong.platform:notification-client:1.0.3"
+		)
+		/** end user should open below block,and close above block
+		compile fileTree('../dianrong-lib/lib') {
+	        include 'dianrong-notification-client-1.0.3.jar'
+	    }
+		**/
 
 		//Http Components for deploy on local
-		compile 'org.apache.httpcomponents:httpclient:4.4'
-		compile 'org.apache.httpcomponents:fluent-hc:4.4'
-		compile 'org.apache.httpcomponents:httpmime:4.4'
-		compile 'ch.qos.logback:logback-classic:1.1.3'
+		compile 'org.apache.httpcomponents:httpclient'
+		compile 'org.apache.httpcomponents:fluent-hc'
+		compile 'org.apache.httpcomponents:httpmime'
 		compile 'org.jasig.cas:cas-server-support-rest:4.1.3'
+		// compile 'ch.qos.logback:logback-classic'
 		
 		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
 			exclude group: 'org.springframework', module: 'spring-aop'
@@ -289,7 +311,7 @@ project(':cas') {
 			exclude group: 'org.springframework', module: 'spring-oxm'
 			exclude group: 'org.springframework', module: 'spring-tx'
 		}
-
+        
 		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
 			//transitive = true
 			//exclude group: 'javax.xml', module: 'xmldsig'

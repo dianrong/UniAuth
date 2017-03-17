@@ -22,8 +22,7 @@ import org.springframework.util.Assert;
  */
 public final class FileUtil {
 
-    /** Logger instance. */
-    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+    private static Logger log = LoggerFactory.getLogger(FileUtil.class);
 
     /**
      * . 返回webApp文件夹所在路径
@@ -57,8 +56,10 @@ public final class FileUtil {
         if (file.exists() && file.isFile()) {
             byte[] bytes = new byte[(int) file.length()];
             BufferedInputStream bufferedInputStream = null;
+            FileInputStream fileInputStream = null;
             try {
-                bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+                fileInputStream = new FileInputStream(file);
+                bufferedInputStream = new BufferedInputStream(fileInputStream);
                 int r = bufferedInputStream.read(bytes);
                 if (r != file.length())
                     throw new IOException("读取文件不正确");
@@ -68,24 +69,28 @@ public final class FileUtil {
                 if (bufferedInputStream != null) {
                     bufferedInputStream.close();
                 }
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
             }
             return bytes;
         }
         return null;
     }
 
-    
+
     /**
-     * . it equals loadProperties(filePath , null)
+     * Equals loadProperties(filePath , null)
+     * 
      * @param filePath filePath
      * @return LinkedHashMap<String, String>
      */
     public static Map<String, String> loadProperties(String filePath) {
         return loadProperties(filePath, null);
     }
-    
+
     /**
-     * . load map from properties file. if defaultMap is null, new a LinkedHashMap
+     * load map from properties file. if defaultMap is null, new a LinkedHashMap
      * 
      * @param filePath filePath
      * @param defaultMap
@@ -110,14 +115,14 @@ public final class FileUtil {
             }
             return values;
         } catch (IOException e) {
-            logger.warn("failed to read properties from " + filePath, e);
+            log.warn("failed to read properties from " + filePath, e);
             throw new RuntimeException(e);
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    logger.warn("failed to close FileInputStream  " + in, e);
+                    log.warn("failed to close FileInputStream  " + in, e);
                 }
             }
         }

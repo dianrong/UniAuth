@@ -37,6 +37,7 @@
 	<sec:http pattern="/i18n/**" security="none" />
 	<sec:http pattern="/images/**" security="none" />
 	<sec:http pattern="/swagger-ui/**" security="none" />
+	<sec:http pattern="/v2/api-docs" security="none" />
 
 	<sec:http pattern="/metrics" security="none" />
 	<sec:http pattern="/health" security="none" />
@@ -119,8 +120,7 @@
 	<!-- trick: must be same id or name, not more than one PermissionEvaluators 
 		allowed, see AccessControlListTag.java -->
 	<bean id="uniauthPermissionEvaluator"
-		class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator"
-		primary="true"></bean>
+		class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
 
 
 	<bean id="handlerMappingC"
@@ -144,4 +144,24 @@
 		<bean id="i18nHolder" class="com.dianrong.common.uniauth.common.server.UniauthI18NHolder">
 				<property name="techOpsResource" ref="techopsResourceService"/>
 		</bean>
+		
+	<!-- set api control account -->
+    <bean class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
+    	<property name="account" value="techops"/>
+    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']}"/>
+    </bean>
+    
+        <bean id="smsNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.sms.DelegateUniauthSmsNotification">
+        <constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+        <constructor-arg index="1" value="#{uniauthConfig['notification_key']}"/>
+        <constructor-arg index="2" value="#{uniauthConfig['notification_endpoint']}"/>
+    </bean>
+     <bean id="emailNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.email.DelegateUniauthEmailNotification">
+         <constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+         <constructor-arg index="1" value="#{uniauthConfig['internal.mail.smtp.femail']}"/>
+         <constructor-arg index="2" value="#{uniauthConfig['internal.mail.smtp.host']}"/>
+         <constructor-arg index="3" value="#{uniauthConfig['internal.mail.smtp.port']?:'0'}"/>
+         <constructor-arg index="4" value="#{uniauthConfig['notification_key']}"/>
+         <constructor-arg index="5" value="#{uniauthConfig['notification_endpoint']}"/>
+    </bean>
 </beans>

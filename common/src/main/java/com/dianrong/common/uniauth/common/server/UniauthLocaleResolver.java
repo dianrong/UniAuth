@@ -7,15 +7,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.LocaleResolver;
 
-/**.
- * uniauth local resolver.
+/**
+ * . uniauth local resolver.
+ * 
  * @author wanglin
  */
-public class UniauthLocaleResolver implements LocaleResolver{
+public class UniauthLocaleResolver implements LocaleResolver {
 
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
-            return UniauthLocaleInfoHolder.getLocale();
+        return UniauthLocaleInfoHolder.getLocale();
     }
 
     @Override

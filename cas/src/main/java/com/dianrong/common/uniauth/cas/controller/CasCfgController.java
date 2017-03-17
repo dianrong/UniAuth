@@ -9,8 +9,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,17 +22,15 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 处理cas的个性化定制的controller ps : 普通spring mvc controller 不走web flow
  */
 @Controller
 @RequestMapping("/cascfg")
+@Slf4j
 public class CasCfgController {
-    /**
-     * . 日志对象
-     */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /**
      * . 根据cfg类型从缓存中获取img的数据流
      */
@@ -44,7 +40,7 @@ public class CasCfgController {
             return;
         }
         // 获取缓存
-        ConfigDto imgCache = CasCfgResourceRefreshHelper.instance.getImageCacheDto(cfgType);
+        ConfigDto imgCache = CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto(cfgType);
         if (imgCache != null) {
             byte[] file = imgCache.getFile();
             if (file != null) {
@@ -67,7 +63,7 @@ public class CasCfgController {
                 try {
                     response.getOutputStream().write(file);
                 } catch (IOException e) {
-                    logger.warn("reponse write image outputstream exception:" + e.getMessage());
+                    log.warn("reponse write image outputstream exception:" + e.getMessage());
                 }
             }
         }
@@ -78,7 +74,7 @@ public class CasCfgController {
      */
     @RequestMapping(value = "/imges/login/scrolling", method = RequestMethod.GET)
     public ModelAndView getLoginScrollImges(HttpServletRequest request, HttpServletResponse response) {
-        CasCfgCacheModel loginAdCaches = CasCfgResourceRefreshHelper.instance.getCache();
+        CasCfgCacheModel loginAdCaches = CasCfgResourceRefreshHelper.INSTANCE.getCache();
         ModelAndView modelAndView = new ModelAndView("dianrong/login/scrollImges");
         List<CasLoginAdConfigModel> loginAd = loginAdCaches == null ? null : loginAdCaches.getLoginPageAd();
         modelAndView.addObject(AppConstants.LOGIN_SCROLL_IMAGES_MODEL_KEY, loginAd == null ? new ArrayList<ConfigDto>() : loginAd);

@@ -127,9 +127,7 @@
         <prop key="/proxy">proxyController</prop>
         <prop key="/authorizationFailure.html">passThroughController</prop>
         
-        <prop key="/uniauth/captcha">captchaController</prop>
         <prop key="/uniauth/forgetPassword">forgetPasswordController</prop>
-<!--         <prop key="/uniauth/initPassword">initPasswordController</prop> -->
       </util:properties>
     </property>
     <property name="interceptors">
@@ -139,9 +137,6 @@
       </property>
   </bean>
   
-  <bean id="captchaController" class="com.dianrong.common.uniauth.cas.controller.CaptchaController">
-  	<property name="messageSource" ref="messageSource"></property>
-  </bean>
   <bean id="forgetPasswordController" class="com.dianrong.common.uniauth.cas.controller.ForgetPasswordController">
   		<property name="forgetPasswordService" ref="forgetPasswordService"></property>
   </bean>
@@ -315,7 +310,11 @@
   <bean id="proxyController" class="org.jasig.cas.web.ProxyController"
         p:centralAuthenticationService-ref="centralAuthenticationService"/>
 
-  <bean id="logoutAction" class="org.jasig.cas.web.flow.LogoutAction"
+ <bean id="logoutAction" class="com.dianrong.common.uniauth.cas.action.LogoutRedirectToLoginPageAction">
+ 		<constructor-arg ref="originalLogoutAction"/>
+ </bean>
+
+  <bean id="originalLogoutAction" class="org.jasig.cas.web.flow.LogoutAction"
         p:servicesManager-ref="servicesManager"
         p:followServiceRedirects="${cas.logout.followServiceRedirects:false}"/>
 

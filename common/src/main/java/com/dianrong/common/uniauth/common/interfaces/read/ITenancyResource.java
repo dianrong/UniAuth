@@ -19,7 +19,7 @@ public interface ITenancyResource {
     @POST
     @Path("query")
     Response<List<TenancyDto>> searchTenancy(TenancyParam tenancyParam);
-    
+
     @POST
     @Path("queryDefault")
     Response<TenancyDto> queryDefaultTenancy();
