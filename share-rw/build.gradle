@@ -10,7 +10,7 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test"
 
-    compileOnly 'com.dianrong.platform:notification-client:1.0.3'
+    compileOnly files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
 }
 
 jar {

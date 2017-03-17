@@ -105,8 +105,7 @@
 			</list>
 		</constructor-arg>
 	</bean>
-    <bean id="ssAuthenticationFailHandler" class="com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler">
-    </bean>
+    <bean id="ssAuthenticationFailHandler" class="com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler"/>
 	<bean id="casAuthenticationFilter"
 		class="org.springframework.security.cas.web.CasAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
