@@ -2,7 +2,7 @@ apply plugin: 'war'
 
 dependencies {
 	// compile project(":common")
-	compile(group: 'com.dianrong.common.uniauth', name: 'common', version:'1.0.80-SNAPSHOT')
+	compile(group: 'com.dianrong.common.uniauth', name: 'common', version:'1.0.82-SNAPSHOT')
 
     providedCompile 'javax.servlet:javax.servlet-api'
     compile 'org.springframework:spring-webmvc'
