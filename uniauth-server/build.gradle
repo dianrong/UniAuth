@@ -3,7 +3,6 @@ apply plugin: 'war'
 apply from: 'build-tomcat.gradle'
 apply from: 'build-mybatis.gradle'
 
-
 dependencies {
 
     compile project(":share-rw")
@@ -53,7 +52,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3'
 
     //Google Jar
-    compile 'com.google.code.gson:gson'
     compile 'com.google.guava:guava'
 
     //JDBC Pool
