@@ -21,6 +21,11 @@ public interface IGroupRWResource extends IGroupResource {
     @Path("removeusers")
     //scenario: remove users from one specific group(normal member and owner member)
     Response<Void> removeUsersFromGroup(UserListParam userListParam);
+
+    //scenario: move users to the target group
+    @POST
+    @Path("moveUser")
+    Response<Void> moveGroupUser(UserListParam userListParam);
     
     @POST
     @Path("addnewgroup")

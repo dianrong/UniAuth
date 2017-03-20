@@ -199,6 +199,13 @@ public class GroupAction {
         return response;
     }
 
+    @RequestMapping(value = "/moveuser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
+    public Response<Void> moveUser(@RequestBody UserListParam userListParam) {
+        Response<Void>  response = uARWFacade.getGroupRWResource().moveGroupUser(userListParam);
+        return response;
+    }
+
     // perm double checked
     @RequestMapping(value = "/group-roles" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')) "
