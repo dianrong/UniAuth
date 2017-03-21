@@ -3,6 +3,8 @@ package com.dianrong.common.techops.service;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +72,10 @@ public class NotificationService {
      * init notification template
      */
     public NotificationService() {
-        initTemplate();
     }
 
     // 初始化消息发送相关的模板
+    @PostConstruct
     private void initTemplate() {
         // add user notification template
         StringBuilder addUserEmailTemplate = new StringBuilder();
@@ -94,7 +96,7 @@ public class NotificationService {
         StringBuilder addUserSmsTemplate = new StringBuilder();
         addUserSmsTemplate.append("系统管理员为您创建了系统账户!您的登录账号为:%s,登陆密码为:%s");
         if (casServerURL != null) {
-            addUserSmsTemplate.append("请到: " + casServerURL + " 去登陆.");
+            addUserSmsTemplate.append(" 请到: " + casServerURL + " 去登陆.");
         }
         addUserSimpleNotTemplate = addUserSmsTemplate.toString();
 
@@ -117,7 +119,7 @@ public class NotificationService {
         StringBuilder updateUserPwdSmsTemplate = new StringBuilder();
         updateUserPwdSmsTemplate.append("系统管理员重置了您的系统账户密码!您的登录账号为:%s,登陆密码为:%s");
         if (casServerURL != null) {
-            updateUserPwdSmsTemplate.append("请到: " + casServerURL + " 去登陆.");
+            updateUserPwdSmsTemplate.append(" 请到: " + casServerURL + " 去登陆.");
         }
         updateUserPwdSimpleNotTemplate = updateUserPwdSmsTemplate.toString();
     }
