@@ -10,6 +10,8 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 
+import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
+
 /**
  * 记录请求的上下文信息
  * 
@@ -23,6 +25,9 @@ public final class RequestCacheInvalidSessionStrategy implements InvalidSessionS
 
     @Override
     public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        requestCache.saveRequest(request, response);
+        // ajax请求的上下文不记录
+        if(! (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request))) {
+            requestCache.saveRequest(request, response);
+        }
     }
 }
