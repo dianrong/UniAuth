@@ -5,9 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dianrong.common.uniauth.client.custom.model.SimpleRedirectInfo;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
@@ -50,9 +48,5 @@ public class UniauthAjaxResponseProcessor implements AjaxResponseProcessor {
         if (redirectObj != null) {
             response.getWriter().println(JsonUtil.object2Jason(redirectObj));
         }
-    }
-    
-    public static void main(String[] args) {
-        System.out.println(JsonUtil.object2Jason(new SimpleRedirectInfo(AppConstants.LOGIN_REDIRECT_URL, "https://passport-dev.dianrong.com?service=https://passport-dev.dianrong.com/login/cas")));
     }
 }
