@@ -32,6 +32,11 @@ public class DomainDefine implements Serializable {
     private static Integer domainId;
     // 每一个服务就只有一个的域名code定义
     private static String staticDomainCode;
+    
+    /**
+     * serviceTicket的验证是否走内网
+     */
+    private boolean serviceTicketValidateWithInnerAddress;
 
     @Autowired
     private transient UniClientFacade uniClientFacade;
@@ -178,6 +183,14 @@ public class DomainDefine implements Serializable {
             return false;
         }
         return this.controlType.support(type.getTypeStr());
+    }
+
+    public boolean isServiceTicketValidateWithInnerAddress() {
+        return serviceTicketValidateWithInnerAddress;
+    }
+
+    public void setServiceTicketValidateWithInnerAddress(boolean serviceTicketValidateWithInnerAddress) {
+        this.serviceTicketValidateWithInnerAddress = serviceTicketValidateWithInnerAddress;
     }
 
     /**
