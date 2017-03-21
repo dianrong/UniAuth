@@ -49,7 +49,7 @@ public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
             response.addHeader("Cache-Control", "no-store");
             response.setStatus(HttpStatus.OK.value());
             response.getWriter().println("{\"info\":[{\"name\": \"" + AppConstants.LOGIN_REDIRECT_URL + "\",");
-            response.getWriter().println("\"msg\": \"ST Authentication Failed\"}]}");
+            response.getWriter().println("\"msg\": \"Service ticket validation failed\"}]}");
             response.flushBuffer();
         } else {
             String authFailureUrl = authFailureUrl();
@@ -58,7 +58,7 @@ public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
             } else {
                 response.setContentType("text/html;charset=UTF-8");
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().print("ST Authentication Failed.<a href='"+request.getContextPath()+"'>Back Home</a>");
+                response.getWriter().print("Service ticket validation failed.  <a href='"+request.getContextPath()+"'>Retry</a>");
                 response.flushBuffer();
             }
         }
