@@ -68,7 +68,7 @@ public interface AppConstants {
     /**
      * zk节点中,域的登出地址的节点后缀
      */
-    String ZK_DOMAIN_LOGOUT_ADDRESS_NODE_SUFFIX = "logout-address";
+    String ZK_DOMAIN_LOGOUT_ADDRESS_NODE_SUFFIX = "logout_address";
     /**
      * 定义域的所属tenancy的code
      */
