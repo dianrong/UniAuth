@@ -104,7 +104,7 @@ public class PatternMatchMost {
                     pattern = ((Pattern) (ReflectionUtils.getField(matchMostRequestMatcher, "pattern", false))).pattern();
                     pattern = "(" + pattern + ")";
                 }
-                log.warn("Found " + mapSize + " patterns <" + allMatchedMap + "> matching <" + url + ">, choose <" + matchMostRequestMatcher + pattern + ">");
+                log.info("Found " + mapSize + " patterns <" + allMatchedMap + "> matching <" + url + ">, choose <" + matchMostRequestMatcher + pattern + ">");
             }
         }
 

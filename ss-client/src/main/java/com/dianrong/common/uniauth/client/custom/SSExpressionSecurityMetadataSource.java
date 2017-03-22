@@ -47,7 +47,7 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
                 }
             }
         } catch (UserNotLoginException ex) {
-            log.info("user not login, when call getAllConfigAttributes");
+            log.warn("user not login, when call getAllConfigAttributes");
         }
         return allAttributes;
     }
@@ -73,7 +73,7 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
                 }
             }
         } catch (UserNotLoginException ex) {
-            log.info("user not login, when call getAttributes(Object object)");
+            log.warn("user not login, when call getAttributes(Object object)");
         }
         RequestMatcher requestMatcher = PatternMatchMost.findMachMostRequestMatcher(request, allMatchedMap);
         return requestMatcher == null ? null : allMatchedMap.get(requestMatcher);
