@@ -63,6 +63,7 @@ task checkDianrongRepoStatus()  {
     URL url = new URL("http://nexus.dianrong.com/nexus/#welcome");
     URLConnection rulConnection = url.openConnection();
     HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+    httpUrlConnection.setReadTimeout(1000);
     try {
       def responseCode = httpUrlConnection.getResponseCode();
        if (responseCode == 200 ) {
