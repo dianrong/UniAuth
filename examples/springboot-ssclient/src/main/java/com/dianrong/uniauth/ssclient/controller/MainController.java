@@ -22,12 +22,12 @@ public class MainController {
         return "content";
     }
     
-    @RequestMapping(value = "/static_content", method = RequestMethod.GET)
+    @RequestMapping(value = "/static-content", method = RequestMethod.GET)
     public String getAjaxRequestPage(HttpServletRequest request) {
-        return "ajax_content";
+        return "ajax-content";
     }
     
-    @RequestMapping(value="ajax_request")
+    @RequestMapping(value="ajax-request")
     @ResponseBody
     public TestUser ajaxRequest(HttpServletRequest request) {
         return new TestUser().setAge(29).setName("wwf");

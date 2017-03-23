@@ -69,7 +69,7 @@ var login = function(service) {
 $(document).ready(function(){
 	$.ajax({
         type:"POST",
-        url:"ajax_request",
+        url:"ajax-request",
         success:function(data){
         	if (data && data.info&&data.info[0]&&data.info[0].name&&data.info[0].name==='LOGIN_REDIRECT_URL') {
         		var service = data.info[0].msg.split('=')[1];

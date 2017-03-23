@@ -15,7 +15,7 @@ import com.dianrong.common.uniauth.client.config.UniauthSecurityConfig;
 public class WebSecurityConfiguration extends UniauthSecurityConfig {
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static_content","/**/ajax_content.jsp");
+        web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static-content","/**/ajax-content.jsp");
     }
 
     @Override
