@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
 import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
 import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
+import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class SSExceptionTranslationFilterConfigure implements Configure<SSExcept
         ssExceptionTranslationFilter.setAccessDeniedHandler(accessDeniedHandlerImpl);
         ssExceptionTranslationFilter.setZooKeeperConfig(zooKeeperConfig);
         ssExceptionTranslationFilter.setCustomizedRedirectFormat(customizedRedirectFormat);
+        ssExceptionTranslationFilter.setAjaxResponseProcessor(new UniauthAjaxResponseProcessor(this.zooKeeperConfig));
         return ssExceptionTranslationFilter;
     }
 

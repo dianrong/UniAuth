@@ -233,7 +233,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
                     }
                 }
                 
-                WebExpressionConfigAttribute weca = new WebExpressionConfigAttribute(spelParser.parseExpression(sb.toString()));
+                UniauthWebExpressionConfigAttribute weca = new UniauthWebExpressionConfigAttribute(spelParser.parseExpression(sb.toString()));
                 List<ConfigAttribute> wecaList = new ArrayList<>();
                 wecaList.add(weca);
                 

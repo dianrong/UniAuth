@@ -9,12 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
 
+import com.dianrong.common.uniauth.client.custom.redirect.CompatibleAjaxRedirct;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
@@ -30,6 +32,8 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
     @Autowired
     private ZooKeeperConfig zooKeeperConfig;
 
+    private RedirectStrategy compatibleAjaxRedirect = new CompatibleAjaxRedirct();
+
     public SSSavedRequestAwareAuthenticationSuccessHandler() {
 
     }
@@ -39,6 +43,8 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends SimpleUrlAu
         if (StringUtils.hasText(domainDefine.getCustomizedLoginRedirecUrl())) {
             this.setDefaultTargetUrl(domainDefine.getCustomizedLoginRedirecUrl());
         }
+        // 覆盖默认的RedirectStrategy实现
+        this.setRedirectStrategy(compatibleAjaxRedirect);
     }
 
     @Override
