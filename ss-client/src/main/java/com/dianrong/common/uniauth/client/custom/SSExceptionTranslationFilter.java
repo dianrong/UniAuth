@@ -47,7 +47,6 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
     }
 
     public void setCustomizedRedirectFormat(CustomizedRedirectFormat customizedRedirectFormat) {
-        Assert.notNull(customizedRedirectFormat);
         this.customizedRedirectFormat = customizedRedirectFormat;
     }
 

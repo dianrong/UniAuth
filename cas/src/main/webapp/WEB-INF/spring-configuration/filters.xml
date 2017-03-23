@@ -82,4 +82,8 @@
     		</property>
     </bean>
     <!--  cas cross filter bean -->
+    
+    <!-- server exception process filter -->
+    <bean id="applicationExceptionFilter" class="com.dianrong.common.uniauth.cas.filter.AppExceptionFilter"/>
+    <!-- server exception process filter -->
 </beans>

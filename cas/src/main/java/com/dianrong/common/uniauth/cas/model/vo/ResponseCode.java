@@ -64,4 +64,10 @@ public interface ResponseCode {
      * 参数service不符合规范
      */
     int PARAMETER_SERVICE_INVALIDATE = 401;
+    
+    /** 应用级状态码 **/
+    /**
+     * 服务器端异常
+     */
+    int SERVER_INTERNAL_ERROR = 500;
 }

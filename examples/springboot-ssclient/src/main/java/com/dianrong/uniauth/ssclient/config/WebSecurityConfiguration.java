@@ -15,12 +15,11 @@ import com.dianrong.common.uniauth.client.config.UniauthSecurityConfig;
 public class WebSecurityConfiguration extends UniauthSecurityConfig {
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/js/**", "/favicon.ico");
+        web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static_content","/**/ajax_content.jsp");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
-        http.authorizeRequests().antMatchers("/web/**").authenticated();
     }
 }
