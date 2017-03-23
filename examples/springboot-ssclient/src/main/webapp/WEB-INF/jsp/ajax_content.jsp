@@ -32,7 +32,10 @@ var validateTicket = function(ticket) {
         type:"GET",
         url:url,
         success:function(data){
-            console.log(data);
+        	// 返回结果两种:
+            // 成功:{"code":200,"result":"success","message":"200","errors":[null]}
+            // 失败:{"code":500,"result":"error","message":"500","errors":["Service ticket validation failed"]}
+            $('#ajax_content').html(JSON.stringify(data));
         }, error: function(){
             console.log('error');
         }         

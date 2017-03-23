@@ -18,9 +18,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
+import com.dianrong.common.uniauth.client.custom.model.JsonResponseModel;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
 
 /**
@@ -40,6 +41,15 @@ public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
     private Map<String, String> allZkNodeMap;
     @Autowired(required = false)
     private DomainDefine domainDefine;
+    
+    public void setAllZkNodeMap(Map<String, String> allZkNodeMap) {
+        this.allZkNodeMap = allZkNodeMap;
+    }
+    
+    public void setDomainDefine(DomainDefine domainDefine) {
+        this.domainDefine = domainDefine;
+    }
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         logger.error("-----------Service Ticket Authentication Failed-------------------:{}", exception.getMessage());
@@ -47,9 +57,7 @@ public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
         if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)) {
             response.setContentType("application/json;charset=UTF-8");
             response.addHeader("Cache-Control", "no-store");
-            response.setStatus(HttpStatus.OK.value());
-            response.getWriter().println("{\"info\":[{\"name\": \"" + AppConstants.LOGIN_REDIRECT_URL + "\",");
-            response.getWriter().println("\"msg\": \"Service ticket validation failed\"}]}");
+            response.getWriter().write(JsonUtil.object2Jason(JsonResponseModel.failure("Service ticket validation failed")));
             response.flushBuffer();
         } else {
             String authFailureUrl = authFailureUrl();
