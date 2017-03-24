@@ -40,7 +40,7 @@ public class CasGetServiceTicketModel implements Serializable {
     public static final String LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED = "402";
 
     // captcha 获取的相对路径
-    public static final String DEFAULT_CATCHA_RELATIVE_PATH = "/uniauth/captcha";
+    public static final String DEFAULT_CATCHA_RELATIVE_PATH = "/uniauth/verification/captcha";
 
 
     /**
