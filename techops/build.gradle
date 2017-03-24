@@ -161,11 +161,7 @@ dependencies {
             'com.squareup.retrofit2:converter-scalars:2.1.0',
             'joda-time:joda-time',
             'commons-io:commons-io',
-<<<<<<< HEAD
         )
-=======
-     )
->>>>>>> refs/remotes/origin/release/rt163
     
     compile 'org.springframework.security:spring-security-aspects'
     aspectpath 'org.springframework.security:spring-security-aspects'
