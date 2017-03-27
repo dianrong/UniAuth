@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -56,6 +57,7 @@ public class GroupResource implements IGroupRWResource {
                     @ApiImplicitParam(name = "needUser", value = "是否将关联的user信息一块查出来", dataType = "boolean", paramType = "query"),
                     @ApiImplicitParam(name = "needParentId", value = "是否将父组id也查出来", dataType = "boolean", paramType = "query"),})
     @Override
+    @Timed
     public Response<PageDto<GroupDto>> queryGroup(GroupQuery groupQuery) {
         PageDto<GroupDto> groupDtoPageDto = groupService.searchGroup(groupQuery.getUserGroupType(), groupQuery.getUserId(), groupQuery.getRoleId(), groupQuery.getId(),
                 groupQuery.getGroupIds(), groupQuery.getName(), groupQuery.getCode(), groupQuery.getDescription(), groupQuery.getStatus(), groupQuery.getTagId(),
@@ -78,6 +80,7 @@ public class GroupResource implements IGroupRWResource {
                     @ApiImplicitParam(name = "opUserId", value = "查询组与该userId的owner关系", dataType = "long", paramType = "query"), @ApiImplicitParam(name = "includeDisableUser",
                             value = "当onlyShowGroup=false时,用于指定返回的用户列表是否包含禁用用户", dataType = "boolean", paramType = "query", defaultValue = "false"),})
     @Override
+    @Timed
     public Response<GroupDto> getGroupTree(GroupParam groupParam) {
         GroupDto grpDto = groupService.getGroupTree(groupParam.getId(), groupParam.getCode(), groupParam.getOnlyShowGroup(), groupParam.getUserGroupType(), groupParam.getRoleId(),
                 groupParam.getTagId(), groupParam.getNeedOwnerMarkup(), groupParam.getOpUserId(), groupParam.getIncludeDisableUser());

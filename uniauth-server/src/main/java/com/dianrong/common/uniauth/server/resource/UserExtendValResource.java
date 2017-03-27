@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
@@ -91,6 +92,7 @@ public class UserExtendValResource implements IUserExtendValRWResource {
             @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true, dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "queryOnlyUsed", value = "是否只查询使用中的属性", dataType = "boolean", paramType = "query"),})
     @Override
+    @Timed
     public Response<PageDto<UserExtendValDto>> searchByUserIdAndCode(UserExtendValParam userExtendValParam) {
         PageDto<UserExtendValDto> pageDto = userExtendValService.searchByUserIdAndCode(userExtendValParam.getUserId(), userExtendValParam.getExtendCode(),
                 userExtendValParam.getPageNumber(), userExtendValParam.getPageSize(), userExtendValParam.isQueryOnlyUsed());
@@ -116,6 +118,7 @@ public class UserExtendValResource implements IUserExtendValRWResource {
             @ApiImplicitParam(name = "value", value = "扩展属性值(去匹配)", required = true, dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "status", value = "扩展属性值的状态(0,1)", dataType = "integer", paramType = "query"),})
     @Override
+    @Timed
     public Response<List<UserExtendValDto>> search(UserExtendValParam userExtendValParam) {
         List<UserExtendValDto> userExtendList = userExtendValService.search(userExtendValParam.getExtendId(), userExtendValParam.getValue(), userExtendValParam.getStatus());
         return Response.success(userExtendList);

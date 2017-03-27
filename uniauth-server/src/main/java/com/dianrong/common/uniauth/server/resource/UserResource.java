@@ -60,6 +60,7 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
+	@Timed
 	public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
 		PageDto<UserDto> pageDto = userService.searchUser(userQuery.getUserId(), userQuery.getGroupId(), userQuery.getNeedDescendantGrpUser(),  userQuery.getNeedDisabledGrpUser(), 
 				userQuery.getRoleId(), userQuery.getUserIds(), userQuery.getExcludeUserIds(), userQuery.getName(),userQuery.getPhone(),userQuery.getEmail() ,userQuery.getStatus(), userQuery.getTagId(), userQuery.getNeedTag(), userQuery.getPageNumber(),userQuery.getPageSize());
@@ -67,6 +68,7 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
+	@Timed
 	public Response<UserDto> login(LoginParam loginParam) {
 		UserDto dto = userService.login(loginParam);
 		return Response.success(dto);
@@ -86,11 +88,13 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
+	@Timed
 	public Response<UserDto> getSingleUser(UserParam userParam) {
 		return new Response<UserDto>(userService.getSingleUser(userParam));
 	}
 	
 	@Override
+	@Timed
 	public Response<UserDto> getUserInfoByUserTag(LoginParam loginParam) {
 		return new Response<UserDto>(userService.getUserByEmailOrPhone(loginParam));
 	}

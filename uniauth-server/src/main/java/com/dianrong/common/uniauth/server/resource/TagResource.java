@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
@@ -29,6 +30,7 @@ public class TagResource implements ITagRWResource {
     private TagService tagService;
 
     @Override
+    @Timed
     public Response<PageDto<TagDto>> searchTags(TagQuery tagQuery) {
         PageDto<TagDto> tagDtoPageDto = tagService.searchTags(tagQuery.getId(), tagQuery.getTagIds(), tagQuery.getCode(), tagQuery.getFuzzyCode(), tagQuery.getStatus(),
                 tagQuery.getTagTypeId(), tagQuery.getUserId(), tagQuery.getDomainId(), tagQuery.getDomainCode(), tagQuery.getDomainIds(), tagQuery.getGroupId(),
