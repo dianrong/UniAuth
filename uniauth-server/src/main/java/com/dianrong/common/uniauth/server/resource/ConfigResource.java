@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -32,6 +33,7 @@ public class ConfigResource implements IConfigRWResource {
     }
 
     @Override
+    @Timed
     public Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam) {
         PageDto<ConfigDto> configDtoPageDto = configService.queryConfig(cfgParam.getCfgKeys(), cfgParam.getCfgKeyLike(), cfgParam.getId(), cfgParam.getCfgKey(),
                 cfgParam.getCfgTypeId(), cfgParam.getValue(), cfgParam.getNeedBLOBs(), cfgParam.getPageSize(), cfgParam.getPageNumber());

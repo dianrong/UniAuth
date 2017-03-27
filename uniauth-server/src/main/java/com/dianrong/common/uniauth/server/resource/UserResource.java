@@ -48,6 +48,7 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
+	@Timed
 	public Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam) {
 		List<RoleDto> roleDtos = userService.getAllRolesToUser(userParam.getId(),userParam.getDomainId());
 		return Response.success(roleDtos);
@@ -75,6 +76,7 @@ public class UserResource implements IUserRWResource {
 	}
 
 	@Override
+	@Timed
 	public Response<UserDetailDto> getUserDetailInfoByUid(UserParam userParam) {
 		UserDetailDto userDetailDto = userService.getUserDetailInfoByUid(userParam.getId());
 		return new Response<UserDetailDto>(userDetailDto);

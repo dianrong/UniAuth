@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
@@ -34,6 +35,7 @@ public class UserExtendResource implements IUserExtendRWResource {
             @ApiImplicitParam(name = "pageSize", value = "每页大小", required = true, dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "code", value = "查询条件code", dataType = "string", paramType = "query"),})
     @Override
+    @Timed
     public Response<PageDto<UserExtendDto>> searchUserExtend(UserExtendPageParam pageParam) {
         PageDto<UserExtendDto> pageDto = userExtendService.search(pageParam.getCode(), pageParam.getPageNumber(), pageParam.getPageSize());
         return Response.success(pageDto);

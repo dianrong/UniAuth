@@ -168,6 +168,7 @@ public class GroupResource implements IGroupRWResource {
     @ApiImplicitParams(value = {
             @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),})
     @Override
+    @Timed
     public Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam) {
         List<UserDto> userDtos = groupService.getGroupOwners(primaryKeyParam.getId());
         return Response.success(userDtos);

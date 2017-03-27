@@ -41,12 +41,14 @@ public class DomainResource implements IDomainRWResource {
     }
 
     @Override
+    @Timed
     public Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam) {
         List<DomainDto> domainDtoList = domainService.getAllLoginDomains(domainParam);
         return new Response<List<DomainDto>>(domainDtoList);
     }
 
     @Override
+    @Timed
     public Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam) {
         DomainDto domainDto = domainService.getDomainInfo(primaryKeyParam);
         return new Response<DomainDto>(domainDto);
