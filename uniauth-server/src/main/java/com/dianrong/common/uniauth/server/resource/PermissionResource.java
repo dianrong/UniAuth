@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
@@ -26,6 +27,7 @@ public class PermissionResource implements IPermissionRWResource {
     private PermissionService permissionService;
 
     @Override
+    @Timed
     public Response<List<PermTypeDto>> getAllPermTypeCodes() {
         List<PermTypeDto> permTypeDtoList = permissionService.getAllPermTypeCodes();
         return new Response<List<PermTypeDto>>(permTypeDtoList);
@@ -50,6 +52,7 @@ public class PermissionResource implements IPermissionRWResource {
     }
 
     @Override
+    @Timed
     public Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam) {
         List<RoleDto> roleDtoList = permissionService.getAllRolesToPermUnderADomain(permissionParam.getDomainId(), permissionParam.getId());
         return new Response<List<RoleDto>>(roleDtoList);
@@ -62,6 +65,7 @@ public class PermissionResource implements IPermissionRWResource {
     }
 
     @Override
+    @Timed
     public Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery) {
         PageDto<PermissionDto> pageDto =
                 permissionService.searchPerm(permissionQuery.getPermIds(), permissionQuery.getId(), permissionQuery.getDomainId(), permissionQuery.getStatus(),

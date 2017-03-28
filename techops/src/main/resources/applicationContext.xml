@@ -147,7 +147,7 @@
 	<!-- set api control account -->
     <bean class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
     	<property name="account" value="techops"/>
-    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']}"/>
+    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']?:''}"/>
     </bean>
     
         <bean id="smsNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.sms.DelegateUniauthSmsNotification">

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
@@ -25,18 +26,21 @@ public class RoleResource implements IRoleRWResource {
     private RoleService roleService;
 
     @Override
+    @Timed
     public Response<List<RoleCodeDto>> getAllRoleCodes() {
         List<RoleCodeDto> roleCodeDtos = roleService.getAllRoleCodes();
         return Response.success(roleCodeDtos);
     }
 
     @Override
+    @Timed
     public Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam) {
         List<PermissionDto> permissionDtos = roleService.getAllPermsToRole(roleParam.getDomainId(), roleParam.getId());
         return Response.success(permissionDtos);
     }
 
     @Override
+    @Timed
     public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
         PageDto<RoleDto> roleDtos = roleService.searchRole(roleQuery.getRoleIds(), roleQuery.getId(), roleQuery.getDomainId(), roleQuery.getName(), roleQuery.getRoleCodeId(),
                 roleQuery.getStatus(), roleQuery.getPageNumber(), roleQuery.getPageSize());

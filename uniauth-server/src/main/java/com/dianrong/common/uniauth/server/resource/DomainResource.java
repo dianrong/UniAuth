@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.resource;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -25,12 +26,14 @@ public class DomainResource implements IDomainRWResource {
     private DomainService domainService;
 
     @Override
+    @Timed
     public Response<List<StakeholderDto>> getAllStakeholdersInDomain(DomainParam domainParam) {
         List<StakeholderDto> stakeholderDtos = domainService.getAllStakeholdersInDomain(domainParam.getId());
         return Response.success(stakeholderDtos);
     }
 
     @Override
+    @Timed
     public Response<PageDto<DomainDto>> searchDomain(DomainParam domainParam) {
         PageDto<DomainDto> pageDto = domainService.searchDomain(domainParam.getDomainIds(), domainParam.getId(), domainParam.getCode(), domainParam.getDisplayName(),
                 domainParam.getStatus(), domainParam.getDescription(), domainParam.getPageNumber(), domainParam.getPageSize());
@@ -38,12 +41,14 @@ public class DomainResource implements IDomainRWResource {
     }
 
     @Override
+    @Timed
     public Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam) {
         List<DomainDto> domainDtoList = domainService.getAllLoginDomains(domainParam);
         return new Response<List<DomainDto>>(domainDtoList);
     }
 
     @Override
+    @Timed
     public Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam) {
         DomainDto domainDto = domainService.getDomainInfo(primaryKeyParam);
         return new Response<DomainDto>(domainDto);

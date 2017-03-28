@@ -50,6 +50,8 @@ export DR_CFG_ZOOKEEPER_ENV_URL 
 /com/dianrong/cfg/1.0.0/uniauth/cas_server http://localhost:8081/cas // cas服务器的部署base地址
 /com/dianrong/cfg/1.0.0/uniauth/domains.techops http://localhost:8082/techops // techops的部署base地址
 /com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint http://localhost:8080/uniauth/ws/rs  // uniauth的webservice endpoint地址， base+/ws/rs
+/com/dianrong/cfg/1.0.0/uniauth/apicall.check.switch false //指定uniauth-server的api访问是否需要权限验证. 默认为true
+/com/dianrong/cfg/1.0.0/uniauth/apicall.techops.pwd =610{8(lxt42nslg*k9q9|5z!:3@~9e72#|rw1*6arz5zad@7+muh!e-w792 // apicall.check.switch为true的时候,必须设置该节点,指定techops和cas访问uniauth-server接口的密码. 该值与api_caller_info表中的password值一致即可
 ```
 zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通过在catalina.sh中 `export DR_CFG_ZOOKEEPER_BASE_PATH`变量来更改
 ###2.5.部署启动
