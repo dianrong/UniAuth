@@ -4,26 +4,18 @@ define(['../../utils/constant'], function(constant) {
      * @exports controllers/User
      */
     var Controller = function ($rootScope, $scope, GroupService, AlertService) {
-        $scope.grp = $rootScope.shareGroup;
-
-        var paramsCtlLevel = {};
-        paramsCtlLevel.onlyShowGroup = true;
-        //paramsCtlLevel.userGroupType = 1;
-        $scope.getTree = GroupService.syncTree;
-        $scope.getTree(paramsCtlLevel);
-
         $scope.modifyGroup = function () {
 
-            if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
+            if(!$rootScope.targetGroup || !$rootScope.targetGroup.id){
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectGroupUedit'));
                 return;
             }
             GroupService.modify({
-                    "id": $scope.grp.selected.id,
-                    "name": $scope.grp.selected.label,
-                    "code": $scope.grp.selected.code,
-                    "description": $scope.grp.selected.description,
-                    "targetGroupId": $scope.grp.selected.id
+                    "id": $rootScope.targetGroup.id,
+                    "name": $rootScope.targetGroup.label,
+                    "code": $rootScope.targetGroup.code,
+                    "description": $rootScope.targetGroup.description,
+                    "targetGroupId": $rootScope.targetGroup.id
                 }, function (res) {
                 var result = res.data;
                 if(res.info) {
@@ -34,17 +26,19 @@ define(['../../utils/constant'], function(constant) {
                 }
                 $scope.modifiedGroup = result.data;
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.groupModifySuccess'));
+
                 //sync the selected group
                 GroupService.getGrpDetails({
-                    id: $rootScope.shareGroup.selected.id
+                    id: $rootScope.targetGroup.id
                 }, function (result) {
                     $scope.selected = result.data;
-                    $rootScope.shareGroup.selected = $scope.selected;
+                    $rootScope.targetGroup = $scope.selected;
                 }, function (err) {
                     console.log(err);
                 });
-                //sync the tree
-                $scope.getTree(paramsCtlLevel);
+
+                //reset the tree component
+                $rootScope.reset();
             }, function () {
                 $scope.modifidGroup = {};
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.groupModifyFailure'));

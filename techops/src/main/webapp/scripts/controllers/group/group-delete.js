@@ -4,22 +4,17 @@ define(['../../utils/constant'], function(constant) {
      * @exports controllers/User
      */
     var Controller = function ($rootScope, $scope, GroupService, AlertService) {
-        var paramsCtlLevel = {};
-        paramsCtlLevel.onlyShowGroup = true;
-        $scope.getTree = GroupService.syncTree;
-        $scope.getTree(paramsCtlLevel);
-
         $scope.confirm = function () {
 
-            if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id || !$rootScope.shareGroup.selected.code){
+            if(!$rootScope.targetGroup || !$rootScope.targetGroup.id || !$rootScope.targetGroup.code){
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectGroupUdel'));
                 return;
             }
             GroupService.del({
-                "id": $rootScope.shareGroup.selected.id,
-                "code": $rootScope.shareGroup.selected.code,
+                "id": $rootScope.targetGroup.id,
+                "code": $rootScope.targetGroup.code,
                 "status": 1,
-                "targetGroupId": $rootScope.shareGroup.selected.id
+                "targetGroupId": $rootScope.targetGroup.id
             }, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
@@ -27,9 +22,9 @@ define(['../../utils/constant'], function(constant) {
                     }
                     return;
                 }
-                $rootScope.shareGroup.selected = {};
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.groupDelSuccess'));
-                $scope.getTree(paramsCtlLevel);
+                //reset the tree component
+                $rootScope.reset();
             }, function () {
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.groupDelFailure'));
             });
