@@ -7,12 +7,12 @@ package com.dianrong.common.uniauth.server.datafilter;
  *
  */
 public enum FilterType {
-	/**.
-	 * 数据如果存在,则报错
-	 */
-		FILTER_TYPE_EXSIT_DATA,
-	/**.
-	 * 如果数据不存在,则报错
-	 */
-		FILTER_TYPE_NO_DATA
+    /**
+     * . 数据如果存在,则报错
+     */
+    FILTER_TYPE_EXSIT_DATA,
+    /**
+     * . 如果数据不存在,则报错
+     */
+    FILTER_TYPE_NO_DATA
 }

@@ -43,7 +43,7 @@ public class SimpleEmailNotify implements EmailNotification {
 
     public void setSmtpHost(String smtpHost) {
         Assert.notNull(smtpHost);
-        log.info("set email server host : " +smtpHost);
+        log.info("set email server host : " + smtpHost);
         this.smtpHost = smtpHost;
     }
 
@@ -51,13 +51,13 @@ public class SimpleEmailNotify implements EmailNotification {
         if (smtpPort <= 0 || smtpPort >= 65535) {
             throw new IllegalArgumentException("invalid smtpPort set: " + smtpPort);
         }
-        log.info("set email server port : " +smtpPort);
+        log.info("set email server port : " + smtpPort);
         this.smtpPort = smtpPort;
     }
 
     public void setFromEmail(String fromEmail) {
         Assert.notNull(fromEmail);
-        log.info("set email send from email : " +fromEmail);
+        log.info("set email send from email : " + fromEmail);
         this.fromEmail = fromEmail;
     }
 

@@ -105,12 +105,13 @@
 			</list>
 		</constructor-arg>
 	</bean>
-
+    <bean id="ssAuthenticationFailHandler" class="com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler"/>
 	<bean id="casAuthenticationFilter"
 		class="org.springframework.security.cas.web.CasAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="filterProcessesUrl" value="/login/cas"></property>
 		<property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
+		<property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"></property>
 		<property name="sessionAuthenticationStrategy" ref="sas" />
 	</bean>
 	<!-- do not change: end -->
@@ -146,7 +147,7 @@
 	<!-- set api control account -->
     <bean class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
     	<property name="account" value="techops"/>
-    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']}"/>
+    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']?:''}"/>
     </bean>
     
         <bean id="smsNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.sms.DelegateUniauthSmsNotification">

@@ -3,7 +3,6 @@ apply plugin: 'war'
 apply from: 'build-tomcat.gradle'
 apply from: 'build-mybatis.gradle'
 
-
 dependencies {
 
     compile project(":share-rw")
@@ -15,7 +14,7 @@ dependencies {
     compile "org.springframework:spring-jdbc"
     compile "org.springframework:spring-tx"
     compile "org.springframework:spring-web"
-    //compile "org.springframework:spring-webmvc:${spring_version}"
+    compile "org.springframework:spring-webmvc"
     compile "org.springframework:spring-context-support"
     compile "org.springframework:spring-aop"
     compile "org.springframework.amqp:spring-amqp"
@@ -53,7 +52,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3'
 
     //Google Jar
-    compile 'com.google.code.gson:gson'
     compile 'com.google.guava:guava'
 
     //JDBC Pool

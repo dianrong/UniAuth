@@ -96,8 +96,7 @@
 <!-- 	</bean> -->
 	<!-- do not change: end -->
 
-	<!-- trick: must be same id or name, not more than one PermissionEvaluators 
-		allowed, see AccessControlListTag.java -->
+	<!-- trick: must be same id or name, not more than one PermissionEvaluators allowed, see AccessControlListTag.java -->
 	<bean id="uniauthPermissionEvaluator" class="com.dianrong.uniauth.ssclient.bean.SSClientPermissionEvaluator" primary="true"/>
 	
 	<!-- 配置该bean，告诉uniauth需要自动创建filter bean -->

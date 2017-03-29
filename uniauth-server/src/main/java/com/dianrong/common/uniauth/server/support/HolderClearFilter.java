@@ -11,20 +11,20 @@ import javax.servlet.ServletResponse;
 
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 
-public  class HolderClearFilter implements Filter {
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {}
+public class HolderClearFilter implements Filter {
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {}
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		try {
-			chain.doFilter(request, response);
-		} finally {
-			// clear 
-			CxfHeaderHolder.clearAllHolder();
-		}
-	}
-	@Override
-	public void destroy() {}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            // clear
+            CxfHeaderHolder.clearAllHolder();
+        }
+    }
+
+    @Override
+    public void destroy() {}
 }

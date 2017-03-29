@@ -53,10 +53,10 @@ public class ApiControlFilter extends GenericFilterBean {
 
     @Autowired
     private JWTProcessor jwtProcessor;
-    
+
     @Autowired
-    private PermissionJudger<ApiCtlPermission, HttpServletRequest>  permissionJudger;
-    
+    private PermissionJudger<ApiCtlPermission, HttpServletRequest> permissionJudger;
+
     @Resource(name = "uniauthConfig")
     private Map<String, String> allZkNodeMap;
 
@@ -116,10 +116,10 @@ public class ApiControlFilter extends GenericFilterBean {
             }
         }
     }
-    
+
     // 成功访问之后，设置返回结果
-    private void afterSuccessInvokeApi(StringHeaderValueOperator headerOperator, RequestVerifiedType requestType,  CallerCredential<ApiCtlPermission> apiCaller) {
-        switch(requestType) {
+    private void afterSuccessInvokeApi(StringHeaderValueOperator headerOperator, RequestVerifiedType requestType, CallerCredential<ApiCtlPermission> apiCaller) {
+        switch (requestType) {
             case LOGIN:
                 try {
                     headerOperator.setHeader(HeaderKey.RESPONSE_TYPE, ResponseVerifiedType.LOGIN_SUCCESS.toString());
@@ -138,7 +138,7 @@ public class ApiControlFilter extends GenericFilterBean {
                 break;
         }
     }
-    
+
     /**
      * get api caller info
      * 
@@ -147,14 +147,15 @@ public class ApiControlFilter extends GenericFilterBean {
      * @return api caller info
      * @throws TokenExpiredException if token is expired
      * @throws InvalidTokenException if token is invalid
-     * @throws LoadCredentialFailedException  load credential failed
+     * @throws LoadCredentialFailedException load credential failed
      */
-    private CallerCredential<ApiCtlPermission> loadApiCallerInfo(StringHeaderValueOperator headerOperator, RequestVerifiedType requestType) throws InvalidTokenException, TokenExpiredException, LoadCredentialFailedException {
+    private CallerCredential<ApiCtlPermission> loadApiCallerInfo(StringHeaderValueOperator headerOperator, RequestVerifiedType requestType)
+            throws InvalidTokenException, TokenExpiredException, LoadCredentialFailedException {
         switch (requestType) {
             case ANONYMOUS:
                 return loadAnonymousCaller();
             case TOKEN:
-               return loadTokenCaller(headerOperator.getHeader(HeaderKey.REQUEST_CONTENT));
+                return loadTokenCaller(headerOperator.getHeader(HeaderKey.REQUEST_CONTENT));
             case LOGIN:
                 PtHeaderOperator<LoginRequestLoad> requestLoginHeaderOperator = new LoginRequestLoadHeaderOperator(headerOperator);
                 LoginRequestLoad loginUser = null;
@@ -178,9 +179,10 @@ public class ApiControlFilter extends GenericFilterBean {
     private CallerCredential<ApiCtlPermission> loadTokenCaller(String token) throws InvalidTokenException, TokenExpiredException {
         return jwtProcessor.verify(token);
     }
-    
+
     /**
      * 是否开启check的开关，默认是true
+     * 
      * @return true or false
      */
     private boolean apiCallPermCheck() {

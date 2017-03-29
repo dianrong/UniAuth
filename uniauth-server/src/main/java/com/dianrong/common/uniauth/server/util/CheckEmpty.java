@@ -29,7 +29,7 @@ public class CheckEmpty {
 	 * @param errorMsg tip
 	 * @param objs obj to check is blank
 	 */
-	public static void checkAllBlank(String errorMsg,String... objs){
+    public static void checkAllBlank(String errorMsg, String... objs){
 	    if(objs == null || objs.length==0 ){
 	        throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("common.parameter.empty", errorMsg));	        
 	    }

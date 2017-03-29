@@ -15,25 +15,25 @@ import com.dianrong.common.uniauth.common.server.UniauthResourceService;
 
 /**
  * 取得指定语言的所有文案
+ * 
  * @author dreamlee
  *
  */
-public class UniauthI18NController extends AbstractController{
-	
-	@Autowired
-	private UniauthResourceService techOpsResourceService;
+public class UniauthI18NController extends AbstractController {
 
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		String lang = request.getParameter("lang");
-		Locale locale = request.getLocale();
-		
-		if(StringUtils.isNotBlank(lang)){
-			locale = org.springframework.util.StringUtils.parseLocaleString(lang);
-		}
-		return new ModelAndView(new MappingJackson2JsonView(),techOpsResourceService.getProperties(locale));
-	}
-	
+    @Autowired
+    private UniauthResourceService techOpsResourceService;
+
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lang = request.getParameter("lang");
+        Locale locale = request.getLocale();
+
+        if (StringUtils.isNotBlank(lang)) {
+            locale = org.springframework.util.StringUtils.parseLocaleString(lang);
+        }
+        return new ModelAndView(new MappingJackson2JsonView(), techOpsResourceService.getProperties(locale));
+    }
+
 
 }

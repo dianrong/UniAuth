@@ -2,11 +2,12 @@ package com.dianrong.common.uniauth.cas.model.vo;
 
 /**
  * 定义api返回的各种结果的code
+ * 
  * @author wanglin
  */
 public interface ResponseCode {
-    
-    /**登陆结果类**/
+
+    /** 登陆结果类 **/
     /**
      * 用户未找到
      */
@@ -39,28 +40,34 @@ public interface ResponseCode {
      * 登陆失败, 但是不知道原因
      */
     int LOGIN_FAILURE = 108;
-    
-    /**状态类**/
+
+    /** 状态类 **/
     /**
      * 一个通用的结果状态码,成功
      */
-    int SUCCESS =200;
+    int SUCCESS = 200;
     /**
      * 用户未登陆
      */
     int USER_NOT_LOGIN = 201;
-    
-    
-    /**用户请求操作结果类**/
+
+
+    /** 用户请求操作结果类 **/
     /**
      * 创建ticket 失败了, service ticket
      */
     int CREATE_SERVICE_TICKET_FAILURE = 301;
-    
-    
-    /**参数校验类**/
+
+
+    /** 参数校验类 **/
     /**
      * 参数service不符合规范
      */
     int PARAMETER_SERVICE_INVALIDATE = 401;
+    
+    /** 应用级状态码 **/
+    /**
+     * 服务器端异常
+     */
+    int SERVER_INTERNAL_ERROR = 500;
 }

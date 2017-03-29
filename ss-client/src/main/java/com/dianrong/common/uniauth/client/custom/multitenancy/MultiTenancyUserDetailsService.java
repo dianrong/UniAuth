@@ -4,5 +4,5 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface MultiTenancyUserDetailsService {
-	UserDetails loadUserByUsername(String username, long tenancyId) throws UsernameNotFoundException;
+    UserDetails loadUserByUsername(String username, long tenancyId) throws UsernameNotFoundException;
 }

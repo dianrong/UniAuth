@@ -19,13 +19,10 @@ import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionContr
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * 用于在服务启动的时候将SSRegularPermissionFilter注入到spring security的处理链路中
  * @author wanglin
  */
-@Slf4j
 public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Ordered, SwitchControl {
 	/**.
 	 * spring security处理filter链的bean name

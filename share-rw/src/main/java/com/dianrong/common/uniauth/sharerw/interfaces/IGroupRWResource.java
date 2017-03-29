@@ -26,7 +26,7 @@ public interface IGroupRWResource extends IGroupResource {
     @POST
     @Path("moveUser")
     Response<Void> moveGroupUser(UserListParam userListParam);
-    
+
     @POST
     @Path("addnewgroup")
     //scenario: add new group into one specific group

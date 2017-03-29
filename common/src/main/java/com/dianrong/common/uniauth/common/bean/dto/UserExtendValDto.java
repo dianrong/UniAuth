@@ -26,13 +26,13 @@ public class UserExtendValDto extends TenancyBaseDto {
 
     @ApiModelProperty("扩展属性id")
     private Long extendId;
-    
+
     @ApiModelProperty("扩展属性code")
     private String extendCode;
-    
+
     @ApiModelProperty("扩展属性的描述信息")
     private String extendDescription;
-    
+
     public Long getId() {
         return id;
     }

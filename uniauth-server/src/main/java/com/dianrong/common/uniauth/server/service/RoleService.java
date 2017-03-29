@@ -56,7 +56,7 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
  * Created by Arc on 15/1/16.
  */
 @Service
-public class RoleService extends TenancyBasedService{
+public class RoleService extends TenancyBasedService {
 
     @Autowired
     private RoleCodeMapper roleCodeMapper;
@@ -73,24 +73,24 @@ public class RoleService extends TenancyBasedService{
     @Autowired
     private GrpRoleMapper grpRoleMapper;
 
-    /**.
-	 * 进行角色数据过滤的filter
-	 */
-	@Resource(name="roleDataFilter")
-	private DataFilter dataFilter;
-	
-	/**.
-	 * 进行域名数据过滤的filter
-	 */
-	@Resource(name="domainDataFilter")
-	private DataFilter domainDataFilter;
-    
+    /**
+     * . 进行角色数据过滤的filter
+     */
+    @Resource(name = "roleDataFilter")
+    private DataFilter dataFilter;
+
+    /**
+     * . 进行域名数据过滤的filter
+     */
+    @Resource(name = "domainDataFilter")
+    private DataFilter domainDataFilter;
+
     public List<RoleCodeDto> getAllRoleCodes() {
         RoleCodeExample example = new RoleCodeExample();
         List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
         List<RoleCodeDto> roleCodeDtoList = new ArrayList<RoleCodeDto>();
-        if(roleCodeList != null) {
-            for(RoleCode roleCode : roleCodeList) {
+        if (roleCodeList != null) {
+            for (RoleCode roleCode : roleCodeList) {
                 roleCodeDtoList.add(BeanConverter.convert(roleCode));
             }
         }
@@ -102,14 +102,12 @@ public class RoleService extends TenancyBasedService{
         CheckEmpty.checkEmpty(roleCodeId, "roleCodeId");
         CheckEmpty.checkEmpty(name, "name");
 
-        //domainid必须是有效的
+        // domainid必须是有效的
         domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
-        //不能存在domainid，roleCodeId，name完全一致的 role
-        dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, 
-        		FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
-        		FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, roleCodeId),
-        		FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, name));
-        
+        // 不能存在domainid，roleCodeId，name完全一致的 role
+        dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
+                FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, roleCodeId), FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, name));
+
         Role role = new Role();
         role.setDomainId(domainId);
         role.setName(name);
@@ -124,13 +122,13 @@ public class RoleService extends TenancyBasedService{
     public void updateRole(Integer roleId, Integer roleCodeId, String name, String description, Byte status) {
         CheckEmpty.checkEmpty(roleId, "roleId");
         Role role = roleMapper.selectByPrimaryKey(roleId);
-        
-        if(role == null) {
+
+        if (role == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleId, Role.class.getSimpleName()));
         }
 
         CheckEmpty.checkEmpty(roleCodeId, "roleCodeId");
-        if(roleCodeMapper.selectByPrimaryKey(roleCodeId) == null) {
+        if (roleCodeMapper.selectByPrimaryKey(roleCodeId) == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", roleCodeId, RoleCode.class.getSimpleName()));
         }
 
@@ -139,125 +137,125 @@ public class RoleService extends TenancyBasedService{
         role.setDescription(description);
         role.setName(name);
         role.setRoleCodeId(roleCodeId);
-        
-        //不能存在domainid，roleCodeId，name完全一致的 role
+
+        // 不能存在domainid，roleCodeId，name完全一致的 role
         dataFilter.updateFieldsCheck(roleId, FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, role.getDomainId()),
-        		FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, role.getRoleCodeId()),
-        		FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, role.getName()));
-        
+                FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, role.getRoleCodeId()), FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, role.getName()));
+
         roleMapper.updateByPrimaryKey(role);
     }
+
     @Transactional
     public void replaceGroupsAndUsersToRole(Integer roleId, List<Integer> grpIdsDup, List<Long> userIdsDup, Boolean needProcessGoupIds, Boolean needProcessUserIds) {
         CheckEmpty.checkEmpty(roleId, "roleId");
-        List<Integer> grpIds =  null;
-        List<Long> userIds =  null;
+        List<Integer> grpIds = null;
+        List<Long> userIds = null;
         if (needProcessGoupIds != null && needProcessGoupIds) {
-        	grpIds =  new ArrayList<>(new HashSet<>(grpIdsDup));
+            grpIds = new ArrayList<>(new HashSet<>(grpIdsDup));
         }
         if (needProcessUserIds != null && needProcessUserIds) {
-        	userIds = new ArrayList<>(new HashSet<>(userIdsDup));
+            userIds = new ArrayList<>(new HashSet<>(userIdsDup));
         }
-        if (grpIds != null ) {
-        	GrpRoleExample grpRoleExample = new GrpRoleExample();
-        	grpRoleExample.createCriteria().andRoleIdEqualTo(roleId);
-        	 if(grpIds.isEmpty()) {
-                 grpRoleMapper.deleteByExample(grpRoleExample);
-             } else {
-                 List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
-                 if (!CollectionUtils.isEmpty(grpRoleKeys)) {
-                     ArrayList<Integer> dbGrpIds = new ArrayList<>();
-                     for (GrpRoleKey grpRoleKey : grpRoleKeys) {
-                         dbGrpIds.add(grpRoleKey.getGrpId());
-                     }
-                     ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
-                     intersections.retainAll(grpIds);
-                     List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
-                     List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
-                     for (Integer grpId : grpIds) {
-                         if (!intersections.contains(grpId)) {
-                             grpIdsNeedAddToDB.add(grpId);
-                         }
-                     }
-                     for (Integer dbGrpId : dbGrpIds) {
-                         if (!intersections.contains(dbGrpId)) {
-                             grpIdsNeedDeleteFromDB.add(dbGrpId);
-                         }
-                     }
+        if (grpIds != null) {
+            GrpRoleExample grpRoleExample = new GrpRoleExample();
+            grpRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+            if (grpIds.isEmpty()) {
+                grpRoleMapper.deleteByExample(grpRoleExample);
+            } else {
+                List<GrpRoleKey> grpRoleKeys = grpRoleMapper.selectByExample(grpRoleExample);
+                if (!CollectionUtils.isEmpty(grpRoleKeys)) {
+                    ArrayList<Integer> dbGrpIds = new ArrayList<>();
+                    for (GrpRoleKey grpRoleKey : grpRoleKeys) {
+                        dbGrpIds.add(grpRoleKey.getGrpId());
+                    }
+                    ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
+                    intersections.retainAll(grpIds);
+                    List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
+                    List<Integer> grpIdsNeedDeleteFromDB = new ArrayList<>();
+                    for (Integer grpId : grpIds) {
+                        if (!intersections.contains(grpId)) {
+                            grpIdsNeedAddToDB.add(grpId);
+                        }
+                    }
+                    for (Integer dbGrpId : dbGrpIds) {
+                        if (!intersections.contains(dbGrpId)) {
+                            grpIdsNeedDeleteFromDB.add(dbGrpId);
+                        }
+                    }
 
-                     if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
-                         for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
-                             GrpRoleKey grpRoleKey = new GrpRoleKey();
-                             grpRoleKey.setRoleId(roleId);
-                             grpRoleKey.setGrpId(grpIdNeedAddToDB);
-                             grpRoleMapper.insert(grpRoleKey);
-                         }
-                     }
-                     if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
-                         GrpRoleExample grpRoleDeleteExample = new GrpRoleExample();
-                         grpRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andGrpIdIn(grpIdsNeedDeleteFromDB);
-                         grpRoleMapper.deleteByExample(grpRoleDeleteExample);
-                     }
-                 } else {
-                     for (Integer grpId : grpIds) {
-                         GrpRoleKey grpRoleKey = new GrpRoleKey();
-                         grpRoleKey.setRoleId(roleId);
-                         grpRoleKey.setGrpId(grpId);
-                         grpRoleMapper.insert(grpRoleKey);
-                     }
-                 }
-             }
+                    if (!CollectionUtils.isEmpty(grpIdsNeedAddToDB)) {
+                        for (Integer grpIdNeedAddToDB : grpIdsNeedAddToDB) {
+                            GrpRoleKey grpRoleKey = new GrpRoleKey();
+                            grpRoleKey.setRoleId(roleId);
+                            grpRoleKey.setGrpId(grpIdNeedAddToDB);
+                            grpRoleMapper.insert(grpRoleKey);
+                        }
+                    }
+                    if (!CollectionUtils.isEmpty(grpIdsNeedDeleteFromDB)) {
+                        GrpRoleExample grpRoleDeleteExample = new GrpRoleExample();
+                        grpRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andGrpIdIn(grpIdsNeedDeleteFromDB);
+                        grpRoleMapper.deleteByExample(grpRoleDeleteExample);
+                    }
+                } else {
+                    for (Integer grpId : grpIds) {
+                        GrpRoleKey grpRoleKey = new GrpRoleKey();
+                        grpRoleKey.setRoleId(roleId);
+                        grpRoleKey.setGrpId(grpId);
+                        grpRoleMapper.insert(grpRoleKey);
+                    }
+                }
+            }
         }
 
         if (userIds != null) {
-        	UserRoleExample userRoleExample = new UserRoleExample();
-        	userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
-        	if(userIds.isEmpty()) {
-        		userRoleMapper.deleteByExample(userRoleExample);
-        	} else {
-        		List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
-        		if (!CollectionUtils.isEmpty(userRoleKeys)) {
-        			ArrayList<Long> dbUserIds = new ArrayList<>();
-        			for (UserRoleKey userRoleKey : userRoleKeys) {
-        				dbUserIds.add(userRoleKey.getUserId());
-        			}
-        			ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
-        			intersections.retainAll(userIds);
-        			List<Long> userIdsNeedAddToDB = new ArrayList<>();
-        			List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
-        			for (Long userId : userIds) {
-        				if (!intersections.contains(userId)) {
-        					userIdsNeedAddToDB.add(userId);
-        				}
-        			}
-        			for (Long dbUserId : dbUserIds) {
-        				if (!intersections.contains(dbUserId)) {
-        					userIdsNeedDeleteFromDB.add(dbUserId);
-        				}
-        			}
-        			
-        			if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
-        				for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
-        					UserRoleKey userRoleKey = new UserRoleKey();
-        					userRoleKey.setRoleId(roleId);
-        					userRoleKey.setUserId(userIdNeedAddToDB);
-        					userRoleMapper.insert(userRoleKey);
-        				}
-        			}
-        			if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
-        				UserRoleExample userRoleDeleteExample = new UserRoleExample();
-        				userRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdIn(userIdsNeedDeleteFromDB);
-        				userRoleMapper.deleteByExample(userRoleDeleteExample);
-        			}
-        		} else {
-        			for (Long userId : userIds) {
-        				UserRoleKey userRoleKey = new UserRoleKey();
-        				userRoleKey.setRoleId(roleId);
-        				userRoleKey.setUserId(userId);
-        				userRoleMapper.insert(userRoleKey);
-        			}
-        		}
-        	}
+            UserRoleExample userRoleExample = new UserRoleExample();
+            userRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+            if (userIds.isEmpty()) {
+                userRoleMapper.deleteByExample(userRoleExample);
+            } else {
+                List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+                if (!CollectionUtils.isEmpty(userRoleKeys)) {
+                    ArrayList<Long> dbUserIds = new ArrayList<>();
+                    for (UserRoleKey userRoleKey : userRoleKeys) {
+                        dbUserIds.add(userRoleKey.getUserId());
+                    }
+                    ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
+                    intersections.retainAll(userIds);
+                    List<Long> userIdsNeedAddToDB = new ArrayList<>();
+                    List<Long> userIdsNeedDeleteFromDB = new ArrayList<>();
+                    for (Long userId : userIds) {
+                        if (!intersections.contains(userId)) {
+                            userIdsNeedAddToDB.add(userId);
+                        }
+                    }
+                    for (Long dbUserId : dbUserIds) {
+                        if (!intersections.contains(dbUserId)) {
+                            userIdsNeedDeleteFromDB.add(dbUserId);
+                        }
+                    }
+
+                    if (!CollectionUtils.isEmpty(userIdsNeedAddToDB)) {
+                        for (Long userIdNeedAddToDB : userIdsNeedAddToDB) {
+                            UserRoleKey userRoleKey = new UserRoleKey();
+                            userRoleKey.setRoleId(roleId);
+                            userRoleKey.setUserId(userIdNeedAddToDB);
+                            userRoleMapper.insert(userRoleKey);
+                        }
+                    }
+                    if (!CollectionUtils.isEmpty(userIdsNeedDeleteFromDB)) {
+                        UserRoleExample userRoleDeleteExample = new UserRoleExample();
+                        userRoleDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdIn(userIdsNeedDeleteFromDB);
+                        userRoleMapper.deleteByExample(userRoleDeleteExample);
+                    }
+                } else {
+                    for (Long userId : userIds) {
+                        UserRoleKey userRoleKey = new UserRoleKey();
+                        userRoleKey.setRoleId(roleId);
+                        userRoleKey.setUserId(userId);
+                        userRoleMapper.insert(userRoleKey);
+                    }
+                }
+            }
         }
     }
 
@@ -266,46 +264,46 @@ public class RoleService extends TenancyBasedService{
         CheckEmpty.checkEmpty(roleId, "roleId");
         RolePermissionExample rolePermissionExample = new RolePermissionExample();
         rolePermissionExample.createCriteria().andRoleIdEqualTo(roleId);
-        if(CollectionUtils.isEmpty(permIds)) {
+        if (CollectionUtils.isEmpty(permIds)) {
             rolePermissionMapper.deleteByExample(rolePermissionExample);
             return;
         }
         List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
-        if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
+        if (!CollectionUtils.isEmpty(rolePermissionKeys)) {
             ArrayList<Integer> dbPermIds = new ArrayList<>();
-            for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+            for (RolePermissionKey rolePermissionKey : rolePermissionKeys) {
                 dbPermIds.add(rolePermissionKey.getPermissionId());
             }
-            ArrayList<Integer> intersections = ((ArrayList<Integer>)dbPermIds.clone());
+            ArrayList<Integer> intersections = ((ArrayList<Integer>) dbPermIds.clone());
             intersections.retainAll(permIds);
             List<Integer> permIdsNeedAddToDB = new ArrayList<>();
             List<Integer> permIdsNeedDeleteFromDB = new ArrayList<>();
-            for(Integer permId : permIds) {
-                if(!intersections.contains(permId)) {
+            for (Integer permId : permIds) {
+                if (!intersections.contains(permId)) {
                     permIdsNeedAddToDB.add(permId);
                 }
             }
-            for(Integer dbPermId : dbPermIds) {
-                if(!intersections.contains(dbPermId)) {
+            for (Integer dbPermId : dbPermIds) {
+                if (!intersections.contains(dbPermId)) {
                     permIdsNeedDeleteFromDB.add(dbPermId);
                 }
             }
 
-            if(!CollectionUtils.isEmpty(permIdsNeedAddToDB)) {
-                for(Integer permIdNeedAddToDB : permIdsNeedAddToDB) {
+            if (!CollectionUtils.isEmpty(permIdsNeedAddToDB)) {
+                for (Integer permIdNeedAddToDB : permIdsNeedAddToDB) {
                     RolePermissionKey rolePermissionKey = new RolePermissionKey();
                     rolePermissionKey.setRoleId(roleId);
                     rolePermissionKey.setPermissionId(permIdNeedAddToDB);
                     rolePermissionMapper.insert(rolePermissionKey);
                 }
             }
-            if(!CollectionUtils.isEmpty(permIdsNeedDeleteFromDB)) {
+            if (!CollectionUtils.isEmpty(permIdsNeedDeleteFromDB)) {
                 RolePermissionExample rolePermDeleteExample = new RolePermissionExample();
                 rolePermDeleteExample.createCriteria().andRoleIdEqualTo(roleId).andPermissionIdIn(permIdsNeedDeleteFromDB);
                 rolePermissionMapper.deleteByExample(rolePermDeleteExample);
             }
         } else {
-            for(Integer permId : permIds) {
+            for (Integer permId : permIds) {
                 RolePermissionKey rolePermissionKey = new RolePermissionKey();
                 rolePermissionKey.setRoleId(roleId);
                 rolePermissionKey.setPermissionId(permId);
@@ -324,13 +322,13 @@ public class RoleService extends TenancyBasedService{
         rolePermissionExample.createCriteria().andRoleIdEqualTo(roleId);
         List<RolePermissionKey> rolePermissionKeys = rolePermissionMapper.selectByExample(rolePermissionExample);
         Set<Integer> permIdSet = new TreeSet<>();
-        if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
-            for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+        if (!CollectionUtils.isEmpty(rolePermissionKeys)) {
+            for (RolePermissionKey rolePermissionKey : rolePermissionKeys) {
                 permIdSet.add(rolePermissionKey.getPermissionId());
             }
         }
-        for(Integer permId : permIds) {
-            if(!permIdSet.contains(roleId)) {
+        for (Integer permId : permIds) {
+            if (!permIdSet.contains(roleId)) {
                 RolePermissionKey rolePermissionKey = new RolePermissionKey();
                 rolePermissionKey.setPermissionId(permId);
                 rolePermissionKey.setRoleId(roleId);
@@ -339,30 +337,31 @@ public class RoleService extends TenancyBasedService{
         }
     }
 
-    public PageDto<RoleDto> searchRole(List<Integer> roleIds, Integer roleId, Integer domainId, String roleName, Integer roleCodeId, Byte status, Integer pageNumber, Integer pageSize) {
+    public PageDto<RoleDto> searchRole(List<Integer> roleIds, Integer roleId, Integer domainId, String roleName, Integer roleCodeId, Byte status, Integer pageNumber,
+            Integer pageSize) {
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
         RoleExample roleExample = new RoleExample();
-        roleExample.setPageOffSet(pageNumber*pageSize);
+        roleExample.setPageOffSet(pageNumber * pageSize);
         roleExample.setPageSize(pageSize);
         roleExample.setOrderByClause("status asc");
         RoleExample.Criteria criteria = roleExample.createCriteria();
-        if(!CollectionUtils.isEmpty(roleIds)) {
+        if (!CollectionUtils.isEmpty(roleIds)) {
             criteria.andIdIn(roleIds);
         }
-        if(roleId != null) {
+        if (roleId != null) {
             criteria.andIdEqualTo(roleId);
         }
-        if(domainId != null) {
+        if (domainId != null) {
             criteria.andDomainIdEqualTo(domainId);
         }
-        if(roleName != null) {
+        if (roleName != null) {
             criteria.andNameLike("%" + roleName + "%");
         }
-        if(roleCodeId != null) {
+        if (roleCodeId != null) {
             criteria.andRoleCodeIdEqualTo(roleCodeId);
         }
-        if(status != null) {
+        if (status != null) {
             ParamCheck.checkStatus(status);
             criteria.andStatusEqualTo(status);
         }
@@ -371,19 +370,19 @@ public class RoleService extends TenancyBasedService{
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Role> roles = roleMapper.selectByExample(roleExample);
 
-        if(!CollectionUtils.isEmpty(roles)) {
+        if (!CollectionUtils.isEmpty(roles)) {
             List<RoleDto> roleDtos = new ArrayList<>();
             List<RoleCode> roleCodes = roleCodeMapper.selectByExample(new RoleCodeExample());
             // build roleCode index.
             Map<Integer, String> roleCodeIdNamePairs = new TreeMap<>();
-            for(RoleCode roleCode : roleCodes) {
+            for (RoleCode roleCode : roleCodes) {
                 roleCodeIdNamePairs.put(roleCode.getId(), roleCode.getCode());
             }
-            for(Role role : roles) {
+            for (Role role : roles) {
                 RoleDto roleDto = BeanConverter.convert(role).setRoleCode(roleCodeIdNamePairs.get(role.getRoleCodeId()));
                 roleDtos.add(roleDto);
             }
-            return new PageDto<>(pageNumber,pageSize, count, roleDtos);
+            return new PageDto<>(pageNumber, pageSize, count, roleDtos);
         } else {
             return null;
         }
@@ -396,7 +395,7 @@ public class RoleService extends TenancyBasedService{
         PermissionExample permissionExample = new PermissionExample();
         permissionExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Permission> permissions = permissionMapper.selectByExample(permissionExample);
-        if(CollectionUtils.isEmpty(permissions)) {
+        if (CollectionUtils.isEmpty(permissions)) {
             return null;
         }
         RolePermissionExample rolePermissionExample = new RolePermissionExample();
@@ -405,25 +404,26 @@ public class RoleService extends TenancyBasedService{
 
         // 2. get the checked permIds for the role
         Set<Integer> permIds = null;
-        if(!CollectionUtils.isEmpty(rolePermissionKeys)) {
+        if (!CollectionUtils.isEmpty(rolePermissionKeys)) {
             permIds = new TreeSet<>();
-            for(RolePermissionKey rolePermissionKey : rolePermissionKeys) {
+            for (RolePermissionKey rolePermissionKey : rolePermissionKeys) {
                 permIds.add(rolePermissionKey.getPermissionId());
             }
         }
         List<PermType> permTypes = permTypeMapper.selectByExample(new PermTypeExample());
         // build permType index.
         Map<Integer, String> permTypeIdTypePairs = new TreeMap<>();
-        for(PermType permType : permTypes) {
+        for (PermType permType : permTypes) {
             permTypeIdTypePairs.put(permType.getId(), permType.getType());
         }
 
-        // 3. construct all permissions linked with the role & mark the permission checked on the role or not
+        // 3. construct all permissions linked with the role & mark the permission checked on the
+        // role or not
         List<PermissionDto> permissionDtos = new ArrayList<>();
-        for(Permission permission:permissions) {
+        for (Permission permission : permissions) {
             PermissionDto permissionDto = BeanConverter.convert(permission);
             permissionDto.setPermType(permTypeIdTypePairs.get(permission.getPermTypeId()));
-            if(permIds != null && permIds.contains(permission.getId())) {
+            if (permIds != null && permIds.contains(permission.getId())) {
                 permissionDto.setChecked(Boolean.TRUE);
             } else {
                 permissionDto.setChecked(Boolean.FALSE);

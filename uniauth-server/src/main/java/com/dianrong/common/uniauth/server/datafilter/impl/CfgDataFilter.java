@@ -13,23 +13,24 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
-/**.
- * 配置的数据过滤处理实现.
+/**
+ * . 配置的数据过滤处理实现.
+ * 
  * @author wanglin
  */
 @Service("cfgDataFilter")
 public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
-	
-	@Autowired
+
+    @Autowired
     private CfgMapper cfgMapper;
-	
-	@Override
-	protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
+
+    @Override
+    protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
         CfgExample condition = new CfgExample();
-        CfgExample.Criteria criteria =  condition.createCriteria();
-        //构造查询条件
-        for(FilterData fd: equalsField){
-            switch(fd.getType()) {
+        CfgExample.Criteria criteria = condition.createCriteria();
+        // 构造查询条件
+        for (FilterData fd : equalsField) {
+            switch (fd.getType()) {
                 case FIELD_TYPE_CFG_KEY:
                     criteria.andCfgKeyEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
                     break;
@@ -37,28 +38,28 @@ public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
                     break;
             }
         }
-        //查询
+        // 查询
         int count = cfgMapper.countByExample(condition);
-        if(count > 0){
+        if (count > 0) {
             return true;
         }
         return false;
-	}
+    }
 
-	@Override
-	protected String getProcessTableName() {
-		return UniBundle.getMsg("data.filter.table.name.cfg");
-	}
-	
-	@Override
-	protected  Cfg getEnableRecordByPrimaryKey(Integer id) {
-		CheckEmpty.checkEmpty(id, "cfgId");
-		CfgExample condition = new CfgExample();
-		condition.createCriteria().andIdEqualTo(id);
-		List<Cfg> selectByExample = cfgMapper.selectByExample(condition);
-		if (selectByExample != null && !selectByExample.isEmpty()) {
-			return  selectByExample.get(0);
-		}
-		return null;
-	};
+    @Override
+    protected String getProcessTableName() {
+        return UniBundle.getMsg("data.filter.table.name.cfg");
+    }
+
+    @Override
+    protected Cfg getEnableRecordByPrimaryKey(Integer id) {
+        CheckEmpty.checkEmpty(id, "cfgId");
+        CfgExample condition = new CfgExample();
+        condition.createCriteria().andIdEqualTo(id);
+        List<Cfg> selectByExample = cfgMapper.selectByExample(condition);
+        if (selectByExample != null && !selectByExample.isEmpty()) {
+            return selectByExample.get(0);
+        }
+        return null;
+    };
 }

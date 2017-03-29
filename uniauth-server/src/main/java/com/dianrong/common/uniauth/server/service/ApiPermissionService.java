@@ -20,7 +20,7 @@ public class ApiPermissionService {
 
     @Autowired
     private ApiPermissionMapper apiPermissionMapper;
-    
+
     public List<ApiPermissionDto> searchAllPublicPermissions() {
         ApiPermissionExample example = new ApiPermissionExample();
         Criteria criteria = example.createCriteria();
@@ -28,19 +28,19 @@ public class ApiPermissionService {
         List<ApiPermissionDto> permissionDtos = Lists.newArrayList();
         List<ApiPermission> permissions = apiPermissionMapper.selectByExample(example);
         if (permissions != null && !permissions.isEmpty()) {
-            for (ApiPermission p : permissions ) {
+            for (ApiPermission p : permissions) {
                 permissionDtos.add(BeanConverter.convert(p));
             }
         }
         return permissionDtos;
     }
-    
+
     public List<ApiPermissionDto> searchPrivatePermissions(Integer apiCallerId) {
         CheckEmpty.checkEmpty(apiCallerId, "apiCallerId");
         List<ApiPermissionDto> permissionDtos = Lists.newArrayList();
         List<ApiPermission> privatePermissions = apiPermissionMapper.searchAllPrivatePermissions(apiCallerId);
         if (privatePermissions != null && !privatePermissions.isEmpty()) {
-            for (ApiPermission p : privatePermissions ) {
+            for (ApiPermission p : privatePermissions) {
                 permissionDtos.add(BeanConverter.convert(p));
             }
         }

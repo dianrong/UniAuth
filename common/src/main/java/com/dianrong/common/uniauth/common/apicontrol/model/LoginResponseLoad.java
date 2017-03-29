@@ -3,15 +3,16 @@ package com.dianrong.common.uniauth.common.apicontrol.model;
 import java.io.Serializable;
 
 /**
- * 登陆返回结果载体 
+ * 登陆返回结果载体
+ * 
  * @author wanglin
  */
 public class LoginResponseLoad implements Serializable {
 
     private static final long serialVersionUID = -3385818323486452185L;
-    
+
     private final String token;
-    
+
     private final long expireTime;
 
     public LoginResponseLoad(String token, long expireTime) {

@@ -23,9 +23,9 @@ public class UserExtendPageParam extends PageParam {
         this.code = code;
     }
 
-	@Override
-	public String toString() {
-		return "UserExtendPageParam [code=" + code + "]";
-	}
+    @Override
+    public String toString() {
+        return "UserExtendPageParam [code=" + code + "]";
+    }
 }
 

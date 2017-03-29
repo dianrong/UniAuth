@@ -66,9 +66,10 @@ public class UserInfoManageController {
         }
         return Response.success();
     }
-    
+
     /**
      * 更新 email 信息
+     * 
      * @param indentity 发送验证码的邮箱
      * @return 结果
      */
@@ -95,6 +96,7 @@ public class UserInfoManageController {
 
     /**
      * 更新phone信息
+     * 
      * @param indentity 发送验证码的电话号码
      * @return 结果
      */
@@ -125,7 +127,8 @@ public class UserInfoManageController {
      * @return 结果
      */
     @RequestMapping(value = "password", method = RequestMethod.POST)
-    public Response<?> updatePassword(HttpServletRequest request, HttpServletResponse response, UserDto user, @RequestParam(value = "originPassword", required = true) String originPassword) {
+    public Response<?> updatePassword(HttpServletRequest request, HttpServletResponse response, UserDto user,
+            @RequestParam(value = "originPassword", required = true) String originPassword) {
         if (!checkIsLogin(request, response)) {
             return getNotLoginResult();
         }

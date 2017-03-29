@@ -24,25 +24,27 @@ public interface IUserExtendValResource {
 
     @POST
     @Path("searchbyuseridandstatus")
-    //scenario: search role
+    // scenario: search role
     Response<List<UserExtendValDto>> searchByUserId(UserExtendValParam userExtendValParam);
 
     @POST
     @Path("searchbyuseridandcode")
     Response<PageDto<UserExtendValDto>> searchByUserIdAndCode(UserExtendValParam userExtendValParam);
-    
+
     /**
      * search user extend val by user identity,identity include:phone number,email
-     * @param userExtendValParam only concerned about status and identity 
+     * 
+     * @param userExtendValParam only concerned about status and identity
      * @return
      * @see #searchByUserId(UserExtendValParam)
      */
     @POST
     @Path("searchbyuseridentity")
     Response<List<UserExtendValDto>> searchByUserIdentity(UserExtendValParam userExtendValParam);
-    
+
     /**
      * 根据查询条件查询用户扩展属性值
+     * 
      * @param userExtendValParam 查询条件对象
      * @return 符合条件的用户扩展属性值列表
      */

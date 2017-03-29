@@ -7,22 +7,23 @@ import com.dianrong.common.uniauth.common.apicontrol.StringHeaderValueOperator;
 import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
- * 用于协议header的get 和 set 
+ * 用于协议header的get 和 set
+ * 
  * @author wanglin
  */
 public class UniauthServerHeaderOperator implements StringHeaderValueOperator {
 
     private final HttpServletRequest request;
-    
+
     private final HttpServletResponse response;
-    
+
     public UniauthServerHeaderOperator(HttpServletRequest request, HttpServletResponse response) {
         Assert.notNull(request);
         Assert.notNull(response);
         this.request = request;
         this.response = response;
     }
-    
+
     @Override
     public String getHeader(String key) {
         return request.getHeader(key);

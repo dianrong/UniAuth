@@ -1,5 +1,7 @@
 buildscript {
 	repositories {
+	     maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
+         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
    		 mavenCentral()
 	}
 	dependencies {
@@ -24,8 +26,11 @@ dependencies {
 	compile ("org.apache.tomcat.embed:tomcat-embed-jasper")
 	compile ("javax.servlet:jstl")
 
-      // compile project(":ss-client")
-       compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.79-SNAPSHOT"
+     compile project(":ss-client")
+    // compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.85-SNAPSHOT"
+    
+    //Log
+     compile 'ch.qos.logback:logback-classic:1.1.7'
     
 	compile('org.springframework.boot:spring-boot-starter-actuator'){
     	 exclude  module:'spring-boot-starter-logging'

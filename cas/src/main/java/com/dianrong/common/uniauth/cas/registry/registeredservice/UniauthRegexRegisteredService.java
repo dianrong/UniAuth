@@ -8,18 +8,21 @@ import com.dianrong.common.uniauth.cas.util.ServiceUtils;
 
 /**
  * Uniauth实现的RegexRegisteredService
- * <p>对RegexRegisteredService中的某些实现进行自定义</p>
+ * <p>
+ * 对RegexRegisteredService中的某些实现进行自定义
+ * </p>
+ * 
  * @author wanglin
  */
 public class UniauthRegexRegisteredService extends RegexRegisteredService {
 
     private static final long serialVersionUID = -264961074092372156L;
-    
+
     /**
-     *  用于实现matches和compareTo.
+     * 用于实现matches和compareTo.
      */
     private boolean serviceIdIsDefault = false;
-    
+
     @Override
     public boolean matches(final Service service) {
         if (service == null || service.getId() == null) {
@@ -34,12 +37,14 @@ public class UniauthRegexRegisteredService extends RegexRegisteredService {
 
     /**
      * 加入serviceIdIsDefault作为排序因子.
-     * <p>serviceIdIsDefault=true的排在serviceIdIsDefault=false的前边</p>
+     * <p>
+     * serviceIdIsDefault=true的排在serviceIdIsDefault=false的前边
+     * </p>
      */
     @Override
     public int compareTo(final RegisteredService other) {
         if (other instanceof UniauthRegexRegisteredService) {
-            UniauthRegexRegisteredService otherRegisteredService = (UniauthRegexRegisteredService)other;
+            UniauthRegexRegisteredService otherRegisteredService = (UniauthRegexRegisteredService) other;
             if (otherRegisteredService.serviceIdIsDefault && !this.serviceIdIsDefault) {
                 return -1;
             }
@@ -49,7 +54,7 @@ public class UniauthRegexRegisteredService extends RegexRegisteredService {
         }
         return super.compareTo(other);
     }
-    
+
     public void setServiceIdIsDefault(boolean serviceIdIsDefault) {
         this.serviceIdIsDefault = serviceIdIsDefault;
     }

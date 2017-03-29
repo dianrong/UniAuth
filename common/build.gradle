@@ -1,5 +1,3 @@
-apply plugin: 'war'
-
 dependencies {
 	compile project(":dianrong-lib:zkcfg")
     //Google Jar
@@ -28,17 +26,14 @@ dependencies {
 	
 	compile 'javax.servlet:javax.servlet-api'
 	
-	//fastjson
-	compile 'com.alibaba:fastjson:1.2.12'
-	
 	// cas
-	providedCompile 'org.jasig.cas.client:cas-client-core:3.4.1'
+	compileOnly 'org.jasig.cas.client:cas-client-core:3.4.1'
 	
 	// spring
-	providedCompile   "org.springframework:spring-webmvc"
+	compileOnly   "org.springframework:spring-webmvc"
 	
 	// swagger
-	providedCompile 'io.swagger:swagger-annotations:1.5.12'
+	compileOnly 'io.swagger:swagger-annotations:1.5.12'
 }
 
 jar {

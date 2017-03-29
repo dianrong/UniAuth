@@ -1,5 +1,3 @@
-apply plugin: 'war'
-
  jar {
         baseName = 'dianrong-lib-cfg'
 }
@@ -7,11 +5,11 @@ apply plugin: 'war'
 dependencies {
     compile 'org.springframework:spring-context',
                     'org.springframework:spring-beans',
-                    //curator
-                    'org.apache.curator:curator-recipes:2.9.1',
-                    //log
-                   'commons-logging:commons-logging',
-                   'org.slf4j:slf4j-api'
+                     //curator
+                     'org.apache.curator:curator-recipes:2.9.1',
+                     //log
+                     'commons-logging:commons-logging',
+                     'org.slf4j:slf4j-api'
 
 
     testCompile 'org.springframework:spring-test',

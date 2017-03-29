@@ -21,35 +21,40 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DomainDefine implements Serializable {
-	private static final long serialVersionUID = 7044166044801306772L;
-	private String domainCode;
-	private String userInfoClass;
-	private boolean rejectPublicInvocations;
-	private String customizedSavedRequestUrl; 
-	// 自定义登陆成功的跳转url
-	private String customizedLoginRedirecUrl;
-	private boolean useAllDomainUserInfoShareMode;
-	private static Integer domainId;
-	// 每一个服务就只有一个的域名code定义
-	private static String staticDomainCode;
-	 
-	 @Autowired
-	 private transient UniClientFacade uniClientFacade;
-	 
-	/**
-	 * 权限控制类型定义,默认为使用uri_pattern
-	 */
-	private CasPermissionControlType controlType = CasPermissionControlType.URI_PATTERN;
+    private static final long serialVersionUID = 7044166044801306772L;
+    private String domainCode;
+    private String userInfoClass;
+    private boolean rejectPublicInvocations;
+    private String customizedSavedRequestUrl;
+    // 自定义登陆成功的跳转url
+    private String customizedLoginRedirecUrl;
+    private boolean useAllDomainUserInfoShareMode;
+    private static Integer domainId;
+    // 每一个服务就只有一个的域名code定义
+    private static String staticDomainCode;
+    
+    /**
+     * serviceTicket的验证是否走内网
+     */
+    private boolean serviceTicketValidateWithInnerAddress;
 
-	@PostConstruct
-	public void init(){
-	    Assert.notNull(this.domainCode, "please config domain code , it can not be null");
-		// init static field domainId
-	    log.info("DomainDefine init, query domainId");
-	    domainId = getDomainId(this.domainCode);
-	}
-	
-	// domainCode can not be null
+    @Autowired
+    private transient UniClientFacade uniClientFacade;
+
+    /**
+     * 权限控制类型定义,默认为使用uri_pattern
+     */
+    private CasPermissionControlType controlType = CasPermissionControlType.URI_PATTERN;
+
+    @PostConstruct
+    public void init() {
+        Assert.notNull(this.domainCode, "please config domain code , it can not be null");
+        // init static field domainId
+        log.info("DomainDefine init, query domainId");
+        domainId = getDomainId(this.domainCode);
+    }
+
+    // domainCode can not be null
     private Integer getDomainId(String domainCode) {
         Assert.notNull(domainCode);
         List<String> codes = new ArrayList<String>();
@@ -81,145 +86,160 @@ public class DomainDefine implements Serializable {
         }
         return data.get(0).getId();
     }
-	
-	public String getDomainCode() {
-		return domainCode;
-	}
 
-	public void setDomainCode(String domainCode) {
-		this.domainCode = domainCode;
-		DomainDefine.staticDomainCode = domainCode;
-	}
+    public String getDomainCode() {
+        return domainCode;
+    }
 
-	public String getUserInfoClass() {
-		return userInfoClass;
-	}
+    public void setDomainCode(String domainCode) {
+        this.domainCode = domainCode;
+        DomainDefine.staticDomainCode = domainCode;
+    }
 
-	public void setUserInfoClass(String userInfoClass) {
-		this.userInfoClass = userInfoClass;
-	}
+    public String getUserInfoClass() {
+        return userInfoClass;
+    }
 
-	public boolean isRejectPublicInvocations() {
-		return rejectPublicInvocations;
-	}
+    public void setUserInfoClass(String userInfoClass) {
+        this.userInfoClass = userInfoClass;
+    }
 
-	public void setRejectPublicInvocations(boolean rejectPublicInvocations) {
-		this.rejectPublicInvocations = rejectPublicInvocations;
-	}
+    public boolean isRejectPublicInvocations() {
+        return rejectPublicInvocations;
+    }
 
-	public String getCustomizedSavedRequestUrl() {
-		return customizedSavedRequestUrl;
-	}
+    public void setRejectPublicInvocations(boolean rejectPublicInvocations) {
+        this.rejectPublicInvocations = rejectPublicInvocations;
+    }
 
-	public void setCustomizedSavedRequestUrl(String customizedSavedRequestUrl) {
-		this.customizedSavedRequestUrl = customizedSavedRequestUrl;
-	}
+    public String getCustomizedSavedRequestUrl() {
+        return customizedSavedRequestUrl;
+    }
 
-	public String getCustomizedLoginRedirecUrl() {
-		return customizedLoginRedirecUrl;
-	}
+    public void setCustomizedSavedRequestUrl(String customizedSavedRequestUrl) {
+        this.customizedSavedRequestUrl = customizedSavedRequestUrl;
+    }
 
-	public void setCustomizedLoginRedirecUrl(String customizedLoginRedirecUrl) {
-		this.customizedLoginRedirecUrl = customizedLoginRedirecUrl;
-	}
+    public String getCustomizedLoginRedirecUrl() {
+        return customizedLoginRedirecUrl;
+    }
 
-	public static Integer getDomainId() {
-		return domainId;
-	}
+    public void setCustomizedLoginRedirecUrl(String customizedLoginRedirecUrl) {
+        this.customizedLoginRedirecUrl = customizedLoginRedirecUrl;
+    }
 
-	public static void setDomainId(Integer domainId) {
-		DomainDefine.domainId = domainId;
-	}
-	
-	public String getControlType() {
-		return controlType.getTypeStr();
-	}
-	
-	public static String getStaticDomainCode() {
-	     if (DomainDefine.staticDomainCode == null) {
-	       throw new UniauthCommonException("before call getStaticDomainCode, need set domainCode first");
-	     }
-	     return DomainDefine.staticDomainCode;
-	}
+    public static Integer getDomainId() {
+        return domainId;
+    }
 
-	public boolean isUseAllDomainUserInfoShareMode() {
-	  return useAllDomainUserInfoShareMode;
-	}
-	
-	public void setUseAllDomainUserInfoShareMode(boolean useAllDomainUserInfoShareMode) {
-	  this.useAllDomainUserInfoShareMode = useAllDomainUserInfoShareMode;
-	}
+    public static void setDomainId(Integer domainId) {
+        DomainDefine.domainId = domainId;
+    }
 
-	/**
-	 *  set permission control type
-	 * @param type type
-	 * @throws IllegalArgumentException if parameter type is not a legal  CasPermissionControlType string
-	 */
-	public void setControlType(String type) throws IllegalArgumentException{
-		try {
-			this.controlType = CasPermissionControlType.valueOf(type);
-		} catch (IllegalArgumentException ex) {
-			log.debug("illegal argument", ex);
-			throw new IllegalArgumentException("permission control type supports [" + CasPermissionControlType.allType()+"], please check the param '" +type+"'");
-		}
-	}
-	
-	/**
-	 * 判断当前的定义的权限控制模式是否支持指定的类型
-	 * @param type 指定类型的权限控制模式
-	 * @return true or false
-	 */
-	public  boolean controlTypeSupport(CasPermissionControlType type) {
-		if (type == null) {
-			log.error("controlTypeSupport param is null");
-			return false;
-		}
-		return this.controlType.support(type.getTypeStr());
-	}
+    public String getControlType() {
+        return controlType.getTypeStr();
+    }
 
-/**
-	 * cas 的权限控制类型定义
-	 * @author wanglin
-	 */
-	public static enum CasPermissionControlType {
-		// default type
-		URI_PATTERN("URI_PATTERN", "URI_PATTERN"),
-		// 正则类型
-		REGULAR_PATTERN("REGULAR_PATTERN", "REGULAR_PATTERN"),
-		// 启用所有
-		ALL("ALL", "URI_PATTERN", "REGULAR_PATTERN"),
-		// 一种都不启用
-		NONE("NONE")
-		;
-		private final String typeStr;
-		private final Set<String> supportTypes;
-		
-		private CasPermissionControlType(String type, String... types) {
-			Assert.notNull(type);
-			this.typeStr = type;
-			this.supportTypes = new HashSet<String>(Arrays.asList(types));
-		}
-		public String getTypeStr() {
-			return typeStr;
-		}
-		public boolean support(String type) {
-			return supportTypes.contains(type);
-		}
-		/**
-		 * get CasPermissionControlType all type string, split with ,
-		 * @return types string. eg. ALL, NONE...
-		 */
-		public static  String allType(){
-			StringBuilder sb = new StringBuilder();
-			int index = 0;
-			for(CasPermissionControlType type : CasPermissionControlType.values()) {
-				if (index > 0) {
-					sb.append(", ");
-				}
-				sb.append(type.getTypeStr());
-				index++;
-			}
-			return sb.toString();
-		}
-	} 
+    public static String getStaticDomainCode() {
+        if (DomainDefine.staticDomainCode == null) {
+            throw new UniauthCommonException("before call getStaticDomainCode, need set domainCode first");
+        }
+        return DomainDefine.staticDomainCode;
+    }
+
+    public boolean isUseAllDomainUserInfoShareMode() {
+        return useAllDomainUserInfoShareMode;
+    }
+
+    public void setUseAllDomainUserInfoShareMode(boolean useAllDomainUserInfoShareMode) {
+        this.useAllDomainUserInfoShareMode = useAllDomainUserInfoShareMode;
+    }
+
+    /**
+     * set permission control type
+     * 
+     * @param type type
+     * @throws IllegalArgumentException if parameter type is not a legal CasPermissionControlType
+     *         string
+     */
+    public void setControlType(String type) throws IllegalArgumentException {
+        try {
+            this.controlType = CasPermissionControlType.valueOf(type);
+        } catch (IllegalArgumentException ex) {
+            log.debug("illegal argument", ex);
+            throw new IllegalArgumentException("permission control type supports [" + CasPermissionControlType.allType() + "], please check the param '" + type + "'");
+        }
+    }
+
+    /**
+     * 判断当前的定义的权限控制模式是否支持指定的类型
+     * 
+     * @param type 指定类型的权限控制模式
+     * @return true or false
+     */
+    public boolean controlTypeSupport(CasPermissionControlType type) {
+        if (type == null) {
+            log.error("controlTypeSupport param is null");
+            return false;
+        }
+        return this.controlType.support(type.getTypeStr());
+    }
+
+    public boolean isServiceTicketValidateWithInnerAddress() {
+        return serviceTicketValidateWithInnerAddress;
+    }
+
+    public void setServiceTicketValidateWithInnerAddress(boolean serviceTicketValidateWithInnerAddress) {
+        this.serviceTicketValidateWithInnerAddress = serviceTicketValidateWithInnerAddress;
+    }
+
+    /**
+     * cas 的权限控制类型定义
+     * 
+     * @author wanglin
+     */
+    public static enum CasPermissionControlType {
+        // default type
+        URI_PATTERN("URI_PATTERN", "URI_PATTERN"),
+        // 正则类型
+        REGULAR_PATTERN("REGULAR_PATTERN", "REGULAR_PATTERN"),
+        // 启用所有
+        ALL("ALL", "URI_PATTERN", "REGULAR_PATTERN"),
+        // 一种都不启用
+        NONE("NONE");
+        private final String typeStr;
+        private final Set<String> supportTypes;
+
+        private CasPermissionControlType(String type, String... types) {
+            Assert.notNull(type);
+            this.typeStr = type;
+            this.supportTypes = new HashSet<String>(Arrays.asList(types));
+        }
+
+        public String getTypeStr() {
+            return typeStr;
+        }
+
+        public boolean support(String type) {
+            return supportTypes.contains(type);
+        }
+
+        /**
+         * get CasPermissionControlType all type string, split with ,
+         * 
+         * @return types string. eg. ALL, NONE...
+         */
+        public static String allType() {
+            StringBuilder sb = new StringBuilder();
+            int index = 0;
+            for (CasPermissionControlType type : CasPermissionControlType.values()) {
+                if (index > 0) {
+                    sb.append(", ");
+                }
+                sb.append(type.getTypeStr());
+                index++;
+            }
+            return sb.toString();
+        }
+    }
 }

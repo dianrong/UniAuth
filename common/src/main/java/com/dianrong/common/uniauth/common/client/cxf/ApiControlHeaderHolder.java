@@ -44,6 +44,7 @@ public final class ApiControlHeaderHolder {
 
         /**
          * Set key and value
+         * 
          * @param key can not be null
          * @param val value
          */
@@ -58,46 +59,46 @@ public final class ApiControlHeaderHolder {
             }
             holder.get().put(key, val);
         }
-        
+
         /**
-         * get all  header
+         * get all header
+         * 
          * @return all header
          */
         public Map<String, String> getAllHeader() {
             return holder.get();
         }
-        
+
         /**
          * Remove holder value
          */
         public void remove() {
             holder.get().clear();
         }
-        
+
         /**
          * return all header key
+         * 
          * @return can not be null, a empty list at least
          */
         public abstract List<String> getAllKeys();
-        
+
     }
-    
+
     // Request header holder
-    private static  HeaderHolder requestHeaderHolder = new HeaderHolder() {
+    private static HeaderHolder requestHeaderHolder = new HeaderHolder() {
         @Override
         public List<String> getAllKeys() {
-            return Arrays.asList(HeaderKey.REQUEST_ACCOUNT, HeaderKey.REQUEST_CONTENT,
-                    HeaderKey.REQUEST_PSWD, HeaderKey.REQUEST_TYPE);
+            return Arrays.asList(HeaderKey.REQUEST_ACCOUNT, HeaderKey.REQUEST_CONTENT, HeaderKey.REQUEST_PSWD, HeaderKey.REQUEST_TYPE);
         }
-        
+
     };
-    
+
     // reponse header holder
-    private static  HeaderHolder responseHeaderHolder = new HeaderHolder() {
+    private static HeaderHolder responseHeaderHolder = new HeaderHolder() {
         @Override
         public List<String> getAllKeys() {
-            return Arrays.asList(HeaderKey.RESPONSE_EXPIRETIME, HeaderKey.RESPONSE_REULST,
-                    HeaderKey.RESPONSE_TOKEN, HeaderKey.RESPONSE_TYPE);
+            return Arrays.asList(HeaderKey.RESPONSE_EXPIRETIME, HeaderKey.RESPONSE_REULST, HeaderKey.RESPONSE_TOKEN, HeaderKey.RESPONSE_TYPE);
         }
     };
 
@@ -109,7 +110,7 @@ public final class ApiControlHeaderHolder {
     public static HeaderHolder getRequestHeaderHolder() {
         return requestHeaderHolder;
     }
-    
+
     /**
      * get all response header holders
      * 

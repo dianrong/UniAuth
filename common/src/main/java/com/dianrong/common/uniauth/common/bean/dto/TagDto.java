@@ -10,52 +10,52 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel("标签信息")
 public class TagDto extends TenancyBaseDto {
-	private static final long serialVersionUID = -6998161636801183621L;
-	
-	@ApiModelProperty("主键id")
-	private Integer id;
-	@ApiModelProperty("编码")
+    private static final long serialVersionUID = -6998161636801183621L;
+
+    @ApiModelProperty("主键id")
+    private Integer id;
+    @ApiModelProperty("编码")
     private String code;
-	@ApiModelProperty("状态(0:启用,1:禁用)")
+    @ApiModelProperty("状态(0:启用,1:禁用)")
     private Byte status;
-	@ApiModelProperty("描述")
+    @ApiModelProperty("描述")
     private String description;
-	@ApiModelProperty("标签类型id")
+    @ApiModelProperty("标签类型id")
     private Integer tagTypeId;
-	@ApiModelProperty("标签类型code")
+    @ApiModelProperty("标签类型code")
     private String tagTypeCode;
-	@ApiModelProperty("创建时间")
+    @ApiModelProperty("创建时间")
     private Date createDate;
-	@ApiModelProperty("最近更新时间")
+    @ApiModelProperty("最近更新时间")
     private Date lastUpdate;
-    
-	//whether this tag directly connected with a user
-	@ApiModelProperty("辅助字段,判断标签是否与某个用户有关联关系")
-	private Boolean tagUserChecked;
-	
-	//whether this tag directly connected with a group
-	@ApiModelProperty("辅助字段,判断标签是否与某个组有关联关系")
-	private Boolean tagGrouprChecked;
+
+    // whether this tag directly connected with a user
+    @ApiModelProperty("辅助字段,判断标签是否与某个用户有关联关系")
+    private Boolean tagUserChecked;
+
+    // whether this tag directly connected with a group
+    @ApiModelProperty("辅助字段,判断标签是否与某个组有关联关系")
+    private Boolean tagGrouprChecked;
 
     public Boolean getTagUserChecked() {
-		return tagUserChecked;
-	}
+        return tagUserChecked;
+    }
 
-	public TagDto setTagUserChecked(Boolean tagUserChecked) {
-		this.tagUserChecked = tagUserChecked;
-		return this;
-	}
+    public TagDto setTagUserChecked(Boolean tagUserChecked) {
+        this.tagUserChecked = tagUserChecked;
+        return this;
+    }
 
-	public Boolean getTagGrouprChecked() {
-		return tagGrouprChecked;
-	}
+    public Boolean getTagGrouprChecked() {
+        return tagGrouprChecked;
+    }
 
-	public TagDto setTagGrouprChecked(Boolean tagGrouprChecked) {
-		this.tagGrouprChecked = tagGrouprChecked;
-		return this;
-	}
+    public TagDto setTagGrouprChecked(Boolean tagGrouprChecked) {
+        this.tagGrouprChecked = tagGrouprChecked;
+        return this;
+    }
 
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -127,11 +127,9 @@ public class TagDto extends TenancyBaseDto {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "TagDto [id=" + id + ", code=" + code + ", status=" + status + ", description=" + description
-				+ ", tagTypeId=" + tagTypeId + ", tagTypeCode=" + tagTypeCode + ", createDate=" + createDate
-				+ ", lastUpdate=" + lastUpdate + ", tagUserChecked=" + tagUserChecked + ", tagGrouprChecked="
-				+ tagGrouprChecked + "]";
-	}
+    @Override
+    public String toString() {
+        return "TagDto [id=" + id + ", code=" + code + ", status=" + status + ", description=" + description + ", tagTypeId=" + tagTypeId + ", tagTypeCode=" + tagTypeCode
+                + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate + ", tagUserChecked=" + tagUserChecked + ", tagGrouprChecked=" + tagGrouprChecked + "]";
+    }
 }

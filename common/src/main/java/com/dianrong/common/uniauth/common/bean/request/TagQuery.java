@@ -7,8 +7,8 @@ import java.util.List;
  */
 public class TagQuery extends PageParam {
 
-	private static final long serialVersionUID = -7447070647269360141L;
-	private Integer id;
+    private static final long serialVersionUID = -7447070647269360141L;
+    private Integer id;
     private List<Integer> tagIds;
     private String code;
     private String fuzzyCode;
@@ -119,10 +119,9 @@ public class TagQuery extends PageParam {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "TagQuery [id=" + id + ", tagIds=" + tagIds + ", code=" + code + ", fuzzyCode=" + fuzzyCode + ", status="
-				+ status + ", tagTypeId=" + tagTypeId + ", domainId=" + domainId + ", domainCode=" + domainCode
-				+ ", domainIds=" + domainIds + ", userId=" + userId + ", groupId=" + groupId + "]";
-	}
+    @Override
+    public String toString() {
+        return "TagQuery [id=" + id + ", tagIds=" + tagIds + ", code=" + code + ", fuzzyCode=" + fuzzyCode + ", status=" + status + ", tagTypeId=" + tagTypeId + ", domainId="
+                + domainId + ", domainCode=" + domainCode + ", domainIds=" + domainIds + ", userId=" + userId + ", groupId=" + groupId + "]";
+    }
 }

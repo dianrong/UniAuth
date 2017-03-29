@@ -186,8 +186,8 @@ public class ForgetPasswordController extends AbstractBaseController {
         UserDto user = null;
         try {
             // 验证邮箱是否存在
-        	user =  forgetPasswordService.checkUser(identity, tenancyCode);
-        	Assert.notNull(user, "can not find user, email or phone :" +identity + ", tenancyCode:" +tenancyCode);
+            user = forgetPasswordService.checkUser(identity, tenancyCode);
+            Assert.notNull(user, "can not find user, email or phone :" + identity + ", tenancyCode:" + tenancyCode);
         } catch (Exception ex) {
             // 验证用户失败了
             setResponseResultJson(response, "4", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
@@ -200,9 +200,9 @@ public class ForgetPasswordController extends AbstractBaseController {
         // 成功进入第二步
         setResponseResultJson(response, "0");
     }
-    
+
     /**
-     *  step3 process, update password
+     * step3 process, update password
      * 
      * @param request request
      * @param response response

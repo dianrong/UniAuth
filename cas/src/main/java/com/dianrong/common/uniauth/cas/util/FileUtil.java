@@ -21,9 +21,9 @@ import org.springframework.util.Assert;
  *
  */
 public final class FileUtil {
-    
+
     private static Logger log = LoggerFactory.getLogger(FileUtil.class);
-    
+
     /**
      * . 返回webApp文件夹所在路径
      * 
@@ -58,7 +58,7 @@ public final class FileUtil {
             BufferedInputStream bufferedInputStream = null;
             FileInputStream fileInputStream = null;
             try {
-                fileInputStream =  new FileInputStream(file);
+                fileInputStream = new FileInputStream(file);
                 bufferedInputStream = new BufferedInputStream(fileInputStream);
                 int r = bufferedInputStream.read(bytes);
                 if (r != file.length())
@@ -78,18 +78,19 @@ public final class FileUtil {
         return null;
     }
 
-    
+
     /**
-     * . it equals loadProperties(filePath , null)
+     * Equals loadProperties(filePath , null)
+     * 
      * @param filePath filePath
      * @return LinkedHashMap<String, String>
      */
     public static Map<String, String> loadProperties(String filePath) {
         return loadProperties(filePath, null);
     }
-    
+
     /**
-     * . load map from properties file. if defaultMap is null, new a LinkedHashMap
+     * load map from properties file. if defaultMap is null, new a LinkedHashMap
      * 
      * @param filePath filePath
      * @param defaultMap

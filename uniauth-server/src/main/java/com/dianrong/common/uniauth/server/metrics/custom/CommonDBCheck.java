@@ -27,13 +27,13 @@ public abstract class CommonDBCheck extends HealthCheck {
             stmt = connection.createStatement();
             stmt.setQueryTimeout(3);
             rs = stmt.executeQuery(DEFAULT_QUERY);
-            while(rs.next()) {
+            while (rs.next()) {
                 int value = rs.getInt("1");
-                if(value == 1) {
+                if (value == 1) {
                     return Result.healthy();
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Result.unhealthy(e);
         } finally {
             closeQuietly(rs);
@@ -48,7 +48,7 @@ public abstract class CommonDBCheck extends HealthCheck {
             if (autoCloseable != null) {
                 autoCloseable.close();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("CommonDBCheck closeQuietly", e);
         }
     }

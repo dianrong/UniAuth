@@ -33,7 +33,7 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
  * Created by Arc on 25/3/2016.
  */
 @Service
-public class ConfigService extends TenancyBasedService{
+public class ConfigService extends TenancyBasedService {
 
     @Autowired
     private CfgMapper cfgMapper;
@@ -41,11 +41,11 @@ public class ConfigService extends TenancyBasedService{
     @Autowired
     private CfgTypeMapper cfgTypeMapper;
 
-    /**.
-	 * 进行配置数据过滤的filter
-	 */
-	@Resource(name="cfgDataFilter")
-	private DataFilter dataFilter;
+    /**
+     * . 进行配置数据过滤的filter
+     */
+    @Resource(name = "cfgDataFilter")
+    private DataFilter dataFilter;
 
     public ConfigDto addOrUpdateConfig(Integer id, String cfgKey, Integer cfgTypeId, String value, byte[] file) {
         Cfg cfg = new Cfg();
@@ -55,17 +55,17 @@ public class ConfigService extends TenancyBasedService{
         cfg.setValue(value);
         cfg.setCfgTypeId(cfgTypeId);
         // update process.
-        if(id != null) {
-        	cfg.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
-        	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
-        		//更新判断比较
-        		dataFilter.updateFieldCheck(id, FieldType.FIELD_TYPE_CFG_KEY ,cfgKey);
-        	}
+        if (id != null) {
+            cfg.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
+            if (!StringUtil.strIsNullOrEmpty(cfgKey)) {
+                // 更新判断比较
+                dataFilter.updateFieldCheck(id, FieldType.FIELD_TYPE_CFG_KEY, cfgKey);
+            }
             Map<String, Integer> cfgTypesMap = this.getAllCfgTypesCodeIdPair();
-            if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file != null) {
+            if (cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file != null) {
                 // when create new file cfg or update the old file
                 cfgMapper.updateByPrimaryKeyWithBLOBs(cfg);
-            } else if(cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file == null) {
+            } else if (cfgTypesMap.get(AppConstants.CFG_TYPE_FILE).equals(cfgTypeId) && file == null) {
                 // only update the key part for the file type cfg update.
                 cfgMapper.updateByPrimaryKey(cfg);
             } else {
@@ -74,12 +74,12 @@ public class ConfigService extends TenancyBasedService{
                 cfgMapper.updateByPrimaryKeyWithBLOBs(cfg);
             }
         } else {
-        	if(!StringUtil.strIsNullOrEmpty(cfgKey)){
-        		//添加判断比较
-        		dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,cfgKey);
-        	}
-        	
-        	 cfg.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
+            if (!StringUtil.strIsNullOrEmpty(cfgKey)) {
+                // 添加判断比较
+                dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY, cfgKey);
+            }
+
+            cfg.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
             // add process.
             cfgMapper.insert(cfg);
         }
@@ -88,8 +88,8 @@ public class ConfigService extends TenancyBasedService{
         return BeanConverter.convert(cfg);
     }
 
-    public PageDto<ConfigDto> queryConfig(List<String> cfgKeys, String cfgKeyLike, Integer id, String cfgKey, Integer cfgTypeId, String value,
-                                          Boolean needBLOBs,Integer pageSize, Integer pageNumber) {
+    public PageDto<ConfigDto> queryConfig(List<String> cfgKeys, String cfgKeyLike, Integer id, String cfgKey, Integer cfgTypeId, String value, Boolean needBLOBs, Integer pageSize,
+            Integer pageNumber) {
 
         CheckEmpty.checkEmpty(pageNumber, "pageNumber");
         CheckEmpty.checkEmpty(pageSize, "pageSize");
@@ -100,22 +100,22 @@ public class ConfigService extends TenancyBasedService{
         cfgExample.setOrderByClause("cfg_type_id asc");
         CfgExample.Criteria criteria = cfgExample.createCriteria();
 
-        if(id != null) {
+        if (id != null) {
             criteria.andIdEqualTo(id);
         }
-        if(!StringUtils.isEmpty(cfgKey)) {
+        if (!StringUtils.isEmpty(cfgKey)) {
             criteria.andCfgKeyEqualTo(cfgKey);
         }
-        if(!StringUtils.isEmpty(cfgKeyLike)) {
+        if (!StringUtils.isEmpty(cfgKeyLike)) {
             criteria.andCfgKeyLike(cfgKeyLike + "%");
         }
-        if(cfgTypeId != null) {
+        if (cfgTypeId != null) {
             criteria.andCfgTypeIdEqualTo(cfgTypeId);
         }
-        if(!StringUtils.isEmpty(value)) {
+        if (!StringUtils.isEmpty(value)) {
             criteria.andValueLike("%" + value + "%");
         }
-        if(!CollectionUtils.isEmpty(cfgKeys)) {
+        if (!CollectionUtils.isEmpty(cfgKeys)) {
             criteria.andCfgKeyIn(cfgKeys);
         }
         criteria.andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
@@ -123,23 +123,23 @@ public class ConfigService extends TenancyBasedService{
         int count = cfgMapper.countByExample(cfgExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
         List<Cfg> cfgs;
-        if(needBLOBs != null && needBLOBs) {
+        if (needBLOBs != null && needBLOBs) {
             cfgs = cfgMapper.selectByExampleWithBLOBs(cfgExample);
         } else {
             cfgs = cfgMapper.selectByExample(cfgExample);
         }
 
-        if(CollectionUtils.isEmpty(cfgs)) {
+        if (CollectionUtils.isEmpty(cfgs)) {
             return null;
         } else {
             List<ConfigDto> configDtos = new ArrayList<>();
             Map<Integer, String> cfgTypeIndex = this.getAllCfgTypesIdCodePair();
-            for(Cfg cfg:cfgs) {
+            for (Cfg cfg : cfgs) {
                 ConfigDto configDto = BeanConverter.convert(cfg);
                 configDto.setCfgType(cfgTypeIndex.get(cfg.getCfgTypeId()));
                 configDtos.add(configDto);
             }
-            return new PageDto<>(pageNumber,pageSize,count,configDtos);
+            return new PageDto<>(pageNumber, pageSize, count, configDtos);
         }
     }
 
@@ -150,7 +150,7 @@ public class ConfigService extends TenancyBasedService{
     public Map<Integer, String> getAllCfgTypesIdCodePair() {
         List<CfgType> cfgTypes = cfgTypeMapper.selectByExample(new CfgTypeExample());
         Map<Integer, String> cfgTypeMap = new HashMap<>();
-        for(CfgType cfgType : cfgTypes) {
+        for (CfgType cfgType : cfgTypes) {
             cfgTypeMap.put(cfgType.getId(), cfgType.getCode());
         }
         return cfgTypeMap;
@@ -159,7 +159,7 @@ public class ConfigService extends TenancyBasedService{
     public Map<String, Integer> getAllCfgTypesCodeIdPair() {
         List<CfgType> cfgTypes = cfgTypeMapper.selectByExample(new CfgTypeExample());
         Map<String, Integer> cfgTypeMap = new HashMap<>();
-        for(CfgType cfgType : cfgTypes) {
+        for (CfgType cfgType : cfgTypes) {
             cfgTypeMap.put(cfgType.getCode(), cfgType.getId());
         }
         return cfgTypeMap;

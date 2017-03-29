@@ -3,7 +3,8 @@ package com.dianrong.common.uniauth.server.support.apicontrl.security;
 import org.springframework.util.Assert;
 
 /**
- * 加密 解密的参数 
+ * 加密 解密的参数
+ * 
  * @author wanglin
  */
 final class JwtInfo {
@@ -14,24 +15,24 @@ final class JwtInfo {
     static final String USER_ACCOUNT_KEY = "user_account";
     // permission
     static final String PERMISSION_KEY = "permission_string";
-    
+
     private final String issuer;
-    
+
     private final String audience;
-    
+
     private final long expireTime;
-    
+
     private final long createTime;
-    
+
     private final String subject;
-    
+
     private final String name;
-    
-    private final String  account;
-    
+
+    private final String account;
+
     private final String permission;
-    
-    JwtInfo(String issuer, String audience, String subject, String name, String account, String permission,  long createTime, long expireTime){
+
+    JwtInfo(String issuer, String audience, String subject, String name, String account, String permission, long createTime, long expireTime) {
         super();
         Assert.notNull(account);
         Assert.isTrue(createTime > 0);
@@ -47,11 +48,11 @@ final class JwtInfo {
     }
 
     public String getIssuer() {
-        return issuer == null? "" : issuer;
+        return issuer == null ? "" : issuer;
     }
 
     public String getAudience() {
-        return audience == null? "" : audience;
+        return audience == null ? "" : audience;
     }
 
     public long getExpireTime() {
@@ -63,7 +64,7 @@ final class JwtInfo {
     }
 
     public String getSubject() {
-        return subject == null? "" : subject;
+        return subject == null ? "" : subject;
     }
 
     public String getName() {
@@ -75,6 +76,6 @@ final class JwtInfo {
     }
 
     public String getPermission() {
-        return permission == null? "" : permission;
+        return permission == null ? "" : permission;
     }
 }

@@ -20,7 +20,7 @@ import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class GenerateServiceTicketAction  extends AbstractAction {
+public final class GenerateServiceTicketAction extends AbstractAction {
 
     /** Instance of CentralAuthenticationService. */
     @NotNull
@@ -34,8 +34,7 @@ public final class GenerateServiceTicketAction  extends AbstractAction {
         try {
             final Credential credential = WebUtils.getCredential(context);
 
-            final ServiceTicket serviceTicketId = this.centralAuthenticationService
-                .grantServiceTicket(ticketGrantingTicket, service, credential);
+            final ServiceTicket serviceTicketId = this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicket, service, credential);
             WebUtils.putServiceTicketInRequestScope(context, serviceTicketId);
             // cache service
             FirstPageUrlProcessUtil.refreshServiceInSession(WebUtils.getHttpServletRequest(context), service.getId());
@@ -54,8 +53,7 @@ public final class GenerateServiceTicketAction  extends AbstractAction {
         return error();
     }
 
-    public void setCentralAuthenticationService(
-        final CentralAuthenticationService centralAuthenticationService) {
+    public void setCentralAuthenticationService(final CentralAuthenticationService centralAuthenticationService) {
         this.centralAuthenticationService = centralAuthenticationService;
     }
 
@@ -66,7 +64,6 @@ public final class GenerateServiceTicketAction  extends AbstractAction {
      * @return true, if gateway present
      */
     protected boolean isGatewayPresent(final RequestContext context) {
-        return StringUtils.hasText(context.getExternalContext()
-            .getRequestParameterMap().get("gateway"));
+        return StringUtils.hasText(context.getExternalContext().getRequestParameterMap().get("gateway"));
     }
 }

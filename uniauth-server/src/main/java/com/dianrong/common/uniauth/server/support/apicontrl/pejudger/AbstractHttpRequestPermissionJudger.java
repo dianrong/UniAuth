@@ -13,7 +13,7 @@ import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermission;
 import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermissionItem;
 
-public abstract class AbstractHttpRequestPermissionJudger implements PermissionJudger<ApiCtlPermission, HttpServletRequest>{
+public abstract class AbstractHttpRequestPermissionJudger implements PermissionJudger<ApiCtlPermission, HttpServletRequest> {
     @Override
     public boolean judge(CallerCredential<ApiCtlPermission> Credential, HttpServletRequest request) {
         Assert.notNull(Credential);
@@ -21,15 +21,15 @@ public abstract class AbstractHttpRequestPermissionJudger implements PermissionJ
         Assert.notNull(request);
         String requestUrl = HttpRequestUtil.extractRequestUrl(request, false);
         String requestMethod = request.getMethod();
-        ApiCtlPermission permissionInfo =getPermissionInfo(Credential);
-        for(ApiCtlPermissionItem item:permissionInfo.getPermissions()) {
+        ApiCtlPermission permissionInfo = getPermissionInfo(Credential);
+        for (ApiCtlPermissionItem item : permissionInfo.getPermissions()) {
             if (checkPermission(requestUrl, requestMethod, item)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     // check permission
     private boolean checkPermission(String requestUrl, String requestMethod, ApiCtlPermissionItem item) {
         // check method
@@ -46,9 +46,10 @@ public abstract class AbstractHttpRequestPermissionJudger implements PermissionJ
         }
         return true;
     }
-    
+
     /**
-     * get pattern 
+     * get pattern
+     * 
      * @param patternStr patternStr
      * @return pattern
      * @throws PatternSyntaxException - If the expression's syntax is invalid
@@ -58,6 +59,6 @@ public abstract class AbstractHttpRequestPermissionJudger implements PermissionJ
         Assert.notNull(patternStr);
         return Pattern.compile(patternStr);
     }
-    
+
     protected abstract ApiCtlPermission getPermissionInfo(CallerCredential<ApiCtlPermission> credential);
 }

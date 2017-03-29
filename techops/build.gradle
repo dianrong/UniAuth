@@ -16,7 +16,6 @@ buildscript {
     }
 }
 
-
 apply plugin: 'js'
 
 project.ext {
@@ -63,6 +62,7 @@ task checkDianrongRepoStatus()  {
     URL url = new URL("http://nexus.dianrong.com/nexus/#welcome");
     URLConnection rulConnection = url.openConnection();
     HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+    httpUrlConnection.setReadTimeout(1000);
     try {
       def responseCode = httpUrlConnection.getResponseCode();
        if (responseCode == 200 ) {
@@ -99,8 +99,10 @@ dependencies {
     // so if there is a version upgrade, we should make sure the release version is work for techops system first then ask other teams to upgrade.
         
         if (dianrongRepoEnable) {
-               compile "com.dianrong.common.uniauth:share-rw:1.0.80-SNAPSHOT"
-               compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.80-SNAPSHOT"
+               compile "com.dianrong.common.uniauth:share-rw:1.0.87-SNAPSHOT"
+               compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.87-SNAPSHOT"
+               // compile project(":ss-client")
+               // compile project(":share-rw")
         } else {
                compile project(":ss-client")
                compile project(":share-rw")
@@ -118,9 +120,6 @@ dependencies {
     compile "org.springframework:spring-webmvc"
     compile "org.springframework:spring-context-support"
     compile "org.springframework:spring-aop"
-
-    // zookeeper util.
-    compile project(":dianrong-lib:zkcfg")
 
     //Aspectj
     compile "org.aspectj:aspectjrt:1.8.8"
@@ -141,20 +140,31 @@ dependencies {
     compile 'commons-fileupload:commons-fileupload'
 
     //Google Jar
-    compile 'com.google.code.gson:gson'
     compile 'com.google.guava:guava'
 
     //Test Suite
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test"
-    compile 'org.springframework.security:spring-security-aspects'
-    compile 'ch.qos.logback:logback-classic'
     
     // swagger
     compile 'io.springfox:springfox-swagger2:2.2.2'
     compile 'io.springfox:springfox-swagger-ui:2.2.2'
     
+    // log
+    compile 'ch.qos.logback:logback-classic'
+    
+    // notification 
+    compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
+    compile(
+            'com.squareup.retrofit2:retrofit:2.1.0',
+            'com.squareup.retrofit2:converter-jackson:2.1.0',
+            'com.squareup.retrofit2:converter-scalars:2.1.0',
+            'joda-time:joda-time',
+            'commons-io:commons-io',
+        )
+    
+    compile 'org.springframework.security:spring-security-aspects'
     aspectpath 'org.springframework.security:spring-security-aspects'
 }
 

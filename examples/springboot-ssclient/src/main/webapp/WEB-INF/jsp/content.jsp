@@ -16,6 +16,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	<br>
 	<a href="logout/cas">Single Sign Out</a>
-  </body>
 </body>
 </html>

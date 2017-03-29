@@ -23,6 +23,7 @@ import com.google.common.collect.Sets;
 
 /**
  * 用于辅助 ApiControlFilter 完成权限控制的功能 主要是做一些缓存处理
+ * 
  * @author wanglin
  */
 @Component
@@ -31,7 +32,7 @@ public final class ServerPermissionCacher {
      * 更新公共权限信息的时间间隔(分钟)
      */
     public static final Long REFRESH_PERMISSION_MINUTE_PERIOD = 60L;
-    
+
     // 缓存一些正则表达式
     private final Map<String, Pattern> patternsCache = Maps.newConcurrentMap();
 
@@ -40,12 +41,12 @@ public final class ServerPermissionCacher {
 
     // 定时刷新缓存的执行器
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    
+
     @Autowired
     private ApiPermissionService apiPermissionService;
-    
-    // 定时更新权限信息的任务 
-    private Runnable refreshPermissionTask = new Runnable(){
+
+    // 定时更新权限信息的任务
+    private Runnable refreshPermissionTask = new Runnable() {
         @Override
         public void run() {
             List<ApiPermissionDto> permissionDtos = apiPermissionService.searchAllPublicPermissions();
@@ -58,22 +59,22 @@ public final class ServerPermissionCacher {
             publicPermissions = permissions;
         }
     };
-    
+
     public ServerPermissionCacher() {
         super();
     }
-    
+
     @PostConstruct
     public void setUpRefreshTask() {
         // 添加定时执行任务
         executor.scheduleAtFixedRate(refreshPermissionTask, 0L, REFRESH_PERMISSION_MINUTE_PERIOD, TimeUnit.MINUTES);
     }
-    
+
     /**
-     *  get Pattern from cache, if there is no cache, create a new one and
-     *  cache it
+     * get Pattern from cache, if there is no cache, create a new one and cache it
+     * 
      * @param patternStr patternStr can not null
-     * @return Pattern 
+     * @return Pattern
      * @throws IllegalArgumentException if patternStr is null
      * @throws PatternSyntaxException if patternStr is a invalid pattern String
      */
@@ -87,9 +88,10 @@ public final class ServerPermissionCacher {
         }
         return patternsCache.get(patternStr);
     }
-    
+
     /**
      * return public permissions
+     * 
      * @return Set of apiCtlPermissionItem
      */
     public Set<ApiCtlPermissionItem> getPublicPermissions() {

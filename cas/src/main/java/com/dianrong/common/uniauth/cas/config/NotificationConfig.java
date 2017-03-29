@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- *  notification system config properties
+ * notification system config properties
+ * 
  * @author xiaofeng.chen@dianrong.com
  * @since jdk1.7
  * @date 2017年1月9日
@@ -28,16 +29,16 @@ public class NotificationConfig {
      * identity to access notification endpoint
      */
     @Value("#{uniauthConfig['notification_key']}")
-    private String notificationUserKey; 
+    private String notificationUserKey;
     /**
-     * notification system endpoint 
+     * notification system endpoint
      */
     @Value("#{uniauthConfig['notification_endpoint']}")
-    private String notificationEndpoint; 
+    private String notificationEndpoint;
     /**
-     * default mail from 
+     * default mail from
      */
     @Value("#{uniauthConfig['internal.mail.smtp.femail']}")
     private String internalSmtpFromEmail;
-    
+
 }

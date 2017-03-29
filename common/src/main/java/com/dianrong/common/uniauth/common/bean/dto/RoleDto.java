@@ -12,169 +12,168 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel("角色信息")
 public class RoleDto extends TenancyBaseDto {
-	private static final long serialVersionUID = 1578124776064866724L;
-	
-	@ApiModelProperty("主键id")
-	private Integer id;
-	
-	@ApiModelProperty("名称")
-	private String name;
-	
-	@ApiModelProperty("描述")
-	private String description;
-	
-	@ApiModelProperty("状态(0,1)")
-	private Byte status;
-	
-	@ApiModelProperty("角色所在域的id")
-	private Integer domainId;
-	
-	@ApiModelProperty("角色类型的id")
-	private Integer roleCodeId;
-	
-	private Integer permissionId;
-	
-	@ApiModelProperty("对应的域信息")
-	private DomainDto domain;
-	private String roleCode;
+    private static final long serialVersionUID = 1578124776064866724L;
 
-	private List<GroupDto> groupList;
-	private Map<String, Set<String>> permMap;
-	private Map<String, Set<PermissionDto>> permDtoMap;
+    @ApiModelProperty("主键id")
+    private Integer id;
 
-	//whether this role connected with this permission
-	//private boolean permChecked;
-	//whether this role connected with this user
-	//private boolean roleChecked;
-	//whether this role connected with this group
-	//private boolean groupChecked;
-	
-	//whether this role connected with a permission, user or group
-	private Boolean checked;
-	
-	public Integer getPermissionId() {
-		return permissionId;
-	}
+    @ApiModelProperty("名称")
+    private String name;
 
-	public RoleDto setPermissionId(Integer permissionId) {
-		this.permissionId = permissionId;
-		return this;
-	}
+    @ApiModelProperty("描述")
+    private String description;
 
-	public Integer getRoleCodeId() {
-		return roleCodeId;
-	}
+    @ApiModelProperty("状态(0,1)")
+    private Byte status;
 
-	public RoleDto setRoleCodeId(Integer roleCodeId) {
-		this.roleCodeId = roleCodeId;
-		return this;
-	}
+    @ApiModelProperty("角色所在域的id")
+    private Integer domainId;
 
-	public Integer getDomainId() {
-		return domainId;
-	}
+    @ApiModelProperty("角色类型的id")
+    private Integer roleCodeId;
 
-	public RoleDto setDomainId(Integer domainId) {
-		this.domainId = domainId;
-		return this;
-	}
+    private Integer permissionId;
 
-	public Integer getId() {
-		return id;
-	}
+    @ApiModelProperty("对应的域信息")
+    private DomainDto domain;
+    private String roleCode;
 
-	public RoleDto setId(Integer id) {
-		this.id = id;
-		return this;
-	}
+    private List<GroupDto> groupList;
+    private Map<String, Set<String>> permMap;
+    private Map<String, Set<PermissionDto>> permDtoMap;
 
-	public String getName() {
-		return name;
-	}
+    // whether this role connected with this permission
+    // private boolean permChecked;
+    // whether this role connected with this user
+    // private boolean roleChecked;
+    // whether this role connected with this group
+    // private boolean groupChecked;
 
-	public RoleDto setName(String name) {
-		this.name = name;
-		return this;
-	}
+    // whether this role connected with a permission, user or group
+    private Boolean checked;
 
-	public String getDescription() {
-		return description;
-	}
+    public Integer getPermissionId() {
+        return permissionId;
+    }
 
-	public RoleDto setDescription(String description) {
-		this.description = description;
-		return this;
-	}
+    public RoleDto setPermissionId(Integer permissionId) {
+        this.permissionId = permissionId;
+        return this;
+    }
 
-	public Byte getStatus() {
-		return status;
-	}
+    public Integer getRoleCodeId() {
+        return roleCodeId;
+    }
 
-	public RoleDto setStatus(Byte status) {
-		this.status = status;
-		return this;
-	}
+    public RoleDto setRoleCodeId(Integer roleCodeId) {
+        this.roleCodeId = roleCodeId;
+        return this;
+    }
 
-	public DomainDto getDomain() {
-		return domain;
-	}
+    public Integer getDomainId() {
+        return domainId;
+    }
 
-	public RoleDto setDomain(DomainDto domain) {
-		this.domain = domain;
-		return this;
-	}
+    public RoleDto setDomainId(Integer domainId) {
+        this.domainId = domainId;
+        return this;
+    }
 
-	public String getRoleCode() {
-		return roleCode;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public RoleDto setRoleCode(String roleCode) {
-		this.roleCode = roleCode;
-		return this;
-	}
+    public RoleDto setId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
-	public List<GroupDto> getGroupList() {
-		return groupList;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public RoleDto setGroupList(List<GroupDto> groupList) {
-		this.groupList = groupList;
-		return this;
-	}
+    public RoleDto setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public RoleDto setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public RoleDto setStatus(Byte status) {
+        this.status = status;
+        return this;
+    }
+
+    public DomainDto getDomain() {
+        return domain;
+    }
+
+    public RoleDto setDomain(DomainDto domain) {
+        this.domain = domain;
+        return this;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public RoleDto setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+        return this;
+    }
+
+    public List<GroupDto> getGroupList() {
+        return groupList;
+    }
+
+    public RoleDto setGroupList(List<GroupDto> groupList) {
+        this.groupList = groupList;
+        return this;
+    }
 
 
-	public Map<String, Set<String>> getPermMap() {
-		return permMap;
-	}
+    public Map<String, Set<String>> getPermMap() {
+        return permMap;
+    }
 
-	public RoleDto setPermMap(Map<String, Set<String>> permMap) {
-		this.permMap = permMap;
-		return this;
-	}
+    public RoleDto setPermMap(Map<String, Set<String>> permMap) {
+        this.permMap = permMap;
+        return this;
+    }
 
-	public Boolean getChecked() {
-		return checked;
-	}
+    public Boolean getChecked() {
+        return checked;
+    }
 
-	public RoleDto setChecked(Boolean checked) {
-		this.checked = checked;
-		return this;
-	}
+    public RoleDto setChecked(Boolean checked) {
+        this.checked = checked;
+        return this;
+    }
 
-	public Map<String, Set<PermissionDto>> getPermDtoMap() {
-		return permDtoMap;
-	}
+    public Map<String, Set<PermissionDto>> getPermDtoMap() {
+        return permDtoMap;
+    }
 
-	public RoleDto setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
-		this.permDtoMap = permDtoMap;
-		return this;
-	}
+    public RoleDto setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
+        this.permDtoMap = permDtoMap;
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return "RoleDto [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status
-				+ ", domainId=" + domainId + ", roleCodeId=" + roleCodeId + ", permissionId=" + permissionId
-				+ ", domain=" + domain + ", roleCode=" + roleCode + ", groupList=" + groupList + ", permMap=" + permMap
-				+ ", permDtoMap=" + permDtoMap + ", checked=" + checked + "]";
-	}
+    @Override
+    public String toString() {
+        return "RoleDto [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status + ", domainId=" + domainId + ", roleCodeId=" + roleCodeId
+                + ", permissionId=" + permissionId + ", domain=" + domain + ", roleCode=" + roleCode + ", groupList=" + groupList + ", permMap=" + permMap + ", permDtoMap="
+                + permDtoMap + ", checked=" + checked + "]";
+    }
 }

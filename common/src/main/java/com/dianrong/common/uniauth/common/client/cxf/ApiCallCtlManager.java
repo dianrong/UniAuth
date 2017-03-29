@@ -29,87 +29,88 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 管理api权限访问客户端的状态信息
+ * 
  * @author wanglin
  */
 @Slf4j
 public final class ApiCallCtlManager {
-    
+
     // 在token过期前多少毫秒以内，去尝试刷新token, 不能是负数
     public static final long MILLISECONDS_BEFORE_TOKEN_EXPIRED_TO_REFRESH_TOKEN = 10L * 1000L;
-    
+
     // 线程池，用于运行定时刷新token的任务
     private static final ScheduledExecutorService excutor = Executors.newSingleThreadScheduledExecutor();
-    
+
     /**
      * singleton
      */
     private static final ApiCallCtlManager instance = new ApiCallCtlManager();
-    
+
     /**
      * @return singleton instance
      */
     public static ApiCallCtlManager getInstance() {
         return instance;
     }
-    
+
     /**
-     *  all invoke handlers
+     * all invoke handlers
      */
     private Map<ClientStatus, InvokeHandlerDelegate> handlers = Maps.newConcurrentMap();
-    
+
     /**
      * default PtHeaderOperator
      */
     private StringHeaderValueOperator headerOperator;
-    
+
     // inner implements
-    private  PtHeaderOperator<LoginRequestLoad> loginRequestHeaderOperator;
-    private  PtHeaderOperator<LoginResponseLoad> loginResponseHeaderOperator;
-    
+    private PtHeaderOperator<LoginRequestLoad> loginRequestHeaderOperator;
+    private PtHeaderOperator<LoginResponseLoad> loginResponseHeaderOperator;
+
     /**
-     *  login lock object
+     * login lock object
      */
     private final Object loginMutex = new Object();
-    
+
     // api访问控制开关
     private ApiCallCtlSwitch ctlSwitch = new ApiCallCtlSwitch() {
-    	// 默认实现总是开启的
-		@Override
-		public boolean apiCtlOn() {
-			return true;
-		}
+        // 默认实现总是开启的
+        @Override
+        public boolean apiCtlOn() {
+            return true;
+        }
     };
-    
+
     // login account
-    private String  account;
-    
+    private String account;
+
     // login password
     private String password;
-    
+
     // 设置status字段
     private static AtomicReferenceFieldUpdater<ApiCallCtlManager, ClientStatus> referenceClientStatus;
     static {
         try {
             referenceClientStatus = AtomicReferenceFieldUpdater.newUpdater(ApiCallCtlManager.class, ClientStatus.class, "status");
-        } catch (Exception ex) { 
-            throw new Error(ex); 
+        } catch (Exception ex) {
+            throw new Error(ex);
         }
     }
     // 默认是匿名登陆
     private volatile ClientStatus status = ClientStatus.ANONYMOUS;
-    
+
     /**
-     *  登陆成功之后换取的token
+     * 登陆成功之后换取的token
      */
     private volatile String token;
-    
+
     /**
-     *  当前的的token过期的时间
+     * 当前的的token过期的时间
      */
     private long credentialExpireTime;
-    
+
     // response handler
-    private final InvokeResultHandler responseHandler  = new  InvokeResultHandler() {
+    private final InvokeResultHandler responseHandler = new InvokeResultHandler() {
         @Override
         public void handle(ResponseVerifiedType type, String content) {
             if (type == null) {
@@ -124,14 +125,14 @@ public final class ApiCallCtlManager {
                     // 身份认证失败
                     throw new AutenticationFailedException();
                 case TOKEN_AVAILABLE:
-                    // 通过token访问能正常访问  不处理
+                    // 通过token访问能正常访问 不处理
                     break;
                 default:
                     break;
-             }
+            }
         }
     };
-    
+
     // 统一返回结果处理
     // 做一些处理调用前后的准备工作
     public abstract class InvokeHandlerReponseProcess extends AbstractInvokeHandlerDelegate {
@@ -142,14 +143,14 @@ public final class ApiCallCtlManager {
 
             doBeforeInvoke(target, proxy, method, args);
         }
-        
+
         @Override
         public final Object afterInvoke(Object target, Object proxy, Method method, Object[] args, Object result, Throwable cause) throws Throwable {
             return doAfterInvoke(target, proxy, method, args, result, cause);
         }
-        
+
         public abstract void doBeforeInvoke(Object target, Object proxy, Method method, Object[] args);
-        
+
         // 实际处理方法
         public Object doAfterInvoke(Object target, Object proxy, Method method, Object[] args, Object result, Throwable cause) throws Throwable {
             ResponseVerifiedType resultType = null;
@@ -159,7 +160,7 @@ public final class ApiCallCtlManager {
                 log.warn(headerOperator.getHeader(HeaderKey.RESPONSE_TYPE) + " is a invalid ResponseVerifiedType", e);
             }
             responseHandler.handle(resultType, headerOperator.getHeader(HeaderKey.RESPONSE_REULST));
-            
+
             // 抛异常
             if (cause != null) {
                 throw cause;
@@ -167,32 +168,33 @@ public final class ApiCallCtlManager {
             return result;
         }
     }
-    
+
     /**
      * private constructor
      */
-    private ApiCallCtlManager(){
+    private ApiCallCtlManager() {
         super();
-        
+
         // init header operator
         setHeaderOperator(new CxfHeaderOperator());
         init();
     }
-    
+
     /**
-     * set  PtHeaderOperator
+     * set PtHeaderOperator
+     * 
      * @param headerOperator can not be null
      */
-    public  ApiCallCtlManager setHeaderOperator(StringHeaderValueOperator headerOperator) {
+    public ApiCallCtlManager setHeaderOperator(StringHeaderValueOperator headerOperator) {
         Assert.notNull(headerOperator, "set headerOperator, headerOperator can not be null");
         this.headerOperator = headerOperator;
         this.loginRequestHeaderOperator = new LoginRequestLoadHeaderOperator(headerOperator);
         this.loginResponseHeaderOperator = new LoginResponseLoadHeaderOperator(headerOperator);
         return this;
     }
-    
+
     /**
-     *  create all invoke handlers
+     * create all invoke handlers
      */
     private void init() {
         // ANONYMOUS
@@ -203,7 +205,7 @@ public final class ApiCallCtlManager {
             }
         };
         handlers.put(ClientStatus.ANONYMOUS, anonymousInvokeHandler);
-        
+
         // LOGIN
         InvokeHandlerDelegate loginInvokeHandler = new InvokeHandlerReponseProcess() {
             @Override
@@ -211,7 +213,7 @@ public final class ApiCallCtlManager {
                 headerOperator.setHeader(HeaderKey.REQUEST_TYPE, RequestVerifiedType.LOGIN.toString());
                 loginRequestHeaderOperator.setHeader(HeaderKey.REQUEST_CONTENT, getLoginLoadJson());
             }
-            
+
             @Override
             public Object doAfterInvoke(Object target, Object proxy, Method method, Object[] args, Object result, Throwable cause) throws Throwable {
                 synchronized (loginMutex) {
@@ -243,7 +245,7 @@ public final class ApiCallCtlManager {
             }
         };
         handlers.put(ClientStatus.NEED_LOGIN, loginInvokeHandler);
-        
+
         // TOKEN
         InvokeHandlerDelegate tokenInvokeHandler = new InvokeHandlerReponseProcess() {
             @Override
@@ -251,9 +253,9 @@ public final class ApiCallCtlManager {
                 headerOperator.setHeader(HeaderKey.REQUEST_TYPE, RequestVerifiedType.TOKEN.toString());
                 headerOperator.setHeader(HeaderKey.REQUEST_CONTENT, token);
             }
-            
+
             @Override
-            public  Object doAfterInvoke(Object target, Object proxy, Method method, Object[] args, Object result, Throwable cause) throws Throwable {
+            public Object doAfterInvoke(Object target, Object proxy, Method method, Object[] args, Object result, Throwable cause) throws Throwable {
                 // 采用普通处理流程处理
                 Object processResult = super.doAfterInvoke(target, proxy, method, args, result, cause);
                 ResponseVerifiedType resultType = null;
@@ -262,10 +264,9 @@ public final class ApiCallCtlManager {
                 } catch (IllegalArgumentException e) {
                     log.warn(headerOperator.getHeader(HeaderKey.RESPONSE_TYPE) + " is a invalid ResponseVerifiedType", e);
                 }
-                
+
                 // token 过期或者 token 验证失败，都用账号密码再重新尝试一次
-                if (ResponseVerifiedType.TOKEN_EXPIRED.equals(resultType)
-                        || ResponseVerifiedType.TOKEN_INVALID.equals(resultType)) {
+                if (ResponseVerifiedType.TOKEN_EXPIRED.equals(resultType) || ResponseVerifiedType.TOKEN_INVALID.equals(resultType)) {
                     // 设置重新登陆的状态
                     setStatus(ClientStatus.TOKEN, ClientStatus.NEED_LOGIN);
                     // 再调用一次
@@ -275,11 +276,11 @@ public final class ApiCallCtlManager {
             }
         };
         handlers.put(ClientStatus.TOKEN, tokenInvokeHandler);
-        
+
         long delay = MILLISECONDS_BEFORE_TOKEN_EXPIRED_TO_REFRESH_TOKEN - 1000L;
         delay = delay < 1000L ? 1000L : delay;
         long period = delay;
-         // 启动token定时刷新任务
+        // 启动token定时刷新任务
         excutor.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -288,21 +289,22 @@ public final class ApiCallCtlManager {
                     long timeToExpired = credentialExpireTime - currentMilles;
                     if (timeToExpired <= MILLISECONDS_BEFORE_TOKEN_EXPIRED_TO_REFRESH_TOKEN) {
                         // 设置标识
-                        setStatus( ClientStatus.TOKEN, ClientStatus.NEED_LOGIN);
+                        setStatus(ClientStatus.TOKEN, ClientStatus.NEED_LOGIN);
                     }
                 }
             }
         }, delay, period, TimeUnit.MILLISECONDS);
     }
-    
-    
+
+
     /**
-     *  Set account and password
+     * Set account and password
+     * 
      * @param account can not be null
      * @param password can not be null
      * @return ApiCallCtlManager
      */
-    public  ApiCallCtlManager setAccount(String account, String password) {
+    public ApiCallCtlManager setAccount(String account, String password) {
         synchronized (loginMutex) {
             Assert.notNull(account, "account can not be null");
             Assert.notNull(password, "password can not be null");
@@ -314,7 +316,7 @@ public final class ApiCallCtlManager {
             return this;
         }
     }
-    
+
     // login success handle
     public boolean loginSuccessHandle(final LoginResponseLoad response) {
         if (response == null) {
@@ -331,24 +333,26 @@ public final class ApiCallCtlManager {
         this.credentialExpireTime = response.getExpireTime();
         return true;
     }
-    
+
     /**
      * 生成登陆的实体对象
+     * 
      * @return 登陆的实体对象
      */
     private LoginRequestLoad getLoginLoadJson() {
         return new LoginRequestLoad(this.account, this.password);
     }
-    
+
     /**
-     * Core method, decide witch Invoke handler to return 
+     * Core method, decide witch Invoke handler to return
+     * 
      * @return Invoke handler not null
      */
     public InvokeHandlerDelegate getInvoker() {
-    	// 采用匿名方式进行访问
-		if (!ctlSwitch.apiCtlOn()) {
-			return handlers.get(ClientStatus.ANONYMOUS);
-		}
+        // 采用匿名方式进行访问
+        if (!ctlSwitch.apiCtlOn()) {
+            return handlers.get(ClientStatus.ANONYMOUS);
+        }
         if (ClientStatus.NEED_LOGIN.equals(status)) {
             // 尝试去登陆
             if (setStatus(ClientStatus.NEED_LOGIN, ClientStatus.LOGGING)) {
@@ -363,9 +367,9 @@ public final class ApiCallCtlManager {
         // 等待登陆结束
         if (ClientStatus.LOGGING.equals(status)) {
             synchronized (loginMutex) {
-                while(ClientStatus.LOGGING.equals(status)) {
+                while (ClientStatus.LOGGING.equals(status)) {
                     try {
-                    	loginMutex.wait();
+                        loginMutex.wait();
                     } catch (InterruptedException e) {
                         log.warn("InterruptedException ", e);
                         // ignore
@@ -373,17 +377,16 @@ public final class ApiCallCtlManager {
                 }
             }
         }
-        
+
         InvokeHandlerDelegate handler = handlers.get(status);
-        
+
         // 此处返回的handler 只能是token 和 anonymous两种之一
-        if (handlers.get(ClientStatus.ANONYMOUS) == handler ||
-             handlers.get(ClientStatus.TOKEN) == handler) {
+        if (handlers.get(ClientStatus.ANONYMOUS) == handler || handlers.get(ClientStatus.TOKEN) == handler) {
             return handler;
         }
         return getInvoker();
     }
-    
+
     // set status
     public boolean setStatus(ClientStatus expect, ClientStatus update) {
         Assert.notNull(expect);
@@ -392,8 +395,8 @@ public final class ApiCallCtlManager {
     }
 
     // 设置开关
-	public ApiCallCtlManager setCtlSwitch(ApiCallCtlSwitch ctlSwitch) {
-		this.ctlSwitch = ctlSwitch;
-		return this;
-	}
+    public ApiCallCtlManager setCtlSwitch(ApiCallCtlSwitch ctlSwitch) {
+        this.ctlSwitch = ctlSwitch;
+        return this;
+    }
 }

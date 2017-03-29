@@ -13,28 +13,34 @@ import org.jasig.cas.services.RegisteredServiceUsernameAttributeProvider;
 
 /**
  * 用于生成各种各样的RegisteredService
+ * 
  * @author wanglin
  *
  */
 public interface RegisteredServiceBuilder {
-    
+
     /**
-     * 生成一个新的RegisteredService. 
-     * <p>由于在cas的原生实现DefaultServicesManagerImpl中,会将生成的RegisteredService放入到TreeSet排序.所以, 生成的RegisteredService需要再实现Comparable接口</p>
+     * 生成一个新的RegisteredService.
+     * <p>
+     * 由于在cas的原生实现DefaultServicesManagerImpl中,会将生成的RegisteredService放入到TreeSet排序.所以,
+     * 生成的RegisteredService需要再实现Comparable接口
+     * </p>
      * 
      * @return 一个新的RegisteredService
      */
     RegisteredService build();
-    
+
     /**
      * 设置生成的RegisteredService的RegisteredServiceProxyPolicy
+     * 
      * @param serviceProxyPolicy
      */
     RegisteredServiceBuilder setProxyPolicy(RegisteredServiceProxyPolicy serviceProxyPolicy);
 
     /**
      * 设置serviceId, 用于唯一标识一个RegisteredService
-     * @param serviceId 
+     * 
+     * @param serviceId
      */
     RegisteredServiceBuilder setServiceId(String serviceId);
 
@@ -51,16 +57,16 @@ public interface RegisteredServiceBuilder {
     RegisteredServiceBuilder setUsernameAttributeProvider(RegisteredServiceUsernameAttributeProvider usernameAttributeProvider);
 
     RegisteredServiceBuilder setRequiredHandlers(Set<String> requiredHandlers);
-    
+
     RegisteredServiceBuilder setAccessStrategy(RegisteredServiceAccessStrategy accessStrategy);
 
     RegisteredServiceBuilder setLogoutType(LogoutType logoutType);
-    
+
     RegisteredServiceBuilder setAttributeReleasePolicy(AttributeReleasePolicy attributeReleasePolicy);
 
     RegisteredServiceBuilder setLogoUrl(URL logoUrl);
 
     RegisteredServiceBuilder setLogoutUrl(URL logoutUrl);
-    
+
     RegisteredServiceBuilder setPublicKey(RegisteredServicePublicKey pulickKey);
 }

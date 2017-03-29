@@ -15,31 +15,32 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/main2")
 @Slf4j
 public class MainController2 {
-	@Autowired
-	private MyService myService;
-	
-	@Autowired
-	private UniClientFacade uniClientFacade;
-	
-	@RequestMapping(value = "/common", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")   
-	public String getCommonPage() {
-		log.debug("Received request to show common page");
-		//myService.testService();
-		return "commonpage";
-	}
-	
-	@RequestMapping(value = "/admin", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")   
-	public String getAadminPage() {
-/*		DomainParam domainParam = new DomainParam();
-		domainParam.setCode("techops");
-		Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
-		
-		TestModel tm = new TestModel();
-		myService.testModel(tm);*/
-		log.debug("Received request to show admin page");
-		return "adminpage";
-	}
+    @Autowired
+    private MyService myService;
+
+    @Autowired
+    private UniClientFacade uniClientFacade;
+
+    @RequestMapping(value = "/common", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    public String getCommonPage() {
+        log.debug("Received request to show common page");
+        // myService.testService();
+        return "commonpage";
+    }
+
+    @RequestMapping(value = "/admin", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    public String getAadminPage() {
+        /*
+         * DomainParam domainParam = new DomainParam(); domainParam.setCode("techops");
+         * Response<List<UrlRoleMappingDto>> response =
+         * uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
+         * 
+         * TestModel tm = new TestModel(); myService.testModel(tm);
+         */
+        log.debug("Received request to show admin page");
+        return "adminpage";
+    }
 
 }

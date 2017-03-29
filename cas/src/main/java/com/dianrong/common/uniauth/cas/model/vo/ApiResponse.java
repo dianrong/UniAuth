@@ -7,21 +7,21 @@ import java.util.List;
 import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
- * 登陆操作的返回结果
+ * 操作的返回结果
  * 
  * @author wanglin
  */
 public class ApiResponse<T extends Serializable> implements Serializable {
     private static final long serialVersionUID = -8045161535931878288L;
 
-     /** 定义结果常量     **/
+    /** 定义结果常量 **/
     /**
-     * 登陆成功
+     * 成功
      */
     private static final String RESULT_SUCCESS = "success";
-    
+
     /**
-     * 登陆失败
+     * 失败
      */
     private static final String RESULT_FAILURE = "error";
 
@@ -36,27 +36,27 @@ public class ApiResponse<T extends Serializable> implements Serializable {
     private final String result;
 
     /**
-     * 登陆成功的返回结果
+     * 成功的返回结果
      */
     private final T content;
 
     /**
-     * 登陆失败返回的message
+     * 失败返回的message
      */
     private final String message;
-    
+
     /**
      * 具体异常信息
      */
     private final List<String> errors;
 
     /**
-     * 构造登陆返回结果
+     * 构造返回结果
      * 
-     * @param success boolean值,登陆是否成功
-     * @param content 登陆成功的返回值
+     * @param success boolean值,是否成功
+     * @param content 成功的返回值
      * @param code 返回结果code, 不能为空
-     * @param message 返回结果信息,一般是登陆失败才会有结果信息.
+     * @param message 返回结果信息,一般是失败才会有结果信息.
      */
     public ApiResponse(boolean success, T content, Integer code, String message) {
         Assert.notNull(code, "response code can not be null");
@@ -90,17 +90,19 @@ public class ApiResponse<T extends Serializable> implements Serializable {
     public List<String> getErrors() {
         return errors;
     }
-    
+
     /**
      * 生成一个成功的结果
+     * 
      * @return 表示成功的返回结果
      */
     public static <T extends Serializable> ApiResponse<T> success() {
         return new ApiResponse<T>(true, null, ResponseCode.SUCCESS, null);
     }
-    
+
     /**
      * 便利方法, 用于生成一个成功的返回结果,采用默认的结果code
+     * 
      * @param content 返回结果内容, 必须是一个序列化的对象类型
      * @return 表示成功的返回结果
      */

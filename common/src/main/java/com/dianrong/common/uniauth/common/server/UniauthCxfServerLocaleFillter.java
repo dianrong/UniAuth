@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 /**
  * . uniauth的cxf的locale的filter实现
+ * 
  * @author wanglin
  */
 @Provider
@@ -20,7 +21,7 @@ public final class UniauthCxfServerLocaleFillter implements ContainerRequestFilt
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String localeStr = requestContext.getHeaderString(AppConstants.CAS_CXF_HEADER_LOCALE_KEY);
-        if(localeStr != null) {
+        if (localeStr != null) {
             UniauthLocaleInfoHolder.setLocale(StringUtils.parseLocaleString(localeStr));
         }
     }

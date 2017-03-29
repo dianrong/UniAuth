@@ -9,16 +9,16 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("分页查询返回结果")
 public class PageDto<T extends Serializable> implements Serializable {
 
-	private static final long serialVersionUID = 578665277377363989L;
-	
-	@ApiModelProperty(value="当前页码", required=true)
-	private int currentPage;       // current page number, from 0
-	@ApiModelProperty(value="每页数量大小", required=true)
-    private int pageSize;   // page size
-	@ApiModelProperty(value="数据总条数",required=true)
+    private static final long serialVersionUID = 578665277377363989L;
+
+    @ApiModelProperty(value = "当前页码", required = true)
+    private int currentPage; // current page number, from 0
+    @ApiModelProperty(value = "每页数量大小", required = true)
+    private int pageSize; // page size
+    @ApiModelProperty(value = "数据总条数", required = true)
     private int totalCount; // total record count
-	@ApiModelProperty(value="查询结果数据", required=true)
-    private List<T> data;   // current page data
+    @ApiModelProperty(value = "查询结果数据", required = true)
+    private List<T> data; // current page data
 
     public PageDto() {
         super();
@@ -31,7 +31,7 @@ public class PageDto<T extends Serializable> implements Serializable {
         this.data = data;
     }
 
-    @ApiModelProperty(value="总页数", required=true)
+    @ApiModelProperty(value = "总页数", required = true)
     public int getTotalPage() {
         if ((pageSize <= 0) || (totalCount <= 0)) {
             return 0;
@@ -92,9 +92,8 @@ public class PageDto<T extends Serializable> implements Serializable {
         return this;
     }
 
-	@Override
-	public String toString() {
-		return "PageDto [currentPage=" + currentPage + ", pageSize=" + pageSize + ", totalCount=" + totalCount
-				+ ", data=" + data + "]";
-	}
+    @Override
+    public String toString() {
+        return "PageDto [currentPage=" + currentPage + ", pageSize=" + pageSize + ", totalCount=" + totalCount + ", data=" + data + "]";
+    }
 }
