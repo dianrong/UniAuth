@@ -217,9 +217,13 @@ define(['../../utils/constant'], function (constant) {
         };
         //reset the tree component by '$state'
         $rootScope.reset = function (){
-            //clear the 'selectedNodes'
+            //clear something
             $scope.selectedNodes = [];
+            $rootScope.onMove = false;
             $rootScope.targetGroup = {};
+            $rootScope.moveGroup = {};
+            $rootScope.moveUser = {};
+
             if ($state.includes("group.this")) {
                 $state.go("group.this");
                 $rootScope.initTree(true);

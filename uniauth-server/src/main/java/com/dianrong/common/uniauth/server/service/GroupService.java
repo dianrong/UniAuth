@@ -489,13 +489,13 @@ public class GroupService extends TenancyBasedService {
             Long userId = linkage.getEntry1();
             Integer grpId = linkage.getEntry2();
 
-            UserGrpExample deleteExample = new UserGrpExample();
-            deleteExample.createCriteria().andGrpIdEqualTo(grpId).andTypeEqualTo(type).andUserIdEqualTo(userId);
-
-            //删除原组里的该用户
-            userGrpMapper.deleteByExample(deleteExample);
-
             if(!userIdSet.contains(userId)) {
+                UserGrpExample deleteExample = new UserGrpExample();
+                deleteExample.createCriteria().andGrpIdEqualTo(grpId).andTypeEqualTo(type).andUserIdEqualTo(userId);
+
+                //删除原组里的该用户
+                userGrpMapper.deleteByExample(deleteExample);
+
                 UserGrp userGrp = new UserGrp();
                 userGrp.setGrpId(targetGroupId);
                 userGrp.setUserId(userId);
