@@ -52,7 +52,7 @@ public interface IGroupRWResource extends IGroupResource {
     
     @POST
     @Path("replacetagstogroup")
-  //scenario: replace tags to group
+    //scenario: replace tags to group
     Response<Void> replaceTagsToGrp(GroupParam groupParam);
 
     @POST

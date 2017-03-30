@@ -46,7 +46,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             moveUser: {
                 method: 'POST',
                 params: {
-                    method: 'moveuser'
+                    method: 'move-user'
                 },
                 timeout: constant.reqTimeout
             },
@@ -60,14 +60,14 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             addUser: {
                 method: 'POST',
                 params: {
-                    method: 'adduser'
+                    method: 'add-user'
                 },
                 timeout: constant.reqTimeout
             },
             deleteUser: {
                 method: 'POST',
                 params: {
-                    method: 'deleteuser'
+                    method: 'delete-user'
                 },
                 timeout: constant.reqTimeout
             },
