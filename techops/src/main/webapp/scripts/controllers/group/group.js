@@ -13,60 +13,26 @@ define(['../../utils/constant'], function (constant) {
         //Used to record the move group user operation's 'user' and 'group'
         $rootScope.moveUser = {};
 
-        $scope.opts = {
-            isLeaf: function(node) {
-                var isLeaf = node.type !== constant.treeNodeType.group;
-                return isLeaf;
-            },
-            injectClasses : {
-                labelUnselectable : "disabled-line-through"
-            },
-            isSelectable: function(node) {
-                if (node.isRootGrp) {
-                    // root group is unmodifiable
-                    return false;
-                } else {
-                    return true;
-                }
-            },
-            equality: function(node1, node2) {
-                if(node1 && node2) {
-                    return node1.id == node2.id && node1.type == node2.type;
-                } else {
-                    return false;
-                }
-            }
-        };
-
         $scope.selected = $rootScope.shareGroup.selected;
 
         $scope.predicate = '';
         $scope.comparator = false;
 
+        //this function is temporarily not used     2017-03-30 16:24:21
         $scope.showSelected = function(node, selected) {
             if(selected) {
                 $scope.selected = node;
                 $rootScope.shareGroup.selected = $scope.selected;
                 // if user is modifying the group, load the group's description
-                if($rootScope.$state.current.name.search("group\.this\-modify || group\.this\-move") >= 0) {
+                if($rootScope.$state.current.name == 'group.modify') {
                     GroupService.getGrpDetails({
                         id: $rootScope.shareGroup.selected.id
                     }, function (result) {
                         $scope.selected = result.data;
                         $rootScope.shareGroup.selected = $scope.selected;
-
-                        //groupMove
-                        if($rootScope.moveFLag){
-                            $rootScope.shareGroup.from = $scope.selected;
-                        }else{
-                            $rootScope.shareGroup.to = $scope.selected;
-                        }
-                        $rootScope.moveFLag = !$rootScope.moveFLag;
                     }, function (err) {
                         console.log(err);
                     });
-                }else{
-                    $rootScope.shareGroup = {};
                 }
             } else {
                 $scope.selected = {};
@@ -74,25 +40,6 @@ define(['../../utils/constant'], function (constant) {
             }
         };
 
-        // for delete users and delete owners
-        $scope.treeOptions = {
-            isLeaf: function(node) {
-                var isLeaf = node.type !== constant.treeNodeType.group;
-                return isLeaf;
-            },
-            injectClasses : {
-                labelUnselectable : "disabled-line-through"
-            },
-            dirSelectable:false,
-            isSelectable: function(node) {
-                if(node.type == constant.treeNodeType.group) {
-                    return false;
-                } else {
-                    return true;
-                }
-            },
-            multiSelection: true
-        };
         $scope.groupOptions = {
             isLeaf: function(node) {
                 var isLeaf = node.type !== constant.treeNodeType.group;
