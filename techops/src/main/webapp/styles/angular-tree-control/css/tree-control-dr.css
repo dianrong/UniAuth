@@ -68,13 +68,23 @@ treecontrol.tree-custom li .tree-selected {
 
 treecontrol.tree-custom li.tree-expanded i.tree-branch-head:before {
     padding: 0px 0px;
-    content: "\f0c0";
-    color: #FFC87C;
+    content: "\f0d7";
+    color: #333;
+    font-size:16px;
 }
 
 treecontrol.tree-custom li.tree-collapsed i.tree-branch-head:before {
     padding: 0px 0px;
-    content: "\f0c0";
+    content: "\f0da";
+    color: #333;
+    font-size:16px;
+}
+
+treecontrol.tree-custom li.tree-expanded .group-font-color {
+    color: #FFC87C;
+}
+
+treecontrol.tree-custom li.tree-collapsed .group-font-color {
     color: #D0A365;
 }
 

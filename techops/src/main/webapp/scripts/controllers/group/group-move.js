@@ -30,6 +30,8 @@ define(['../../utils/constant'], function(constant) {
                 //reset
                 $rootScope.moveGroup.from = {};
                 $rootScope.moveGroup.to = {};
+                //cancel the onMove status before move successfully
+                $rootScope.onMove = false;
                 //reset the tree component
                 $rootScope.reset();
             }, function () {

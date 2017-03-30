@@ -143,7 +143,7 @@ define(['../../utils/constant'], function (constant) {
                 $rootScope.onMove = true;
                 $rootScope.moveGroup.from = node;
             }else{
-                $rootScope.onMove = false;
+                // $rootScope.onMove = false;
                 $rootScope.moveGroup.to = node;
             }
             event.stopPropagation();
@@ -155,7 +155,7 @@ define(['../../utils/constant'], function (constant) {
                 $rootScope.moveUser.user = node;
                 $rootScope.moveUser.user.parent = parent;
             }else{
-                $rootScope.onMove = false;
+                // $rootScope.onMove = false;
                 $rootScope.moveUser.group = node;
             }
             event.stopPropagation();
@@ -170,7 +170,12 @@ define(['../../utils/constant'], function (constant) {
             var newAry = newValue.split(".");
             var oldAry = oldValue.split(".");
             if(!(oldAry[0]==newAry[0] && oldAry[1]==newAry[1])){
+                //clear something
                 $scope.selectedNodes = [];
+                $rootScope.onMove = false;
+                $rootScope.targetGroup = {};
+                $rootScope.moveGroup = {};
+                $rootScope.moveUser = {};
             }
         });
 
