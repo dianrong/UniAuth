@@ -41,7 +41,7 @@ public class XSSFilter extends OncePerRequestFilter {
         if(pattern != null && pattern.matcher(requestURI).matches()) {
             filterChain.doFilter(request, response);
         } else{
-            EscapeScriptwrapper escapeScriptwrapper = new EscapeScriptwrapper(request);
+            EscapeScriptWrapper escapeScriptwrapper = new EscapeScriptWrapper(request);
             filterChain.doFilter(escapeScriptwrapper, response);
         }
     }
@@ -70,10 +70,10 @@ public class XSSFilter extends OncePerRequestFilter {
     /**
      * 继承HttpServletRequestWrapper，创建装饰类，以达到修改HttpServletRequest参数的目的
      * */
-    private class EscapeScriptwrapper extends HttpServletRequestWrapper{
+    private class EscapeScriptWrapper extends HttpServletRequestWrapper{
         private Map<String, String[]> parameterMap;  //所有参数的Map集合
         private Pattern tmpPattern = Pattern.compile("[sS][cC][rR][iI][pP][tT]");
-        public EscapeScriptwrapper(HttpServletRequest request) {
+        public EscapeScriptWrapper(HttpServletRequest request) {
             super(request);
             parameterMap = request.getParameterMap();
         }
@@ -138,7 +138,7 @@ public class XSSFilter extends OncePerRequestFilter {
         }
          
         /**
-         * 过滤xss攻击字符串
+         * 过滤XSS攻击字符串
          * @param str 
          * @return
          */
