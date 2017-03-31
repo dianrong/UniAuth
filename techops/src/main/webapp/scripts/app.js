@@ -56,7 +56,12 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 			  		$translate.use(langKey).then(
 			  				function(){
 			  					$rootScope.translateConstant();
-			  					$scope.languagesDropdown.selectOption(it)
+			  					$scope.languagesDropdown.selectOption(it);
+
+                                //change html head title
+                                if(!$rootScope.techopsTitle){
+                                    $rootScope.pageTitle = $translate.instant('header.title');
+                                }
 			  				});
 		        }, function (errorResponse) {
 		        	console.log('change language error');
@@ -109,6 +114,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $http.get(constant.apiBase + "/cfg/download/TECHOPS_TITLE").then(function (res) {
         if(res.data && res.data.data && res.data.data.value) {
           $rootScope.pageTitle = res.data.data.value;
+          $rootScope.techopsTitle = res.data.data.value;
         } else {
           $rootScope.pageTitle = $translate.instant('header.title');
         }
@@ -308,7 +314,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         
         
         $translateProvider.useUrlLoader('servicei18n');
-        
+
         $translateProvider.preferredLanguage(languages.langs.current);
         
         //$translateProvider.fallbackLanguage('zh');
