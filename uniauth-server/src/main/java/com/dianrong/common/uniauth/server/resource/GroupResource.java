@@ -107,7 +107,17 @@ public class GroupResource implements IGroupRWResource {
         groupService.removeUsersFromGroup(userListParam.getUserIdGroupIdPairs(), userListParam.getNormalMember());
         return Response.success();
     }
-
+    @ApiOperation(value="移动用户到指定组")
+    @ApiImplicitParams(value={
+            @ApiImplicitParam(name="groupId", value="目标组id", required=true, dataType="long", paramType="query"),
+            @ApiImplicitParam(name="userIds", value="用户列表", required=true,  dataType="java.util.List", paramType="query"),
+            @ApiImplicitParam(name="normalMember", value="普通关联关系(或owner关系)", dataType="boolean", paramType="query", defaultValue="true"),
+    })
+    @Override
+    public Response<Void> moveGroupUser(UserListParam userListParam) {
+        groupService.moveUser(userListParam.getGroupId(), userListParam.getUserIdGroupIdPairs(), userListParam.getNormalMember());
+        return Response.success();
+    }
     @ApiOperation(value = "向父组中添加子组", notes = "每一个组的code都需要是唯一的")
     @ApiImplicitParams(value = {
             @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),

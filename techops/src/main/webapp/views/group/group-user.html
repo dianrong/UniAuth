@@ -1,0 +1,71 @@
+<div ui-view style="" class="col-md-29d4 col-sm-9">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'groupMgr.label.operationTips' | translate }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <p>{{ 'groupMgr.label.operateOnNode' | translate }}</p>
+            <p>
+                <i class="fa fa-user-plus"></i>
+                <span>：{{ 'groupMgr.addUser' | translate }}</span>
+            </p>
+            <p>
+                <i class="fa fa-remove"></i>
+                <span>：{{ 'groupMgr.delUser' | translate }}({{ 'groupMgr.label.multiselect' | translate }})</span>
+            </p>
+            <p>
+                <i class="fa fa-exchange"></i>
+                <span>：{{ 'groupMgr.moveUser' | translate}}</span>
+            </p>
+            <p>
+                <i class="fa fa-mail-forward"></i>
+                <span>：{{ 'groupMgr.label.selectTargetGroup' | translate }}</span>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="col-md-70d6 col-sm-9">
+    <!-- operation info -->
+    <!--<div ng-if="shareGroup.selected.id">-->
+        <!--<i class="fa fa-exclamation-circle font-color-blue"></i>-->
+        <!--<span>-->
+            <!--{{ 'groupMgr.selectedGroupText' | translate }} id: <strong>'{{shareGroup.selected.id}}'</strong> {{ 'groupMgr.name' | translate}}: <strong>'{{shareGroup.selected.label}}'</strong> Code: <strong>'{{shareGroup.selected.code}}'</strong> .-->
+        <!--</span>-->
+    <!--</div>-->
+    <!--<div ng-if="!shareGroup.selected.id">-->
+        <!--<i class="fa fa-exclamation-circle font-color-blue"></i>-->
+        <!--<span>-->
+            <!--{{ 'groupMgr.noGroupSelected' | translate }}-->
+        <!--</span>-->
+    <!--</div>-->
+    <!-- filter input -->
+    <input style="width: 24%" type="text" class="form-control margin-tb5" ng-model="predicate" placeholder="{{ 'groupMgr.filterString' | translate}}" />
+    <!-- tree componnet -->
+    <treecontrol class="tree-custom" options="groupUserOptions" tree-model="treedata.data" selected-nodes="selectedNodes" expanded-nodes="treedata.expandedNodes"
+                 on-selection="showSelectedNodes(node, selected, $parentNode)" filter-expression="predicate" filter-comparator="comparator">
+            <span ng-mouseenter="iconOpen=true" ng-mouseleave="iconOpen=false">
+                <span ng-switch="" on="node.type">
+                    <i ng-switch-when="oUser" class="fa fa-user font-color-red"></i>
+                    <i ng-switch-when="mUser" class="fa fa-user font-color-blue"></i>
+                    <i ng-switch-when="grp" class="fa fa-group group-font-color"></i>
+                </span>
+                <span >{{node.label}}</span>
+                <span ng-init="iconOpen = false" ng-show="iconOpen" class="font-color-555">
+                    <!-- icon button -->
+                    <i ng-if="judge.isAlAddGroupUser(node)" ng-show="!onMove" class="fa fa-user-plus margin-l5"
+                       ng-click="toOperateGroup(node,$event)" title="{{ 'groupMgr.addUser' | translate }}" ui-sref="group.user.add"></i>
+
+                    <i ng-if="judge.isAlDelGroupUser(node)" ng-show="!onMove" class="fa fa-remove margin-l5"
+                       ng-click="showSelectedNodes(node, selected, $parentNode)" title="{{ 'groupMgr.delUser' | translate }}" ui-sref="group.user.delete"></i>
+
+                    <i ng-if="judge.isAlMoveGroupUser(node)" ng-show="!onMove" class="fa fa-exchange margin-l5"
+                       ng-click="toMoveUser(node, false, $event, $parentNode)" title="{{ 'groupMgr.moveUser' | translate}}" ui-sref="group.user.move"></i>
+
+                    <i ng-if="judge.isAlAddGroupUser(node)" ng-show="onMove" class="fa fa-mail-forward margin-l5"
+                       ng-click="toMoveUser(node,true,$event)" title="{{ 'groupMgr.label.moveto' | translate }}" ui-sref="group.user.move"></i>
+                </span>
+            </span>
+    </treecontrol>
+</div>

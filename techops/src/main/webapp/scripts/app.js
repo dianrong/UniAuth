@@ -56,7 +56,12 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
 			  		$translate.use(langKey).then(
 			  				function(){
 			  					$rootScope.translateConstant();
-			  					$scope.languagesDropdown.selectOption(it)
+			  					$scope.languagesDropdown.selectOption(it);
+
+                                //change html head title
+                                if(!$rootScope.techopsTitle){
+                                    $rootScope.pageTitle = $translate.instant('header.title');
+                                }
 			  				});
 		        }, function (errorResponse) {
 		        	console.log('change language error');
@@ -109,6 +114,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $http.get(constant.apiBase + "/cfg/download/TECHOPS_TITLE").then(function (res) {
         if(res.data && res.data.data && res.data.data.value) {
           $rootScope.pageTitle = res.data.data.value;
+          $rootScope.techopsTitle = res.data.data.value;
         } else {
           $rootScope.pageTitle = $translate.instant('header.title');
         }
@@ -134,43 +140,73 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             templateUrl: "views/user/user.html"
         }).
         state('group', {
-            abstract: true,
+            // abstract: true,
             url: "/group",
             controller: "GroupController",
             templateUrl: "views/group/group.html"
         }).
-        state('group.add', {
-            url: '',
+        state('group.this', {
+            url: '/this',
+            controller: "",
+            templateUrl: 'views/group/group-this.html'
+        }).
+        state('group.this.add', {
+            url: '/add',
             controller: "GroupAddController",
             templateUrl: 'views/group/group-add.html'
         }).
-        state('group.modify', {
+        state('group.this.modify', {
             url: '/modify',
             controller: "GroupModifyController",
             templateUrl: 'views/group/group-modify.html'
         }).
-        state('group.delete', {
+        state('group.this.move', {
+            url: '/move',
+            controller: "GroupMoveController",
+            templateUrl: 'views/group/group-move.html'
+        }).
+        state('group.this.delete', {
             url: '/delete',
             controller: "GroupDeleteController",
             templateUrl: 'views/group/group-delete.html'
         }).
-        state('group.add-user', {
-            url: '/add-user',
+        state('group.user', {
+            url: '/user',
+            controller: "",
+            templateUrl: 'views/group/group-user.html'
+        }).
+        state('group.user.add', {
+            url: '/user/add',
             controller: "GroupAddUserController",
             templateUrl: 'views/group/group-add-user.html'
         }).
-        state('group.delete-user', {
-            url: '/delete-user',
+        state('group.user.move', {
+            url: '/user/move',
+            controller: "GroupMoveUserController",
+            templateUrl: 'views/group/group-move-user.html'
+        }).
+        state('group.user.delete', {
+            url: '/user/delete',
             controller: "GroupDeleteUserController",
             templateUrl: 'views/group/group-delete-user.html'
         }).
-        state('group.add-owner', {
-            url: '/add-owner',
+        state('group.owner', {
+            url: '/owner',
+            controller: "",
+            templateUrl: 'views/group/group-owner.html'
+        }).
+        state('group.owner.add', {
+            url: '/owner/add',
             controller: "GroupAddOwnerController",
             templateUrl: 'views/group/group-add-owner.html'
         }).
-        state('group.delete-owner', {
-            url: '/delete-owner',
+        state('group.owner.move', {
+            url: '/owner/move',
+            controller: "GroupMoveOwnerController",
+            templateUrl: 'views/group/group-move-owner.html'
+        }).
+        state('group.owner.delete', {
+            url: '/owner/delete',
             controller: "GroupDeleteOwnerController",
             templateUrl: 'views/group/group-delete-owner.html'
         }).
@@ -278,7 +314,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
         
         
         $translateProvider.useUrlLoader('servicei18n');
-        
+
         $translateProvider.preferredLanguage(languages.langs.current);
         
         //$translateProvider.fallbackLanguage('zh');

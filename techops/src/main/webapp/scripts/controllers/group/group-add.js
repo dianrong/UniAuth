@@ -4,20 +4,13 @@ define(['../../utils/constant'],function(constant) {
      * @exports controllers/User
      */
     var Controller = function ($rootScope, $scope, GroupService, AlertService) {
-        var paramsCtlLevel = {};
-        paramsCtlLevel.onlyShowGroup = true;
-        //paramsCtlLevel.userGroupType = 0;
-        $scope.getTree = GroupService.syncTree;
-        $scope.getTree(paramsCtlLevel);
-
         $scope.addGroup = function () {
-
             var params = $scope.grp;
-            if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
+            if(!$rootScope.targetGroup || !$rootScope.targetGroup.id){
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.selectedParentGroup'));
                 return;
             }
-            params.targetGroupId=$rootScope.shareGroup.selected.id;
+            params.targetGroupId=$rootScope.targetGroup.id;
 
             GroupService.add(params, function (res) {
                 var result = res.data;
@@ -29,7 +22,8 @@ define(['../../utils/constant'],function(constant) {
                 }
                 $scope.addedGroup = result.data;
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.addGroupSuccess'));
-                $scope.getTree(paramsCtlLevel);
+                //reset the tree component
+                $rootScope.reset();
             }, function () {
                 $scope.addedGroup = {};
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.addGroupFailure'));

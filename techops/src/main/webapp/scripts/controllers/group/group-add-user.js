@@ -4,12 +4,6 @@ define(['../../utils/constant'],function(constant) {
      * @exports controllers/User
      */
     var Controller = function ($rootScope, $scope, GroupService, UserService, AlertService) {
-        var paramsCtlLevel = {};
-        paramsCtlLevel.onlyShowGroup = false;
-        paramsCtlLevel.userGroupType = 0;
-        $scope.getTree = GroupService.syncTree;
-        $scope.getTree(paramsCtlLevel);
-
         $scope.user = {};
         $scope.refreshUsers = function(email) {
             var params = {email: email, status: 0, pageNumber: 0, pageSize: 16};
@@ -20,11 +14,11 @@ define(['../../utils/constant'],function(constant) {
                     $scope.users = [];
                 }
             });
-        }
+        };
 
         $scope.addUserToGroup = function () {
 
-            if(!$rootScope.shareGroup.selected || !$rootScope.shareGroup.selected.id){
+            if(!$rootScope.targetGroup || !$rootScope.targetGroup.id){
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.choosePGroupBeforeUser'));
                 return;
             }
@@ -33,10 +27,11 @@ define(['../../utils/constant'],function(constant) {
                 return;
             }
 
-            var params = {};
-            params.groupId=$rootScope.shareGroup.selected.id;
-            params.normalMember=true;
-            params.userIds = [];
+            var params = {
+                groupId:$rootScope.targetGroup.id,
+                normalMember:true,
+                userIds:[]
+            };
             params.userIds.push($scope.user.selected.id);
 
             GroupService.addUser(params, function (res) {
@@ -47,7 +42,8 @@ define(['../../utils/constant'],function(constant) {
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.addUserSuccess'));
-                $scope.getTree(paramsCtlLevel);
+                //reset the tree component
+                $rootScope.reset();
             }, function () {
                 $scope.addedGroup = {};
                 AlertService.addAutoDismissAlert(constant.messageType.danger,  $rootScope.translate('groupMgr.tips.addUserFailure'));

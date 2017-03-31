@@ -17,7 +17,7 @@ plugins {
 
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.87-SNAPSHOT'
+    version = '1.0.88-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
     }
@@ -30,30 +30,12 @@ allprojects {
 
     repositories {
         maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
-        maven {
-            url 'http://archiva.dianrong.com/repository/mirror'
-			credentials {
-				username = 'developer'
-				password = '#a1GiRoKJnG'
-			}
-        }
-        maven {
-            url 'http://archiva.dianrong.com/repository/internal'
-			credentials {
-				username = 'developer'
-				password = '#a1GiRoKJnG'
-			}
-        }
-        maven {
-            url 'http://archiva.dianrong.com/repository/snapshots'
-			credentials {
-				username = 'developer'
-				password = '#a1GiRoKJnG'
-			}
-        }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-		mavenCentral()
     }
+
+    repositories{
+		mavenCentral()
+	}
 	
 	publishing {
     	publications.all {

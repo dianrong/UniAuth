@@ -1,0 +1,25 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'groupMgr.moveGroup' | translate}}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <ng-form name="moveGroupForm" novalidate role="form">
+                <div class="form-group">
+                    <label class="panel-label" for="fromGroup">{{ 'groupMgr.currentGroup' | translate}}:</label>
+                    <input type="text" class="form-control" name="fromGroup" id="fromGroup" ng-model="moveGroup.from.label" required disabled>
+                </div>
+                <div class="form-group">
+                    <label class="panel-label" for="toGroup">{{ 'groupMgr.targetGroup' | translate}}:</label>
+                    <input type="text" class="form-control" name="toGroup" id="toGroup" ng-model="moveGroup.to.label" required disabled>
+                </div>
+                <button type="button" class="btn btn-info" ng-click="move()"
+                        ng-disabled="moveGroupForm.fromGroup.$invalid || moveGroupForm.toGroup.$invalid">{{ 'groupMgr.dialog.eav.confirmMove'| translate}}</button>
+                <button type="button" class="btn btn-link" ng-click="reset()">{{ 'groupMgr.label.cancel'| translate }}</button>
+            </ng-form>
+        </div>
+    </div>
+</div>
+
