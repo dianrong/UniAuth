@@ -43,10 +43,13 @@
 
   <!-- Scan CAS artifacts to mvc annotations, such as controllers.
        The scan is controlled by the application context config file -->
-  <mvc:annotation-driven />
+  <mvc:annotation-driven>
+        <mvc:path-matching path-helper="xssUrlPathHelper"/>
+  </mvc:annotation-driven>
 
   <import resource="spring-configuration/propertyFileConfigurer.xml"/>
-
+  <bean id="xssUrlPathHelper" class="com.dianrong.common.uniauth.cas.util.XssUrlPathHelper"/>
+    
   <!-- Theme Resolver -->
   <bean id="themeResolver" class="org.jasig.cas.services.web.ServiceThemeResolver"
         p:defaultThemeName="${cas.themeResolver.defaultThemeName}"
@@ -60,7 +63,7 @@
       </util:map>
     </property>
   </bean>
-
+  
   <bean id="themeChangeInterceptor" class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"
         p:paramName="theme" />
 
