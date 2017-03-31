@@ -18,7 +18,7 @@
 <a id='quickstart'/>
 ## 二. 快速开始
 ###2.1.编译打包
-在源码目录执行命令
+在源码目录执行命令 (gradle 版本2.12)
 ``` shell 
 gradle warUniAuthServer、 gradle warCas、 gradle warTechopsWebsite, 
 ```
