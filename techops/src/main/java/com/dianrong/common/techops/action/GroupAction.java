@@ -185,17 +185,24 @@ public class GroupAction {
     }
 
     // perm double checked
-    @RequestMapping(value = "/adduser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/add-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
     public Response<Void> addUserToGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().addUsersIntoGroup(userListParam);
         return response;
     }
 
-    @RequestMapping(value = "/deleteuser" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
     public Response<Void> removeUserFromGroup(@RequestBody UserListParam userListParam) {
         Response<Void>  response = uARWFacade.getGroupRWResource().removeUsersFromGroup(userListParam);
+        return response;
+    }
+
+    @RequestMapping(value = "/move-user" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#userListParam,'PERM_GROUP_OWNER')")
+    public Response<Void> moveUser(@RequestBody UserListParam userListParam) {
+        Response<Void>  response = uARWFacade.getGroupRWResource().moveGroupUser(userListParam);
         return response;
     }
 

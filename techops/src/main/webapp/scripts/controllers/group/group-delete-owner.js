@@ -4,11 +4,6 @@ define(['../../utils/constant'],function(constant) {
      * @exports controllers/User
      */
     var Controller = function ($rootScope, $scope, GroupService, AlertService) {
-        var paramsCtlLevel = {};
-        paramsCtlLevel.onlyShowGroup = false;
-        paramsCtlLevel.userGroupType = 1;
-        $scope.getTree = GroupService.syncTree;
-        $scope.getTree(paramsCtlLevel);
 
         $scope.removeUserFromGroup = function () {
 
@@ -36,8 +31,9 @@ define(['../../utils/constant'],function(constant) {
                     return;
                 }
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('groupMgr.tips.delOwnerSuccess'));
-                $scope.getTree(paramsCtlLevel);
                 $scope.selectedNodes.splice(0, $scope.selectedNodes.length);
+                //reset the tree component
+                $rootScope.reset();
             }, function () {
                 $scope.addedGroup = {};
                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('groupMgr.tips.delOwnerFailure'));
