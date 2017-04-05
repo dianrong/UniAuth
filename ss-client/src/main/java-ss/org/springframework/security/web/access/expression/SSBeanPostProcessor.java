@@ -1,5 +1,6 @@
 package org.springframework.security.web.access.expression;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
@@ -233,7 +235,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
                     }
                 }
                 
-                UniauthWebExpressionConfigAttribute weca = new UniauthWebExpressionConfigAttribute(spelParser.parseExpression(sb.toString()));
+                ConfigAttribute weca = constructConfigAttribute(spelParser.parseExpression(sb.toString()));
                 List<ConfigAttribute> wecaList = new ArrayList<>();
                 wecaList.add(weca);
                 
@@ -242,6 +244,34 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
             allMaps.put(tenancyId, appendMap);
 	    }
 		return allMaps;
+	}
+	
+	private ConfigAttribute constructConfigAttribute(Expression expression) {
+	    Class<WebExpressionConfigAttribute> clz = WebExpressionConfigAttribute.class;
+	    Constructor<?>[] constructors = clz.getConstructors();
+	    for (int i = 0; i< constructors.length; i++) {
+	        Constructor<?> constructor = constructors[i];
+	        Class<?>[] parameterTypes = constructor.getParameterTypes();
+	        if (parameterTypes.length == 1 || Expression.class.isAssignableFrom(parameterTypes[0])) {
+	            log.debug("current sprint security's WebExpressionConfigAttribute support 1 parameter constructor");
+	            try {
+                    return (ConfigAttribute) constructor.newInstance(expression);
+                } catch (Exception e) {
+                    log.error("failed to create WebExpressionConfigAttribute", e);
+                    throw new UniauthCommonException("failed to create WebExpressionConfigAttribute with 1 parameter constructer", e);
+                }
+	        }
+	           if (parameterTypes.length == 2 || Expression.class.isAssignableFrom(parameterTypes[0])) {
+	                log.debug("current sprint security's WebExpressionConfigAttribute support 2 parameter constructor");
+	                try {
+	                    return (ConfigAttribute) constructor.newInstance(expression, null);
+	                } catch (Exception e) {
+	                    log.error("failed to create WebExpressionConfigAttribute", e);
+	                    throw new UniauthCommonException("failed to create WebExpressionConfigAttribute with 2 parameter constructer", e);
+	                }
+	            }
+	    }
+	    throw new UniauthCommonException("WebExpressionConfigAttribute can not supported ");
 	}
 
 	private class RefreshDomainResourceThread extends Thread{
