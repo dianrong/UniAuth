@@ -17,7 +17,7 @@ plugins {
 
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.90-SNAPSHOT'
+    version = '1.0.91-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
     }
