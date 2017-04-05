@@ -30,30 +30,12 @@ allprojects {
 
     repositories {
         maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
-        maven {
-            url 'http://archiva.dianrong.com/repository/mirror'
-			credentials {
-				username = 'developer'
-				password = '#a1GiRoKJnG'
-			}
-        }
-        maven {
-            url 'http://archiva.dianrong.com/repository/internal'
-			credentials {
-				username = 'developer'
-				password = '#a1GiRoKJnG'
-			}
-        }
-        maven {
-            url 'http://archiva.dianrong.com/repository/snapshots'
-			credentials {
-				username = 'developer'
-				password = '#a1GiRoKJnG'
-			}
-        }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-		mavenCentral()
     }
+
+    repositories{
+		mavenCentral()
+	}
 	
 	publishing {
     	publications.all {

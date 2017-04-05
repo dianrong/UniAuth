@@ -1,19 +1,22 @@
-<div class="control-panel">
-    <div class="panel-header modal-header dialog-header-group">
-        <h4 class="modal-title text-center">
-            <i class="fa fa-trash-o"></i> {{ 'groupMgr.delete.user.title' | translate}}
-        </h4>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'groupMgr.delete.user.title' | translate}}
+        </h3>
     </div>
-    <div style="font-size: 13px">
-        <div ng-repeat="selectedNode in selectedNodes">
-            <div>{{ 'groupMgr.delete.delText' | translate}}:
-                <strong style="color: #337AC3">'{{selectedNode.parent.label}}'</strong>
-                中的{{$state.includes('group.delete-user')?('common.user' | translate):'Owner:'}}
-                <strong style="color: #FF338E">{{selectedNode.label}}</strong>
+    <div class="panel-body">
+        <div>
+            <div style="font-size: 13px">
+                <div ng-repeat="selectedNode in selectedNodes">
+                    <p>
+                        {{$index + 1}}.{{ 'groupMgr.label.group' | translate}}
+                        <strong style="color: #337AC3">'{{selectedNode.parent.label}}'</strong>-
+                        <strong style="color: #FF338E">{{selectedNode.label}}</strong>
+                    </p>
+                </div>
             </div>
+            <button type="button" class="btn btn-info" ng-click="removeUserFromGroup()">{{ 'groupMgr.delete.confirm' | translate}}</button>
+            <button type="button" class="btn btn-link" ng-click="reset()">{{ 'groupMgr.label.cancel'| translate }}</button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-info" ng-click="removeUserFromGroup()">{{ 'groupMgr.delete.confirm' | translate}}</button>
     </div>
 </div>

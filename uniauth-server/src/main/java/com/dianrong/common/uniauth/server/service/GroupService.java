@@ -466,6 +466,48 @@ public class GroupService extends TenancyBasedService {
     }
 
     @Transactional
+    public void moveUser(Integer targetGroupId, List<Linkage<Long, Integer>> userIdGrpIdPairs , Boolean normalMember) {
+        if(targetGroupId == null || CollectionUtils.isEmpty(userIdGrpIdPairs)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
+        }
+        UserGrpExample userGrpExample = new UserGrpExample();
+        List<UserGrpKey> userGrpKeys;
+        Byte type = normalMember == null || normalMember ? AppConstants.ZERO_BYTE : AppConstants.ONE_BYTE;
+        userGrpExample.createCriteria().andGrpIdEqualTo(targetGroupId).andTypeEqualTo(type);
+
+        //查询目标分组的用户，用以后面检测用户是否已经存在该组下
+        userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+        Set<Long> userIdSet = new HashSet<>();
+        if(!CollectionUtils.isEmpty(userGrpKeys)) {
+            for (UserGrpKey userGrpKey : userGrpKeys) {
+                userIdSet.add(userGrpKey.getUserId());
+            }
+        }
+
+        //移动用户到新组
+        for(Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
+            Long userId = linkage.getEntry1();
+            Integer grpId = linkage.getEntry2();
+
+            if(!userIdSet.contains(userId)) {
+                UserGrpExample deleteExample = new UserGrpExample();
+                deleteExample.createCriteria().andGrpIdEqualTo(grpId).andTypeEqualTo(type).andUserIdEqualTo(userId);
+
+                //删除原组里的该用户
+                userGrpMapper.deleteByExample(deleteExample);
+
+                UserGrp userGrp = new UserGrp();
+                userGrp.setGrpId(targetGroupId);
+                userGrp.setUserId(userId);
+                userGrp.setType(type);
+                //将该用户加入到新组
+                userGrpMapper.insert(userGrp);
+            }
+        }
+
+    }
+
+    @Transactional
     public void saveRolesToGroup(Integer groupId, List<Integer> roleIds) {
         if (groupId == null || CollectionUtils.isEmpty(roleIds)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, roleIds"));
