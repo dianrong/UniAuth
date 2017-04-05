@@ -1344,12 +1344,11 @@ public class UserService extends TenancyBasedService {
      * 
      * @param groupCode groupCode can not be null
      * @param includeSubGrp include sub group or not
-     * @param includeRoleIds roleIds can not be null
+     * @param includeRoleIds roleIds. 如果为空,则不根据角色限定用户列表
      * @return List<UserDto>
      */
     public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp, List<Integer> includeRoleIds) {
         CheckEmpty.checkEmpty(groupCode, "groupCode");
-        CheckEmpty.checkEmpty(includeRoleIds, "roleIds");
         Map<String, Object> param = new HashMap<>();
         param.put("roleIds", includeRoleIds);
         param.put("groupCode", groupCode);
