@@ -14,13 +14,13 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler;
 import com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 
 @Component
-@Conditional(UniauthConfigEnvLoadCondtion.class)
+@Conditional(UniauthConfigEnvLoadCondition.class)
 public class CasAuthenticationFilterConfigure implements Configure<CasAuthenticationFilter> {
 
     private static final String DEFAULT_FILTER_PROCESS_URL = "/login/cas";

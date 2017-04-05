@@ -10,7 +10,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * 
  * @author wanglin
  */
-public class UniauthFilterBeanCreateCondtion extends UniauthEnvCondition {
+public class UniauthFilterBeanCreateCondition extends UniauthEnvCondition {
 
     @Override
     public ConfigurationPhase getConfigurationPhase() {

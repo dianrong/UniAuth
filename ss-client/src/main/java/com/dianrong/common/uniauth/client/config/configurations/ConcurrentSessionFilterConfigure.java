@@ -10,10 +10,10 @@ import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 
 @Component
-@Conditional(UniauthConfigEnvLoadCondtion.class)
+@Conditional(UniauthConfigEnvLoadCondition.class)
 public class ConcurrentSessionFilterConfigure implements Configure<ConcurrentSessionFilter> {
 
     @Resource(name = "sessionRegistry")

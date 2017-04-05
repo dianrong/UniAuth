@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Component
-@Conditional(UniauthConfigEnvLoadCondtion.class)
+@Conditional(UniauthConfigEnvLoadCondition.class)
 @Slf4j
 public class ConfigureBeanCreator implements ApplicationContextAware {
 
