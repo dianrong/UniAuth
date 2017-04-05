@@ -98,22 +98,22 @@ dependencies {
     // This is the first project to use the release version of cas&uniauth-server,
     // so if there is a version upgrade, we should make sure the release version is work for techops system first then ask other teams to upgrade.
         
-        if (dianrongRepoEnable) {
-               compile "com.dianrong.common.uniauth:share-rw:1.0.88-SNAPSHOT"
-               compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.88-SNAPSHOT"
-               // compile project(":ss-client")
-               // compile project(":share-rw")
-        } else {
-               compile project(":ss-client")
-               compile project(":share-rw")
-        }
+    if (dianrongRepoEnable) {
+        compile "com.dianrong.common.uniauth:share-rw:1.0.92-SNAPSHOT"
+        compile "com.dianrong.common.uniauth:common-uniauth-ssclient:1.0.92-SNAPSHOT"
+        // compile project(":ss-client")
+        // compile project(":share-rw")
+    } else {
+        compile project(":ss-client")
+        compile project(":share-rw")
+    }
 
     //Spring
     //def spring_version = '4.1.6.RELEASE'
 
     compile('org.springframework.boot:spring-boot-actuator:1.3.5.RELEASE'){
-     exclude group: 'org.springframework.boot', module:'spring-boot-starter-logging'
-     }
+        exclude group: 'org.springframework.boot', module:'spring-boot-starter-logging'
+    }
     compile "org.springframework:spring-context"
     compile "org.springframework:spring-tx"
     compile "org.springframework:spring-web"
@@ -157,12 +157,12 @@ dependencies {
     // notification 
     compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
     compile(
-            'com.squareup.retrofit2:retrofit:2.1.0',
-            'com.squareup.retrofit2:converter-jackson:2.1.0',
-            'com.squareup.retrofit2:converter-scalars:2.1.0',
-            'joda-time:joda-time',
-            'commons-io:commons-io',
-        )
+        'com.squareup.retrofit2:retrofit:2.1.0',
+        'com.squareup.retrofit2:converter-jackson:2.1.0',
+        'com.squareup.retrofit2:converter-scalars:2.1.0',
+        'joda-time:joda-time',
+        'commons-io:commons-io',
+    )
     
     compile 'org.springframework.security:spring-security-aspects'
     aspectpath 'org.springframework.security:spring-security-aspects'

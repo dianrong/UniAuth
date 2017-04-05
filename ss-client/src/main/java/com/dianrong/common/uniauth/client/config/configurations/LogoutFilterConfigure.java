@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 
 /**
  * configure new LogoutFilter
@@ -18,7 +18,7 @@ import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
  * @author wanglin
  */
 @Component
-@Conditional(UniauthConfigEnvLoadCondtion.class)
+@Conditional(UniauthConfigEnvLoadCondition.class)
 public class LogoutFilterConfigure implements Configure<LogoutFilter> {
 
     private static final String DEFAULT_FILTER_PROCESS_URL = "/logout/cas";

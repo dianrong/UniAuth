@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
  * @author wanglin
  */
 @Configuration
-@Conditional(UniauthFilterBeanCreateCondtion.class)
+@Conditional(UniauthFilterBeanCreateCondition.class)
 public class UniauthFilterBeanConfig {
     @Autowired
     private ConfigureBeanCreator configureBeanCreator;
