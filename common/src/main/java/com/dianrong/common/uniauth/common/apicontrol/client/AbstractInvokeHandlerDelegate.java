@@ -2,23 +2,37 @@ package com.dianrong.common.uniauth.common.apicontrol.client;
 
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+
 /**
  * 模板方法，处理调用handler逻辑
  * 
  * @author wanglin
  */
 public abstract class AbstractInvokeHandlerDelegate implements InvokeHandlerDelegate {
+    
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AppConstants.UNIAUTH_API_CALL_TIME_OUT_LOGGER);
+    
     @Override
     public Object invoke(Object target, Object proxy, Method method, Object[] args) throws Throwable {
         Object result = null;
         Throwable cause = null;
-        beforeInvoke(target, proxy, method, args);
+        long beforeInvoke = System.currentTimeMillis();
         try {
-            result = doInvoke(target, proxy, method, args);
-        } catch (Throwable t) {
-            cause = t;
+            beforeInvoke(target, proxy, method, args);
+            try {
+                result = doInvoke(target, proxy, method, args);
+            } catch (Throwable t) {
+                cause = t;
+            }
+            return afterInvoke(target, proxy, method, args, result, cause);
+        } finally {
+            if (cause != null) {
+                LOGGER.warn("{} invoke consume {} milles", method, System.currentTimeMillis() - beforeInvoke);
+            }
         }
-        return afterInvoke(target, proxy, method, args, result, cause);
     }
 
     /**

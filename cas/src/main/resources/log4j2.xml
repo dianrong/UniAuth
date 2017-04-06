@@ -57,7 +57,7 @@
         <Logger name="org.jasig" level="info" additivity="true">
             <AppenderRef ref="cas" />
         </Logger>
-        <Logger name="com.dianrong.common.uniauth.api.call.socket.timeout.exception" level="error" additivity="true">
+        <Logger name="com.dianrong.common.uniauth.api.call.socket.timeout.exception" level="info" additivity="true">
             <AppenderRef ref="apiCallTimeOut" />
         </Logger>
         <Logger name="org.springframework.webflow" level="warn">
