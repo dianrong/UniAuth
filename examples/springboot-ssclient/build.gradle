@@ -24,6 +24,7 @@ dependencies {
 	
 	// jsp 
 	compile ("org.apache.tomcat.embed:tomcat-embed-jasper")
+	compile 'org.springframework.security:spring-security-web:4.1.0.RELEASE'
 	compile ("javax.servlet:jstl")
 
      compile project(":ss-client")
