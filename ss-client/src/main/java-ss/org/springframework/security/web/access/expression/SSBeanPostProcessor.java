@@ -250,7 +250,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
         for (int i = 0; i < constructors.length; i++) {
             Constructor<?> constructor = constructors[i];
             Class<?>[] parameterTypes = constructor.getParameterTypes();
-            if (parameterTypes.length == 1 || Expression.class.isAssignableFrom(parameterTypes[0])) {
+            if (parameterTypes.length == 1 && Expression.class.isAssignableFrom(parameterTypes[0])) {
                 log.debug("current sprint security's WebExpressionConfigAttribute support 1 parameter constructor");
                 try {
                     return (ConfigAttribute) constructor.newInstance(expression);
@@ -259,7 +259,7 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
                     throw new UniauthCommonException("failed to create WebExpressionConfigAttribute with 1 parameter constructer", e);
                 }
             }
-            if (parameterTypes.length == 2 || Expression.class.isAssignableFrom(parameterTypes[0])) {
+            if (parameterTypes.length == 2 && Expression.class.isAssignableFrom(parameterTypes[0])) {
                 log.debug("current sprint security's WebExpressionConfigAttribute support 2 parameter constructor");
                 try {
                     return (ConfigAttribute) constructor.newInstance(expression, null);
