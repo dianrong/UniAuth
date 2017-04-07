@@ -1,11 +1,17 @@
 package com.dianrong.common.uniauth.common.client.cxf;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+
+import javax.ws.rs.ProcessingException;
+
+import org.slf4j.Logger;
 
 import com.dianrong.common.uniauth.common.apicontrol.HeaderKey;
 import com.dianrong.common.uniauth.common.apicontrol.LoginRequestLoadHeaderOperator;
@@ -22,6 +28,8 @@ import com.dianrong.common.uniauth.common.apicontrol.exp.AutenticationFailedExce
 import com.dianrong.common.uniauth.common.apicontrol.exp.InsufficientPrivilegesException;
 import com.dianrong.common.uniauth.common.apicontrol.model.LoginRequestLoad;
 import com.dianrong.common.uniauth.common.apicontrol.model.LoginResponseLoad;
+import com.dianrong.common.uniauth.common.client.cxf.exp.ApiCallSocketTimeOutException;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Maps;
 
@@ -35,6 +43,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class ApiCallCtlManager {
 
+    /**
+     * 专门用于记录Uniauth的API访问超时的异常,方便统计
+     */
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AppConstants.UNIAUTH_API_CALL_TIME_OUT_LOGGER);
+    
     // 在token过期前多少毫秒以内，去尝试刷新token, 不能是负数
     public static final long MILLISECONDS_BEFORE_TOKEN_EXPIRED_TO_REFRESH_TOKEN = 10L * 1000L;
 
@@ -72,7 +85,7 @@ public final class ApiCallCtlManager {
      */
     private final Object loginMutex = new Object();
 
-    // api访问控制开关
+    // API访问控制开关
     private ApiCallCtlSwitch ctlSwitch = new ApiCallCtlSwitch() {
         // 默认实现总是开启的
         @Override
@@ -163,9 +176,29 @@ public final class ApiCallCtlManager {
 
             // 抛异常
             if (cause != null) {
+                socketTimeOutExceptionCheck(cause);
                 throw cause;
             }
             return result;
+        }
+        
+        /**
+         * 处理SocketTimeOutException
+         * @param cause 异常信息
+         * @throws ApiCallSocketTimeOutException 如果异常是SocketTimeoutException
+         */
+        protected void socketTimeOutExceptionCheck(final Throwable cause) {
+            if (cause instanceof SocketTimeoutException) {
+                LOGGER.error(cause.getMessage(), cause);
+                throw new ApiCallSocketTimeOutException(cause.getMessage(), cause);
+            }
+            // 判断反射异常
+            if(cause instanceof InvocationTargetException) {
+                socketTimeOutExceptionCheck(((InvocationTargetException)cause).getTargetException());
+            }
+            if (cause instanceof ProcessingException) {
+                socketTimeOutExceptionCheck(cause.getCause());
+            }
         }
     }
 
