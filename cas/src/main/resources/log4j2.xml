@@ -29,8 +29,8 @@
             </PatternLayout>
             <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
         </RollingFile>
-        <RollingFile name="apiCallTimeOut" fileName="${pathName}/apicall.timeout.exception.log"
-                     filePattern="${pathName}//$${date:yyyy-MM}/apicall.timeout.exception_%d{yyyy-MM-dd}_%i.log.gz">
+        <RollingFile name="apiCallTimeOut" fileName="${pathName}/apiCall.log"
+                     filePattern="${pathName}//$${date:yyyy-MM}/apiCall_%d{yyyy-MM-dd}_%i.log.gz">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [SEQID:%X{seq}] [%t] %-5p %c{36} - %m%n</pattern>
             </PatternLayout>
