@@ -166,5 +166,7 @@ DELIMITER ;
 
 -- 耗时(幂等)
 call multi_tenancy_update_audit();
+-- 删除没用的存储过程
+DROP procedure IF EXISTS `multi_tenancy_update_audit`;
 
 alter table audit add constraint fk_audit_tenancy foreign key(tenancy_id) references tenancy(id);
