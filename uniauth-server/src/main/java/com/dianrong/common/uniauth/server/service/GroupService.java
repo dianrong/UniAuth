@@ -109,6 +109,11 @@ public class GroupService extends TenancyBasedService {
 
     @Transactional
     public void moveGroup(Integer sourceGroup, Integer targetGroup) {
+        CheckEmpty.checkEmpty(sourceGroup, "sourceGroupId");
+        CheckEmpty.checkEmpty(targetGroup, "targetGroupId");
+        if (sourceGroup.equals(targetGroup)) {
+            throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.parameter.targetid.equals.sourceid"));
+        }
         dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, sourceGroup);
         dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, targetGroup);
         grpPathMapper.moveTreeStepOne(sourceGroup);
