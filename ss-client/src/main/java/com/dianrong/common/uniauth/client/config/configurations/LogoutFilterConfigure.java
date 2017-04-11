@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
@@ -27,7 +27,7 @@ public class LogoutFilterConfigure implements Configure<LogoutFilter> {
     private Map<String, String> uniauthConfig;
 
     @Resource(name = "securityContextLogoutHandler")
-    private SecurityContextLogoutHandler securityContextLogoutHandler;
+    private LogoutHandler securityContextLogoutHandler;
 
     @Override
     public LogoutFilter create() {
