@@ -165,21 +165,25 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         	};
         	return processArray;
         })();
-        svc.syncTree = function(params, roleUserGrpTreeOrTree) {
+        svc.syncTree = function(params, roleUserGrpTreeOrTree, isNeedResetExpandedNodes) {
             // separate the variable that different module use.
             if(!roleUserGrpTreeOrTree) {
                 // only owner can operate the group in frontend.
                 params.needOwnerMarkup = true;
                 svc.getTree(params, function (res) {
                     svc.tree.data = res.data;
-                    var expandedNodes = [];
-                    if(params.userGroupType != undefined && params.userGroupType == 0) {
-                      // only expand the first layer of the tree, reduce the rendering nodes for browser when add or delete normal user.
-                      expandedNodes.push(svc.tree.data[0]);
-                      svc.tree.expandedNodes = expandedNodes;
-                    } else {
-                      svc.tree.expandedNodes = utils.getParentNodeArray(svc.tree.data, expandedNodes);
+                    if(isNeedResetExpandedNodes){
+                        var expandedNodes = [];
+                        expandedNodes.push(svc.tree.data[0]);
+                        svc.tree.expandedNodes = expandedNodes;
                     }
+                    // if(params.userGroupType != undefined && params.userGroupType == 0) {
+                    //   // only expand the first layer of the tree, reduce the rendering nodes for browser when add or delete normal user.
+                    //   expandedNodes.push(svc.tree.data[0]);
+                    //   svc.tree.expandedNodes = expandedNodes;
+                    // } else {
+                    //   svc.tree.expandedNodes = utils.getParentNodeArray(svc.tree.data, expandedNodes);
+                    // }
                     svc.tree.msg = '';
                 }, function (res) {
                     svc.tree.msg =$rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
