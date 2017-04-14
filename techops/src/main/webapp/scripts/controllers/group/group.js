@@ -127,12 +127,12 @@ define(['../../utils/constant'], function (constant) {
         });
 
         //initialize the tree component
-        $rootScope.initTree = function(onlyShowGroupType, userGroupType){
+        $rootScope.initTree = function(onlyShowGroupType, userGroupType, isNeedResetExpandedNodes){
             var paramsCtlLevel = {
                 onlyShowGroup:onlyShowGroupType,
                 userGroupType:userGroupType
             };
-            GroupService.syncTree(paramsCtlLevel);
+            GroupService.syncTree(paramsCtlLevel,false,isNeedResetExpandedNodes);
         };
         //for determine the icon button status
         $rootScope.judge = {
@@ -168,28 +168,28 @@ define(['../../utils/constant'], function (constant) {
             }
         };
         //reset the tree component by '$state'
-        $rootScope.reset = function (){
+        $rootScope.reset = function (isNeedResetExpandedNodes){
             //clear something
             $scope.selectedNodes = [];
             $rootScope.onMove = false;
-            $rootScope.targetGroup = {};
+            // $rootScope.targetGroup = {};
             $rootScope.moveGroup = {};
             $rootScope.moveUser = {};
 
             if ($state.includes("group.this")) {
-                $state.go("group.this");
-                $rootScope.initTree(true);
+                // $state.go("group.this");
+                $rootScope.initTree(true, -1, isNeedResetExpandedNodes);
 
             } else if($state.includes("group.user")){
-                $state.go("group.user");
-                $rootScope.initTree(false, 0);
+                // $state.go("group.user");
+                $rootScope.initTree(false, 0, isNeedResetExpandedNodes);
 
             } else if($state.includes("group.owner")){
-                $state.go("group.owner");
-                $rootScope.initTree(false, 1);
+                // $state.go("group.owner");
+                $rootScope.initTree(false, 1, isNeedResetExpandedNodes);
             }
         };
-        $rootScope.reset();
+        $rootScope.reset(true);
     };
 
     return {
