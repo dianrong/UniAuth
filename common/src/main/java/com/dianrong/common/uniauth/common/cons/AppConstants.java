@@ -230,4 +230,7 @@ public interface AppConstants {
 
     // 2 hours
     long DEFAULT_API_CALL_TOKEN_AVAILABLE_MILLiSECONDS = 1000L * 60L * 60l * 2L;
+    
+    // 记录API访问超时的日志logger name
+    String UNIAUTH_API_CALL_TIME_OUT_LOGGER = "com.dianrong.common.uniauth.api.call.socket.timeout.exception";
 }

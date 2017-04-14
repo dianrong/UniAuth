@@ -20,6 +20,9 @@ import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * Created by Arc on 14/1/16.
@@ -60,6 +63,10 @@ public class UserResource implements IUserRWResource {
 		return Response.success();
 	}
 
+	/**
+	 * 根据条件过滤用户列表
+	 */
+	
 	@Override
 	@Timed
 	public Response<PageDto<UserDto>> searchUser(UserQuery userQuery) {
@@ -149,6 +156,13 @@ public class UserResource implements IUserRWResource {
 		return Response.success(userDtos);
 	}
 
+	@ApiOperation("根据组code和角色id列表查询用户列表")
+    @ApiImplicitParams(
+            value = {
+                    @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
+                    @ApiImplicitParam(name = "groupCode", value = "组code",  required = true, dataType = "string", paramType = "query"),
+                    @ApiImplicitParam(name = "includeSubGrp", value = "是否包含子组关联的用户", dataType = "boolean", paramType = "query", defaultValue="false"),
+                    @ApiImplicitParam(name = "includeRoleIds", value = "角色id列表(用于进一步限定用户的范围). 不传,则不根据角色进行限定", dataType = "java.util.List", paramType = "query")})
     @Override
     public Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam) {
         return Response.success(userService.getUsersByGroupCodeRoleIds(userParam.getGroupCode(), userParam.getIncludeSubGrp(), userParam.getIncludeRoleIds()));

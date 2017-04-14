@@ -2,12 +2,13 @@ package com.dianrong.common.uniauth.client.config.configurations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
 import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
 import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
@@ -16,17 +17,17 @@ import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Conditional(UniauthConfigEnvLoadCondtion.class)
+@Conditional(UniauthConfigEnvLoadCondition.class)
 @Slf4j
 public class SSExceptionTranslationFilterConfigure implements Configure<SSExceptionTranslationFilter> {
 
     private static final String DEFAULT_ERROR_PAGE = "/errors/403.jsp";
 
     @Autowired(required = false)
-    private AccessDeniedHandlerImpl accessDeniedHandlerImpl;
+    private AccessDeniedHandler accessDeniedHandlerImpl;
 
     @Autowired
-    private CasAuthenticationEntryPoint casAuthEntryPoint;
+    private AuthenticationEntryPoint casAuthEntryPoint;
 
     @Autowired
     private ZooKeeperConfig zooKeeperConfig;
@@ -39,8 +40,9 @@ public class SSExceptionTranslationFilterConfigure implements Configure<SSExcept
         if (accessDeniedHandlerImpl == null) {
             // construct auto
             log.info("accessDeniedHandlerImpl is null, construct auto, the default error page is : " + DEFAULT_ERROR_PAGE);
-            this.accessDeniedHandlerImpl = new AccessDeniedHandlerImpl();
-            this.accessDeniedHandlerImpl.setErrorPage(DEFAULT_ERROR_PAGE);
+            AccessDeniedHandlerImpl defaultAccessDeniedHandler = new AccessDeniedHandlerImpl();
+            defaultAccessDeniedHandler.setErrorPage(DEFAULT_ERROR_PAGE);
+            this.accessDeniedHandlerImpl = defaultAccessDeniedHandler;
         }
 
         SSExceptionTranslationFilter ssExceptionTranslationFilter = new SSExceptionTranslationFilter(casAuthEntryPoint);

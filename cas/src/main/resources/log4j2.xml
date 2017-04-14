@@ -29,6 +29,13 @@
             </PatternLayout>
             <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
         </RollingFile>
+        <RollingFile name="apiCallTimeOut" fileName="${pathName}/apiCall.log"
+                     filePattern="${pathName}//$${date:yyyy-MM}/apiCall_%d{yyyy-MM-dd}_%i.log.gz">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [SEQID:%X{seq}] [%t] %-5p %c{36} - %m%n</pattern>
+            </PatternLayout>
+            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        </RollingFile>
     </Appenders>
 
     <Loggers>
@@ -49,6 +56,9 @@
         </Logger>
         <Logger name="org.jasig" level="info" additivity="true">
             <AppenderRef ref="cas" />
+        </Logger>
+        <Logger name="com.dianrong.common.uniauth.api.call.socket.timeout.exception" level="info" additivity="true">
+            <AppenderRef ref="apiCallTimeOut" />
         </Logger>
         <Logger name="org.springframework.webflow" level="warn">
         </Logger>

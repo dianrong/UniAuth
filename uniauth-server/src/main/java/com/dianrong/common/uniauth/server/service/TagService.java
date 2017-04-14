@@ -335,6 +335,7 @@ public class TagService extends TenancyBasedService {
                     for (GrpTagKey grpTagKey : grpTagKeys) {
                         dbGrpIds.add(grpTagKey.getGrpId());
                     }
+                    @SuppressWarnings("unchecked")
                     ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
                     intersections.retainAll(grpIds);
                     List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
@@ -386,6 +387,7 @@ public class TagService extends TenancyBasedService {
                     for (UserTagKey userTagKey : userTagKeys) {
                         dbUserIds.add(userTagKey.getUserId());
                     }
+                    @SuppressWarnings("unchecked")
                     ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
                     intersections.retainAll(userIds);
                     List<Long> userIdsNeedAddToDB = new ArrayList<>();

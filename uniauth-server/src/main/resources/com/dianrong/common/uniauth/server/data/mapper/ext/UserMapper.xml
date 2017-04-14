@@ -84,25 +84,27 @@
 		        and  type = 0 
 		) 
 		<!--  filter role -->
-		and id in (
-			select user_id from user_role where role_id in 
-			<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
-	            	#{item}  
-        	 </foreach>
-        	 union
-        	 select user_id from user_grp where grp_id in (
-				select id from grp  where id in (
-						select descendant from grp_path where ancestor in (
-								select grp_id from grp_role where role_id in 
-								<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
-					            		#{item}  
-				        	 	</foreach>
-						)								    			
+		<if test="roleIds != null" >
+			and id in (
+				select user_id from user_role where role_id in 
+				<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+		            	#{item}  
+	        	 </foreach>
+	        	 union
+	        	 select user_id from user_grp where grp_id in (
+					select id from grp  where id in (
+							select descendant from grp_path where ancestor in (
+									select grp_id from grp_role where role_id in 
+									<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+						            		#{item}  
+					        	 	</foreach>
+							)								    			
+					)
+					and status =  0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
 				)
-				and status =  0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
-			)
-		   and type = 0  
-      	)
+			   and type = 0  
+	      	)
+      	</if>
 		and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
   </select>
 </mapper>

@@ -166,6 +166,7 @@ public class PermissionService extends TenancyBasedService {
             for (RolePermissionKey rolePermissionKey : rolePermissionKeys) {
                 dbRoleIds.add(rolePermissionKey.getRoleId());
             }
+            @SuppressWarnings("unchecked")
             ArrayList<Integer> intersections = ((ArrayList<Integer>) dbRoleIds.clone());
             intersections.retainAll(roleIds);
             List<Integer> roleIdsNeedAddToDB = new ArrayList<>();

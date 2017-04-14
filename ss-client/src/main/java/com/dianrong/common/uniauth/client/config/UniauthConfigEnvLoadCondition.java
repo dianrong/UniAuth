@@ -8,7 +8,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * 
  * @author wanglin
  */
-public class UniauthConfigEnvLoadCondtion extends UniauthEnvCondition {
+public class UniauthConfigEnvLoadCondition extends UniauthEnvCondition {
 
     @Override
     public ConfigurationPhase getConfigurationPhase() {
