@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <pre>
- * TODO
- * </pre>
- * 
  * @author cwl
  * @created Apr 14, 2016
  */
@@ -54,9 +50,6 @@ public class MQSenderFactory {
      * @return true or false
      */
     private boolean isOn() {
-        if ("on".equalsIgnoreCase(mq_switch)) {
-            return true;
-        }
-        return false;
+        return "on".equalsIgnoreCase(mq_switch);
     }
 }
