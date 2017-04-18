@@ -176,17 +176,17 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             templateUrl: 'views/group/group-user.html'
         }).
         state('group.user.add', {
-            url: '/user/add',
+            url: '/add',
             controller: "GroupAddUserController",
             templateUrl: 'views/group/group-add-user.html'
         }).
         state('group.user.move', {
-            url: '/user/move',
+            url: '/move',
             controller: "GroupMoveUserController",
             templateUrl: 'views/group/group-move-user.html'
         }).
         state('group.user.delete', {
-            url: '/user/delete',
+            url: '/delete',
             controller: "GroupDeleteUserController",
             templateUrl: 'views/group/group-delete-user.html'
         }).
@@ -196,17 +196,17 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             templateUrl: 'views/group/group-owner.html'
         }).
         state('group.owner.add', {
-            url: '/owner/add',
+            url: '/add',
             controller: "GroupAddOwnerController",
             templateUrl: 'views/group/group-add-owner.html'
         }).
         state('group.owner.move', {
-            url: '/owner/move',
+            url: '/move',
             controller: "GroupMoveOwnerController",
             templateUrl: 'views/group/group-move-owner.html'
         }).
         state('group.owner.delete', {
-            url: '/owner/delete',
+            url: '/delete',
             controller: "GroupDeleteOwnerController",
             templateUrl: 'views/group/group-delete-owner.html'
         }).

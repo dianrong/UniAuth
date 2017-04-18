@@ -66,12 +66,16 @@ public final class ServerPermissionCacher {
 
     @PostConstruct
     public void setUpRefreshTask() {
+        // 初始化cache的时候 同步刷新一次缓存
+        // 如果通过异步的方式刷新缓存,有可能cache在使用的时候,还没有刷新缓存,导致从缓存中拿到数据不正确
+        // 典型的就是,Uniauth-server在重启的时候,访问API会提示没有访问权限.
+        refreshPermissionTask.run();
         // 添加定时执行任务
-        executor.scheduleAtFixedRate(refreshPermissionTask, 0L, REFRESH_PERMISSION_MINUTE_PERIOD, TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(refreshPermissionTask, REFRESH_PERMISSION_MINUTE_PERIOD, REFRESH_PERMISSION_MINUTE_PERIOD, TimeUnit.MINUTES);
     }
 
     /**
-     * get Pattern from cache, if there is no cache, create a new one and cache it
+     * Get pattern from cache. if no cache, create a new one and cache it
      * 
      * @param patternStr patternStr can not null
      * @return Pattern

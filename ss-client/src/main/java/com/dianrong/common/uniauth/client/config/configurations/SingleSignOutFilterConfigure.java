@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 
 /**
  * . create new SingleSignOutFilter
@@ -13,7 +13,7 @@ import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
  * @author wanglin
  */
 @Component
-@Conditional(UniauthConfigEnvLoadCondtion.class)
+@Conditional(UniauthConfigEnvLoadCondition.class)
 public final class SingleSignOutFilterConfigure implements Configure<SingleSignOutFilter> {
     @Override
     public SingleSignOutFilter create() {

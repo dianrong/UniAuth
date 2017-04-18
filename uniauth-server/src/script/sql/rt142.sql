@@ -144,10 +144,10 @@ select max(id) into dest_tenancy_id from tenancy where code='DIANRONG-WEBSITE' ;
 set while_times = (audit_top_id  DIV update_per_num) + 1;
 
 -- drop index
-IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_userid_idx') THEN  
+IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_userid_idx' AND table_schema=database()) THEN  
 alter table audit drop index `uniauth_audit_userid_idx`;
 END IF;  
-IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_action_date') THEN  
+IF EXISTS (SELECT * FROM information_schema.statistics WHERE table_name = 'audit' AND index_name = 'uniauth_audit_action_date' AND table_schema=database()) THEN  
 alter table audit drop index`uniauth_audit_action_date`;
 END IF;  
 
@@ -166,5 +166,7 @@ DELIMITER ;
 
 -- 耗时(幂等)
 call multi_tenancy_update_audit();
+-- 删除没用的存储过程
+DROP procedure IF EXISTS `multi_tenancy_update_audit`;
 
 alter table audit add constraint fk_audit_tenancy foreign key(tenancy_id) references tenancy(id);

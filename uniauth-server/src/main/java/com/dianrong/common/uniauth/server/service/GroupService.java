@@ -68,6 +68,12 @@ import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
+import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseGroupNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupAddNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -100,15 +106,23 @@ public class GroupService extends TenancyBasedService {
     private TagMapper tagMapper;
     @Autowired
     private TagTypeMapper tagTypeMapper;
+    
+    @Autowired
+    private UniauthNotify uniauthNotify;
 
     /**
-     * . 进行组数据过滤的filter
+     * 进行组数据过滤的filter
      */
     @Resource(name = "groupDataFilter")
     private DataFilter dataFilter;
 
     @Transactional
     public void moveGroup(Integer sourceGroup, Integer targetGroup) {
+        CheckEmpty.checkEmpty(sourceGroup, "sourceGroupId");
+        CheckEmpty.checkEmpty(targetGroup, "targetGroupId");
+        if (sourceGroup.equals(targetGroup)) {
+            throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.parameter.targetid.equals.sourceid"));
+        }
         dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, sourceGroup);
         dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, targetGroup);
         grpPathMapper.moveTreeStepOne(sourceGroup);
@@ -337,7 +351,6 @@ public class GroupService extends TenancyBasedService {
         } else {
             return null;
         }
-
     }
 
     @Transactional
@@ -369,6 +382,10 @@ public class GroupService extends TenancyBasedService {
         if (count != null && count > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.name", grp.getName()));
         }
+        
+        // 发送通知
+        uniauthNotify.notify(new GroupAddNotifyInfo().setCode(grp.getCode()).setDescription(grp.getDescription()).setName(grp.getName())
+                .setParentGroupId(targetGroupId).setGroupId(grp.getId()));
         return BeanConverter.convert(grp);
     }
 
@@ -383,7 +400,7 @@ public class GroupService extends TenancyBasedService {
         if (grp == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
         }
-
+        
         // 根组不能进行修改，修改只能走数据库修改
         if (AppConstants.GRP_ROOT.equals(grp.getCode())) {
             throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.rootgrp.unmodifiable"));
@@ -395,6 +412,9 @@ public class GroupService extends TenancyBasedService {
             dataFilter.updateFieldCheck(groupId, FieldType.FIELD_TYPE_CODE, groupCode);
         }
 
+        // cache original status
+        Byte originlaStaus = grp.getStatus();
+        
         grp.setName(groupName);
         grp.setStatus(status);
         grp.setDescription(description);
@@ -405,6 +425,17 @@ public class GroupService extends TenancyBasedService {
         if (count != null && count > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.name", grp.getName()));
         }
+        
+        // 发送通知
+        if (status != null && !status.equals(originlaStaus)) {
+            NotifyInfoType type = NotifyInfoType.GROUP_DISABLE;
+            if (status.equals(AppConstants.STATUS_ENABLED)) {
+                // 启用
+                type = NotifyInfoType.GROUP_ENABLE;
+            }
+            uniauthNotify.notify(new BaseGroupNotifyInfo().setGroupId(grp.getId()).setNotifyInfoType(type));
+        }
+        
         return BeanConverter.convert(grp);
     }
 
@@ -439,13 +470,17 @@ public class GroupService extends TenancyBasedService {
                     userGrp.setType((byte) 1);
                 }
                 userGrpMapper.insert(userGrp);
+                
+                // 只处理普通的关系
+                if (normalMember == null || normalMember) {
+                    uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(groupId).setUserId(userId).setNotifyInfoType(NotifyInfoType.USERS_TO_GROUP_ADD));
+                }
             }
         }
     }
 
     @Transactional
     public void removeUsersFromGroup(List<Linkage<Long, Integer>> userIdGrpIdPairs, Boolean normalMember) {
-
         if (CollectionUtils.isEmpty(userIdGrpIdPairs)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
         }
@@ -461,8 +496,12 @@ public class GroupService extends TenancyBasedService {
                 userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_BYTE_PRIMITIVE);
             }
             userGrpMapper.deleteByExample(userGrpExample);
+            
+            // 通知 处理普通关系进行通知
+            if (normalMember == null || normalMember) {
+                uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(grpId).setUserId(userId).setNotifyInfoType(NotifyInfoType.USERS_TO_GROUP_REMOVE));
+            }
         }
-
     }
 
     @Transactional
@@ -502,9 +541,13 @@ public class GroupService extends TenancyBasedService {
                 userGrp.setType(type);
                 //将该用户加入到新组
                 userGrpMapper.insert(userGrp);
+                
+                // 通知 处理普通关系进行通知
+                if (normalMember == null || normalMember) {
+                    uniauthNotify.notify(new UsersToGroupExchangeNotifyInfo().setTargetGroupId(targetGroupId).setGroupId(grpId).setUserId(userId));
+                }
             }
         }
-
     }
 
     @Transactional

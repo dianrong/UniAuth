@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <pre>
- * mqsender默认实现
+ * mqSender默认实现
  * </pre>
  * 
  * @author cwl

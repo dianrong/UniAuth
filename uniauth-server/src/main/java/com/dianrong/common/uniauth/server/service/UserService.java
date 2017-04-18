@@ -89,6 +89,9 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.mq.UniauthSender;
+import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
+import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseUserNotifyInfo;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -133,6 +136,8 @@ public class UserService extends TenancyBasedService {
     private RolePermissionMapper rolePermissionMapper;
     @Autowired
     private UniauthSender uniauthSender;
+    @Autowired
+    private UniauthNotify uniauthNotify;
 
     @Autowired
     private UserExtendValService userExtendValService;
@@ -141,7 +146,7 @@ public class UserService extends TenancyBasedService {
     private UserPwdLogMapper userPwdLogMapper;
 
     /**
-     * . 进行用户数据过滤的filter
+     * 进行用户数据过滤的filter
      */
     @Resource(name = "userDataFilter")
     private DataFilter dataFilter;
@@ -271,6 +276,20 @@ public class UserService extends TenancyBasedService {
         }
         user.setLastUpdate(new Date());
         userMapper.updateByPrimaryKey(user);
+        
+        // 发送通知
+        if (UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
+            BaseUserNotifyInfo notifyInfo = new BaseUserNotifyInfo();
+            notifyInfo.setUserId(user.getId());
+            // 只处理启用的情况
+            if (status != null && status == AppConstants.STATUS_ENABLED) {
+                notifyInfo.setNotifyInfoType(NotifyInfoType.USER_ENABLE);
+            } else {
+                notifyInfo.setNotifyInfoType(NotifyInfoType.USER_DISABLE);
+            }
+            uniauthNotify.notify(notifyInfo);
+        }
+        
         return BeanConverter.convert(user).setPassword(password);
     }
 
@@ -1344,12 +1363,11 @@ public class UserService extends TenancyBasedService {
      * 
      * @param groupCode groupCode can not be null
      * @param includeSubGrp include sub group or not
-     * @param includeRoleIds roleIds can not be null
+     * @param includeRoleIds roleIds. 如果为空,则不根据角色限定用户列表
      * @return List<UserDto>
      */
     public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp, List<Integer> includeRoleIds) {
         CheckEmpty.checkEmpty(groupCode, "groupCode");
-        CheckEmpty.checkEmpty(includeRoleIds, "roleIds");
         Map<String, Object> param = new HashMap<>();
         param.put("roleIds", includeRoleIds);
         param.put("groupCode", groupCode);

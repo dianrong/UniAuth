@@ -168,6 +168,7 @@ public class RoleService extends TenancyBasedService {
                     for (GrpRoleKey grpRoleKey : grpRoleKeys) {
                         dbGrpIds.add(grpRoleKey.getGrpId());
                     }
+                    @SuppressWarnings("unchecked")
                     ArrayList<Integer> intersections = ((ArrayList<Integer>) dbGrpIds.clone());
                     intersections.retainAll(grpIds);
                     List<Integer> grpIdsNeedAddToDB = new ArrayList<>();
@@ -219,6 +220,7 @@ public class RoleService extends TenancyBasedService {
                     for (UserRoleKey userRoleKey : userRoleKeys) {
                         dbUserIds.add(userRoleKey.getUserId());
                     }
+                    @SuppressWarnings("unchecked")
                     ArrayList<Long> intersections = ((ArrayList<Long>) dbUserIds.clone());
                     intersections.retainAll(userIds);
                     List<Long> userIdsNeedAddToDB = new ArrayList<>();
@@ -274,6 +276,7 @@ public class RoleService extends TenancyBasedService {
             for (RolePermissionKey rolePermissionKey : rolePermissionKeys) {
                 dbPermIds.add(rolePermissionKey.getPermissionId());
             }
+            @SuppressWarnings("unchecked")
             ArrayList<Integer> intersections = ((ArrayList<Integer>) dbPermIds.clone());
             intersections.retainAll(permIds);
             List<Integer> permIdsNeedAddToDB = new ArrayList<>();

@@ -10,23 +10,23 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondtion;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler;
-import com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 
 @Component
-@Conditional(UniauthConfigEnvLoadCondtion.class)
+@Conditional(UniauthConfigEnvLoadCondition.class)
 public class CasAuthenticationFilterConfigure implements Configure<CasAuthenticationFilter> {
 
     private static final String DEFAULT_FILTER_PROCESS_URL = "/login/cas";
 
     @Autowired
-    private SSSavedRequestAwareAuthenticationSuccessHandler ssAuthenticationSuccessHandler;
+    private AuthenticationSuccessHandler ssAuthenticationSuccessHandler;
     
     @Autowired(required=false)
     private AuthenticationFailureHandler authenticationFailureHandler;

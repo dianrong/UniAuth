@@ -1,6 +1,6 @@
 <ul class="nav nav-pills nav-justified margin-b15">
     <li ng-class="{active: $state.includes('group.this')}">
-        <a ui-sref="group.this" ng-click="initTree(true)">{{ 'groupMgr.label.group' | translate}}</a>
+        <a ui-sref="group.this" ng-click="initTree(true,-1)">{{ 'groupMgr.label.group' | translate}}</a>
     </li>
     <li ng-class="{active: $state.includes('group.user')}">
         <a  ui-sref="group.user" ng-click="initTree(false, 0)">{{ 'groupMgr.label.groupUser' | translate}}</a>

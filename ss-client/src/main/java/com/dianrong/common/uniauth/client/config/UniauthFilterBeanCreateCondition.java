@@ -10,7 +10,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
  * 
  * @author wanglin
  */
-public class UniauthFilterBeanCreateCondtion extends UniauthEnvCondition {
+public class UniauthFilterBeanCreateCondition extends UniauthEnvCondition {
 
     @Override
     public ConfigurationPhase getConfigurationPhase() {
@@ -21,12 +21,12 @@ public class UniauthFilterBeanCreateCondtion extends UniauthEnvCondition {
     boolean doMatchesProcess(ConditionContext context, AnnotatedTypeMetadata metadata) {
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
         // 使用比较笨的方式来增加一种判断机制
-        String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthFilterBeanCreateAutoSign.class, true, true);
+        String[] names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthFilterBeanCreateAutoSign.class, true, false);
         if (names.length > 0) {
             return true;
         }
         // 自动判断
-        names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthSecurityConfig.class, true, true);
+        names = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, UniauthSecurityConfig.class, true, false);
         if (names.length > 0) {
             return false;
         }
