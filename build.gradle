@@ -20,6 +20,8 @@ allprojects {
     version = '1.0.95-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
+        jackson_version_old = '2.8.8'
+        jackson_databind_version = '2.8.10-SNAPSHOT'
     }
 
     apply plugin: 'java'
@@ -80,13 +82,19 @@ allprojects {
 	        mavenBom 'io.spring.platform:platform-bom:2.0.8.RELEASE'
 	    }
 	    dependencies {
-          dependency 'org.projectlombok:lombok:1.16.10'
-          dependency 'org.apache.httpcomponents:fluent-hc:4.5.2'
-          dependency 'com.google.guava:guava:18.0'
-          dependency 'org.apache.commons:commons-lang3:3.4'
-          dependency 'org.mybatis:mybatis:3.2.8'
-          dependency 'org.mybatis:mybatis-spring:1.2.2'
-          dependency "javax.mail:mail:1.5.0-b01"
+            dependency 'org.projectlombok:lombok:1.16.10'
+            dependency 'org.apache.httpcomponents:fluent-hc:4.5.2'
+            dependency 'com.google.guava:guava:18.0'
+            dependency 'org.apache.commons:commons-lang3:3.4'
+            dependency 'org.mybatis:mybatis:3.2.8'
+            dependency 'org.mybatis:mybatis-spring:1.2.2'
+            dependency "javax.mail:mail:1.5.0-b01"
+            
+            // jackson
+            dependency "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
+            dependency "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
+            dependency "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+            dependency 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
         }
 	}
 
@@ -143,6 +151,11 @@ project(':ss-client') {
 		compile 'org.springframework.security:spring-security-openid'
 		compile 'org.springframework.security:spring-security-taglibs'
 		compile 'org.hibernate:hibernate-validator'
+		
+		compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
+        compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
+        compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+        compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
 	}
 
 	sourceSets {
@@ -194,7 +207,6 @@ project('examples:subsystem') {
 	    providedCompile 'javax.servlet:javax.servlet-api'
 	    compile 'org.springframework:spring-webmvc'
 	    compile 'ch.qos.logback:logback-classic'
-	     
 	}
 	configurations{
     	runtime.exclude group : 'commons-logging',module:'commons-logging'
@@ -294,6 +306,12 @@ project(':cas') {
 			exclude group: 'org.springframework', module: 'spring-oxm'
 			exclude group: 'org.springframework', module: 'spring-tx'
 		}
+        
+        // jackson
+        compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
+        compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
+        compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+        compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
         
 		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
 			//transitive = true

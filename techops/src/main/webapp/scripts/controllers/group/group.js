@@ -148,6 +148,9 @@ define(['../../utils/constant'], function (constant) {
             isAlMoveGroup:function (node) {
                 return !node.isRootGrp && $state.current.name.indexOf('group.this')>-1;
             },
+            isAlMoveToGroup:function (node) {
+                return $state.current.name.indexOf('group.this')>-1;
+            },
             isAlAddGroupUser:function (node) {
                 return node.type==constant.treeNodeType.group && $state.current.name.indexOf('group.user')>-1;
             },
