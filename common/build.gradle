@@ -12,15 +12,13 @@ dependencies {
     //CXF
     compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxf_version}"
     compile 'org.eclipse.persistence:org.eclipse.persistence.moxy:2.6.0'
-    compile "com.fasterxml.jackson.core:jackson-annotations"
-    
+
     //Test Suite
     testCompile 'junit:junit'
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test"
     testCompile "org.springframework:spring-web"
     
-	compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
 	compile 'commons-httpclient:commons-httpclient'
 	
@@ -34,6 +32,12 @@ dependencies {
 	
 	// swagger
 	compileOnly 'io.swagger:swagger-annotations:1.5.12'
+	
+	// jackson
+	compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
+    compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
 }
 
 jar {
