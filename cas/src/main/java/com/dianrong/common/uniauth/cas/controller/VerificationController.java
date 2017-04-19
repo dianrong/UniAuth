@@ -147,10 +147,10 @@ public class VerificationController {
             try {
                 smsNotify.send(identity, verificationMsg);
             } catch (NotificationNotAvailableException e1) {
-                log.warn("send email is not available", e1);
+                log.warn("send sms is not available", e1);
                 return Response.failure(Info.build(InfoName.INTERNAL_ERROR, UniBundleUtil.getMsg(messageSource, "verification.controller.verification.not.available", "SMS")));
             } catch (SendNotificationFailedException e2) {
-                log.warn("send email failed", e2);
+                log.warn("send sms failed", e2);
                 return Response.failure(Info.build(InfoName.INTERNAL_ERROR, UniBundleUtil.getMsg(messageSource, "verification.controller.verification.send.failed", "SMS")));
             }
             // after sending successfully, set flag to session
