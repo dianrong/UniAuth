@@ -42,8 +42,7 @@ dependencies {
     //cxf
     compile "org.apache.cxf:cxf-rt-transports-http:${cxf_version}"
     compile "org.apache.cxf:cxf-rt-rs-service-description:${cxf_version}"  // for wadl generate purpose
-    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.1' // for json support
-
+    
     //spring-metrics
     compile 'com.ryantenney.metrics:metrics-spring:3.1.2'
     compile 'io.dropwizard.metrics:metrics-servlets:3.1.2'
