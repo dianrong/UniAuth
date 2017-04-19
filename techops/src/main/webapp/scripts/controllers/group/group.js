@@ -180,15 +180,15 @@ define(['../../utils/constant'], function (constant) {
             $rootScope.moveUser = {};
 
             if ($state.includes("group.this")) {
-                // $state.go("group.this");
+                $state.go("group.this");
                 $rootScope.initTree(true, -1, isNeedResetExpandedNodes);
 
             } else if($state.includes("group.user")){
-                // $state.go("group.user");
+                $state.go("group.user");
                 $rootScope.initTree(false, 0, isNeedResetExpandedNodes);
 
             } else if($state.includes("group.owner")){
-                // $state.go("group.owner");
+                $state.go("group.owner");
                 $rootScope.initTree(false, 1, isNeedResetExpandedNodes);
             }
         };
