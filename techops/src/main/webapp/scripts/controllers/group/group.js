@@ -171,7 +171,7 @@ define(['../../utils/constant'], function (constant) {
             }
         };
         //reset the tree component by '$state'
-        $rootScope.reset = function (isNeedResetExpandedNodes){
+        $rootScope.reset = function (isNeedResetExpandedNodes,isResetPanel){
             //clear something
             $scope.selectedNodes = [];
             $rootScope.onMove = false;
@@ -180,15 +180,21 @@ define(['../../utils/constant'], function (constant) {
             $rootScope.moveUser = {};
 
             if ($state.includes("group.this")) {
-                // $state.go("group.this");
+                if(isResetPanel){
+                    $state.go("group.this");
+                }
                 $rootScope.initTree(true, -1, isNeedResetExpandedNodes);
 
             } else if($state.includes("group.user")){
-                // $state.go("group.user");
+                if(isResetPanel){
+                    $state.go("group.user");
+                }
                 $rootScope.initTree(false, 0, isNeedResetExpandedNodes);
 
             } else if($state.includes("group.owner")){
-                // $state.go("group.owner");
+                if(isResetPanel){
+                    $state.go("group.owner");
+                }
                 $rootScope.initTree(false, 1, isNeedResetExpandedNodes);
             }
         };

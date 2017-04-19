@@ -17,7 +17,7 @@
                 </div>
                 <button type="button" class="btn btn-info" ng-click="move()"
                         ng-disabled="moveGroupForm.fromGroup.$invalid || moveGroupForm.toGroup.$invalid">{{ 'groupMgr.dialog.eav.confirmMove'| translate}}</button>
-                <button type="button" class="btn btn-link" ng-click="reset()">{{ 'groupMgr.label.cancel'| translate }}</button>
+                <button type="button" class="btn btn-link" ng-click="reset(false,true)">{{ 'groupMgr.label.cancel'| translate }}</button>
             </ng-form>
         </div>
     </div>
