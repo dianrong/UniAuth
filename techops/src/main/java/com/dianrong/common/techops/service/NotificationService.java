@@ -88,7 +88,7 @@ public class NotificationService {
         addUserEmailTemplate.append(" 您的账户密码为: %s        <br />");
         if (casServerURL != null) {
             addUserEmailTemplate.append("            ");
-            addUserEmailTemplate.append(" 请到: " + casServerURL + " 去登陆.       <br />");
+            addUserEmailTemplate.append(" 请到: " + casServerURL + " 去登陆       <br />");
         }
         addUserEmailTemplate.append("====================================================<br />");
         addUserNotTemplate = addUserEmailTemplate.toString();
@@ -96,7 +96,7 @@ public class NotificationService {
         StringBuilder addUserSmsTemplate = new StringBuilder();
         addUserSmsTemplate.append("系统管理员为您创建了系统账户!您的登录账号为:%s,登陆密码为:%s");
         if (casServerURL != null) {
-            addUserSmsTemplate.append(" 请到: " + casServerURL + " 去登陆.");
+            addUserSmsTemplate.append(" 请到: " + casServerURL + " 去登陆");
         }
         addUserSimpleNotTemplate = addUserSmsTemplate.toString();
 
@@ -111,7 +111,7 @@ public class NotificationService {
         updateUserPwdEmailTemplate.append(" 您的账户密码为: %s        <br />");
         if (casServerURL != null) {
             updateUserPwdEmailTemplate.append("            ");
-            updateUserPwdEmailTemplate.append("请到: " + casServerURL + " 去登陆.");
+            updateUserPwdEmailTemplate.append("请到: " + casServerURL + " 去登陆       <br />");
         }
         updateUserPwdEmailTemplate.append("====================================================<br />");
         updateUserPwdNotTemplate = updateUserPwdEmailTemplate.toString();
@@ -119,7 +119,7 @@ public class NotificationService {
         StringBuilder updateUserPwdSmsTemplate = new StringBuilder();
         updateUserPwdSmsTemplate.append("系统管理员重置了您的系统账户密码!您的登录账号为:%s,登陆密码为:%s");
         if (casServerURL != null) {
-            updateUserPwdSmsTemplate.append(" 请到: " + casServerURL + " 去登陆.");
+            updateUserPwdSmsTemplate.append(" 请到: " + casServerURL + " 去登陆");
         }
         updateUserPwdSimpleNotTemplate = updateUserPwdSmsTemplate.toString();
     }

@@ -184,7 +184,7 @@ public class UserService extends TenancyBasedService {
 
     @Transactional
     public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId, String name, String phone, String email, String password,
-            String orginPassword, Byte status) {
+            String orginPassword, Boolean ignorePwdStrategyCheck, Byte status) {
         if (userActionEnum == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
         }
@@ -217,7 +217,7 @@ public class UserService extends TenancyBasedService {
                 user.setFailCount(AppConstants.ZERO_BYTE);
                 break;
             case RESET_PASSWORD:
-                checkUserPwd(user.getId(), password);
+                checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
                 byte salt[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
                 user.setPasswordSalt(Base64.encode(salt));
@@ -262,7 +262,7 @@ public class UserService extends TenancyBasedService {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
                 }
                 // 验证新密码
-                checkUserPwd(user.getId(), password);
+                checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
                 byte salttemp[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
                 user.setPasswordSalt(Base64.encode(salttemp));
@@ -1306,15 +1306,26 @@ public class UserService extends TenancyBasedService {
      * @param userId userId
      * @param password the new password
      */
-    private void checkUserPwd(Long userId, String password) {
+    private void checkUserPwd(Long userId, String password, Boolean ignorePwdStrategyCheck) {
         CheckEmpty.checkEmpty(userId, "userId");
         // check
         if (password == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "password"));
         }
+        
+        // 判断是否忽略密码设置策略检查
+        if (ignorePwdStrategyCheck != null && ignorePwdStrategyCheck) {
+            return;
+        }
+        
+        // 密码设置策略检查
+        
+        // 符合密码复杂度
         if (!AuthUtils.validatePasswordRule(password)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
         }
+        
+        // 不能设置过去8个月内设置过的密码
         UserPwdLogQueryParam condition = new UserPwdLogQueryParam();
         condition.setUserId(userId);
         Calendar time = Calendar.getInstance();
