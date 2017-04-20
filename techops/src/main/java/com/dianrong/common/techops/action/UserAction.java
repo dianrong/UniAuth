@@ -96,6 +96,8 @@ public class UserAction {
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')")
     public Response<?> resetPassword(@RequestBody UserParam userParam) {
         userParam.setUserActionEnum(UserActionEnum.RESET_PASSWORD);
+        // 管理员设置密码不需要检查
+        userParam.setIgnorePwdStrategyCheck(Boolean.TRUE);
         Response<UserDto> userDtoResponse = uARWFacade.getUserRWResource().updateUser(userParam);
         if(!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
             return userDtoResponse;

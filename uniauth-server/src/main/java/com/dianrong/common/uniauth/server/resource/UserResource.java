@@ -46,7 +46,7 @@ public class UserResource implements IUserRWResource {
 		UserDto userDto = userService.updateUser(userParam.getUserActionEnum(),userParam.getId(), 
 		        userParam.getAccount(), userParam.getTenancyId(),
 				userParam.getName(),userParam.getPhone(),userParam.getEmail(),
-				userParam.getPassword(),userParam.getOriginPassword(),userParam.getStatus());
+				userParam.getPassword(),userParam.getOriginPassword(),userParam.getIgnorePwdStrategyCheck(), userParam.getStatus());
 		return Response.success(userDto);
 	}
 
