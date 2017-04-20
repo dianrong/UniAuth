@@ -1,9 +1,11 @@
 package com.dianrong.common.uniauth.cas.filter;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,14 +20,24 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.dianrong.common.uniauth.cas.filter.support.CasRequest;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class XSSFilter extends OncePerRequestFilter {
     //匹配不需要过滤路径的正则表达式
-    private Pattern pattern = null;  
-     
-    public void setExclude(String exclude) {
-        pattern = Pattern.compile(getRegStr(exclude));
+    private final Set<CasRequestPatternCache> requestPattern;  
+    
+    public XSSFilter(CasRequest... casRequest) {
+        Set<CasRequestPatternCache> patternSet = Sets.newHashSet();
+        if (casRequest != null && casRequest.length > 0) {
+            for (int i =0; i < casRequest.length; i++) {
+                patternSet.add(new CasRequestPatternCache(casRequest[i].getUrl(), casRequest[i].getMethod()));
+            }
+        }
+        this.requestPattern = Collections.unmodifiableSet(patternSet);
     }
      
     /**
@@ -33,38 +45,56 @@ public class XSSFilter extends OncePerRequestFilter {
      */
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String requestURI = request.getRequestURI();
-        if(StringUtils.isNotBlank(requestURI)) {
-            requestURI = requestURI.replace(request.getContextPath(),"");
-        }
-         
-        if(pattern != null && pattern.matcher(requestURI).matches()) {
+        if(checkIfPassWithoutProcess(request)) {
             filterChain.doFilter(request, response);
         } else{
             EscapeScriptWrapper escapeScriptwrapper = new EscapeScriptWrapper(request);
             filterChain.doFilter(escapeScriptwrapper, response);
         }
     }
-     
+    
     /**
-     * 将传递进来的不需要过滤得路径集合的字符串格式化成一系列的正则规则
-     * @param str 不需要过滤的路径集合
-     * @return 正则表达式规则
-     * */
-    private String getRegStr(String str){
-        if(StringUtils.isNotBlank(str)){
-            String[] excludes = str.split(";");  //以分号进行分割
-            int length = excludes.length;
-            for(int i=0;i<length;i++){
-                String tmpExclude = excludes[i];
-                //对点、反斜杠和星号进行转义
-                tmpExclude = tmpExclude.replace("\\", "\\\\").replace(".", "\\.").replace("*", ".*");
-                tmpExclude = "^" + tmpExclude + "$";
-                excludes[i] = tmpExclude;
+     * 检查是否可以放过不处理
+     * @param HttpServletRequest request
+     * @return 是否可以放过不处理
+     */
+    private boolean checkIfPassWithoutProcess(HttpServletRequest request) {
+        String requestMethod = request.getMethod();
+        for (CasRequestPatternCache pattern: this.requestPattern) {
+            String patternMethod = pattern.getMethod();
+            // check method
+            if (patternMethod.equalsIgnoreCase(AppConstants.HTTP_METHOD_ALL) || patternMethod.equalsIgnoreCase(requestMethod)) {
+                // check request url
+                String requestURI = request.getRequestURI();
+                if(StringUtils.isNotBlank(requestURI)) {
+                    requestURI = requestURI.replace(request.getContextPath(),"");
+                }
+                if (pattern.getRequestUrlPattern().matcher(requestURI).matches()) {
+                    return true;
+                }
             }
-            return StringUtils.join(excludes, "|");
         }
-        return str;
+        return false;
+    }
+    
+    /**
+     * 辅助类, 用于缓存正则对象
+     */
+    private static class CasRequestPatternCache {
+        private final Pattern requestUrlPattern;
+        private final String method;
+        CasRequestPatternCache(String requestUrl, String method) {
+            Assert.notNull(requestUrl);
+            Assert.notNull(method);
+            this.requestUrlPattern = Pattern.compile(requestUrl);
+            this.method = method;
+        }
+        public Pattern getRequestUrlPattern() {
+            return requestUrlPattern;
+        }
+        public String getMethod() {
+            return method;
+        }
     }
      
     /**
@@ -151,5 +181,4 @@ public class XSSFilter extends OncePerRequestFilter {
             return str;
         }
     }
- 
 }
