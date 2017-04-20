@@ -83,6 +83,36 @@
     </bean>
     <!--  cas cross filter bean -->
     
+    <!-- xssFilter -->
+    <bean id="xssFilter" class="com.dianrong.common.uniauth.cas.filter.XSSFilter">
+        <constructor-arg>
+              <list>
+                <ref bean="casRequest1"/>
+                <ref bean="casRequest2"/>
+                <ref bean="casRequest3"/>
+              </list>
+        </constructor-arg>
+    </bean>
+    <bean id="casRequest1" class="com.dianrong.common.uniauth.cas.filter.support.CasRequest">
+        <constructor-arg>
+            <value>/uniauth/forgetPassword</value>
+        </constructor-arg>
+        <property name="method" value="POST"/>
+    </bean>
+    <bean id="casRequest2" class="com.dianrong.common.uniauth.cas.filter.support.CasRequest">
+    <constructor-arg>
+            <value>/login</value>
+        </constructor-arg>
+        <property name="method" value="POST"/>
+    </bean>
+    <bean id="casRequest3" class="com.dianrong.common.uniauth.cas.filter.support.CasRequest">
+         <constructor-arg>
+             <value>/uniauth/userinfo/password</value>
+         </constructor-arg>
+        <property name="method" value="POST"/>
+    </bean>
+    <!-- xssFilter -->
+    
     <!-- server exception process filter -->
     <bean id="applicationExceptionFilter" class="com.dianrong.common.uniauth.cas.filter.AppExceptionFilter"/>
     <!-- server exception process filter -->

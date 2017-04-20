@@ -74,9 +74,14 @@
     </filter-mapping>
         
      <!-- xss filter -->
-     <filter>
+     <!-- Application exception filter -->
+    <filter>
         <filter-name>xssFilter</filter-name>
-        <filter-class>com.dianrong.common.uniauth.cas.filter.XSSFilter</filter-class>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetBeanName</param-name>
+            <param-value>xssFilter</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>xssFilter</filter-name>
