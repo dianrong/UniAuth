@@ -16,7 +16,7 @@
 
 	<appender name="dataAppender"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${log_home}/com.dianrong.common.uniauth.common.data.log</File>
+		<File>${log_home}/data.log</File>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- rollover daily -->

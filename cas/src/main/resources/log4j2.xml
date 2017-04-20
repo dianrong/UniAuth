@@ -9,28 +9,28 @@
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{36} - %m%n"/>
         </Console>
         <RollingFile name="consoleAppender" fileName="${pathName}/console.log"
-                     filePattern="${pathName}//$${date:yyyy-MM}/console_%d{yyyy-MM-dd}_%i.log.gz">
+                     filePattern="${pathName}//console_%d{yyyy-MM-dd}_%i.log">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [SEQID:%X{seq}] [%t] %-5p %c{36} - %m%n</pattern>
             </PatternLayout>
             <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
         </RollingFile>
         <RollingFile name="cas" fileName="${pathName}/cas.log"
-                     filePattern="${pathName}//$${date:yyyy-MM}/cas_%d{yyyy-MM-dd}_%i.log.gz">
+                     filePattern="${pathName}//cas_%d{yyyy-MM-dd}_%i.log">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [SEQID:%X{seq}] [%t] %-5p %c{36} - %m%n</pattern>
             </PatternLayout>
             <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
         </RollingFile>
         <RollingFile name="audit" fileName="${pathName}/audit.log"
-                     filePattern="${pathName}//$${date:yyyy-MM}/audit_%d{yyyy-MM-dd}_%i.log.gz">
+                     filePattern="${pathName}//audit_%d{yyyy-MM-dd}_%i.log">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [SEQID:%X{seq}] [%t] %-5p %c{36} - %m%n</pattern>
             </PatternLayout>
             <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
         </RollingFile>
         <RollingFile name="apiCallTimeOut" fileName="${pathName}/apiCall.log"
-                     filePattern="${pathName}//$${date:yyyy-MM}/apiCall_%d{yyyy-MM-dd}_%i.log.gz">
+                     filePattern="${pathName}//apiCall_%d{yyyy-MM-dd}_%i.log">
             <PatternLayout>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} [SEQID:%X{seq}] [%t] %-5p %c{36} - %m%n</pattern>
             </PatternLayout>
