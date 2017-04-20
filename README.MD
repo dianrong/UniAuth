@@ -42,9 +42,9 @@ gradle warTechopsWebsite
 
 ### 2.3.配置tomcat7
 
-- **添加环境参数**
+#### (1) **添加环境参数**
 
-  修改tomcat bin目录中` catalina.sh`文件，在正文首行后加入下面环境参数：
+修改tomcat bin目录中` catalina.sh`文件，在正文首行后加入下面环境参数：
 
 ``` shell
 # log out
@@ -56,15 +56,14 @@ DR_CFG_ZOOKEEPER_ENV_URL="10.8.12.85:2181,10.8.12.85:2182,10.8.12.85:2183"
 export DR_CFG_ZOOKEEPER_ENV_URL
 ```
 
-- **修改端口**
+#### (2) **修改端口**
 
-  将上面tomcat复制粘贴三份，分别叫做 tomcat_uniauth、 tomcat_cas、 tomcat_techops,分别修改`server.xml`中监听端口，假定分别是：8080，8081，8082，
+将上面tomcat复制粘贴三份，分别叫做 tomcat_uniauth、 tomcat_cas、 tomcat_techops,分别修改`server.xml`中监听端口，假定分别是：8080，8081，8082，
+**注意**：同时修改其他shutdown，ajp端口
 
-  **注意**：同时修改其他shutdown，ajp端口
+#### (3) **uniauth添加jndi数据源**
 
-- **uniauth添加jndi数据源**
-
-  在tomcat_uniauth的`context.xml`中
+在tomcat_uniauth的`context.xml`中
 
 ``` xml
 <Resource name="jdbc/uniauth" auth="Container" type="javax.sql.DataSource" driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/uniauth?useUnicode=true&characterEncoding=utf8" username="root" password="root" maxActive="50" maxIdle="20" maxWait="200" />
@@ -88,15 +87,15 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 
 按下面顺序启动
 
-* 1.启动tomcat_uniauth
+1. 启动tomcat_uniauth
 
   将`uniauth.war`部署到tomcat_uniauth 的webapps目录，启动tomcat
 
-* 2.启动tomcat_cas
+2. 启动tomcat_cas
 
   将`cas.war`部署到tomcat_cas 的webapps目录，启动tomcat
 
-* 3.启动tomcat_techops
+3. 启动tomcat_techops
 
   将`techops.war`部署到tomcat_techops 的webapps目录，启动tomcat
 
@@ -114,16 +113,21 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 
 - 三个独立应用：
 
-  （1）`uniauth-server`是提供数据访问的`REST`服务；用户，资源，权限数据通过它进行访问；
-  （2）`techops`是web界面的管理控制台；通过`techops`录入资源，角色，做权限分配；
-  （3）`cas`是单点登录系统；各个*subsystem*通过cas做sso认证；
+  (1) `uniauth-server`是提供数据访问的`REST`服务；用户，资源，权限数据通过它进行访问；
+
+  (2) `techops`是web界面的管理控制台；通过`techops`录入资源，角色，做权限分配；
+
+  (3) `cas`是单点登录系统；各个*subsystem*通过cas做sso认证；
 
 - 三个关键模块：
 
-  （4）`common`定义了**读**uniauth-server的接口，接口的数据模型以及cxf方式的访问实现；由它定义了数据接口，因此各个模块必须依赖它；
-  （5）`share-rw`提供对`uniauth-server`中**写**功能的访问接口定义  ，cxf方式访问实现，由于牵涉到对数据的修改，因此只有管理系统才能依赖这个模块，如`techops`
-  （6）`ss-client`是uniauth提供的sdk，各子系统依赖它后只需要少量的配置就可以完成sso,authentication 和 authorization的业务
-  （7）*subsystem*代表各个子系统,也是uniauth的客户端，各个需要用到sso,authentication和authorization的系统，比如`techops`。
+  (4) `common`定义了**读**uniauth-server的接口，接口的数据模型以及cxf方式的访问实现；由它定义了数据接口，因此各个模块必须依赖它；
+
+  (5) `share-rw`提供对`uniauth-server`中**写**功能的访问接口定义  ，cxf方式访问实现，由于牵涉到对数据的修改，因此只有管理系统才能依赖这个模块，如`techops`
+
+  (6) `ss-client`是uniauth提供的sdk，各子系统依赖它后只需要少量的配置就可以完成sso,authentication 和 authorization的业务
+
+  (7) *subsystem*代表各个子系统,也是uniauth的客户端，各个需要用到sso,authentication和authorization的系统，比如`techops`。
 
 ### 3.2.系统架构
 
@@ -133,9 +137,9 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 
 1. step 1-7, include sso and authentication
 
-  Between step 7 and 8,the `uniauth client` send request to cas server for authentication user with  `st` (get from step 6) then the client can get `credentials`(* include `username` *) from response data 。
+  Between step 7 and 8,the `uniauth client` send request to cas server for authentication user with `st` (get from step 6) then the client can get `credentials`(* include `username` *) from response data.
 
-2.  step 8 , include authorization
+2. step 8 , include authorization
 
   After got `credentials`, `uniauth client`  call `uniauth-server` to get user details and all permissions.
 
@@ -147,7 +151,7 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 
 ### 4.1. 核心配置
 
-（1） cas本身的配置
+#### (1) cas本身的配置
 
 ``` shell
 # 是否采用https的形式写cookie,生产为true
@@ -165,7 +169,8 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 # 配置的uniauth-server的地址。比如：http://localhost:8090/uniauth/ws/rs
 /com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint http://localhost:8090/uniauth/ws/rs
 ```
-（2） 邮箱配置
+
+#### (2) 邮箱配置
 
 邮箱主要是为了验证码发送，密码重置
 
@@ -222,7 +227,7 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 客户端系统需要使用[spring security](http://projects.spring.io/spring-security/)，引入`ss-client`模块的jar包
 下面以`techops`项目为例
 
-- (1) web.xml
+#### (1) web.xml
 
 ``` xml
 <!-- spring session publisher -->
@@ -239,9 +244,10 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
     <url-pattern>/*</url-pattern>
 </filter-mapping>
 ```
-- (2) applicationContext.xml
 
-<font color=#ff0000 size=3> 不要把下面这一段配置放到SpringMVC对应的xml当中，必须放置到Spring Bean的xml当中 </font>
+#### (2) applicationContext.xml
+
+不要把下面这一段配置放到SpringMVC对应的xml当中，必须放置到Spring Bean的xml当中。
 
 ```xml
 <import resource="classpath:ss-uniauth-client.xml" /> //导入ss-client中的Spring配置文件
@@ -317,9 +323,9 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 <bean id="uniauthPermissionEvaluator" class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
 ```
 
-* (3)获取当前登录用户
+#### (3) 获取当前登录用户
 
-  可以通过调用UniClientCommonService这个Spring Bean类的getLoginUserInfo()方法获取当前登录用户对象
+可以通过调用UniClientCommonService这个Spring Bean类的getLoginUserInfo()方法获取当前登录用户对象
 
 ```java
 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -329,14 +335,15 @@ SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 #### 5.2.1 与CAS集成
 
-* (1) 引入Cas jar包
+##### (1) 引入Cas jar包
 
-  jar包：'org.jasig.cas.client:cas-client-core:3.4.1'
+jar包：'org.jasig.cas.client:cas-client-core:3.4.1'
 
-* (2) 添加filter
+##### (2) 添加filter
 
-  说明：需要添加三个filter，SingleSignOutFilter（统一登出filter），AuthenticationFilter（统一认证） ，Cas20ProxyReceivingTicketValidationFilter（ticket验证filter）
-  使用方式举例（以jetty内置服务器为例，其他tomcat容器的配置类似）
+说明：需要添加三个filter，SingleSignOutFilter（统一登出filter），AuthenticationFilter（统一认证） ，Cas20ProxyReceivingTicketValidationFilter（ticket验证filter）
+
+使用方式举例（以jetty内置服务器为例，其他tomcat容器的配置类似）
 
 ```java
 // first
@@ -356,7 +363,7 @@ ticketValidationFilter.setInitParameter("casServerUrlPrefix", "http://localhost:
 root.addFilter(ticketValidationFilter, "/*", Handler.DEFAULT);
 ```
 
-  注意：可以注意到添加filter的顺序，SingleSignOutFilter -> AuthenticationFilter -> ticketValidationFilter
+注意：可以注意到添加filter的顺序，SingleSignOutFilter -> AuthenticationFilter -> ticketValidationFilter
 
 #### 5.2.2经过上面的Filter后，可从session中 获取登陆人Principal
 
@@ -369,9 +376,9 @@ AttributePrincipal principal = assertion.getPrincipal(); // principal中有登�
 
 #### 5.2.3登陆用户信息获取
 
-* (1) 首先通过第2.3步得到的AttributePrincipal对象
-* (2) 获取principal的attribute属性,如：principal.getAttributes().get("tenancyid"),返回租户的id
-* (3) call uniauth的api获取用户信息：
+1. 首先通过第2.3步得到的AttributePrincipal对象
+2. 获取principal的attribute属性,如：principal.getAttributes().get("tenancyid"),返回租户的id
+3. call uniauth的api获取用户信息：
 
 ```java
 // 构造登陆参数
@@ -408,8 +415,10 @@ public static void main(String args[]) {
 1. **URI_PATTERN**：
 
   效果和Spring Security配置文件中的`<sec:intercept-url pattern="/xxx" access="hasAnyRole('ROLE_XXX','ROLE_YYY','ROLE_ZZZ')" />`一样，主要用于Web形式的URL资源定义。可用于保护真实URL访问地址，或者用于`<sec:authorize url="/xxx">`的标签中。
-需要尤其指明的是，如果你的多个role共享了一个role_code，则使用URL_PATTERN可能会有影响。
-注意：无论在Spring Security中还是在db中都可以定义url pattern的允许访问的http method，如GET，POST等等，如果不指定则该url默认支持所有类型的http method。比如在配置文件中：`<sec:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" **method="GET"**/>`在使用method定义时，这里面有一个注意点，就是Spring Security默认会优先比较请求的http method和定义中的是否匹配，如果不匹配则该条定义就直接被忽略掉了，哪怕url本身是匹配的。所以如果你要使用http method保护你的url，则应该把controller中需要受保护的url模式和可访问方法进行完整定义(在配置文件或db中)，这样才能起到应有的作用。
+
+  需要尤其指明的是，如果你的多个role共享了一个role_code，则使用URL_PATTERN可能会有影响。
+
+  注意：无论在Spring Security中还是在db中都可以定义url pattern的允许访问的http method，如GET，POST等等，如果不指定则该url默认支持所有类型的http method。比如在配置文件中：`<sec:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" **method="GET"**/>`在使用method定义时，这里面有一个注意点，就是Spring Security默认会优先比较请求的http method和定义中的是否匹配，如果不匹配则该条定义就直接被忽略掉了，哪怕url本身是匹配的。所以如果你要使用http method保护你的url，则应该把controller中需要受保护的url模式和可访问方法进行完整定义(在配置文件或db中)，这样才能起到应有的作用。
 
 2. **DOMAIN**：
 
