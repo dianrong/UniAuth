@@ -83,7 +83,6 @@
     </filter-mapping>
         
      <!-- xss filter -->
-     <!-- Application exception filter -->
     <filter>
         <filter-name>xssFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
