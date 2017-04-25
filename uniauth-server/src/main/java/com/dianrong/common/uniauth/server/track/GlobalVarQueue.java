@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PostConstruct;
 
@@ -30,19 +31,19 @@ public class GlobalVarQueue {
     private BlockingQueue<GlobalVar> GLOBALVAR_QUEUE = new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBALVAR_QUEUE_SIZE);
 
     /**
-     * 实际插入数据任务线程池 两个活跃线程: 1. 定时插入线程 2.数据量大的时候高速插入信息线程
+     * 实际插入数据库的线程池
      */
-    private final ExecutorService insertDBThreadPool = Executors.newScheduledThreadPool(2);
+    private final ExecutorService insertDBThreadPool = Executors.newCachedThreadPool();
+
+    /**
+     * 记录内存中实际cache的audit的数量
+     */
+    private final AtomicLong totalCacheNum = new AtomicLong(0L);
 
     /**
      * 缓存audit列表
      */
     private volatile List<Audit> auditList;
-
-    /**
-     * 标识位, 用于指定高速插入数据的任务是否正在工作
-     */
-    private volatile boolean fastInsertRunnableBusy;
 
     private final Object lock = new Object();
 
@@ -52,7 +53,7 @@ public class GlobalVarQueue {
         Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-                insertDBThreadPool.execute(new SaveToDbThread(takeAuditList()));
+                setUpDBInsertRunnable();
             }
         }, AppConstants.AUDIT_INSERT_EVERY_SECOND, AppConstants.AUDIT_INSERT_EVERY_SECOND, TimeUnit.SECONDS);
     }
@@ -81,37 +82,55 @@ public class GlobalVarQueue {
     @PostConstruct
     private void init() {
         new Thread() {
+
+            /**
+             * 构造数据库插入的Audit对象
+             * @param gv GlobalVar 
+             * @return Audit
+             */
+            private Audit constructAudit(GlobalVar gv) {
+                if (gv == null) {
+                    return null;
+                }
+                Audit audit = new Audit();
+                audit.setReqDate(gv.getReqDate());
+                audit.setReqIp(gv.getIp());
+                audit.setReqElapse(gv.getElapse());
+                String expInfo = gv.getException();
+                if (expInfo != null && expInfo.length() > AppConstants.AUDIT_INSERT_EXP_LENGTH) {
+                    expInfo = expInfo.substring(0, AppConstants.AUDIT_INSERT_EXP_LENGTH);
+                }
+                audit.setReqExp(expInfo);
+                audit.setReqMethod(gv.getMethod());
+
+                String reqParam = gv.getReqParam();
+                if (reqParam != null && reqParam.length() > AppConstants.AUDIT_INSET_PARAM_LENGTH) {
+                    reqParam = reqParam.substring(0, AppConstants.AUDIT_INSET_PARAM_LENGTH);
+                }
+                audit.setReqParam(RegExpUtil.purgePassword(reqParam));
+                audit.setReqSuccess(gv.getSuccess());
+                audit.setReqUrl(gv.getReqUrl());
+                audit.setReqUuid(gv.getUuid());
+                audit.setUserId(gv.getUserId());
+                audit.setReqClass(gv.getMapper());
+                audit.setReqSeq(gv.getInvokeSeq());
+                audit.setDomainId(gv.getDomainId());
+                audit.setTenancyId(gv.getTenancyId());
+                audit.setRequestDomainCode(gv.getRequestDomainCode());
+                return audit;
+            }
+            
             public void run() {
                 while (true) {
                     try {
                         GlobalVar gv = GLOBALVAR_QUEUE.take();
-                        if (gv != null) {
-                            Audit audit = new Audit();
-                            audit.setReqDate(gv.getReqDate());
-                            audit.setReqIp(gv.getIp());
-                            audit.setReqElapse(gv.getElapse());
-                            String expInfo = gv.getException();
-                            if (expInfo != null && expInfo.length() > AppConstants.AUDIT_INSERT_EXP_LENGTH) {
-                                expInfo = expInfo.substring(0, AppConstants.AUDIT_INSERT_EXP_LENGTH);
-                            }
-                            audit.setReqExp(expInfo);
-                            audit.setReqMethod(gv.getMethod());
-
-                            String reqParam = gv.getReqParam();
-                            if (reqParam != null && reqParam.length() > AppConstants.AUDIT_INSET_PARAM_LENGTH) {
-                                reqParam = reqParam.substring(0, AppConstants.AUDIT_INSET_PARAM_LENGTH);
-                            }
-                            audit.setReqParam(RegExpUtil.purgePassword(reqParam));
-                            audit.setReqSuccess(gv.getSuccess());
-                            audit.setReqUrl(gv.getReqUrl());
-                            audit.setReqUuid(gv.getUuid());
-                            audit.setUserId(gv.getUserId());
-                            audit.setReqClass(gv.getMapper());
-                            audit.setReqSeq(gv.getInvokeSeq());
-                            audit.setDomainId(gv.getDomainId());
-                            audit.setTenancyId(gv.getTenancyId());
-                            audit.setRequestDomainCode(gv.getRequestDomainCode());
-                            cacheAudit(audit);
+                        cacheAudit(constructAudit(gv));
+                        GlobalVar polgv = GLOBALVAR_QUEUE.poll();
+                        // 队列中没有数据了, 立即将缓存中的数据插入到数据库
+                        if (polgv == null) {
+                            setUpDBInsertRunnable();
+                        } else {
+                            cacheAudit(constructAudit(gv));
                         }
                     } catch (Exception e) {
                         log.error("Take from GLOBALVAR_QUEUE error.", e);
@@ -131,34 +150,27 @@ public class GlobalVarQueue {
             return;
         }
         // 超出缓存列表大小
-        if (this.auditList.size() >= AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE) {
-            if (this.fastInsertRunnableBusy) {
+        if (this.auditList.size() >= AppConstants.AUDIT_INSERT_LIST_SIZE) {
+            if (this.totalCacheNum.get() >= AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE) {
                 // ignore current audit info
                 log.error("ignore current audit info {}", audit);
             } else {
                 log.debug("set up 1 fast audit insert runnable");
-                insertDBThreadPool.execute(new SaveToDbThread(takeAuditList(), new CallBack() {
-                    @Override
-                    public void beforeCall() {
-                        fastInsertRunnableBusy = true;
-                    }
-
-                    @Override
-                    public void afterCall() {
-                        fastInsertRunnableBusy = false;
-                    }
-                }));
+                setUpDBInsertRunnable();
             }
         } else {
+            // 缓存数量 +1
+            totalCacheNum.incrementAndGet();
             this.auditList.add(audit);
         }
     }
-
-    private static interface CallBack {
-        void beforeCall();
-
-        void afterCall();
-    };
+    
+    /**
+     * 将缓存列表中的数据插入到数据库
+     */
+    private void setUpDBInsertRunnable() {
+        insertDBThreadPool.execute(new SaveToDbThread(takeAuditList()));
+    }
 
     /**
      * 日志数据插入任务
@@ -166,49 +178,25 @@ public class GlobalVarQueue {
     private class SaveToDbThread implements Runnable {
         private List<Audit> toBeInsertedAuditList;
 
-        private CallBack callBack;
-
         public SaveToDbThread(List<Audit> toBeInsertedAuditList) {
-            this(toBeInsertedAuditList, null);
-        }
-
-        public SaveToDbThread(List<Audit> toBeInsertedAuditList, CallBack callBack) {
             this.toBeInsertedAuditList = toBeInsertedAuditList;
-            this.callBack = callBack;
         }
 
         public void run() {
+            if (this.toBeInsertedAuditList == null || this.toBeInsertedAuditList.isEmpty()) {
+                log.debug("no audit need to insert to DB");
+                return;
+            }
+            int size = toBeInsertedAuditList.size();
+            log.debug("Size for insertAuditList: {}", size);
             try {
-                if (this.callBack != null) {
-                    this.callBack.beforeCall();
-                }
-                if (this.toBeInsertedAuditList == null || this.toBeInsertedAuditList.isEmpty()) {
-                    log.debug("no audit need to insert to DB");
-                    return;
-                }
-                int size = toBeInsertedAuditList.size();
-                log.debug("Size for insertAuditList:" + toBeInsertedAuditList.size());
-                int start = 0;
-                int end = AppConstants.AUDIT_INSERT_LIST_SIZE;
-                while (true) {
-                    if (end > size) {
-                        end = size;
-                    }
-                    try {
-                        auditMapper.insertBatch(toBeInsertedAuditList.subList(start, end));
-                    } catch (Exception e) {
-                        log.error("Inner:Batch insert db error.", e);
-                    }
-                    if (end >= size) {
-                        break;
-                    }
-                    start = end;
-                    end += AppConstants.AUDIT_INSERT_LIST_SIZE;
-                }
+                // 一次性插入所有数据
+                auditMapper.insertBatch(toBeInsertedAuditList);
+            } catch (Exception e) {
+                log.error("Inner:Batch insert db error.", e);
             } finally {
-                if (this.callBack != null) {
-                    this.callBack.afterCall();
-                }
+                // 更新内存缓存对象数量
+                totalCacheNum.addAndGet(-size);
             }
         }
     }
