@@ -6,6 +6,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -33,7 +35,7 @@ public class GlobalVarQueue {
     /**
      * 实际插入数据库的线程池
      */
-    private final ExecutorService insertDBThreadPool = Executors.newCachedThreadPool();
+    private final ExecutorService insertDBThreadPool = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(10));
 
     /**
      * 记录内存中实际cache的audit的数量
@@ -74,7 +76,7 @@ public class GlobalVarQueue {
         synchronized (lock) {
             List<Audit> currentAuditList = this.auditList;
             // replace auditList with a new list
-            this.auditList = new ArrayList<>(AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE);
+            this.auditList = new ArrayList<>(AppConstants.AUDIT_INSERT_LIST_SIZE);
             return currentAuditList;
         }
     }
@@ -85,7 +87,8 @@ public class GlobalVarQueue {
 
             /**
              * 构造数据库插入的Audit对象
-             * @param gv GlobalVar 
+             * 
+             * @param gv GlobalVar
              * @return Audit
              */
             private Audit constructAudit(GlobalVar gv) {
@@ -119,7 +122,7 @@ public class GlobalVarQueue {
                 audit.setRequestDomainCode(gv.getRequestDomainCode());
                 return audit;
             }
-            
+
             public void run() {
                 while (true) {
                     try {
@@ -164,7 +167,7 @@ public class GlobalVarQueue {
             this.auditList.add(audit);
         }
     }
-    
+
     /**
      * 将缓存列表中的数据插入到数据库
      */
