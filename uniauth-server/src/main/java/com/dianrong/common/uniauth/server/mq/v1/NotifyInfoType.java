@@ -14,6 +14,7 @@ public enum NotifyInfoType {
     GROUP_ADD, // 新增组
     GROUP_DISABLE, // 禁用组
     GROUP_ENABLE, // 启用组
+    GROUP_MOVE, // 移动组
 
     USERS_TO_GROUP_ADD, // 用户与组的关联关系添加
     USERS_TO_GROUP_REMOVE, // 用户与组的关联关系删除
