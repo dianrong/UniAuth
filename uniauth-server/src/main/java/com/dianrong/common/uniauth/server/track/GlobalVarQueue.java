@@ -131,7 +131,7 @@ public class GlobalVarQueue {
             return;
         }
         // 超出缓存列表大小
-        if (this.auditList.size() > AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE) {
+        if (this.auditList.size() >= AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE) {
             if (this.fastInsertRunnableBusy) {
                 // ignore current audit info
                 log.debug("ignore current audit info {}", audit);
