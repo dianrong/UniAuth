@@ -137,46 +137,85 @@ public class GlobalVarQueue {
                 log.debug("ignore current audit info {}", audit);
             } else {
                 log.debug("set up 1 fast audit insert runnable");
-                insertDBThreadPool.execute(new SaveToDbThread(takeAuditList()));
+                insertDBThreadPool.execute(new SaveToDbThread(takeAuditList(), new CallBefore() {
+                    @Override
+                    public void call() {
+                        fastInsertRunnableBusy = true;
+                    }
+                }, new CallBack() {
+                    @Override
+                    public void call() {
+                        fastInsertRunnableBusy = false;
+                    }
+                }));
             }
         } else {
             this.auditList.add(audit);
         }
     }
 
+    private static interface CallBefore{
+        void call();
+    };
+    
+    private static interface CallBack{
+        void call();
+    };
+    
     /**
      * 日志数据插入任务
      */
     private class SaveToDbThread implements Runnable {
         private List<Audit> toBeInsertedAuditList;
+        
+        /**
+         * 任务扩展实现
+         */
+        private CallBefore callBefore;
+        private CallBack callBack;
 
         public SaveToDbThread(List<Audit> toBeInsertedAuditList) {
+            this(toBeInsertedAuditList, null, null);
+        }
+        
+        public SaveToDbThread(List<Audit> toBeInsertedAuditList, CallBefore callBefore, CallBack callBack) {
             this.toBeInsertedAuditList = toBeInsertedAuditList;
+            this.callBefore = callBefore;
+            this.callBack = callBack;
         }
 
         public void run() {
-            if (this.toBeInsertedAuditList == null || this.toBeInsertedAuditList.isEmpty()) {
-                log.debug("no audit need to insert to DB");
-                return;
-            }
-            int size = toBeInsertedAuditList.size();
-            log.debug("Size for insertAuditList:" + toBeInsertedAuditList.size());
-            int start = 0;
-            int end = AppConstants.AUDIT_INSERT_LIST_SIZE;
-            while (true) {
-                if (end > size) {
-                    end = size;
+            try {
+                if (this.callBefore != null) {
+                    this.callBefore.call();
                 }
-                try {
-                    auditMapper.insertBatch(toBeInsertedAuditList.subList(start, end));
-                } catch (Exception e) {
-                    log.error("Inner:Batch insert db error.", e);
+                if (this.toBeInsertedAuditList == null || this.toBeInsertedAuditList.isEmpty()) {
+                    log.debug("no audit need to insert to DB");
+                    return;
                 }
-                if (end >= size) {
-                    break;
+                int size = toBeInsertedAuditList.size();
+                log.debug("Size for insertAuditList:" + toBeInsertedAuditList.size());
+                int start = 0;
+                int end = AppConstants.AUDIT_INSERT_LIST_SIZE;
+                while (true) {
+                    if (end > size) {
+                        end = size;
+                    }
+                    try {
+                        auditMapper.insertBatch(toBeInsertedAuditList.subList(start, end));
+                    } catch (Exception e) {
+                        log.error("Inner:Batch insert db error.", e);
+                    }
+                    if (end >= size) {
+                        break;
+                    }
+                    start = end;
+                    end += AppConstants.AUDIT_INSERT_LIST_SIZE;
                 }
-                start = end;
-                end += AppConstants.AUDIT_INSERT_LIST_SIZE;
+            } finally {
+                if (this.callBack != null) {
+                    this.callBack.call();
+                }
             }
         }
     }
