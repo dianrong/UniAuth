@@ -15,6 +15,7 @@ import org.springframework.context.MessageSource;
 import com.dianrong.common.uniauth.cas.model.vo.ApiResponse;
 import com.dianrong.common.uniauth.cas.model.vo.ResponseCode;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public class AppExceptionFilter implements Filter {
         } catch (Exception ex) {
             log.error("server internal error", ex);
             // server error
-            response.getWriter().write(
+            WebScopeUtil.writeJsonContentToResponse(response, 
                     JsonUtil.object2Jason(ApiResponse.failure(ResponseCode.SERVER_INTERNAL_ERROR, UniBundleUtil.getMsg(messageSource, "application.server.internal.error"))));
         }
     }

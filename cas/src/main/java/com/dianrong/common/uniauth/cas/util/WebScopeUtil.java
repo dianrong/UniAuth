@@ -5,10 +5,12 @@ import java.io.Serializable;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.entity.ContentType;
 import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
@@ -225,10 +227,28 @@ public final class WebScopeUtil {
      * @throws IOException response write error
      */
     public static void sendJsonToResponse(HttpServletResponse response, HttpResponseModel<?> obj) throws IOException {
+        
         if (obj == null) {
             response.getWriter().write("");
         } else {
             response.getWriter().write(JsonUtil.object2Jason(obj));
+        }
+    }
+    
+    /**
+     * Write json to response stream
+     *
+     * @param response
+     *            HttpServletResponse
+     * @param jsonContent json to be write to response stream
+     */
+    public static void writeJsonContentToResponse(ServletResponse response, String jsonContent) {
+        try {
+            // 设置header Content-Type:application/json;charset=UTF-8
+            response.setContentType(ContentType.APPLICATION_JSON.toString());
+            response.getWriter().write(jsonContent);
+        } catch (IOException e) {
+            log.warn("response json to client failed", e);
         }
     }
 
