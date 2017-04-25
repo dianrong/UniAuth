@@ -158,7 +158,6 @@ public class GlobalVarQueue {
                 // ignore current audit info
                 log.error("ignore current audit info {}", audit);
             } else {
-                log.debug("set up 1 fast audit insert runnable");
                 setUpDBInsertRunnable();
             }
         } else {
@@ -172,6 +171,7 @@ public class GlobalVarQueue {
      * 将缓存列表中的数据插入到数据库
      */
     private void setUpDBInsertRunnable() {
+        log.debug("set up 1 fast audit insert runnable");
         insertDBThreadPool.execute(new SaveToDbThread(takeAuditList()));
     }
 

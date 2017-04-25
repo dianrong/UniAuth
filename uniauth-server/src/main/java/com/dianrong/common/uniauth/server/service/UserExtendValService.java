@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -32,6 +33,7 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * @author wenlongchen
@@ -224,8 +226,27 @@ public class UserExtendValService extends TenancyBasedService {
         
         // 过滤禁用用户关联的属性值信息
         if (!(includeDisableUserRelatedExtendVal !=null && includeDisableUserRelatedExtendVal)) {
+            List<Long> userIds = Lists.newArrayList();
+            for (UserExtendVal extendVal : userExtendVals) {
+                userIds.add(extendVal.getUserId());
+            }
             UserExample userExample = new UserExample();
-            List<User> selectByExample = userMapper.selectByExample(userExample);
+            userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED).andIdIn(userIds);
+            List<User> users = userMapper.selectByExample(userExample);
+            if (users == null || users.isEmpty()) {
+                return Lists.newArrayList();
+            }
+            Set<Long> enableUserIds = Sets.newHashSet();    
+            for (User u: users) {
+                enableUserIds.add(u.getId());
+            }
+            List<UserExtendVal> tempUserExtendVals = Lists.newArrayList();
+            for (UserExtendVal extendVal : userExtendVals) {
+                if (enableUserIds.contains(extendVal.getUserId())) {
+                    tempUserExtendVals.add(extendVal);
+                }
+            }
+            userExtendVals = tempUserExtendVals;
         }
 
         UserExtend extend = userExtendMapper.selectByPrimaryKey(extendId);

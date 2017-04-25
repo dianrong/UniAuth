@@ -2,12 +2,14 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 /**
  * @author wenlongchen
  * @since May 16, 2016
  */
 @ApiModel("用户扩展属性值请求参数")
+@ToString
 public class UserExtendValParam extends PageParam {
 
     private static final long serialVersionUID = 5991602165228109411L;
@@ -34,10 +36,24 @@ public class UserExtendValParam extends PageParam {
      */
     private String identity;
     /**
-     * . 是否只查询被用户使用了的属性
+     * 是否只查询被用户使用了的属性
      */
     @ApiModelProperty("查询条件:是否只返回用户关联了的属性(用于接口:searchbyuseridandcode)")
     private boolean queryOnlyUsed;
+    
+    /**
+     * 是否包含禁用用户的扩展属性值
+     */
+    @ApiModelProperty("查询条件:是否包含禁用用户的扩展属性值(用于接口:search)")
+    private Boolean includeDisableUserRelatedExtendVal;
+
+    public Boolean getIncludeDisableUserRelatedExtendVal() {
+        return includeDisableUserRelatedExtendVal;
+    }
+
+    public void setIncludeDisableUserRelatedExtendVal(Boolean includeDisableUserRelatedExtendVal) {
+        this.includeDisableUserRelatedExtendVal = includeDisableUserRelatedExtendVal;
+    }
 
     public Long getId() {
         return id;
@@ -110,12 +126,5 @@ public class UserExtendValParam extends PageParam {
     public void setIdentity(String identity) {
         this.identity = identity;
     }
-
-    @Override
-    public String toString() {
-        return "UserExtendValParam [id=" + id + ", userId=" + userId + ", extendId=" + extendId + ", value=" + value + ", status=" + status + ", extendCode=" + extendCode
-                + ", identity=" + identity + ", queryOnlyUsed=" + queryOnlyUsed + "]";
-    }
-
 }
 
