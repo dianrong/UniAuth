@@ -134,7 +134,7 @@ public class GlobalVarQueue {
         if (this.auditList.size() >= AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE) {
             if (this.fastInsertRunnableBusy) {
                 // ignore current audit info
-                log.debug("ignore current audit info {}", audit);
+                log.error("ignore current audit info {}", audit);
             } else {
                 log.debug("set up 1 fast audit insert runnable");
                 insertDBThreadPool.execute(new SaveToDbThread(takeAuditList(), new CallBack() {
