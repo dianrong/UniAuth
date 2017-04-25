@@ -137,14 +137,14 @@ public class GlobalVarQueue {
                 log.debug("ignore current audit info {}", audit);
             } else {
                 log.debug("set up 1 fast audit insert runnable");
-                insertDBThreadPool.execute(new SaveToDbThread(takeAuditList(), new CallBefore() {
+                insertDBThreadPool.execute(new SaveToDbThread(takeAuditList(), new CallBack() {
                     @Override
-                    public void call() {
+                    public void beforeCall() {
                         fastInsertRunnableBusy = true;
                     }
-                }, new CallBack() {
+
                     @Override
-                    public void call() {
+                    public void afterCall() {
                         fastInsertRunnableBusy = false;
                     }
                 }));
@@ -154,40 +154,33 @@ public class GlobalVarQueue {
         }
     }
 
-    private static interface CallBefore{
-        void call();
+    private static interface CallBack {
+        void beforeCall();
+
+        void afterCall();
     };
-    
-    private static interface CallBack{
-        void call();
-    };
-    
+
     /**
      * 日志数据插入任务
      */
     private class SaveToDbThread implements Runnable {
         private List<Audit> toBeInsertedAuditList;
-        
-        /**
-         * 任务扩展实现
-         */
-        private CallBefore callBefore;
+
         private CallBack callBack;
 
         public SaveToDbThread(List<Audit> toBeInsertedAuditList) {
-            this(toBeInsertedAuditList, null, null);
+            this(toBeInsertedAuditList, null);
         }
-        
-        public SaveToDbThread(List<Audit> toBeInsertedAuditList, CallBefore callBefore, CallBack callBack) {
+
+        public SaveToDbThread(List<Audit> toBeInsertedAuditList, CallBack callBack) {
             this.toBeInsertedAuditList = toBeInsertedAuditList;
-            this.callBefore = callBefore;
             this.callBack = callBack;
         }
 
         public void run() {
             try {
-                if (this.callBefore != null) {
-                    this.callBefore.call();
+                if (this.callBack != null) {
+                    this.callBack.beforeCall();
                 }
                 if (this.toBeInsertedAuditList == null || this.toBeInsertedAuditList.isEmpty()) {
                     log.debug("no audit need to insert to DB");
@@ -214,7 +207,7 @@ public class GlobalVarQueue {
                 }
             } finally {
                 if (this.callBack != null) {
-                    this.callBack.call();
+                    this.callBack.afterCall();
                 }
             }
         }
