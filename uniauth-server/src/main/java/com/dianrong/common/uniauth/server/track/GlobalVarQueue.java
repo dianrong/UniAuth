@@ -133,7 +133,7 @@ public class GlobalVarQueue {
                         if (polgv == null) {
                             setUpDBInsertRunnable();
                         } else {
-                            cacheAudit(constructAudit(gv));
+                            cacheAudit(constructAudit(polgv));
                         }
                     } catch (Exception e) {
                         log.error("Take from GLOBALVAR_QUEUE error.", e);
