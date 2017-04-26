@@ -1,7 +1,7 @@
 apply plugin: 'war'
 
 dependencies {
-
+	// compile(group: 'com.dianrong.common.uniauth', name: 'common', version:'1.0.82-SNAPSHOT')
     compile project(":common")
 
     providedCompile 'javax.servlet:javax.servlet-api'

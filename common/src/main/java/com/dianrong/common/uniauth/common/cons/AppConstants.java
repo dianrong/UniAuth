@@ -166,8 +166,9 @@ public interface AppConstants {
 
     String MAIL_PREFIX = "[TechOps]";
     int GLOBALVAR_QUEUE_SIZE = 2048;
-    int AUDIT_INSERT_LIST_SIZE = 30;
-    int AUDIT_INSERT_EVERY_SECOND = 120;
+    int AUDIT_INSERT_LIST_SIZE = 1024;
+    int AUDIT_INSERT_LIST_CACHE_SIZE = 40960;
+    int AUDIT_INSERT_EVERY_SECOND = 60;
     int AUDIT_INSERT_EXP_LENGTH = 3072;
     int AUDIT_INSET_PARAM_LENGTH = 256;
 
@@ -227,6 +228,9 @@ public interface AppConstants {
 
     // 配置项, 指定是否使用notification实现的通知发送
     String UNIAUTH_NOTIFY_USE_NOTIFICATION = "notify.notification";
+    
+    // uniauth_server使用的GlobalVarQueue是否采用旧的实现
+    String UNIAUTH_GLOBAL_VAR_QUEUE_USE_OLD_IMPL = "global.var.queue.old.impl";
 
     // 2 hours
     long DEFAULT_API_CALL_TOKEN_AVAILABLE_MILLiSECONDS = 1000L * 60L * 60l * 2L;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 
@@ -14,6 +15,7 @@ public interface RoleMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     int countByExample(RoleExample example);
 
     /**
@@ -54,6 +56,7 @@ public interface RoleMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     List<Role> selectByExample(RoleExample example);
 
     /**
@@ -62,6 +65,7 @@ public interface RoleMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     Role selectByPrimaryKey(Integer id);
 
     /**

@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.service.TenancyService;
 import com.dianrong.common.uniauth.server.track.GlobalVar;
-import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
+import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
 
@@ -24,30 +23,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServerMapperAOPHandler {
     @Autowired
-    private GlobalVarQueue globalVarQueue;
+    private GlobalVarQueueFacade globalVarQueue;
 
-    @Autowired
-    private TenancyService tenancyService;
+//    @Autowired
+//    private TenancyService tenancyService;
 
-    // @Pointcut(value = "execution(public *
-    // com.dianrong.common.uniauth.server.data.mapper.*.insert*(..)) ")
-    // public void insertMappers() {}
-    //
-    // @Pointcut(value = "execution(public *
-    // com.dianrong.common.uniauth.server.data.mapper.*.update*(..)) ")
-    // public void updateMappers() {}
-    //
-    // @Pointcut(value = "execution(public *
-    // com.dianrong.common.uniauth.server.data.mapper.*.delete*(..)) ")
-    // public void deleteMappers() {}
+     @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.insert*(..)) ")
+     public void insertMappers() {}
+    
+     @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.update*(..)) ")
+     public void updateMappers() {}
+    
+     @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.delete*(..)) ")
+     public void deleteMappers() {}
 
-    @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.*(..)) ")
-    public void mappers() {}
+//    @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.*(..)) ")
+//    public void mappers() {}
 
     @Pointcut(value = "!execution(public * com.dianrong.common.uniauth.server.data.mapper.AuditMapper.*(..))")
     public void notAuditMapper() {}
 
-    @Around("notAuditMapper() && mappers()")
+    @Around("notAuditMapper() && insertMappers() && updateMappers() && deleteMappers()")
     public Object interceptMapper(ProceedingJoinPoint joinPoint) throws Throwable {
         GlobalVar origin = RequestManager.getGlobalVar();
         if (origin == null)
@@ -58,7 +54,7 @@ public class ServerMapperAOPHandler {
             gv.setReqDate(new Date());
             // TODO 处理租户id的问题,可以通过缓存的方案解决
             if (gv.getTenancyId() == null) {
-                gv.setTenancyId(-1L);
+                gv.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
             }
             // gv.setTenancyId(tenancyService.getOneCanUsedTenancyId());
             gv.setMapper(joinPoint.getSignature().getDeclaringType().getSimpleName());

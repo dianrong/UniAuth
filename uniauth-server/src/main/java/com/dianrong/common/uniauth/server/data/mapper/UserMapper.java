@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
@@ -16,6 +17,7 @@ public interface UserMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     int countByExample(UserExample example);
 
     /**
@@ -56,6 +58,7 @@ public interface UserMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     List<User> selectByExample(UserExample example);
 
     /**
@@ -64,6 +67,7 @@ public interface UserMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     User selectByPrimaryKey(Long id);
 
     /**

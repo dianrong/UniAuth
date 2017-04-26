@@ -209,6 +209,8 @@ public class UserService extends TenancyBasedService {
         } else if (AppConstants.ONE_BYTE.equals(user.getStatus()) && !UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.status.isone", userIdentity, User.class.getSimpleName()));
         }
+        // 辅助标识位
+        boolean isUpdatePassword = false;
         switch (userActionEnum) {
             case LOCK:
                 user.setFailCount(AppConstants.MAX_AUTH_FAIL_COUNT);
@@ -217,6 +219,7 @@ public class UserService extends TenancyBasedService {
                 user.setFailCount(AppConstants.ZERO_BYTE);
                 break;
             case RESET_PASSWORD:
+                isUpdatePassword = true;
                 checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
                 byte salt[] = AuthUtils.createSalt();
                 user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
@@ -224,8 +227,6 @@ public class UserService extends TenancyBasedService {
                 user.setPasswordDate(new Date());
                 // reset failed count
                 user.setFailCount(AppConstants.ZERO_BYTE);
-                // log
-                asynAddUserPwdLog(user);
                 break;
             case STATUS_CHANGE:
                 // 只处理启用的情况
@@ -261,6 +262,8 @@ public class UserService extends TenancyBasedService {
                 if (!UniPasswordEncoder.isPasswordValid(user.getPassword(), orginPassword, user.getPasswordSalt())) {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
                 }
+                
+                isUpdatePassword = true;
                 // 验证新密码
                 checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
                 byte salttemp[] = AuthUtils.createSalt();
@@ -268,14 +271,27 @@ public class UserService extends TenancyBasedService {
                 user.setPasswordSalt(Base64.encode(salttemp));
                 user.setPasswordDate(new Date());
                 user.setFailCount(AppConstants.ZERO_BYTE);
-                // log
-                asynAddUserPwdLog(user);
                 break;
             default:
                 break;
         }
         user.setLastUpdate(new Date());
+        if (isUpdatePassword) {
+            // 特殊设置的密码, 需要在登陆的时候重新设置密码
+            if (ignorePwdStrategyCheck != null && ignorePwdStrategyCheck) {
+                user.setPasswordDate(null);
+            }
+        }
+        
         userMapper.updateByPrimaryKey(user);
+        
+        // 记录日志设置记录
+        if (isUpdatePassword) {
+            // 如果特设设置的密码, 则不记录密码设置日志
+            if (ignorePwdStrategyCheck == null || !ignorePwdStrategyCheck) {
+                asynAddUserPwdLog(user);
+            }
+        }
         
         // 发送通知
         if (UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
@@ -1027,15 +1043,17 @@ public class UserService extends TenancyBasedService {
         } else {
             user = getUserByAccount(userParam.getPhone(), userParam.getTenancyCode(), userParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
         }
-        if (!AuthUtils.validatePasswordRule(password)) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
-        }
+        
+        checkUserPwd(user.getId(), password, false);
         byte salt[] = AuthUtils.createSalt();
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
         user.setPasswordSalt(Base64.encode(salt));
         user.setPasswordDate(new Date());
         user.setFailCount(AppConstants.ZERO_BYTE);
         userMapper.updateByPrimaryKey(user);
+        
+        // add password set log
+        asynAddUserPwdLog(user);
     }
 
     @Transactional

@@ -546,4 +546,11 @@ public class Audit {
     public void setRequestDomainCode(String requestDomainCode) {
         this.requestDomainCode = requestDomainCode;
     }
+
+    @Override
+    public String toString() {
+        return "{ id:" + id + ", userId:" + userId + ", reqDate:" + reqDate + ", domainId:" + domainId + ", reqIp:" + reqIp + ", reqUuid:" + reqUuid + ", reqUrl:" + reqUrl
+                + ", reqSeq:" + reqSeq + ", reqClass:" + reqClass + ", reqMethod:" + reqMethod + ", reqSuccess:" + reqSuccess + ", reqExp:" + reqExp + ", reqElapse:" + reqElapse
+                + ", reqParam:" + reqParam + ", reqResult:" + reqResult + ", tenancyId:" + tenancyId + ", requestDomainCode:" + requestDomainCode + "}";
+    }
 }

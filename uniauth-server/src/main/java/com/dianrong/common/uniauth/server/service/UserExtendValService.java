@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
@@ -20,6 +23,7 @@ import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample.Crite
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -29,6 +33,7 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * @author wenlongchen
@@ -42,6 +47,9 @@ public class UserExtendValService extends TenancyBasedService {
 
     @Autowired
     private UserExtendMapper userExtendMapper;
+    
+    @Autowired
+    private UserMapper userMapper;
 
     @Resource(name = "userExtendValDataFilter")
     private UserExtendValDataFilter dataFilter;
@@ -195,9 +203,10 @@ public class UserExtendValService extends TenancyBasedService {
      * @param extendId 扩展属性id
      * @param value 扩展属性值
      * @param status 状态
+     * @param includeDisableUserRelatedExtendVal 是否包含禁用用户关联的扩展属性值
      * @return 符合条件的扩展属性值列表
      */
-    public List<UserExtendValDto> search(Long extendId, String value, Byte status) {
+    public List<UserExtendValDto> search(Long extendId, String value, Byte status, Boolean includeDisableUserRelatedExtendVal) {
         CheckEmpty.checkEmpty(extendId, "extendId");
         CheckEmpty.checkEmpty(value, "value");
 
@@ -213,6 +222,31 @@ public class UserExtendValService extends TenancyBasedService {
         List<UserExtendValDto> userExtendValDtos = Lists.newArrayList();
         if (userExtendVals == null || userExtendVals.isEmpty()) {
             return userExtendValDtos;
+        }
+        
+        // 过滤禁用用户关联的属性值信息
+        if (!(includeDisableUserRelatedExtendVal !=null && includeDisableUserRelatedExtendVal)) {
+            List<Long> userIds = Lists.newArrayList();
+            for (UserExtendVal extendVal : userExtendVals) {
+                userIds.add(extendVal.getUserId());
+            }
+            UserExample userExample = new UserExample();
+            userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED).andIdIn(userIds);
+            List<User> users = userMapper.selectByExample(userExample);
+            if (users == null || users.isEmpty()) {
+                return Lists.newArrayList();
+            }
+            Set<Long> enableUserIds = Sets.newHashSet();    
+            for (User u: users) {
+                enableUserIds.add(u.getId());
+            }
+            List<UserExtendVal> tempUserExtendVals = Lists.newArrayList();
+            for (UserExtendVal extendVal : userExtendVals) {
+                if (enableUserIds.contains(extendVal.getUserId())) {
+                    tempUserExtendVals.add(extendVal);
+                }
+            }
+            userExtendVals = tempUserExtendVals;
         }
 
         UserExtend extend = userExtendMapper.selectByPrimaryKey(extendId);

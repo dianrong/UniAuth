@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
@@ -16,6 +17,7 @@ public interface PermissionMapper {
      *
      * @mbggenerated Tue Apr 05 14:00:16 CST 2016
      */
+    @Timed
     int countByExample(PermissionExample example);
 
     /**
@@ -56,6 +58,7 @@ public interface PermissionMapper {
      *
      * @mbggenerated Tue Apr 05 14:00:16 CST 2016
      */
+    @Timed
     List<Permission> selectByExample(PermissionExample example);
 
     /**
@@ -64,6 +67,7 @@ public interface PermissionMapper {
      *
      * @mbggenerated Tue Apr 05 14:00:16 CST 2016
      */
+    @Timed
     Permission selectByPrimaryKey(Integer id);
 
     /**

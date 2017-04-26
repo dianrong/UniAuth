@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
@@ -18,6 +19,7 @@ public interface GrpMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     int countByExample(GrpExample example);
 
     /**
@@ -58,6 +60,7 @@ public interface GrpMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     List<Grp> selectByExample(GrpExample example);
 
     /**
@@ -66,6 +69,7 @@ public interface GrpMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     Grp selectByPrimaryKey(Integer id);
 
     /**
@@ -112,5 +116,6 @@ public interface GrpMapper {
 
     Integer getUserIdInGroupOrSub(Map<String, Object> paramMap);
 
+    @Timed
     List<GroupDto> listGroupsRelateToUser(Map<String, Object> paramMap);
 }

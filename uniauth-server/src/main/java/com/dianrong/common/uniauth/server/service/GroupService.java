@@ -72,6 +72,7 @@ import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseGroupNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupAddNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupMoveNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
@@ -106,7 +107,7 @@ public class GroupService extends TenancyBasedService {
     private TagMapper tagMapper;
     @Autowired
     private TagTypeMapper tagTypeMapper;
-    
+
     @Autowired
     private UniauthNotify uniauthNotify;
 
@@ -130,6 +131,9 @@ public class GroupService extends TenancyBasedService {
         moveParam.put("subAncestor", sourceGroup);
         moveParam.put("superDecendant", targetGroup);
         grpPathMapper.moveTreeStepTwo(moveParam);
+
+        // 发送通知
+        uniauthNotify.notify(new GroupMoveNotifyInfo().setTargetGroupId(targetGroup).setGroupId(sourceGroup));
     }
 
     public PageDto<GroupDto> searchGroup(Byte userGroupType, Long userId, Integer roleId, Integer id, List<Integer> groupIds, String name, String code, String description,
@@ -382,10 +386,10 @@ public class GroupService extends TenancyBasedService {
         if (count != null && count > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.name", grp.getName()));
         }
-        
+
         // 发送通知
-        uniauthNotify.notify(new GroupAddNotifyInfo().setCode(grp.getCode()).setDescription(grp.getDescription()).setName(grp.getName())
-                .setParentGroupId(targetGroupId).setGroupId(grp.getId()));
+        uniauthNotify.notify(new GroupAddNotifyInfo().setCode(grp.getCode()).setDescription(grp.getDescription()).setName(grp.getName()).setParentGroupId(targetGroupId)
+                .setGroupId(grp.getId()));
         return BeanConverter.convert(grp);
     }
 
@@ -400,7 +404,7 @@ public class GroupService extends TenancyBasedService {
         if (grp == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
         }
-        
+
         // 根组不能进行修改，修改只能走数据库修改
         if (AppConstants.GRP_ROOT.equals(grp.getCode())) {
             throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.rootgrp.unmodifiable"));
@@ -414,7 +418,7 @@ public class GroupService extends TenancyBasedService {
 
         // cache original status
         Byte originlaStaus = grp.getStatus();
-        
+
         grp.setName(groupName);
         grp.setStatus(status);
         grp.setDescription(description);
@@ -425,7 +429,7 @@ public class GroupService extends TenancyBasedService {
         if (count != null && count > 1) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("group.parameter.name", grp.getName()));
         }
-        
+
         // 发送通知
         if (status != null && !status.equals(originlaStaus)) {
             NotifyInfoType type = NotifyInfoType.GROUP_DISABLE;
@@ -435,7 +439,7 @@ public class GroupService extends TenancyBasedService {
             }
             uniauthNotify.notify(new BaseGroupNotifyInfo().setGroupId(grp.getId()).setNotifyInfoType(type));
         }
-        
+
         return BeanConverter.convert(grp);
     }
 
@@ -470,7 +474,7 @@ public class GroupService extends TenancyBasedService {
                     userGrp.setType((byte) 1);
                 }
                 userGrpMapper.insert(userGrp);
-                
+
                 // 只处理普通的关系
                 if (normalMember == null || normalMember) {
                     uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(groupId).setUserId(userId).setNotifyInfoType(NotifyInfoType.USERS_TO_GROUP_ADD));
@@ -496,7 +500,7 @@ public class GroupService extends TenancyBasedService {
                 userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_BYTE_PRIMITIVE);
             }
             userGrpMapper.deleteByExample(userGrpExample);
-            
+
             // 通知 处理普通关系进行通知
             if (normalMember == null || normalMember) {
                 uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(grpId).setUserId(userId).setNotifyInfoType(NotifyInfoType.USERS_TO_GROUP_REMOVE));
@@ -505,8 +509,8 @@ public class GroupService extends TenancyBasedService {
     }
 
     @Transactional
-    public void moveUser(Integer targetGroupId, List<Linkage<Long, Integer>> userIdGrpIdPairs , Boolean normalMember) {
-        if(targetGroupId == null || CollectionUtils.isEmpty(userIdGrpIdPairs)) {
+    public void moveUser(Integer targetGroupId, List<Linkage<Long, Integer>> userIdGrpIdPairs, Boolean normalMember) {
+        if (targetGroupId == null || CollectionUtils.isEmpty(userIdGrpIdPairs)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
         }
         UserGrpExample userGrpExample = new UserGrpExample();
@@ -514,34 +518,34 @@ public class GroupService extends TenancyBasedService {
         Byte type = normalMember == null || normalMember ? AppConstants.ZERO_BYTE : AppConstants.ONE_BYTE;
         userGrpExample.createCriteria().andGrpIdEqualTo(targetGroupId).andTypeEqualTo(type);
 
-        //查询目标分组的用户，用以后面检测用户是否已经存在该组下
+        // 查询目标分组的用户，用以后面检测用户是否已经存在该组下
         userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
         Set<Long> userIdSet = new HashSet<>();
-        if(!CollectionUtils.isEmpty(userGrpKeys)) {
+        if (!CollectionUtils.isEmpty(userGrpKeys)) {
             for (UserGrpKey userGrpKey : userGrpKeys) {
                 userIdSet.add(userGrpKey.getUserId());
             }
         }
 
-        //移动用户到新组
-        for(Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
+        // 移动用户到新组
+        for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
             Long userId = linkage.getEntry1();
             Integer grpId = linkage.getEntry2();
 
-            if(!userIdSet.contains(userId)) {
+            if (!userIdSet.contains(userId)) {
                 UserGrpExample deleteExample = new UserGrpExample();
                 deleteExample.createCriteria().andGrpIdEqualTo(grpId).andTypeEqualTo(type).andUserIdEqualTo(userId);
 
-                //删除原组里的该用户
+                // 删除原组里的该用户
                 userGrpMapper.deleteByExample(deleteExample);
 
                 UserGrp userGrp = new UserGrp();
                 userGrp.setGrpId(targetGroupId);
                 userGrp.setUserId(userId);
                 userGrp.setType(type);
-                //将该用户加入到新组
+                // 将该用户加入到新组
                 userGrpMapper.insert(userGrp);
-                
+
                 // 通知 处理普通关系进行通知
                 if (normalMember == null || normalMember) {
                     uniauthNotify.notify(new UsersToGroupExchangeNotifyInfo().setTargetGroupId(targetGroupId).setGroupId(grpId).setUserId(userId));

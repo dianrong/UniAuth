@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.track;
+package com.dianrong.common.uniauth.server.track.queue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.mapper.AuditMapper;
+import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.util.RegExpUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class GlobalVarQueue {
-
     @Autowired
     private AuditMapper auditMapper;
 

@@ -26,7 +26,10 @@ public class UniauthServerApiInvoke {
     public static final String URI = "http://10.8.12.218:8200/uniauth/ws/rs/user/searchusers";
 
     public static void main(String[] args) throws Exception {
-        System.out.println(request("dianrong", 300002193L));
+        for(int i =0; i < 1000000; i++) {
+            request("dianrong", 300002193L);
+        }
+//        System.out.println(request("dianrong", 300002193L));
     }
 
     public static String request(String tenancyCode, Long userId) throws Exception {

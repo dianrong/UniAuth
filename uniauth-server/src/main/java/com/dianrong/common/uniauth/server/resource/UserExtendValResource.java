@@ -116,11 +116,12 @@ public class UserExtendValResource implements IUserExtendValRWResource {
             @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "extendId", value = "扩展属性id", required = true, dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "value", value = "扩展属性值(去匹配)", required = true, dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "status", value = "扩展属性值的状态(0,1)", dataType = "integer", paramType = "query"),})
+            @ApiImplicitParam(name = "status", value = "扩展属性值的状态(0,1)", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "includeDisableUserRelatedExtendVal", value = "是否包含禁用用户关联的扩展属性值", dataType = "boolean", defaultValue="false", paramType = "query")})
     @Override
     @Timed
     public Response<List<UserExtendValDto>> search(UserExtendValParam userExtendValParam) {
-        List<UserExtendValDto> userExtendList = userExtendValService.search(userExtendValParam.getExtendId(), userExtendValParam.getValue(), userExtendValParam.getStatus());
+        List<UserExtendValDto> userExtendList = userExtendValService.search(userExtendValParam.getExtendId(), userExtendValParam.getValue(), userExtendValParam.getStatus(), userExtendValParam.getIncludeDisableUserRelatedExtendVal());
         return Response.success(userExtendList);
     }
 }

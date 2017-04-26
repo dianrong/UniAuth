@@ -85,7 +85,7 @@ public class NotificationService {
         addUserEmailTemplate.append("            ");
         addUserEmailTemplate.append(" 您的登录账号为: %s        <br />");
         addUserEmailTemplate.append("            ");
-        addUserEmailTemplate.append(" 您的账户密码为: %s        <br />");
+        addUserEmailTemplate.append(" 您的账户临时密码为: %s        <br />");
         if (casServerURL != null) {
             addUserEmailTemplate.append("            ");
             addUserEmailTemplate.append(" 请到: " + casServerURL + " 去登陆       <br />");
@@ -94,7 +94,7 @@ public class NotificationService {
         addUserNotTemplate = addUserEmailTemplate.toString();
         // sms
         StringBuilder addUserSmsTemplate = new StringBuilder();
-        addUserSmsTemplate.append("系统管理员为您创建了系统账户!您的登录账号为:%s,登陆密码为:%s");
+        addUserSmsTemplate.append("系统管理员为您创建了系统账户!您的登录账号为:%s,临时登陆密码为:%s");
         if (casServerURL != null) {
             addUserSmsTemplate.append(" 请到: " + casServerURL + " 去登陆");
         }
@@ -108,7 +108,7 @@ public class NotificationService {
         updateUserPwdEmailTemplate.append("            ");
         updateUserPwdEmailTemplate.append(" 您的登录账号为: %s        <br />");
         updateUserPwdEmailTemplate.append("            ");
-        updateUserPwdEmailTemplate.append(" 您的账户密码为: %s        <br />");
+        updateUserPwdEmailTemplate.append(" 您的账户临时密码为: %s        <br />");
         if (casServerURL != null) {
             updateUserPwdEmailTemplate.append("            ");
             updateUserPwdEmailTemplate.append("请到: " + casServerURL + " 去登陆       <br />");
@@ -117,7 +117,7 @@ public class NotificationService {
         updateUserPwdNotTemplate = updateUserPwdEmailTemplate.toString();
         // sms
         StringBuilder updateUserPwdSmsTemplate = new StringBuilder();
-        updateUserPwdSmsTemplate.append("系统管理员重置了您的系统账户密码!您的登录账号为:%s,登陆密码为:%s");
+        updateUserPwdSmsTemplate.append("系统管理员重置了您的系统账户密码!您的登录账号为:%s,临时登陆密码为:%s");
         if (casServerURL != null) {
             updateUserPwdSmsTemplate.append(" 请到: " + casServerURL + " 去登陆");
         }

@@ -22,7 +22,7 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.TenancyService;
 import com.dianrong.common.uniauth.server.support.apicontrl.CallerAccountHolder;
 import com.dianrong.common.uniauth.server.track.GlobalVar;
-import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
+import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
 
@@ -40,7 +40,7 @@ public class ServerExAOPHandler {
     private static final boolean IS_PRINT_STACKTRACE = true;
 
     @Autowired
-    private GlobalVarQueue globalVarQueue;
+    private GlobalVarQueueFacade globalVarQueue;
 
     @Autowired
     private TenancyService tenancyService;
@@ -49,8 +49,11 @@ public class ServerExAOPHandler {
     public void anyServerResources() {}
 
     @Around("anyServerResources()")
-    public Object handleException(ProceedingJoinPoint joinPoint) {
+    public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
         GlobalVar origin = RequestManager.getGlobalVar();
+        if (origin == null) {
+            return joinPoint.proceed();
+        }
         GlobalVar gv = null;
         try {
             origin.setRequestDomainCode(CallerAccountHolder.get());
@@ -89,7 +92,7 @@ public class ServerExAOPHandler {
             }
 
             long start = System.currentTimeMillis();
-            Response<?> response = (Response<?>) joinPoint.proceed();
+            Object response = joinPoint.proceed();
             long end = System.currentTimeMillis();
             long elapse = end - start;
             gv.setElapse(elapse);
