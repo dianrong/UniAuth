@@ -49,8 +49,11 @@ public class ServerExAOPHandler {
     public void anyServerResources() {}
 
     @Around("anyServerResources()")
-    public Object handleException(ProceedingJoinPoint joinPoint) {
+    public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
         GlobalVar origin = RequestManager.getGlobalVar();
+        if (origin == null) {
+            return joinPoint.proceed();
+        }
         GlobalVar gv = null;
         try {
             origin.setRequestDomainCode(CallerAccountHolder.get());
@@ -89,7 +92,7 @@ public class ServerExAOPHandler {
             }
 
             long start = System.currentTimeMillis();
-            Response<?> response = (Response<?>) joinPoint.proceed();
+            Object response = joinPoint.proceed();
             long end = System.currentTimeMillis();
             long elapse = end - start;
             gv.setElapse(elapse);
