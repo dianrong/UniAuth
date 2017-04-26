@@ -23,7 +23,7 @@ public class UserAddNotifyInfo extends BaseUserNotifyInfo {
     private String phone;
     
     public UserAddNotifyInfo() {
-        super.setNotifyInfoType(NotifyInfoType.USER_ADD);
+        super.setType(NotifyInfoType.USER_ADD);
     }
 
     public String getName() {

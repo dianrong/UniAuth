@@ -12,7 +12,7 @@ public class GroupMoveNotifyInfo extends BaseGroupNotifyInfo {
     private Integer targetGroupId;
     
     public GroupMoveNotifyInfo() {
-        super.setNotifyInfoType(NotifyInfoType.GROUP_MOVE);
+        super.setType(NotifyInfoType.GROUP_MOVE);
     }
 
     public Integer getTargetGroupId() {

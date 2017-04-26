@@ -27,7 +27,7 @@ public class GroupAddNotifyInfo extends BaseGroupNotifyInfo {
     private Integer parentGroupId;
 
     public GroupAddNotifyInfo() {
-        super.setNotifyInfoType(NotifyInfoType.GROUP_ADD);
+        super.setType(NotifyInfoType.GROUP_ADD);
     }
     
     public String getCode() {

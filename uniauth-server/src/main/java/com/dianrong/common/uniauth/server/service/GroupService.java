@@ -437,7 +437,7 @@ public class GroupService extends TenancyBasedService {
                 // 启用
                 type = NotifyInfoType.GROUP_ENABLE;
             }
-            uniauthNotify.notify(new BaseGroupNotifyInfo().setGroupId(grp.getId()).setNotifyInfoType(type));
+            uniauthNotify.notify(new BaseGroupNotifyInfo().setGroupId(grp.getId()).setType(type));
         }
 
         return BeanConverter.convert(grp);
@@ -477,7 +477,7 @@ public class GroupService extends TenancyBasedService {
 
                 // 只处理普通的关系
                 if (normalMember == null || normalMember) {
-                    uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(groupId).setUserId(userId).setNotifyInfoType(NotifyInfoType.USERS_TO_GROUP_ADD));
+                    uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(groupId).setUserId(userId).setType(NotifyInfoType.USERS_TO_GROUP_ADD));
                 }
             }
         }
@@ -503,7 +503,7 @@ public class GroupService extends TenancyBasedService {
 
             // 通知 处理普通关系进行通知
             if (normalMember == null || normalMember) {
-                uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(grpId).setUserId(userId).setNotifyInfoType(NotifyInfoType.USERS_TO_GROUP_REMOVE));
+                uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(grpId).setUserId(userId).setType(NotifyInfoType.USERS_TO_GROUP_REMOVE));
             }
         }
     }
