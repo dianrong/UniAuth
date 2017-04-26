@@ -42,11 +42,11 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
 
     @Override
     protected HandlerResult authenticateUsernamePasswordInternal(UsernamePasswordCredential credential) throws GeneralSecurityException, PreventedException {
-        CasUsernamePasswordCredential _credential = (CasUsernamePasswordCredential) credential;
+        CasUsernamePasswordCredential casUserNameCredential = (CasUsernamePasswordCredential) credential;
 
-        String userName = _credential.getUsername();
-        String password = _credential.getPassword();
-        String tenancyCode = _credential.getTenancyCode();
+        String userName = StringUtil.trimCompatibleNull(casUserNameCredential.getUsername());
+        String password = casUserNameCredential.getPassword();
+        String tenancyCode = StringUtil.trimCompatibleNull(casUserNameCredential.getTenancyCode());
 
         LoginParam loginParam = new LoginParam();
         loginParam.setAccount(userName);
@@ -92,7 +92,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put(CasProtocal.DianRongCas.getTenancyIdName(), StringUtil.translateIntegerToLong(response.getData().getTenancyId()));
         // 防止userName中有空格
-        return createHandlerResult(credential, this.principalFactory.createPrincipal(userName.trim(), attributes), null);
+        return createHandlerResult(credential, this.principalFactory.createPrincipal(userName, attributes), null);
     }
 
     @Override

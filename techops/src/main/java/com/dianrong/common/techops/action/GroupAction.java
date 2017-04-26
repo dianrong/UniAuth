@@ -239,7 +239,7 @@ public class GroupAction {
     }
 
     @RequestMapping(value = "/move" , method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null and principal.permMap['DOMAIN'].contains('techops')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') and hasPermission(#groupParam,'PERM_GROUP_OWNER')")
     public Response<Void> moveGroup(@RequestBody GroupParam groupParam) {
         return uARWFacade.getGroupRWResource().moveGroup(groupParam);
     }

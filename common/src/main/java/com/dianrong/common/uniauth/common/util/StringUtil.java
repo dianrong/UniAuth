@@ -147,5 +147,16 @@ public class StringUtil {
         return emailAddress.matches(regExp);
     }
 
+    /**
+     * 兼容null字符串的trim处理
+     * @param orginlStr 原始字符串,可能为null
+     * @return 去除两边空格之后的字符串. 如果orginlStr为null, 则返回null
+     */
+    public static String trimCompatibleNull(String orginlStr) {
+        if (orginlStr == null) {
+            return null;
+        }
+        return orginlStr.trim();
+    }
 
 }

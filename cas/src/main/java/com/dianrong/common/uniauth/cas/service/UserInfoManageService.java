@@ -14,6 +14,7 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 
 @Service
@@ -36,8 +37,8 @@ public class UserInfoManageService extends BaseService {
     @TenancyIdentity(type = Type.CODE, index = 1)
     public UserDto getUserDetailInfo(String account, String tenancyCode) throws Exception {
         LoginParam loginParam = new LoginParam();
-        loginParam.setAccount(account);
-        loginParam.setTenancyCode(tenancyCode);
+        loginParam.setAccount(StringUtil.trimCompatibleNull(account));
+        loginParam.setTenancyCode(StringUtil.trimCompatibleNull(tenancyCode));
         Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
         List<Info> infoList = response.getInfo();
         checkInfoList(infoList);
@@ -55,7 +56,7 @@ public class UserInfoManageService extends BaseService {
     @TenancyIdentity(index = 1)
     public UserDto getUserDetailInfo(String account, Long tenancyId) throws Exception {
         LoginParam loginParam = new LoginParam();
-        loginParam.setAccount(account);
+        loginParam.setAccount(StringUtil.trimCompatibleNull(account));
         loginParam.setTenancyId(tenancyId);
         Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
         List<Info> infoList = response.getInfo();
@@ -74,7 +75,7 @@ public class UserInfoManageService extends BaseService {
     @TenancyIdentity(index = 1)
     public void updateUserInfo(String account, Long tenancyId, String newName) throws Exception {
         UserParam userParam = new UserParam();
-        userParam.setAccount(account);
+        userParam.setAccount(StringUtil.trimCompatibleNull(account));
         userParam.setTenancyId(tenancyId);
         userParam.setName(newName);
         userParam.setUserActionEnum(UserActionEnum.UPDATE_INFO_BY_ACCOUNT);
@@ -94,9 +95,9 @@ public class UserInfoManageService extends BaseService {
     @TenancyIdentity(index = 1)
     public void updateEmail(String account, Long tenancyId, String email) throws Exception {
         UserParam userParam = new UserParam();
-        userParam.setAccount(account);
+        userParam.setAccount(StringUtil.trimCompatibleNull(account));
         userParam.setTenancyId(tenancyId);
-        userParam.setEmail(email);
+        userParam.setEmail(StringUtil.trimCompatibleNull(email));
         userParam.setUserActionEnum(UserActionEnum.UPDATE_EMAIL_BY_ACCOUNT);
         Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
         List<Info> infoList = response.getInfo();
@@ -114,9 +115,9 @@ public class UserInfoManageService extends BaseService {
     @TenancyIdentity(index = 1)
     public void updatePhone(String account, Long tenancyId, String phone) throws Exception {
         UserParam userParam = new UserParam();
-        userParam.setAccount(account);
+        userParam.setAccount(StringUtil.trimCompatibleNull(account));
         userParam.setTenancyId(tenancyId);
-        userParam.setPhone(phone);
+        userParam.setPhone(StringUtil.trimCompatibleNull(phone));
         userParam.setUserActionEnum(UserActionEnum.UPDATE_PHONE_BY_ACCOUNT);
         Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
         List<Info> infoList = response.getInfo();
@@ -135,7 +136,7 @@ public class UserInfoManageService extends BaseService {
     @TenancyIdentity(index = 1)
     public void updatePassword(String account, Long tenancyId, String newPassword, String originPassword) throws Exception {
         UserParam userParam = new UserParam();
-        userParam.setAccount(account);
+        userParam.setAccount(StringUtil.trimCompatibleNull(account));
         userParam.setTenancyId(tenancyId);
         userParam.setPassword(newPassword);
         userParam.setOriginPassword(originPassword);

@@ -36,7 +36,11 @@ dependencies {
 	// jackson
 	compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
     compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+    if (rootProject.dianrongRepoEnable) {
+        compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+    } else {
+        compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
+    }
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
 }
 
