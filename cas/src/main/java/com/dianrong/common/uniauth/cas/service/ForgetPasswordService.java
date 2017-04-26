@@ -34,8 +34,8 @@ public class ForgetPasswordService extends BaseService{
 	@TenancyIdentity(type=Type.CODE, index=1)
 	public UserDto checkUser(String accountId, String tenancyCode) throws Exception {
 	    LoginParam loginParam = new LoginParam();
-		loginParam.setAccount(accountId);
-		loginParam.setTenancyCode(tenancyCode);
+		loginParam.setAccount(StringUtil.trimCompatibleNull(accountId));
+		loginParam.setTenancyCode(StringUtil.trimCompatibleNull(tenancyCode));
 		Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);//.getSingleUser(userParam);
         List<Info> infoList = response.getInfo();
 
@@ -53,7 +53,7 @@ public class ForgetPasswordService extends BaseService{
 	@Deprecated
 	public void resetPassword(String email, Long tenancyId, String password) throws Exception {
 		UserParam userParam = new UserParam();
-		userParam.setEmail(email);
+		userParam.setEmail(StringUtil.trimCompatibleNull(email));
 		userParam.setPassword(password);
 		userParam.setTenancyId(tenancyId);
 		Response<Void> response = uarwFacade.getUserRWResource().resetPassword(userParam);
@@ -72,9 +72,9 @@ public class ForgetPasswordService extends BaseService{
 	public void resetPasswordByIdentity(String identity, Long tenancyId, String password) throws Exception {
 	    UserParam userParam = new UserParam();
 	    if(StringUtil.isPhoneNumber(identity)){
-	        userParam.setPhone(identity);
+	        userParam.setPhone(StringUtil.trimCompatibleNull(identity));
 	    }else if(StringUtil.isEmailAddress(identity)){
-	        userParam.setEmail(identity);
+	        userParam.setEmail(StringUtil.trimCompatibleNull(identity));
 	    }
 	    userParam.setPassword(password);
 	    userParam.setTenancyId(tenancyId);

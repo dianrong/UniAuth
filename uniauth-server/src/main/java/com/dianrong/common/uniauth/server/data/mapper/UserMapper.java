@@ -105,7 +105,7 @@ public interface UserMapper {
     List<User> getGroupOwners(Integer groupId);
 
     // userId + email + groupId
-    List<UserExt> getUsersByParentGrpIdByUserType(Map params);
+    List<UserExt> getUsersByParentGrpIdByUserType(Map<String, Object> params);
 
     List<User> selectByEmailOrPhone(Map<String, String> map);
 

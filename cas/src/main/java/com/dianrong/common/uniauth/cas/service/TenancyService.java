@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**
  * . 租户处理相关的service
@@ -45,7 +46,7 @@ public class TenancyService extends BaseService {
         Assert.notNull(tenancyCode, "tenancyCode can not be null");
         TenancyParam param = new TenancyParam();
         param.setStatus(AppConstants.STATUS_ENABLED);
-        param.setCode(tenancyCode);
+        param.setCode(StringUtil.trimCompatibleNull(tenancyCode));
         List<TenancyDto> tenancies = uniClientFacade.getTenancyResource().searchTenancy(param).getData();
         if (tenancies != null && !tenancies.isEmpty()) {
             return tenancies.get(0);

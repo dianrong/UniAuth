@@ -7,5 +7,5 @@ import com.dianrong.common.uniauth.server.data.entity.RolePermissionHolder;
 
 public interface LoginMapper {
 
-    List<RolePermissionHolder> selectRolePermission(Map map);
+    List<RolePermissionHolder> selectRolePermission(Map<String, Object> map);
 }
