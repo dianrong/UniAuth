@@ -15,13 +15,40 @@ plugins {
 	id "org.sonarqube" version "2.0.1"
 }
 
+ext {
+    dianrongRepoEnable = false
+    jackson_version_old = '2.8.8'
+    jackson_databind_version = '2.8.10-SNAPSHOT'
+}
+
+// Dianrong repo status set
+task checkDianrongRepoStatus()  {
+    URL url = new URL("http://nexus.dianrong.com/nexus/#welcome");
+    URLConnection rulConnection = url.openConnection();
+    HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+    httpUrlConnection.setReadTimeout(1000);
+    try {
+      def responseCode = httpUrlConnection.getResponseCode();
+       if (responseCode == 200 ) {
+            dianrongRepoEnable = true;
+       } else {
+            dianrongRepoEnable = false;
+       }
+    } catch(Exception ex) {
+            dianrongRepoEnable = false;
+    }
+    if (dianrongRepoEnable) {
+        println 'DianRong repository is enable'
+    } else {
+        println 'DianRong repository is unable'
+    }
+}
+
 allprojects {
     group = 'com.dianrong.common.uniauth'
     version = '1.0.97-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
-        jackson_version_old = '2.8.8'
-        jackson_databind_version = '2.8.10-SNAPSHOT'
     }
 
     apply plugin: 'java'
@@ -93,7 +120,12 @@ allprojects {
             // jackson
             dependency "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
             dependency "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
-            dependency "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+            if (rootProject.dianrongRepoEnable) {
+                dependency "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+            } else {
+                dependency "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
+            }
+            
             dependency 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
         }
 	}
@@ -154,7 +186,11 @@ project(':ss-client') {
 		
 		compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
-        compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+        if (rootProject.dianrongRepoEnable) {
+            compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+        } else {
+            compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
+        }
         compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
 	}
 
@@ -310,7 +346,11 @@ project(':cas') {
         // jackson
         compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
-        compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+        if (rootProject.dianrongRepoEnable) {
+            compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
+        } else {
+            compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
+        }
         compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
         
 		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
