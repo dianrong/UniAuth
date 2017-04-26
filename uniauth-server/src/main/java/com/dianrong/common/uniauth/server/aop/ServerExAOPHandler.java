@@ -22,7 +22,7 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.TenancyService;
 import com.dianrong.common.uniauth.server.support.apicontrl.CallerAccountHolder;
 import com.dianrong.common.uniauth.server.track.GlobalVar;
-import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
+import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
 
@@ -40,7 +40,7 @@ public class ServerExAOPHandler {
     private static final boolean IS_PRINT_STACKTRACE = true;
 
     @Autowired
-    private GlobalVarQueue globalVarQueue;
+    private GlobalVarQueueFacade globalVarQueue;
 
     @Autowired
     private TenancyService tenancyService;

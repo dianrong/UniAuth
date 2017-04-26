@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.track;
+package com.dianrong.common.uniauth.server.track.queue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +19,14 @@ import org.springframework.stereotype.Component;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.mapper.AuditMapper;
+import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.util.RegExpUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Component("globalVarQueueV2")
 @Slf4j
-public class GlobalVarQueue {
+public class GlobalVarQueueV2 {
 
     @Autowired
     private AuditMapper auditMapper;
@@ -49,7 +50,7 @@ public class GlobalVarQueue {
 
     private final Object lock = new Object();
 
-    private GlobalVarQueue() {
+    private GlobalVarQueueV2() {
         this.auditList = new ArrayList<>(AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE);
         // 启动定时任务
         Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(new Runnable() {

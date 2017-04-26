@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.track.GlobalVar;
-import com.dianrong.common.uniauth.server.track.GlobalVarQueue;
+import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
 
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServerMapperAOPHandler {
     @Autowired
-    private GlobalVarQueue globalVarQueue;
+    private GlobalVarQueueFacade globalVarQueue;
 
 //    @Autowired
 //    private TenancyService tenancyService;
