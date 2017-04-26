@@ -12,7 +12,7 @@ public class UsersToGroupExchangeNotifyInfo extends UsersToGroupNotifyInfo {
     private Integer targetGroupId;
     
     public UsersToGroupExchangeNotifyInfo() {
-        super.setNotifyInfoType(NotifyInfoType.USERS_TO_GROUP_EXCHANGE);
+        super.setType(NotifyInfoType.USERS_TO_GROUP_EXCHANGE);
     }
     
     public Integer getTargetGroupId() {

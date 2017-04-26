@@ -299,9 +299,9 @@ public class UserService extends TenancyBasedService {
             notifyInfo.setUserId(user.getId());
             // 只处理启用的情况
             if (status != null && status == AppConstants.STATUS_ENABLED) {
-                notifyInfo.setNotifyInfoType(NotifyInfoType.USER_ENABLE);
+                notifyInfo.setType(NotifyInfoType.USER_ENABLE);
             } else {
-                notifyInfo.setNotifyInfoType(NotifyInfoType.USER_DISABLE);
+                notifyInfo.setType(NotifyInfoType.USER_DISABLE);
             }
             uniauthNotify.notify(notifyInfo);
         }

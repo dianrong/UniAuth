@@ -15,23 +15,19 @@ public class BaseNotifyInfo implements NotifyInfo {
     /**
      * 异常类型
      */
-    protected NotifyInfoType notifyInfoType;
+    protected NotifyInfoType type;
 
     @Override
     public NotifyInfoType getType() {
-        if (this.notifyInfoType == null) {
+        if (this.type == null) {
             log.error("current NotifyInfo's notifyInfoType is null");
             throw new IllegalArgumentException("current NotifyInfo's notifyInfoType is null");
         }
-        return this.notifyInfoType;
+        return this.type;
     }
 
-    public BaseNotifyInfo setNotifyInfoType(NotifyInfoType notifyInfoType) {
-        this.notifyInfoType = notifyInfoType;
+    public BaseNotifyInfo setType(NotifyInfoType type) {
+        this.type = type;
         return this;
-    }
-
-    public NotifyInfoType getNotifyInfoType() {
-        return notifyInfoType;
     }
 }
