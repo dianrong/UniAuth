@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
+import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
 import java.util.List;
@@ -12,6 +13,7 @@ public interface GrpRoleMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     int countByExample(GrpRoleExample example);
 
     /**
@@ -52,6 +54,7 @@ public interface GrpRoleMapper {
      *
      * @mbggenerated Tue Jan 26 11:13:56 CST 2016
      */
+    @Timed
     List<GrpRoleKey> selectByExample(GrpRoleExample example);
 
     /**
