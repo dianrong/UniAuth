@@ -46,7 +46,7 @@ task checkDianrongRepoStatus()  {
 
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '1.0.97-SNAPSHOT'
+    version = '1.0.98-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
     }
