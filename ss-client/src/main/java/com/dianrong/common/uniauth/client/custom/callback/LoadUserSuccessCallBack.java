@@ -10,7 +10,7 @@ import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 public interface LoadUserSuccessCallBack {
 
     /**
-     * 登陆成功, load用户相信信息成功
+     * 登陆成功, load用户信息成功回调
      * 
      * @param userDetail 加载的用户详情(不会为空)
      */
