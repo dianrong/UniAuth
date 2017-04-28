@@ -55,7 +55,7 @@ public class GroupResource implements IGroupRWResource {
                     @ApiImplicitParam(name = "status", value = "状态", dataType = "string", paramType = "query", allowableValues = "0,1"),
                     @ApiImplicitParam(name = "needTag", value = "是否将关联的tag信息一块查出来", dataType = "boolean", paramType = "query"),
                     @ApiImplicitParam(name = "needUser", value = "是否将关联的user信息一块查出来", dataType = "boolean", paramType = "query"),
-                    @ApiImplicitParam(name = "needParentId", value = "是否将父组id也查出来", dataType = "boolean", paramType = "query"),})
+                    @ApiImplicitParam(name = "needParentId", value = "是否将父组id也查出来", dataType = "boolean", paramType = "query")})
     @Override
     @Timed
     public Response<PageDto<GroupDto>> queryGroup(GroupQuery groupQuery) {

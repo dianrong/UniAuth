@@ -64,7 +64,7 @@ public class PermissionService extends TenancyBasedService {
     private RoleCodeMapper roleCodeMapper;
     @Autowired
     private CommonService commonService;
-
+    
     /**
      * . 进行权限数据过滤的filter
      */
@@ -108,7 +108,7 @@ public class PermissionService extends TenancyBasedService {
 
         Permission permission = BeanConverter.convert(permissionParam, false);
         permission.setStatus(AppConstants.STATUS_ENABLED);
-        permission.setTenancyId(tenancyService.getTenancyIdWithCheck());
+        permission.setTenancyId(tenancyIdentityService.getTenancyIdWithCheck());
         permissionMapper.insert(permission);
 
         PermissionDto permissionDto = BeanConverter.convert(permission);
@@ -140,7 +140,7 @@ public class PermissionService extends TenancyBasedService {
         }
 
         Permission permission = BeanConverter.convert(permissionParam, true);
-        permission.setTenancyId(tenancyService.getTenancyIdWithCheck());
+        permission.setTenancyId(tenancyIdentityService.getTenancyIdWithCheck());
         permissionMapper.updateByPrimaryKey(permission);
     }
 
@@ -211,7 +211,7 @@ public class PermissionService extends TenancyBasedService {
         CheckEmpty.checkEmpty(permissionId, "权限ID");
         // 1. get all roles under the domain
         RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        roleExample.createCriteria().andDomainIdEqualTo(domainId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
         List<Role> roles = roleMapper.selectByExample(roleExample);
         if (CollectionUtils.isEmpty(roles)) {
             return null;
@@ -303,7 +303,7 @@ public class PermissionService extends TenancyBasedService {
         if (permTypeId != null) {
             criteria.andPermTypeIdEqualTo(permTypeId);
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        criteria.andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
         Integer totalCount = permissionMapper.countByExample(permissionExample);
         ParamCheck.checkPageParams(pageNumber, pageSize, totalCount);
         List<Permission> permissionList = permissionMapper.selectByExample(permissionExample);

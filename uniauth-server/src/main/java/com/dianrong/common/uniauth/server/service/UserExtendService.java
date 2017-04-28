@@ -52,7 +52,7 @@ public class UserExtendService extends TenancyBasedService {
         UserExtend userExtend = new UserExtend();
         userExtend.setCode(code);
         userExtend.setDescription(description);
-        userExtend.setTenancyId(tenancyService.getTenancyIdWithCheck());
+        userExtend.setTenancyId(tenancyIdentityService.getTenancyIdWithCheck());
         userExtendMapper.insertSelective(userExtend);
         UserExtendDto userExtendDto = BeanConverter.convert(userExtend, UserExtendDto.class);
         return userExtendDto;
@@ -111,7 +111,7 @@ public class UserExtendService extends TenancyBasedService {
         if (StringUtils.isNotBlank(code)) {
             criteria.andCodeLike('%' + code + '%');
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        criteria.andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
         // 查询
         int count = userExtendMapper.countByExample(example);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);

@@ -129,6 +129,6 @@ public class AuditService extends TenancyBasedService {
         if (!StringUtils.isEmpty(requestDomainCode)) {
             criteria.andRequestDomainCodeEqualTo(requestDomainCode);
         }
-        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        criteria.andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
     }
 }
