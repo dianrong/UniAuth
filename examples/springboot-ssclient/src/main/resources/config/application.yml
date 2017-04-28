@@ -1,4 +1,35 @@
+spring:
+  profiles:
+    active: local
+    
+---
+spring:
+  profiles: local
+
 DR_CFG_ZOOKEEPER_ENV_URL: "localhost:2181"
+domainCode: springboot-ssclient
+server: 
+  port: 8180
+  session:
+    timeout: 1200
+    
+---
+spring:
+  profiles: dev
+
+DR_CFG_ZOOKEEPER_ENV_URL: "10.18.19.64:12181"
+domainCode: springboot-ssclient-dev
+server: 
+  port: 8180
+  session:
+    timeout: 1200
+ 
+---
+spring:
+  profiles: demo
+
+DR_CFG_ZOOKEEPER_ENV_URL: "10.18.19.64:22181"
+
 server: 
   port: 8180
   session:
