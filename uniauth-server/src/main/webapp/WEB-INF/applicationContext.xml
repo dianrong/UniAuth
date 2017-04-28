@@ -31,20 +31,32 @@
     <!-- context -->
     <context:component-scan base-package="com.dianrong.common.uniauth.server" />
     
-    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
-        <property name="caches">
-            <set>
-                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="default"/>
-                </bean>
-                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="commonService"/>
-                </bean>
-                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="tenancy"/>
-                </bean>
-            </set>
-        </property>
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg ref="redisTemplate"/>
+        <property name="defaultExpiration"  value="#{uniauthConfig['redis.uniauth.expiration']?:'3600'}"/>
+    </bean>
+    
+    <!-- 配置redis -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <constructor-arg ref="connectionFactory"/>
+        <property name="valueSerializer" ref="jacksonSerializer"/>
+        <property name="hashValueSerializer" ref="jacksonSerializer"/>
+    </bean>
+    
+    <bean id="jacksonSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+        p:password="#{uniauthConfig['redis.password']?:'mypass1'}" p:database="#{uniauthConfig['redis.uniauth.database']?:'0'}">
+        <constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration"></constructor-arg>
+        <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
+     </bean>
+     
+     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <property name="maxIdle" value="200" />  
+        <property name="testOnBorrow" value="true" />  
     </bean>
 
+     <bean id="redisSentinelConfiguration" lazy-init="true" class="com.dianrong.common.uniauth.server.cache.RedisSentinelConfigurationHelper">
+        <constructor-arg name="master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></constructor-arg>
+        <constructor-arg name="sentinels" value="#{uniauthConfig['redis.sentinels']?:'10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000'}"></constructor-arg>
+    </bean>
 </beans>
