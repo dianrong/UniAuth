@@ -25,9 +25,6 @@ public class ServerMapperAOPHandler {
     @Autowired
     private GlobalVarQueueFacade globalVarQueue;
 
-//    @Autowired
-//    private TenancyService tenancyService;
-
      @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.insert*(..)) ")
      public void insertMappers() {}
     
@@ -37,13 +34,13 @@ public class ServerMapperAOPHandler {
      @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.delete*(..)) ")
      public void deleteMappers() {}
 
-//    @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.*(..)) ")
-//    public void mappers() {}
+    @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.*(..)) ")
+    public void mappers() {}
 
     @Pointcut(value = "!execution(public * com.dianrong.common.uniauth.server.data.mapper.AuditMapper.*(..))")
     public void notAuditMapper() {}
 
-    @Around("notAuditMapper() && insertMappers() && updateMappers() && deleteMappers()")
+    @Around("notAuditMapper() && (insertMappers() || updateMappers() || deleteMappers())")
     public Object interceptMapper(ProceedingJoinPoint joinPoint) throws Throwable {
         GlobalVar origin = RequestManager.getGlobalVar();
         if (origin == null)
