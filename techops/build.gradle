@@ -146,8 +146,10 @@ dependencies {
 
 loadConfiguration()
 
-task printProps << {
-    println "frontend.apiBase: $config.frontend.apibase"
+task printProps {
+    doLast {
+        println "frontend.apiBase: $config.frontend.apibase"
+    }
 }
 
 def loadConfiguration() {

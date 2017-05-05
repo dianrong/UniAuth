@@ -80,7 +80,7 @@ dependencies {
             exclude group: 'org.springframework', module: 'spring-expression'
             exclude group: 'org.springframework', module: 'spring-oxm'
             exclude group: 'org.springframework', module: 'spring-tx'
-        }
+    }
        
     compile 'redis.clients:jedis:2.8.2' 
 }
