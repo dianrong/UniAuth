@@ -235,6 +235,6 @@ public class UserExtInfo implements UserDetails {
     
     @Override
     public String toString() {
-        return this.getUserDto().toString();
+        return this.getCurrentDomainUserExtInfo().toString();
     }
 }
