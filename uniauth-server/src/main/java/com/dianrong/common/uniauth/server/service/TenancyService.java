@@ -66,7 +66,7 @@ public class TenancyService {
      * @param tenancyCode tenancyCode, not null
      * @return 根据tenancyCode查找的租户信息
      */
-    @Cacheable(value = "tenancy", key = "#tenancyCode")
+    @Cacheable(value = "tenancy", key = "'tenancy:' + #tenancyCode")
     public TenancyDto getEnableTenancyByCode(String tenancyCode) {
         Assert.notNull(tenancyCode);
         TenancyExample example = new TenancyExample();

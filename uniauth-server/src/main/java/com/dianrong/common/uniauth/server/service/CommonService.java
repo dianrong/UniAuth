@@ -23,7 +23,7 @@ public class CommonService {
     @Autowired
     private RoleCodeMapper roleCodeMapper;
 
-    @Cacheable(value = "commonService", key="'permType'")
+    @Cacheable(value = "commonService", key="'commonService:permType'")
     public Map<Integer, PermType> getPermTypeMap() {
         Map<Integer, PermType> permTypeMap = new HashMap<Integer, PermType>();
         PermTypeExample example = new PermTypeExample();
@@ -36,7 +36,7 @@ public class CommonService {
         return permTypeMap;
     }
 
-    @Cacheable(value = "commonService", key="'roleCode'")
+    @Cacheable(value = "commonService", key="'commonService:roleCode'")
     public Map<Integer, RoleCode> getRoleCodeMap() {
         Map<Integer, RoleCode> roleCodeMap = new HashMap<Integer, RoleCode>();
         RoleCodeExample example = new RoleCodeExample();
