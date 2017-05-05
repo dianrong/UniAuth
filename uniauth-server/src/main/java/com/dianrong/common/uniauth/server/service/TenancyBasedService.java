@@ -6,11 +6,4 @@ public class TenancyBasedService {
     @Autowired
     protected TenancyService tenancyService;
 
-    public TenancyService getTenancyService() {
-        return tenancyService;
-    }
-
-    public void setTenancyService(TenancyService tenancyService) {
-        this.tenancyService = tenancyService;
-    }
 }

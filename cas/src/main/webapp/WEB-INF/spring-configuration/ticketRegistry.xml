@@ -55,7 +55,7 @@
         <constructor-arg index="1" value="7200" />
         <constructor-arg index="2" value="10" />
         <property name="registryHolder">
-        	<bean class="com.dianrong.common.uniauth.cas.registry.support.SerialzableServiceTicketRedisRegistryHolder" p:serviceTicketExpirationPolicy-ref="serviceTicketExpirationPolicy"/>
+            <bean class="com.dianrong.common.uniauth.cas.registry.support.SerialzableServiceTicketRedisRegistryHolder" p:serviceTicketExpirationPolicy-ref="serviceTicketExpirationPolicy"/>
         </property>
     </bean>
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
@@ -74,14 +74,26 @@
         <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
      </bean>
 
-     <bean id="redisSentinelConfiguration" lazy-init="true" class="com.dianrong.common.uniauth.cas.registry.support.RedisSentinelConfigurationHelper">
-        <constructor-arg name="master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></constructor-arg>
-        <constructor-arg name="sentinels" value="#{uniauthConfig['redis.sentinels']?:'10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000'}"></constructor-arg>
+     <bean id="redisSentinelConfiguration"  lazy-init="true" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+        <constructor-arg ref="mapPropertySource"></constructor-arg>
+    </bean>
+    <bean id="mapPropertySource" class="org.springframework.core.env.MapPropertySource">
+        <constructor-arg name="name" value="RedisSentinelConfiguration"></constructor-arg>
+        <constructor-arg name="source">
+            <map>
+                <entry key="spring.redis.sentinel.master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></entry>
+                <entry key="spring.redis.sentinel.nodes" value="#{uniauthConfig['redis.sentinels']?:'10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000'}"></entry>
+            </map>
+        </constructor-arg>
     </bean>
      
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
         p:connection-factory-ref="connectionFactory">
+        <property name="keySerializer" ref="stringRedisSerializer"/>
+        <property name="hashKeySerializer" ref="stringRedisSerializer"/>
     </bean>
+    <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+    
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->

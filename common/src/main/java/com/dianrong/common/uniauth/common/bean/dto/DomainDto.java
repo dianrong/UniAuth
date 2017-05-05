@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 public class DomainDto implements Serializable {
     private static final long serialVersionUID = -7455679107780186680L;
     private Integer id;
@@ -127,12 +130,5 @@ public class DomainDto implements Serializable {
     public DomainDto setIsCustomizedLoginPage(Boolean isCustomizedLoginPage) {
         this.isCustomizedLoginPage = isCustomizedLoginPage;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "DomainDto [id=" + id + ", code=" + code + ", displayName=" + displayName + ", description=" + description + ", status=" + status + ", createDate=" + createDate
-                + ", lastUpdate=" + lastUpdate + ", roleList=" + roleList + ", stakeholderList=" + stakeholderList + ", zkDomainUrl=" + zkDomainUrl + ", zkDomainUrlEncoded="
-                + zkDomainUrlEncoded + ", isCustomizedLoginPage=" + isCustomizedLoginPage + "]";
     }
 }

@@ -7,11 +7,13 @@ import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 /**
  * Created by Arc on 13/1/16.
  */
 @ApiModel("用户信息")
+@ToString
 public class UserDto extends TenancyBaseDto {
     private static final long serialVersionUID = -1969133233179816584L;
 
@@ -195,12 +197,5 @@ public class UserDto extends TenancyBaseDto {
             }
         }
         return userExtendValMap.get(code);
-    }
-
-    @Override
-    public String toString() {
-        return "UserDto [id=" + id + ", name=" + name + ", password=" + password + ", passwordSalt=" + passwordSalt + ", email=" + email + ", phone=" + phone + ", createDate="
-                + createDate + ", lastUpdate=" + lastUpdate + ", status=" + status + ", userGroupType=" + userGroupType + ", tagDtos=" + tagDtos + ", userExtendValDtos="
-                + userExtendValDtos + ", userExtendValMap=" + userExtendValMap + ", roleChecked=" + roleChecked + ", tagChecked=" + tagChecked + "]";
     }
 }

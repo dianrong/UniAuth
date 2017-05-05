@@ -4,14 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 
 /**
  * . 租户处理相关的service
@@ -43,18 +42,15 @@ public class TenancyService extends BaseService {
      * @return tenancy or null
      */
     public TenancyDto getTenancyByCode(String tenancyCode) {
-        Assert.notNull(tenancyCode, "tenancyCode can not be null");
         TenancyParam param = new TenancyParam();
-        param.setStatus(AppConstants.STATUS_ENABLED);
-        param.setCode(StringUtil.trimCompatibleNull(tenancyCode));
-        List<TenancyDto> tenancies = uniClientFacade.getTenancyResource().searchTenancy(param).getData();
-        if (tenancies != null && !tenancies.isEmpty()) {
-            return tenancies.get(0);
-        }
-        return null;
+        param.setCode(tenancyCode);
+        return uniClientFacade.getTenancyResource().queryEnableTenancyByCode(param).getData();
     }
 
-    // 初期的租户需要一个默认的租户，即点融网
+    /**
+     * 获取uniauth默认的租户的信息, 即点融网
+     * @return 默认的TenancyDto
+     */
     public TenancyDto getDefaultTenancy() {
         if (this.defaultTenancy == null) {
             synchronized (lock) {
@@ -71,7 +67,7 @@ public class TenancyService extends BaseService {
         if (temp != null) {
             return temp.getCode();
         }
-        throw new RuntimeException("default Tenancy can not be null");
+        throw new UniauthCommonException("default Tenancy can not be null");
     }
 
     public boolean isDefaultTenancy(String tenancyCode) {

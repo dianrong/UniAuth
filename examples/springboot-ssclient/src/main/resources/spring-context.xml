@@ -16,12 +16,12 @@
 						http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 	<import resource="classpath:ss-uniauth-client.xml" />
 
-	<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
-		<property name="domainCode" value="springboot-ssclient"></property>
-		<property name="userInfoClass" value="com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo"></property>
-		<property name="rejectPublicInvocations" value="false"></property>
-		<property name="customizedLoginRedirecUrl"  value="/content"></property>
-	</bean>
+<!-- 	<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine"> -->
+<!-- 		<property name="domainCode" value="springboot-ssclient"></property> -->
+<!-- 		<property name="userInfoClass" value="com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo"></property> -->
+<!-- 		<property name="rejectPublicInvocations" value="false"></property> -->
+<!-- 		<property name="customizedLoginRedirecUrl"  value="/content"></property> -->
+<!-- 	</bean> -->
 
 <!-- 	<sec:http pattern="/js/**" security="none" /> -->
 <!-- 	<sec:http pattern="/favicon.ico" security="none" /> -->

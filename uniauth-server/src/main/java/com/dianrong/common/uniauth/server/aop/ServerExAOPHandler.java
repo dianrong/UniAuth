@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.common.bean.Info;
@@ -34,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Component
 @Slf4j
-@Order(0)
 public class ServerExAOPHandler {
     // todo: should migrate to zoo keeper
     private static final boolean IS_PRINT_STACKTRACE = true;
@@ -54,12 +52,13 @@ public class ServerExAOPHandler {
         if (origin == null) {
             return joinPoint.proceed();
         }
+        Long tenancyId = tenancyService.getOneCanUsedTenancyId();
+        origin.setTenancyId(tenancyId);
         GlobalVar gv = null;
         try {
             origin.setRequestDomainCode(CallerAccountHolder.get());
             gv = (GlobalVar) origin.clone();
             gv.setReqDate(new Date());
-            gv.setTenancyId(tenancyService.getOneCanUsedTenancyId());
             gv.setMapper(joinPoint.getSignature().getDeclaringType().getSimpleName());
             String invokeMethod = joinPoint.getSignature().getName();
             gv.setMethod(invokeMethod);

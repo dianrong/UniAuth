@@ -18,25 +18,20 @@ import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.service.cache.TenancyCache;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class TenancyService {
     @Autowired
     private TenancyMapper tenancyMapper;
 
     @Resource(name = "uniauthConfig")
     private Map<String, String> allZkNodeMap;
-
-    /**
-     * . 默认使用的tenancy
-     */
-    private volatile TenancyDto defaultTenancy;
-    private Object lock = new Object();
+    
+    @Autowired
+    private TenancyCache tenancyCache;
 
     public List<TenancyDto> getAllTenancy(Long id, String code, Byte status, String name, String contactName, String phone, String description) {
         TenancyExample example = new TenancyExample();
@@ -71,19 +66,7 @@ public class TenancyService {
         }
         return tenancyDtoList;
     }
-
-    // 初期的租户需要一个默认的租户，即点融网
-    public TenancyDto getDefaultTenancy() {
-        if (this.defaultTenancy == null) {
-            synchronized (lock) {
-                if (this.defaultTenancy == null) {
-                    this.defaultTenancy = _getDefaultTenancy();
-                }
-            }
-        }
-        return this.defaultTenancy;
-    }
-
+    
     /**
      * . 获取一个可用的租户id
      * 
@@ -103,6 +86,15 @@ public class TenancyService {
     }
 
     /**
+     * 根据租户编码获取一个启用的租户
+     * @param tenancyCode 租户编码
+     * @return 租户信息
+     */
+    public TenancyDto getEnableTenancyByCode(String tenancyCode) {
+        return tenancyCache.getEnableTenancyByCode(tenancyCode);
+    }
+    
+    /**
      * . 获取一个可用的租户id 优先级为：tenancyId -> tenancyCode
      * 
      * @return tenancyId for current thread
@@ -113,54 +105,24 @@ public class TenancyService {
             return _id;
         }
         String tenancyCode = (String) CxfHeaderHolder.TENANCYCODE.get();
-        TenancyDto dto = getEnableTenancyByCode(tenancyCode);
-        if (dto != null) {
-            return dto.getId();
+        if (StringUtils.hasText(tenancyCode)) {
+            TenancyDto dto = tenancyCache.getEnableTenancyByCode(tenancyCode);
+            if (dto != null) {
+                return dto.getId();
+            }
         }
         if (check) {
             if (checkTenancyIdentity()) {
                 throw new AppException(InfoName.TENANCY_IDENTITY_REQUIRED, UniBundle.getMsg("common.parameter.tenancyidentity.required"));
             } else {
-                return getDefaultTenancy().getId();
+                return tenancyCache.getEnableTenancyByCode(AppConstants.DEFAULT_TANANCY_CODE).getId();
             }
         }
         return AppConstants.TENANCY_UNRELATED_TENANCY_ID;
     }
-
+    
     /**
-     * . 根据tenancyCode 查询 可用的租户信息
-     * 
-     * @param tenancyCode tenancyCode, not null
-     * @return
-     */
-    public TenancyDto getEnableTenancyByCode(String tenancyCode) {
-        if (!StringUtils.hasText(tenancyCode)) {
-            return null;
-        }
-        TenancyExample example = new TenancyExample();
-        TenancyExample.Criteria criteria = example.createCriteria();
-        criteria.andCodeEqualTo(tenancyCode).andStatusEqualTo(AppConstants.STATUS_ENABLED);
-        List<Tenancy> tenancyList = tenancyMapper.selectByExample(example);
-        if (tenancyList != null && !tenancyList.isEmpty()) {
-            return BeanConverter.convert(tenancyList.get(0));
-        }
-        return null;
-    }
-
-    private TenancyDto _getDefaultTenancy() {
-        TenancyExample example = new TenancyExample();
-        TenancyExample.Criteria criteria = example.createCriteria();
-        criteria.andCodeEqualTo(AppConstants.DEFAULT_TANANCY_CODE).andStatusEqualTo(AppConstants.STATUS_ENABLED);
-        List<Tenancy> tenancyList = tenancyMapper.selectByExample(example);
-        if (tenancyList != null && !tenancyList.isEmpty()) {
-            return BeanConverter.convert(tenancyList.get(0));
-        }
-        log.error("can not find default tenancy, the default tenancy code is " + AppConstants.DEFAULT_TANANCY_CODE);
-        return null;
-    }
-
-    /**
-     * a switch to control check tenancyIdentity forcibly
+     * A switch to control check tenancyIdentity forcibly
      * 
      * @return true or false
      */

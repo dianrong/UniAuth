@@ -110,7 +110,7 @@ public class GroupService extends TenancyBasedService {
 
     @Autowired
     private UniauthNotify uniauthNotify;
-
+    
     /**
      * 进行组数据过滤的filter
      */

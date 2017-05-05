@@ -18,9 +18,7 @@ public abstract class MultiTenancyCheck extends AbstractDataFilter {
     }
 
     /**
-     * . 获取当前的租户id
-     * 
-     * @return
+     *  获取当前的租户id
      */
     public Long getTenancyId() {
         return tenancyService.getTenancyIdWithCheck();
