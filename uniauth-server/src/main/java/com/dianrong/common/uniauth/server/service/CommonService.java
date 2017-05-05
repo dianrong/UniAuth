@@ -1,49 +1,51 @@
 package com.dianrong.common.uniauth.server.service;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
-import com.dianrong.common.uniauth.server.data.entity.PermTypeExample;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
-import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
-import com.dianrong.common.uniauth.server.data.mapper.PermTypeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.service.cache.CommonCache;
+import com.google.common.collect.Maps;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class CommonService {
 
     @Autowired
-    private PermTypeMapper permTypeMapper;
-    @Autowired
-    private RoleCodeMapper roleCodeMapper;
+    private CommonCache commonCache;
 
-    @Cacheable(value = "commonService", key="'commonService:permType'")
     public Map<Integer, PermType> getPermTypeMap() {
-        Map<Integer, PermType> permTypeMap = new HashMap<Integer, PermType>();
-        PermTypeExample example = new PermTypeExample();
-        List<PermType> permTypeList = permTypeMapper.selectByExample(example);
-        if (permTypeList != null && !permTypeList.isEmpty()) {
-            for (PermType permType : permTypeList) {
-                permTypeMap.put(permType.getId(), permType);
+        Map<String, PermType> permMap = commonCache.getPermTypeMap();
+        Map<Integer, PermType> permTypeMap = Maps.newHashMap();
+        for(Entry<String, PermType> entry : permMap.entrySet()) {
+            String key = entry.getKey();
+            Integer integerKey = StringUtil.tryToTranslateStrToInt(key);
+            if (integerKey != null) {
+                permTypeMap.put(integerKey, entry.getValue());
+            } else {
+                log.error("{} is not valid a permission id", key);
             }
         }
         return permTypeMap;
     }
 
-    @Cacheable(value = "commonService", key="'commonService:roleCode'")
     public Map<Integer, RoleCode> getRoleCodeMap() {
-        Map<Integer, RoleCode> roleCodeMap = new HashMap<Integer, RoleCode>();
-        RoleCodeExample example = new RoleCodeExample();
-        List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
-        if (roleCodeList != null && !roleCodeList.isEmpty()) {
-            for (RoleCode rc : roleCodeList) {
-                roleCodeMap.put(rc.getId(), rc);
+        Map<String, RoleCode> roleMap = commonCache.getRoleCodeMap();
+        Map<Integer, RoleCode> roleCodeMap = Maps.newHashMap();
+        for(Entry<String, RoleCode> entry : roleMap.entrySet()) {
+            String key = entry.getKey();
+            Integer integerKey = StringUtil.tryToTranslateStrToInt(key);
+            if (integerKey != null) {
+                roleCodeMap.put(integerKey, entry.getValue());
+            } else {
+                log.error("{} is not valid a role id", key);
             }
         }
         return roleCodeMap;

@@ -7,16 +7,20 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
+import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.service.cache.TenancyCache;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 
 @Service
 public class TenancyService {
@@ -25,6 +29,9 @@ public class TenancyService {
 
     @Resource(name = "uniauthConfig")
     private Map<String, String> allZkNodeMap;
+    
+    @Autowired
+    private TenancyCache tenancyCache;
 
     public List<TenancyDto> getAllTenancy(Long id, String code, Byte status, String name, String contactName, String phone, String description) {
         TenancyExample example = new TenancyExample();
@@ -59,23 +66,67 @@ public class TenancyService {
         }
         return tenancyDtoList;
     }
+    
+    /**
+     * . 获取一个可用的租户id
+     * 
+     * @return tenancyId for current thread
+     */
+    public Long getOneCanUsedTenancyId() {
+        return getTenancyId(false);
+    }
 
     /**
-     * . 根据tenancyCode 查询 可用的租户信息
+     * . 获取一个租户id，并且必须是有效值
      * 
-     * @param tenancyCode tenancyCode, not null
-     * @return 根据tenancyCode查找的租户信息
+     * @return tenancyId for current thread
      */
-    @Cacheable(value = "tenancy", key = "'tenancy:' + #tenancyCode")
+    public Long getTenancyIdWithCheck() {
+        return getTenancyId(true);
+    }
+
+    /**
+     * 根据租户编码获取一个启用的租户
+     * @param tenancyCode 租户编码
+     * @return 租户信息
+     */
     public TenancyDto getEnableTenancyByCode(String tenancyCode) {
-        Assert.notNull(tenancyCode);
-        TenancyExample example = new TenancyExample();
-        TenancyExample.Criteria criteria = example.createCriteria();
-        criteria.andCodeEqualTo(tenancyCode).andStatusEqualTo(AppConstants.STATUS_ENABLED);
-        List<Tenancy> tenancyList = tenancyMapper.selectByExample(example);
-        if (tenancyList != null && !tenancyList.isEmpty()) {
-            return BeanConverter.convert(tenancyList.get(0));
+        return tenancyCache.getEnableTenancyByCode(tenancyCode);
+    }
+    
+    /**
+     * . 获取一个可用的租户id 优先级为：tenancyId -> tenancyCode
+     * 
+     * @return tenancyId for current thread
+     */
+    private Long getTenancyId(boolean check) {
+        Long _id = (Long) CxfHeaderHolder.TENANCYID.get();
+        if (_id != null) {
+            return _id;
         }
-        return null;
+        String tenancyCode = (String) CxfHeaderHolder.TENANCYCODE.get();
+        if (StringUtils.hasText(tenancyCode)) {
+            TenancyDto dto = tenancyCache.getEnableTenancyByCode(tenancyCode);
+            if (dto != null) {
+                return dto.getId();
+            }
+        }
+        if (check) {
+            if (checkTenancyIdentity()) {
+                throw new AppException(InfoName.TENANCY_IDENTITY_REQUIRED, UniBundle.getMsg("common.parameter.tenancyidentity.required"));
+            } else {
+                return tenancyCache.getEnableTenancyByCode(AppConstants.DEFAULT_TANANCY_CODE).getId();
+            }
+        }
+        return AppConstants.TENANCY_UNRELATED_TENANCY_ID;
+    }
+    
+    /**
+     * A switch to control check tenancyIdentity forcibly
+     * 
+     * @return true or false
+     */
+    private boolean checkTenancyIdentity() {
+        return "true".equalsIgnoreCase(allZkNodeMap.get(AppConstants.CHECK_TENANCY_IDENTITY_FORCIBLY));
     }
 }

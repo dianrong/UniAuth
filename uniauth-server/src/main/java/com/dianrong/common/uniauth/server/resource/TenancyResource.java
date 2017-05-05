@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
 public class TenancyResource implements ITenancyRWResource {
 
     @Autowired
-    private TenancyService tanancyService;
+    private TenancyService tenancyService;
 
     @ApiOperation("根据查询条件查询租户信息")
     @ApiImplicitParams(
@@ -39,7 +39,7 @@ public class TenancyResource implements ITenancyRWResource {
     @Override
     @Timed
     public Response<List<TenancyDto>> searchTenancy(TenancyParam tenancyParam) {
-        List<TenancyDto> tenancyDtoList = tanancyService.getAllTenancy(tenancyParam.getId(), tenancyParam.getCode(), tenancyParam.getStatus(), tenancyParam.getName(),
+        List<TenancyDto> tenancyDtoList = tenancyService.getAllTenancy(tenancyParam.getId(), tenancyParam.getCode(), tenancyParam.getStatus(), tenancyParam.getName(),
                 tenancyParam.getContactName(), tenancyParam.getPhone(), tenancyParam.getDescription());
         return new Response<List<TenancyDto>>(tenancyDtoList);
     }
@@ -48,7 +48,7 @@ public class TenancyResource implements ITenancyRWResource {
     @ApiImplicitParams(value = {})
     @Override
     public Response<TenancyDto> queryDefaultTenancy() {
-        return new Response<TenancyDto>(tanancyService.getEnableTenancyByCode(AppConstants.DEFAULT_TANANCY_CODE));
+        return new Response<TenancyDto>(tenancyService.getEnableTenancyByCode(AppConstants.DEFAULT_TANANCY_CODE));
     }
 
     @ApiOperation("根据租户编码查询可用的租户信息")
@@ -61,6 +61,6 @@ public class TenancyResource implements ITenancyRWResource {
         if (!StringUtils.hasLength(tenancyCode)) {
             return Response.success(null);
         }
-        return new Response<TenancyDto>(tanancyService.getEnableTenancyByCode(tenancyCode));
+        return new Response<TenancyDto>(tenancyService.getEnableTenancyByCode(tenancyCode));
     }
 }

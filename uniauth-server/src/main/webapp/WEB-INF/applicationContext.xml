@@ -40,10 +40,11 @@
     <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
         <constructor-arg ref="connectionFactory"/>
         <property name="valueSerializer" ref="jacksonSerializer"/>
+        <property name="hashKeySerializer" ref="jacksonSerializer"/>
         <property name="hashValueSerializer" ref="jacksonSerializer"/>
     </bean>
-    
     <bean id="jacksonSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
+    
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
         p:password="#{uniauthConfig['redis.password']?:'mypass1'}" p:database="#{uniauthConfig['redis.uniauth.database']?:'0'}">
         <constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration"></constructor-arg>

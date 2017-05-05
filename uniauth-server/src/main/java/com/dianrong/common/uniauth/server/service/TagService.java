@@ -93,7 +93,7 @@ public class TagService extends TenancyBasedService {
         if (!StringUtils.isEmpty(fuzzyTagCode)) {
             criteria.andCodeLike("%" + fuzzyTagCode + "%");
         }
-        criteria.andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
 
         if (userId != null) {
             UserTagExample userTagExample = new UserTagExample();
@@ -120,7 +120,7 @@ public class TagService extends TenancyBasedService {
             }
             if (domainCode != null) {
                 DomainExample domainExample = new DomainExample();
-                domainExample.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+                domainExample.createCriteria().andCodeEqualTo(domainCode).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
                 List<Domain> domains = domainMapper.selectByExample(domainExample);
                 if (!CollectionUtils.isEmpty(domains)) {
                     for (Domain domain : domains) {
@@ -131,7 +131,7 @@ public class TagService extends TenancyBasedService {
                 }
             }
             TagTypeExample tagTypeExample = new TagTypeExample();
-            tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds).andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+            tagTypeExample.createCriteria().andDomainIdIn(unionDomainIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
             List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
             if (!CollectionUtils.isEmpty(tagTypes)) {
                 List<Integer> tagTypeIds = new ArrayList<>();
@@ -188,7 +188,7 @@ public class TagService extends TenancyBasedService {
         tag.setTagTypeId(tagTypeId);
         tag.setDescription(description);
         tag.setCode(code);
-        tag.setTenancyId(tenancyIdentityService.getTenancyIdWithCheck());
+        tag.setTenancyId(tenancyService.getTenancyIdWithCheck());
         tagMapper.insert(tag);
         return BeanConverter.convert(tag);
     }
@@ -231,7 +231,7 @@ public class TagService extends TenancyBasedService {
         if (code != null) {
             criteria.andCodeEqualTo(code);
         }
-        criteria.andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
         if (!CollectionUtils.isEmpty(tagTypes)) {
             List<TagTypeDto> tagTypeDtos = new ArrayList<>();
@@ -252,7 +252,7 @@ public class TagService extends TenancyBasedService {
         TagType tagType = new TagType();
         tagType.setDomainId(domainId);
         tagType.setCode(code);
-        tagType.setTenancyId(tenancyIdentityService.getTenancyIdWithCheck());
+        tagType.setTenancyId(tenancyService.getTenancyIdWithCheck());
         tagTypeMapper.insert(tagType);
         return BeanConverter.convert(tagType);
     }
@@ -284,14 +284,14 @@ public class TagService extends TenancyBasedService {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.notfound", tagTypeId, TagType.class.getSimpleName()));
         }
         TagExample tagExample = new TagExample();
-        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+        tagExample.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         int count = tagMapper.countByExample(tagExample);
         if (count > 0) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("tagtype.delete.linked-tag.error"));
         }
 
         TagExample tagExample2 = new TagExample();
-        tagExample2.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_DISABLED).andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+        tagExample2.createCriteria().andTagTypeIdEqualTo(tagTypeId).andStatusEqualTo(AppConstants.STATUS_DISABLED).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<Tag> tags = tagMapper.selectByExample(tagExample2);
         if (!CollectionUtils.isEmpty(tags)) {
             List<Integer> tagIds = new ArrayList<>();

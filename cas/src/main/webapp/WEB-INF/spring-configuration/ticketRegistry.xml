@@ -55,7 +55,7 @@
         <constructor-arg index="1" value="7200" />
         <constructor-arg index="2" value="10" />
         <property name="registryHolder">
-        	<bean class="com.dianrong.common.uniauth.cas.registry.support.SerialzableServiceTicketRedisRegistryHolder" p:serviceTicketExpirationPolicy-ref="serviceTicketExpirationPolicy"/>
+            <bean class="com.dianrong.common.uniauth.cas.registry.support.SerialzableServiceTicketRedisRegistryHolder" p:serviceTicketExpirationPolicy-ref="serviceTicketExpirationPolicy"/>
         </property>
     </bean>
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
@@ -81,7 +81,11 @@
      
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
         p:connection-factory-ref="connectionFactory">
+        <property name="keySerializer" ref="stringRedisSerializer"/>
+        <property name="hashKeySerializer" ref="stringRedisSerializer"/>
     </bean>
+    <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+    
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->

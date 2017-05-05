@@ -18,7 +18,7 @@ import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.service.support.TenancyIdentityService;
+import com.dianrong.common.uniauth.server.service.TenancyService;
 import com.dianrong.common.uniauth.server.support.apicontrl.CallerAccountHolder;
 import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
@@ -41,7 +41,7 @@ public class ServerExAOPHandler {
     private GlobalVarQueueFacade globalVarQueue;
 
     @Autowired
-    private TenancyIdentityService tenancyIdentityService;
+    private TenancyService tenancyService;
 
     @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.resource.*.*(..))")
     public void anyServerResources() {}
@@ -52,7 +52,7 @@ public class ServerExAOPHandler {
         if (origin == null) {
             return joinPoint.proceed();
         }
-        Long tenancyId = tenancyIdentityService.getOneCanUsedTenancyId();
+        Long tenancyId = tenancyService.getOneCanUsedTenancyId();
         origin.setTenancyId(tenancyId);
         GlobalVar gv = null;
         try {

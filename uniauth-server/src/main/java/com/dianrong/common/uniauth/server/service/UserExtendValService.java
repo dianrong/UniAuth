@@ -76,7 +76,7 @@ public class UserExtendValService extends TenancyBasedService {
         userExtendVal.setStatus(status);
         userExtendVal.setUserId(userId);
         userExtendVal.setValue(value);
-        userExtendVal.setTenancyId(tenancyIdentityService.getTenancyIdWithCheck());
+        userExtendVal.setTenancyId(tenancyService.getTenancyIdWithCheck());
 
         userExtendValMapper.insertSelective(userExtendVal);
 
@@ -144,7 +144,7 @@ public class UserExtendValService extends TenancyBasedService {
         if (status != null) {
             criteria.andStatusEqualTo(status);
         }
-        criteria.andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
 
         List<UserExtendVal> userExtendVals = userExtendValMapper.selectByExample(example);
         List<UserExtendValDto> userExtendValDtos = new ArrayList<UserExtendValDto>();
@@ -178,7 +178,7 @@ public class UserExtendValService extends TenancyBasedService {
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", userId.toString());
         params.put("extendCode", code == null ? null : '%' + code + '%');
-        params.put("tenancyId", tenancyIdentityService.getTenancyIdWithCheck().toString());
+        params.put("tenancyId", tenancyService.getTenancyIdWithCheck().toString());
 
         int count = queryOnlyUsed ? userExtendValMapper.countByUserExtend(params) : userExtendValMapper.countByCode(params);
         ParamCheck.checkPageParams(pageNumber, pageSize, count);
@@ -216,7 +216,7 @@ public class UserExtendValService extends TenancyBasedService {
         if (status != null) {
             criteria.andStatusEqualTo(status);
         }
-        criteria.andTenancyIdEqualTo(tenancyIdentityService.getTenancyIdWithCheck());
+        criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
         List<UserExtendVal> userExtendVals = userExtendValMapper.selectByExample(example);
 
         List<UserExtendValDto> userExtendValDtos = Lists.newArrayList();
