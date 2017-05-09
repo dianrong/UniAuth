@@ -34,7 +34,7 @@
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
         <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
+          <trim prefixOverrides="and" >
             <foreach collection="criteria.criteria" item="criterion" >
               <choose >
                 <when test="criterion.noValue" >
@@ -45,6 +45,9 @@
                 </when>
                 <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.fullTextIndexMatch" >
+                  and match(${criterion.condition}) against(#{criterion.value} IN BOOLEAN MODE)
                 </when>
                 <when test="criterion.listValue" >
                   and ${criterion.condition}

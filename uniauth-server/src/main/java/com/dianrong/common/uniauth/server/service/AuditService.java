@@ -85,7 +85,7 @@ public class AuditService extends TenancyBasedService {
         }
 
         if (!StringUtils.isEmpty(reqParam)) {
-            criteria.andReqParamLike("%" + reqParam + "%");
+            criteria.andReqParamFullTextIndexMatch(reqParam);
         }
         if (!StringUtils.isEmpty(reqResult)) {
             criteria.andReqResultLike("%" + reqResult + "%");
