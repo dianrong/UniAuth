@@ -209,10 +209,10 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 /com/dianrong/cfg/1.0.0/uniauth/domains.xxx http://localhost:8100/techops/
 
 # 如果xxx系统采用自定义登陆页面，则此处配置其自定义登陆页面地址。
-/com/dianrong/cfg/1.0.0/uniauth/domainx.xxx.loginPage http://localhost:8100/techops/login.jsp
+/com/dianrong/cfg/1.0.0/uniauth/domains.xxx.loginPage http://localhost:8100/techops/login.jsp
 
 # 如果xxx系统在进行st认证失败的时候跳转到失败页面（需要客户端集成做一些配置）。
-/com/dianrong/cfg/1.0.0/uniauth/domainx.xxx.auth_fail_url http://localhost:8100/techops/login_fail.jsp
+/com/dianrong/cfg/1.0.0/uniauth/domains.xxx.auth_fail_url http://localhost:8100/techops/login_fail.jsp
 
 # 明确指定是否在uniauth登陆页能跳转到xxx系统的登陆页（是否出现选项框中），例如：true
 /com/dianrong/cfg/1.0.0/uniauth/domains.xxx.showInHomePage true
