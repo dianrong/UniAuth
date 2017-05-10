@@ -1,5 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import lombok.ToString;
+
+@ToString
 public class PermissionDto extends TenancyBaseDto {
     private static final long serialVersionUID = -3799602677526320793L;
     private Integer id;
@@ -137,11 +140,5 @@ public class PermissionDto extends TenancyBaseDto {
         result = 31 * result + (permType != null ? permType.hashCode() : 0);
         result = 31 * result + (checked != null ? checked.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "PermissionDto [id=" + id + ", value=" + value + ", valueExt=" + valueExt + ", description=" + description + ", status=" + status + ", permTypeId=" + permTypeId
-                + ", domainId=" + domainId + ", permType=" + permType + ", checked=" + checked + "]";
     }
 }

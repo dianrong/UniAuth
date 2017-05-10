@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * . 负责维护cxf header相关holder
+ * 负责维护cxf header相关holder
  * 
  * @author wanglin
  */

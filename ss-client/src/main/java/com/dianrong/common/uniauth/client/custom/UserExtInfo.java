@@ -232,4 +232,9 @@ public class UserExtInfo implements UserDetails {
     public int hashCode() {
         return this.loginDomainUserExtInfo.hashCode();
     }
+    
+    @Override
+    public String toString() {
+        return this.getCurrentDomainUserExtInfo().toString();
+    }
 }

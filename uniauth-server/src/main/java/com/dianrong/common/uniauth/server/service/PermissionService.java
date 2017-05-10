@@ -64,7 +64,7 @@ public class PermissionService extends TenancyBasedService {
     private RoleCodeMapper roleCodeMapper;
     @Autowired
     private CommonService commonService;
-
+    
     /**
      * . 进行权限数据过滤的filter
      */

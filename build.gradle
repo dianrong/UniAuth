@@ -156,12 +156,6 @@ allprojects {
 	}
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.6'
-    archiveBase = 'PROJECT'
-    archivePath = 'gradle/dists'
-}
-
 project(':common') {
 	dependencies {
 		compile 'org.apache.commons:commons-lang3:3.4'

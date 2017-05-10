@@ -14,8 +14,10 @@ import org.jasig.cas.ticket.Ticket;
 import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.AbstractDistributedTicketRegistry;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.cas.registry.support.SerialzableTicketRegistryHolder;
+import com.dianrong.common.uniauth.common.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +37,11 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
      */
     @Min(0)
     private final int stTimeout;
+    
+    /**
+     * ticket的key的前缀字符,防止在redis中与其他key冲突
+     */
+    private String ticketPrefix = "uniauth";
 
     private SerialzableTicketRegistryHolder registryHolder;
 
@@ -57,7 +64,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
         log.debug("Adding ticket {}", ticket);
         try {
             registryHolder.beforeSerializable(ticket);
-            redisTemplate.opsForValue().set(ticket.getId(), ticket, getTimeout(ticket), TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
             registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
             log.error("Failed adding {}", ticket, e);
@@ -68,7 +75,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
     @Override
     public Ticket getTicket(String ticketId) {
         try {
-            final Ticket t = (Ticket) this.redisTemplate.opsForValue().get(ticketId);
+            final Ticket t = (Ticket) this.redisTemplate.opsForValue().get(getTicketKey(ticketId));
             registryHolder.afterDserializable(t);
             if (t != null) {
                 return getProxiedTicketInstance(t);
@@ -88,7 +95,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
             if (t instanceof TicketGrantingTicket) {
                 deleteChildren((TicketGrantingTicket) t);
             }
-            this.redisTemplate.delete(ticketId);
+            this.redisTemplate.delete(getTicketKey(ticketId));
             return true;
         } catch (final Exception e) {
             log.error("Failed deleting {}", ticketId, e);
@@ -127,7 +134,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
         }
         log.debug("Deleting ticket {}", ticketId);
         try {
-            this.redisTemplate.delete(ticketId);
+            this.redisTemplate.delete(getTicketKey(ticketId));
             return true;
         } catch (final Exception e) {
             log.error("Failed deleting {}", ticketId, e);
@@ -145,9 +152,9 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
     protected void updateTicket(Ticket ticket) {
         log.debug("Updating ticket {}", ticket);
         try {
-            this.redisTemplate.delete(ticket.getId());
+            this.redisTemplate.delete(getTicketKey(ticket.getId()));
             registryHolder.beforeSerializable(ticket);
-            redisTemplate.opsForValue().set(ticket.getId(), ticket, getTimeout(ticket), TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
             registryHolder.afterSerializable(ticket);
         } catch (final Exception e) {
             log.error("Failed updating {}", ticket, e);
@@ -167,5 +174,28 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
             return this.stTimeout;
         }
         throw new IllegalArgumentException("Invalid ticket type");
+    }
+    
+    /**
+     * 获取ticket的key
+     * @param ticketId 不能为空
+     * @return 生成的key
+     */
+    protected String getTicketKey(String ticketId) {
+        Assert.notNull(ticketId);
+        return this.ticketPrefix + ":" + ticketId.trim();
+    }
+
+    public String getTicketPrefix() {
+        return ticketPrefix;
+    }
+
+    public void setTicketPrefix(String ticketPrefix) {
+        if(!StringUtils.hasText(ticketPrefix)) {
+            log.warn("can not set ticketPrefix with empty string.");
+            return;
+        }
+        log.info("set new ticketPrefix {}", ticketPrefix);
+        this.ticketPrefix = ticketPrefix;
     }
 }
