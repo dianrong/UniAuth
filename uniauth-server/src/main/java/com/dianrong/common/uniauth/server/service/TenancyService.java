@@ -100,9 +100,9 @@ public class TenancyService {
      * @return tenancyId for current thread
      */
     private Long getTenancyId(boolean check) {
-        Long _id = (Long) CxfHeaderHolder.TENANCYID.get();
-        if (_id != null) {
-            return _id;
+        Long tenancyId = (Long) CxfHeaderHolder.TENANCYID.get();
+        if (tenancyId != null) {
+            return tenancyId;
         }
         String tenancyCode = (String) CxfHeaderHolder.TENANCYCODE.get();
         if (StringUtils.hasText(tenancyCode)) {

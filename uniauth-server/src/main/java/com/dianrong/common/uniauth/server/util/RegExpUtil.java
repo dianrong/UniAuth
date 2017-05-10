@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class RegExpUtil {
 
     // add more 'password' related fields into PWD_FIELDS if necessary
-    private static final String[] PWD_FIELDS = {"password", "originPassword"};
+    private static final String[] PWD_FIELDS = {"password", "originPassword", "passwordSalt"};
     private static Pattern[] pwdPatterns;
 
     private RegExpUtil() {

@@ -5,7 +5,7 @@
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="{{'auditMgr.transactionKey' | translate}}" ng-model="auditQuery.reqUuid" maxlength="40">
             </div>
-        </div>
+         </div>
         <div class="col-md-3">
             <span class="col-sm-4 control-label">minElapse</span>
             <div class="col-sm-8">
@@ -57,17 +57,9 @@
             </div>
         </div>
         <div class="col-md-3">
-            <span class="col-md-4 control-label">success</span>
-            <div style="margin-left: 8px;" class="btn-group" uib-dropdown is-open="successDropdown.isOpen">
-                <button type="button" class="btn btn-primary" uib-dropdown-toggle>
-                    <span style="padding-left: 5px;padding-right: 5px;" ng-bind="successDropdown.option.name"></span>
-                    <span class="caret"></span>
-                </button>
-                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
-                    <li ng-repeat="it in successDropdown.items">
-                        <a ng-click="successDropdown.selectOption(it)" ng-bind="it.name"></a>
-                    </li>
-                </ul>
+            <span class="col-md-4 control-label">URL</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="{{'auditMgr.requestUrl' | translate}}" ng-model="auditQuery.reqUrl" maxlength="40">
             </div>
         </div>
         <div class="col-md-6">
@@ -91,6 +83,22 @@
                 <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
                     <li ng-repeat="it in ascDescDropdown.items">
                         <a ng-click="ascDescDropdown.selectOption(it)" ng-bind="it.name"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <span class="col-md-4 control-label">success</span>
+            <div style="margin-left: 8px;" class="btn-group" uib-dropdown is-open="successDropdown.isOpen">
+                <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+                    <span style="padding-left: 5px;padding-right: 5px;" ng-bind="successDropdown.option.name"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="it in successDropdown.items">
+                        <a ng-click="successDropdown.selectOption(it)" ng-bind="it.name"></a>
                     </li>
                 </ul>
             </div>

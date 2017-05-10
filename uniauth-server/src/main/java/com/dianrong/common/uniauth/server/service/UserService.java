@@ -636,7 +636,7 @@ public class UserService extends TenancyBasedService {
             updateLogin(user.getId(), ip, user.getFailCount() + 1, true);
             throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.error"));
         }
-        // successfully loged in
+        // login successfully
         updateLogin(user.getId(), ip, 0, false);
 
         Date passwordDate = user.getPasswordDate();
@@ -1136,7 +1136,6 @@ public class UserService extends TenancyBasedService {
         user.setLastLoginTime(new Date());
         user.setLastLoginIp(ip);
         user.setFailCount((byte) failCount);
-        user.setLastUpdate(new Date());
         if (sync) {
             return userMapper.updateByPrimaryKeySelective(user);
         }
