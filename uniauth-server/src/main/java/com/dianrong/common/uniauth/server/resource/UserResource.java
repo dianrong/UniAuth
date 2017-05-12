@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
@@ -75,13 +76,20 @@ public class UserResource implements IUserRWResource {
 		return Response.success(pageDto);
 	}
 
+	@ApiOperation("登陆接口")
+    @ApiImplicitParams(
+            value = {
+                    @ApiImplicitParam(name = "tenancyId", value = "租户id或code", required = true, dataType = "long", paramType = "query"),
+                    @ApiImplicitParam(name = "account", value = "账号", required = true, dataType = "string", paramType = "query"),
+                    @ApiImplicitParam(name = "password", value = "密码", required=true, dataType = "string", paramType = "query"),
+                    @ApiImplicitParam(name = "ip", value = "登陆用户所在ip", required=true, dataType = "string", paramType = "query")})
 	@Override
 	@Timed
 	public Response<UserDto> login(LoginParam loginParam) {
 		UserDto dto = userService.login(loginParam);
 		return Response.success(dto);
 	}
-
+	
 	@Override
 	@Timed
 	public Response<UserDetailDto> getUserDetailInfoByUid(UserParam userParam) {
@@ -166,5 +174,18 @@ public class UserResource implements IUserRWResource {
     @Override
     public Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam) {
         return Response.success(userService.getUsersByGroupCodeRoleIds(userParam.getGroupCode(), userParam.getIncludeSubGrp(), userParam.getIncludeRoleIds()));
+    }
+
+	@ApiOperation("vpn登陆接口")
+    @ApiImplicitParams(
+            value = {
+                    @ApiImplicitParam(name = "tenancyCode", value = "租户code", dataType = "string", paramType = "query", defaultValue="DIANRONG"),
+                    @ApiImplicitParam(name = "account", value = "账号", required = true, dataType = "string", paramType = "query"),
+                    @ApiImplicitParam(name = "password", value = "密码", required=true, dataType = "string", paramType = "query"),
+                    @ApiImplicitParam(name = "ip", value = "登陆用户所在ip", dataType = "string", paramType = "query")})
+    @Override
+    @Timed
+    public Response<VPNLoginResult> vpnLogin(LoginParam loginParam) {
+        return Response.success(userService.vpnLogin(loginParam));
     }
 }

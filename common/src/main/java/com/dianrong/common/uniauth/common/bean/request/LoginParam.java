@@ -1,6 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 public class LoginParam extends Operator {
+    /**定义常量位置的ip*/
+    public static final String UNKNOWN_IP = "unknown_ip";
+    
     private static final long serialVersionUID = 7180777080519450378L;
     // domainCode may does not need involve in login process
     /**

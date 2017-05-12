@@ -15,6 +15,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
@@ -89,4 +90,9 @@ public interface IUserResource {
     @POST
     @Path("query-user/group-and-role")
     Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam);
+    
+    @POST
+    @Path("vpn-login")
+    // scenario: VPN login
+    Response<VPNLoginResult> vpnLogin(LoginParam loginParam);
 }
