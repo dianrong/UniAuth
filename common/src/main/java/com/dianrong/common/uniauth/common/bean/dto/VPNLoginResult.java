@@ -29,7 +29,7 @@ public class VPNLoginResult extends TenancyBaseDto {
     @ApiModelProperty("登陆用户备注说明")
     private String user_note;
     
-    @ApiModelProperty("登陆用户所在组的层级结构:top-group1-group2")
+    @ApiModelProperty("登陆用户所在组的层级code列表,从top一直到自身code")
     private List<String> group_name;
     
     @ApiModelProperty("登陆用户的姓名或邮箱或登陆账户")
