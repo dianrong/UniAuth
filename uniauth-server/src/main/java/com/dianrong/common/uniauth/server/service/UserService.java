@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -32,6 +33,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
@@ -144,6 +146,9 @@ public class UserService extends TenancyBasedService {
 
     @Autowired
     private UserPwdLogMapper userPwdLogMapper;
+    
+    @Autowired
+    private GroupService groupService;
 
     /**
      * 进行用户数据过滤的filter
@@ -262,7 +267,7 @@ public class UserService extends TenancyBasedService {
                 if (!UniPasswordEncoder.isPasswordValid(user.getPassword(), orginPassword, user.getPasswordSalt())) {
                     throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.wrong", "origin password"));
                 }
-                
+
                 isUpdatePassword = true;
                 // 验证新密码
                 checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
@@ -282,9 +287,9 @@ public class UserService extends TenancyBasedService {
                 user.setPasswordDate(null);
             }
         }
-        
+
         userMapper.updateByPrimaryKey(user);
-        
+
         // 记录日志设置记录
         if (isUpdatePassword) {
             // 如果特设设置的密码, 则不记录密码设置日志
@@ -292,7 +297,7 @@ public class UserService extends TenancyBasedService {
                 asynAddUserPwdLog(user);
             }
         }
-        
+
         // 发送通知
         if (UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
             BaseUserNotifyInfo notifyInfo = new BaseUserNotifyInfo();
@@ -305,7 +310,7 @@ public class UserService extends TenancyBasedService {
             }
             uniauthNotify.notify(notifyInfo);
         }
-        
+
         return BeanConverter.convert(user).setPassword(password);
     }
 
@@ -653,6 +658,30 @@ public class UserService extends TenancyBasedService {
             }
         }
         return BeanConverter.convert(user);
+    }
+
+    public VPNLoginResult vpnLogin(LoginParam loginParam) {
+        if (!StringUtils.hasText(loginParam.getIp())) {
+            loginParam.setIp(LoginParam.UNKNOWN_IP);
+        }
+        Long tenancyId = tenancyService.getOneCanUsedTenancyId();
+        // VPN登陆必须要有个租户标识信息
+        if (tenancyId.equals(AppConstants.TENANCY_UNRELATED_TENANCY_ID)) {
+            // 设置登陆租户编码为默认的点融
+            loginParam.setTenancyCode(AppConstants.DEFAULT_TANANCY_CODE);
+        }
+        // login
+        UserDto user =  login(loginParam);
+        VPNLoginResult result = BeanConverter.convert(user);
+        
+        // 计算用户的组结构
+        List<Grp> grps = groupService.listUserLastGrpPath(user.getId());
+        List<String> grpNames = Lists.newArrayList();
+        for (Grp grp: grps) {
+            grpNames.add(grp.getCode().trim());
+        }
+        result.setGroup_name(grpNames);
+        return result;
     }
 
     public List<UserDto> searchUsersWithRoleCheck(Integer roleId) {
@@ -1043,7 +1072,7 @@ public class UserService extends TenancyBasedService {
         } else {
             user = getUserByAccount(userParam.getPhone(), userParam.getTenancyCode(), userParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
         }
-        
+
         checkUserPwd(user.getId(), password, false);
         byte salt[] = AuthUtils.createSalt();
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
@@ -1051,7 +1080,7 @@ public class UserService extends TenancyBasedService {
         user.setPasswordDate(new Date());
         user.setFailCount(AppConstants.ZERO_BYTE);
         userMapper.updateByPrimaryKey(user);
-        
+
         // add password set log
         asynAddUserPwdLog(user);
     }
@@ -1329,19 +1358,19 @@ public class UserService extends TenancyBasedService {
         if (password == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "password"));
         }
-        
+
         // 判断是否忽略密码设置策略检查
         if (ignorePwdStrategyCheck != null && ignorePwdStrategyCheck) {
             return;
         }
-        
+
         // 密码设置策略检查
-        
+
         // 符合密码复杂度
         if (!AuthUtils.validatePasswordRule(password)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.password.rule"));
         }
-        
+
         // 不能设置过去8个月内设置过的密码
         UserPwdLogQueryParam condition = new UserPwdLogQueryParam();
         condition.setUserId(userId);

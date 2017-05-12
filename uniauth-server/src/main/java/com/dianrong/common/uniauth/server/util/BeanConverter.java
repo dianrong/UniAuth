@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.server.util;
 
+import org.springframework.util.StringUtils;
+
 import com.dianrong.common.uniauth.common.bean.dto.ApiPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
@@ -15,6 +17,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
@@ -178,6 +181,21 @@ public class BeanConverter {
             userDto.setName(user.getName()).setEmail(user.getEmail()).setId(user.getId()).setPhone(user.getPhone()).setCreateDate(user.getCreateDate()).setStatus(user.getStatus())
                     .setLastUpdate(user.getLastUpdate()).setTenancyId(StringUtil.translateLongToInteger(user.getTenancyId()));
             return userDto;
+        }
+    }
+    
+    public static VPNLoginResult convert(UserDto user) {
+        if (user == null) {
+            return null;
+        } else {
+            VPNLoginResult result = new VPNLoginResult();
+            result.setMobile_num(user.getPhone());
+            result.setTenancyCode(user.getTenancyCode());
+            result.setTenancyId(user.getTenancyId());
+            result.setUser_name(StringUtils.hasText(user.getName()) ? user.getName()
+                    : StringUtils.hasText(user.getEmail()) ? user.getEmail() : StringUtils.hasText(user.getPhone()) ? user.getPhone() : null);
+            result.setUser_note(result.getUser_name());
+            return result;
         }
     }
 

@@ -68,9 +68,9 @@ public class TenancyService {
     }
     
     /**
-     * . 获取一个可用的租户id
-     * 
-     * @return tenancyId for current thread
+     *  获取一个可用的租户id. 如果不能获取, 返回一个默认的非租户相关的租户id -1
+     * @return tenancyId for current request
+     * @see AppConstants.TENANCY_UNRELATED_TENANCY_ID
      */
     public Long getOneCanUsedTenancyId() {
         return getTenancyId(false);

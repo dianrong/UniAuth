@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 @ApiModel("租户信息")
+@Data
 public class TenancyBaseDto implements Serializable {
 
     private static final long serialVersionUID = 7612408066715418041L;

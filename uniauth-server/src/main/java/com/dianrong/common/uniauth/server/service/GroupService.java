@@ -77,8 +77,11 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotify
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Created by Arc on 14/1/16.
@@ -110,7 +113,7 @@ public class GroupService extends TenancyBasedService {
 
     @Autowired
     private UniauthNotify uniauthNotify;
-    
+
     /**
      * 进行组数据过滤的filter
      */
@@ -949,8 +952,8 @@ public class GroupService extends TenancyBasedService {
         List<Tag> allTags = tagMapper.selectByExample(tagConditon);
 
         // 优化
-        if (allTags == null || allTags.isEmpty()) {
-            return new ArrayList<TagDto>();
+        if (ObjectUtil.collectionIsEmptyOrNull(allTags)) {
+            return new ArrayList<>();
         }
 
         for (Tag tag : allTags) {
@@ -1040,5 +1043,57 @@ public class GroupService extends TenancyBasedService {
             return groupList;
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * 获取用户最新关联的组的结构
+     * 
+     * @param userId 用户id, 不能为空
+     * @return 组信息列表. 以从根组到子组的顺序排序
+     */
+    public List<Grp> listUserLastGrpPath(Long userId) {
+        CheckEmpty.checkEmpty(userId, "userId");
+        List<Grp> grps = Lists.newArrayList();
+        UserGrpExample ugExample = new UserGrpExample();
+        UserGrpExample.Criteria ugCriteria = ugExample.createCriteria();
+        ugCriteria.andTypeEqualTo(AppConstants.ZERO_BYTE).andUserIdEqualTo(userId);
+        ugExample.setOrderByClause(" grp_id desc");
+        List<UserGrpKey> userGrpList = userGrpMapper.selectByExample(ugExample);
+        if (ObjectUtil.collectionIsEmptyOrNull(userGrpList)) {
+            return grps;
+        }
+        Integer grpId = userGrpList.get(0).getGrpId();
+        GrpPathExample gpExample = new GrpPathExample();
+        GrpPathExample.Criteria gpCriteria = gpExample.createCriteria();
+        gpCriteria.andDescendantEqualTo(grpId);
+        gpExample.setOrderByClause("deepth desc");
+        List<GrpPath> grpPathList = grpPathMapper.selectByExample(gpExample);
+        if (ObjectUtil.collectionIsEmptyOrNull(grpPathList)) {
+            return grps;
+        }
+        List<Integer> grpIds = Lists.newArrayList();
+        for (GrpPath gp : grpPathList) {
+            grpIds.add(gp.getAncestor());
+        }
+        GrpExample grpExample = new GrpExample();
+        GrpExample.Criteria grpCriteria = grpExample.createCriteria();
+        grpCriteria.andIdIn(grpIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+        List<Grp> grpList = grpMapper.selectByExample(grpExample);
+        if (ObjectUtil.collectionIsEmptyOrNull(grpList)) {
+            return grps;
+        }
+        Map<Integer, Grp> grpMap = Maps.newHashMap();
+        for (Grp grp : grpList) {
+            grpMap.put(grp.getId(), grp);
+        }
+
+        // 按照depth从大到小的顺序来放入list
+        for (Integer gid : grpIds) {
+            Grp grpItem = grpMap.get(gid);
+            if (grpItem != null) {
+                grps.add(grpItem);
+            }
+        }
+        return grps;
     }
 }
