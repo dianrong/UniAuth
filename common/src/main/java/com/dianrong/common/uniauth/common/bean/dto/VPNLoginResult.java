@@ -24,14 +24,14 @@ public class VPNLoginResult extends TenancyBaseDto {
     private static final long serialVersionUID = -1373906423303067202L;
 
     @ApiModelProperty("登陆用户的电话号码")
-    private String mobile_num;
+    private String mobileNum;
     
     @ApiModelProperty("登陆用户备注说明")
-    private String user_note;
+    private String userNote;
     
     @ApiModelProperty("登陆用户所在组的层级code列表,从top一直到自身code")
-    private List<String> group_name;
+    private List<String> groupCodes;
     
     @ApiModelProperty("登陆用户的姓名或邮箱或登陆账户")
-    private String user_name;
+    private String userName;
 }

@@ -189,12 +189,12 @@ public class BeanConverter {
             return null;
         } else {
             VPNLoginResult result = new VPNLoginResult();
-            result.setMobile_num(user.getPhone());
+            result.setMobileNum(user.getPhone());
             result.setTenancyCode(user.getTenancyCode());
             result.setTenancyId(user.getTenancyId());
-            result.setUser_name(StringUtils.hasText(user.getName()) ? user.getName()
+            result.setUserName(StringUtils.hasText(user.getName()) ? user.getName()
                     : StringUtils.hasText(user.getEmail()) ? user.getEmail() : StringUtils.hasText(user.getPhone()) ? user.getPhone() : null);
-            result.setUser_note(result.getUser_name());
+            result.setUserNote(result.getUserName());
             return result;
         }
     }

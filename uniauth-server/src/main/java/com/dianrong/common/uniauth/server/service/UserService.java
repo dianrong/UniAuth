@@ -676,11 +676,12 @@ public class UserService extends TenancyBasedService {
         
         // 计算用户的组结构
         List<Grp> grps = groupService.listUserLastGrpPath(user.getId());
-        List<String> grpNames = Lists.newArrayList();
+        List<String> grpCodes = Lists.newArrayList();
+        
         for (Grp grp: grps) {
-            grpNames.add(grp.getCode().trim());
+            grpCodes.add(grp.getCode().trim());
         }
-        result.setGroup_name(grpNames);
+        result.setGroupCodes(grpCodes);
         return result;
     }
 
