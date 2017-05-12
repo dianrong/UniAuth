@@ -19,6 +19,7 @@ ext {
     dianrongRepoEnable = false
     jackson_version_old = '2.8.8'
     jackson_databind_version = '2.8.10-SNAPSHOT'
+    log4j_version_new='2.8.2'
 }
 
 // Dianrong repo status set
@@ -127,7 +128,15 @@ allprojects {
             }
             
             dependency 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
-        }
+            
+            // update log4j version
+            dependency "org.apache.logging.log4j:log4j-core:${log4j_version_new}"
+            dependency "org.apache.logging.log4j:log4j:${log4j_version_new}"
+            dependency "org.apache.logging.log4j:log4j-api:${log4j_version_new}"
+            dependency "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version_new}"
+            dependency "org.apache.logging.log4j:log4j-jcl:${log4j_version_new}"
+            dependency "org.apache.logging.log4j:log4j-web:${log4j_version_new}"
+         }
 	}
 
 	dependencies {
