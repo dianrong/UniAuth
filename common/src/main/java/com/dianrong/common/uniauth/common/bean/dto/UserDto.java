@@ -29,6 +29,10 @@ public class UserDto extends TenancyBaseDto {
     private String email;
     @ApiModelProperty("电话")
     private String phone;
+    @ApiModelProperty("最近的一次登陆时间")
+    private Date lastLoginTime;
+    @ApiModelProperty("最近的一次登陆ip")
+    private String lastLoginIp;
     @ApiModelProperty("创建时间")
     private Date createDate;
     @ApiModelProperty("最新更新时间")
@@ -197,5 +201,23 @@ public class UserDto extends TenancyBaseDto {
             }
         }
         return userExtendValMap.get(code);
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public UserDto setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+        return this;
+    }
+
+    public String getLastLoginIp() {
+        return lastLoginIp;
+    }
+
+    public UserDto setLastLoginIp(String lastLoginIp) {
+        this.lastLoginIp = lastLoginIp;
+        return this;
     }
 }

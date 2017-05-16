@@ -178,12 +178,13 @@ public class BeanConverter {
             return null;
         } else {
             UserDto userDto = new UserDto();
-            userDto.setName(user.getName()).setEmail(user.getEmail()).setId(user.getId()).setPhone(user.getPhone()).setCreateDate(user.getCreateDate()).setStatus(user.getStatus())
-                    .setLastUpdate(user.getLastUpdate()).setTenancyId(StringUtil.translateLongToInteger(user.getTenancyId()));
+            userDto.setName(user.getName()).setEmail(user.getEmail()).setId(user.getId()).setPhone(user.getPhone()).setLastLoginTime(user.getLastLoginTime())
+                    .setLastLoginIp(user.getLastLoginIp()).setCreateDate(user.getCreateDate()).setStatus(user.getStatus()).setLastUpdate(user.getLastUpdate())
+                    .setTenancyId(StringUtil.translateLongToInteger(user.getTenancyId()));
             return userDto;
         }
     }
-    
+
     public static VPNLoginResult convert(UserDto user) {
         if (user == null) {
             return null;
