@@ -4,7 +4,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
     	$scope.uniauthTransfer={
     				srcItems: [],
     				targetItems: [],
-    				displayKey: 'email',
+    				displayKey: 'account',
     				srcTitle : $rootScope.translate('relMgr.relUser.notRelUser'),
     				targetTitle : $rootScope.translate('relMgr.relUser.relUser'),
     				showInputFilter : true,
@@ -51,12 +51,12 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         
         // cache
         var selectedUserIds = [];
-        function queryNotSelectedUser(email){
+        function queryNotSelectedUser(account){
         	if (!$scope.role.selected || !$scope.role.selected.id) return;
-        	email = email || '';
+        	account = account || '';
         	var param = {
         			excludeUserIds : selectedUserIds,
-        			email :  email,
+        			account :  account,
         			status : constant.statusEnable,
         			pageSize : constant.pageSize,
         			pageNumber : 0

@@ -41,6 +41,7 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
@@ -193,8 +194,8 @@ public class UserService extends TenancyBasedService {
         if (userActionEnum == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
         }
-        User user = null;
-        String userIdentity = "";
+        User user;
+        String userIdentity;
         // 通过账号的查找当前的用户信息
         if (UserActionEnum.isUpdateByAccount(userActionEnum)) {
             if (account == null || tenancyId == null) {
@@ -247,6 +248,7 @@ public class UserService extends TenancyBasedService {
                 user.setPhone(phone);
                 break;
             case UPDATE_INFO_BY_ACCOUNT:
+                // 目前只能修改用户的名称
                 user.setName(name);
                 break;
             case UPDATE_EMAIL_BY_ACCOUNT:
@@ -386,7 +388,7 @@ public class UserService extends TenancyBasedService {
     }
 
     public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser, Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds,
-            List<Long> excludeUserIds, String name, String phone, String email, Byte status, Integer tagId, Boolean needTag, Integer pageNumber, Integer pageSize) {
+            List<Long> excludeUserIds, String name, String phone, String email, String account, Byte status, Integer tagId, Boolean needTag, Integer pageNumber, Integer pageSize) {
         if (pageNumber == null || pageSize == null) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
         }
@@ -403,6 +405,9 @@ public class UserService extends TenancyBasedService {
         }
         if (email != null) {
             criteria.andEmailLike("%" + email + "%");
+        }
+        if (account != null) {
+            criteria.andAccountLike("%" + account + "%");
         }
         if (status != null) {
             criteria.andStatusEqualTo(status);
@@ -570,30 +575,45 @@ public class UserService extends TenancyBasedService {
     }
 
     /**
-     * check email and phone, composed by checkEmail and checkPhone
+     * 检测电话和邮箱, 不能同时为空
      * 
-     * @param phone phone
-     * @param email email
-     * @param userId userId
-     * @throws AppException if email or phone is invalid
+     * @param phone 电话号码(手机号码)
+     * @param email 邮箱地址
+     * @param userId 用户的主键ID
+     * @throws AppException 如果检测不通过
      */
     private void checkPhoneAndEmail(String phone, String email, Long userId) {
-        checkEmail(email, userId);
-        checkPhone(phone, userId);
+        if (!StringUtils.hasText(phone) && !StringUtils.hasText(email)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.two.empty", "email", "phone"));
+        }
+        checkEmail(email, userId, false);
+        checkPhone(phone, userId, false);
     }
 
+    private void checkEmail(String email, Long userId) {
+        checkEmail(email, userId, true);
+    }
+
+    private void checkPhone(String phone, Long userId) {
+        checkPhone(phone, userId, true);
+    }
+    
     /**
      * email can not be null
      * 
      * @param email email
      * @param userId userId
+     * @param checkEmpty 如果为true, 遇到空email则报错, 否则直接返回
      * @throws AppException if email is invalid
      */
-    private void checkEmail(String email, Long userId) {
-        if (email == null) {
-            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "email"));
+    private void checkEmail(String email, Long userId, boolean checkEmpty) {
+        if (!StringUtils.hasText(email)) {
+            if (checkEmpty) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "email"));
+            } 
+            return;
         }
-        if (!email.contains("@")) {
+        if (!StringUtil.isEmailAddress(email)) {
             throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.email.invalid", email));
         }
         // check duplicate email
@@ -609,16 +629,24 @@ public class UserService extends TenancyBasedService {
      * 
      * @param phone phone number
      * @param userId userId
+     * @param checkEmpty 如果为true, 遇到空phone则报错, 否则直接返回
      * @throws AppException if phone is invalid
      */
-    private void checkPhone(String phone, Long userId) {
-        if (phone != null) {
-            // check duplicate phone
-            if (userId == null) {
-                dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_PHONE, phone);
-            } else {
-                dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE, phone);
+    private void checkPhone(String phone, Long userId, boolean checkEmpty) {
+        if (!StringUtils.hasText(phone)) {
+            if (checkEmpty) {
+                throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.parameter.empty", "phone"));
             }
+            return;
+        }
+        if (!StringUtil.isPhoneNumber(phone)) {
+            throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("user.parameter.phone.invalid", phone));
+        }
+        // check duplicate phone
+        if (userId == null) {
+            dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_PHONE, phone);
+        } else {
+            dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE, phone);
         }
     }
 

@@ -4,11 +4,11 @@
                ng-disabled="disabled"
                reset-search-input="false"
                style="width:100%;margin-top: 6px;">
-        <ui-select-match placeholder="Enter an email...">{{$select.selected.email}}</ui-select-match>
+        <ui-select-match placeholder="Enter an account...">{{$select.selected.account}}</ui-select-match>
         <ui-select-choices repeat="user in users track by $index"
                            refresh="refreshUsers($select.search)"
                            refresh-delay="300">
-            <div ng-bind-html="user.email | highlight: $select.search"></div>
+            <div ng-bind-html="user.account | highlight: $select.search"></div>
         </ui-select-choices>
     </ui-select>
 </div>

@@ -19,6 +19,9 @@ dependencies {
     compile "org.springframework:spring-aop"
     compile "org.springframework.amqp:spring-amqp"
     compile "org.springframework.amqp:spring-rabbit"
+    
+    compile "org.springframework.ldap:spring-ldap-core"
+    compile "org.springframework.data:spring-data-commons"
 
     //Aspectj
     compile "org.aspectj:aspectjrt"

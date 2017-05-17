@@ -7,8 +7,8 @@ define(['../../utils/constant'], function (constant, AlertService) {
         $scope.user = UserService.userShared;
         
         // 获取用户信息function
-        $scope.refreshUsers = function(email) {
-            var params = {email: email, status:0, pageNumber:0, pageSize: 16};
+        $scope.refreshUsers = function(account) {
+            var params = {account: account, status:0, pageNumber:0, pageSize: 16};
             return UserService.getUsers(params).$promise.then(function(response) {
                 if(response.data && response.data.data) {
                     $scope.users = response.data.data;

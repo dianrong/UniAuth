@@ -71,7 +71,7 @@ public class CustomizeBeanConverter {
             for(UserDto userDto : subUserNodes) {
                 Node subUserNode = new Node();
                 subUserNode.setId(userDto.getId().toString());
-                subUserNode.setLabel(userDto.getEmail());
+                subUserNode.setLabel(userDto.getAccount());
                 if(roleCheckOrTagCheck == null || roleCheckOrTagCheck) {
                     subUserNode.setChecked(userDto.getRoleChecked());
                 } else {

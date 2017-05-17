@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -219,5 +221,16 @@ public class UserDto extends TenancyBaseDto {
     public UserDto setLastLoginIp(String lastLoginIp) {
         this.lastLoginIp = lastLoginIp;
         return this;
+    }
+    
+    /**
+     * 用于业务处理, 返回用户的账号(Email > phone)
+     * @return 用户账号
+     */
+    public String getAccount() {
+        if (StringUtils.hasText(this.email)) {
+            return this.email;
+        }
+        return this.phone;
     }
 }

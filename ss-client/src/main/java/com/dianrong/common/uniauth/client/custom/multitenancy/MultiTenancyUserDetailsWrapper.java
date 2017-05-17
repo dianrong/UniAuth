@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 
 public class MultiTenancyUserDetailsWrapper implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken>, InitializingBean {
-    private MultiTenancyUserDetailsService userDetailsService = null;
+    private MultiTenancyUserDetailsService userDetailsService;
 
     public MultiTenancyUserDetailsWrapper() {}
 

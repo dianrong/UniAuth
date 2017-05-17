@@ -187,6 +187,13 @@ public class UserExample extends PageParam {
             }
             criteria.add(new Criterion(condition, value));
         }
+        
+        protected void addCriterion(String condition, Object value, String secondCondition, Object secondValue, String property) {
+            if (value == null || secondValue == null) {
+                throw new RuntimeException("Value for " + property + " cannot be null");
+            }
+            criteria.add(new Criterion(condition, value, secondCondition, secondValue, true));
+        }
 
         protected void addCriterion(String condition, Object value1, Object value2, String property) {
             if (value1 == null || value2 == null) {
@@ -462,6 +469,11 @@ public class UserExample extends PageParam {
 
         public Criteria andPhoneNotBetween(String value1, String value2) {
             addCriterion("phone not between", value1, value2, "phone");
+            return (Criteria) this;
+        }
+        
+        public Criteria andAccountLike(String value) {
+            addCriterion("phone like ", value, "email like ", value, "account");
             return (Criteria) this;
         }
 
@@ -1117,6 +1129,8 @@ public class UserExample extends PageParam {
      */
     public static class Criterion {
         private String condition;
+        
+        private String secondCondition;
 
         private Object value;
 
@@ -1129,6 +1143,8 @@ public class UserExample extends PageParam {
         private boolean betweenValue;
 
         private boolean listValue;
+        
+        private boolean orValue;
 
         private String typeHandler;
 
@@ -1195,9 +1211,26 @@ public class UserExample extends PageParam {
             this.typeHandler = typeHandler;
             this.betweenValue = true;
         }
+        
+        protected Criterion(String condition, Object value, String secondCondition, Object secondValue, boolean orValue) {
+            super();
+            this.condition = condition;
+            this.secondCondition = secondCondition;
+            this.value = value;
+            this.secondValue = secondValue;
+            this.orValue = orValue;
+        }
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
+        }
+
+        public String getSecondCondition() {
+            return secondCondition;
+        }
+
+        public boolean isOrValue() {
+            return orValue;
         }
     }
 }
