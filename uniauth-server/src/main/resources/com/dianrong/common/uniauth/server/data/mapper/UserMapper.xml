@@ -40,6 +40,9 @@
                 <when test="criterion.singleValue">
                   and ${criterion.condition} #{criterion.value}
                 </when>
+                <when test="criterion.orValue">
+                  and ((${criterion.condition} #{criterion.value}) or (${criterion.secondCondition} #{criterion.secondValue}))
+                </when>
                 <when test="criterion.betweenValue">
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>

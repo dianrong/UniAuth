@@ -129,7 +129,7 @@ public class StringUtil {
         if (strIsNullOrEmpty(phoneNumber)) {
             return false;
         }
-        String regExp = "^((13[0-9])|(15[^4])|(18[0-9])|(17[0-8])|(147))\\d{8}$";
+        String regExp = "^1(3|4|5|7|8)\\d{9}$";
         return phoneNumber.matches(regExp);
     }
 

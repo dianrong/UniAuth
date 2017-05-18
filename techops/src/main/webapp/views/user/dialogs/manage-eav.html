@@ -7,9 +7,9 @@
        <form style="margin-left: -22px;" class="form-horizontal" name="eavQueryForm">
 	    <div style="margin-top: 10px;" class="form-group">
 	        <div class="col-md-6">
-	            <span class="col-md-4 control-label">EAV-CODE:</span>
+	            <span class="col-md-4 control-label">{{ 'userMgr.dialog.eav.code' | translate }}</span>
 	            <div class="col-md-8">
-	                <input type="text" class="form-control" placeholder="eav-code" ng-model="eavQuery.code" maxlength="64">
+	                <input type="text" class="form-control" placeholder="{{ 'userMgr.dialog.eav.code' | translate }}" ng-model="eavQuery.code" maxlength="64">
 	            </div>
 	        </div>
 	        <div class="col-md-offset-3 col-md-3">
@@ -22,7 +22,7 @@
 	    <table class="text-left table grey-border table-hover vertical-middle">
 	        <thead class="text-color-c4">
 		        <tr>
-		            <th>EAV-CODE</th>
+		            <th>{{ 'userMgr.dialog.eav.code' | translate }}</th>
 		            <th>{{'userMgr.dialog.eav.desc' | translate}}</th>
 		            <th style="text-align: center" ng-if="(userRoleCodes.indexOf('ROLE_SUPER_ADMIN') != -1) && (userDomainCodes.indexOf('techops') != -1)">{{ 'userMgr.operators' | translate}}</th>
 		        </tr>

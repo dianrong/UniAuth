@@ -12,7 +12,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.dianrong.common.uniauth.client.custom.LoginUserInfoHolder;
@@ -75,7 +74,7 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
 	 */
 	private void unPermittedRequest(HttpServletResponse response) {
 		try {
-			response.setStatus(HttpStatus.SC_FORBIDDEN);
+			response.setStatus(org.apache.http.HttpStatus.SC_FORBIDDEN);
 			response.getWriter().write(JsonUtil.object2Jason(new ForbiddenResponseMsg(AppConstants.NO_PRIVILEGE, "Sorry! You do not have permission to access the resource!")));
 		} catch(IOException ex) {
 			log.warn("failed to send unpermitted warn", ex);

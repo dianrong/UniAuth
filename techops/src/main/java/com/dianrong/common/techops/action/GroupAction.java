@@ -60,7 +60,7 @@ public class GroupAction {
                     for(UserDto userDto : userDtos) {
                         Node userNode = new Node();
                         userNode.setId(userDto.getId().toString());
-                        userNode.setLabel(userDto.getEmail());
+                        userNode.setLabel(userDto.getAccount());
                         userNode.setChecked(userDto.getRoleChecked());
                         userNode.setType(AppConstants.NODE_TYPE_MEMBER_USER);
                         nodes.add(userNode);
@@ -79,7 +79,7 @@ public class GroupAction {
                     for(UserDto userDto : userDtos) {
                         Node userNode = new Node();
                         userNode.setId(userDto.getId().toString());
-                        userNode.setLabel(userDto.getEmail());
+                        userNode.setLabel(userDto.getAccount());
                         userNode.setChecked(userDto.getTagChecked());
                         userNode.setType(AppConstants.NODE_TYPE_MEMBER_USER);
                         nodes.add(userNode);

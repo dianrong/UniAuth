@@ -10,9 +10,9 @@
             <label class="control-label" for="username" placeholder="{{'userMgr.dialog.add.userName' | translate }}">{{'userMgr.dialog.add.userName' | translate }}:</label>
             <input type="text" class="form-control" name="username" id="username" ng-model="user.name">
             <label class="control-label" for="email" placeholder="{{'userMgr.dialog.add.email' | translate }}">{{'userMgr.dialog.add.email' | translate }}:</label>
-            <input type="text" class="form-control" name="email" id="email" ng-model="user.email" required>
+            <input type="email" class="form-control" name="email" id="email" ng-model="user.email">
             <label class="control-label" for="phone" placeholder="{{'userMgr.dialog.add.mobile' | translate }}">{{'userMgr.dialog.add.mobile' | translate }}:</label>
-            <input type="text" class="form-control" name="phone" id="phone" ng-model="user.phone">
+            <input type="text" class="form-control" name="phone" id="phone" ng-model="user.phone"  ng-pattern="/^1(3|4|5|7|8)\d{9}$/">
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
         </div>
@@ -21,5 +21,5 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancel()">{{'dialog.cancel' | translate}}</button>
     <button type="button" class="btn btn-primary" ng-click="save()"
-            ng-disabled="(addUserDialog.$dirty && addUserDialog.$invalid) || addUserDialog.$pristine">{{'dialog.save' | translate}}</button>
+            ng-disabled="(addUserDialog.$dirty && addUserDialog.$invalid) || addUserDialog.$pristine ||  !add_btn_enable()">{{'dialog.save' | translate}}</button>
 </div>

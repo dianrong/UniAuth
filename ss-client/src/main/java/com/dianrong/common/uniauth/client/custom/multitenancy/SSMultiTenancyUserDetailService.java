@@ -85,7 +85,6 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
             LoginParam loginParam = new LoginParam();
             loginParam.setAccount(userName);
             loginParam.setTenancyId(tenancyId);
-            // not login, need set tenancyId manually
             Response<UserDetailDto> response = uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
             UserDetailDto userDetailDto = response.getData();
 
@@ -97,7 +96,6 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
                 UserDto userDto = userDetailDto.getUserDto();
                 Long id = userDto.getId();
                 List<DomainDto> domainDtoList = userDetailDto.getDomainList();
-                // DomainDto currentDomainDto = null;
                 Map<String, UserExtInfoParam> userExtInfos = new HashMap<>();
                 if (domainDtoList != null && !domainDtoList.isEmpty()) {
                     List<DomainDto> tempDomainDtoList = null;

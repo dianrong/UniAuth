@@ -2,9 +2,12 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
+import lombok.ToString;
+
 /**
  * Created by Arc on 15/1/16.
  */
+@ToString
 public class UserQuery extends PageParam {
 
     private static final long serialVersionUID = -9186367883822216088L;
@@ -21,6 +24,11 @@ public class UserQuery extends PageParam {
     // 是否需要被禁用掉的组的user
     private Boolean needDisabledGrpUser;
 
+    /**
+     * 根据账号来匹配(phone, email, ldap_no...)
+     */
+    private String account;
+    
     private Integer roleId;
     private Boolean needTag;
 
@@ -120,30 +128,35 @@ public class UserQuery extends PageParam {
         return needDescendantGrpUser;
     }
 
-    public void setNeedDescendantGrpUser(Boolean needDescendantGrpUser) {
+    public UserQuery setNeedDescendantGrpUser(Boolean needDescendantGrpUser) {
         this.needDescendantGrpUser = needDescendantGrpUser;
+        return this;
     }
 
     public Boolean getNeedDisabledGrpUser() {
         return needDisabledGrpUser;
     }
 
-    public void setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
+    public UserQuery setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
         this.needDisabledGrpUser = needDisabledGrpUser;
+        return this;
     }
 
     public List<Long> getExcludeUserIds() {
         return excludeUserIds;
     }
 
-    public void setExcludeUserIds(List<Long> excludeUserIds) {
+    public UserQuery setExcludeUserIds(List<Long> excludeUserIds) {
         this.excludeUserIds = excludeUserIds;
+        return this;
     }
 
-    @Override
-    public String toString() {
-        return "UserQuery [userId=" + userId + ", userIds=" + userIds + ", name=" + name + ", phone=" + phone + ", email=" + email + ", status=" + status + ", tagId=" + tagId
-                + ", groupId=" + groupId + ", needDescendantGrpUser=" + needDescendantGrpUser + ", needDisabledGrpUser=" + needDisabledGrpUser + ", roleId=" + roleId + ", needTag="
-                + needTag + ", excludeUserIds=" + excludeUserIds + "]";
+    public String getAccount() {
+        return account;
+    }
+
+    public UserQuery setAccount(String account) {
+        this.account = account;
+        return this;
     }
 }
