@@ -135,11 +135,13 @@ public class NotificationService {
             @Override
             public void run() {
                 if (notificationIsOn()) {
-                    try {
-                        String emailContent = String.format(addUserNotTemplate, userInfo.getEmail(), userInfo.getPassword());
-                        emailNotify.send(NOTIFICATION_TITLE, userInfo.getEmail(), emailContent);
-                    } catch (Exception ex) {
-                        LOGGER.error("failed to send email ", ex);
+                    if (StringUtils.hasText(userInfo.getEmail())) {
+                        try {
+                            String emailContent = String.format(addUserNotTemplate, userInfo.getEmail(), userInfo.getPassword());
+                            emailNotify.send(NOTIFICATION_TITLE, userInfo.getEmail(), emailContent);
+                        } catch (Exception ex) {
+                            LOGGER.error("failed to send email ", ex);
+                        }
                     }
                     // send sms
                     if (StringUtils.hasText(userInfo.getPhone())) {
@@ -166,11 +168,13 @@ public class NotificationService {
             @Override
             public void run() {
                 if (notificationIsOn()) {
-                    try {
-                        String emailContent = String.format(updateUserPwdNotTemplate, userInfo.getEmail(), userInfo.getPassword());
-                        emailNotify.send(NOTIFICATION_TITLE, userInfo.getEmail(), emailContent);
-                    } catch (Exception ex) {
-                        LOGGER.error("failed to send email ", ex);
+                    if (StringUtils.hasText(userInfo.getEmail())) {
+                        try {
+                            String emailContent = String.format(updateUserPwdNotTemplate, userInfo.getEmail(), userInfo.getPassword());
+                            emailNotify.send(NOTIFICATION_TITLE, userInfo.getEmail(), emailContent);
+                        } catch (Exception ex) {
+                            LOGGER.error("failed to send email ", ex);
+                        }
                     }
                     // send sms
                     if (StringUtils.hasText(userInfo.getPhone())) {
