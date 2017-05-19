@@ -75,7 +75,7 @@ final class JWTSecurity {
                     .sign(Algorithm.HMAC512(this.securityKey));
         } catch (Exception e) {
             log.error("failed create jwt ", e);
-            throw new TokenCreateFailedException("failed create jwt", e);
+            throw new TokenCreateFailedException("failed create jwt: " + jwt, e);
         }
     }
 
@@ -98,7 +98,7 @@ final class JWTSecurity {
                     decodedJWT.getClaim(JwtInfo.USER_ACCOUNT_KEY).asString(), decodedJWT.getClaim(JwtInfo.PERMISSION_KEY).asString(), createTime, expireTIme);
         } catch (InvalidClaimException invalidException) {
             if (invalidException.getMessage() != null && invalidException.getMessage().contains("The Token has expired on")) {
-                throw new TokenExpiredException();
+                throw new TokenExpiredException(token + " is expired");
             }
             log.error(token + " is a invalid jwt token ", invalidException);
             throw new InvalidTokenException(token + " is a invalid jwt token ", invalidException);

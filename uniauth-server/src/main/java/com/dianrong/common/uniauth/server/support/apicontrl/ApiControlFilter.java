@@ -33,6 +33,7 @@ import com.dianrong.common.uniauth.common.apicontrol.model.LoginResponseLoad;
 import com.dianrong.common.uniauth.common.apicontrol.server.CallerCredential;
 import com.dianrong.common.uniauth.common.apicontrol.server.PermissionJudger;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.server.support.apicontrl.security.JWTProcessor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -98,7 +99,7 @@ public class ApiControlFilter extends GenericFilterBean {
                         }
                     } else {
                         // 权限不足
-                        throw new InsufficientPrivilegesException();
+                        throw new InsufficientPrivilegesException(HttpRequestUtil.extractRequestUrl(httpRequest, false));
                     }
                 } catch (LoadCredentialFailedException e) {
                     log.info("load credential failed ", e);
@@ -163,11 +164,11 @@ public class ApiControlFilter extends GenericFilterBean {
                     loginUser = requestLoginHeaderOperator.getHeader(HeaderKey.REQUEST_CONTENT);
                 } catch (Throwable t) {
                     log.warn("invalid login request user info", t);
-                    throw new InvalidTokenException();
+                    throw new InvalidTokenException("token {0} is invalid!", headerOperator.getHeader(HeaderKey.REQUEST_CONTENT));
                 }
                 return callerLoader.loadCredential(loginUser.getAccount(), loginUser.getPassword());
         }
-        throw new InvalidTokenException();
+        throw new InvalidTokenException("{0} is a  invalid token!", headerOperator.getHeader(HeaderKey.REQUEST_CONTENT));
     }
 
     // construct a anonymous ApiCaller

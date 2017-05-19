@@ -35,7 +35,7 @@ public class ApiCallerLoader implements LoadCredential<ApiCtlPermission> {
         try {
             ApiCallerInfoDto apiCallerInfo = ApiCallerService.searchApiCaller(account, password);
             if (apiCallerInfo == null) {
-                throw new LoadCredentialFailedException();
+                throw new LoadCredentialFailedException(String.format("Account %s loadCredential failed", account));
             }
             // get private permissions
             List<ApiPermissionDto> privatePermissions = apiPermissionService.searchPrivatePermissions(apiCallerInfo.getId());
@@ -60,7 +60,7 @@ public class ApiCallerLoader implements LoadCredential<ApiCtlPermission> {
             return apiCallerCredential;
         } catch (Throwable t) {
             log.error("loadCredential failed, account " + account, t);
-            throw new LoadCredentialFailedException();
+            throw new LoadCredentialFailedException(String.format("Account %s loadCredential failed", account));
         }
     }
 }
