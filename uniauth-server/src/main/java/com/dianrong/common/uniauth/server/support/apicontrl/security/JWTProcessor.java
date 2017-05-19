@@ -69,14 +69,14 @@ public class JWTProcessor implements TokenProcessor<ApiCtlPermission> {
         // customized token check
         if (!ISSUER.equals(jwtInfo.getIssuer()) || !AUDIENCE.equals(jwtInfo.getAudience()) || !SUBJECT.equals(jwtInfo.getSubject())) {
             log.error(token + " is a invalid token string");
-            throw new InvalidTokenException();
+            throw new InvalidTokenException("token {0} is invalid!", token);
         }
         try {
             ApiCtlPermission permission = JsonUtil.jsonToObject(jwtInfo.getPermission(), ApiCtlPermission.class);
             return new ApiCaller(jwtInfo.getAccount(), jwtInfo.getName(), permission, jwtInfo.getCreateTime(), jwtInfo.getExpireTime());
         } catch (Throwable t) {
-            log.error(token + " is a invalid token string");
-            throw new InvalidTokenException();
+            log.error(token + " is a invalid token string", t);
+            throw new InvalidTokenException("token {0} is invalid!", token);
         }
     }
 }

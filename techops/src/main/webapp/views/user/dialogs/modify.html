@@ -6,12 +6,12 @@
 <div class="modal-body">
     <ng-form name="modifyUserDialog" novalidate role="form">
         <div class="form-group input-group-lg" ng-class="{true: 'has-error'}[modifyUserDialog.email.$dirty && modifyUserDialog.email.$invalid]">
-            <label class="control-label" for="email" placeholder="{{'userMgr.dialog.add.email' | translate }}">{{'userMgr.dialog.add.email' | translate }}:</label>
-            <input type="text" class="form-control" name="email" id="email" ng-model="user.email">
             <label class="control-label" for="name" placeholder="{{'userMgr.dialog.add.userName' | translate }}">{{'userMgr.dialog.add.userName' | translate }}:</label>
             <input type="text" class="form-control" name="name" id="name" ng-model="user.name">
+            <label class="control-label" for="email" placeholder="{{'userMgr.dialog.add.email' | translate }}">{{'userMgr.dialog.add.email' | translate }}:</label>
+            <input type="email" class="form-control" name="email" id="email" ng-model="user.email">
             <label class="control-label" for="phone" placeholder="{{'userMgr.dialog.add.mobile' | translate }}">{{'userMgr.dialog.add.mobile' | translate }}:</label>
-            <input type="text" class="form-control" name="phone" id="phone" ng-model="user.phone">
+            <input type="text" class="form-control" name="phone" id="phone" ng-model="user.phone" ng-pattern="/^1(3|4|5|7|8)\d{9}$/">
             <br />
             <span class="text-danger"><strong>{{msg}}</strong></span>
         </div>
@@ -20,5 +20,5 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancel()">{{'dialog.cancel' | translate}}</button>
     <button type="button" class="btn btn-primary" ng-click="save()"
-            ng-disabled="(modifyUserDialog.$dirty && modifyUserDialog.$invalid) || modifyUserDialog.$pristine">{{'dialog.save' | translate}}</button>
+            ng-disabled="(modifyUserDialog.$dirty && modifyUserDialog.$invalid) || modifyUserDialog.$pristine ||  !update_btn_enable()">{{'dialog.save' | translate}}</button>
 </div>
