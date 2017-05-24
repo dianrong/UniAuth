@@ -280,7 +280,7 @@ public class GroupResource implements IGroupRWResource {
     @ApiImplicitParams(value = {
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "includeOwner", value = "关系关系是否包含own关系", dataType = "boolean", paramType = "query", defaultValue = "false"),
-            @ApiImplicitParam(name = "includeIndirectAncestors", value = "是否包含非直属关系", dataType = "boolean", paramType = "query", defaultValue = "false"),})
+            @ApiImplicitParam(name = "includeIndirectAncestors", value = "是否包含用户关联组的父组信息", dataType = "boolean", paramType = "query", defaultValue = "false"),})
     @Override
     public Response<List<GroupDto>> listGroupsRelateToUser(GroupQuery query) {
         List<GroupDto> groupList = groupService.listGroupsRelateToUser(query.getUserId(), query.getIncludeOwner(), query.getIncludeIndirectAncestors());
