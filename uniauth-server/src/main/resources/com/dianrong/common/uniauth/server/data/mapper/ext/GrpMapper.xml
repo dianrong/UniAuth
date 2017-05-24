@@ -79,7 +79,7 @@
         from grp 
         where id in (
             <if test="includeIndirectAncestors != null and includeIndirectAncestors">
-                    select descendant from grp_path where ancestor in (
+                    select ancestor from grp_path where descendant in (
             </if>
 		            select grp_id from user_grp where user_id = #{userId, jdbcType=BIGINT}
 		            <if test="includeOwner == null or !includeOwner">
