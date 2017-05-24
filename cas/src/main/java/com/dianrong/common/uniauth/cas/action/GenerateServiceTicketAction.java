@@ -19,6 +19,7 @@ import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("deprecation")
 @Slf4j
 public final class GenerateServiceTicketAction extends AbstractAction {
 

@@ -50,4 +50,24 @@ public class CommonService {
         }
         return roleCodeMap;
     }
+    
+    public Integer getRoleCodeId(String roleCode) {
+        Map<String, RoleCode> roleCodeMap = commonCache.getRoleCodeMap();
+        for(Entry<String, RoleCode> entry : roleCodeMap.entrySet()) {
+            if (entry.getValue().getCode().equalsIgnoreCase(roleCode)) {
+                return StringUtil.tryToTranslateStrToInt(entry.getKey());
+            }
+        }
+        return null;
+    }
+    
+    public Integer getPermTypeId(String permType) {
+        Map<String, PermType> permTypeMap = commonCache.getPermTypeMap();
+        for(Entry<String, PermType> entry : permTypeMap.entrySet()) {
+            if (entry.getValue().getType().equalsIgnoreCase(permType)) {
+                return StringUtil.tryToTranslateStrToInt(entry.getKey());
+            }
+        }
+        return null;
+    }
 }

@@ -34,7 +34,7 @@ public class InitPasswordController {
     // define InitPasswordController process result code
     // success
     private static final int INITPWDSUCCESSCODE = 0;
-    // failed
+    // failure
     private static final int INITPWDFAILEDCODE = 1;
 
     /**

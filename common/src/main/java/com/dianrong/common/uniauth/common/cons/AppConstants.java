@@ -38,6 +38,9 @@ public interface AppConstants {
     String PERM_TYPE_URIPATTERN = "URI_PATTERN";
     String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
     String DOMAIN_CODE_TECHOPS = "techops";
+    
+    // ROLE_NORMAL
+    String ROLE_CODE_ROLE_NORMAL = "ROLE_NORMAL";
 
     /*** zk节点配置相关的常量定义 */
     /**

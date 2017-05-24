@@ -1,10 +1,8 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,12 +15,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.access.regular.SSRegularPattern;
 
+import com.dianrong.common.uniauth.client.support.PermissionUtil;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import lombok.extern.slf4j.Slf4j;
@@ -210,8 +211,16 @@ public final class SingleDomainUserExtInfo extends User {
     }
 
     public static SingleDomainUserExtInfo emptyAuthorityUserInfo(String username, Long id, UserDto userDto, DomainDto domainDto) {
-        return new SingleDomainUserExtInfo(username, "", true, true, true, true, new ArrayList<GrantedAuthority>(), id, userDto, domainDto, new HashMap<String, Set<String>>(),
-                new HashMap<String, Set<PermissionDto>>());
+        return emptyAuthorityUserInfo(username, id, userDto, domainDto, null);
+    }
+
+    public static SingleDomainUserExtInfo emptyAuthorityUserInfo(String username, Long id, UserDto userDto, DomainDto domainDto, IPAPermissionDto ipaPermissionDto) {
+        Map<String, Set<String>> permMap = Maps.newHashMap();
+        Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
+        Collection<GrantedAuthority> authorities = Lists.newArrayList();
+        // 增加对IPA账号的支持
+        PermissionUtil.mergeIPAPermission(ipaPermissionDto, authorities, permMap, permDtoMap);
+        return new SingleDomainUserExtInfo(username, "", true, true, true, true, authorities, id, userDto, domainDto, permMap, permDtoMap);
     }
 
     public Long getId() {
