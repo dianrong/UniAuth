@@ -1270,7 +1270,7 @@ public class UserService extends TenancyBasedService {
     }
 
     /**
-     * . 根据email或phone获取用户信息
+     * 根据email或phone获取用户信息
      * 
      * @param loginParam email或phone
      * @return 信息model
@@ -1284,7 +1284,7 @@ public class UserService extends TenancyBasedService {
     }
 
     /**
-     * . 获取所有的tags，并且根据用户id打上对应的checked标签
+     * 获取所有的tags，并且根据用户id打上对应的checked标签
      * 
      * @param userId 用户id
      * @param domainId 域名id

@@ -1,18 +1,24 @@
 package com.dianrong.common.uniauth.common.util;
 
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * . some functions process String
- * 
- * @author R9GBP97
- */
 @Slf4j
 public class StringUtil {
     /**
-     * . judge str is null or empty
+     * 手机号码正则
+     */
+    public static final Pattern PHONE_NUMBER = Pattern.compile("^1(3|4|5|7|8)\\d{9}$");
+    
+    /**
+     * 邮箱正则
+     */
+    public static final Pattern EMAIL_NUMBER = Pattern.compile("^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+    
+    /**
+     * Judge string is null or empty
      * 
      * @param str str
      * @return boolean
@@ -26,7 +32,7 @@ public class StringUtil {
     }
 
     /**
-     * . 获取对象的字符串表示方式
+     * 获取对象的字符串表示方式
      * 
      * @param obj 对象
      * @return 字符串结果
@@ -39,7 +45,7 @@ public class StringUtil {
     }
 
     /**
-     * . 获取对象的字符串表示方式
+     * 获取对象的字符串表示方式
      * 
      * @param obj 对象
      * @return 字符串结果
@@ -83,7 +89,7 @@ public class StringUtil {
     }
 
     /**
-     * . 生成目标长度的数字字符串
+     * 生成目标长度的数字字符串
      * 
      * @param length
      * @return
@@ -101,7 +107,7 @@ public class StringUtil {
     }
 
     /**
-     * . 获取异常信息的第一行简单信息
+     * 获取异常信息的第一行简单信息
      * 
      * @param detailMessage detailMessage
      * @return 返回信息
@@ -120,34 +126,6 @@ public class StringUtil {
     }
 
     /**
-     * verify phone number
-     * 
-     * @param phoneNumber
-     * @return
-     */
-    public static boolean isPhoneNumber(String phoneNumber) {
-        if (strIsNullOrEmpty(phoneNumber)) {
-            return false;
-        }
-        String regExp = "^1(3|4|5|7|8)\\d{9}$";
-        return phoneNumber.matches(regExp);
-    }
-
-    /**
-     * verify phone number
-     * 
-     * @param phoneNumber
-     * @return
-     */
-    public static boolean isEmailAddress(String emailAddress) {
-        if (strIsNullOrEmpty(emailAddress)) {
-            return false;
-        }
-        String regExp = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-        return emailAddress.matches(regExp);
-    }
-
-    /**
      * 兼容null字符串的trim处理
      * @param orginlStr 原始字符串,可能为null
      * @return 去除两边空格之后的字符串. 如果orginlStr为null, 则返回null
@@ -158,5 +136,24 @@ public class StringUtil {
         }
         return orginlStr.trim();
     }
+    
+    /**
+     * Check whether the string is a regular phone number 
+     * 
+     * @param phoneNumber
+     * @return true if the parameter phoneNumber is a regular phone number
+     */
+    public static boolean isPhoneNumber(String phoneNumber) {
+        return PHONE_NUMBER.matcher(phoneNumber).matches();
+    }
 
+    /**
+     * Check whether the string is a regular email 
+     * 
+     * @param email
+     * @return true if the email string is a regular email
+     */
+    public static boolean isEmailAddress(String email) {
+        return EMAIL_NUMBER.matcher(email).matches();
+    }
 }

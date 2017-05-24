@@ -3,11 +3,17 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 public class UserDetailDto implements Serializable {
     private static final long serialVersionUID = -7182531560501252283L;
     private UserDto userDto;
     // owner group list not considered
     private List<DomainDto> domainList;
+    
+    // IPA账号的权限设计为每个域共有的权限信息
+    private IPAPermissionDto ipaPermissionDto;
 
     public UserDto getUserDto() {
         return userDto;
@@ -27,8 +33,12 @@ public class UserDetailDto implements Serializable {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "UserDetailDto [userDto=" + userDto + ", domainList=" + domainList + "]";
+    public IPAPermissionDto getIpaPermissionDto() {
+        return ipaPermissionDto;
+    }
+
+    public UserDetailDto setIpaPermissionDto(IPAPermissionDto ipaPermissionDto) {
+        this.ipaPermissionDto = ipaPermissionDto;
+        return this;
     }
 }

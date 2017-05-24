@@ -10,14 +10,11 @@ import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * . 用于生成用户的登陆页面的url 存放到flowscope中
  * 
  * @author wanglin
  */
-@Slf4j
 public class GenerateCustomLoginUrlAction {
     @Autowired
     private CfgService cfgService;

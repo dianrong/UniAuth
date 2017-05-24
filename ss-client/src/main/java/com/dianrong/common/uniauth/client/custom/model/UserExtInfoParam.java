@@ -11,11 +11,14 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 
+import lombok.ToString;
+
 /**
  * 用于进行UserExtInfo构造的传参model
  * 
  * @author wanglin
  */
+@ToString
 public class UserExtInfoParam implements Serializable {
     private static final long serialVersionUID = 3389698235561645882L;
 
@@ -138,12 +141,5 @@ public class UserExtInfoParam implements Serializable {
     public UserExtInfoParam setDomainDto(DomainDto domainDto) {
         this.domainDto = domainDto;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "UserExtInfoParam [username=" + username + ", password=" + password + ", enabled=" + enabled + ", accountNonExpired=" + accountNonExpired
-                + ", credentialsNonExpired=" + credentialsNonExpired + ", accountNonLocked=" + accountNonLocked + ", authorities=" + authorities + ", id=" + id + ", userDto="
-                + userDto + ", domainDto=" + domainDto + ", permMap=" + permMap + ", permDtoMap=" + permDtoMap + "]";
     }
 }

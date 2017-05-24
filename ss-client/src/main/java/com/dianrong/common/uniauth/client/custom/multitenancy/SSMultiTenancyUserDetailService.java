@@ -6,10 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.springframework.beans.BeansException;
@@ -20,7 +18,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.OrderComparator;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -32,16 +29,19 @@ import com.dianrong.common.uniauth.client.custom.callback.support.MultipleLoadUs
 import com.dianrong.common.uniauth.client.custom.callback.support.MultipleLoadUserSuccessCallBackDelegate;
 import com.dianrong.common.uniauth.client.custom.model.UserExtInfoParam;
 import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
+import com.dianrong.common.uniauth.client.support.PermissionUtil;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -94,6 +94,8 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
                 throw t;
             } else {
                 UserDto userDto = userDetailDto.getUserDto();
+                // 增加对IPA数据源的支持
+                IPAPermissionDto ipaPermissionDto = userDetailDto.getIpaPermissionDto();
                 Long id = userDto.getId();
                 List<DomainDto> domainDtoList = userDetailDto.getDomainList();
                 Map<String, UserExtInfoParam> userExtInfos = new HashMap<>();
@@ -112,19 +114,13 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
                         tempDomainDtoList = domainDtoList;
                     }
                     for (DomainDto domainDto : tempDomainDtoList) {
-                        Map<String, Set<String>> permMap = new HashMap<String, Set<String>>();
-                        Map<String, Set<PermissionDto>> permDtoMap = new HashMap<>();
-                        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-                        List<RoleDto> roleDtoList = domainDto.getRoleList();
-                        if (roleDtoList != null && !roleDtoList.isEmpty()) {
-                            for (RoleDto roleDto : roleDtoList) {
-                                String roleCode = roleDto.getRoleCode();
-                                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleCode);
-                                authorities.add(authority);
-                                mergePermMap(permMap, roleDto.getPermMap());
-                                mergePermMap(permDtoMap, roleDto.getPermDtoMap());
-                            }
-                        }
+                        Collection<GrantedAuthority> authorities = Sets.newHashSet();
+                        Map<String, Set<String>> permMap = Maps.newHashMap();
+                        Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
+                        PermissionUtil.mergeDomainPermission(domainDto.getRoleList(), authorities, permMap, permDtoMap);
+                        // 增加对IPA账号的支持
+                        PermissionUtil.mergeIPAPermission(ipaPermissionDto, authorities, permMap, permDtoMap);
+
                         UserExtInfoParam userExtInfoParam = new UserExtInfoParam();
                         userExtInfoParam.setUsername(userName).setPassword("fake_password").setEnabled(true).setAccountNonExpired(true).setCredentialsNonExpired(true)
                                 .setAccountNonLocked(true).setAuthorities(authorities).setId(id).setUserDto(userDto).setDomainDto(domainDto).setPermMap(permMap)
@@ -135,10 +131,14 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
                 UserExtInfoParam currentDomainUserInfo = userExtInfos.get(currentDomainCode);
                 if (currentDomainUserInfo == null) {
                     UserExtInfoParam userExtInfoParam = new UserExtInfoParam();
+                    Collection<GrantedAuthority> authorities = Sets.newHashSet();
+                    Map<String, Set<String>> permMap = Maps.newHashMap();
+                    Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
+                    // 增加对IPA账号的支持
+                    PermissionUtil.mergeIPAPermission(ipaPermissionDto, authorities, permMap, permDtoMap);
                     userExtInfoParam.setUsername(userName).setPassword("fake_password").setEnabled(true).setAccountNonExpired(true).setCredentialsNonExpired(true)
-                            .setAccountNonLocked(true).setAuthorities(new ArrayList<GrantedAuthority>()).setId(id).setUserDto(userDto)
-                            .setDomainDto(new DomainDto().setCode(DomainDefine.getStaticDomainCode())).setPermMap(new HashMap<String, Set<String>>())
-                            .setPermDtoMap(new HashMap<String, Set<PermissionDto>>());
+                            .setAccountNonLocked(true).setAuthorities(authorities).setId(id).setUserDto(userDto)
+                            .setDomainDto(new DomainDto().setCode(DomainDefine.getStaticDomainCode())).setPermMap(permMap).setPermDtoMap(permDtoMap);
                     userExtInfos.put(currentDomainCode, userExtInfoParam);
                     currentDomainUserInfo = userExtInfos.get(currentDomainCode);
                 }
@@ -146,7 +146,7 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
                 UserExtInfo userExtInfo;
 
                 if (userInfoClass == null || "".equals(userInfoClass.trim())) {
-                    userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos);
+                    userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos, ipaPermissionDto);
                 } else {
                     try {
                         Class<?> clazz = Class.forName(userInfoClass);
@@ -157,6 +157,8 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
                                         currentDomainUserInfo.isAccountNonExpired(), currentDomainUserInfo.isCredentialsNonExpired(), currentDomainUserInfo.isAccountNonLocked(),
                                         currentDomainUserInfo.getAuthorities(), currentDomainUserInfo.getId(), currentDomainUserInfo.getUserDto(),
                                         currentDomainUserInfo.getDomainDto(), currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap());
+                        // 增加对IPA权限的支持
+                        customeDefineUserExtInfo.setIpaPermissionDto(ipaPermissionDto);
                         if (userInfoCallBack != null) {
                             userInfoCallBack.fill(customeDefineUserExtInfo);
                         }
@@ -164,29 +166,13 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
                     } catch (Exception e) {
                         log.error("Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) " + userInfoClass + " not found. \n (2) "
                                 + userInfoClass + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.", e);
-                        userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos);
+                        userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos, ipaPermissionDto);
                     }
                 }
 
                 // 登陆成功之后, 回调
                 loadUserSuccessCallBack.loadUserSuccess(userExtInfo);
                 return userExtInfo;
-            }
-        }
-    }
-
-    private <T> void mergePermMap(Map<String, Set<T>> permMap, Map<String, Set<T>> subPermMap) {
-        Set<Entry<String, Set<T>>> subEntrySet = subPermMap.entrySet();
-        Iterator<Entry<String, Set<T>>> subEntryIterator = subEntrySet.iterator();
-        while (subEntryIterator.hasNext()) {
-            Entry<String, Set<T>> subEntry = subEntryIterator.next();
-            String permTypeName = subEntry.getKey();
-            Set<T> permValueSet = subEntry.getValue();
-
-            if (permMap.containsKey(permTypeName)) {
-                permMap.get(permTypeName).addAll(permValueSet);
-            } else {
-                permMap.put(permTypeName, permValueSet);
             }
         }
     }
@@ -202,19 +188,19 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
     @Override
     public void afterPropertiesSet() throws Exception {
         Comparator<Object> comparator = OrderComparator.INSTANCE;
-        
+
         String[] loadUserFailedCallBackBeanNames = this.applicationContext.getBeanNamesForType(LoadUserFailedCallBack.class);
         List<LoadUserFailedCallBack> loadUserFailedCallBackList = Lists.newArrayList();
-        for (String failedCallBackName: loadUserFailedCallBackBeanNames) {
+        for (String failedCallBackName : loadUserFailedCallBackBeanNames) {
             loadUserFailedCallBackList.add(this.applicationContext.getBean(failedCallBackName, LoadUserFailedCallBack.class));
         }
         Collections.sort(loadUserFailedCallBackList, comparator);
         this.loadUserFailedCallBack = new MultipleLoadUserFailedCallBackDelegate(loadUserFailedCallBackList);
-        
+
         // success callback
         String[] loadUserSuccessCallBackBeanNames = this.applicationContext.getBeanNamesForType(LoadUserSuccessCallBack.class);
         List<LoadUserSuccessCallBack> loadUserSuccessCallBackList = Lists.newArrayList();
-        for (String successCallBackName: loadUserSuccessCallBackBeanNames) {
+        for (String successCallBackName : loadUserSuccessCallBackBeanNames) {
             loadUserSuccessCallBackList.add(this.applicationContext.getBean(successCallBackName, LoadUserSuccessCallBack.class));
         }
         Collections.sort(loadUserSuccessCallBackList, comparator);

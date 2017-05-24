@@ -21,6 +21,8 @@ public class UserDto extends TenancyBaseDto {
 
     @ApiModelProperty("主键id")
     private Long id;
+    @ApiModelProperty("用户对应的账号")
+    private String account;
     @ApiModelProperty("姓名")
     private String name;
     @ApiModelProperty("密码")
@@ -223,14 +225,32 @@ public class UserDto extends TenancyBaseDto {
         return this;
     }
     
+    public UserDto setAccount(String account) {
+        this.account = account;
+        return this;
+    }
+    
     /**
-     * 用于业务处理, 返回用户的账号(Email > phone)
+     * 用于业务处理, 返回用户的账号(Account>Email > phone)
      * @return 用户账号
      */
     public String getAccount() {
+        if (StringUtils.hasText(this.account)) {
+            return this.account;
+        }
         if (StringUtils.hasText(this.email)) {
             return this.email;
         }
         return this.phone;
+    }
+    
+    /**
+     * 获取用户的姓名展示
+     */
+    public String getDisplayName() {
+        if (StringUtils.hasText(this.name)) {
+            return this.name;
+        }
+        return this.getAccount();
     }
 }

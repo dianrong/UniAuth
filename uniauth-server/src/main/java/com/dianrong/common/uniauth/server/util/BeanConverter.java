@@ -23,6 +23,7 @@ import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.ApiPermission;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
@@ -315,5 +316,15 @@ public class BeanConverter {
 
     public static <T> T convert(Object srcObject, Class<T> toValueType) {
         return JasonUtil.o2o(srcObject, toValueType);
+    }
+    
+    public static UserDto convert(com.dianrong.common.uniauth.server.ldap.ipa.entity.User user) {
+        if (user == null) {
+            return null;
+        } else {
+            UserDto userDto = new UserDto();
+            userDto.setAccount(user.getUid()).setName(user.getCn()).setEmail(user.getEmail()).setPhone(user.getPhone()).setStatus(AppConstants.STATUS_ENABLED);
+            return userDto;
+        }
     }
 }
