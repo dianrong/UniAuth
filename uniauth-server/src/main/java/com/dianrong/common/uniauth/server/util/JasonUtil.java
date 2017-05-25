@@ -6,28 +6,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JasonUtil {
 
-    private static ObjectMapper objectMapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
+  private static ObjectMapper objectMapper =
+      new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
 
-    private JasonUtil() {
+  private JasonUtil() {
 
+  }
+
+  /**
+   * 对转转化为Json.
+   */
+  public static String object2Jason(Object obj) {
+    try {
+      return objectMapper.writeValueAsString(obj);
+    } catch (JsonProcessingException e) {
+      return null;
     }
+  }
 
-    public static String object2Jason(Object obj) {
-        try {
-            return objectMapper.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 将一种类型转换为新的类型
-     * 
-     * @param fromValue
-     * @param toValueType
-     * @return
-     */
-    public static <T> T o2o(Object fromValue, Class<T> toValueType) {
-        return objectMapper.convertValue(fromValue, toValueType);
-    }
+  /**
+   * 将一种类型转换为新的类型.
+   */
+  public static <T> T o2o(Object fromValue, Class<T> toValueType) {
+    return objectMapper.convertValue(fromValue, toValueType);
+  }
 }

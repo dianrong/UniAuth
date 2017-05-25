@@ -1,46 +1,48 @@
 package com.dianrong.common.uniauth.server.mq.v1.ninfo;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
+import java.util.List;
 
 import lombok.ToString;
 
 @ToString
 public class UsersToGroupNotifyInfo extends BaseNotifyInfo {
-    /**
-     * 关联关系中的用户id
-     */
-    protected List<Long> userIds;
-    
-    /**
-     * 关联关系中的组id
-     */
-    protected Integer groupId;
+  /**
+   * 关联关系中的用户id.
+   */
+  protected List<Long> userIds;
 
-    public Integer getGroupId() {
-        return groupId;
-    }
+  /**
+   * 关联关系中的组id.
+   */
+  protected Integer groupId;
 
-    public UsersToGroupNotifyInfo setGroupId(Integer groupId) {
-        this.groupId = groupId;
-        return this;
-    }
+  public Integer getGroupId() {
+    return groupId;
+  }
 
-    public List<Long> getUserIds() {
-        return userIds;
-    }
+  public UsersToGroupNotifyInfo setGroupId(Integer groupId) {
+    this.groupId = groupId;
+    return this;
+  }
 
-    public UsersToGroupNotifyInfo setUserId(Long userId) {
-        if (this.userIds == null) {
-            this.userIds = Lists.newArrayList();
-        }
-        this.userIds.add(userId);
-        return this;
+  public List<Long> getUserIds() {
+    return userIds;
+  }
+
+  /**
+   * 设置用户id.
+   */
+  public UsersToGroupNotifyInfo setUserId(Long userId) {
+    if (this.userIds == null) {
+      this.userIds = Lists.newArrayList();
     }
-    
-    public UsersToGroupNotifyInfo setUserIds(List<Long> userIds) {
-        this.userIds = userIds;
-        return this;
-    }
+    this.userIds.add(userId);
+    return this;
+  }
+
+  public UsersToGroupNotifyInfo setUserIds(List<Long> userIds) {
+    this.userIds = userIds;
+    return this;
+  }
 }

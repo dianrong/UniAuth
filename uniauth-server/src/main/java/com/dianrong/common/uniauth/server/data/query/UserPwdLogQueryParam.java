@@ -8,63 +8,63 @@ import java.util.Date;
  * @author wanglin
  */
 public class UserPwdLogQueryParam {
-    private Long id;
+  private Long id;
 
-    private Long userId;
+  private Long userId;
 
-    private Date createDate;
+  private Date createDate;
 
-    private Long tenancyId;
+  private Long tenancyId;
 
-    private Date createDateBegin;
+  private Date createDateBegin;
 
-    private Date createDateEnd;
+  private Date createDateEnd;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getUserId() {
-        return userId;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
+  public Date getCreateDate() {
+    return createDate;
+  }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
+  }
 
-    public Date getCreateDateBegin() {
-        return createDateBegin;
-    }
+  public Date getCreateDateBegin() {
+    return createDateBegin;
+  }
 
-    public void setCreateDateBegin(Date createDateBegin) {
-        this.createDateBegin = createDateBegin;
-    }
+  public void setCreateDateBegin(Date createDateBegin) {
+    this.createDateBegin = createDateBegin;
+  }
 
-    public Date getCreateDateEnd() {
-        return createDateEnd;
-    }
+  public Date getCreateDateEnd() {
+    return createDateEnd;
+  }
 
-    public void setCreateDateEnd(Date createDateEnd) {
-        this.createDateEnd = createDateEnd;
-    }
+  public void setCreateDateEnd(Date createDateEnd) {
+    this.createDateEnd = createDateEnd;
+  }
 
-    public Long getTenancyId() {
-        return tenancyId;
-    }
+  public Long getTenancyId() {
+    return tenancyId;
+  }
 
-    public void setTenancyId(Long tenancyId) {
-        this.tenancyId = tenancyId;
-    }
+  public void setTenancyId(Long tenancyId) {
+    this.tenancyId = tenancyId;
+  }
 }

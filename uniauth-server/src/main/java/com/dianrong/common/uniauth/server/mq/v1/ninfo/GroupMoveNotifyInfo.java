@@ -6,21 +6,21 @@ import lombok.ToString;
 
 @ToString
 public class GroupMoveNotifyInfo extends BaseGroupNotifyInfo {
-    /**
-     * 目标组id
-     */
-    private Integer targetGroupId;
-    
-    public GroupMoveNotifyInfo() {
-        super.setType(NotifyInfoType.GROUP_MOVE);
-    }
+  /**
+   * 目标组id.
+   */
+  private Integer targetGroupId;
 
-    public Integer getTargetGroupId() {
-        return targetGroupId;
-    }
+  public GroupMoveNotifyInfo() {
+    super.setType(NotifyInfoType.GROUP_MOVE);
+  }
 
-    public GroupMoveNotifyInfo setTargetGroupId(Integer targetGroupId) {
-        this.targetGroupId = targetGroupId;
-        return this;
-    }
+  public Integer getTargetGroupId() {
+    return targetGroupId;
+  }
+
+  public GroupMoveNotifyInfo setTargetGroupId(Integer targetGroupId) {
+    this.targetGroupId = targetGroupId;
+    return this;
+  }
 }
