@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -42,19 +43,24 @@ public class LdapDate {
    */
   @SuppressWarnings("deprecation")
   public LdapDate(String source) {
+    if (!StringUtils.hasText(source)) {
+      log.warn("empty string can not cast to Date");
+      return;
+    }
     try {
       this.date = DateUtils.parseDate(source, DATE_FORMATS);
+      return;
     } catch (ParseException e) {
-      log.warn("{0} is not a format date time string", source, e);
+      log.warn("'{}' is not a format date time string", source, e);
     }
 
     try {
       this.date = new Date(source);
     } catch (Exception e) {
-      log.warn("{0} is not a format date time string", e);
+      log.warn("'{}' is not a format date time string", source, e);
     }
     if (this.date == null) {
-      throw new UniauthCommonException(String.format("{} is not a format date String", source));
+      throw new UniauthCommonException(String.format("%s is not a format date String", source));
     }
   }
 }
