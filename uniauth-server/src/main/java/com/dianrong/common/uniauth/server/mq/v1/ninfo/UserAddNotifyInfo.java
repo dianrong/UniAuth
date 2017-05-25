@@ -7,49 +7,49 @@ import lombok.ToString;
 @ToString
 public class UserAddNotifyInfo extends BaseUserNotifyInfo {
 
-    /**
-     * 姓名
-     */
-    private String name;
+  /**
+   * 姓名.
+   */
+  private String name;
 
-    /**
-     * 邮箱
-     */
-    private String email;
+  /**
+   * 邮箱.
+   */
+  private String email;
 
-    /**
-     * 电话
-     */
-    private String phone;
-    
-    public UserAddNotifyInfo() {
-        super.setType(NotifyInfoType.USER_ADD);
-    }
+  /**
+   * 电话.
+   */
+  private String phone;
 
-    public String getName() {
-        return name;
-    }
+  public UserAddNotifyInfo() {
+    super.setType(NotifyInfoType.USER_ADD);
+  }
 
-    public UserAddNotifyInfo setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public UserAddNotifyInfo setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public UserAddNotifyInfo setEmail(String email) {
-        this.email = email;
-        return this;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public UserAddNotifyInfo setEmail(String email) {
+    this.email = email;
+    return this;
+  }
 
-    public UserAddNotifyInfo setPhone(String phone) {
-        this.phone = phone;
-        return this;
-    }
+  public String getPhone() {
+    return phone;
+  }
+
+  public UserAddNotifyInfo setPhone(String phone) {
+    this.phone = phone;
+    return this;
+  }
 }

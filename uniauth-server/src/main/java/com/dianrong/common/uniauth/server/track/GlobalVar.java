@@ -4,152 +4,152 @@ import java.util.Date;
 
 public class GlobalVar implements Cloneable {
 
-    // operator id
-    private Long userId;
-    private String ip;
-    private String uuid;
-    private String reqUrl;
-    private String method;
-    private String exception;
-    private Byte success;
-    private Long elapse;
-    private Date reqDate;
-    private String reqParam;
-    private String mapper;
-    private Long invokeSeq;
-    private Integer domainId;
-    private Long tenancyId;
-    private String requestDomainCode;
+  // operator id
+  private Long userId;
+  private String ip;
+  private String uuid;
+  private String reqUrl;
+  private String method;
+  private String exception;
+  private Byte success;
+  private Long elapse;
+  private Date reqDate;
+  private String reqParam;
+  private String mapper;
+  private Long invokeSeq;
+  private Integer domainId;
+  private Long tenancyId;
+  private String requestDomainCode;
 
-    public Integer getDomainId() {
-        return domainId;
-    }
+  public Integer getDomainId() {
+    return domainId;
+  }
 
-    public void setDomainId(Integer domainId) {
-        this.domainId = domainId;
-    }
+  public void setDomainId(Integer domainId) {
+    this.domainId = domainId;
+  }
 
-    public Long getInvokeSeq() {
-        return invokeSeq;
-    }
+  public Long getInvokeSeq() {
+    return invokeSeq;
+  }
 
-    public void setInvokeSeq(Long invokeSeq) {
-        this.invokeSeq = invokeSeq;
-    }
+  public void setInvokeSeq(Long invokeSeq) {
+    this.invokeSeq = invokeSeq;
+  }
 
-    public String getMapper() {
-        return mapper;
-    }
+  public String getMapper() {
+    return mapper;
+  }
 
-    public void setMapper(String mapper) {
-        this.mapper = mapper;
-    }
+  public void setMapper(String mapper) {
+    this.mapper = mapper;
+  }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    return super.clone();
+  }
 
-    public String getReqParam() {
-        return reqParam;
-    }
+  public String getReqParam() {
+    return reqParam;
+  }
 
-    public void setReqParam(String reqParam) {
-        this.reqParam = reqParam;
-    }
+  public void setReqParam(String reqParam) {
+    this.reqParam = reqParam;
+  }
 
-    public Long getElapse() {
-        return elapse;
-    }
+  public Long getElapse() {
+    return elapse;
+  }
 
-    public void setElapse(Long elapse) {
-        this.elapse = elapse;
-    }
+  public void setElapse(Long elapse) {
+    this.elapse = elapse;
+  }
 
-    public GlobalVar() {
+  public GlobalVar() {
 
-    }
+  }
 
-    public Byte getSuccess() {
-        return success;
-    }
+  public Byte getSuccess() {
+    return success;
+  }
 
-    public void setSuccess(Byte success) {
-        this.success = success;
-    }
+  public void setSuccess(Byte success) {
+    this.success = success;
+  }
 
-    public String getException() {
-        return exception;
-    }
-
-
-    public void setException(String exception) {
-        this.exception = exception;
-    }
+  public String getException() {
+    return exception;
+  }
 
 
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
+  public void setException(String exception) {
+    this.exception = exception;
+  }
 
 
-    public Long getUserId() {
-        return userId;
-    }
+  public String getMethod() {
+    return method;
+  }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+  public void setMethod(String method) {
+    this.method = method;
+  }
 
-    public String getIp() {
-        return ip;
-    }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public String getUuid() {
-        return uuid;
-    }
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+  public String getIp() {
+    return ip;
+  }
 
-    public String getReqUrl() {
-        return reqUrl;
-    }
+  public void setIp(String ip) {
+    this.ip = ip;
+  }
 
-    public void setReqUrl(String reqUrl) {
-        this.reqUrl = reqUrl;
-    }
+  public String getUuid() {
+    return uuid;
+  }
 
-    public Date getReqDate() {
-        return reqDate;
-    }
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-    public void setReqDate(Date reqDate) {
-        this.reqDate = reqDate;
-    }
+  public String getReqUrl() {
+    return reqUrl;
+  }
 
-    public Long getTenancyId() {
-        return tenancyId;
-    }
+  public void setReqUrl(String reqUrl) {
+    this.reqUrl = reqUrl;
+  }
 
-    public void setTenancyId(Long tenancyId) {
-        this.tenancyId = tenancyId;
-    }
+  public Date getReqDate() {
+    return reqDate;
+  }
 
-    public String getRequestDomainCode() {
-        return requestDomainCode;
-    }
+  public void setReqDate(Date reqDate) {
+    this.reqDate = reqDate;
+  }
 
-    public void setRequestDomainCode(String requestDomainCode) {
-        this.requestDomainCode = requestDomainCode;
-    }
+  public Long getTenancyId() {
+    return tenancyId;
+  }
+
+  public void setTenancyId(Long tenancyId) {
+    this.tenancyId = tenancyId;
+  }
+
+  public String getRequestDomainCode() {
+    return requestDomainCode;
+  }
+
+  public void setRequestDomainCode(String requestDomainCode) {
+    this.requestDomainCode = requestDomainCode;
+  }
 }

@@ -6,21 +6,21 @@ import lombok.ToString;
 
 @ToString
 public class UsersToGroupExchangeNotifyInfo extends UsersToGroupNotifyInfo {
-    /**
-     * 关联关系中的组id
-     */
-    private Integer targetGroupId;
-    
-    public UsersToGroupExchangeNotifyInfo() {
-        super.setType(NotifyInfoType.USERS_TO_GROUP_EXCHANGE);
-    }
-    
-    public Integer getTargetGroupId() {
-        return targetGroupId;
-    }
+  /**
+   * 关联关系中的组id.
+   */
+  private Integer targetGroupId;
 
-    public UsersToGroupExchangeNotifyInfo setTargetGroupId(Integer targetGroupId) {
-        this.targetGroupId = targetGroupId;
-        return this;
-    }
+  public UsersToGroupExchangeNotifyInfo() {
+    super.setType(NotifyInfoType.USERS_TO_GROUP_EXCHANGE);
+  }
+
+  public Integer getTargetGroupId() {
+    return targetGroupId;
+  }
+
+  public UsersToGroupExchangeNotifyInfo setTargetGroupId(Integer targetGroupId) {
+    this.targetGroupId = targetGroupId;
+    return this;
+  }
 }

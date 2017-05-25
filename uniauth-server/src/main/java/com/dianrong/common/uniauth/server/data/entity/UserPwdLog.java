@@ -9,63 +9,63 @@ import java.util.Date;
  */
 public class UserPwdLog {
 
-    private Long id;
+  private Long id;
 
-    private Long userId;
+  private Long userId;
 
-    private String password;
+  private String password;
 
-    private String passwordSalt;
+  private String passwordSalt;
 
-    private Date createDate;
+  private Date createDate;
 
-    private Long tenancyId;
+  private Long tenancyId;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getUserId() {
-        return userId;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public String getPasswordSalt() {
-        return passwordSalt;
-    }
+  public String getPasswordSalt() {
+    return passwordSalt;
+  }
 
-    public void setPasswordSalt(String passwordSalt) {
-        this.passwordSalt = passwordSalt;
-    }
+  public void setPasswordSalt(String passwordSalt) {
+    this.passwordSalt = passwordSalt;
+  }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
+  public Date getCreateDate() {
+    return createDate;
+  }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
+  }
 
-    public Long getTenancyId() {
-        return tenancyId;
-    }
+  public Long getTenancyId() {
+    return tenancyId;
+  }
 
-    public void setTenancyId(Long tenancyId) {
-        this.tenancyId = tenancyId;
-    }
+  public void setTenancyId(Long tenancyId) {
+    this.tenancyId = tenancyId;
+  }
 }

@@ -6,23 +6,23 @@ package com.dianrong.common.uniauth.server.data.entity;
  * @author wanglin
  */
 public class PageParam {
-    private int pageSize;
+  private int pageSize;
 
-    private int pageOffSet;
+  private int pageOffSet;
 
-    public int getPageSize() {
-        return pageSize;
-    }
+  public int getPageSize() {
+    return pageSize;
+  }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
+  public void setPageSize(int pageSize) {
+    this.pageSize = pageSize;
+  }
 
-    public int getPageOffSet() {
-        return pageOffSet;
-    }
+  public int getPageOffSet() {
+    return pageOffSet;
+  }
 
-    public void setPageOffSet(int pageOffSet) {
-        this.pageOffSet = pageOffSet;
-    }
+  public void setPageOffSet(int pageOffSet) {
+    this.pageOffSet = pageOffSet;
+  }
 }
