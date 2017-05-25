@@ -57,7 +57,7 @@ public class LdapDate {
     try {
       this.date = new Date(source);
     } catch (Exception e) {
-      log.warn("'{}' is not a format date time string", source, e);
+      log.warn("can not cast string '{}' to a Date", source, e);
     }
     if (this.date == null) {
       throw new UniauthCommonException(String.format("%s is not a format date String", source));
