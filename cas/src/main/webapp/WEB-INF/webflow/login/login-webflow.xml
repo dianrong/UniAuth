@@ -164,6 +164,7 @@
         <transition on="FailedLoginException" to="generateLoginTicket"/>
         <transition on="AccountNotFoundException" to="generateLoginTicket"/>
         <transition on="UserPasswordNotMatchException" to="generateLoginTicket"/>
+        <transition on="IpaAccountLoginFailedTooManyTimesException" to="generateLoginTicket"/>
         
         <transition on="FreshUserException" to="casFreshUserView"/>
         <transition on="MultiUsersFoundException" to="generateLoginTicket"/>

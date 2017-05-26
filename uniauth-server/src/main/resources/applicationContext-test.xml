@@ -5,10 +5,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
 
-    <ldap:context-source
-          url="ldap://10.8.10.103:389"
-          base="dc=dianrong,dc=com"
-          username="cn=admin,dc=dianrong,dc=com"
-          password="123456" />
+   <ldap:context-source
+          url="ldap://haipa5.dc.dianrong.com:389"
+          base="cn=accounts,dc=ipa,dc=dianrong,dc=com"
+          username="uid=svc-uniauth,cn=users,cn=accounts,dc=ipa,dc=dianrong,dc=com" 
+          password="C8qGgCoMzWsvh3"/>
+
+<!--     <ldap:context-source -->
+<!--           url="ldap://10.8.10.103:389" -->
+<!--           base="dc=dianrong,dc=com" -->
+<!--           username="cn=admin,dc=dianrong,dc=com" -->
+<!--           password="123456" /> -->
    <ldap:ldap-template id="ldapTemplate" />
 </beans>

@@ -909,10 +909,25 @@ public class UserService extends TenancyBasedService {
    * 根据账号以及租户信息查询用户的详细信息.
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
+    return getUserDetailInfo(loginParam, false);
+  }
+  
+  /**
+   * 根据账号以及租户信息查询用户的详细信息.
+   * @param loginStatusCheck 是否检测用户的登陆可用状态
+   */
+  public UserDetailDto getUserDetailInfo(LoginParam loginParam, boolean loginStatusCheck) {
     String account = loginParam.getAccount();
     CheckEmpty.checkEmpty(account, "账号");
     User user = getUserByAccount(account, loginParam.getTenancyCode(), loginParam.getTenancyId(),
         true, AppConstants.STATUS_ENABLED);
+    if (loginStatusCheck) {
+      // check user lock status
+      if (user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT) {
+        throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT,
+            UniBundle.getMsg("user.login.account.lock"));
+      }
+    }
     UserDetailDto userDetailDto = getUserDetailDto(user);
     return userDetailDto;
   }
@@ -1296,7 +1311,7 @@ public class UserService extends TenancyBasedService {
    * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
    * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
    * @return 用户信息
-   * @throws AppException not found or find multi user
+   * @throws AppException not found or find multiple user
    */
   public User getUserByAccount(String account, String tenancyCode, Long tenancyId,
       boolean withPhoneChecked, Byte status) {
