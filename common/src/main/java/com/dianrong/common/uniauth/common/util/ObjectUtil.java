@@ -1,9 +1,9 @@
-package com.dianrong.common.uniauth.server.util;
+package com.dianrong.common.uniauth.common.util;
 
 import java.util.Collection;
 
 /**
- * . object 处理相关的 util
+ * Object处理相关的工具类.
  * 
  * @author wanglin
  */

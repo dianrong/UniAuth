@@ -46,6 +46,9 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   `create_date` DATETIME  not null default now() comment '创建时间',
   `last_update` DATETIME  not null default now() comment '最近更新时间',
    `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
+  `create_date` DATETIME  comment '创建时间',
+  `last_update` DATETIME  comment '最近更新时间',
+>>>>>>> refs/remotes/origin/develop
     PRIMARY KEY (`id`) comment '主键' ,
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
   
