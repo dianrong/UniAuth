@@ -72,7 +72,7 @@ public class IpaService {
       throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND,
           UniBundle.getMsg("user.login.notfound", loginParam.getAccount()));
     } catch (OperationNotSupportedException ose) {
-      log.warn("IPA login, account {0} not support login", ose);
+      log.warn("IPA login, account {0} too many times login failed", ose);
       throw new AppException(InfoName.LOGIN_ERROR_IPA_TOO_MANY_FAILED,
           UniBundle.getMsg("user.login.account.lock"));
     } catch (Exception e) {
