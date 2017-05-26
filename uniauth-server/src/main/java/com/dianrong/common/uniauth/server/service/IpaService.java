@@ -8,6 +8,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
+import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.exp.AppException;
@@ -21,15 +22,18 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.OperationNotSupportedException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 处理IPA相关信息.
@@ -42,6 +46,9 @@ public class IpaService {
 
   @Autowired
   private UserDao userDao;
+
+  @Autowired
+  private UserService userService;
 
   @Autowired
   private TenancyCache tenancyCache;
@@ -64,15 +71,33 @@ public class IpaService {
       log.warn("IPA login, account {0} not exsits", eda);
       throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND,
           UniBundle.getMsg("user.login.notfound", loginParam.getAccount()));
+    } catch (OperationNotSupportedException ose) {
+      log.warn("IPA login, account {0} not support login", ose);
+      throw new AppException(InfoName.LOGIN_ERROR_IPA_TOO_MANY_FAILED,
+          UniBundle.getMsg("user.login.account.lock"));
     } catch (Exception e) {
       log.warn("IPA login, account {0} login failed", e);
       throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.error"));
     }
     // load user basic information
     User user = userDao.getUserByAccount(loginParam.getAccount());
-    UserDto dto = BeanConverter.convert(user);
-    dto.setTenancyId(StringUtil.translateLongToInteger(defaultTenancyId));
-    return dto;
+    if (StringUtils.hasText(user.getEmail())) {
+      try {
+        UserDto uniauthUserDto = userService.getSingleUser(
+            new UserParam().setEmail(user.getEmail()).setTenancyId(defaultTenancyId));
+        if (uniauthUserDto != null) {
+          return uniauthUserDto;
+        }
+        log.debug("{}'s email did'not registry in uniauth", loginParam.getAccount());
+      } catch (Exception ex) {
+        log.debug("{}'s email did'not registry in uniauth", loginParam.getAccount(), ex);
+      }
+    }
+
+    // 没有关联的IPA账号
+    UserDto ipaDto = BeanConverter.convert(user);
+    ipaDto.setTenancyId(StringUtil.translateLongToInteger(defaultTenancyId));
+    return ipaDto;
   }
 
   /**
@@ -80,17 +105,29 @@ public class IpaService {
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
     CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
-    Long tenancyId = tenancyIdentityCheck(loginParam.getTenancyCode(), loginParam.getTenancyId(),
-        loginParam.getAccount());
+    Long defaultTenancyId = tenancyIdentityCheck(loginParam.getTenancyCode(),
+        loginParam.getTenancyId(), loginParam.getAccount());
     User user = userDao.getUserByAccount(loginParam.getAccount());
     if (user == null) {
       log.warn("Account {0} not found detail infomartion", loginParam.getAccount());
       return null;
     }
-    UserDto dto = BeanConverter.convert(user);
-    dto.setTenancyId(StringUtil.translateLongToInteger(tenancyId));
-    UserDetailDto userDetailDto = new UserDetailDto();
-    userDetailDto.setUserDto(dto);
+    UserDetailDto userDetailDto = null;
+    if (StringUtils.hasText(user.getEmail())) {
+      // 关联Uniauth中的账号,权限信息
+      try {
+        userDetailDto = userService.getUserDetailInfo(
+            new LoginParam().setAccount(user.getEmail()).setTenancyId(defaultTenancyId), true);
+      } catch (Exception ex) {
+        log.debug("{}'s email did'not registry in uniauth", loginParam.getAccount(), ex);
+      }
+    }
+    if (userDetailDto == null) {
+      UserDto dto = BeanConverter.convert(user);
+      dto.setTenancyId(StringUtil.translateLongToInteger(defaultTenancyId));
+      userDetailDto = new UserDetailDto();
+      userDetailDto.setUserDto(dto);
+    }
     userDetailDto.setIpaPermissionDto(constructIpaPermission(user.getGroups()));
     return userDetailDto;
   }

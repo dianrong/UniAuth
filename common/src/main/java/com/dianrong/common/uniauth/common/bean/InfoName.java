@@ -28,6 +28,8 @@ public enum InfoName {
     LOGIN_ERROR_STATUS_1,
     @ApiModelProperty("登陆错误，用户登陆失败次数过多被锁定")
     LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT,
+    @ApiModelProperty("登陆错误，IPA账号登陆失败次数太多")
+    LOGIN_ERROR_IPA_TOO_MANY_FAILED,
     @ApiModelProperty("登陆错误，用户需要初始化密码")
     LOGIN_ERROR_NEW_USER,
     @ApiModelProperty("登陆错误，用户密码过期需要重新设定")

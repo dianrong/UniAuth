@@ -3,16 +3,17 @@ package com.dianrong.common.uniauth.server.test.ldap;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.OperationNotSupportedException;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext-test.xml")
@@ -102,15 +103,20 @@ public class SearchTest extends AbstractJUnit4SpringContextTests {
   @Test
   public void testAuthentication() {
     String account = "wangw";
-    String password = "xxxxxxxx!!";
-    try {
-      authentication(account, password);
-    } catch (AuthenticationException ex) {
-      ex.printStackTrace();
-    } catch (EmptyResultDataAccessException e2) {
-      e2.printStackTrace();
-    } catch (Exception e1) {
-      e1.printStackTrace();
+    String password = "6631411Qq!";
+    for (int i = 0; i < 16; i++) {
+      try {
+        authentication(account, password);
+        System.out.println("success");
+      } catch (AuthenticationException ex) {
+        ex.printStackTrace();
+      } catch (EmptyResultDataAccessException e2) {
+        e2.printStackTrace();
+      } catch (OperationNotSupportedException ose) {
+        ose.printStackTrace();
+      } catch (Exception e1) {
+        e1.printStackTrace();
+      }
     }
   }
 

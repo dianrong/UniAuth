@@ -28,6 +28,7 @@ public class UserDao {
    * @param password 密码
    * @throws AuthenticationException 账号和密码不匹配
    * @throws EmptyResultDataAccessException 账号不存在
+   * @throws OperationNotSupportedException 账号被锁定
    */
   public void authenticate(String account, String password) {
     ldapTemplate.authenticate(query().base(IpaConstants.USER_BASE).where("uid").is(account),
