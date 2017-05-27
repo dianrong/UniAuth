@@ -21,6 +21,7 @@ import org.jasig.inspektr.common.web.ClientInfoHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
+import com.dianrong.common.uniauth.cas.exp.IpaAccountLoginFailedTooManyTimesException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
@@ -77,6 +78,8 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
                     throw new AccountDisabledException(userName + " disabled(status == 1) in db.");
                 } else if (InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT.equals(infoName)) {
                     throw new AccountLockedException(userName + " locked due to too many failed login attempts.");
+                } else if (InfoName.LOGIN_ERROR_IPA_TOO_MANY_FAILED.equals(infoName)) {
+                  throw new IpaAccountLoginFailedTooManyTimesException("IPA Account " + userName + " login failed too many times.");
                 } else if (InfoName.LOGIN_ERROR_NEW_USER.equals(infoName)) {
                     throw new FreshUserException("Newly added user, must modify password first.");
                 } else if (InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH.equals(infoName)) {
@@ -91,7 +94,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
         }
         Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put(CasProtocal.DianRongCas.getTenancyIdName(), StringUtil.translateIntegerToLong(response.getData().getTenancyId()));
-        // 防止userName中有空格
+        // 防止userName中有空格,  这地方必须使用登陆使用的userName, 不能使用登陆返回的用户中的账号信息.
         return createHandlerResult(credential, this.principalFactory.createPrincipal(userName, attributes), null);
     }
 

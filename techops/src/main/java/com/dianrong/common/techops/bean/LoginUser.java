@@ -13,55 +13,55 @@ import java.util.Set;
  */
 public class LoginUser {
 
-    private UserDto user;
-    private List<RoleDto> roles;
-    private Map<String, Set<String>> permMap;
-    private List<DomainDto> switchableDomains;
-    
-    // 用户更新数据的跳转url
-    private transient  String userInfoUpdateUrl;
+  private UserDto user;
+  private List<RoleDto> roles;
+  private Map<String, Set<String>> permMap;
+  private List<DomainDto> switchableDomains;
 
-    public UserDto getUser() {
-        return user;
-    }
+  // 用户更新数据的跳转url
+  private transient String userInfoUpdateUrl;
 
-    public LoginUser setUser(UserDto user) {
-        this.user = user;
-        return this;
-    }
+  public UserDto getUser() {
+    return user;
+  }
 
-    public List<RoleDto> getRoles() {
-        return roles;
-    }
+  public LoginUser setUser(UserDto user) {
+    this.user = user;
+    return this;
+  }
 
-    public LoginUser setRoles(List<RoleDto> roles) {
-        this.roles = roles;
-        return this;
-    }
+  public List<RoleDto> getRoles() {
+    return roles;
+  }
 
-    public Map<String, Set<String>> getPermMap() {
-        return permMap;
-    }
+  public LoginUser setRoles(List<RoleDto> roles) {
+    this.roles = roles;
+    return this;
+  }
 
-    public LoginUser setPermMap(Map<String, Set<String>> permMap) {
-        this.permMap = permMap;
-        return this;
-    }
+  public Map<String, Set<String>> getPermMap() {
+    return permMap;
+  }
 
-    public List<DomainDto> getSwitchableDomains() {
-        return switchableDomains;
-    }
+  public LoginUser setPermMap(Map<String, Set<String>> permMap) {
+    this.permMap = permMap;
+    return this;
+  }
 
-    public LoginUser setSwitchableDomains(List<DomainDto> switchableDomains) {
-        this.switchableDomains = switchableDomains;
-        return this;
-    }
+  public List<DomainDto> getSwitchableDomains() {
+    return switchableDomains;
+  }
 
-	public String getUserInfoUpdateUrl() {
-		return userInfoUpdateUrl;
-	}
+  public LoginUser setSwitchableDomains(List<DomainDto> switchableDomains) {
+    this.switchableDomains = switchableDomains;
+    return this;
+  }
 
-	public void setUserInfoUpdateUrl(String userInfoUpdateUrl) {
-		this.userInfoUpdateUrl = userInfoUpdateUrl;
-	}
+  public String getUserInfoUpdateUrl() {
+    return userInfoUpdateUrl;
+  }
+
+  public void setUserInfoUpdateUrl(String userInfoUpdateUrl) {
+    this.userInfoUpdateUrl = userInfoUpdateUrl;
+  }
 }

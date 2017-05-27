@@ -10,11 +10,12 @@ import com.dianrong.common.uniauth.server.service.ConfigService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
 
 import io.swagger.annotations.Api;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+;
 
 /**
  * Created by Arc on 25/3/2016.
@@ -23,33 +24,36 @@ import java.util.Map;
 @RestController
 public class ConfigResource implements IConfigRWResource {
 
-    @Autowired
-    private ConfigService configService;
+  @Autowired
+  private ConfigService configService;
 
-    @Override
-    public Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam) {
-        ConfigDto configDto = configService.addOrUpdateConfig(cfgParam.getId(), cfgParam.getCfgKey(), cfgParam.getCfgTypeId(), cfgParam.getValue(), cfgParam.getFile());
-        return Response.success(configDto);
-    }
+  @Override
+  public Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam) {
+    ConfigDto configDto = configService.addOrUpdateConfig(cfgParam.getId(), cfgParam.getCfgKey(),
+        cfgParam.getCfgTypeId(), cfgParam.getValue(), cfgParam.getFile());
+    return Response.success(configDto);
+  }
 
-    @Override
-    @Timed
-    public Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam) {
-        PageDto<ConfigDto> configDtoPageDto = configService.queryConfig(cfgParam.getCfgKeys(), cfgParam.getCfgKeyLike(), cfgParam.getId(), cfgParam.getCfgKey(),
-                cfgParam.getCfgTypeId(), cfgParam.getValue(), cfgParam.getNeedBLOBs(), cfgParam.getPageSize(), cfgParam.getPageNumber());
-        return Response.success(configDtoPageDto);
-    }
+  @Override
+  @Timed
+  public Response<PageDto<ConfigDto>> queryConfig(CfgParam cfgParam) {
+    PageDto<ConfigDto> configDtoPageDto =
+        configService.queryConfig(cfgParam.getCfgKeys(), cfgParam.getCfgKeyLike(), cfgParam.getId(),
+            cfgParam.getCfgKey(), cfgParam.getCfgTypeId(), cfgParam.getValue(),
+            cfgParam.getNeedBLOBs(), cfgParam.getPageSize(), cfgParam.getPageNumber());
+    return Response.success(configDtoPageDto);
+  }
 
-    @Override
-    public Response<Void> delConfig(PrimaryKeyParam primaryKeyParam) {
-        configService.delConfig(primaryKeyParam.getId());
-        return Response.success();
-    }
+  @Override
+  public Response<Void> delConfig(PrimaryKeyParam primaryKeyParam) {
+    configService.delConfig(primaryKeyParam.getId());
+    return Response.success();
+  }
 
-    @Override
-    public Response<Map<Integer, String>> getAllCfgTypes() {
-        Map<Integer, String> cfgTypesMap = configService.getAllCfgTypesIdCodePair();
-        return Response.success(cfgTypesMap);
-    }
+  @Override
+  public Response<Map<Integer, String>> getAllCfgTypes() {
+    Map<Integer, String> cfgTypesMap = configService.getAllCfgTypesIdCodePair();
+    return Response.success(cfgTypesMap);
+  }
 
 }

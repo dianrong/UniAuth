@@ -48,5 +48,5 @@
     
     <rabbit:template id="uniauth_mq_template" exchange="#{uniauthConfig['rabbit.exchange']}" connection-factory="uniauth_mq_connectionFactory"  message-converter="daJsonMessageConverter"/>
     <bean id="daJsonMessageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"/>  
-    <bean id="mqSender" class="com.dianrong.common.uniauth.server.mq.MQSenderFactory"  factory-bean="mqSenderFactory"  factory-method="getSender"/>
+    <bean id="mqSender" class="com.dianrong.common.uniauth.server.mq.MqSenderFactory"  factory-bean="mqSenderFactory"  factory-method="getSender"/>
 </beans>

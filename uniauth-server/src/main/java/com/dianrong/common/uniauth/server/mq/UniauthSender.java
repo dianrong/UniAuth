@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 
 /**
  * <pre>
- * uniauth中的消息发送接口
+ * uniauth中的消息发送接口.
  * </pre>
  * 
  * @author cwl
@@ -12,11 +12,9 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
  */
 public interface UniauthSender {
 
-    /**
-     * 添加用户发送消息
-     * 
-     * @param user
-     */
-    public void sendUserAdd(UserDto user);
+  /**
+   * 添加用户发送消息.
+   */
+  public void sendUserAdd(UserDto user);
 
 }

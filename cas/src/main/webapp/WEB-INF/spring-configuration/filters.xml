@@ -90,6 +90,7 @@
                 <ref bean="casRequest1"/>
                 <ref bean="casRequest2"/>
                 <ref bean="casRequest3"/>
+                <ref bean="casRequest4"/>
               </list>
         </constructor-arg>
     </bean>
@@ -108,6 +109,12 @@
     <bean id="casRequest3" class="com.dianrong.common.uniauth.cas.filter.support.CasRequest">
          <constructor-arg>
              <value>/uniauth/userinfo/password</value>
+         </constructor-arg>
+        <property name="method" value="POST"/>
+    </bean>
+    <bean id="casRequest4" class="com.dianrong.common.uniauth.cas.filter.support.CasRequest">
+         <constructor-arg>
+             <value>/uniauth/initPassword/process</value>
          </constructor-arg>
         <property name="method" value="POST"/>
     </bean>

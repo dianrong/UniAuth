@@ -17,6 +17,7 @@ public class UniauthAuthenticationExceptionHandler extends AuthenticationExcepti
         errorList.add(com.dianrong.common.uniauth.cas.exp.FreshUserException.class);
         errorList.add(com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException.class);
         errorList.add(com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException.class);
+        errorList.add(com.dianrong.common.uniauth.cas.exp.IpaAccountLoginFailedTooManyTimesException.class);
         super.setErrors(errorList);
     }
 }
