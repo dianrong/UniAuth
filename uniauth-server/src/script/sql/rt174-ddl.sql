@@ -13,8 +13,8 @@ alter table user add user_guid varchar(80) comment '用户的guid' after phone;
 -- update table user_extend_val
 alter table user_extend_val drop column status;
 alter table user_extend_val change value_  `value` varchar(200) not null default '' comment '扩展属性值';
-alter table user_extend_val add create_date datetime not null default now() comment '记录创建时间';
-alter table user_extend_val add last_update datetime not null default now() comment '最近更新时间';
+alter table user_extend_val add create_date datetime comment '记录创建时间';
+alter table user_extend_val add last_update datetime comment '最近更新时间';
 
 -- -----------------------------------------------------
 -- Table `user_detail`
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   `entry_date` DATETIME comment '入职时间',
   `leave_date` DATETIME comment '离职时间',
   `remark` varchar(200) comment '备注',
-  `create_date` DATETIME  not null default now() comment '创建时间',
-  `last_update` DATETIME  not null default now() comment '最近更新时间',
+  `create_date` DATETIME  comment '创建时间',
+  `last_update` DATETIME comment '最近更新时间',
    `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
     PRIMARY KEY (`id`) comment '主键' ,
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS `user_work_relationship` (
   `work_phone` varchar(60) comment '工作电话',
   `work_location` varchar(100) comment '工作低点',
   `work_address` varchar(100) comment '工作低点',
-  `create_date` DATETIME  not null default now() comment '创建时间',
-  `last_update` DATETIME  not null default now() comment '最近更新时间',
+  `create_date` DATETIME  comment '创建时间',
+  `last_update` DATETIME comment '最近更新时间',
    `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
     PRIMARY KEY (`id`) comment '主键' ,
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS `user_attribute_records` (
   `extend_id` INT(11) NOT NULL comment '关联的扩展属性id',
   `pre_val` varchar(200) comment '操作前的值',
   `cur_val` varchar(200) comment '操作后的值',
-  `create_date` DATETIME  not null default now() comment '创建时间',
-  `last_update` DATETIME  not null default now() comment '最近更新时间',
+  `create_date` DATETIME  comment '创建时间',
+  `last_update` DATETIME comment '最近更新时间',
    `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
     PRIMARY KEY (`id`) comment '主键' ,
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -118,8 +118,8 @@ CREATE TABLE IF NOT EXISTS `grp_attribute_records` (
   `extend_id` INT(11) NOT NULL comment '关联的扩展属性id',
   `pre_val` varchar(200) comment '操作前的值',
   `cur_val` varchar(200) comment '操作后的值',
-  `create_date` DATETIME  not null default now() comment '创建时间',
-  `last_update` DATETIME  not null default now() comment '最近更新时间',
+  `create_date` DATETIME  comment '创建时间',
+  `last_update` DATETIME comment '最近更新时间',
    `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
     PRIMARY KEY (`id`) comment '主键' ,
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -127,6 +127,3 @@ CREATE TABLE IF NOT EXISTS `grp_attribute_records` (
   -- -------------------------------------------------------------------
   -- Add table index, forein key
   -- -------------------------------------------------------------------
-  -- Table user
-  alter table `user` add constraint 外键名 foreign key(需加外键表的字段名) referencnes 关联表名(关联字段名);
-注意：外键名不能重复
