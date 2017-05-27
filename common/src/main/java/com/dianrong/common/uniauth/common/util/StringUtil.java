@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.util;
 
+import java.net.URL;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -155,5 +156,20 @@ public class StringUtil {
      */
     public static boolean isEmailAddress(String email) {
         return EMAIL_NUMBER.matcher(email).matches();
+    }
+    
+    /**
+     * 判断一个URL是不是一个规范的地址
+     */
+    public static boolean isValidUrl(String url) {
+      if (strIsNullOrEmpty(url)) {
+        return false;
+      }
+      try {
+        new URL(url);
+        return true;
+      } catch(Exception ex) {
+      }
+      return false;
     }
 }
