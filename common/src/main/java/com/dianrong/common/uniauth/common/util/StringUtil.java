@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.util;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -168,7 +169,7 @@ public class StringUtil {
       try {
         new URL(url);
         return true;
-      } catch(Exception ex) {
+      } catch(MalformedURLException ex) {
       }
       return false;
     }
