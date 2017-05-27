@@ -7,18 +7,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
 
-import org.junit.Test;
 import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Maps;
 
 public class FileToolTest {
-
-  @Test
-  public void getNamesAndEmails() throws IOException {
-    Map<String, String> nameEmailMap = readFiles("xxxx");
-    System.out.println(nameEmailMap.size());
-  }
 
   public Map<String, String> readFiles(String path) throws IOException {
     File file = new File(path);
