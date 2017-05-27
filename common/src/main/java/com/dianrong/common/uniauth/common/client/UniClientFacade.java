@@ -59,11 +59,14 @@ public class UniClientFacade {
         init();
     }
 
-    public UniClientFacade(String uniWsEndpoint, String apiName, String apiKey) {
+    public UniClientFacade(String uniWsEndpoint, String apiName, String apiKey, String account, String password) {
         this.uniWsEndpoint = uniWsEndpoint;
         this.apiName = apiName;
         this.apiKey = apiKey;
-        init();
+        SimpleApiCtrlAccountHolder simpleApiCtrlAccountHolder = new SimpleApiCtrlAccountHolder();
+        simpleApiCtrlAccountHolder.setAccount(account);
+        simpleApiCtrlAccountHolder.setPassword(password);
+        apiCtrlAccountHolder = simpleApiCtrlAccountHolder;
     }
 
     private IDomainResource domainResource;
@@ -95,7 +98,10 @@ public class UniClientFacade {
                     .setCtlSwitch(new ApiCallCtlSwitch() {
                         @Override
                         public boolean apiCtlOn() {
-                            return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+                            if (allZkNodeMap != null) {
+                                return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+                            }
+                            return true;
                         }
                     });
         }

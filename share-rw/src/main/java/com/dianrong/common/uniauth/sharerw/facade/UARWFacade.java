@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ws.rs.client.ClientRequestFilter;
 
+import com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,8 @@ public class UARWFacade {
     @Value("#{uniauthConfig['uniauth_api_key']}")
     private String apiKey;
 
+    public UARWFacade(){}
+
     @Resource(name = "uniauthConfig")
     private Map<String, String> allZkNodeMap;
 
@@ -73,7 +76,10 @@ public class UARWFacade {
             ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword()).setCtlSwitch(new ApiCallCtlSwitch() {
                 @Override
                 public boolean apiCtlOn() {
-                    return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+                    if (allZkNodeMap != null) {
+                        return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+                    }
+                    return true;
                 }
             });
         }
@@ -91,6 +97,14 @@ public class UARWFacade {
 
         ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource, permissionRWResource, userRWResource, roleRWResource, auditResource, configRWResource,
                 tagRWResource, tenancyRWResource);
+    }
+
+    public UARWFacade(String uniWsEndpoint, String account, String password) {
+        this.uniWsEndpoint = uniWsEndpoint;
+        SimpleApiCtrlAccountHolder simpleApiCtrlAccountHolder = new SimpleApiCtrlAccountHolder();
+        simpleApiCtrlAccountHolder.setAccount(account);
+        simpleApiCtrlAccountHolder.setPassword(password);
+        apiCtrlAccountHolder = simpleApiCtrlAccountHolder;
     }
 
     public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {

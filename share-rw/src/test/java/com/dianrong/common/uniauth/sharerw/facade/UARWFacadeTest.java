@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UARWFacadeTest {
 
     static {
-        System.setProperty("DR_CFG_ZOOKEEPER_ENV_URL", "127.0.0.1:2181");
+        System.setProperty("DR_CFG_ZOOKEEPER_ENV_URL", "10.18.19.64:12181");
     }
     
     @Autowired
@@ -42,32 +42,32 @@ public class UARWFacadeTest {
     @Test
     public void addUserExtend() throws Exception {
         IUserExtendRWResource userExtendResource=facade.getUserExtendRWResource();
-        
+
         UserExtendParam userExtendParam=new UserExtendParam();
         userExtendParam.setCode("aaaa");
         userExtendParam.setDescription("aaaaaaaaaaaaaaaaaaaaaaa");
         Response<UserExtendDto> response1= userExtendResource.addUserExtend(userExtendParam);
-        
+
         System.out.println(mapper.writeValueAsString(response1));
     }
 
     @Test
     public void updateUserExtend() throws JsonProcessingException{
         IUserExtendRWResource userExtendResource=facade.getUserExtendRWResource();
-        
+
         UserExtendParam userExtendParam=new UserExtendParam();
         userExtendParam.setId(9l);
         userExtendParam.setCode("wwf");
         userExtendParam.setDescription("aaaaaaaaacccaaaaaaaaaaaaaa");
         Response<Integer> response1= userExtendResource.updateUserExtend(userExtendParam);
-        
+
         System.out.println(mapper.writeValueAsString(response1));
     }
 
     @Test
     public void searchUserExtend() throws JsonProcessingException{
         IUserExtendRWResource userExtendResource=facade.getUserExtendRWResource();
-        
+
         UserExtendPageParam userExtendParam=new UserExtendPageParam();
         userExtendParam.setCode("a");
         userExtendParam.setPageNumber(1);
@@ -79,49 +79,49 @@ public class UARWFacadeTest {
     @Test
     public void addUserExtendVal() throws JsonProcessingException{
         IUserExtendValRWResource userExtendResource=facade.getUserExtendValRWResource();
-        
+
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setExtendId(2l);
         userExtendValParam.setUserId(300000001l);
         userExtendValParam.setValue("5");
-        
+
         Response<UserExtendValDto> response1=userExtendResource.add(userExtendValParam);
-        
+
         System.out.println(mapper.writeValueAsString(response1));
     }
 
     @Test
     public void updateUserExtendVal() throws JsonProcessingException{
         IUserExtendValRWResource userExtendResource=facade.getUserExtendValRWResource();
-        
+
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setId(2l);
         userExtendValParam.setValue("8");
-        
+
         Response<Integer> response1=userExtendResource.updateById(userExtendValParam);
-        
+
         System.out.println(mapper.writeValueAsString(response1));
     }
 
     @Test
     public void delUserExtendVal() throws JsonProcessingException{
         IUserExtendValRWResource userExtendResource=facade.getUserExtendValRWResource();
-        
+
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setId(2l);
-        
+
         Response<Integer> response1=userExtendResource.delById(userExtendValParam);
-        
+
         System.out.println(mapper.writeValueAsString(response1));
     }
 
     @Test
     public void searchUserExtendVal() throws JsonProcessingException{
         IUserExtendValRWResource userExtendResource=facade.getUserExtendValRWResource();
-        
+
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setUserId(300000001l);
-        
+
         Response<List<UserExtendValDto>> response1=userExtendResource.searchByUserId(userExtendValParam);
         System.out.println(mapper.writeValueAsString(response1));
 
@@ -133,22 +133,22 @@ public class UARWFacadeTest {
     @Test
     public void searchPageUserExtendVal() throws JsonProcessingException{
         IUserExtendValRWResource userExtendResource=facade.getUserExtendValRWResource();
-        
+
         UserExtendValParam userExtendValParam=new UserExtendValParam();
         userExtendValParam.setUserId(300000001l);
         userExtendValParam.setPageNumber(0);
         userExtendValParam.setPageSize(50);
-        
+
         userExtendValParam.setExtendCode("aa");
         userExtendValParam.setPageSize(5);
         userExtendValParam.setQueryOnlyUsed(false);
         Response<PageDto<UserExtendValDto>> response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
         System.out.println(mapper.writeValueAsString(response1));
-        
+
         userExtendValParam.setExtendCode("b");
         response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
         System.out.println(mapper.writeValueAsString(response1));
-        
+
         userExtendValParam.setExtendCode(null);
         response1=userExtendResource.searchByUserIdAndCode(userExtendValParam);
         System.out.println(mapper.writeValueAsString(response1));
