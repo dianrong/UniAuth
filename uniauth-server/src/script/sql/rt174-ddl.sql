@@ -1,20 +1,20 @@
 -- update table user_extend
 ALTER TABLEuser_extend modify `description` VARCHAR(200) COMMENT '扩展属性描述';
 ALTER TABLEuser_extend ADD category VARCHAR(30) COMMENT '扩展属性类型' after code;
-ALTER TABLEuser_extend ADD subcategory VARCHAR(30) COMMENT '扩展属性子类型' after code;
+ALTER TABLEuser_extend ADD subcategory VARCHAR(30) COMMENT '扩展属性子类型' after category;
 -- rename table user_extend to attribute_extend
 ALTER TABLEuser_extend rename attribute_extend;
 
 -- update table user
 ALTER TABLEuser ADD staff_no VARCHAR(80) COMMENT '员工编号' after phone;
-ALTER TABLEuser ADD ldap_dn VARCHAR(100) COMMENT 'ldap账号' after phone;
-ALTER TABLEuser ADD user_guid VARCHAR(80) COMMENT '用户的guid' after phone;
+ALTER TABLEuser ADD ldap_dn VARCHAR(100) COMMENT 'ldap账号' after staff_no;
+ALTER TABLEuser ADD user_guid VARCHAR(80) COMMENT '用户的guid' after ldap_dn;
 
 -- update table user_extend_val
 ALTER TABLEuser_extend_val DROP COLUMN status;
 ALTER TABLEuser_extend_val change value_  `value` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '扩展属性值';
 ALTER TABLEuser_extend_val ADD create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间';
-ALTER TABLEuser_extend_val ADD last_update DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP '最近更新时间';
+ALTER TABLEuser_extend_val ADD last_update DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间';
 
 -- -----------------------------------------------------
 -- Table `user_detail`
@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   `leave_date` DATETIME COMMENT '离职时间',
   `remark` VARCHAR(200) COMMENT '备注',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP '最近更新时间',
-   `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
-    PRIMARY KEY (`id`) COMMENT '主键' ,
+  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
+   `tenancy_id` BIGINT(20) not null default -1 COMMENT'租户id',
+    PRIMARY KEY (`id`) COMMENT '主键'
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
   
 -- -----------------------------------------------------
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS `user_work_relationship` (
   `work_location` VARCHAR(100) COMMENT '工作低点',
   `work_address` VARCHAR(100) COMMENT '工作低点',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP '最近更新时间',
-   `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
-    PRIMARY KEY (`id`) COMMENT '主键' ,
+  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
+   `tenancy_id` BIGINT(20) not null default -1 COMMENT'租户id',
+    PRIMARY KEY (`id`) COMMENT '主键' 
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
   
       -- -----------------------------------------------------
@@ -86,9 +86,9 @@ CREATE TABLE IF NOT EXISTS `user_attribute_records` (
   `pre_val` VARCHAR(200) COMMENT '操作前的值',
   `cur_val` VARCHAR(200) COMMENT '操作后的值',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP '最近更新时间',
-   `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
-    PRIMARY KEY (`id`) COMMENT '主键' ,
+  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
+   `tenancy_id` BIGINT(20) not null default -1 COMMENT'租户id',
+    PRIMARY KEY (`id`) COMMENT '主键'
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
   
 -- -----------------------------------------------------
@@ -101,8 +101,8 @@ CREATE TABLE IF NOT EXISTS `grp_extend_val` (
   `value` VARCHAR(20) NOT NULL COMMENT '扩展属性值' DEFAULT '',
   `tenancy_id` BIGINT(20) NOT NULL COMMENT '租户id',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP '最近更新时间',
-    PRIMARY KEY (`id`) COMMENT '主键' ,
+  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
+    PRIMARY KEY (`id`) COMMENT '主键'
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
   
 -- -----------------------------------------------------
@@ -119,9 +119,9 @@ CREATE TABLE IF NOT EXISTS `grp_attribute_records` (
   `pre_val` VARCHAR(200) COMMENT '操作前的值',
   `cur_val` VARCHAR(200) COMMENT '操作后的值',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP '最近更新时间',
-   `tenancy_id` BIGINT(20) not null default -1 comment'租户id',
-    PRIMARY KEY (`id`) COMMENT '主键' ,
+  `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
+   `tenancy_id` BIGINT(20) not null default -1 COMMENT'租户id',
+    PRIMARY KEY (`id`) COMMENT '主键'
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
   
   -- -------------------------------------------------------------------
