@@ -1,20 +1,20 @@
 -- update table user_extend
-ALTER TABLEuser_extend modify `description` VARCHAR(200) COMMENT '扩展属性描述';
-ALTER TABLEuser_extend ADD category VARCHAR(30) COMMENT '扩展属性类型' after code;
-ALTER TABLEuser_extend ADD subcategory VARCHAR(30) COMMENT '扩展属性子类型' after category;
+ALTER TABLE user_extend MODIFY `description` VARCHAR(200) COMMENT '扩展属性描述';
+ALTER TABLE user_extend ADD category VARCHAR(30) COMMENT '扩展属性类型' after code;
+ALTER TABLE user_extend ADD subcategory VARCHAR(30) COMMENT '扩展属性子类型' after category;
 -- rename table user_extend to attribute_extend
-ALTER TABLEuser_extend rename attribute_extend;
+ALTER TABLE user_extend rename attribute_extend;
 
 -- update table user
-ALTER TABLEuser ADD staff_no VARCHAR(80) COMMENT '员工编号' after phone;
-ALTER TABLEuser ADD ldap_dn VARCHAR(100) COMMENT 'ldap账号' after staff_no;
-ALTER TABLEuser ADD user_guid VARCHAR(80) COMMENT '用户的guid' after ldap_dn;
+ALTER TABLE user ADD staff_no VARCHAR(80) COMMENT '员工编号' after phone;
+ALTER TABLE user ADD ldap_dn VARCHAR(100) COMMENT 'ldap账号' after staff_no;
+ALTER TABLE user ADD user_guid VARCHAR(80) COMMENT '用户的guid' after ldap_dn;
 
 -- update table user_extend_val
-ALTER TABLEuser_extend_val DROP COLUMN status;
-ALTER TABLEuser_extend_val change value_  `value` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '扩展属性值';
-ALTER TABLEuser_extend_val ADD create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间';
-ALTER TABLEuser_extend_val ADD last_update DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间';
+ALTER TABLE user_extend_val DROP COLUMN status;
+ALTER TABLE user_extend_val change value_  `value` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '扩展属性值';
+ALTER TABLE user_extend_val ADD create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间';
+ALTER TABLE user_extend_val ADD last_update DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间';
 
 -- -----------------------------------------------------
 -- Table `user_detail`
