@@ -5,14 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 
 import lombok.ToString;
 
-/**
- * 已被AttributeExtendParam替代.
- * @see com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam
- */
-@Deprecated
 @ToString
-@ApiModel("用户扩展属性操作请求参数")
-public class UserExtendParam extends Operator {
+@ApiModel("扩展属性操作请求参数")
+public class AttributeExtendParam extends Operator {
 
     private static final long serialVersionUID = 1792555726955678797L;
 
@@ -20,6 +15,10 @@ public class UserExtendParam extends Operator {
     private Long id;
     @ApiModelProperty("用户扩展属性code")
     private String code;
+    @ApiModelProperty("扩展属性的类别")
+    private String category;
+    @ApiModelProperty("扩展属性的子类别")
+    private String subcategory;
     @ApiModelProperty("用户扩展属性描述信息")
     private String description;
 
@@ -45,6 +44,22 @@ public class UserExtendParam extends Operator {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCategory() {
+      return category;
+    }
+
+    public void setCategory(String category) {
+      this.category = category;
+    }
+
+    public String getSubcategory() {
+      return subcategory;
+    }
+
+    public void setSubcategory(String subcategory) {
+      this.subcategory = subcategory;
     }
 }
 

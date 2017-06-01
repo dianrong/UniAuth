@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -21,8 +23,12 @@ public class UserExtendValDto extends TenancyBaseDto {
     @ApiModelProperty("扩展值")
     private String value;
 
+    /**
+     * 删除该字段. 为了兼容以前的API,在DTO中存在的status都为启用
+     */
+    @Deprecated
     @ApiModelProperty("状态(0:启用,1:禁用)")
-    private Byte status;
+    private Byte status = AppConstants.STATUS_ENABLED;
 
     @ApiModelProperty("扩展属性id")
     private Long extendId;

@@ -3,14 +3,14 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
-import com.dianrong.common.uniauth.server.data.entity.UserExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
-import com.dianrong.common.uniauth.server.data.mapper.UserExtendMapper;
+import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
@@ -23,6 +23,7 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +46,7 @@ public class UserExtendValService extends TenancyBasedService {
   private UserExtendValMapper userExtendValMapper;
 
   @Autowired
-  private UserExtendMapper userExtendMapper;
+  private AttributeExtendMapper attributeExtendMapper;
 
   @Autowired
   private UserMapper userMapper;
@@ -56,7 +57,7 @@ public class UserExtendValService extends TenancyBasedService {
   /**
    * 添加一个用户扩展属性值.
    */
-  public UserExtendValDto add(Long userId, Long extendId, String value, Byte status) {
+  public UserExtendValDto add(Long userId, Long extendId, String value) {
     CheckEmpty.checkEmpty(userId, "user_id");
     CheckEmpty.checkEmpty(extendId, "extend_id");
 
@@ -67,7 +68,6 @@ public class UserExtendValService extends TenancyBasedService {
 
     UserExtendVal userExtendVal = new UserExtendVal();
     userExtendVal.setExtendId(extendId);
-    userExtendVal.setStatus(status);
     userExtendVal.setUserId(userId);
     userExtendVal.setValue(value);
     userExtendVal.setTenancyId(tenancyService.getTenancyIdWithCheck());
@@ -84,16 +84,13 @@ public class UserExtendValService extends TenancyBasedService {
    */
   public int delById(Long id) {
     CheckEmpty.checkEmpty(id, "id");
-    UserExtendVal userExtendVal = new UserExtendVal();
-    userExtendVal.setId(id);
-    userExtendVal.setStatus(AppConstants.STATUS_DISABLED);
-    return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
+    return userExtendValMapper.deleteByPrimaryKey(id);
   }
 
   /**
    * 根据扩展属性值的主键id修改数据.
    */
-  public int updateById(Long id, Long userId, Long extendId, String value, Byte status) {
+  public int updateById(Long id, Long userId, Long extendId, String value) {
     CheckEmpty.checkEmpty(id, "id");
     // 过滤数据
     List<FilterData> filterFileds = new ArrayList<FilterData>();
@@ -111,7 +108,6 @@ public class UserExtendValService extends TenancyBasedService {
     UserExtendVal userExtendVal = new UserExtendVal();
     userExtendVal.setId(id);
     userExtendVal.setExtendId(extendId);
-    userExtendVal.setStatus(status);
     userExtendVal.setUserId(userId);
     userExtendVal.setValue(value);
     return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
@@ -121,27 +117,23 @@ public class UserExtendValService extends TenancyBasedService {
    * 根据用户id查询扩展属性值.
    * 
    * @param userId 用户Id
-   * @param status 启用禁用状态
    */
-  public List<UserExtendValDto> searchByUserId(Long userId, Byte status) {
+  public List<UserExtendValDto> searchByUserId(Long userId) {
     CheckEmpty.checkEmpty(userId, "userId");
 
     UserExtendValExample example = new UserExtendValExample();
     Criteria criteria = example.createCriteria().andUserIdEqualTo(userId);
-    if (status != null) {
-      criteria.andStatusEqualTo(status);
-    }
     criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
 
     List<UserExtendVal> userExtendVals = userExtendValMapper.selectByExample(example);
     List<UserExtendValDto> userExtendValDtos = new ArrayList<UserExtendValDto>();
     UserExtendValDto userExtendValDto;
-    UserExtend userExtend;
+    AttributeExtend attributeExtend;
     for (UserExtendVal userExtendVal : userExtendVals) {
       userExtendValDto = BeanConverter.convert(userExtendVal, UserExtendValDto.class);
-      userExtend = userExtendMapper.selectByPrimaryKey(userExtendValDto.getExtendId());
-      userExtendValDto.setExtendCode(userExtend.getCode());
-      userExtendValDto.setExtendDescription(userExtend.getDescription());
+      attributeExtend = attributeExtendMapper.selectByPrimaryKey(userExtendValDto.getExtendId());
+      userExtendValDto.setExtendCode(attributeExtend.getCode());
+      userExtendValDto.setExtendDescription(attributeExtend.getDescription());
       userExtendValDtos.add(userExtendValDto);
     }
 
@@ -189,11 +181,10 @@ public class UserExtendValService extends TenancyBasedService {
    * 
    * @param extendId 扩展属性id
    * @param value 扩展属性值
-   * @param status 状态
    * @param includeDisableUserRelatedExtendVal 是否包含禁用用户关联的扩展属性值
    * @return 符合条件的扩展属性值列表
    */
-  public List<UserExtendValDto> search(Long extendId, String value, Byte status,
+  public List<UserExtendValDto> search(Long extendId, String value,
       Boolean includeDisableUserRelatedExtendVal) {
     CheckEmpty.checkEmpty(extendId, "extendId");
     CheckEmpty.checkEmpty(value, "value");
@@ -201,9 +192,6 @@ public class UserExtendValService extends TenancyBasedService {
     UserExtendValExample example = new UserExtendValExample();
     Criteria criteria = example.createCriteria();
     criteria.andExtendIdEqualTo(extendId).andValueEqualTo(value);
-    if (status != null) {
-      criteria.andStatusEqualTo(status);
-    }
     criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     List<UserExtendVal> userExtendVals = userExtendValMapper.selectByExample(example);
 
@@ -219,7 +207,7 @@ public class UserExtendValService extends TenancyBasedService {
         userIds.add(extendVal.getUserId());
       }
       UserExample userExample = new UserExample();
-      userExample.createCriteria().andStatusEqualTo(AppConstants.STATUS_ENABLED).andIdIn(userIds);
+      userExample.createCriteria().andIdIn(userIds).andStatusEqualTo(AppConstants.STATUS_ENABLED);
       List<User> users = userMapper.selectByExample(userExample);
       if (users == null || users.isEmpty()) {
         return Lists.newArrayList();
@@ -237,7 +225,7 @@ public class UserExtendValService extends TenancyBasedService {
       userExtendVals = tempUserExtendVals;
     }
 
-    UserExtend extend = userExtendMapper.selectByPrimaryKey(extendId);
+    AttributeExtend extend = attributeExtendMapper.selectByPrimaryKey(extendId);
     if (extend == null) {
       return userExtendValDtos;
     }

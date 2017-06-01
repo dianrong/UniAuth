@@ -21,7 +21,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 
 @Component
-@CacheConfig(cacheNames={"tenancy"})
+@CacheConfig(cacheNames = {"tenancy"})
 public class TenancyCache {
 
   @Autowired
@@ -53,10 +53,10 @@ public class TenancyCache {
    * @param originalCode 用于更新缓存.
    */
   
-  @Caching(evict={
+  @Caching(evict = {
       @CacheEvict(key = "#originalCode.toUpperCase()"),
-      @CacheEvict(key = "#code.toUpperCase()", condition="#code != null and #code.trim().length() > 0")
-  })
+      @CacheEvict(key = "#code.toUpperCase()",
+          condition = "#code != null and #code.trim().length() > 0")})
   public TenancyDto updateTenancy(String originalCode, Long id, String code, String name,
       String contactName, String phone, String description, Byte status) {
     Tenancy updateTenancy = new Tenancy();

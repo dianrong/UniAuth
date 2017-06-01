@@ -4,9 +4,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * @author wenlongchen
- * @since May 16, 2016
+ * 用户扩展属性Dto. 已被AttributeExtendDto替代.
+ * @see com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto
  */
+@Deprecated
 @ApiModel("用户扩展属性")
 public class UserExtendDto extends TenancyBaseDto {
 
@@ -23,24 +24,27 @@ public class UserExtendDto extends TenancyBaseDto {
         return id;
     }
 
-    public void setId(Long id) {
+    public UserExtendDto setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public UserExtendDto setCode(String code) {
         this.code = code;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public UserExtendDto setDescription(String description) {
         this.description = description;
+        return this;
     }
 }
 

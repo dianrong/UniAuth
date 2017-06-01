@@ -20,7 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
-@CacheConfig(cacheNames={"commonService"})
+@CacheConfig(cacheNames = {"commonService"})
 public class CommonCache {
 
   @Autowired
@@ -59,7 +59,7 @@ public class CommonCache {
     }
     return roleCodeMap;
   }
-  
+
   /**
    * 获取所有的角色编码信息.
    */

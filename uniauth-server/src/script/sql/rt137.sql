@@ -127,15 +127,3 @@ CHANGE COLUMN `req_exp` `req_exp` VARCHAR(3072) NULL DEFAULT NULL COMMENT '请�
 CHANGE COLUMN `req_elapse` `req_elapse` BIGINT(20) NULL DEFAULT NULL COMMENT '处理请求所用的时间（ms）' ,
 CHANGE COLUMN `req_param` `req_param` VARCHAR(256) NULL DEFAULT NULL COMMENT '请求的参数' ,
 CHANGE COLUMN `req_result` `req_result` VARCHAR(1024) NULL DEFAULT NULL COMMENT '请求的返回结果' ;
-
-
-
-
-
-
-
-
-
-
-
-

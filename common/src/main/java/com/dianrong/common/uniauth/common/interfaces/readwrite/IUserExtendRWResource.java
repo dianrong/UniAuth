@@ -9,9 +9,12 @@ import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendResource;
 
 /**
- * @author wenlongchen
- * @since May 16, 2016
+ * 已被IAttributeExtendRWResource替代.
+ * @see com.dianrong.common.uniauth.common.interfaces.readwrite.IAttributeExtendRWResource
+ * @author wanglin
+ *
  */
+@Deprecated
 public interface IUserExtendRWResource extends IUserExtendResource {
 
     @POST

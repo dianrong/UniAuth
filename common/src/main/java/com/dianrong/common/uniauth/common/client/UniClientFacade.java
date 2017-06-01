@@ -1,5 +1,29 @@
 package com.dianrong.common.uniauth.common.client;
 
+import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
+import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlSwitch;
+import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.interfaces.read.IAttributeExtendResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
+import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
+import com.dianrong.common.uniauth.common.interfaces.read.ITenancyResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendValResource;
+import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IAttributeExtendRWResource;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
+import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
+import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
+import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
+import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -12,28 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
-import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlSwitch;
-import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
-import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
-import com.dianrong.common.uniauth.common.interfaces.read.ITenancyResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendValResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
-import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
-import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
-import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
-import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
-import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
+@SuppressWarnings("deprecation")
 @Component
 public class UniClientFacade {
 
@@ -79,10 +82,12 @@ public class UniClientFacade {
     private IUserExtendResource userExtendResource;
     private IUserExtendValResource userExtendValResource;
     private ITenancyResource tenancyResource;
+    private IAttributeExtendResource attributeExtendResource;
 
     // read and write
     private IUserExtendRWResource userExtendRWResource;
     private IUserExtendValRWResource userExtendValRWResource;
+    private IAttributeExtendRWResource attributeExtendRWResource;
 
     @PostConstruct
     public void init() {
@@ -116,12 +121,14 @@ public class UniClientFacade {
         tagResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagResource.class, providers);
         configResource = UniauthRSClientFactory.create(uniWsEndpoint, IConfigResource.class, providers);
         tenancyResource = UniauthRSClientFactory.create(uniWsEndpoint, ITenancyResource.class, providers);
+        attributeExtendResource = UniauthRSClientFactory.create(uniWsEndpoint, IAttributeExtendResource.class, providers);
 
         // write
         userExtendRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendRWResource.class, providers);
         userExtendValRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
+        attributeExtendRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IAttributeExtendRWResource.class, providers);
         ClientFacadeUtil.addApiKey(apiName, apiKey, domainResource, groupResource, permissionResource, userResource, roleResource, tagResource, configResource, tenancyResource,
-                userExtendResource, userExtendValResource, userExtendRWResource, userExtendValRWResource);
+                userExtendResource, userExtendValResource, userExtendRWResource, userExtendValRWResource, attributeExtendResource,attributeExtendRWResource);
     }
 
     public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
@@ -160,6 +167,10 @@ public class UniClientFacade {
         return configResource;
     }
 
+    /**
+     * @see getAttributeExtendResource
+     */
+    @Deprecated
     public IUserExtendResource getUserExtendResource() {
         return userExtendResource;
     }
@@ -168,23 +179,27 @@ public class UniClientFacade {
         return userExtendValResource;
     }
 
+    /**
+     * @see getAttributeExtendRWResource.
+     */
+    @Deprecated
     public IUserExtendRWResource getUserExtendRWResource() {
         return userExtendRWResource;
-    }
-
-    public void setUserExtendRWResource(IUserExtendRWResource userExtendRWResource) {
-        this.userExtendRWResource = userExtendRWResource;
     }
 
     public IUserExtendValRWResource getUserExtendValRWResource() {
         return userExtendValRWResource;
     }
 
-    public void setUserExtendValRWResource(IUserExtendValRWResource userExtendValRWResource) {
-        this.userExtendValRWResource = userExtendValRWResource;
-    }
-
     public ITenancyResource getTenancyResource() {
         return tenancyResource;
+    }
+
+    public IAttributeExtendResource getAttributeExtendResource() {
+      return attributeExtendResource;
+    }
+
+    public IAttributeExtendRWResource getAttributeExtendRWResource() {
+      return attributeExtendRWResource;
     }
 }

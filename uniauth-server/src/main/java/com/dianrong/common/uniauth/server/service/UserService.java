@@ -1362,7 +1362,7 @@ public class UserService extends TenancyBasedService {
 
   private void setUserExtendVal(UserDto userDto) {
     List<UserExtendValDto> userExtendValDtos =
-        userExtendValService.searchByUserId(userDto.getId(), AppConstants.STATUS_ENABLED);
+        userExtendValService.searchByUserId(userDto.getId());
     userDto.setUserExtendValDtos(userExtendValDtos);
   }
 

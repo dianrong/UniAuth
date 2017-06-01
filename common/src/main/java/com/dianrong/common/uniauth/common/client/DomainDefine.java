@@ -64,12 +64,12 @@ public class DomainDefine implements Serializable {
             try {
                 result = uniClientFacade.getDomainResource().getAllLoginDomains(new DomainParam().setDomainCodeList(codes));
                 if (result == null) {
-                    throw new UniauthCommonException("call api , query domain info failed, request body is null");
+                    throw new UniauthCommonException("Init DomainDefine failed, please check uniauth-server is already running or the server can connect to uniauth-server");
                 } else {
                     break;
                 }
             } catch (Exception ex) {
-                log.warn("failed to get domain Id by domain code, retry after 1 minitue", ex);
+                log.warn("failed to get domain Id, retry after 1 minitue", ex);
             }
             try {
                 Thread.sleep(1000L * 60L);
@@ -82,7 +82,7 @@ public class DomainDefine implements Serializable {
         }
         List<DomainDto> data = result.getData();
         if (data == null || data.isEmpty()) {
-            throw new UniauthCommonException("please check the configed domainCode is correct or not");
+            throw new UniauthCommonException(String.format("please check whether the configed domainCode [%s] is correct! Need configure a domain in Techops, the domain code is equals [%s]", domainCode, domainCode));
         }
         return data.get(0).getId();
     }

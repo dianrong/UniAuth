@@ -8,8 +8,8 @@ import lombok.ToString;
  * @author wenlongchen
  * @since May 16, 2016
  */
-@ApiModel("用户扩展属性值请求参数")
 @ToString
+@ApiModel("用户扩展属性值请求参数")
 public class UserExtendValParam extends PageParam {
 
     private static final long serialVersionUID = 5991602165228109411L;
