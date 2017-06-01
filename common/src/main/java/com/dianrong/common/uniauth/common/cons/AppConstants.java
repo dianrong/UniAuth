@@ -8,6 +8,12 @@ public interface AppConstants {
     Byte ZERO_BYTE = (byte) 0;
     // 1 = 禁用
     Byte ONE_BYTE = (byte) 1;
+    
+    // 类型0
+    Byte ZERO_TYPE = ZERO_BYTE;
+    // 类型1
+    Byte ONE_TYPE = ONE_BYTE;
+    
     // 0 = 启用
     byte ZERO_BYTE_PRIMITIVE = (byte) 0;
     // 1 = 禁用
@@ -24,6 +30,8 @@ public interface AppConstants {
     String NODE_TYPE_OWNER_USER = "oUser";
 
     String GRP_ROOT = "GRP_ROOT";
+    String TECHOPS_SUPER_ADMIN_GRP = "GRP_TECHOPS_SUPER_ADMIN";
+    
     byte MAX_AUTH_FAIL_COUNT = 10;
     int MAX_PASSWORD_VALID_MONTH = 6;
     int DUPLICATE_PWD_VALID_MONTH = 8;

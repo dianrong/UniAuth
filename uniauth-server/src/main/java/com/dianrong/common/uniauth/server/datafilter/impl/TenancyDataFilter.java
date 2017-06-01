@@ -1,8 +1,9 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
-import com.dianrong.common.uniauth.server.data.entity.UserExtend;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendExample;
-import com.dianrong.common.uniauth.server.data.mapper.UserExtendMapper;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.server.data.entity.Tenancy;
+import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
+import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
@@ -14,25 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * . 用户扩展字段数据过滤处理
+ * tenancy数据过滤的接口.
  * 
  * @author wanglin
  */
-@Service("userExtendDataFilter")
-public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend> {
+@Service("tenancyDataFilter")
+public class TenancyDataFilter extends CurrentAbstractDataFilter<Tenancy> {
   @Autowired
-  private UserExtendMapper userExtendMapper;
+  private TenancyMapper tenancyMapper;
 
   @Override
   protected String getProcessTableName() {
-    return UniBundle.getMsg("data.filter.table.name.userextend");
+    return UniBundle.getMsg("data.filter.table.name.tenancy");
   }
 
   @Override
   protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
-    UserExtendExample condition = new UserExtendExample();
-    UserExtendExample.Criteria criteria = condition.createCriteria();
-    criteria.andTenancyIdEqualTo(getTenancyId());
+    TenancyExample condition = new TenancyExample();
+    TenancyExample.Criteria criteria = condition.createCriteria();
+
+    criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED);
     // 构造查询条件
     for (FilterData fd : equalsField) {
       switch (fd.getType()) {
@@ -44,7 +46,7 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend> 
       }
     }
     // 查询
-    int count = userExtendMapper.countByExample(condition);
+    int count = tenancyMapper.countByExample(condition);
     if (count > 0) {
       return true;
     }
@@ -52,11 +54,12 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend> 
   }
 
   @Override
-  protected UserExtend getEnableRecordByPrimaryKey(Integer id) {
-    CheckEmpty.checkEmpty(id, "userExtendId");
-    UserExtendExample condition = new UserExtendExample();
-    condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
-    List<UserExtend> selectByExample = userExtendMapper.selectByExample(condition);
+  protected Tenancy getEnableRecordByPrimaryKey(Integer id) {
+    CheckEmpty.checkEmpty(id, "tenancyId");
+    TenancyExample condition = new TenancyExample();
+    condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id))
+        .andStatusEqualTo(AppConstants.STATUS_ENABLED);
+    List<Tenancy> selectByExample = tenancyMapper.selectByExample(condition);
     if (selectByExample != null && !selectByExample.isEmpty()) {
       return selectByExample.get(0);
     }

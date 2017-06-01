@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
+
 @Api("租户信息操作接口")
 @RestController
 public class TenancyResource implements ITenancyRWResource {
@@ -53,7 +54,6 @@ public class TenancyResource implements ITenancyRWResource {
   }
 
   @ApiOperation("获取默认的租户的信息")
-  @ApiImplicitParams(value = {})
   @Override
   public Response<TenancyDto> queryDefaultTenancy() {
     return new Response<TenancyDto>(
@@ -70,5 +70,52 @@ public class TenancyResource implements ITenancyRWResource {
       return Response.success(null);
     }
     return new Response<TenancyDto>(tenancyService.getEnableTenancyByCode(tenancyCode));
+  }
+
+  @ApiOperation("新增租户")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "code", value = "租户编码", required = true, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "name", value = "租户名称", required = false, dataType = "string",
+          paramType = "query", defaultValue = "使用code"),
+      @ApiImplicitParam(name = "contactName", value = "联系人", required = false, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "phone", value = "联系电话", required = false, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "description", value = "描述", required = false, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "adminEmail", value = "租户管理员邮箱", required = false,
+          dataType = "string", paramType = "query", defaultValue = "采用默认邮箱(shuanggui)"),
+      @ApiImplicitParam(name = "adminPassword", value = "租户编码", required = false,
+          dataType = "string", paramType = "query", defaultValue = "采用默认管理员密码")})
+  @Override
+  public Response<TenancyDto> addTenancy(TenancyParam tenancyParam) {
+    return Response
+        .success(tenancyService.addNewTenancy(tenancyParam.getCode(), tenancyParam.getName(),
+            tenancyParam.getContactName(), tenancyParam.getPhone(), tenancyParam.getDescription(),
+            tenancyParam.getAdminEmail(), tenancyParam.getAdminPassword()));
+  }
+
+  @ApiOperation("更新租户信息")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "id", value = "主键id", required = true, dataType = "long",
+          paramType = "query"),
+      @ApiImplicitParam(name = "code", value = "租户编码", required = false, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "name", value = "租户名称", required = false, dataType = "string",
+          paramType = "query", defaultValue = "使用code"),
+      @ApiImplicitParam(name = "contactName", value = "联系人", required = false, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "phone", value = "联系电话", required = false, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "description", value = "描述", required = false, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "status", value = "状态", required = false, dataType = "int",
+          paramType = "query")})
+  @Override
+  public Response<TenancyDto> updateTenancy(TenancyParam tenancyParam) {
+    return Response.success(tenancyService.updateTenancy(tenancyParam.getId(),
+        tenancyParam.getCode(), tenancyParam.getName(), tenancyParam.getContactName(),
+        tenancyParam.getPhone(), tenancyParam.getDescription(), tenancyParam.getStatus()));
   }
 }
