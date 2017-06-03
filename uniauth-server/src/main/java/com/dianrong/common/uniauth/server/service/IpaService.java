@@ -1,21 +1,23 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
+import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
+import com.dianrong.common.uniauth.common.bean.dto.AllDomainPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
-import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.InnerStringUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.ldap.ipa.dao.UserDao;
 import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
 import com.dianrong.common.uniauth.server.ldap.ipa.support.IpaUtil;
 import com.dianrong.common.uniauth.server.service.cache.TenancyCache;
+import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -26,6 +28,7 @@ import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +45,10 @@ import org.springframework.util.StringUtils;
  */
 @Service
 @Slf4j
-public class IpaService {
+public class IpaService implements UserAuthentication {
 
   @Autowired
   private UserDao userDao;
-
-  @Autowired
-  private UserService userService;
 
   @Autowired
   private TenancyCache tenancyCache;
@@ -56,8 +56,14 @@ public class IpaService {
   @Autowired
   private CommonService commonService;
 
+  @Autowired
+  private UserThirdAccountService serThirdAccountService;
+
+  @Autowired
+  private UserService userService;
+
   /**
-   * UserService.login的IPA实现
+   * IPA账号的登陆.
    */
   public UserDto login(LoginParam loginParam) {
     Long defaultTenancyId = tenancyIdentityCheck(loginParam.getTenancyCode(),
@@ -83,8 +89,7 @@ public class IpaService {
     User user = userDao.getUserByAccount(loginParam.getAccount());
     if (StringUtils.hasText(user.getEmail())) {
       try {
-        UserDto uniauthUserDto = userService.getSingleUser(
-            new UserParam().setEmail(user.getEmail()).setTenancyId(defaultTenancyId));
+        UserDto uniauthUserDto = getUniauthUserInfo(user, loginParam.getAccount());
         if (uniauthUserDto != null) {
           return uniauthUserDto;
         }
@@ -93,15 +98,16 @@ public class IpaService {
         log.debug("{}'s email did'not registry in uniauth", loginParam.getAccount(), ex);
       }
     }
-
-    // 没有关联的IPA账号
+    // 没有关联的Uniauth账号
     UserDto ipaDto = BeanConverter.convert(user);
     ipaDto.setTenancyId(StringUtil.translateLongToInteger(defaultTenancyId));
     return ipaDto;
   }
 
   /**
-   * UserService.getUserDetailInfo的IPA实现
+   * 获取IPA用户的详细信息.<br>
+   * 1 如果能根据IPA账号的email找到对应的Uniauth账号,则返回Uniauth+IPA的所有信息(包括权限信息).<br>
+   * 2 如果不能根据email找到对应的Uniauth账号,则创建一个Uniauth用户,并关联IPA账号和Uniauth账号
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
     CheckEmpty.checkEmpty(loginParam.getAccount(), "账号");
@@ -112,36 +118,49 @@ public class IpaService {
       log.warn("Account {0} not found detail infomartion", loginParam.getAccount());
       return null;
     }
-    UserDetailDto userDetailDto = null;
+    UserDto uniauthUserDto = null;
     if (StringUtils.hasText(user.getEmail())) {
-      // 关联Uniauth中的账号,权限信息
-      try {
-        userDetailDto = userService.getUserDetailInfo(
-            new LoginParam().setAccount(user.getEmail()).setTenancyId(defaultTenancyId), true);
-      } catch (Exception ex) {
-        log.debug("{}'s email did'not registry in uniauth", loginParam.getAccount(), ex);
-      }
+      uniauthUserDto = getUniauthUserInfo(user, loginParam.getAccount());
     }
-    if (userDetailDto == null) {
+    UserDetailDto userDetailDto = null;
+
+    // 如果没找到,构造空的UniauthUser
+    if (uniauthUserDto == null) {
       UserDto dto = BeanConverter.convert(user);
       dto.setTenancyId(StringUtil.translateLongToInteger(defaultTenancyId));
       userDetailDto = new UserDetailDto();
       userDetailDto.setUserDto(dto);
+    } else {
+      userDetailDto = userService.getUserDetailInfo(
+          new LoginParam().setAccount(user.getEmail()).setTenancyId(defaultTenancyId), true);
     }
-    userDetailDto.setIpaPermissionDto(constructIpaPermission(user.getGroups()));
+    userDetailDto.setAllDomainPermissionDto(constructIpaPermission(user.getGroups()));
     return userDetailDto;
   }
 
 
-  /**
-   * UserService.getUserByEmailOrPhone的IPA实现
-   */
   public UserDto getUserByEmailOrPhone(LoginParam loginParam) {
     throw new AppException(InfoName.BAD_REQUEST,
         UniBundle.getMsg("user.info.load.ipa.account", loginParam.getAccount()));
   }
 
-  // TODO UserService.vpnLogin的IPA实现
+  /**
+   * 根据Email从Uniauth的数据源中获取Uniauth用户信息. 1 如果不存在,则创建一个,并关联IPA账号和Uniauth账号 2 如果存在则直接返回对应的账号.
+   */
+  private UserDto getUniauthUserInfo(User ipaUser, String ipaAccount) {
+    UserDto user = serThirdAccountService.queryUserByThirdAccount(ipaAccount, ThirdAccountType.IPA);
+    // 创建新用户 并关联
+    if (user == null) {
+      user = serThirdAccountService.createNewUserAndRelateThirdAccount(ipaUser.getDisplayName(),
+          ipaUser.getPhone(), ipaUser.getEmail(), ipaAccount, ThirdAccountType.IPA);
+    }
+    // check user lock status
+    if (user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT) {
+      throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT,
+          UniBundle.getMsg("user.login.account.lock"));
+    }
+    return user;
+  }
 
   /**
    * 所有IPA相关的操作都当做是DIANRONG租户来处理.
@@ -162,12 +181,9 @@ public class IpaService {
     return defaultTenancy.getId();
   }
 
-  /**
-   * 根据IPA的组信息构造一个uniauth使用的权限信息.
-   */
-  private IPAPermissionDto constructIpaPermission(List<String> ipaGroups) {
+  private AllDomainPermissionDto constructIpaPermission(List<String> ipaGroups) {
     Set<String> groupCodes = IpaUtil.translateMemberGroupToGroupName(ipaGroups);
-    IPAPermissionDto ipaPermission = new IPAPermissionDto();
+    AllDomainPermissionDto ipaPermission = new AllDomainPermissionDto();
     if (groupCodes.isEmpty()) {
       return ipaPermission;
     }
@@ -176,16 +192,16 @@ public class IpaService {
     String tenancyCode = defaultTenancy.getCode();
     Integer tenancyId = StringUtil.translateLongToInteger(defaultTenancy.getId());
     Integer roleCodeId = commonService.getRoleCodeId(AppConstants.ROLE_CODE_ROLE_NORMAL);
-    Integer permTypeId = commonService.getPermTypeId(AppConstants.PERM_TYPE_PRIVILEGE);
+    Integer permTypeId = commonService.getPermTypeId(AppConstants.PERM_TYPE_THIRD_ACCOUNT);
 
-    // 统一设置成privilege类型权限
-    String permType = AppConstants.PERM_TYPE_PRIVILEGE;
+    // 统一设置成third_account类型权限
+    String permType = AppConstants.PERM_TYPE_THIRD_ACCOUNT;
     List<RoleDto> roleList = Lists.newArrayList();
     for (String groupCode : groupCodes) {
       RoleDto roleDto = new RoleDto();
       Map<String, Set<String>> permMap = Maps.newHashMap();
       Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
-      roleDto.setDescription(groupCode).setName(groupCode).setRoleCode(groupCode)
+      roleDto.setDescription(groupCode).setName(groupCode).setRoleCode(AppConstants.ROLE_CODE_ROLE_NORMAL)
           .setRoleCodeId(roleCodeId).setStatus(AppConstants.STATUS_ENABLED).setPermMap(permMap)
           .setPermDtoMap(permDtoMap).setTenancyCode(tenancyCode).setTenancyId(tenancyId);
       Set<String> permissionStr = Sets.newHashSet();
@@ -204,5 +220,15 @@ public class IpaService {
     ipaPermission.setTenancyCode(tenancyCode);
     ipaPermission.setTenancyId(tenancyId);
     return ipaPermission;
+  }
+
+  @Override
+  public int getOrder() {
+    return -10;
+  }
+
+  @Override
+  public boolean supported(LoginParam loginParam) {
+    return InnerStringUtil.isIPAAccount(loginParam.getAccount());
   }
 }

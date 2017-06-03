@@ -34,7 +34,7 @@
         </javaClientGenerator>
 
 
-        <table tableName="audit" enableCountByExample="true"
+        <table tableName="user_third_account" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>

@@ -13,13 +13,14 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
-import com.dianrong.common.uniauth.server.service.facade.LoginFacade;
+import com.dianrong.common.uniauth.server.service.facade.UserAuthenticationFacade;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class UserResource implements IUserRWResource {
   private UserService userService;
 
   @Autowired
-  private LoginFacade loginFacade;
+  private UserAuthenticationFacade userAuthenticationFacade;
 
   @Override
   public Response<UserDto> addNewUser(UserParam userParam) {
@@ -97,7 +98,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDto> login(LoginParam loginParam) {
-    UserDto dto = loginFacade.login(loginParam);
+    UserDto dto = userAuthenticationFacade.login(loginParam);
     return Response.success(dto);
   }
 
@@ -111,7 +112,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam) {
-    UserDetailDto userDetailDto = loginFacade.getUserDetailInfo(loginParam);
+    UserDetailDto userDetailDto = userAuthenticationFacade.getUserDetailInfo(loginParam);
     return new Response<UserDetailDto>(userDetailDto);
   }
 
@@ -124,7 +125,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDto> getUserInfoByUserTag(LoginParam loginParam) {
-    return new Response<UserDto>(loginFacade.getUserByEmailOrPhone(loginParam));
+    return new Response<UserDto>(userAuthenticationFacade.getUserByEmailOrPhone(loginParam));
   }
 
   @Override

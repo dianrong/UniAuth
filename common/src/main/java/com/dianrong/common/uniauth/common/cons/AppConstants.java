@@ -37,6 +37,7 @@ public interface AppConstants {
     String PERM_TYPE_DOMAIN = "DOMAIN";
     String PERM_TYPE_URIPATTERN = "URI_PATTERN";
     String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
+    String PERM_TYPE_THIRD_ACCOUNT = "THIRD_ACCOUNT";
     String DOMAIN_CODE_TECHOPS = "techops";
     
     // ROLE_NORMAL

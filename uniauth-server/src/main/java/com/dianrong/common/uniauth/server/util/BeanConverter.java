@@ -126,7 +126,7 @@ public class BeanConverter {
       return domain;
     }
   }
-  
+
   /**
    * 将Param转化为Entity.
    */
@@ -143,7 +143,7 @@ public class BeanConverter {
       return grp;
     }
   }
-  
+
   /**
    * 将Entity转化为Dto.
    */
@@ -222,8 +222,9 @@ public class BeanConverter {
       UserDto userDto = new UserDto();
       userDto.setName(user.getName()).setEmail(user.getEmail()).setId(user.getId())
           .setPhone(user.getPhone()).setLastLoginTime(user.getLastLoginTime())
-          .setLastLoginIp(user.getLastLoginIp()).setCreateDate(user.getCreateDate())
-          .setStatus(user.getStatus()).setLastUpdate(user.getLastUpdate())
+          .setFailCount(user.getFailCount()).setLastLoginIp(user.getLastLoginIp())
+          .setCreateDate(user.getCreateDate()).setStatus(user.getStatus())
+          .setLastUpdate(user.getLastUpdate())
           .setTenancyId(StringUtil.translateLongToInteger(user.getTenancyId()));
       return userDto;
     }

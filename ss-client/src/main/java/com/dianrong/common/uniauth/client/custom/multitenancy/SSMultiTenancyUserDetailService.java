@@ -32,7 +32,7 @@ import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
 import com.dianrong.common.uniauth.client.support.PermissionUtil;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.AllDomainPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
@@ -95,7 +95,7 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
             } else {
                 UserDto userDto = userDetailDto.getUserDto();
                 // 增加对IPA数据源的支持
-                IPAPermissionDto ipaPermissionDto = userDetailDto.getIpaPermissionDto();
+                AllDomainPermissionDto ipaPermissionDto = userDetailDto.getAllDomainPermissionDto();
                 Long id = userDto.getId();
                 List<DomainDto> domainDtoList = userDetailDto.getDomainList();
                 Map<String, UserExtInfoParam> userExtInfos = new HashMap<>();

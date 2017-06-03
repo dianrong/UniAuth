@@ -1,9 +1,10 @@
-package com.dianrong.common.techops.service;
+package com.dianrong.common.uniauth.server.service.support;
 
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
 import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -128,7 +129,7 @@ public class NotificationService {
    * 
    * @param userInfo UserDto 新增用户的信息,不能为空
    */
-  public void addUserNotification(final UserDto userInfo) {
+  public void addUserNotification(final User userInfo) {
     Assert.notNull(userInfo);
     NOTIFICATION_EXECUTOR_SERVICE.execute(new Runnable() {
       @Override
@@ -163,7 +164,7 @@ public class NotificationService {
    * 
    * @param userInfo UserDto 更新用户密码的用户信息
    */
-  public void updateUserPwdNotification(final UserDto userInfo) {
+  public void updateUserPwdNotification(final User userInfo) {
     Assert.notNull(userInfo);
     NOTIFICATION_EXECUTOR_SERVICE.execute(new Runnable() {
       @Override

@@ -12,8 +12,8 @@ public class UserDetailDto implements Serializable {
     // owner group list not considered
     private List<DomainDto> domainList;
     
-    // IPA账号的权限设计为每个域共有的权限信息
-    private IPAPermissionDto ipaPermissionDto;
+    // 每个域共有的权限信息
+    private AllDomainPermissionDto allDoaminPermissionDto;
 
     public UserDto getUserDto() {
         return userDto;
@@ -33,12 +33,12 @@ public class UserDetailDto implements Serializable {
         return this;
     }
 
-    public IPAPermissionDto getIpaPermissionDto() {
-        return ipaPermissionDto;
+    public AllDomainPermissionDto getAllDomainPermissionDto() {
+        return allDoaminPermissionDto;
     }
 
-    public UserDetailDto setIpaPermissionDto(IPAPermissionDto ipaPermissionDto) {
-        this.ipaPermissionDto = ipaPermissionDto;
+    public UserDetailDto setAllDomainPermissionDto(AllDomainPermissionDto allDomainPermissionDto) {
+        this.allDoaminPermissionDto = allDomainPermissionDto;
         return this;
     }
 }

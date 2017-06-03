@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.AllDomainPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 
@@ -28,7 +28,7 @@ public final class PermissionUtil {
     /**
      * 将IPA权限合并到权限集合中
      */
-    public static final void mergeIPAPermission(IPAPermissionDto ipaPermissionDto, Collection<GrantedAuthority> authorities, Map<String, Set<String>> permMap,
+    public static final void mergeIPAPermission(AllDomainPermissionDto ipaPermissionDto, Collection<GrantedAuthority> authorities, Map<String, Set<String>> permMap,
             Map<String, Set<PermissionDto>> permDtoMap) {
         if (authorities == null || permDtoMap == null || permMap == null) {
             log.warn("mergeIPAPermission need parameter authorities, permMap, subPermMap not null");

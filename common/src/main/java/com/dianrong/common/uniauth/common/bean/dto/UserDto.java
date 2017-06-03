@@ -37,6 +37,8 @@ public class UserDto extends TenancyBaseDto {
     private Date lastLoginTime;
     @ApiModelProperty("最近的一次登陆ip")
     private String lastLoginIp;
+    @ApiModelProperty("用户连续登陆失败次数")
+    private Byte failCount;
     @ApiModelProperty("创建时间")
     private Date createDate;
     @ApiModelProperty("最新更新时间")
@@ -252,5 +254,14 @@ public class UserDto extends TenancyBaseDto {
             return this.name;
         }
         return this.getAccount();
+    }
+
+    public Byte getFailCount() {
+      return failCount;
+    }
+
+    public UserDto setFailCount(Byte failCount) {
+      this.failCount = failCount;
+      return this;
     }
 }
