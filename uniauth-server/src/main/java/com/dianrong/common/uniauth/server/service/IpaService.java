@@ -88,14 +88,9 @@ public class IpaService implements UserAuthentication {
     // load user basic information
     User user = userDao.getUserByAccount(loginParam.getAccount());
     if (StringUtils.hasText(user.getEmail())) {
-      try {
-        UserDto uniauthUserDto = getUniauthUserInfo(user, loginParam.getAccount());
-        if (uniauthUserDto != null) {
-          return uniauthUserDto;
-        }
-        log.debug("{}'s email did'not registry in uniauth", loginParam.getAccount());
-      } catch (Exception ex) {
-        log.debug("{}'s email did'not registry in uniauth", loginParam.getAccount(), ex);
+      UserDto uniauthUserDto = getUniauthUserInfo(user, loginParam.getAccount());
+      if (uniauthUserDto != null) {
+        return uniauthUserDto;
       }
     }
     // 没有关联的Uniauth账号
@@ -201,9 +196,10 @@ public class IpaService implements UserAuthentication {
       RoleDto roleDto = new RoleDto();
       Map<String, Set<String>> permMap = Maps.newHashMap();
       Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
-      roleDto.setDescription(groupCode).setName(groupCode).setRoleCode(AppConstants.ROLE_CODE_ROLE_NORMAL)
-          .setRoleCodeId(roleCodeId).setStatus(AppConstants.STATUS_ENABLED).setPermMap(permMap)
-          .setPermDtoMap(permDtoMap).setTenancyCode(tenancyCode).setTenancyId(tenancyId);
+      roleDto.setDescription(groupCode).setName(groupCode)
+          .setRoleCode(AppConstants.ROLE_CODE_ROLE_NORMAL).setRoleCodeId(roleCodeId)
+          .setStatus(AppConstants.STATUS_ENABLED).setPermMap(permMap).setPermDtoMap(permDtoMap)
+          .setTenancyCode(tenancyCode).setTenancyId(tenancyId);
       Set<String> permissionStr = Sets.newHashSet();
       permissionStr.add(groupCode);
       permMap.put(permType, permissionStr);
