@@ -28,7 +28,7 @@ public class TestMqConsumer {
     factory.setHost("10.18.19.126");
     factory.setPort(5672);
     factory.setUsername("admin");
-    factory.setPassword("dangerous");
+    factory.setPassword("123456");
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.queueDeclare(QUEUE_NAME, false, false, false, null);
