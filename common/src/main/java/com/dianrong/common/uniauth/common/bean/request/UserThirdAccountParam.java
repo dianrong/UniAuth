@@ -17,7 +17,7 @@ public class UserThirdAccountParam extends Operator {
 
   private String thirdAccount;
 
-  private Byte type;
+  private ThirdAccountType type;
 
   private Date lastLoginIp;
 
@@ -54,24 +54,15 @@ public class UserThirdAccountParam extends Operator {
     return this;
   }
 
-  public Byte getType() {
+  public ThirdAccountType getType() {
     return type;
   }
 
-  public UserThirdAccountParam setType(Byte type) {
+  public UserThirdAccountParam setType(ThirdAccountType type) {
     this.type = type;
     return this;
   }
   
-  public UserThirdAccountParam setType(ThirdAccountType type) {
-    this.type = type.getType();
-    return this;
-  }
-  
-  public ThirdAccountType getEnumType() {
-    return ThirdAccountType.getType(this.type);
-  }
-
   public Date getLastLoginIp() {
     return lastLoginIp;
   }

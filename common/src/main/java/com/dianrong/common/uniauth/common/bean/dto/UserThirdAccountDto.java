@@ -25,7 +25,7 @@ public class UserThirdAccountDto extends TenancyBaseDto {
   private String thirdAccount;
 
   @ApiModelProperty("第三方账号类型")
-  private Byte type;
+  private ThirdAccountType type;
 
   @ApiModelProperty("第三账号最近一次在Uniauth的登陆时间")
   private Date lastLoginIp;
@@ -66,25 +66,15 @@ public class UserThirdAccountDto extends TenancyBaseDto {
     return this;
   }
 
-  public Byte getType() {
+  public ThirdAccountType getType() {
     return type;
   }
 
-  public UserThirdAccountDto setType(Byte type) {
+  public UserThirdAccountDto setType(ThirdAccountType type) {
     this.type = type;
     return this;
   }
   
-  public UserThirdAccountDto setType(ThirdAccountType type) {
-    this.type = type.getType();
-    return this;
-  }
-  
-  public ThirdAccountType getEnumType() {
-    return ThirdAccountType.getType(this.type);
-  }
-  
-
   public Date getLastLoginIp() {
     return lastLoginIp;
   }

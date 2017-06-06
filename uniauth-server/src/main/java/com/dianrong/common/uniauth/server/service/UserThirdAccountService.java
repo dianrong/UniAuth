@@ -50,7 +50,7 @@ public class UserThirdAccountService extends TenancyBasedService {
     CheckEmpty.checkEmpty(thirdAccount, "thirdAccount");
     CheckEmpty.checkEmpty(type, "thirdAccountType");
     UserThirdAccountExample uaExample = new UserThirdAccountExample();
-    uaExample.createCriteria().andThirdAccountEqualTo(thirdAccount).andTypeEqualTo(type.getType())
+    uaExample.createCriteria().andThirdAccountEqualTo(thirdAccount).andTypeEqualTo(type.toString())
         .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     List<UserThirdAccount> userThirdAccountList = userThirdAccountMapper.selectByExample(uaExample);
     if (userThirdAccountList == null || userThirdAccountList.isEmpty()) {
@@ -128,7 +128,7 @@ public class UserThirdAccountService extends TenancyBasedService {
     userThirdAccount.setTenancyId(tenancyService.getTenancyIdWithCheck());
     userThirdAccount.setCreateDate(new Date());
     userThirdAccount.setThirdAccount(thirdAccount);
-    userThirdAccount.setType(type.getType());
+    userThirdAccount.setType(type.toString());
     userThirdAccount.setUserId(userId);
     userThirdAccountMapper.insert(userThirdAccount);
     return userDto != null ? userDto : BeanConverter.convert(user);
