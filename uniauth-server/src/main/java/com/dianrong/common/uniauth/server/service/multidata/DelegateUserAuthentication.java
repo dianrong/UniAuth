@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service.facade;
+package com.dianrong.common.uniauth.server.service.multidata;
 
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  * 处理多数据源的登陆实现.
  */
 @Service
-public class UserAuthenticationFacade
+public class DelegateUserAuthentication
     implements UserAuthentication, ApplicationContextAware, InitializingBean {
 
   // 默认值
@@ -105,7 +105,7 @@ public class UserAuthenticationFacade
       UserAuthentication multipleDataAuthentication =
           this.applicationContext.getBean(multipleDataAuthenticationName, UserAuthentication.class);
       // 排除facade实现
-      if (multipleDataAuthentication instanceof UserAuthenticationFacade) {
+      if (multipleDataAuthentication instanceof DelegateUserAuthentication) {
         continue;
       }
       tempAuthenticationList.add(multipleDataAuthentication);

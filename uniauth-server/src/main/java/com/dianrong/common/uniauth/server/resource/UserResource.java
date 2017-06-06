@@ -13,7 +13,7 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
-import com.dianrong.common.uniauth.server.service.facade.UserAuthenticationFacade;
+import com.dianrong.common.uniauth.server.service.multidata.DelegateUserAuthentication;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 
 import io.swagger.annotations.Api;
@@ -37,7 +37,7 @@ public class UserResource implements IUserRWResource {
   private UserService userService;
 
   @Autowired
-  private UserAuthenticationFacade userAuthenticationFacade;
+  private DelegateUserAuthentication delegateUserAuthentication;
 
   @Override
   public Response<UserDto> addNewUser(UserParam userParam) {
@@ -98,7 +98,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDto> login(LoginParam loginParam) {
-    UserDto dto = userAuthenticationFacade.login(loginParam);
+    UserDto dto = delegateUserAuthentication.login(loginParam);
     return Response.success(dto);
   }
 
@@ -112,7 +112,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam) {
-    UserDetailDto userDetailDto = userAuthenticationFacade.getUserDetailInfo(loginParam);
+    UserDetailDto userDetailDto = delegateUserAuthentication.getUserDetailInfo(loginParam);
     return new Response<UserDetailDto>(userDetailDto);
   }
 
@@ -125,7 +125,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDto> getUserInfoByUserTag(LoginParam loginParam) {
-    return new Response<UserDto>(userAuthenticationFacade.getUserByEmailOrPhone(loginParam));
+    return new Response<UserDto>(delegateUserAuthentication.getUserByEmailOrPhone(loginParam));
   }
 
   @Override
