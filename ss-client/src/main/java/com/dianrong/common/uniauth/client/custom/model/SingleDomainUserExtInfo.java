@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.client.support.PermissionUtil;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.AllDomainPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
@@ -217,7 +217,7 @@ public final class SingleDomainUserExtInfo extends User {
         return emptyAuthorityUserInfo(username, id, userDto, domainDto, null);
     }
 
-    public static SingleDomainUserExtInfo emptyAuthorityUserInfo(String username, Long id, UserDto userDto, DomainDto domainDto, IPAPermissionDto ipaPermissionDto) {
+    public static SingleDomainUserExtInfo emptyAuthorityUserInfo(String username, Long id, UserDto userDto, DomainDto domainDto, AllDomainPermissionDto ipaPermissionDto) {
         Map<String, Set<String>> permMap = Maps.newHashMap();
         Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
         Collection<GrantedAuthority> authorities = Lists.newArrayList();

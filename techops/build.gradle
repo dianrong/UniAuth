@@ -75,8 +75,8 @@ dependencies {
     // so if there is a version upgrade, we should make sure the release version is work for techops system first then ask other teams to upgrade.
         
     if (rootProject.dianrongRepoEnable) {
-        compile "com.dianrong.common.uniauth:share-rw:2.0.02-SNAPSHOT"
-        compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.02-SNAPSHOT"
+        compile "com.dianrong.common.uniauth:share-rw:2.0.03-RELEASE"
+        compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.03-RELEASE"
       //  compile project(":ss-client")
       //  compile project(":share-rw")
     } else {
@@ -129,16 +129,6 @@ dependencies {
     
     // log
     compile 'ch.qos.logback:logback-classic'
-    
-    // notification 
-    compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
-    compile(
-        'com.squareup.retrofit2:retrofit:2.1.0',
-        'com.squareup.retrofit2:converter-jackson:2.1.0',
-        'com.squareup.retrofit2:converter-scalars:2.1.0',
-        'joda-time:joda-time',
-        'commons-io:commons-io',
-    )
     
     compile 'org.springframework.security:spring-security-aspects'
     aspectpath 'org.springframework.security:spring-security-aspects'

@@ -84,8 +84,19 @@ dependencies {
             exclude group: 'org.springframework', module: 'spring-oxm'
             exclude group: 'org.springframework', module: 'spring-tx'
     }
-       
+    
+    // redis   
     compile 'redis.clients:jedis:2.8.2' 
+    
+    // notification 
+    compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
+    compile(
+        'com.squareup.retrofit2:retrofit:2.1.0',
+        'com.squareup.retrofit2:converter-jackson:2.1.0',
+        'com.squareup.retrofit2:converter-scalars:2.1.0',
+        'joda-time:joda-time',
+        'commons-io:commons-io',
+    )
 }
 
 sonarqube {

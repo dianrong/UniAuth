@@ -7,15 +7,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * IPA权限model
- * 
- * @author wanglin
- *
+ * Uniauth中每个域通用的权限类型
  */
 @ToString
 @Getter
 @Setter
-public class IPAPermissionDto extends TenancyBaseDto{
+public class AllDomainPermissionDto extends TenancyBaseDto{
 
     private static final long serialVersionUID = 5798097486278500153L;
     /**

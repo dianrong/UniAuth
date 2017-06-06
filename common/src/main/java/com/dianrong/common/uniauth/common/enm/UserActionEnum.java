@@ -34,4 +34,21 @@ public enum UserActionEnum {
         }
         return false;
     }
+    
+    /**
+     * 判断是否在修改密码.
+     */
+    public static boolean isPasswordChange(UserActionEnum action) {
+        switch (action) {
+            case RESET_PASSWORD:
+                return true;
+            case RESET_PASSWORD_AND_CHECK:
+                return true;
+            case UPDATE_PASSWORD_BY_ACCOUNT:
+                return true;
+            default:
+                break;
+        }
+        return false;
+    }
 }
