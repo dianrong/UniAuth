@@ -19,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
 @Api("租户信息操作接口")
 @RestController
 public class TenancyResource implements ITenancyRWResource {
@@ -84,10 +81,10 @@ public class TenancyResource implements ITenancyRWResource {
           paramType = "query"),
       @ApiImplicitParam(name = "description", value = "描述", required = false, dataType = "string",
           paramType = "query"),
-      @ApiImplicitParam(name = "adminEmail", value = "租户管理员邮箱", required = false,
-          dataType = "string", paramType = "query", defaultValue = "采用默认邮箱(shuanggui)"),
-      @ApiImplicitParam(name = "adminPassword", value = "租户编码", required = false,
-          dataType = "string", paramType = "query", defaultValue = "采用默认管理员密码")})
+      @ApiImplicitParam(name = "adminEmail", value = "租户管理员邮箱", required = true,
+          dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "adminPassword", value = "租户编码", required = true,
+          dataType = "string", paramType = "query")})
   @Override
   public Response<TenancyDto> addTenancy(TenancyParam tenancyParam) {
     return Response
