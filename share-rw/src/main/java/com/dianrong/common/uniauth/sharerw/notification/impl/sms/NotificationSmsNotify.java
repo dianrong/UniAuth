@@ -40,7 +40,7 @@ public class NotificationSmsNotify implements SmsNotification {
   @Override
   public void send(String phoneNumber, String notification) {
     Assert.notNull(phoneNumber);
-    log.info(String.format("send sms, the notification is: %s", notification));
+    log.info(String.format("send sms to phone %s", phoneNumber));
     SendSmsContentRequest arg = new SendSmsContentRequest();
     HashSet<String> phoneSet = new HashSet<>(1);
     phoneSet.add(phoneNumber);
@@ -52,14 +52,14 @@ public class NotificationSmsNotify implements SmsNotification {
     } catch (Throwable t) {
       log.warn(
           String.format("failed send sms to %s, the content is:%s", phoneNumber, notification));
-      throw new SendNotificationFailedException(
-          String.format("failed send sms to %s, the content is:%s", phoneNumber, notification), t);
+      throw new SendNotificationFailedException(String.format("failed send sms to %s", phoneNumber),
+          t);
     }
     if (response == null || !response.isSuccess()) {
       log.warn(
           String.format("failed send sms to %s, the content is:%s", phoneNumber, notification));
       throw new SendNotificationFailedException(
-          String.format("failed send sms to %s, the content is:%s", phoneNumber, notification));
+          String.format("failed send sms to %s", phoneNumber));
     } else {
       log.info(String.format("success send sms to %s", phoneNumber));
     }

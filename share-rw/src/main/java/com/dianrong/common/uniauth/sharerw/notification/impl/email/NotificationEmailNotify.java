@@ -67,11 +67,11 @@ public class NotificationEmailNotify implements EmailNotification {
       response = emailClient.send(this.notificationUserKey, arg);
     } catch (Throwable t) {
       log.warn(String
-          .format("failed send email, from %s to %s, the subject is %s, the content is:%s",
-              this.fromEmail, toEmail, subject, notification));
+          .format("failed send email, from %s to %s, the subject is %s", this.fromEmail, toEmail,
+              subject));
       throw new SendNotificationFailedException(
-          String.format("failed send email, from %s to %s, the subject is %s, the content is:%s",
-              this.fromEmail, toEmail, subject, notification), t);
+          String.format("failed send email, from %s to %s, the subject is %s", this.fromEmail,
+              toEmail, subject), t);
     }
     if (response != null && response.isSuccess()) {
       log.info(String
@@ -79,11 +79,11 @@ public class NotificationEmailNotify implements EmailNotification {
               subject));
     } else {
       log.warn(String
-          .format("failed send email, from %s to %s, the subject is %s, the content is:%s",
-              this.fromEmail, toEmail, subject, notification));
+          .format("failed send email, from %s to %s, the subject is %s", this.fromEmail, toEmail,
+              subject));
       throw new SendNotificationFailedException(
-          String.format("failed send email, from %s to %s, the subject is %s, the content is:%s",
-              this.fromEmail, toEmail, subject, notification));
+          String.format("failed send email, from %s to %s, the subject is %s", this.fromEmail,
+              toEmail, subject));
     }
   }
 }

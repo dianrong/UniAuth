@@ -4,7 +4,6 @@
        xmlns:ldap="http://www.springframework.org/schema/ldap"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
-
     <ldap:context-source
           url="ldap://10.8.10.103:389"
           base="dc=dianrong,dc=com"

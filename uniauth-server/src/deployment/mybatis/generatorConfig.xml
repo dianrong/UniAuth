@@ -34,7 +34,39 @@
         </javaClientGenerator>
 
 
-        <table tableName="audit" enableCountByExample="true"
+        <table tableName="user" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="attribute_extend" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="user_detail" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="user_extend_val" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="grp_extend_val" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="grp" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="user_work_relationship" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="user_attribute_records" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true"
+               enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
+        <table tableName="grp_attribute_records" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>

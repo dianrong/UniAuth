@@ -12,9 +12,12 @@ import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 
 /**
- * @author wenlongchen
- * @since May 16, 2016
+ * 用户扩展属性操作读接口. 已被IAttributeExtendResource替代.
+ * @see com.dianrong.common.uniauth.common.interfaces.read.IAttributeExtendResource
+ * @author wanglin
+ *
  */
+@Deprecated
 @Path("userextend")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})

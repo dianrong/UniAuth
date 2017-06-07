@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.data.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserExtendValExample {
@@ -561,6 +562,126 @@ public class UserExtendValExample {
 
     public Criteria andTenancyIdNotBetween(Long value1, Long value2) {
       addCriterion("tenancy_id not between", value1, value2, "tenancyId");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateIsNull() {
+      addCriterion("create_date is null");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateIsNotNull() {
+      addCriterion("create_date is not null");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateEqualTo(Date value) {
+      addCriterion("create_date =", value, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateNotEqualTo(Date value) {
+      addCriterion("create_date <>", value, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateGreaterThan(Date value) {
+      addCriterion("create_date >", value, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateGreaterThanOrEqualTo(Date value) {
+      addCriterion("create_date >=", value, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateLessThan(Date value) {
+      addCriterion("create_date <", value, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateLessThanOrEqualTo(Date value) {
+      addCriterion("create_date <=", value, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateIn(List<Date> values) {
+      addCriterion("create_date in", values, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateNotIn(List<Date> values) {
+      addCriterion("create_date not in", values, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateBetween(Date value1, Date value2) {
+      addCriterion("create_date between", value1, value2, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andCreateDateNotBetween(Date value1, Date value2) {
+      addCriterion("create_date not between", value1, value2, "createDate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateIsNull() {
+      addCriterion("last_update is null");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateIsNotNull() {
+      addCriterion("last_update is not null");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateEqualTo(Date value) {
+      addCriterion("last_update =", value, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateNotEqualTo(Date value) {
+      addCriterion("last_update <>", value, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateGreaterThan(Date value) {
+      addCriterion("last_update >", value, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateGreaterThanOrEqualTo(Date value) {
+      addCriterion("last_update >=", value, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateLessThan(Date value) {
+      addCriterion("last_update <", value, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateLessThanOrEqualTo(Date value) {
+      addCriterion("last_update <=", value, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateIn(List<Date> values) {
+      addCriterion("last_update in", values, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateNotIn(List<Date> values) {
+      addCriterion("last_update not in", values, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateBetween(Date value1, Date value2) {
+      addCriterion("last_update between", value1, value2, "lastUpdate");
+      return (Criteria) this;
+    }
+
+    public Criteria andLastUpdateNotBetween(Date value1, Date value2) {
+      addCriterion("last_update not between", value1, value2, "lastUpdate");
       return (Criteria) this;
     }
   }

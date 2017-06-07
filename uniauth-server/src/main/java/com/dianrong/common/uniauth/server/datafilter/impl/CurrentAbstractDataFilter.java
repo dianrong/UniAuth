@@ -1,12 +1,12 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
 import java.lang.reflect.Field;
@@ -77,7 +77,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
   }
 
   /**
-   * . 获取描述符
+   * 获取描述符.
    * 
    * @param equalsField equalsField处理的字段
    * @return 描述符string
@@ -101,7 +101,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
   }
 
   /**
-   * . 从Role中获取数据
+   * 从Role中获取数据.
    * 
    * @param obj Role
    * @param type 结果
@@ -129,7 +129,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
   }
 
   /**
-   * . 处理查询数据中是否存在对应的字段相等的情况
+   * 处理查询数据中是否存在对应的字段相等的情况.
    * 
    * @param equalsField 字段列表,一定不为空
    * @return 结果
@@ -137,14 +137,14 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
   protected abstract boolean multiFieldsDuplicateCheck(FilterData... equalsField);
 
   /**
-   * . 获取描述的表的名字
+   * 获取描述的表的名字.
    * 
    * @return 表名
    */
   protected abstract String getProcessTableName();
 
   /**
-   * . 根据主键id获取一个启用状态的数据
+   * 根据主键id获取一个启用状态的数据.
    * 
    * @param id primary key
    * @return record

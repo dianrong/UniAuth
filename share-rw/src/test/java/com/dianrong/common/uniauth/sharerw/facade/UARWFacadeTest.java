@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UARWFacadeTest {
 
   static {
-    System.setProperty("DR_CFG_ZOOKEEPER_ENV_URL", "127.0.0.1:2181");
+    System.setProperty("DR_CFG_ZOOKEEPER_ENV_URL", "10.18.19.64:12181");
   }
 
   @Autowired

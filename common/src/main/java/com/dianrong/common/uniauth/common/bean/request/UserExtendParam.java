@@ -3,10 +3,15 @@ package com.dianrong.common.uniauth.common.bean.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import lombok.ToString;
+
 /**
- * @author wenlongchen
- * @since May 16, 2016
+ * 已被AttributeExtendParam替代.
+ *
+ * @see com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam
  */
+@Deprecated
+@ToString
 @ApiModel("用户扩展属性操作请求参数")
 public class UserExtendParam extends Operator {
 
@@ -41,11 +46,6 @@ public class UserExtendParam extends Operator {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  @Override
-  public String toString() {
-    return "UserExtendParam [id=" + id + ", code=" + code + ", description=" + description + "]";
   }
 }
 

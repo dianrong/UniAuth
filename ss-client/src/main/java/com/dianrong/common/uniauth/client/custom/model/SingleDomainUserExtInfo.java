@@ -14,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.access.regular.SSRegularPattern;
+import org.springframework.util.StringUtils;
 
 import com.dianrong.common.uniauth.client.support.PermissionUtil;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -26,6 +27,7 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author wanglin
  */
 @Slf4j
+@ToString
 public final class SingleDomainUserExtInfo extends User {
 
   private static final long serialVersionUID = 8347558918889027136L;
@@ -277,19 +280,22 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   @Override
-  public String toString() {
-    return "SingleDomainUserExtInfo [id=" + id + ", userDto=" + userDto + ", domainDto=" + domainDto
-        + ", permMap=" + permMap + ", permDtoMap=" + permDtoMap
-        + ", regularPatterns=" + regularPatterns + "]";
-  }
-
-  @Override
   public boolean equals(Object rhs) {
     if (rhs instanceof SingleDomainUserExtInfo) {
       SingleDomainUserExtInfo rhsUser = (SingleDomainUserExtInfo) rhs;
-      // tenancyId and email must be equal
-      return this.userDto.getTenancyId().equals(rhsUser.getUserDto().getTenancyId()) && this.userDto
-          .getEmail().equals(rhsUser.getUserDto().getEmail());
+      // tenancyId must be equal
+      if (!this.userDto.getTenancyId().equals(rhsUser.getUserDto().getTenancyId())) {
+        return false;
+      }
+      if (StringUtils.hasText(userDto.getEmail())) {
+        return this.userDto.getEmail().equals(rhsUser.getUserDto().getEmail());
+      }
+      if (StringUtils.hasText(userDto.getPhone())) {
+        return this.userDto.getPhone().equals(rhsUser.getUserDto().getPhone());
+      }
+      if (StringUtils.hasText(userDto.getAccount())) {
+        return this.userDto.getAccount().equals(rhsUser.getUserDto().getAccount());
+      }
     }
     return false;
   }
@@ -297,11 +303,20 @@ public final class SingleDomainUserExtInfo extends User {
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = super.hashCode();
+    int result = 0;
     result = prime * result + ((this.userDto.getTenancyId() == null) ? 0
         : this.userDto.getTenancyId().hashCode());
     result = prime * result + ((this.userDto.getEmail() == null) ? 0
         : this.userDto.getEmail().hashCode());
+    if (!StringUtils.hasText(this.userDto.getEmail())) {
+      result = prime * result + ((this.userDto.getPhone() == null) ? 0
+          : this.userDto.getPhone().hashCode());
+    }
+    if (!StringUtils.hasText(this.userDto.getEmail()) && !StringUtils
+        .hasText(this.userDto.getPhone())) {
+      result = prime * result + ((this.userDto.getAccount() == null) ? 0
+          : this.userDto.getAccount().hashCode());
+    }
     return result;
   }
 }

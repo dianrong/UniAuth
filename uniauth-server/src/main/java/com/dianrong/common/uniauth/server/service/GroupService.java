@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpPath;
@@ -58,7 +59,6 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotify
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-import com.dianrong.common.uniauth.server.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
