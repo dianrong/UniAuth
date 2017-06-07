@@ -15,10 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
+@CacheConfig(cacheNames={"commonService"})
 public class CommonCache {
 
   @Autowired
@@ -29,7 +31,7 @@ public class CommonCache {
   /**
    * 从缓存中获取permType信息.
    */
-  @Cacheable(value = "commonService", key = "'common:permType'")
+  @Cacheable(key = "'permType'")
   public Map<String, PermType> getPermTypeMap() {
     Map<String, PermType> permTypeMap = new HashMap<>();
     PermTypeExample example = new PermTypeExample();
@@ -45,7 +47,7 @@ public class CommonCache {
   /**
    * 从缓存中获取roleCode信息.
    */
-  @Cacheable(value = "commonService", key = "'common:roleCode'")
+  @Cacheable(key = "'roleCode'")
   public Map<String, RoleCode> getRoleCodeMap() {
     Map<String, RoleCode> roleCodeMap = new HashMap<>();
     RoleCodeExample example = new RoleCodeExample();
@@ -61,7 +63,7 @@ public class CommonCache {
   /**
    * 获取所有的角色编码信息.
    */
-  @Cacheable(value = "commonService", key = "'common:allRoleCode'")
+  @Cacheable(key = "'allRoleCode'")
   public List<RoleCodeDto> getAllRoleCodes() {
     RoleCodeExample example = new RoleCodeExample();
     List<RoleCode> roleCodeList = roleCodeMapper.selectByExample(example);
