@@ -50,7 +50,7 @@ gradle warTechopsWebsite
 # log out
 JAVA_OPTS="$JAVA_OPTS -Dcatalina.logs=/var/lib/tomcat/logs"
 
-# zookeeper cluster address
+# zookeeper cluster address (zookeeper集群不是必须的, 可单节点)
 DR_CFG_ZOOKEEPER_ENV_URL="10.8.12.85:2181,10.8.12.85:2182,10.8.12.85:2183"
 
 export DR_CFG_ZOOKEEPER_ENV_URL
@@ -168,6 +168,27 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 
 # 配置的uniauth-server的地址。比如：http://localhost:8090/uniauth/ws/rs
 /com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint http://localhost:8090/uniauth/ws/rs
+
+# 配置cas execution 和 webflow 对象encryption, signing 的密钥, 这一块是为安全考虑(Optional)
+
+具体步骤：
+1. 新增四个zookeeper节点:
+/com/dianrong/cfg/1.0.0/uniauth/cas.tgc.encryption.key MvU58Xs7fOsGQL47K6AXVy7qyDzaSO7_Khh1nC5gbLo
+/com/dianrong/cfg/1.0.0/uniauth/cas.tgc.signing.key 8hALJmFBEq1X4TD824cg15P5U8BjNrdoF9-XqH1KZQ8UdzFRmT_dX6Ao2M46hiCpvXRvRv-HhkQnpmPtG8oA_w
+/com/dianrong/cfg/1.0.0/uniauth/cas.webflow.encryption.key C4SBogp_badO82wC
+/com/dianrong/cfg/1.0.0/uniauth/cas.webflow.signing.key 8_G6JMTdkxiJ5rN0tqFrEOQj200VoxGrRzAp7bvjMFSGdA2IOzdFRsGv3m3GMNVmoSJ0O4miIBrYCHx_FWP4oQ
+这四个节点的值通过下面这个工具生成，具体步骤：
+a. git clone https://github.com/mitreid-connect/json-web-key-generator.git
+b. 切换到json-web-key-generator目录
+c. 使用maven命令 mvn package 
+d. 切换到json-web-key-generator目录下的 target目录
+e. 分别执行 
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 256
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 512
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 96
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 512
+得到四个k, 按顺序赋值给上面的四个zookeeper节点
+
 ```
 
 #### (2) 邮箱配置
@@ -188,11 +209,7 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 ### 4.2. redis配置
 
 ``` shell
-# a 普通模式
-/com/dianrong/cfg/1.0.0/uniauth/redis.host localhost  # cas采用的redis的host
-/com/dianrong/cfg/1.0.0/uniauth/redis.port 6379       # redis的port
-
-# b 哨兵模式
+# 哨兵模式 (请自行指定具体的master, password, sentinels配置必须为sentinel的地址和端口)
 /com/dianrong/cfg/1.0.0/uniauth/redis.database 0      # redis的数据库index
 /com/dianrong/cfg/1.0.0/uniauth/cas.iscluster true    # true or false  cas是否采用redis存储登陆的ticket
 /com/dianrong/cfg/1.0.0/uniauth/redis.password ''     # 指定redis密码
