@@ -10,7 +10,6 @@ import com.dianrong.common.uniauth.server.service.ApiPermissionService;
 import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

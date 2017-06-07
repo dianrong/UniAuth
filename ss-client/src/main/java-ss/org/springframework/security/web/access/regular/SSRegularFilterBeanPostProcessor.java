@@ -1,9 +1,11 @@
 package org.springframework.security.web.access.regular;
 
+import com.dianrong.common.uniauth.common.client.DomainDefine;
+import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.util.List;
-
 import javax.servlet.Filter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
@@ -13,11 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.SwitchControl;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
-
-import com.dianrong.common.uniauth.common.client.DomainDefine;
-import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
-import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 /**
  * 用于在服务启动的时候将SSRegularPermissionFilter注入到spring security的处理链路中

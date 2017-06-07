@@ -23,15 +23,12 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,7 +76,7 @@ public class UserExtendValService extends TenancyBasedService {
 
   /**
    * 根据扩展属性值的主键id删除数据.
-   * 
+   *
    * @return 删除的个数
    */
   public int delById(Long id) {
@@ -115,7 +112,7 @@ public class UserExtendValService extends TenancyBasedService {
 
   /**
    * 根据用户id查询扩展属性值.
-   * 
+   *
    * @param userId 用户Id
    */
   public List<UserExtendValDto> searchByUserId(Long userId) {
@@ -142,7 +139,7 @@ public class UserExtendValService extends TenancyBasedService {
 
   /**
    * 根据用户id和code分页查询数据.
-   * 
+   *
    * @param userId 必填
    * @param code 可选
    */
@@ -178,7 +175,7 @@ public class UserExtendValService extends TenancyBasedService {
 
   /**
    * 根据条件查询用户扩展属性值列表.
-   * 
+   *
    * @param extendId 扩展属性id
    * @param value 扩展属性值
    * @param includeDisableUserRelatedExtendVal 是否包含禁用用户关联的扩展属性值

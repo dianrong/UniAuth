@@ -1,11 +1,9 @@
 package org.springframework.security.web.access.regular;
 
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import java.io.Serializable;
 import java.util.regex.Pattern;
-
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 /**
  * regular pattern model

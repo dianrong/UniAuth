@@ -1,16 +1,13 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import javax.servlet.http.HttpServletRequest;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.util.UniqueTicketIdGenerator;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.webflow.execution.RequestContext;
-
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 用于生成客户自定义的登陆页面的登陆ticket的生成

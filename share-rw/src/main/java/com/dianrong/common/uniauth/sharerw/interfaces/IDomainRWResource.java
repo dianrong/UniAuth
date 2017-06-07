@@ -7,7 +7,6 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 

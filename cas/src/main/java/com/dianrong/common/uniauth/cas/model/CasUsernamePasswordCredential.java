@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.cas.model;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jasig.cas.authentication.UsernamePasswordCredential;

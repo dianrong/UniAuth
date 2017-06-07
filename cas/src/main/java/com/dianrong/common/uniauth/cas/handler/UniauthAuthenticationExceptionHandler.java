@@ -2,9 +2,7 @@ package com.dianrong.common.uniauth.cas.handler;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
-
 import org.jasig.cas.web.flow.AuthenticationExceptionHandler;
 
 public class UniauthAuthenticationExceptionHandler extends AuthenticationExceptionHandler {

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class GlobalVarQueue {
+
   @Autowired
   private AuditMapper auditMapper;
 
@@ -88,6 +89,7 @@ public class GlobalVarQueue {
   }
 
   private class SaveToDbThread extends Thread {
+
     private List<Audit> toBeInsertedAuditList;
 
     public SaveToDbThread(List<Audit> toBeInsertedAuditList) {

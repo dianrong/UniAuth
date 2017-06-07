@@ -1,8 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
+import java.util.List;
 
 @ApiModel("组操作请求参数")
 public class GroupParam extends Operator {

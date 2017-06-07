@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.cas.registry.registeredservice;
 
+import com.dianrong.common.uniauth.cas.util.ServiceUtils;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.services.RegexRegisteredService;
 import org.jasig.cas.services.RegisteredService;
-
-import com.dianrong.common.uniauth.cas.util.ServiceUtils;
 
 /**
  * Uniauth实现的RegexRegisteredService

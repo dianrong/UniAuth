@@ -3,7 +3,6 @@ package com.dianrong.common.techops.bean;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

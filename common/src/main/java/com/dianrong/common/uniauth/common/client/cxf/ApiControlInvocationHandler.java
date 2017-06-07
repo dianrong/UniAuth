@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.common.client.cxf;
 
+import com.dianrong.common.uniauth.common.util.Assert;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-
-import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
  * 用于处理访问的控制处理逻辑

@@ -1,5 +1,8 @@
 package com.dianrong.common.uniauth.common.server;
 
+import com.dianrong.common.uniauth.common.bean.LangDto;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -9,15 +12,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
-
-import com.dianrong.common.uniauth.common.bean.LangDto;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author dreamlee

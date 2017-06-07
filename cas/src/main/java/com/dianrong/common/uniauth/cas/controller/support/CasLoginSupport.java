@@ -1,12 +1,16 @@
 package com.dianrong.common.uniauth.cas.controller.support;
 
+import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
+import com.dianrong.common.uniauth.common.exp.NotLoginException;
+import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import java.io.IOException;
 import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.Credential;
@@ -23,14 +27,6 @@ import org.jasig.cas.web.support.CookieRetrievingCookieGenerator;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
-import com.dianrong.common.uniauth.cas.util.CasConstants;
-import com.dianrong.common.uniauth.common.exp.NotLoginException;
-import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.common.util.StringUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 抽取cas登陆相关操作的公用代码，其他模块采用 组合方式使用

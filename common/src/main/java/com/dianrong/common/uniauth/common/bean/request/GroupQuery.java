@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
 
 /**
  * Created by Arc on 3/3/2016.

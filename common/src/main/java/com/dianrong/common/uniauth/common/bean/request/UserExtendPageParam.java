@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 已被AttributeExtendPageParam替代.
+ *
  * @see com.dianrong.common.uniauth.common.bean.request.AttributeExtendPageParam
  */
 @Deprecated

@@ -1,15 +1,13 @@
 package com.dianrong.uniauth.ssclient.bean;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.security.core.GrantedAuthority;
-
 import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import org.springframework.security.core.GrantedAuthority;
 
 public class SSClientUserExtInfo extends UserExtInfo {
 

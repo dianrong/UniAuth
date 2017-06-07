@@ -1,10 +1,12 @@
 package com.dianrong.common.uniauth.client.config.configurations;
 
+import com.dianrong.common.uniauth.client.config.Configure;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
+import com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,11 +15,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
-
-import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
-import com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler;
-import com.dianrong.common.uniauth.common.client.DomainDefine;
 
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)

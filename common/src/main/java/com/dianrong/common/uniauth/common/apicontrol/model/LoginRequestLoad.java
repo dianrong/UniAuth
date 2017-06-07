@@ -1,8 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.model;
 
-import java.io.Serializable;
-
 import com.dianrong.common.uniauth.common.util.Assert;
+import java.io.Serializable;
 
 /**
  * 登陆请求载体

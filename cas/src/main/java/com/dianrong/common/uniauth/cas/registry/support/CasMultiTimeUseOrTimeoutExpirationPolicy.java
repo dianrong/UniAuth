@@ -1,16 +1,13 @@
 package com.dianrong.common.uniauth.cas.registry.support;
 
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jasig.cas.ticket.TicketState;
 import org.jasig.cas.ticket.support.AbstractCasExpirationPolicy;
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 
 public class CasMultiTimeUseOrTimeoutExpirationPolicy extends AbstractCasExpirationPolicy {
 

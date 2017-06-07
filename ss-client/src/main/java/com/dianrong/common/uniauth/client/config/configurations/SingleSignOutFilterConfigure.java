@@ -1,11 +1,10 @@
 package com.dianrong.common.uniauth.client.config.configurations;
 
+import com.dianrong.common.uniauth.client.config.Configure;
+import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
-
-import com.dianrong.common.uniauth.client.config.Configure;
-import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 
 /**
  * . create new SingleSignOutFilter

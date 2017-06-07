@@ -11,10 +11,8 @@ import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import com.dianrong.common.uniauth.server.service.TagService;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
-
 import io.swagger.annotations.Api;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

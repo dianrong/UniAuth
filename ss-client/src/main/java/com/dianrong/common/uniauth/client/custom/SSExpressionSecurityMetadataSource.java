@@ -1,23 +1,19 @@
 package com.dianrong.common.uniauth.client.custom;
 
+import com.dianrong.common.uniauth.client.exp.UserNotLoginException;
+import com.dianrong.common.uniauth.client.support.PatternMatchMost;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.client.exp.UserNotLoginException;
-import com.dianrong.common.uniauth.client.support.PatternMatchMost;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SSExpressionSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {

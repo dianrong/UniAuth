@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.util.Date;
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
+import java.util.List;
 
 @ApiModel("组信息")
 public class GroupDto extends TenancyBaseDto {

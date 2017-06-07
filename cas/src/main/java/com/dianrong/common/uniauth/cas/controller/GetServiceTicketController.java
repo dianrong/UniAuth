@@ -1,10 +1,19 @@
 package com.dianrong.common.uniauth.cas.controller;
 
+import com.dianrong.common.uniauth.cas.exp.FreshUserException;
+import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
+import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
+import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
+import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
+import com.dianrong.common.uniauth.cas.model.CasRememberMeUsernamePasswordCredential;
+import com.dianrong.common.uniauth.cas.service.CfgService;
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
@@ -12,7 +21,7 @@ import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.AuthenticationException;
@@ -32,19 +41,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.dianrong.common.uniauth.cas.exp.FreshUserException;
-import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
-import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
-import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
-import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
-import com.dianrong.common.uniauth.cas.model.CasRememberMeUsernamePasswordCredential;
-import com.dianrong.common.uniauth.cas.service.CfgService;
-import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.JsonUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author wanglin 用于获取登陆使用的service ticket处理的controller

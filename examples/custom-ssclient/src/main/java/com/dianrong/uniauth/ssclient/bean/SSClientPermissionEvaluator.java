@@ -1,10 +1,8 @@
 package com.dianrong.uniauth.ssclient.bean;
 
-import java.io.Serializable;
-
-import org.springframework.security.core.Authentication;
-
 import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
+import java.io.Serializable;
+import org.springframework.security.core.Authentication;
 
 public class SSClientPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 

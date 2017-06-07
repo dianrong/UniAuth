@@ -1,21 +1,17 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-
-import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 用于判断当前的登陆请求的处理方式

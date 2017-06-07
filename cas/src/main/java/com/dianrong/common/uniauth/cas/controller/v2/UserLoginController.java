@@ -1,19 +1,28 @@
 package com.dianrong.common.uniauth.cas.controller.v2;
 
+import com.dianrong.common.uniauth.cas.controller.support.CasLoginSupport;
+import com.dianrong.common.uniauth.cas.exp.FreshUserException;
+import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
+import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
+import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
+import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
+import com.dianrong.common.uniauth.cas.model.vo.ApiResponse;
+import com.dianrong.common.uniauth.cas.model.vo.ResponseCode;
+import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
+import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
@@ -26,19 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.dianrong.common.uniauth.cas.controller.support.CasLoginSupport;
-import com.dianrong.common.uniauth.cas.exp.FreshUserException;
-import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
-import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
-import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
-import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
-import com.dianrong.common.uniauth.cas.model.vo.ApiResponse;
-import com.dianrong.common.uniauth.cas.model.vo.ResponseCode;
-import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
-import com.dianrong.common.uniauth.common.exp.NotLoginException;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 该controller用于通过纯api的方式进行登陆操作

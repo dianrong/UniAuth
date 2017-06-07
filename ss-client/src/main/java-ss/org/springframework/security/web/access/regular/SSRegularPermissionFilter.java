@@ -1,27 +1,23 @@
 package org.springframework.security.web.access.regular;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.filter.GenericFilterBean;
-
 import com.dianrong.common.uniauth.client.custom.LoginUserInfoHolder;
 import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 import com.dianrong.common.uniauth.client.exp.UserNotLoginException;
 import com.dianrong.common.uniauth.client.support.ExtractRequestUrl;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.filter.GenericFilterBean;
 
 /**
  * uniauth中的regular权限的处理filter,必须处理登陆成功的情况

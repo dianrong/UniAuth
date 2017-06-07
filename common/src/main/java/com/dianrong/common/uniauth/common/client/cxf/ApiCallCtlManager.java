@@ -1,18 +1,5 @@
 package com.dianrong.common.uniauth.common.client.cxf;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.SocketTimeoutException;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
-
-import javax.ws.rs.ProcessingException;
-
-import org.slf4j.Logger;
-
 import com.dianrong.common.uniauth.common.apicontrol.HeaderKey;
 import com.dianrong.common.uniauth.common.apicontrol.LoginRequestLoadHeaderOperator;
 import com.dianrong.common.uniauth.common.apicontrol.LoginResponseLoadHeaderOperator;
@@ -32,8 +19,17 @@ import com.dianrong.common.uniauth.common.client.cxf.exp.ApiCallSocketTimeOutExc
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Maps;
-
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.SocketTimeoutException;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+import javax.ws.rs.ProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 /**
  * 管理api权限访问客户端的状态信息

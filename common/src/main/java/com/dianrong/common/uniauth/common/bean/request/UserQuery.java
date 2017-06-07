@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
-
 import lombok.ToString;
 
 /**

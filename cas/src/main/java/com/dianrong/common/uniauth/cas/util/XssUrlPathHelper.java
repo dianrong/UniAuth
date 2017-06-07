@@ -1,17 +1,14 @@
 package com.dianrong.common.uniauth.cas.util;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UrlPathHelper;
-
-import com.google.common.collect.Lists;
 
 public class XssUrlPathHelper extends UrlPathHelper {
 

@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.cas.cors;
 
+import com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,7 +13,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -21,13 +21,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.catalina.filters.Constants;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
-
-import com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper;
 
 /**
  * Created by Arc on 1/3/2016.

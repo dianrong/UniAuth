@@ -1,14 +1,12 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * uniauth的ajax请求返回结果实现

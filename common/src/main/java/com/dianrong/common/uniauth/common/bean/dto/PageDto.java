@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
+import java.util.List;
 
 @ApiModel("分页查询返回结果")
 public class PageDto<T extends Serializable> implements Serializable {

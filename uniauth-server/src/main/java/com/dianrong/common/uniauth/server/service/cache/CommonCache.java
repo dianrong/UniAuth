@@ -8,12 +8,10 @@ import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
 import com.dianrong.common.uniauth.server.data.mapper.PermTypeMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

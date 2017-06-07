@@ -1,17 +1,14 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import org.springframework.security.core.GrantedAuthority;
-
-import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * 用于进行UserExtInfo构造的传参model

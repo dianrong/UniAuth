@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
+import com.dianrong.common.uniauth.common.util.Assert;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-
-import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
  * uniauth的json结果model

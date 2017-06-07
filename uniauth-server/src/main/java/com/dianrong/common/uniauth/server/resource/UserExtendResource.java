@@ -11,22 +11,19 @@ import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWReso
 import com.dianrong.common.uniauth.server.service.AttributeExtendService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.google.common.collect.Lists;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 被AttributeExtendResource替代.
- * 
- * @see com.dianrong.common.uniauth.server.resource.AttributeExtendResource
+ *
  * @author wanglin
+ * @see com.dianrong.common.uniauth.server.resource.AttributeExtendResource
  */
 @Deprecated
 @Api(value = "用户扩展属性操作")

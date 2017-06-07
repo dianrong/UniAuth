@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.io.Serializable;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
 
 @ApiModel("调用Api涉及到的租户标识信息")
 public class TenancyBasedParam implements Serializable {

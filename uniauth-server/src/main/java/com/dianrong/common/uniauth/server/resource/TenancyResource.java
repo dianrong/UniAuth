@@ -7,19 +7,14 @@ import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.service.TenancyService;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITenancyRWResource;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
-
-
 
 
 @Api("租户信息操作接口")

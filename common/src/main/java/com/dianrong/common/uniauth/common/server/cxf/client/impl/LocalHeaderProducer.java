@@ -1,9 +1,7 @@
 package com.dianrong.common.uniauth.common.server.cxf.client.impl;
 
-import org.springframework.stereotype.Component;
-
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
-import com.dianrong.common.uniauth.common.server.cxf.client.impl.AbstractLocalHeaderProducer;
+import org.springframework.stereotype.Component;
 
 /**
  * . 默认实现

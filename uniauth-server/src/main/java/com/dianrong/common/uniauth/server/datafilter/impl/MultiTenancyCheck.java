@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.server.service.TenancyService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class MultiTenancyCheck extends AbstractDataFilter {
+
   // 目前是基于多租户的数据检验
   @Autowired
   private TenancyService tenancyService;

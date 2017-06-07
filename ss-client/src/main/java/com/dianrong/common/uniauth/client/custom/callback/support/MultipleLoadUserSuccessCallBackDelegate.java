@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.client.custom.callback.support;
 
-import java.util.List;
-
 import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 import com.dianrong.common.uniauth.client.custom.callback.LoadUserSuccessCallBack;
 import com.dianrong.common.uniauth.common.util.Assert;
+import java.util.List;
 
 public class MultipleLoadUserSuccessCallBackDelegate implements LoadUserSuccessCallBack {
 

@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.server.aop;
 
 import com.dianrong.common.uniauth.common.bean.request.TenancyBasedParam;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
-
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,7 +12,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 
-
 /**
  * Created by Arc on 15/1/16.
  */
@@ -22,8 +20,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RequestIdentityAopHandler {
+
   @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.resource.*.*(..))")
-  public void anyServerResources() {}
+  public void anyServerResources() {
+  }
 
   /**
    * 处理任何的请求.

@@ -1,11 +1,8 @@
 package com.dianrong.loanbusiness.subsystem.service;
 
-import java.io.Serializable;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-
 import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluator;
+import java.io.Serializable;
+import org.springframework.security.core.Authentication;
 
 public class MyPermissionEvaluator implements UniauthPermissionEvaluator {
 

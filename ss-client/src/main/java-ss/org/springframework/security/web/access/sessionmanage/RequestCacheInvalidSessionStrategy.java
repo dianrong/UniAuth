@@ -1,16 +1,13 @@
 package org.springframework.security.web.access.sessionmanage;
 
+import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.session.InvalidSessionStrategy;
-
-import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 
 /**
  * 记录请求的上下文信息

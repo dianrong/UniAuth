@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.cas.registry.registeredservice;
 
 import java.net.URL;
 import java.util.Set;
-
 import org.jasig.cas.services.AttributeReleasePolicy;
 import org.jasig.cas.services.LogoutType;
 import org.jasig.cas.services.RegisteredService;

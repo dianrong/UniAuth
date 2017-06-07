@@ -6,9 +6,7 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
 import com.dianrong.common.uniauth.server.ldap.ipa.support.IpaConstants;
 import com.dianrong.common.uniauth.server.ldap.ipa.support.IpaUtil;
-
 import javax.naming.Name;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.AuthenticationException;
@@ -23,7 +21,7 @@ public class UserDao {
 
   /**
    * 调用IPA数据服务,进行身份认证.
-   * 
+   *
    * @param account 账号
    * @param password 密码
    * @throws AuthenticationException 账号和密码不匹配
@@ -37,7 +35,7 @@ public class UserDao {
 
   /**
    * 根据uid获取用户的基本信息.
-   * 
+   *
    * @param uid 不能为空
    */
   public User getUserByAccount(String uid) {

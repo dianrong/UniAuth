@@ -7,10 +7,8 @@ import com.dianrong.common.uniauth.server.support.apicontrl.pejudger.PrivatePerm
 import com.dianrong.common.uniauth.server.support.apicontrl.pejudger.PublicPermissionJudger;
 import com.google.common.collect.Sets;
 import java.util.Set;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +41,7 @@ public class ComposedPermissionJudger
 
   /**
    * Add a new permission judger.
-   * 
+   *
    * @param judger new judger
    * @return ComposedPermissionJudger
    */

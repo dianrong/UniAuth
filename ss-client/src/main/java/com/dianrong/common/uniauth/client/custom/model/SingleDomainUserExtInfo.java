@@ -1,21 +1,5 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.springframework.http.HttpMethod;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.access.regular.SSRegularPattern;
-import org.springframework.util.StringUtils;
-
 import com.dianrong.common.uniauth.client.support.PermissionUtil;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
@@ -26,9 +10,22 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.access.regular.SSRegularPattern;
+import org.springframework.util.StringUtils;
 
 /**
  * 单个域的用户信息model

@@ -73,9 +73,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,6 +85,7 @@ import org.springframework.util.StringUtils;
  */
 @Service
 public class GroupService extends TenancyBasedService {
+
   @Autowired
   private GrpMapper grpMapper;
   @Autowired
@@ -1000,7 +999,7 @@ public class GroupService extends TenancyBasedService {
 
   /**
    * 获取所有的tags，并且根据groupId打上对应的checked标签.
-   * 
+   *
    * @param groupId 组id
    * @param domainId 域idd
    */
@@ -1102,7 +1101,7 @@ public class GroupService extends TenancyBasedService {
 
   /**
    * Check if the user witch's id is userId is in group or in the sub group.
-   * 
+   *
    * @param userId can not be null
    * @param code can not be null
    * @param includeOwner if group-user owner relationship is include
@@ -1126,7 +1125,7 @@ public class GroupService extends TenancyBasedService {
 
   /**
    * 根据用户id查询关联的组的信息集合.
-   * 
+   *
    * @param userId 用户id 不能为空
    * @param includeOwner 是否包含owner的从属关系(默认为false)
    * @param includeIndirectAncestors 是否查询非直属的关系
@@ -1148,7 +1147,7 @@ public class GroupService extends TenancyBasedService {
 
   /**
    * 获取用户最新关联的组的结构.
-   * 
+   *
    * @param userId 用户id, 不能为空
    * @return 组信息列表. 以从根组到子组的顺序排序
    */

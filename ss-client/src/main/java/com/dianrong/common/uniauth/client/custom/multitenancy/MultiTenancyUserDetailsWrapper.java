@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.client.custom.multitenancy;
 
+import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import java.security.InvalidParameterException;
 import java.util.Map;
-
 import org.jasig.cas.client.validation.Assertion;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
 
 public class MultiTenancyUserDetailsWrapper implements
     AuthenticationUserDetailsService<CasAssertionAuthenticationToken>, InitializingBean {

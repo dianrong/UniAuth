@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.cas.registry.support;
 
 import java.io.Serializable;
-
 import org.jasig.cas.ticket.Ticket;
 
 /**

@@ -1,8 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.server;
 
-import java.io.Serializable;
-
 import com.dianrong.common.uniauth.common.apicontrol.exp.LoadCredentialFailedException;
+import java.io.Serializable;
 
 /**
  * Load WillExpiredCallerCredential

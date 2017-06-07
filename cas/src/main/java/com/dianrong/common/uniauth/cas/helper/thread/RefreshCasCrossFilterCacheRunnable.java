@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.cas.helper.thread;
 
 import com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

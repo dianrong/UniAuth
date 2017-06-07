@@ -23,15 +23,12 @@ import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
 import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ws.rs.client.ClientRequestFilter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

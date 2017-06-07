@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.jasig.cas.authentication.principal.DefaultPrincipalAttributesRepository;
 import org.jasig.cas.services.AttributeReleasePolicy;
 import org.jasig.cas.services.DefaultRegisteredServiceAccessStrategy;

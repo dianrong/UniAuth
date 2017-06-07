@@ -8,12 +8,10 @@ import com.dianrong.common.uniauth.common.bean.request.AttributeExtendPageParam;
 import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IAttributeExtendRWResource;
 import com.dianrong.common.uniauth.server.service.AttributeExtendService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

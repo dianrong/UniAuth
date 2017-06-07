@@ -1,11 +1,9 @@
 package com.dianrong.common.uniauth.client.custom;
 
 import java.io.Serializable;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Component("uniauthPermissionEvaluator")
 @Slf4j

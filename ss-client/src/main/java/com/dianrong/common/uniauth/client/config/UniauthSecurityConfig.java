@@ -1,9 +1,10 @@
 package com.dianrong.common.uniauth.client.config;
 
+import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
@@ -15,11 +16,6 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
-import com.dianrong.common.uniauth.common.client.DomainDefine;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * uniauth 针对spring boot的集成配置对象 一般做法是直接继承该类作为spring security配置

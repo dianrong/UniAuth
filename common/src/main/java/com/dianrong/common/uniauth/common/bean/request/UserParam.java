@@ -1,9 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.util.List;
-
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
-
+import java.util.List;
 import lombok.ToString;
 
 @ToString

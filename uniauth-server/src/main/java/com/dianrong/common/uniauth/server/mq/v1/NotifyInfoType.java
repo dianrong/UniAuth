@@ -2,9 +2,8 @@ package com.dianrong.common.uniauth.server.mq.v1;
 
 /**
  * 通知消息类型定义.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public enum NotifyInfoType {
   USER_ADD, // 新增用户

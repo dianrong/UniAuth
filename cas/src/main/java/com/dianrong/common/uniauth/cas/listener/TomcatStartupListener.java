@@ -1,12 +1,10 @@
 package com.dianrong.common.uniauth.cas.listener;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import com.dianrong.common.uniauth.cas.helper.thread.RfreshCasCfgCacheRunnable;
 import com.dianrong.common.uniauth.cas.helper.thread.SingleScheduledThreadPool;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**

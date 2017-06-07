@@ -1,12 +1,11 @@
 package com.dianrong.common.uniauth.client.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.ConfigurationCondition;
 import org.springframework.core.type.AnnotatedTypeMetadata;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 作为uniauth的所有condition父类，用于定义一个统一的 condition判断过滤

@@ -1,16 +1,12 @@
 package com.dianrong.common.uniauth.cas.controller;
 
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.web.servlet.mvc.AbstractController;
-
-import com.dianrong.common.uniauth.common.util.StringUtil;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
  * . 点融扩展的基础的controller

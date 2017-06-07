@@ -1,14 +1,12 @@
 package com.dianrong.common.uniauth.cas.action;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.jasig.cas.web.support.WebUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.webflow.execution.RequestContext;
-
 import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import javax.servlet.http.HttpServletRequest;
+import org.jasig.cas.web.support.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * . 用于生成用户的登陆页面的url 存放到flowscope中

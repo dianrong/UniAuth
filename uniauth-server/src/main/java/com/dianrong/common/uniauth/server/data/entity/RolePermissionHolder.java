@@ -23,7 +23,6 @@ public class RolePermissionHolder {
   // =====permission end=======
 
 
-
   public Integer getRoleId() {
     return roleId;
   }

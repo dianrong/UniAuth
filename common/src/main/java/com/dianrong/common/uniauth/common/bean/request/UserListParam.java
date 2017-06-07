@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 import com.dianrong.common.uniauth.common.bean.Linkage;
-
 import java.util.List;
 
 public class UserListParam extends Operator {

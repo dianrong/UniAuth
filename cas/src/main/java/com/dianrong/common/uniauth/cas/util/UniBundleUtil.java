@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.cas.util;
 
+import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import org.springframework.context.MessageSource;
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 
 /**
  * . 国际化处理的bundle util

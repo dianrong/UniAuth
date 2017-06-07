@@ -1,24 +1,20 @@
 package com.dianrong.common.uniauth.cas.filter;
 
+import com.dianrong.common.uniauth.cas.model.vo.ApiResponse;
+import com.dianrong.common.uniauth.cas.model.vo.ResponseCode;
+import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
+import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-
-import com.dianrong.common.uniauth.cas.model.vo.ApiResponse;
-import com.dianrong.common.uniauth.cas.model.vo.ResponseCode;
-import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
-import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
-import com.dianrong.common.uniauth.common.util.JsonUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用于处理公共异常信息的filter

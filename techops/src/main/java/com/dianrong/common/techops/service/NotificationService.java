@@ -6,9 +6,7 @@ import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
 import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +16,12 @@ import org.springframework.util.StringUtils;
 
 /**
  * 用于消息发送的service, 比如:修改密码通知,新建用户通知.
- * 
+ *
  * @author wanglin
  */
 @Service
 public class NotificationService {
+
   // logger
   private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
 
@@ -71,7 +70,8 @@ public class NotificationService {
   /**
    * 初始化消息通知的模板.
    */
-  public NotificationService() {}
+  public NotificationService() {
+  }
 
   // 初始化消息发送相关的模板
   @PostConstruct
@@ -125,7 +125,7 @@ public class NotificationService {
 
   /**
    * 新增用户之后发送通知.
-   * 
+   *
    * @param userInfo UserDto 新增用户的信息,不能为空
    */
   public void addUserNotification(final UserDto userInfo) {
@@ -160,7 +160,7 @@ public class NotificationService {
 
   /**
    * 更新用户密码之后发送消息给用户.
-   * 
+   *
    * @param userInfo UserDto 更新用户密码的用户信息
    */
   public void updateUserPwdNotification(final UserDto userInfo) {

@@ -1,16 +1,14 @@
 package com.dianrong.common.uniauth.cas.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * . 租户处理相关的service

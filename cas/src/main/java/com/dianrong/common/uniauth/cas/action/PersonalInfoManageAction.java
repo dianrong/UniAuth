@@ -1,17 +1,16 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import org.jasig.cas.authentication.principal.Principal;
 import org.jasig.cas.web.flow.GenericSuccessViewAction;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-
-import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
-import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**
  * 处理用户信息的管理分之处理

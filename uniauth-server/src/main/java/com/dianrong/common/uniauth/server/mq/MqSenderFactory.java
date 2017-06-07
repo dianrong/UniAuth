@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Service("mqSenderFactory")
 @Slf4j
 public class MqSenderFactory {
+
   @Value("#{uniauthConfig['rabbit.switch']}")
   private String mqSwitch;
 
@@ -42,7 +43,7 @@ public class MqSenderFactory {
 
   /**
    * . 判断是否开启了rabbitmq 发送消息的功能
-   * 
+   *
    * @return true or false
    */
   private boolean isOn() {

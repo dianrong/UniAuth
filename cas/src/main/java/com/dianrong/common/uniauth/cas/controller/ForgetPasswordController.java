@@ -1,17 +1,15 @@
 package com.dianrong.common.uniauth.cas.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.util.Assert;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.dianrong.common.uniauth.cas.service.ForgetPasswordService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.springframework.util.Assert;
+import org.springframework.web.servlet.ModelAndView;
 
 public class ForgetPasswordController extends AbstractBaseController {
 

@@ -1,20 +1,16 @@
 package com.dianrong.common.uniauth.cas.controller;
 
+import com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor;
+import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor;
-import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 国际化处理相关的请求处理

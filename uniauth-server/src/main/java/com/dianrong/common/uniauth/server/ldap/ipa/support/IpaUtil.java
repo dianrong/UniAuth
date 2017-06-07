@@ -2,22 +2,19 @@ package com.dianrong.common.uniauth.server.ldap.ipa.support;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Sets;
-
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import javax.naming.Name;
-
 import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.util.StringUtils;
 
 
 /**
  * IPA账号处理相关的工具方法.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public final class IpaUtil {
 
@@ -29,6 +26,7 @@ public final class IpaUtil {
     Assert.notNull(value);
     return buildDn(base, new LinkedHashMap<String, String>() {
       private static final long serialVersionUID = 4739618845415969059L;
+
       {
         put(key, value);
       }
@@ -37,6 +35,7 @@ public final class IpaUtil {
 
   /**
    * 便利方法, 用于生成DN
+   *
    * @param params 用顺序的map. 根据dn从后到前的顺序的LinkedHashMap
    */
   public static Name buildDn(String base, LinkedHashMap<String, String> params) {

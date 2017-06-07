@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.common.apicontrol.server;
 
-import java.io.Serializable;
-
 import com.dianrong.common.uniauth.common.apicontrol.exp.InvalidTokenException;
 import com.dianrong.common.uniauth.common.apicontrol.exp.TokenCreateFailedException;
 import com.dianrong.common.uniauth.common.apicontrol.exp.TokenExpiredException;
+import java.io.Serializable;
 
 /**
  * token process interface

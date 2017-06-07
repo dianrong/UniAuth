@@ -49,7 +49,7 @@ public class EavAction {
   }
 
   /**
-   *更新扩展类型.
+   * 更新扩展类型.
    */
   @RequestMapping(value = "/code/modify", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)

@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.server.mq.v1.ninfo;
 
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
-
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 @Slf4j
 public class BaseNotifyInfo implements NotifyInfo {
+
   /**
    * 异常类型.
    */

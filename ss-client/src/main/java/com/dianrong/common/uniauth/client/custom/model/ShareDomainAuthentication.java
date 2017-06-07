@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.client.custom.model;
 
 import java.util.Collection;
 import java.util.Collections;
-
 import org.jasig.cas.client.validation.Assertion;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

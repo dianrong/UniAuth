@@ -1,5 +1,11 @@
 package com.dianrong.common.uniauth.cas.registry;
 
+import com.dianrong.common.uniauth.cas.registry.registeredservice.UniauthRegexRegisteredServiceBuilder;
+import com.dianrong.common.uniauth.cas.util.ServiceUtils;
+import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.common.util.CRC32;
+import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
+import com.google.common.collect.Maps;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -7,18 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.services.RegisteredService;
 import org.jasig.cas.services.ServiceRegistryDao;
-
-import com.dianrong.common.uniauth.cas.registry.registeredservice.UniauthRegexRegisteredServiceBuilder;
-import com.dianrong.common.uniauth.cas.util.ServiceUtils;
-import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.common.util.CRC32;
-import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
-import com.google.common.collect.Maps;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 实现uniauth自定义的RegisteredService管理逻辑 从zk配置的数据中获取

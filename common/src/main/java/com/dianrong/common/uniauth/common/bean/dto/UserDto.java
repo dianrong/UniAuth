@@ -1,15 +1,13 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.util.StringUtils;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by Arc on 13/1/16.

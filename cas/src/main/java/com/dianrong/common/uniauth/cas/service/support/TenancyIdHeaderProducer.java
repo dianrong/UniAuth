@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.cas.service.support;
 
-import org.springframework.stereotype.Component;
-
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.server.cxf.client.impl.AbstractTenancyIdHeaderProducer;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TenancyIdHeaderProducer extends AbstractTenancyIdHeaderProducer {

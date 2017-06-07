@@ -1,16 +1,14 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import com.dianrong.common.uniauth.cas.handler.CasUserLoginCaptchaValidHelper;
+import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
 import javax.servlet.http.HttpSession;
-
 import org.jasig.cas.authentication.Credential;
 import org.jasig.cas.web.flow.AuthenticationViaFormAction;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-
-import com.dianrong.common.uniauth.cas.handler.CasUserLoginCaptchaValidHelper;
-import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
 
 /**
  * . 配置web-flow的cas登陆流程的submit的拦截过滤操作

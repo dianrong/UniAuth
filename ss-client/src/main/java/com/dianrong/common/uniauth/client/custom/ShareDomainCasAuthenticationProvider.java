@@ -1,9 +1,13 @@
 package com.dianrong.common.uniauth.client.custom;
 
+import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
+import com.dianrong.common.uniauth.client.custom.model.ShareDomainAuthentication;
+import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,13 +16,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
-import com.dianrong.common.uniauth.client.custom.model.ShareDomainAuthentication;
-import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用于处理多域共享信息的情况

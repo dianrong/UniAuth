@@ -6,7 +6,6 @@ import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 

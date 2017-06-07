@@ -1,22 +1,18 @@
 package com.dianrong.common.uniauth.client.support;
 
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PatternMatchMost {

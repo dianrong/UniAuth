@@ -12,10 +12,8 @@ import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.server.service.PermissionService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
-
 import io.swagger.annotations.Api;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

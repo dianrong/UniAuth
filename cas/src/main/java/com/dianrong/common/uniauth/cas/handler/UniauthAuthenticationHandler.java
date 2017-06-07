@@ -1,25 +1,5 @@
 package com.dianrong.common.uniauth.cas.handler;
 
-import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.security.auth.login.AccountLockedException;
-import javax.security.auth.login.AccountNotFoundException;
-import javax.security.auth.login.CredentialExpiredException;
-import javax.security.auth.login.FailedLoginException;
-
-import org.jasig.cas.authentication.AccountDisabledException;
-import org.jasig.cas.authentication.Credential;
-import org.jasig.cas.authentication.HandlerResult;
-import org.jasig.cas.authentication.PreventedException;
-import org.jasig.cas.authentication.UsernamePasswordCredential;
-import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
-import org.jasig.inspektr.common.web.ClientInfo;
-import org.jasig.inspektr.common.web.ClientInfoHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.IpaAccountLoginFailedTooManyTimesException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
@@ -33,8 +13,24 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-
+import java.security.GeneralSecurityException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.security.auth.login.AccountLockedException;
+import javax.security.auth.login.AccountNotFoundException;
+import javax.security.auth.login.CredentialExpiredException;
+import javax.security.auth.login.FailedLoginException;
 import lombok.extern.slf4j.Slf4j;
+import org.jasig.cas.authentication.AccountDisabledException;
+import org.jasig.cas.authentication.Credential;
+import org.jasig.cas.authentication.HandlerResult;
+import org.jasig.cas.authentication.PreventedException;
+import org.jasig.cas.authentication.UsernamePasswordCredential;
+import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
+import org.jasig.inspektr.common.web.ClientInfo;
+import org.jasig.inspektr.common.web.ClientInfoHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {

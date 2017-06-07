@@ -1,14 +1,12 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.util.Assert;
-
-import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
-import com.google.common.collect.Sets;
 
 /**
  * 当前登陆用户的所有域下的权限集合的信息

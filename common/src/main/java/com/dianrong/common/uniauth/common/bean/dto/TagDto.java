@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.util.Date;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 
 /**
  * Created by Arc on 7/4/2016.

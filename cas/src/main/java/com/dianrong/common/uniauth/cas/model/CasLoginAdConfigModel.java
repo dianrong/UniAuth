@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.cas.model;
 
-import java.security.InvalidParameterException;
-
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import java.security.InvalidParameterException;
 
 /**
  * . 专门用于cas的首页登陆广告轮询的config

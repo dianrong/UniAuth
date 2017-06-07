@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.dianrong.common.uniauth.client.custom.model.SimpleRedirectInfo;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import javax.servlet.http.HttpServletRequest;
 
 public class SimpleRedirectFormat implements CustomizedRedirectFormat {
 

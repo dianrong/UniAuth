@@ -1,10 +1,8 @@
 package com.dianrong.common.uniauth.common.apicontrol.client;
 
-import java.lang.reflect.Method;
-
-import org.slf4j.Logger;
-
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import java.lang.reflect.Method;
+import org.slf4j.Logger;
 
 /**
  * 模板方法，处理调用handler逻辑

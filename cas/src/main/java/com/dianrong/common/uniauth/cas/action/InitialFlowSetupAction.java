@@ -1,11 +1,13 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import com.dianrong.common.uniauth.cas.service.DomainService;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.services.RegisteredService;
 import org.jasig.cas.services.ServicesManager;
@@ -18,12 +20,6 @@ import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
-
-import com.dianrong.common.uniauth.cas.service.DomainService;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.StringUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class InitialFlowSetupAction extends AbstractAction {

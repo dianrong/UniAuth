@@ -1,15 +1,5 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.access.regular.SSRegularPattern;
-import org.springframework.util.Assert;
-
 import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
 import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
 import com.dianrong.common.uniauth.client.custom.model.UserExtInfoParam;
@@ -18,6 +8,14 @@ import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.access.regular.SSRegularPattern;
+import org.springframework.util.Assert;
 
 /**
  * uniauth对外的UserDetails实现

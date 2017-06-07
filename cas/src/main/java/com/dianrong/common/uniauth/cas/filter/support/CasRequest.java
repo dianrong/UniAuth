@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.cas.filter.support;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
-
 import lombok.ToString;
 
 @ToString

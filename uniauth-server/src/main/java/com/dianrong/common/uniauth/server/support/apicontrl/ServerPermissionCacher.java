@@ -13,20 +13,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
  * 用于辅助 ApiControlFilter 完成权限控制的功能 主要是做一些缓存处理.
- * 
+ *
  * @author wanglin
  */
 @Component
 public final class ServerPermissionCacher {
+
   /**
    * 更新公共权限信息的时间间隔(分钟).
    */
@@ -79,7 +78,7 @@ public final class ServerPermissionCacher {
 
   /**
    * Get pattern from cache. if no cache, create a new one and cache it
-   * 
+   *
    * @param patternStr patternStr can not null
    * @return Pattern
    * @throws IllegalArgumentException if patternStr is null
@@ -98,7 +97,7 @@ public final class ServerPermissionCacher {
 
   /**
    * Return public permissions.
-   * 
+   *
    * @return Set of apiCtlPermissionItem
    */
   public Set<ApiCtlPermissionItem> getPublicPermissions() {

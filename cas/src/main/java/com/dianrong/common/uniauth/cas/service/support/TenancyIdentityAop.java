@@ -1,20 +1,17 @@
 package com.dianrong.common.uniauth.cas.service.support;
 
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity;
+import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity.Type;
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.lang.reflect.Method;
-
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
-import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity;
-import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity.Type;
-import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * for annotation TenancyIdentity. set tenancy identity

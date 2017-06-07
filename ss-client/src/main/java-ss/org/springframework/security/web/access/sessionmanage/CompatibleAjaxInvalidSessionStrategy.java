@@ -1,20 +1,17 @@
 package org.springframework.security.web.access.sessionmanage;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.web.session.InvalidSessionStrategy;
-
 import com.dianrong.common.uniauth.client.custom.AjaxResponseProcessor;
 import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.web.session.InvalidSessionStrategy;
 
 /**
  * 兼容ajax请求的InvalidSessionStrategey实现

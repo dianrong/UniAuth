@@ -1,17 +1,5 @@
 package com.dianrong.common.uniauth.cas.service;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.security.auth.login.AccountLockedException;
-import javax.security.auth.login.AccountNotFoundException;
-import javax.security.auth.login.CredentialExpiredException;
-
-import org.jasig.cas.authentication.AccountDisabledException;
-
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.OtherException;
@@ -21,8 +9,16 @@ import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.security.auth.login.AccountLockedException;
+import javax.security.auth.login.AccountNotFoundException;
+import javax.security.auth.login.CredentialExpiredException;
 import lombok.extern.slf4j.Slf4j;
+import org.jasig.cas.authentication.AccountDisabledException;
 
 /**
  * . 基础类,提供远程调用的公用方法

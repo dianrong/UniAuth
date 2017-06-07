@@ -1,7 +1,8 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 import javax.validation.constraints.NotNull;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.Credential;
@@ -14,10 +15,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-
-import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 @SuppressWarnings("deprecation")
 @Slf4j

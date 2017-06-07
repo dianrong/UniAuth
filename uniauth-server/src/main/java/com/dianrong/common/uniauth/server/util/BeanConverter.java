@@ -42,7 +42,6 @@ import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
-
 import org.springframework.util.StringUtils;
 
 /**

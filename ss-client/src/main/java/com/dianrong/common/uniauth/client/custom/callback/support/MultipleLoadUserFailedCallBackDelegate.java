@@ -1,8 +1,7 @@
 package com.dianrong.common.uniauth.client.custom.callback.support;
 
-import java.util.List;
-
 import com.dianrong.common.uniauth.client.custom.callback.LoadUserFailedCallBack;
+import java.util.List;
 
 public class MultipleLoadUserFailedCallBackDelegate implements LoadUserFailedCallBack {
 

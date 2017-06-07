@@ -1,20 +1,18 @@
 package com.dianrong.common.uniauth.client.config.configurations;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.stereotype.Component;
-
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
 import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
 import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.stereotype.Component;
 
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)

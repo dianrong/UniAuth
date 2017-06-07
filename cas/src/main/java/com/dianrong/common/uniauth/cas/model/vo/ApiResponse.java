@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.cas.model.vo;
 
+import com.dianrong.common.uniauth.common.util.Assert;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-
-import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
  * 操作的返回结果

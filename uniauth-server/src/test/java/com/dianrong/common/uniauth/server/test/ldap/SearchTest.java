@@ -4,11 +4,9 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
 import java.util.List;
-
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,7 @@ public class SearchTest extends AbstractJUnit4SpringContextTests {
   private LdapTemplate ldapTemplate;
 
   private class PersonAttributesMapper implements AttributesMapper<Person> {
+
     @Override
     public Person mapFromAttributes(Attributes attributes) throws NamingException {
       Person person = new Person();

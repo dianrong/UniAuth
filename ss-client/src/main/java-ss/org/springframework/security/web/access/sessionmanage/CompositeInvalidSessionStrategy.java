@@ -1,17 +1,14 @@
 package org.springframework.security.web.access.sessionmanage;
 
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.web.session.InvalidSessionStrategy;
-
-import com.google.common.collect.Lists;
 
 /**
  * 组合InvalidSessionStrategy

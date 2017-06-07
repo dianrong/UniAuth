@@ -1,24 +1,21 @@
 package com.dianrong.common.uniauth.cas.handler;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.security.auth.login.AccountLockedException;
-import javax.security.auth.login.AccountNotFoundException;
-import javax.security.auth.login.CredentialExpiredException;
-import javax.servlet.http.HttpSession;
-
-import org.jasig.cas.authentication.AuthenticationException;
-import org.springframework.binding.message.MessageBuilder;
-import org.springframework.binding.message.MessageContext;
-import org.springframework.webflow.execution.Event;
-
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.security.auth.login.AccountLockedException;
+import javax.security.auth.login.AccountNotFoundException;
+import javax.security.auth.login.CredentialExpiredException;
+import javax.servlet.http.HttpSession;
+import org.jasig.cas.authentication.AuthenticationException;
+import org.springframework.binding.message.MessageBuilder;
+import org.springframework.binding.message.MessageContext;
+import org.springframework.webflow.execution.Event;
 
 /**
  * . cas用户登陆的验证码验证帮助类.

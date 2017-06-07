@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.data.entity.ext;
 
 public class UrlRoleMappingExt {
+
   private String permUrl;
   private String roleCode;
   private String permType;

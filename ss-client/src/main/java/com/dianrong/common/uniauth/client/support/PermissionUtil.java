@@ -1,20 +1,17 @@
 package com.dianrong.common.uniauth.client.support;
 
+import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 在Uniauth集成系统的客户端中为权限的处理提供一些工具方法

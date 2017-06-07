@@ -1,13 +1,11 @@
 package com.dianrong.common.uniauth.cas.model;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.springframework.util.Assert;
-
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import java.io.Serializable;
+import java.util.List;
+import org.springframework.util.Assert;
 
 /**
  * . 用于缓存cas的个性化的一些设置参数

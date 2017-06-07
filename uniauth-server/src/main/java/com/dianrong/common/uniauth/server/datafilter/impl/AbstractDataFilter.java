@@ -7,10 +7,11 @@ import com.dianrong.common.uniauth.server.datafilter.FilterType;
 
 /**
  * . 该抽象方法主要是加入了数据校验的开关-- dataFilterSwitch
- * 
+ *
  * @author wanglin
  */
 public abstract class AbstractDataFilter implements DataFilter {
+
   /**
    * . 数据过滤的开关变量
    */
@@ -28,7 +29,7 @@ public abstract class AbstractDataFilter implements DataFilter {
 
   /**
    * . 数据过滤并且伴随字段相等的情况。
-   * 
+   *
    * @param ftype 过滤的方式
    * @param equalsField 比较的字段以及值
    */
@@ -42,7 +43,7 @@ public abstract class AbstractDataFilter implements DataFilter {
 
   /**
    * . 判断数据是否重复并且伴随字段相等的情况。
-   * 
+   *
    * @param id keyid
    * @param equalsField 比较的字段以及值
    */
@@ -56,7 +57,7 @@ public abstract class AbstractDataFilter implements DataFilter {
 
   /**
    * . addFieldsCheck 的委托方法
-   * 
+   *
    * @param ftype 过滤的方式
    * @param equalsField 需要比较的字段以及值
    */
@@ -64,7 +65,7 @@ public abstract class AbstractDataFilter implements DataFilter {
 
   /**
    * . updateFieldsCheck的委托方法
-   * 
+   *
    * @param id keyid
    * @param equalsField 需要比较的字段以及值
    */

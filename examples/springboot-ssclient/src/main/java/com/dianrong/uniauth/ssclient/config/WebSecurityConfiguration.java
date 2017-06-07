@@ -1,10 +1,9 @@
 package com.dianrong.uniauth.ssclient.config;
 
+import com.dianrong.common.uniauth.client.config.UniauthSecurityConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-
-import com.dianrong.common.uniauth.client.config.UniauthSecurityConfig;
 
 /**
  * 自定义spring security 配置

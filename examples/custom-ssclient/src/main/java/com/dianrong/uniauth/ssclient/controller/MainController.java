@@ -2,10 +2,8 @@ package com.dianrong.uniauth.ssclient.controller;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.cas.ServiceProperties;

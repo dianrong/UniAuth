@@ -1,11 +1,10 @@
 package com.dianrong.loanbusiness.subsystem.test;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import com.dianrong.loanbusiness.subsystem.MessageService;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 public class MessageServiceTest {
 

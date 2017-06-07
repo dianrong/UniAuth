@@ -39,14 +39,11 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.dianrong.common.uniauth.server.util.UniauthServerConstant;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,6 +52,7 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class TenancyService {
+
   @Autowired
   private TenancyMapper tenancyMapper;
 
@@ -138,7 +136,7 @@ public class TenancyService {
   /**
    * 获取一个可用的租户id.<br>
    * 如果不能获取, 返回一个默认的非租户相关的租户id -1
-   * 
+   *
    * @return tenancyId for current request
    * @see AppConstants.TENANCY_UNRELATED_TENANCY_ID
    */
@@ -148,7 +146,7 @@ public class TenancyService {
 
   /**
    * 获取一个租户id，并且必须是有效值.
-   * 
+   *
    * @return tenancyId for current thread
    */
   public Long getTenancyIdWithCheck() {
@@ -157,7 +155,7 @@ public class TenancyService {
 
   /**
    * 根据租户编码获取一个启用的租户.
-   * 
+   *
    * @param tenancyCode 租户编码
    * @return 租户信息
    */
@@ -343,7 +341,7 @@ public class TenancyService {
 
   /**
    * 获取一个可用的租户Identity 优先级为：tenancyId > tenancyCode.
-   * 
+   *
    * @return tenancyId for current request
    */
   private Long getTenancyId(boolean check) {
@@ -371,7 +369,7 @@ public class TenancyService {
 
   /**
    * A switch to control check tenancyIdentity forcibly.
-   * 
+   *
    * @return true or false
    */
   private boolean checkTenancyIdentity() {

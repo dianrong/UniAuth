@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.common.client;
 
 import com.dianrong.common.uniauth.common.util.Assert;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

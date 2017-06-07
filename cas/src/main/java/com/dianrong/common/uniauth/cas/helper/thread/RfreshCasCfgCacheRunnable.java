@@ -1,9 +1,7 @@
 package com.dianrong.common.uniauth.cas.helper.thread;
 
-import javax.servlet.ServletContext;
-
 import com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper;
-
+import javax.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**

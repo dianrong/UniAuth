@@ -1,18 +1,5 @@
 package com.dianrong.common.uniauth.cas.helper;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.context.MessageSource;
-
-import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
 import com.dianrong.common.uniauth.cas.model.CasCfgCacheModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginAdConfigModel;
 import com.dianrong.common.uniauth.cas.service.CfgService;
@@ -23,8 +10,17 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 
 /**
  * . cas的配置资源刷新辅助类

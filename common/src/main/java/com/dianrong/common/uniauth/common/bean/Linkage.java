@@ -1,9 +1,8 @@
 package com.dianrong.common.uniauth.common.bean;
 
-import java.io.Serializable;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
 
 /**
  * Created by Arc on 18/3/2016.

@@ -1,10 +1,9 @@
 package com.dianrong.loanbusiness.subsystem.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import com.dianrong.loanbusiness.subsystem.MyInterface;
 import com.dianrong.loanbusiness.subsystem.model.TestModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public class MyService {
 

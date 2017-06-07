@@ -1,19 +1,7 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ws.rs.client.ClientRequestFilter;
-
-import com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.dianrong.common.uniauth.common.client.ApiCtrlAccountHolder;
+import com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder;
 import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
 import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
 import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlSwitch;
@@ -32,6 +20,15 @@ import com.dianrong.common.uniauth.sharerw.interfaces.ITenancyRWResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.ws.rs.client.ClientRequestFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Arc on 14/2/16.

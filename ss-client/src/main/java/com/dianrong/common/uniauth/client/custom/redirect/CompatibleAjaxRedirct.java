@@ -1,17 +1,13 @@
 package com.dianrong.common.uniauth.client.custom.redirect;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.web.DefaultRedirectStrategy;
-
 import com.dianrong.common.uniauth.client.custom.model.JsonResponseModel;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
-
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.web.DefaultRedirectStrategy;
 
 /**
  * 该跳转策略兼容处理ajax请求

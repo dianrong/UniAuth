@@ -4,10 +4,11 @@ import org.springframework.util.Assert;
 
 /**
  * 加密 解密的参数.
- * 
+ *
  * @author wanglin
  */
 final class JwtInfo {
+
   // jwt token, customized field key
   // user name
   static final String USER_NAME_KEY = "user_name";

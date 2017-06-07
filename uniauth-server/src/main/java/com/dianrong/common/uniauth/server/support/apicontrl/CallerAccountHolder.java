@@ -2,10 +2,11 @@ package com.dianrong.common.uniauth.server.support.apicontrl;
 
 /**
  * help class for saving request account per request.
- * 
+ *
  * @author wanglin
  */
 public final class CallerAccountHolder {
+
   private static final ThreadLocal<String> holder = new ThreadLocal<String>();
 
   /**

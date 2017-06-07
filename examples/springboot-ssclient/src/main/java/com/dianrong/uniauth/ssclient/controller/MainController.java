@@ -1,13 +1,11 @@
 package com.dianrong.uniauth.ssclient.controller;
 
+import com.dianrong.uniauth.ssclient.bean.TestUser;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.dianrong.uniauth.ssclient.bean.TestUser;
 
 @Controller
 public class MainController {

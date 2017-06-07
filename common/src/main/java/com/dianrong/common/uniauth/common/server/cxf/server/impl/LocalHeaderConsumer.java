@@ -1,11 +1,9 @@
 package com.dianrong.common.uniauth.common.server.cxf.server.impl;
 
+import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import java.util.Locale;
-
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 
 /**
  * . 消费local header的默认实现

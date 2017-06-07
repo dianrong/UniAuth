@@ -1,22 +1,19 @@
 package org.springframework.security.web.access.sessionmanage;
 
+import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.SimpleRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
+import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.util.ArrayList;
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
-
-import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
-import com.dianrong.common.uniauth.client.custom.SimpleRedirectFormat;
-import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
-import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用于手态配置SessionManagementFilter

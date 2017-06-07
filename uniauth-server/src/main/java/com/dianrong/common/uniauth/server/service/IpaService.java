@@ -22,12 +22,10 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.AuthenticationException;
@@ -37,7 +35,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * 处理IPA相关信息.
- * 
+ *
  * @author wanglin
  */
 @Service
@@ -145,7 +143,7 @@ public class IpaService {
 
   /**
    * 所有IPA相关的操作都当做是DIANRONG租户来处理.
-   * 
+   *
    * @param tenancyCode 传入的租户编码
    * @param tenancyId 传入的租户id
    * @param account 账号信息

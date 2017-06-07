@@ -1,13 +1,12 @@
 package com.dianrong.common.uniauth.cas.model;
 
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**
  * . 用于缓存cross filter的缓存model

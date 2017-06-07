@@ -7,19 +7,18 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * 过滤处理扩展属性.
- * 
+ *
  * @author wanglin
  */
 @Service("attributeExtendDataFilter")
 public class AttributeExtendDataFilter extends CurrentAbstractDataFilter<AttributeExtend> {
+
   @Autowired
   private AttributeExtendMapper attributeExtendMapper;
 

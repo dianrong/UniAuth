@@ -1,11 +1,10 @@
 package com.dianrong.common.uniauth.cas.listener;
 
+import com.dianrong.common.uniauth.cas.util.SpringContextHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-
-import com.dianrong.common.uniauth.cas.util.SpringContextHolder;
 
 /**
  * . spring 初始化完全的listener

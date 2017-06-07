@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.io.Serializable;
 import java.util.List;
-
 import lombok.ToString;
 
 @ToString

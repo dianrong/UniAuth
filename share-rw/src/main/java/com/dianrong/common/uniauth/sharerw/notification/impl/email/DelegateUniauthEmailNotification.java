@@ -1,10 +1,8 @@
 package com.dianrong.common.uniauth.sharerw.notification.impl.email;
 
-import org.springframework.util.StringUtils;
-
 import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 /**
  * 代理具体的EmailNotify实现

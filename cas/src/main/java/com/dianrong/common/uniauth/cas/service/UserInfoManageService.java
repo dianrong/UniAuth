@@ -1,10 +1,5 @@
 package com.dianrong.common.uniauth.cas.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity;
 import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity.Type;
 import com.dianrong.common.uniauth.common.bean.Info;
@@ -16,6 +11,9 @@ import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserInfoManageService extends BaseService {

@@ -9,14 +9,13 @@ import com.dianrong.common.uniauth.common.apicontrol.exp.InvalidTokenException;
 import com.dianrong.common.uniauth.common.apicontrol.exp.TokenCreateFailedException;
 import com.dianrong.common.uniauth.common.apicontrol.exp.TokenExpiredException;
 import com.dianrong.common.uniauth.server.support.apicontrl.security.exp.JwtVerifierCreateFailedException;
-
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
 /**
  * JWT 操作相关的API 涉及到数据的签名和验证.
- * 
+ *
  * @author wanglin
  */
 @Slf4j
@@ -25,9 +24,9 @@ final class JwtSecurity {
   // 默认的秘钥
   public static final String DEFAULT_SECURITY_KEY =
       "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCud_DotADycQRhsiMSViewAxUJ"
-      + "x3buJZLqd-VF0fO1N5dfZUJljxhgn7XU8itVV5dyTY-9nKgY6X0GLy2kB8K0yoszmaEhpp"
-      + "AxumOkTNZnoyRHNstr4Osau-LZwRd2tzOmiVFB2hocmST3ewsmEVWOhS26ST-Mw"
-      + "AVex7KzCroSYwIDAQAB";
+          + "x3buJZLqd-VF0fO1N5dfZUJljxhgn7XU8itVV5dyTY-9nKgY6X0GLy2kB8K0yoszmaEhpp"
+          + "AxumOkTNZnoyRHNstr4Osau-LZwRd2tzOmiVFB2hocmST3ewsmEVWOhS26ST-Mw"
+          + "AVex7KzCroSYwIDAQAB";
 
   /**
    * 秘钥.
@@ -46,6 +45,7 @@ final class JwtSecurity {
 
   /**
    * 构造一个JwtSecurity.
+   *
    * @param securityKey specify the secret key
    * @throws JwtVerifierCreateFailedException failed to create JWTVerifier
    */
@@ -62,7 +62,7 @@ final class JwtSecurity {
 
   /**
    * Create a new jwt.
-   * 
+   *
    * @param jwt jwt
    * @return token not null
    * @throws TokenCreateFailedException if create token failed
@@ -86,7 +86,7 @@ final class JwtSecurity {
 
   /**
    * Get jwt information from token.
-   * 
+   *
    * @param token token String
    * @return JwtParameter not null
    * @throws InvalidTokenException token is invalid

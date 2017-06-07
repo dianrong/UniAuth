@@ -7,7 +7,6 @@ import com.dianrong.common.uniauth.server.data.entity.GrpExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample.Criteria;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,7 +21,7 @@ public class GrpCache {
 
   /**
    * 根据组code来缓存组信息.
-   * 
+   *
    * @param grpCode 组编码 不能为空
    * @param tenancyId 租户id 不能为空
    * @return 组信息

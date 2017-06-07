@@ -5,7 +5,6 @@ import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.mapper.AuditMapper;
 import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.util.RegExpUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,11 +52,11 @@ public class GlobalVarQueueV2 {
     this.auditList = new ArrayList<>(AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE);
     // 启动定时任务
     Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(new Runnable() {
-      @Override
-      public void run() {
-        setUpDbInsertRunnable();
-      }
-    }, AppConstants.AUDIT_INSERT_EVERY_SECOND, AppConstants.AUDIT_INSERT_EVERY_SECOND,
+                                                                 @Override
+                                                                 public void run() {
+                                                                   setUpDbInsertRunnable();
+                                                                 }
+                                                               }, AppConstants.AUDIT_INSERT_EVERY_SECOND, AppConstants.AUDIT_INSERT_EVERY_SECOND,
         TimeUnit.SECONDS);
   }
 
@@ -74,7 +72,7 @@ public class GlobalVarQueueV2 {
 
   /**
    * 创建一个新的list用于缓存audit列表信息, 返回当前正在使用的audit列表.
-   * 
+   *
    * @return currentAuditList
    */
   private List<Audit> takeAuditList() {
@@ -92,7 +90,7 @@ public class GlobalVarQueueV2 {
 
       /**
        * 构造数据库插入的Audit对象.
-       * 
+       *
        * @param gv GlobalVar
        * @return Audit
        */
@@ -150,7 +148,7 @@ public class GlobalVarQueueV2 {
 
   /**
    * 将新的audit加入缓存列表.
-   * 
+   *
    * @param audit 新的audit信息
    */
   private void cacheAudit(Audit audit) {
@@ -184,6 +182,7 @@ public class GlobalVarQueueV2 {
    * 日志数据插入任务.
    */
   private class SaveToDbThread implements Runnable {
+
     private List<Audit> toBeInsertedAuditList;
 
     public SaveToDbThread(List<Audit> toBeInsertedAuditList) {

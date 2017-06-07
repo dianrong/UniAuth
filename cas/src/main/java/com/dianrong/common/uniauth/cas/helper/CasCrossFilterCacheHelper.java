@@ -1,18 +1,5 @@
 package com.dianrong.common.uniauth.cas.helper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.FilterConfig;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.dianrong.common.uniauth.cas.helper.thread.RefreshCasCrossFilterCacheRunnable;
 import com.dianrong.common.uniauth.cas.helper.thread.SingleScheduledThreadPool;
 import com.dianrong.common.uniauth.cas.model.CasCrossFilterCacheModel;
@@ -20,8 +7,17 @@ import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import javax.annotation.PostConstruct;
+import javax.servlet.FilterConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * . 用于辅助cas的cross filter获取缓存数据 ps. 目前只缓存orgin数据

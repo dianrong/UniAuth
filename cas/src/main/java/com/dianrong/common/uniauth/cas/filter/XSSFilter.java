@@ -1,5 +1,10 @@
 package com.dianrong.common.uniauth.cas.filter;
 
+import com.dianrong.common.uniauth.cas.filter.support.CasRequest;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.Assert;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -9,22 +14,14 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.dianrong.common.uniauth.cas.filter.support.CasRequest;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.util.Assert;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class XSSFilter extends OncePerRequestFilter {
 

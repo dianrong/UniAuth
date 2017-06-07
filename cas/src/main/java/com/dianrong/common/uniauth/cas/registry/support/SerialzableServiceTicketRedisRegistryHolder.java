@@ -1,13 +1,11 @@
 package com.dianrong.common.uniauth.cas.registry.support;
 
 import java.lang.reflect.Field;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.ticket.ServiceTicket;
 import org.jasig.cas.ticket.Ticket;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * . 专门用于处理RedisTicketRegistry

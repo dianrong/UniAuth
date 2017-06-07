@@ -1,18 +1,5 @@
 package com.dianrong.common.uniauth.cas.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.jasig.cas.authentication.principal.Principal;
-import org.jasig.cas.ticket.TicketGrantingTicket;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.dianrong.common.uniauth.cas.controller.support.CasLoginSupport;
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
@@ -23,8 +10,18 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jasig.cas.authentication.principal.Principal;
+import org.jasig.cas.ticket.TicketGrantingTicket;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 用户信息管理的controller
