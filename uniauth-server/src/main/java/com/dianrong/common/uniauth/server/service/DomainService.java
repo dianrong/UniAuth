@@ -208,7 +208,7 @@ public class DomainService extends TenancyBasedService {
       if (StringUtils.hasText(domainParam.getCode())
           && !AppConstants.DOMAIN_CODE_TECHOPS.equals(domain.getCode())) {
         throw new AppException(InfoName.BAD_REQUEST,
-            UniBundle.getMsg("domain.tecops.code.unmodifiable"));
+            UniBundle.getMsg("domain.techops.code.unmodifiable"));
       }
     }
 
