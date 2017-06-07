@@ -28,10 +28,15 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- CAS 1.0 Protocol Response Views -->
-    <bean id="cas1ServiceFailureView" class="org.jasig.cas.web.view.Cas10ResponseView"/>
+    <bean id="cas1ServiceFailureView" class="org.jasig.cas.web.view.Cas10ResponseView">
+        <property name="servicesManager" ref="servicesManager"/>
+        <property name="casAttributeEncoder" ref="casAttributeEncoder"/>
+    </bean>
 
-    <bean id="cas1ServiceSuccessView" class="org.jasig.cas.web.view.Cas10ResponseView"
-          p:successResponse="true" />
+    <bean id="cas1ServiceSuccessView" class="org.jasig.cas.web.view.Cas10ResponseView" p:successResponse="true">
+        <property name="servicesManager" ref="servicesManager"/>
+        <property name="casAttributeEncoder" ref="casAttributeEncoder"/>
+    </bean>
 
     <!-- CAS 2.0 Response Protocol Views -->
 
@@ -40,7 +45,10 @@
     <!-- Successful Validation Views -->
     <bean id="cas2ServiceSuccessView" class="org.jasig.cas.web.view.Cas20ResponseView"
           c:view-ref="cas2JstlSuccessView"
-          p:successResponse="true" />
+          p:successResponse="true">
+        <property name="servicesManager" ref="servicesManager"/>
+        <property name="casAttributeEncoder" ref="casAttributeEncoder"/>
+    </bean>
 
     <bean id="cas2JstlSuccessView" class="org.springframework.web.servlet.view.JstlView"
           c:url="/WEB-INF/view/jsp/protocol/2.0/casServiceValidationSuccess.jsp" />
