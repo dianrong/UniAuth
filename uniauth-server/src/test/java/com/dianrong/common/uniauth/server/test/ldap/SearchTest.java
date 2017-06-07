@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.test.ldap;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
+import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -19,8 +20,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

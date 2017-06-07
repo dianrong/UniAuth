@@ -35,6 +35,7 @@
     <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
         <constructor-arg ref="redisTemplate"/>
         <property name="defaultExpiration"  value="#{uniauthConfig['redis.uniauth.expiration']?:'3600'}"/>
+        <property name="usePrefix" value="true"/>
     </bean>
     
     <!-- 配置redis -->
