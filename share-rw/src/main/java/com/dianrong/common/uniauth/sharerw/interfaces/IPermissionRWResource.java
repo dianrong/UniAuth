@@ -10,23 +10,23 @@ import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
 
 public interface IPermissionRWResource extends IPermissionResource {
 
-    @POST
-    @Path("addnewperm")
+  @POST
+  @Path("addnewperm")
     // scenario: add new permission
-    Response<PermissionDto> addNewPerm(PermissionParam permissionParam);
+  Response<PermissionDto> addNewPerm(PermissionParam permissionParam);
 
-    @POST
-    @Path("updateperm")
+  @POST
+  @Path("updateperm")
     // scenario: update permission
-    Response<Void> updatePerm(PermissionParam permissionParam);
+  Response<Void> updatePerm(PermissionParam permissionParam);
 
-    @POST
-    @Path("replacerolesfromperm")
+  @POST
+  @Path("replacerolesfromperm")
     // scenario: delete permission
-    Response<Void> replaceRolesToPerm(PermissionParam permissionParam);
+  Response<Void> replaceRolesToPerm(PermissionParam permissionParam);
 
-    @POST
-    @Path("saverolestoperm")
+  @POST
+  @Path("saverolestoperm")
     // scenario: save roles to a permission
-    Response<Void> saveRolesToPerm(PermissionParam permissionParam);
+  Response<Void> saveRolesToPerm(PermissionParam permissionParam);
 }

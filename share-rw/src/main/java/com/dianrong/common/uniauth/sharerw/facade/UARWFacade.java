@@ -38,107 +38,118 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 @Component
 public class UARWFacade {
 
-    @Value("#{uniauthConfig['uniauth_ws_endpoint']}")
-    private String uniWsEndpoint;
+  @Value("#{uniauthConfig['uniauth_ws_endpoint']}")
+  private String uniWsEndpoint;
 
-    @Value("#{uniauthConfig['uniauth_api_name']}")
-    private String apiName;
+  @Value("#{uniauthConfig['uniauth_api_name']}")
+  private String apiName;
 
-    @Value("#{uniauthConfig['uniauth_api_key']}")
-    private String apiKey;
+  @Value("#{uniauthConfig['uniauth_api_key']}")
+  private String apiKey;
 
-    @Resource(name = "uniauthConfig")
-    private Map<String, String> allZkNodeMap;
+  @Resource(name = "uniauthConfig")
+  private Map<String, String> allZkNodeMap;
 
-    private IDomainRWResource domainRWResource;
-    private IGroupRWResource groupRWResource;
-    private IPermissionRWResource permissionRWResource;
-    private IRoleRWResource roleRWResource;
-    private IUserRWResource userRWResource;
-    private IAuditResource auditResource;
-    private IConfigRWResource configRWResource;
-    private ITagRWResource tagRWResource;
-    private ITenancyRWResource tenancyRWResource;
+  private IDomainRWResource domainRWResource;
+  private IGroupRWResource groupRWResource;
+  private IPermissionRWResource permissionRWResource;
+  private IRoleRWResource roleRWResource;
+  private IUserRWResource userRWResource;
+  private IAuditResource auditResource;
+  private IConfigRWResource configRWResource;
+  private ITagRWResource tagRWResource;
+  private ITenancyRWResource tenancyRWResource;
 
-    @Autowired(required = false)
-    private ApiCtrlAccountHolder apiCtrlAccountHolder;
+  @Autowired(required = false)
+  private ApiCtrlAccountHolder apiCtrlAccountHolder;
 
-    @PostConstruct
-    public void init() {
-        JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
-        jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
-        // set api control account
-        if (apiCtrlAccountHolder != null) {
-            ApiCallCtlManager.getInstance().setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword()).setCtlSwitch(new ApiCallCtlSwitch() {
-                @Override
-                public boolean apiCtlOn() {
-                    return !"false".equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
-                }
-            });
-        }
-        UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
-        List<?> providers = Arrays.asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
-        domainRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
-        groupRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, providers);
-        permissionRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, providers);
-        userRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, providers);
-        roleRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, providers);
-        auditResource = UniauthRSClientFactory.create(uniWsEndpoint, IAuditResource.class, providers);
-        configRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, providers);
-        tagRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
-        tenancyRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
-
-        ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource, permissionRWResource, userRWResource, roleRWResource, auditResource, configRWResource,
-                tagRWResource, tenancyRWResource);
+  @PostConstruct
+  public void init() {
+    JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
+    jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
+    // set api control account
+    if (apiCtrlAccountHolder != null) {
+      ApiCallCtlManager.getInstance()
+          .setAccount(apiCtrlAccountHolder.getAccount(), apiCtrlAccountHolder.getPassword())
+          .setCtlSwitch(new ApiCallCtlSwitch() {
+            @Override
+            public boolean apiCtlOn() {
+              return !"false"
+                  .equalsIgnoreCase(allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+            }
+          });
     }
+    UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
+    List<?> providers = Arrays
+        .asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
+    domainRWResource = UniauthRSClientFactory
+        .create(uniWsEndpoint, IDomainRWResource.class, providers);
+    groupRWResource = UniauthRSClientFactory
+        .create(uniWsEndpoint, IGroupRWResource.class, providers);
+    permissionRWResource = UniauthRSClientFactory
+        .create(uniWsEndpoint, IPermissionRWResource.class, providers);
+    userRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, providers);
+    roleRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, providers);
+    auditResource = UniauthRSClientFactory.create(uniWsEndpoint, IAuditResource.class, providers);
+    configRWResource = UniauthRSClientFactory
+        .create(uniWsEndpoint, IConfigRWResource.class, providers);
+    tagRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
+    tenancyRWResource = UniauthRSClientFactory
+        .create(uniWsEndpoint, ITenancyRWResource.class, providers);
 
-    public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
-        this.uniWsEndpoint = uniWsEndpoint;
-        return this;
-    }
+    ClientFacadeUtil
+        .addApiKey(apiName, apiKey, domainRWResource, groupRWResource, permissionRWResource,
+            userRWResource, roleRWResource, auditResource, configRWResource,
+            tagRWResource, tenancyRWResource);
+  }
 
-    public IDomainRWResource getDomainRWResource() {
-        return domainRWResource;
-    }
+  public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
+    this.uniWsEndpoint = uniWsEndpoint;
+    return this;
+  }
 
-    public IGroupRWResource getGroupRWResource() {
-        return groupRWResource;
-    }
+  public IDomainRWResource getDomainRWResource() {
+    return domainRWResource;
+  }
 
-    public IPermissionRWResource getPermissionRWResource() {
-        return permissionRWResource;
-    }
+  public IGroupRWResource getGroupRWResource() {
+    return groupRWResource;
+  }
 
-    public IRoleRWResource getRoleRWResource() {
-        return roleRWResource;
-    }
+  public IPermissionRWResource getPermissionRWResource() {
+    return permissionRWResource;
+  }
 
-    public IUserRWResource getUserRWResource() {
-        return userRWResource;
-    }
+  public IRoleRWResource getRoleRWResource() {
+    return roleRWResource;
+  }
 
-    public IAuditResource getAuditResource() {
-        return auditResource;
-    }
+  public IUserRWResource getUserRWResource() {
+    return userRWResource;
+  }
 
-    public IConfigRWResource getConfigRWResource() {
-        return configRWResource;
-    }
+  public IAuditResource getAuditResource() {
+    return auditResource;
+  }
 
-    public String getUniWsEndpoint() {
-        return uniWsEndpoint;
-    }
+  public IConfigRWResource getConfigRWResource() {
+    return configRWResource;
+  }
 
-    public ITagRWResource getTagRWResource() {
-        return tagRWResource;
-    }
+  public String getUniWsEndpoint() {
+    return uniWsEndpoint;
+  }
 
-    public ITenancyRWResource getTenancyRWResource() {
-        return tenancyRWResource;
-    }
+  public ITagRWResource getTagRWResource() {
+    return tagRWResource;
+  }
 
-    public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
-        this.apiCtrlAccountHolder = apiCtrlAccountHolder;
-    }
+  public ITenancyRWResource getTenancyRWResource() {
+    return tenancyRWResource;
+  }
+
+  public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {
+    this.apiCtrlAccountHolder = apiCtrlAccountHolder;
+  }
 }

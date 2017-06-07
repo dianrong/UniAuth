@@ -8,31 +8,32 @@ import org.springframework.webflow.execution.RequestContext;
 
 /**
  * redirect to login page
- * 
+ *
  * @author wanglin
  */
 public final class LogoutRedirectToLoginPageAction extends AbstractAction {
-    public final static String REDIRECT_URL_KEY = "logoutRedirectUrl";
-    public final static String LOGIN_PAGE_URL = "/login";
 
-    private final LogoutAction originalAction;
+  public final static String REDIRECT_URL_KEY = "logoutRedirectUrl";
+  public final static String LOGIN_PAGE_URL = "/login";
+
+  private final LogoutAction originalAction;
 
 
-    public LogoutRedirectToLoginPageAction(LogoutAction originalAction) {
-        Assert.notNull(originalAction);
-        this.originalAction = originalAction;
-    }
+  public LogoutRedirectToLoginPageAction(LogoutAction originalAction) {
+    Assert.notNull(originalAction);
+    this.originalAction = originalAction;
+  }
 
-    @Override
-    protected Event doExecute(RequestContext context) throws Exception {
-        Event result = originalAction.execute(context);
-        if (result != null) {
-            if (result.getId().equals(LogoutAction.FINISH_EVENT)) {
-                if (context.getFlowScope().get(REDIRECT_URL_KEY) == null) {
-                    context.getFlowScope().put(REDIRECT_URL_KEY, LOGIN_PAGE_URL);
-                }
-            }
+  @Override
+  protected Event doExecute(RequestContext context) throws Exception {
+    Event result = originalAction.execute(context);
+    if (result != null) {
+      if (result.getId().equals(LogoutAction.FINISH_EVENT)) {
+        if (context.getFlowScope().get(REDIRECT_URL_KEY) == null) {
+          context.getFlowScope().put(REDIRECT_URL_KEY, LOGIN_PAGE_URL);
         }
-        return result;
+      }
     }
+    return result;
+  }
 }

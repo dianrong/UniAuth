@@ -12,24 +12,24 @@ import com.dianrong.uniauth.ssclient.bean.TestUser;
 @Controller
 public class MainController {
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String homePage(HttpServletRequest request) {
-        return "forward:index.jsp";
-    }
+  @RequestMapping(value = "/", method = RequestMethod.GET)
+  public String homePage(HttpServletRequest request) {
+    return "forward:index.jsp";
+  }
 
-    @RequestMapping(value = "/content", method = RequestMethod.GET)
-    public String getAadminPage(HttpServletRequest request) {
-        return "content";
-    }
-    
-    @RequestMapping(value = "/static-content", method = RequestMethod.GET)
-    public String getAjaxRequestPage(HttpServletRequest request) {
-        return "ajax-content";
-    }
-    
-    @RequestMapping(value="ajax-request")
-    @ResponseBody
-    public TestUser ajaxRequest(HttpServletRequest request) {
-        return new TestUser().setAge(29).setName("wwf");
-    }
+  @RequestMapping(value = "/content", method = RequestMethod.GET)
+  public String getAadminPage(HttpServletRequest request) {
+    return "content";
+  }
+
+  @RequestMapping(value = "/static-content", method = RequestMethod.GET)
+  public String getAjaxRequestPage(HttpServletRequest request) {
+    return "ajax-content";
+  }
+
+  @RequestMapping(value = "ajax-request")
+  @ResponseBody
+  public TestUser ajaxRequest(HttpServletRequest request) {
+    return new TestUser().setAge(29).setName("wwf");
+  }
 }

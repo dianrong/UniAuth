@@ -7,50 +7,51 @@ import java.util.List;
  */
 public class TagTypeQuery extends Operator {
 
-    private static final long serialVersionUID = -3924943487606336730L;
-    private Integer id;
-    private List<Integer> domainIds;
-    private Integer domainId;
-    private String code;
+  private static final long serialVersionUID = -3924943487606336730L;
+  private Integer id;
+  private List<Integer> domainIds;
+  private Integer domainId;
+  private String code;
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public TagTypeQuery setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public TagTypeQuery setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public List<Integer> getDomainIds() {
-        return domainIds;
-    }
+  public List<Integer> getDomainIds() {
+    return domainIds;
+  }
 
-    public TagTypeQuery setDomainIds(List<Integer> domainIds) {
-        this.domainIds = domainIds;
-        return this;
-    }
+  public TagTypeQuery setDomainIds(List<Integer> domainIds) {
+    this.domainIds = domainIds;
+    return this;
+  }
 
-    public Integer getDomainId() {
-        return domainId;
-    }
+  public Integer getDomainId() {
+    return domainId;
+  }
 
-    public TagTypeQuery setDomainId(Integer domainId) {
-        this.domainId = domainId;
-        return this;
-    }
+  public TagTypeQuery setDomainId(Integer domainId) {
+    this.domainId = domainId;
+    return this;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public TagTypeQuery setCode(String code) {
-        this.code = code;
-        return this;
-    }
+  public TagTypeQuery setCode(String code) {
+    this.code = code;
+    return this;
+  }
 
-    @Override
-    public String toString() {
-        return "TagTypeQuery [id=" + id + ", domainIds=" + domainIds + ", domainId=" + domainId + ", code=" + code + "]";
-    }
+  @Override
+  public String toString() {
+    return "TagTypeQuery [id=" + id + ", domainIds=" + domainIds + ", domainId=" + domainId
+        + ", code=" + code + "]";
+  }
 }

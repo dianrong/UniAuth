@@ -14,12 +14,12 @@ import javax.ws.rs.Path;
  */
 public interface IConfigRWResource extends IConfigResource {
 
-    @POST
-    @Path("/addOrUpdate")
-    Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam);
+  @POST
+  @Path("/addOrUpdate")
+  Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam);
 
-    @POST
-    @Path("/del")
-    Response<Void> delConfig(PrimaryKeyParam primaryKeyParam);
+  @POST
+  @Path("/del")
+  Response<Void> delConfig(PrimaryKeyParam primaryKeyParam);
 
 }

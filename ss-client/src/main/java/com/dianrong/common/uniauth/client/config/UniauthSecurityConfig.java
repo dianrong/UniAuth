@@ -27,64 +27,66 @@ import lombok.extern.slf4j.Slf4j;
  * 如果需要 重写自定义configure（HttpSecurity http）<br>
  * 请不要忘记: 调用该类中的配置：super.configure(HttpSecurity http)
  * <p>
- * 
+ *
  * @author wanglin
  */
 @Slf4j
 public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private ConfigureBeanCreator beanCreator;
+  @Autowired
+  private ConfigureBeanCreator beanCreator;
 
-    @Resource(name = "sas")
-    private SessionAuthenticationStrategy sas;
+  @Resource(name = "sas")
+  private SessionAuthenticationStrategy sas;
 
-    @Resource(name = "uniauthConfig")
-    private Map<String, String> uniauthConfig;
+  @Resource(name = "uniauthConfig")
+  private Map<String, String> uniauthConfig;
 
-    @Autowired
-    private DomainDefine domainDefine;
+  @Autowired
+  private DomainDefine domainDefine;
 
-    @Autowired
-    private CasAuthenticationEntryPoint casAuthEntryPoint;
+  @Autowired
+  private CasAuthenticationEntryPoint casAuthEntryPoint;
 
-    /**
-     * configure security filter chain for uniauth
-     */
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        Assert.notNull(beanCreator, "UniauthSecurityConfig need managed by spring");
-        log.info("start uniauth security configure");
+  /**
+   * configure security filter chain for uniauth
+   */
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    Assert.notNull(beanCreator, "UniauthSecurityConfig need managed by spring");
+    log.info("start uniauth security configure");
 
-        // <sec:intercept-url pattern="/**" access="isAuthenticated()" />
-        http.authorizeRequests().anyRequest().authenticated();
+    // <sec:intercept-url pattern="/**" access="isAuthenticated()" />
+    http.authorizeRequests().anyRequest().authenticated();
 
-        // session management configure
-        http.sessionManagement().sessionAuthenticationStrategy(sas).invalidSessionUrl(getInvalidSessionUrl());
+    // session management configure
+    http.sessionManagement().sessionAuthenticationStrategy(sas)
+        .invalidSessionUrl(getInvalidSessionUrl());
 
-        // logout delete cookie and csrf configure
-        http.logout().deleteCookies("JSESSIONID").and().csrf().disable();
+    // logout delete cookie and csrf configure
+    http.logout().deleteCookies("JSESSIONID").and().csrf().disable();
 
-        // filter configure
-        http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
-        http.addFilter(beanCreator.create(CasAuthenticationFilter.class));
-        http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
-        http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class), ExceptionTranslationFilter.class);
-        http.addFilterBefore(beanCreator.create(SingleSignOutFilter.class), CasAuthenticationFilter.class);
+    // filter configure
+    http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
+    http.addFilter(beanCreator.create(CasAuthenticationFilter.class));
+    http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
+    http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class),
+        ExceptionTranslationFilter.class);
+    http.addFilterBefore(beanCreator.create(SingleSignOutFilter.class),
+        CasAuthenticationFilter.class);
 
-        // entry-point configure
-        http.exceptionHandling().authenticationEntryPoint(casAuthEntryPoint);
-        log.info("finish uniauth security configure");
-    }
+    // entry-point configure
+    http.exceptionHandling().authenticationEntryPoint(casAuthEntryPoint);
+    log.info("finish uniauth security configure");
+  }
 
-    /**
-     * #{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas
-     * 
-     * @return
-     */
-    private String getInvalidSessionUrl() {
-        String invalidSessionUrl = uniauthConfig.get("cas_server") + "/login?service=" + uniauthConfig.get("domains." + domainDefine.getDomainCode()) + "/login/cas";
-        log.info("invalidSessionUrl is " + invalidSessionUrl);
-        return invalidSessionUrl;
-    }
+  /**
+   * #{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas
+   */
+  private String getInvalidSessionUrl() {
+    String invalidSessionUrl = uniauthConfig.get("cas_server") + "/login?service=" + uniauthConfig
+        .get("domains." + domainDefine.getDomainCode()) + "/login/cas";
+    log.info("invalidSessionUrl is " + invalidSessionUrl);
+    return invalidSessionUrl;
+  }
 }

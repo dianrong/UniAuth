@@ -13,31 +13,37 @@ import org.springframework.util.Assert;
 
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 
-public class MultiTenancyUserDetailsWrapper implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken>, InitializingBean {
-    private MultiTenancyUserDetailsService userDetailsService;
+public class MultiTenancyUserDetailsWrapper implements
+    AuthenticationUserDetailsService<CasAssertionAuthenticationToken>, InitializingBean {
 
-    public MultiTenancyUserDetailsWrapper() {}
+  private MultiTenancyUserDetailsService userDetailsService;
 
-    public MultiTenancyUserDetailsWrapper(final MultiTenancyUserDetailsService userDetailsService) {
-        Assert.notNull(userDetailsService, "userDetailsService cannot be null.");
-        this.userDetailsService = userDetailsService;
+  public MultiTenancyUserDetailsWrapper() {
+  }
+
+  public MultiTenancyUserDetailsWrapper(final MultiTenancyUserDetailsService userDetailsService) {
+    Assert.notNull(userDetailsService, "userDetailsService cannot be null.");
+    this.userDetailsService = userDetailsService;
+  }
+
+  public void afterPropertiesSet() throws Exception {
+    Assert.notNull(this.userDetailsService, "UserDetailsService must be set");
+  }
+
+  public UserDetails loadUserDetails(CasAssertionAuthenticationToken token)
+      throws UsernameNotFoundException {
+    Assertion assertion = token.getAssertion();
+    if (assertion != null && assertion.getPrincipal() != null) {
+      Map<String, Object> attributes = assertion.getPrincipal().getAttributes();
+      long tenancyId = Long
+          .parseLong(attributes.get(CasProtocal.DianRongCas.getTenancyIdName()).toString());
+      return this.userDetailsService
+          .loadUserByUsername(assertion.getPrincipal().getName(), tenancyId);
     }
+    throw new InvalidParameterException("loadUserDetails new userName and tenancy id");
+  }
 
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(this.userDetailsService, "UserDetailsService must be set");
-    }
-
-    public UserDetails loadUserDetails(CasAssertionAuthenticationToken token) throws UsernameNotFoundException {
-        Assertion assertion = token.getAssertion();
-        if (assertion != null && assertion.getPrincipal() != null) {
-            Map<String, Object> attributes = assertion.getPrincipal().getAttributes();
-            long tenancyId = Long.parseLong(attributes.get(CasProtocal.DianRongCas.getTenancyIdName()).toString());
-            return this.userDetailsService.loadUserByUsername(assertion.getPrincipal().getName(), tenancyId);
-        }
-        throw new InvalidParameterException("loadUserDetails new userName and tenancy id");
-    }
-
-    public void setUserDetailsService(MultiTenancyUserDetailsService aUserDetailsService) {
-        this.userDetailsService = aUserDetailsService;
-    }
+  public void setUserDetailsService(MultiTenancyUserDetailsService aUserDetailsService) {
+    this.userDetailsService = aUserDetailsService;
+  }
 }

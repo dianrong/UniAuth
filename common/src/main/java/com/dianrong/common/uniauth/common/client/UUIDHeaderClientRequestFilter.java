@@ -26,36 +26,39 @@ import lombok.extern.slf4j.Slf4j;
 @Priority(10)
 @Slf4j
 public class UUIDHeaderClientRequestFilter implements ClientRequestFilter, ClientResponseFilter {
-    private static final String REQ_START_TIME = "reqStartTime";
-    private static final Long SLOW_CALL_MILLIS = 1000L;
 
-    @Override
-    public void filter(ClientRequestContext requestContext) throws IOException {
-        String uuid = UUID.randomUUID().toString();
-        String requestURI = requestContext.getUri().toString();
-        String method = requestContext.getMethod();
-        List<Object> objs = new LinkedList<>();
-        objs.add(uuid);
-        requestContext.getHeaders().put(AppConstants.API_UUID, objs);
-        requestContext.setProperty(REQ_START_TIME, System.currentTimeMillis());
-        log.info("Starting sdk call--- " + method + " -> uri: " + requestURI + " UUID: " + uuid + " ---");
-    }
+  private static final String REQ_START_TIME = "reqStartTime";
+  private static final Long SLOW_CALL_MILLIS = 1000L;
 
-    @Override
-    public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) {
-        Long startTime = (Long) requestContext.getProperty(REQ_START_TIME);
-        Long consumeTime = System.currentTimeMillis() - startTime;
-        String uuid = (String) requestContext.getHeaders().get(AppConstants.API_UUID).get(0);
-        String requestURI = requestContext.getUri().toString();
-        String method = requestContext.getMethod();
-        Integer httpResponseStatus = responseContext.getStatus();
-        String logstr =
-                "Ending sdk call--- " + method + " -> " + requestURI + " consumed " + consumeTime + "ms " + " httpStatus: " + httpResponseStatus + " UUID: " + uuid + " ---";
-        if (consumeTime > SLOW_CALL_MILLIS) {
-            log.warn(logstr);
-        } else {
-            log.info(logstr);
-        }
+  @Override
+  public void filter(ClientRequestContext requestContext) throws IOException {
+    String uuid = UUID.randomUUID().toString();
+    String requestURI = requestContext.getUri().toString();
+    String method = requestContext.getMethod();
+    List<Object> objs = new LinkedList<>();
+    objs.add(uuid);
+    requestContext.getHeaders().put(AppConstants.API_UUID, objs);
+    requestContext.setProperty(REQ_START_TIME, System.currentTimeMillis());
+    log.info(
+        "Starting sdk call--- " + method + " -> uri: " + requestURI + " UUID: " + uuid + " ---");
+  }
+
+  @Override
+  public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) {
+    Long startTime = (Long) requestContext.getProperty(REQ_START_TIME);
+    Long consumeTime = System.currentTimeMillis() - startTime;
+    String uuid = (String) requestContext.getHeaders().get(AppConstants.API_UUID).get(0);
+    String requestURI = requestContext.getUri().toString();
+    String method = requestContext.getMethod();
+    Integer httpResponseStatus = responseContext.getStatus();
+    String logstr =
+        "Ending sdk call--- " + method + " -> " + requestURI + " consumed " + consumeTime + "ms "
+            + " httpStatus: " + httpResponseStatus + " UUID: " + uuid + " ---";
+    if (consumeTime > SLOW_CALL_MILLIS) {
+      log.warn(logstr);
+    } else {
+      log.info(logstr);
     }
+  }
 
 }

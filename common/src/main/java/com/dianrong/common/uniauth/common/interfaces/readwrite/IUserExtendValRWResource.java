@@ -14,16 +14,16 @@ import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendValResource
  */
 public interface IUserExtendValRWResource extends IUserExtendValResource {
 
-    @POST
-    @Path("add")
-    Response<UserExtendValDto> add(UserExtendValParam userExtendValParam);
+  @POST
+  @Path("add")
+  Response<UserExtendValDto> add(UserExtendValParam userExtendValParam);
 
-    @POST
-    @Path("delbyid")
-    Response<Integer> delById(UserExtendValParam userExtendValParam);
+  @POST
+  @Path("delbyid")
+  Response<Integer> delById(UserExtendValParam userExtendValParam);
 
-    @POST
-    @Path("updatebyid")
-    Response<Integer> updateById(UserExtendValParam userExtendValParam);
+  @POST
+  @Path("updatebyid")
+  Response<Integer> updateById(UserExtendValParam userExtendValParam);
 }
 

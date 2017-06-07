@@ -14,33 +14,33 @@ import javax.ws.rs.Path;
  */
 public interface IUserRWResource extends IUserResource {
 
-    @POST
-    @Path("addnewuser")
+  @POST
+  @Path("addnewuser")
     // scenario: add new user
-    Response<UserDto> addNewUser(UserParam userParam);
+  Response<UserDto> addNewUser(UserParam userParam);
 
-    @POST
-    @Path("updateuser")
+  @POST
+  @Path("updateuser")
     // scenario: update user(including lock, disable, reset password, update profile)
-    Response<UserDto> updateUser(UserParam userParam);
+  Response<UserDto> updateUser(UserParam userParam);
 
-    @POST
-    @Path("saverolestouser")
+  @POST
+  @Path("saverolestouser")
     // scenario: save roles to user
-    Response<Void> saveRolesToUser(UserParam userParam);
+  Response<Void> saveRolesToUser(UserParam userParam);
 
-    @POST
-    @Path("resetpassword")
+  @POST
+  @Path("resetpassword")
     // scenario: save roles to user
-    Response<Void> resetPassword(UserParam userParam);
+  Response<Void> resetPassword(UserParam userParam);
 
-    @POST
-    @Path("replacerolestouser")
-    Response<Void> replaceRolesToUser(UserParam userParam);
+  @POST
+  @Path("replacerolestouser")
+  Response<Void> replaceRolesToUser(UserParam userParam);
 
 
-    @POST
-    @Path("savetagstouser")
+  @POST
+  @Path("savetagstouser")
     // scenario: techops user-tag
-    Response<Void> replaceTagsToUser(UserParam userParam);
+  Response<Void> replaceTagsToUser(UserParam userParam);
 }

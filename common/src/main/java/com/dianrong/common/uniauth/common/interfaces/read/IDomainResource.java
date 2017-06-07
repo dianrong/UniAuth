@@ -20,21 +20,21 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IDomainResource {
 
-    @POST
-    @Path("login/alldomains")
+  @POST
+  @Path("login/alldomains")
     // scenario: domain drop down list for login
-    Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam);
+  Response<List<DomainDto>> getAllLoginDomains(DomainParam domainParam);
 
-    @POST
-    @Path("domaininfo")
+  @POST
+  @Path("domaininfo")
     // scenario: get domain info and it's related stakeholders
-    Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam);
+  Response<DomainDto> getDomainInfo(PrimaryKeyParam primaryKeyParam);
 
-    @POST
-    @Path("query")
-    Response<PageDto<DomainDto>> searchDomain(DomainParam domainParam);
+  @POST
+  @Path("query")
+  Response<PageDto<DomainDto>> searchDomain(DomainParam domainParam);
 
-    @POST
-    @Path("stakeholder/query")
-    Response<List<StakeholderDto>> getAllStakeholdersInDomain(DomainParam domainParam);
+  @POST
+  @Path("stakeholder/query")
+  Response<List<StakeholderDto>> getAllStakeholdersInDomain(DomainParam domainParam);
 }

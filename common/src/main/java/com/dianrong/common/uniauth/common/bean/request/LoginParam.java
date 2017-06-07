@@ -1,65 +1,68 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 public class LoginParam extends Operator {
-    /**定义常量位置的ip*/
-    public static final String UNKNOWN_IP = "unknown_ip";
-    
-    private static final long serialVersionUID = 7180777080519450378L;
-    // domainCode may does not need involve in login process
-    /**
-     * private String domainCode;
-     */
-    private String account;
-    // only apply to cas sso
-    private String password;
-    private String ip;
 
-    // 租户id
-    private Long tenancyId;
+  /**
+   * 定义常量位置的ip
+   */
+  public static final String UNKNOWN_IP = "unknown_ip";
 
-    private String tenancyCode;
+  private static final long serialVersionUID = 7180777080519450378L;
+  // domainCode may does not need involve in login process
+  /**
+   * private String domainCode;
+   */
+  private String account;
+  // only apply to cas sso
+  private String password;
+  private String ip;
 
-    public Long getTenancyId() {
-        return tenancyId;
-    }
+  // 租户id
+  private Long tenancyId;
 
-    public LoginParam setTenancyId(Long tenancyId) {
-        this.tenancyId = tenancyId;
-        return this;
-    }
+  private String tenancyCode;
 
-    public String getAccount() {
-        return account;
-    }
+  public Long getTenancyId() {
+    return tenancyId;
+  }
 
-    public String getIp() {
-        return ip;
-    }
+  public LoginParam setTenancyId(Long tenancyId) {
+    this.tenancyId = tenancyId;
+    return this;
+  }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
+  public String getAccount() {
+    return account;
+  }
 
-    public LoginParam setAccount(String account) {
-        this.account = account;
-        return this;
-    }
+  public String getIp() {
+    return ip;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setIp(String ip) {
+    this.ip = ip;
+  }
 
-    public LoginParam setPassword(String password) {
-        this.password = password;
-        return this;
-    }
+  public LoginParam setAccount(String account) {
+    this.account = account;
+    return this;
+  }
 
-    public String getTenancyCode() {
-        return tenancyCode;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public LoginParam setTenancyCode(String tenancyCode) {
-        this.tenancyCode = tenancyCode;
-        return this;
-    }
+  public LoginParam setPassword(String password) {
+    this.password = password;
+    return this;
+  }
+
+  public String getTenancyCode() {
+    return tenancyCode;
+  }
+
+  public LoginParam setTenancyCode(String tenancyCode) {
+    this.tenancyCode = tenancyCode;
+    return this;
+  }
 }

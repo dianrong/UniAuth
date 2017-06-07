@@ -20,9 +20,9 @@ import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IUserExtendResource {
 
-    @POST
-    @Path("searchuserextend")
+  @POST
+  @Path("searchuserextend")
     // scenario: search role
-    Response<PageDto<UserExtendDto>> searchUserExtend(UserExtendPageParam pageParam);
+  Response<PageDto<UserExtendDto>> searchUserExtend(UserExtendPageParam pageParam);
 }
 

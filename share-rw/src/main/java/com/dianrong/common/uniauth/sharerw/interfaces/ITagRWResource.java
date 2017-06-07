@@ -15,27 +15,27 @@ import javax.ws.rs.Path;
  */
 public interface ITagRWResource extends ITagResource {
 
-    @POST
-    @Path("add")
-    Response<TagDto> addNewTag(TagParam tagParam);
+  @POST
+  @Path("add")
+  Response<TagDto> addNewTag(TagParam tagParam);
 
-    @POST
-    @Path("update")
-    Response<TagDto> updateTag(TagParam tagParam);
+  @POST
+  @Path("update")
+  Response<TagDto> updateTag(TagParam tagParam);
 
-    @POST
-    @Path("add-new-tag-type")
-    Response<TagTypeDto> addNewTagType(TagTypeParam tagTypeParam);
+  @POST
+  @Path("add-new-tag-type")
+  Response<TagTypeDto> addNewTagType(TagTypeParam tagTypeParam);
 
-    @POST
-    @Path("update-tag-type")
-    Response<TagTypeDto> updateTagType(TagTypeParam tagTypeParam);
+  @POST
+  @Path("update-tag-type")
+  Response<TagTypeDto> updateTagType(TagTypeParam tagTypeParam);
 
-    @POST
-    @Path("delete-tag-type")
-    Response<Void> deleteTagType(TagTypeParam tagTypeParam);
+  @POST
+  @Path("delete-tag-type")
+  Response<Void> deleteTagType(TagTypeParam tagTypeParam);
 
-    @POST
-    @Path("replace-grps-users-to-tag")
-    Response<Void> replaceGroupsAndUsersToTag(TagParam tagParam);
+  @POST
+  @Path("replace-grps-users-to-tag")
+  Response<Void> replaceGroupsAndUsersToTag(TagParam tagParam);
 }

@@ -21,66 +21,73 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SSExpressionSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
-    private Map<RequestMatcher, Collection<ConfigAttribute>> originRequestMap;
-    private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap;
 
-    public SSExpressionSecurityMetadataSource(LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap,
-            Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap) {
-        Assert.notNull(originRequestMap);
-        Assert.notNull(configedRequestMap);
-        this.originRequestMap = originRequestMap;
-        this.configedRequestMap = configedRequestMap;
+  private Map<RequestMatcher, Collection<ConfigAttribute>> originRequestMap;
+  private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap;
+
+  public SSExpressionSecurityMetadataSource(
+      LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap,
+      Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap) {
+    Assert.notNull(originRequestMap);
+    Assert.notNull(configedRequestMap);
+    this.originRequestMap = originRequestMap;
+    this.configedRequestMap = configedRequestMap;
+  }
+
+  @Override
+  public Collection<ConfigAttribute> getAllConfigAttributes() {
+    Set<ConfigAttribute> allAttributes = new HashSet<ConfigAttribute>();
+    for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : originRequestMap
+        .entrySet()) {
+      allAttributes.addAll(entry.getValue());
+    }
+    try {
+      Long tenancyId = LoginUserInfoHolder.getCurrentLoginUserTenancyId();
+      LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed = configedRequestMap
+          .get(tenancyId);
+      if (configed != null) {
+        for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : configed.entrySet()) {
+          allAttributes.addAll(entry.getValue());
+        }
+      }
+    } catch (UserNotLoginException ex) {
+      log.warn("user not login, when call getAllConfigAttributes");
+    }
+    return allAttributes;
+  }
+
+  @Override
+  public Collection<ConfigAttribute> getAttributes(Object object) {
+    Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+    final HttpServletRequest request = ((FilterInvocation) object).getRequest();
+    for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : originRequestMap
+        .entrySet()) {
+      if (entry.getKey().matches(request)) {
+        allMatchedMap.put(entry.getKey(), entry.getValue());
+      }
     }
 
-    @Override
-    public Collection<ConfigAttribute> getAllConfigAttributes() {
-        Set<ConfigAttribute> allAttributes = new HashSet<ConfigAttribute>();
-        for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : originRequestMap.entrySet()) {
-            allAttributes.addAll(entry.getValue());
+    try {
+      Long tenancyId = LoginUserInfoHolder.getCurrentLoginUserTenancyId();
+      LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed = configedRequestMap
+          .get(tenancyId);
+      if (configed != null) {
+        for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : configed.entrySet()) {
+          if (entry.getKey().matches(request)) {
+            allMatchedMap.put(entry.getKey(), entry.getValue());
+          }
         }
-        try {
-            Long tenancyId = LoginUserInfoHolder.getCurrentLoginUserTenancyId();
-            LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed = configedRequestMap.get(tenancyId);
-            if (configed != null) {
-                for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : configed.entrySet()) {
-                    allAttributes.addAll(entry.getValue());
-                }
-            }
-        } catch (UserNotLoginException ex) {
-            log.warn("user not login, when call getAllConfigAttributes");
-        }
-        return allAttributes;
+      }
+    } catch (UserNotLoginException ex) {
+      log.warn("user not login, when call getAttributes(Object object)");
     }
+    RequestMatcher requestMatcher = PatternMatchMost
+        .findMachMostRequestMatcher(request, allMatchedMap);
+    return requestMatcher == null ? null : allMatchedMap.get(requestMatcher);
+  }
 
-    @Override
-    public Collection<ConfigAttribute> getAttributes(Object object) {
-        Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
-        final HttpServletRequest request = ((FilterInvocation) object).getRequest();
-        for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : originRequestMap.entrySet()) {
-            if (entry.getKey().matches(request)) {
-                allMatchedMap.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        try {
-            Long tenancyId = LoginUserInfoHolder.getCurrentLoginUserTenancyId();
-            LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed = configedRequestMap.get(tenancyId);
-            if (configed != null) {
-                for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : configed.entrySet()) {
-                    if (entry.getKey().matches(request)) {
-                        allMatchedMap.put(entry.getKey(), entry.getValue());
-                    }
-                }
-            }
-        } catch (UserNotLoginException ex) {
-            log.warn("user not login, when call getAttributes(Object object)");
-        }
-        RequestMatcher requestMatcher = PatternMatchMost.findMachMostRequestMatcher(request, allMatchedMap);
-        return requestMatcher == null ? null : allMatchedMap.get(requestMatcher);
-    }
-
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return FilterInvocation.class.isAssignableFrom(clazz);
-    }
+  @Override
+  public boolean supports(Class<?> clazz) {
+    return FilterInvocation.class.isAssignableFrom(clazz);
+  }
 }

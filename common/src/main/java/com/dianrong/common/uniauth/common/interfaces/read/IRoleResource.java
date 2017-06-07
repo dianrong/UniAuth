@@ -21,19 +21,20 @@ import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IRoleResource {
-    @GET
-    @Path("allrolecodes")
+
+  @GET
+  @Path("allrolecodes")
     // scenario: get all role codes, dictionary data from role_code table
-    Response<List<RoleCodeDto>> getAllRoleCodes();
+  Response<List<RoleCodeDto>> getAllRoleCodes();
 
-    @POST
-    @Path("searchroles")
+  @POST
+  @Path("searchroles")
     // scenario: search role
-    Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery);
+  Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery);
 
-    @POST
-    @Path("domain/perms")
+  @POST
+  @Path("domain/perms")
     // scenario: retrieve all permissions connected with a role(including all other permissions
     // under a domain)
-    Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam);
+  Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam);
 }

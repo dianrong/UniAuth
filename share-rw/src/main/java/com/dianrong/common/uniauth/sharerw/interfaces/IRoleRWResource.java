@@ -11,27 +11,27 @@ import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
 
 public interface IRoleRWResource extends IRoleResource {
 
-    @POST
-    @Path("addnewrole")
+  @POST
+  @Path("addnewrole")
     // scenario: add new role
-    Response<RoleDto> addNewRole(RoleParam roleParam);
+  Response<RoleDto> addNewRole(RoleParam roleParam);
 
-    @POST
-    @Path("updaterole")
+  @POST
+  @Path("updaterole")
     // scenario: update role
-    Response<Void> updateRole(RoleParam roleParam);
+  Response<Void> updateRole(RoleParam roleParam);
 
-    @POST
-    @Path("replacepermtorole")
-    Response<Void> replacePermsToRole(RoleParam roleParam);
+  @POST
+  @Path("replacepermtorole")
+  Response<Void> replacePermsToRole(RoleParam roleParam);
 
-    @POST
-    @Path("savepermstorole")
+  @POST
+  @Path("savepermstorole")
     // scenario: save permissions to a role
-    Response<Void> savePermsToRole(RoleParam roleParam);
+  Response<Void> savePermsToRole(RoleParam roleParam);
 
-    @POST
-    @Path("replace-grps-users-to-role")
-    Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam);
+  @POST
+  @Path("replace-grps-users-to-role")
+  Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam);
 
 }

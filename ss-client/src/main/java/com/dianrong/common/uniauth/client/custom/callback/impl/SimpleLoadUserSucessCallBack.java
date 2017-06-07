@@ -9,15 +9,16 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * LoadUserSuccessCallBack的简单实现
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 @Component
 @Slf4j
 public class SimpleLoadUserSucessCallBack implements LoadUserSuccessCallBack {
-    @Override
-    public void loadUserSuccess(UserExtInfo userDetail) {
-        log.info("email:{}, tenancyId:{} load user info success!", userDetail.getUserDto().getEmail(), userDetail.getUserDto().getTenancyId());
-    }
+
+  @Override
+  public void loadUserSuccess(UserExtInfo userDetail) {
+    log.info("email:{}, tenancyId:{} load user info success!", userDetail.getUserDto().getEmail(),
+        userDetail.getUserDto().getTenancyId());
+  }
 }

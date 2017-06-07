@@ -12,19 +12,19 @@ import com.dianrong.loanbusiness.subsystem.service.MyService;
 @Controller
 @RequestMapping("/main")
 public class MainController {
-	
-	@Autowired
-	private MyService myService;
 
-	@RequestMapping(value = "/common", method = RequestMethod.GET)
-	public String getCommonPage(HttpServletRequest request) {
-		myService.testService();
-		System.out.println(request.getRemoteUser());
-		return "commonpage";
-	}
-	
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
-	public String getAadminPage() {
-		return "adminpage";
-	}
+  @Autowired
+  private MyService myService;
+
+  @RequestMapping(value = "/common", method = RequestMethod.GET)
+  public String getCommonPage(HttpServletRequest request) {
+    myService.testService();
+    System.out.println(request.getRemoteUser());
+    return "commonpage";
+  }
+
+  @RequestMapping(value = "/admin", method = RequestMethod.GET)
+  public String getAadminPage() {
+    return "adminpage";
+  }
 }

@@ -16,115 +16,113 @@ import org.springframework.util.Assert;
 
 /**
  * . 文件处理相关util.主要用于cas的子系统
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public final class FileUtil {
 
-    private static Logger log = LoggerFactory.getLogger(FileUtil.class);
+  private static Logger log = LoggerFactory.getLogger(FileUtil.class);
 
-    /**
-     * . 返回webApp文件夹所在路径
-     * 
-     * @return
-     */
-    public static String getWebAppLocation() {
-        String classesLocation = FileUtil.class.getClassLoader().getResource("").getPath();
-        File tclasses = new File(classesLocation);
+  /**
+   * . 返回webApp文件夹所在路径
+   */
+  public static String getWebAppLocation() {
+    String classesLocation = FileUtil.class.getClassLoader().getResource("").getPath();
+    File tclasses = new File(classesLocation);
 
-        // ../../classes
-        return tclasses.getParentFile().getParent();
+    // ../../classes
+    return tclasses.getParentFile().getParent();
+  }
+
+  /**
+   * .
+   *
+   * @param relativePathForWebApp 相对于webapp的相对路径
+   * @return 读取到的文件流数据
+   * @throws IOException 文件读取io异常
+   */
+  public static byte[] readFiles(String relativePathForWebApp) throws IOException {
+    if (relativePathForWebApp == null) {
+      relativePathForWebApp = "";
     }
-
-    /**
-     * .
-     * 
-     * @param relativePathForWebApp 相对于webapp的相对路径
-     * @return 读取到的文件流数据
-     * @throws IOException 文件读取io异常
-     */
-    public static byte[] readFiles(String relativePathForWebApp) throws IOException {
-        if (relativePathForWebApp == null) {
-            relativePathForWebApp = "";
-        }
-        if (relativePathForWebApp.startsWith(File.separator)) {
-            relativePathForWebApp = relativePathForWebApp.substring(1);
-        }
-        String realFilePath = getWebAppLocation() + File.separator + relativePathForWebApp;
-        File file = new File(realFilePath);
-        if (file.exists() && file.isFile()) {
-            byte[] bytes = new byte[(int) file.length()];
-            BufferedInputStream bufferedInputStream = null;
-            FileInputStream fileInputStream = null;
-            try {
-                fileInputStream = new FileInputStream(file);
-                bufferedInputStream = new BufferedInputStream(fileInputStream);
-                int r = bufferedInputStream.read(bytes);
-                if (r != file.length())
-                    throw new IOException("读取文件不正确");
-            } catch (IOException ex) {
-                throw ex;
-            } finally {
-                if (bufferedInputStream != null) {
-                    bufferedInputStream.close();
-                }
-                if (fileInputStream != null) {
-                    fileInputStream.close();
-                }
-            }
-            return bytes;
-        }
-        return null;
+    if (relativePathForWebApp.startsWith(File.separator)) {
+      relativePathForWebApp = relativePathForWebApp.substring(1);
     }
-
-
-    /**
-     * Equals loadProperties(filePath , null)
-     * 
-     * @param filePath filePath
-     * @return LinkedHashMap<String, String>
-     */
-    public static Map<String, String> loadProperties(String filePath) {
-        return loadProperties(filePath, null);
+    String realFilePath = getWebAppLocation() + File.separator + relativePathForWebApp;
+    File file = new File(realFilePath);
+    if (file.exists() && file.isFile()) {
+      byte[] bytes = new byte[(int) file.length()];
+      BufferedInputStream bufferedInputStream = null;
+      FileInputStream fileInputStream = null;
+      try {
+        fileInputStream = new FileInputStream(file);
+        bufferedInputStream = new BufferedInputStream(fileInputStream);
+        int r = bufferedInputStream.read(bytes);
+        if (r != file.length()) {
+          throw new IOException("读取文件不正确");
+        }
+      } catch (IOException ex) {
+        throw ex;
+      } finally {
+        if (bufferedInputStream != null) {
+          bufferedInputStream.close();
+        }
+        if (fileInputStream != null) {
+          fileInputStream.close();
+        }
+      }
+      return bytes;
     }
+    return null;
+  }
 
-    /**
-     * load map from properties file. if defaultMap is null, new a LinkedHashMap
-     * 
-     * @param filePath filePath
-     * @param defaultMap
-     * @return Map<String, String>
-     */
-    public static Map<String, String> loadProperties(String filePath, Map<String, String> defaultMap) {
-        Assert.notNull(filePath, "properties filePath");
-        // 读取属性文件a.properties
-        Properties prop = new Properties();
-        InputStream in = null;
+
+  /**
+   * Equals loadProperties(filePath , null)
+   *
+   * @param filePath filePath
+   * @return LinkedHashMap<String, String>
+   */
+  public static Map<String, String> loadProperties(String filePath) {
+    return loadProperties(filePath, null);
+  }
+
+  /**
+   * load map from properties file. if defaultMap is null, new a LinkedHashMap
+   *
+   * @param filePath filePath
+   * @return Map<String, String>
+   */
+  public static Map<String, String> loadProperties(String filePath,
+      Map<String, String> defaultMap) {
+    Assert.notNull(filePath, "properties filePath");
+    // 读取属性文件a.properties
+    Properties prop = new Properties();
+    InputStream in = null;
+    try {
+      in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
+      prop.load(in);
+      Map<String, String> values = defaultMap;
+      if (values == null) {
+        values = new HashMap<String, String>();
+      }
+      Iterator<String> it = prop.stringPropertyNames().iterator();
+      while (it.hasNext()) {
+        String key = it.next();
+        values.put(key, prop.getProperty(key));
+      }
+      return values;
+    } catch (IOException e) {
+      log.warn("failed to read properties from " + filePath, e);
+      throw new RuntimeException(e);
+    } finally {
+      if (in != null) {
         try {
-            in = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
-            prop.load(in);
-            Map<String, String> values = defaultMap;
-            if (values == null) {
-                values = new HashMap<String, String>();
-            }
-            Iterator<String> it = prop.stringPropertyNames().iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-                values.put(key, prop.getProperty(key));
-            }
-            return values;
+          in.close();
         } catch (IOException e) {
-            log.warn("failed to read properties from " + filePath, e);
-            throw new RuntimeException(e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    log.warn("failed to close FileInputStream  " + in, e);
-                }
-            }
+          log.warn("failed to close FileInputStream  " + in, e);
         }
+      }
     }
+  }
 }

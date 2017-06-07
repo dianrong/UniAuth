@@ -3,122 +3,125 @@ package com.dianrong.common.uniauth.common.bean.request;
 import java.util.List;
 
 public class RoleParam extends Operator {
-    private static final long serialVersionUID = -1555945847793133921L;
-    private Integer id;
-    private String name;
-    private String description;
-    private Byte status;
-    private Integer roleCodeId;
-    private Integer domainId;
-    private List<Integer> permIds;
-    private List<Integer> grpIds;
-    private List<Long> userIds;
 
-    // 默认是全部都要处理
-    private Boolean needProcessGoupIds = Boolean.TRUE;
-    private Boolean needProcessUserIds = Boolean.TRUE;
+  private static final long serialVersionUID = -1555945847793133921L;
+  private Integer id;
+  private String name;
+  private String description;
+  private Byte status;
+  private Integer roleCodeId;
+  private Integer domainId;
+  private List<Integer> permIds;
+  private List<Integer> grpIds;
+  private List<Long> userIds;
 
-    public Boolean getNeedProcessGoupIds() {
-        return needProcessGoupIds;
-    }
+  // 默认是全部都要处理
+  private Boolean needProcessGoupIds = Boolean.TRUE;
+  private Boolean needProcessUserIds = Boolean.TRUE;
 
-    public void setNeedProcessGoupIds(Boolean needProcessGoupIds) {
-        this.needProcessGoupIds = needProcessGoupIds;
-    }
+  public Boolean getNeedProcessGoupIds() {
+    return needProcessGoupIds;
+  }
 
-    public Boolean getNeedProcessUserIds() {
-        return needProcessUserIds;
-    }
+  public void setNeedProcessGoupIds(Boolean needProcessGoupIds) {
+    this.needProcessGoupIds = needProcessGoupIds;
+  }
 
-    public void setNeedProcessUserIds(Boolean needProcessUserIds) {
-        this.needProcessUserIds = needProcessUserIds;
-    }
+  public Boolean getNeedProcessUserIds() {
+    return needProcessUserIds;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public void setNeedProcessUserIds(Boolean needProcessUserIds) {
+    this.needProcessUserIds = needProcessUserIds;
+  }
 
-    public RoleParam setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public RoleParam setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public RoleParam setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public RoleParam setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public RoleParam setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Byte getStatus() {
-        return status;
-    }
+  public RoleParam setDescription(String description) {
+    this.description = description;
+    return this;
+  }
 
-    public RoleParam setStatus(Byte status) {
-        this.status = status;
-        return this;
-    }
+  public Byte getStatus() {
+    return status;
+  }
 
-    public Integer getRoleCodeId() {
-        return roleCodeId;
-    }
+  public RoleParam setStatus(Byte status) {
+    this.status = status;
+    return this;
+  }
 
-    public RoleParam setRoleCodeId(Integer roleCodeId) {
-        this.roleCodeId = roleCodeId;
-        return this;
-    }
+  public Integer getRoleCodeId() {
+    return roleCodeId;
+  }
 
-    public Integer getDomainId() {
-        return domainId;
-    }
+  public RoleParam setRoleCodeId(Integer roleCodeId) {
+    this.roleCodeId = roleCodeId;
+    return this;
+  }
 
-    public RoleParam setDomainId(Integer domainId) {
-        this.domainId = domainId;
-        return this;
-    }
+  public Integer getDomainId() {
+    return domainId;
+  }
 
-    public List<Integer> getPermIds() {
-        return permIds;
-    }
+  public RoleParam setDomainId(Integer domainId) {
+    this.domainId = domainId;
+    return this;
+  }
 
-    public RoleParam setPermIds(List<Integer> permIds) {
-        this.permIds = permIds;
-        return this;
-    }
+  public List<Integer> getPermIds() {
+    return permIds;
+  }
 
-    public List<Integer> getGrpIds() {
-        return grpIds;
-    }
+  public RoleParam setPermIds(List<Integer> permIds) {
+    this.permIds = permIds;
+    return this;
+  }
 
-    public RoleParam setGrpIds(List<Integer> grpIds) {
-        this.grpIds = grpIds;
-        return this;
-    }
+  public List<Integer> getGrpIds() {
+    return grpIds;
+  }
 
-    public List<Long> getUserIds() {
-        return userIds;
-    }
+  public RoleParam setGrpIds(List<Integer> grpIds) {
+    this.grpIds = grpIds;
+    return this;
+  }
 
-    public RoleParam setUserIds(List<Long> userIds) {
-        this.userIds = userIds;
-        return this;
-    }
+  public List<Long> getUserIds() {
+    return userIds;
+  }
 
-    @Override
-    public String toString() {
-        return "RoleParam [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status + ", roleCodeId=" + roleCodeId + ", domainId=" + domainId
-                + ", permIds=" + permIds + ", grpIds=" + grpIds + ", userIds=" + userIds + ", needProcessGoupIds=" + needProcessGoupIds + ", needProcessUserIds="
-                + needProcessUserIds + "]";
-    }
+  public RoleParam setUserIds(List<Long> userIds) {
+    this.userIds = userIds;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "RoleParam [id=" + id + ", name=" + name + ", description=" + description + ", status="
+        + status + ", roleCodeId=" + roleCodeId + ", domainId=" + domainId
+        + ", permIds=" + permIds + ", grpIds=" + grpIds + ", userIds=" + userIds
+        + ", needProcessGoupIds=" + needProcessGoupIds + ", needProcessUserIds="
+        + needProcessUserIds + "]";
+  }
 }

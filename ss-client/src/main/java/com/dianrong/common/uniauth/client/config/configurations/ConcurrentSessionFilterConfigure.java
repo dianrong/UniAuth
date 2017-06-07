@@ -16,24 +16,25 @@ import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 @Conditional(UniauthConfigEnvLoadCondition.class)
 public class ConcurrentSessionFilterConfigure implements Configure<ConcurrentSessionFilter> {
 
-    @Resource(name = "sessionRegistry")
-    private SessionRegistry sessionRegistry;
+  @Resource(name = "sessionRegistry")
+  private SessionRegistry sessionRegistry;
 
-    @Resource(name = "uniauthConfig")
-    private Map<String, String> uniauthConfig;
+  @Resource(name = "uniauthConfig")
+  private Map<String, String> uniauthConfig;
 
-    @Override
-    public ConcurrentSessionFilter create() {
-        ConcurrentSessionFilter concurrentSessionFilter = new ConcurrentSessionFilter(sessionRegistry, getExpiredUrl());
-        return concurrentSessionFilter;
-    }
+  @Override
+  public ConcurrentSessionFilter create() {
+    ConcurrentSessionFilter concurrentSessionFilter = new ConcurrentSessionFilter(sessionRegistry,
+        getExpiredUrl());
+    return concurrentSessionFilter;
+  }
 
-    @Override
-    public boolean isSupport(Class<?> cls) {
-        return ConcurrentSessionFilter.class.equals(cls);
-    }
+  @Override
+  public boolean isSupport(Class<?> cls) {
+    return ConcurrentSessionFilter.class.equals(cls);
+  }
 
-    private String getExpiredUrl() {
-        return uniauthConfig.get("cas_server") + "/logout?dupsession=true";
-    }
+  private String getExpiredUrl() {
+    return uniauthConfig.get("cas_server") + "/logout?dupsession=true";
+  }
 }

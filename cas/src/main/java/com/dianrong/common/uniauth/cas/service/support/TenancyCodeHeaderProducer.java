@@ -7,14 +7,15 @@ import com.dianrong.common.uniauth.common.server.cxf.client.impl.AbstractTenancy
 
 @Component
 public class TenancyCodeHeaderProducer extends AbstractTenancyCodeHeaderProducer {
-    @Override
-    public String produce() {
-        Object tenancyCode = CxfHeaderHolder.TENANCYCODE.get();
-        return tenancyCode == null ? null : tenancyCode.toString();
-    }
 
-    @Override
-    public int getOrder() {
-        return LOWEST_PRECEDENCE;
-    }
+  @Override
+  public String produce() {
+    Object tenancyCode = CxfHeaderHolder.TENANCYCODE.get();
+    return tenancyCode == null ? null : tenancyCode.toString();
+  }
+
+  @Override
+  public int getOrder() {
+    return LOWEST_PRECEDENCE;
+  }
 }

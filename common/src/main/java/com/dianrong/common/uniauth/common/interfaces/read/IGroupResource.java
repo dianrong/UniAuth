@@ -23,58 +23,56 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IGroupResource {
 
-    @POST
-    @Path("tree")
+  @POST
+  @Path("tree")
     // scenario: group/member tree
     // if groupId == null then retrieve from the root tree, otherwise treat the groupId as the root
     // tree.
-    Response<GroupDto> getGroupTree(GroupParam groupParam);
+  Response<GroupDto> getGroupTree(GroupParam groupParam);
 
-    @POST
-    @Path("query")
-    Response<PageDto<GroupDto>> queryGroup(GroupQuery groupQuery);
+  @POST
+  @Path("query")
+  Response<PageDto<GroupDto>> queryGroup(GroupQuery groupQuery);
 
-    @POST
-    @Path("groupowners")
+  @POST
+  @Path("groupowners")
     // scenario: get all group owners
-    Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam);
+  Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam);
 
-    @POST
-    @Path("domain/roles")
+  @POST
+  @Path("domain/roles")
     // scenario: retrieve all roles connected with a group(including all other roles under a domain)
-    Response<List<RoleDto>> getAllRolesToGroupAndDomain(GroupParam groupParam);
+  Response<List<RoleDto>> getAllRolesToGroupAndDomain(GroupParam groupParam);
 
-    @POST
-    @Path("checkowner")
+  @POST
+  @Path("checkowner")
     // scenario: check if one user is the owner of one group by groupIds
-    Response<Void> checkOwner(GroupParam groupParam);
+  Response<Void> checkOwner(GroupParam groupParam);
 
-    @POST
-    @Path("querytagswithchecked")
-    Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam);
+  @POST
+  @Path("querytagswithchecked")
+  Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam);
 
-    /**
-     * check whether the user with the specified userId is in the group or the sub group
-     * 
-     * @param query &nbsp;&nbsp; parameter model. <br>
-     *        query.code &nbsp;&nbsp; group code; <br>
-     *        query.userId &nbsp;&nbsp; specified userId;<br>
-     *        query.includeOwner &nbsp;&nbsp; the check result is include ownership or not, default
-     *        is false.
-     * @return Response.data true or false
-     * @throws Reponse.info exceptionInfo
-     */
-    @POST
-    @Path("userInGroupOrSub")
-    Response<Boolean> isUserInGroupOrSub(GroupQuery query);
+  /**
+   * check whether the user with the specified userId is in the group or the sub group
+   *
+   * @param query &nbsp;&nbsp; parameter model. <br> query.code &nbsp;&nbsp; group code; <br>
+   * query.userId &nbsp;&nbsp; specified userId;<br> query.includeOwner &nbsp;&nbsp; the check
+   * result is include ownership or not, default is false.
+   * @return Response.data true or false
+   * @throws Reponse.info exceptionInfo
+   */
+  @POST
+  @Path("userInGroupOrSub")
+  Response<Boolean> isUserInGroupOrSub(GroupQuery query);
 
-    /**
-     * 根据userId查询用户关联的组
-     * 
-     * @param query 查询参数
-     * @return 用户关联组的集合
-     */
-    @POST
-    @Path("list-group-relate-to-user")
-    Response<List<GroupDto>> listGroupsRelateToUser(GroupQuery query);
+  /**
+   * 根据userId查询用户关联的组
+   *
+   * @param query 查询参数
+   * @return 用户关联组的集合
+   */
+  @POST
+  @Path("list-group-relate-to-user")
+  Response<List<GroupDto>> listGroupsRelateToUser(GroupQuery query);
 }

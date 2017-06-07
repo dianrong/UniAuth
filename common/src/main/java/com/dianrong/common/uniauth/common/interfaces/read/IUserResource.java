@@ -29,70 +29,70 @@ import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IUserResource {
 
-    @POST
-    @Path("searchusers")
+  @POST
+  @Path("searchusers")
     // scenario: search user
-    Response<PageDto<UserDto>> searchUser(UserQuery userQuery);
+  Response<PageDto<UserDto>> searchUser(UserQuery userQuery);
 
-    @POST
-    @Path("userswithrolechecked")
+  @POST
+  @Path("userswithrolechecked")
     // scenario: search user with role checked
-    Response<List<UserDto>> searchUsersWithRoleCheck(PrimaryKeyParam primaryKeyParam);
+  Response<List<UserDto>> searchUsersWithRoleCheck(PrimaryKeyParam primaryKeyParam);
 
-    @POST
-    @Path("userswithtagchecked")
+  @POST
+  @Path("userswithtagchecked")
     // scenario: search user with role checked
-    Response<List<UserDto>> searchUsersWithTagCheck(PrimaryKeyParam primaryKeyParam);
+  Response<List<UserDto>> searchUsersWithTagCheck(PrimaryKeyParam primaryKeyParam);
 
-    @POST
-    @Path("domain/roles")
+  @POST
+  @Path("domain/roles")
     // scenario: retrieve all roles connected with a user(including all other roles under a domain)
-    Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam);
+  Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam);
 
-    @POST
-    @Path("login")
+  @POST
+  @Path("login")
     // scenario: cas login
-    Response<UserDto> login(LoginParam loginParam);
+  Response<UserDto> login(LoginParam loginParam);
 
-    @POST
-    @Path("usedetailinfo")
+  @POST
+  @Path("usedetailinfo")
     // scenario: get user detail info
-    Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam);
+  Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam);
 
-    @POST
-    @Path("usedetailinfobyid")
+  @POST
+  @Path("usedetailinfobyid")
     // scenario: get user detail info by userId
-    Response<UserDetailDto> getUserDetailInfoByUid(UserParam userParam);
+  Response<UserDetailDto> getUserDetailInfoByUid(UserParam userParam);
 
-    @POST
-    @Path("singleuser")
+  @POST
+  @Path("singleuser")
     // scenario: cas login, check if the input email exists or not
-    Response<UserDto> getSingleUser(UserParam userParam);
+  Response<UserDto> getSingleUser(UserParam userParam);
 
-    @POST
-    @Path("userInfobytag")
+  @POST
+  @Path("userInfobytag")
     // scenario: cas userinfo edit, check if the input email or phone exists
-    Response<UserDto> getUserInfoByUserTag(LoginParam loginParam);
+  Response<UserDto> getUserInfoByUserTag(LoginParam loginParam);
 
-    @POST
-    @Path("tagsWithUserChecked")
+  @POST
+  @Path("tagsWithUserChecked")
     // scenario: techops user-tag
-    Response<List<TagDto>> getTagsWithUserCheckedInfo(UserParam userParam);
+  Response<List<TagDto>> getTagsWithUserCheckedInfo(UserParam userParam);
 
-    @POST
-    @Path("search-user-by-roleid")
-    Response<List<UserDto>> searchUserByRoleId(UserParam userParam);
+  @POST
+  @Path("search-user-by-roleid")
+  Response<List<UserDto>> searchUserByRoleId(UserParam userParam);
 
-    @POST
-    @Path("search-user-by-tagid")
-    Response<List<UserDto>> searchUserByTagId(UserParam userParam);
+  @POST
+  @Path("search-user-by-tagid")
+  Response<List<UserDto>> searchUserByTagId(UserParam userParam);
 
-    @POST
-    @Path("query-user/group-and-role")
-    Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam);
-    
-    @POST
-    @Path("vpn-login")
+  @POST
+  @Path("query-user/group-and-role")
+  Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam);
+
+  @POST
+  @Path("vpn-login")
     // scenario: VPN login
-    Response<VPNLoginResult> vpnLogin(LoginParam loginParam);
+  Response<VPNLoginResult> vpnLogin(LoginParam loginParam);
 }

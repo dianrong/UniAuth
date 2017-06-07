@@ -24,24 +24,24 @@ import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IPermissionResource {
 
-    @GET
-    @Path("allpermtypecodes")
+  @GET
+  @Path("allpermtypecodes")
     // scenario: get all permission type codes, dictionary data from perm_type table
-    Response<List<PermTypeDto>> getAllPermTypeCodes();
+  Response<List<PermTypeDto>> getAllPermTypeCodes();
 
-    @POST
-    @Path("searchperms")
+  @POST
+  @Path("searchperms")
     // scenario: search permissions
-    Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery);
+  Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery);
 
-    @POST
-    @Path("roles")
+  @POST
+  @Path("roles")
     // scenario: retrieve all roles connected with a permission(including all other roles under a
     // domain)
-    Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam);
+  Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam);
 
-    @POST
-    @Path("urlrolemappings")
+  @POST
+  @Path("urlrolemappings")
     // scenario: populate url and role mappings for ss-client project
-    Response<List<UrlRoleMappingDto>> getUrlRoleMapping(DomainParam domainParam);
+  Response<List<UrlRoleMappingDto>> getUrlRoleMapping(DomainParam domainParam);
 }

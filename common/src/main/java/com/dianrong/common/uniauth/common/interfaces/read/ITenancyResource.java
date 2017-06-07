@@ -16,15 +16,16 @@ import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface ITenancyResource {
-    @POST
-    @Path("query")
-    Response<List<TenancyDto>> searchTenancy(TenancyParam tenancyParam);
 
-    @POST
-    @Path("queryDefault")
-    Response<TenancyDto> queryDefaultTenancy();
-    
-    @POST
-    @Path("query-enable-tenancy-by-code")
-    Response<TenancyDto> queryEnableTenancyByCode(TenancyParam param);
+  @POST
+  @Path("query")
+  Response<List<TenancyDto>> searchTenancy(TenancyParam tenancyParam);
+
+  @POST
+  @Path("queryDefault")
+  Response<TenancyDto> queryDefaultTenancy();
+
+  @POST
+  @Path("query-enable-tenancy-by-code")
+  Response<TenancyDto> queryEnableTenancyByCode(TenancyParam param);
 }

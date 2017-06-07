@@ -12,28 +12,29 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 public interface IDomainRWResource extends IDomainResource {
-    @POST
-    @Path("addnewdomain")
+
+  @POST
+  @Path("addnewdomain")
     // scenario: add new domain
-    Response<DomainDto> addNewDomain(DomainParam domainParam);
+  Response<DomainDto> addNewDomain(DomainParam domainParam);
 
-    @POST
-    @Path("updatedomain")
+  @POST
+  @Path("updatedomain")
     // scenario: update domain
-    Response<Void> updateDomain(DomainParam domainParam);
+  Response<Void> updateDomain(DomainParam domainParam);
 
-    @POST
-    @Path("addnewpstakeholder")
+  @POST
+  @Path("addnewpstakeholder")
     // scenario: add new stakeholder
-    Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam);
+  Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam);
 
-    @POST
-    @Path("updatestakeholder")
+  @POST
+  @Path("updatestakeholder")
     // scenario: update stakeholder
-    Response<Void> updateStakeholder(StakeholderParam stakeholderParam);
+  Response<Void> updateStakeholder(StakeholderParam stakeholderParam);
 
-    @POST
-    @Path("deletestakeholder")
+  @POST
+  @Path("deletestakeholder")
     // scenario: delete stakeholder
-    Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam);
+  Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam);
 }

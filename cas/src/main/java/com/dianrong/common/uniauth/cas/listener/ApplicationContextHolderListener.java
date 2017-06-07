@@ -9,13 +9,14 @@ import com.dianrong.common.uniauth.cas.util.SpringContextHolder;
 
 /**
  * . spring 初始化完全的listener
- * 
+ *
  * @author wanglin
  */
 @Component("applicationContextHolderListener")
 public class ApplicationContextHolderListener implements ApplicationContextAware {
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringContextHolder.injectApplicationContext(applicationContext);
-    }
+
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    SpringContextHolder.injectApplicationContext(applicationContext);
+  }
 }

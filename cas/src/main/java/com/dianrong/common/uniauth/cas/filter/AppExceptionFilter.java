@@ -22,34 +22,37 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用于处理公共异常信息的filter
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 @Slf4j
 public class AppExceptionFilter implements Filter {
 
-    /**
-     * 国际化资源对象
-     */
-    @Autowired
-    private MessageSource messageSource;
+  /**
+   * 国际化资源对象
+   */
+  @Autowired
+  private MessageSource messageSource;
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
+  @Override
+  public void init(FilterConfig filterConfig) throws ServletException {
+  }
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        try {
-            chain.doFilter(request, response);
-        } catch (Exception ex) {
-            log.error("server internal error", ex);
-            // server error
-            WebScopeUtil.writeJsonContentToResponse(response, 
-                    JsonUtil.object2Jason(ApiResponse.failure(ResponseCode.SERVER_INTERNAL_ERROR, UniBundleUtil.getMsg(messageSource, "application.server.internal.error"))));
-        }
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
+    try {
+      chain.doFilter(request, response);
+    } catch (Exception ex) {
+      log.error("server internal error", ex);
+      // server error
+      WebScopeUtil.writeJsonContentToResponse(response,
+          JsonUtil.object2Jason(ApiResponse.failure(ResponseCode.SERVER_INTERNAL_ERROR,
+              UniBundleUtil.getMsg(messageSource, "application.server.internal.error"))));
     }
+  }
 
-    @Override
-    public void destroy() {}
+  @Override
+  public void destroy() {
+  }
 }

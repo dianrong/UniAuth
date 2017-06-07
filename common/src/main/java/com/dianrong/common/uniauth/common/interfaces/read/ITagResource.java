@@ -22,11 +22,11 @@ import java.util.List;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface ITagResource {
 
-    @POST
-    @Path("query")
-    Response<PageDto<TagDto>> searchTags(TagQuery tagQuery);
+  @POST
+  @Path("query")
+  Response<PageDto<TagDto>> searchTags(TagQuery tagQuery);
 
-    @POST
-    @Path("tag-types")
-    Response<List<TagTypeDto>> searchTagTypes(TagTypeQuery tagTypeQuery);
+  @POST
+  @Path("tag-types")
+  Response<List<TagTypeDto>> searchTagTypes(TagTypeQuery tagTypeQuery);
 }

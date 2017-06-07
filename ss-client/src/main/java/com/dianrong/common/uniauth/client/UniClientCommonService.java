@@ -8,9 +8,10 @@ import com.dianrong.common.uniauth.client.custom.UserExtInfo;
 @Component
 public class UniClientCommonService {
 
-    public UserExtInfo getLoginUserInfo() {
-        UserExtInfo userExtInfo = (UserExtInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userExtInfo;
-    }
+  public UserExtInfo getLoginUserInfo() {
+    UserExtInfo userExtInfo = (UserExtInfo) SecurityContextHolder.getContext().getAuthentication()
+        .getPrincipal();
+    return userExtInfo;
+  }
 
 }

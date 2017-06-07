@@ -15,29 +15,31 @@ import com.google.common.collect.Lists;
 
 /**
  * 组合InvalidSessionStrategy
+ *
  * @author wanglin
  */
 public final class CompositeInvalidSessionStrategy implements InvalidSessionStrategy {
-    
-    private List<InvalidSessionStrategy> invalidSessionStrategies;
-    
-    public List<InvalidSessionStrategy> getInvalidSessionStrategies() {
-        if (invalidSessionStrategies == null) {
-            return Lists.newArrayList();
-        }
-        return Collections.unmodifiableList(invalidSessionStrategies);
-    }
 
-    public void setInvalidSessionStrategies(List<InvalidSessionStrategy> invalidSessionStrategies) {
-        this.invalidSessionStrategies = new ArrayList<>(invalidSessionStrategies);
-    }
+  private List<InvalidSessionStrategy> invalidSessionStrategies;
 
-    @Override
-    public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        if (this.invalidSessionStrategies != null && !this.invalidSessionStrategies .isEmpty()) {
-            for (InvalidSessionStrategy invalidSessionStrategy: this.invalidSessionStrategies) {
-                invalidSessionStrategy.onInvalidSessionDetected(request, response);
-            }
-        }
+  public List<InvalidSessionStrategy> getInvalidSessionStrategies() {
+    if (invalidSessionStrategies == null) {
+      return Lists.newArrayList();
     }
+    return Collections.unmodifiableList(invalidSessionStrategies);
+  }
+
+  public void setInvalidSessionStrategies(List<InvalidSessionStrategy> invalidSessionStrategies) {
+    this.invalidSessionStrategies = new ArrayList<>(invalidSessionStrategies);
+  }
+
+  @Override
+  public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    if (this.invalidSessionStrategies != null && !this.invalidSessionStrategies.isEmpty()) {
+      for (InvalidSessionStrategy invalidSessionStrategy : this.invalidSessionStrategies) {
+        invalidSessionStrategy.onInvalidSessionDetected(request, response);
+      }
+    }
+  }
 }

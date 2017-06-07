@@ -9,18 +9,19 @@ import com.dianrong.common.uniauth.common.server.cxf.client.impl.AbstractTenancy
 
 @Component
 public class TenancyIdHeaderProducer extends AbstractTenancyIdHeaderProducer {
-    @Override
-    public String produce() {
-        try {
-            return String.valueOf(LoginUserInfoHolder.getCurrentLoginUserTenancyId());
-        } catch (UserNotLoginException ex) {
-            Object tenancyId = CxfHeaderHolder.TENANCYID.get();
-            return tenancyId == null ? null : tenancyId.toString();
-        }
-    }
 
-    @Override
-    public int getOrder() {
-        return LOWEST_PRECEDENCE;
+  @Override
+  public String produce() {
+    try {
+      return String.valueOf(LoginUserInfoHolder.getCurrentLoginUserTenancyId());
+    } catch (UserNotLoginException ex) {
+      Object tenancyId = CxfHeaderHolder.TENANCYID.get();
+      return tenancyId == null ? null : tenancyId.toString();
     }
+  }
+
+  @Override
+  public int getOrder() {
+    return LOWEST_PRECEDENCE;
+  }
 }

@@ -6,111 +6,114 @@ import java.util.List;
  * Created by Arc on 12/4/2016.
  */
 public class TagParam extends Operator {
-    private static final long serialVersionUID = 8630107970908020377L;
-    private Integer id;
-    private String code;
-    private Byte status;
-    private Integer tagTypeId;
-    private Integer domainId;
-    private String description;
-    private List<Integer> grpIds;
-    private List<Long> userIds;
 
-    // 默认是全部都要处理
-    private Boolean needProcessGoupIds = Boolean.TRUE;
-    private Boolean needProcessUserIds = Boolean.TRUE;
+  private static final long serialVersionUID = 8630107970908020377L;
+  private Integer id;
+  private String code;
+  private Byte status;
+  private Integer tagTypeId;
+  private Integer domainId;
+  private String description;
+  private List<Integer> grpIds;
+  private List<Long> userIds;
 
-    public Boolean getNeedProcessGoupIds() {
-        return needProcessGoupIds;
-    }
+  // 默认是全部都要处理
+  private Boolean needProcessGoupIds = Boolean.TRUE;
+  private Boolean needProcessUserIds = Boolean.TRUE;
 
-    public void setNeedProcessGoupIds(Boolean needProcessGoupIds) {
-        this.needProcessGoupIds = needProcessGoupIds;
-    }
+  public Boolean getNeedProcessGoupIds() {
+    return needProcessGoupIds;
+  }
 
-    public Boolean getNeedProcessUserIds() {
-        return needProcessUserIds;
-    }
+  public void setNeedProcessGoupIds(Boolean needProcessGoupIds) {
+    this.needProcessGoupIds = needProcessGoupIds;
+  }
 
-    public void setNeedProcessUserIds(Boolean needProcessUserIds) {
-        this.needProcessUserIds = needProcessUserIds;
-    }
+  public Boolean getNeedProcessUserIds() {
+    return needProcessUserIds;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public void setNeedProcessUserIds(Boolean needProcessUserIds) {
+    this.needProcessUserIds = needProcessUserIds;
+  }
 
-    public TagParam setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public TagParam setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public TagParam setCode(String code) {
-        this.code = code;
-        return this;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public Byte getStatus() {
-        return status;
-    }
+  public TagParam setCode(String code) {
+    this.code = code;
+    return this;
+  }
 
-    public TagParam setStatus(Byte status) {
-        this.status = status;
-        return this;
-    }
+  public Byte getStatus() {
+    return status;
+  }
 
-    public Integer getTagTypeId() {
-        return tagTypeId;
-    }
+  public TagParam setStatus(Byte status) {
+    this.status = status;
+    return this;
+  }
 
-    public TagParam setTagTypeId(Integer tagTypeId) {
-        this.tagTypeId = tagTypeId;
-        return this;
-    }
+  public Integer getTagTypeId() {
+    return tagTypeId;
+  }
 
-    public Integer getDomainId() {
-        return domainId;
-    }
+  public TagParam setTagTypeId(Integer tagTypeId) {
+    this.tagTypeId = tagTypeId;
+    return this;
+  }
 
-    public TagParam setDomainId(Integer domainId) {
-        this.domainId = domainId;
-        return this;
-    }
+  public Integer getDomainId() {
+    return domainId;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public TagParam setDomainId(Integer domainId) {
+    this.domainId = domainId;
+    return this;
+  }
 
-    public TagParam setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public List<Integer> getGrpIds() {
-        return grpIds;
-    }
+  public TagParam setDescription(String description) {
+    this.description = description;
+    return this;
+  }
 
-    public TagParam setGrpIds(List<Integer> grpIds) {
-        this.grpIds = grpIds;
-        return this;
-    }
+  public List<Integer> getGrpIds() {
+    return grpIds;
+  }
 
-    public List<Long> getUserIds() {
-        return userIds;
-    }
+  public TagParam setGrpIds(List<Integer> grpIds) {
+    this.grpIds = grpIds;
+    return this;
+  }
 
-    public TagParam setUserIds(List<Long> userIds) {
-        this.userIds = userIds;
-        return this;
-    }
+  public List<Long> getUserIds() {
+    return userIds;
+  }
 
-    @Override
-    public String toString() {
-        return "TagParam [id=" + id + ", code=" + code + ", status=" + status + ", tagTypeId=" + tagTypeId + ", domainId=" + domainId + ", description=" + description + ", grpIds="
-                + grpIds + ", userIds=" + userIds + ", needProcessGoupIds=" + needProcessGoupIds + ", needProcessUserIds=" + needProcessUserIds + "]";
-    }
+  public TagParam setUserIds(List<Long> userIds) {
+    this.userIds = userIds;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "TagParam [id=" + id + ", code=" + code + ", status=" + status + ", tagTypeId="
+        + tagTypeId + ", domainId=" + domainId + ", description=" + description + ", grpIds="
+        + grpIds + ", userIds=" + userIds + ", needProcessGoupIds=" + needProcessGoupIds
+        + ", needProcessUserIds=" + needProcessUserIds + "]";
+  }
 }

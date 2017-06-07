@@ -18,11 +18,12 @@ import javax.ws.rs.core.MediaType;
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IAuditResource {
-    @POST
-    @Path("query")
-    Response<PageDto<AuditDto>> searchAudit(AuditParam auditParam);
 
-    @POST
-    @Path("delete")
-    Response<Integer> deleteAudit(AuditParam auditParam);
+  @POST
+  @Path("query")
+  Response<PageDto<AuditDto>> searchAudit(AuditParam auditParam);
+
+  @POST
+  @Path("delete")
+  Response<Integer> deleteAudit(AuditParam auditParam);
 }

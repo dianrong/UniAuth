@@ -4,17 +4,18 @@ package com.dianrong.common.uniauth.sharerw.notification.exp;
  * @author wanglin
  */
 public class NotificationNotAvailableException extends NotificationException {
-    private static final long serialVersionUID = -3783277420226439420L;
 
-    public NotificationNotAvailableException() {
-        super();
-    }
+  private static final long serialVersionUID = -3783277420226439420L;
 
-    public NotificationNotAvailableException(String msg) {
-        super(msg);
-    }
+  public NotificationNotAvailableException() {
+    super();
+  }
 
-    public NotificationNotAvailableException(String msg, Throwable t) {
-        super(msg, t);
-    }
+  public NotificationNotAvailableException(String msg) {
+    super(msg);
+  }
+
+  public NotificationNotAvailableException(String msg, Throwable t) {
+    super(msg, t);
+  }
 }

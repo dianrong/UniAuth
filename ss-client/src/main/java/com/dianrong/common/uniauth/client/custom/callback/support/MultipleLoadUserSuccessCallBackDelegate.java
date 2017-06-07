@@ -7,18 +7,19 @@ import com.dianrong.common.uniauth.client.custom.callback.LoadUserSuccessCallBac
 import com.dianrong.common.uniauth.common.util.Assert;
 
 public class MultipleLoadUserSuccessCallBackDelegate implements LoadUserSuccessCallBack {
-    
-    private List<LoadUserSuccessCallBack>  loadUserSuccessCallBacks;
-    
-    public MultipleLoadUserSuccessCallBackDelegate(List<LoadUserSuccessCallBack>  loadUserSuccessCallBacks) {
-        Assert.notNull(loadUserSuccessCallBacks);
-        this.loadUserSuccessCallBacks =loadUserSuccessCallBacks;
+
+  private List<LoadUserSuccessCallBack> loadUserSuccessCallBacks;
+
+  public MultipleLoadUserSuccessCallBackDelegate(
+      List<LoadUserSuccessCallBack> loadUserSuccessCallBacks) {
+    Assert.notNull(loadUserSuccessCallBacks);
+    this.loadUserSuccessCallBacks = loadUserSuccessCallBacks;
+  }
+
+  @Override
+  public void loadUserSuccess(UserExtInfo userDetail) {
+    for (LoadUserSuccessCallBack loadUserSuccessCallBack : loadUserSuccessCallBacks) {
+      loadUserSuccessCallBack.loadUserSuccess(userDetail);
     }
-    
-    @Override
-    public void loadUserSuccess(UserExtInfo userDetail) {
-        for (LoadUserSuccessCallBack loadUserSuccessCallBack : loadUserSuccessCallBacks) {
-            loadUserSuccessCallBack.loadUserSuccess(userDetail);
-        }
-    }
+  }
 }

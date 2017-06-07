@@ -15,131 +15,132 @@ import lombok.ToString;
 
 /**
  * 用于进行UserExtInfo构造的传参model
- * 
+ *
  * @author wanglin
  */
 @ToString
 public class UserExtInfoParam implements Serializable {
-    private static final long serialVersionUID = 3389698235561645882L;
 
-    private String username;
-    private String password;
-    private boolean enabled;
-    private boolean accountNonExpired;
-    private boolean credentialsNonExpired;
-    private boolean accountNonLocked;
-    private Collection<GrantedAuthority> authorities;
-    private Long id;
-    private UserDto userDto;
-    private DomainDto domainDto;
-    private Map<String, Set<String>> permMap;
-    private Map<String, Set<PermissionDto>> permDtoMap;
+  private static final long serialVersionUID = 3389698235561645882L;
 
-    public String getUsername() {
-        return username;
-    }
+  private String username;
+  private String password;
+  private boolean enabled;
+  private boolean accountNonExpired;
+  private boolean credentialsNonExpired;
+  private boolean accountNonLocked;
+  private Collection<GrantedAuthority> authorities;
+  private Long id;
+  private UserDto userDto;
+  private DomainDto domainDto;
+  private Map<String, Set<String>> permMap;
+  private Map<String, Set<PermissionDto>> permDtoMap;
 
-    public UserExtInfoParam setUsername(String username) {
-        this.username = username;
-        return this;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public UserExtInfoParam setUsername(String username) {
+    this.username = username;
+    return this;
+  }
 
-    public UserExtInfoParam setPassword(String password) {
-        this.password = password;
-        return this;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+  public UserExtInfoParam setPassword(String password) {
+    this.password = password;
+    return this;
+  }
 
-    public UserExtInfoParam setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        return this;
-    }
+  public boolean isEnabled() {
+    return enabled;
+  }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
+  public UserExtInfoParam setEnabled(boolean enabled) {
+    this.enabled = enabled;
+    return this;
+  }
 
-    public UserExtInfoParam setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-        return this;
-    }
+  public boolean isAccountNonExpired() {
+    return accountNonExpired;
+  }
 
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
+  public UserExtInfoParam setAccountNonExpired(boolean accountNonExpired) {
+    this.accountNonExpired = accountNonExpired;
+    return this;
+  }
 
-    public UserExtInfoParam setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-        return this;
-    }
+  public boolean isCredentialsNonExpired() {
+    return credentialsNonExpired;
+  }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
+  public UserExtInfoParam setCredentialsNonExpired(boolean credentialsNonExpired) {
+    this.credentialsNonExpired = credentialsNonExpired;
+    return this;
+  }
 
-    public UserExtInfoParam setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-        return this;
-    }
+  public boolean isAccountNonLocked() {
+    return accountNonLocked;
+  }
 
-    public Collection<GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+  public UserExtInfoParam setAccountNonLocked(boolean accountNonLocked) {
+    this.accountNonLocked = accountNonLocked;
+    return this;
+  }
 
-    public UserExtInfoParam setAuthorities(Collection<GrantedAuthority> authorities) {
-        this.authorities = authorities;
-        return this;
-    }
+  public Collection<GrantedAuthority> getAuthorities() {
+    return authorities;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public UserExtInfoParam setAuthorities(Collection<GrantedAuthority> authorities) {
+    this.authorities = authorities;
+    return this;
+  }
 
-    public UserExtInfoParam setId(Long id) {
-        this.id = id;
-        return this;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public UserDto getUserDto() {
-        return userDto;
-    }
+  public UserExtInfoParam setId(Long id) {
+    this.id = id;
+    return this;
+  }
 
-    public UserExtInfoParam setUserDto(UserDto userDto) {
-        this.userDto = userDto;
-        return this;
-    }
+  public UserDto getUserDto() {
+    return userDto;
+  }
 
-    public Map<String, Set<String>> getPermMap() {
-        return permMap;
-    }
+  public UserExtInfoParam setUserDto(UserDto userDto) {
+    this.userDto = userDto;
+    return this;
+  }
 
-    public UserExtInfoParam setPermMap(Map<String, Set<String>> permMap) {
-        this.permMap = permMap;
-        return this;
-    }
+  public Map<String, Set<String>> getPermMap() {
+    return permMap;
+  }
 
-    public Map<String, Set<PermissionDto>> getPermDtoMap() {
-        return permDtoMap;
-    }
+  public UserExtInfoParam setPermMap(Map<String, Set<String>> permMap) {
+    this.permMap = permMap;
+    return this;
+  }
 
-    public UserExtInfoParam setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
-        this.permDtoMap = permDtoMap;
-        return this;
-    }
+  public Map<String, Set<PermissionDto>> getPermDtoMap() {
+    return permDtoMap;
+  }
 
-    public DomainDto getDomainDto() {
-        return domainDto;
-    }
+  public UserExtInfoParam setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
+    this.permDtoMap = permDtoMap;
+    return this;
+  }
 
-    public UserExtInfoParam setDomainDto(DomainDto domainDto) {
-        this.domainDto = domainDto;
-        return this;
-    }
+  public DomainDto getDomainDto() {
+    return domainDto;
+  }
+
+  public UserExtInfoParam setDomainDto(DomainDto domainDto) {
+    this.domainDto = domainDto;
+    return this;
+  }
 }

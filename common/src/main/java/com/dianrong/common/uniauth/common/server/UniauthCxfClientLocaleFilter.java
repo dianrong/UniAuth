@@ -11,8 +11,10 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 @Provider
 @Deprecated
 public final class UniauthCxfClientLocaleFilter implements ClientRequestFilter {
-    @Override
-    public void filter(ClientRequestContext requestContext) throws IOException {
-        requestContext.getStringHeaders().add(AppConstants.CAS_CXF_HEADER_LOCALE_KEY, UniauthLocaleInfoHolder.getLocale().toString());
-    }
+
+  @Override
+  public void filter(ClientRequestContext requestContext) throws IOException {
+    requestContext.getStringHeaders().add(AppConstants.CAS_CXF_HEADER_LOCALE_KEY,
+        UniauthLocaleInfoHolder.getLocale().toString());
+  }
 }

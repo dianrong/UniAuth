@@ -10,192 +10,196 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel("组查询信息")
 public class GroupQuery extends PageParam {
-    private static final long serialVersionUID = -6174713703363466941L;
 
-    @ApiModelProperty("主键id")
-    private Integer id;
+  private static final long serialVersionUID = -6174713703363466941L;
 
-    @ApiModelProperty("辅助查询字段,组id列表")
-    private List<Integer> groupIds;
+  @ApiModelProperty("主键id")
+  private Integer id;
 
-    @ApiModelProperty("编码")
-    private String code;
+  @ApiModelProperty("辅助查询字段,组id列表")
+  private List<Integer> groupIds;
 
-    @ApiModelProperty("组名")
-    private String name;
+  @ApiModelProperty("编码")
+  private String code;
 
-    @ApiModelProperty("描述")
-    private String description;
+  @ApiModelProperty("组名")
+  private String name;
 
-    @ApiModelProperty("状态(0,1)")
-    private Byte status;
+  @ApiModelProperty("描述")
+  private String description;
 
-    @ApiModelProperty("用户组的关系类型(0,1)")
-    private Byte userGroupType;
+  @ApiModelProperty("状态(0,1)")
+  private Byte status;
 
-    @ApiModelProperty("用户id")
-    private Long userId;
+  @ApiModelProperty("用户组的关系类型(0,1)")
+  private Byte userGroupType;
 
-    @ApiModelProperty("角色id")
-    private Integer roleId;
+  @ApiModelProperty("用户id")
+  private Long userId;
 
-    @ApiModelProperty("标签id")
-    private Integer tagId;
+  @ApiModelProperty("角色id")
+  private Integer roleId;
 
-    @ApiModelProperty("是否需要查询tag信息")
-    private Boolean needTag;
+  @ApiModelProperty("标签id")
+  private Integer tagId;
 
-    @ApiModelProperty("是否需要查询user信息")
-    private Boolean needUser;
+  @ApiModelProperty("是否需要查询tag信息")
+  private Boolean needTag;
 
-    @ApiModelProperty("是否需要查询父组id")
-    private Boolean needParentId;
+  @ApiModelProperty("是否需要查询user信息")
+  private Boolean needUser;
 
-    @ApiModelProperty("是否包含有owner关系的组")
-    private Boolean includeOwner;
+  @ApiModelProperty("是否需要查询父组id")
+  private Boolean needParentId;
 
-    @ApiModelProperty("是否查询非直属的父组信息")
-    private Boolean includeIndirectAncestors;
+  @ApiModelProperty("是否包含有owner关系的组")
+  private Boolean includeOwner;
 
-    public Boolean getIncludeIndirectAncestors() {
-        return includeIndirectAncestors;
-    }
+  @ApiModelProperty("是否查询非直属的父组信息")
+  private Boolean includeIndirectAncestors;
 
-    public GroupQuery setIncludeIndirectAncestors(Boolean includeIndirectAncestors) {
-        this.includeIndirectAncestors = includeIndirectAncestors;
-        return this;
-    }
+  public Boolean getIncludeIndirectAncestors() {
+    return includeIndirectAncestors;
+  }
 
-    public List<Integer> getGroupIds() {
-        return groupIds;
-    }
+  public GroupQuery setIncludeIndirectAncestors(Boolean includeIndirectAncestors) {
+    this.includeIndirectAncestors = includeIndirectAncestors;
+    return this;
+  }
 
-    public GroupQuery setGroupIds(List<Integer> groupIds) {
-        this.groupIds = groupIds;
-        return this;
-    }
+  public List<Integer> getGroupIds() {
+    return groupIds;
+  }
 
-    public Integer getTagId() {
-        return tagId;
-    }
+  public GroupQuery setGroupIds(List<Integer> groupIds) {
+    this.groupIds = groupIds;
+    return this;
+  }
 
-    public GroupQuery setTagId(Integer tagId) {
-        this.tagId = tagId;
-        return this;
-    }
+  public Integer getTagId() {
+    return tagId;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public GroupQuery setTagId(Integer tagId) {
+    this.tagId = tagId;
+    return this;
+  }
 
-    public GroupQuery setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public GroupQuery setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public GroupQuery setCode(String code) {
-        this.code = code;
-        return this;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public GroupQuery setCode(String code) {
+    this.code = code;
+    return this;
+  }
 
-    public GroupQuery setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public GroupQuery setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public GroupQuery setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Byte getStatus() {
-        return status;
-    }
+  public GroupQuery setDescription(String description) {
+    this.description = description;
+    return this;
+  }
 
-    public GroupQuery setStatus(Byte status) {
-        this.status = status;
-        return this;
-    }
+  public Byte getStatus() {
+    return status;
+  }
 
-    public Byte getUserGroupType() {
-        return userGroupType;
-    }
+  public GroupQuery setStatus(Byte status) {
+    this.status = status;
+    return this;
+  }
 
-    public GroupQuery setUserGroupType(Byte userGroupType) {
-        this.userGroupType = userGroupType;
-        return this;
-    }
+  public Byte getUserGroupType() {
+    return userGroupType;
+  }
 
-    public Long getUserId() {
-        return userId;
-    }
+  public GroupQuery setUserGroupType(Byte userGroupType) {
+    this.userGroupType = userGroupType;
+    return this;
+  }
 
-    public GroupQuery setUserId(Long userId) {
-        this.userId = userId;
-        return this;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public Boolean getNeedTag() {
-        return needTag;
-    }
+  public GroupQuery setUserId(Long userId) {
+    this.userId = userId;
+    return this;
+  }
 
-    public GroupQuery setNeedTag(Boolean needTag) {
-        this.needTag = needTag;
-        return this;
-    }
+  public Boolean getNeedTag() {
+    return needTag;
+  }
 
-    public Boolean getNeedUser() {
-        return needUser;
-    }
+  public GroupQuery setNeedTag(Boolean needTag) {
+    this.needTag = needTag;
+    return this;
+  }
 
-    public GroupQuery setNeedUser(Boolean needUser) {
-        this.needUser = needUser;
-        return this;
-    }
+  public Boolean getNeedUser() {
+    return needUser;
+  }
 
-    public Integer getRoleId() {
-        return roleId;
-    }
+  public GroupQuery setNeedUser(Boolean needUser) {
+    this.needUser = needUser;
+    return this;
+  }
 
-    public GroupQuery setRoleId(Integer roleId) {
-        this.roleId = roleId;
-        return this;
-    }
+  public Integer getRoleId() {
+    return roleId;
+  }
 
-    public Boolean getNeedParentId() {
-        return needParentId;
-    }
+  public GroupQuery setRoleId(Integer roleId) {
+    this.roleId = roleId;
+    return this;
+  }
 
-    public GroupQuery setNeedParentId(Boolean needParentId) {
-        this.needParentId = needParentId;
-        return this;
-    }
+  public Boolean getNeedParentId() {
+    return needParentId;
+  }
 
-    public Boolean getIncludeOwner() {
-        return includeOwner;
-    }
+  public GroupQuery setNeedParentId(Boolean needParentId) {
+    this.needParentId = needParentId;
+    return this;
+  }
 
-    public GroupQuery setIncludeOwner(Boolean includeOwner) {
-        this.includeOwner = includeOwner;
-        return this;
-    }
+  public Boolean getIncludeOwner() {
+    return includeOwner;
+  }
 
-    @Override
-    public String toString() {
-        return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name + ", description=" + description + ", status=" + status + ", userGroupType="
-                + userGroupType + ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId + ", needTag=" + needTag + ", needUser=" + needUser + ", needParentId="
-                + needParentId + ", includeOwner=" + includeOwner + ", includeIndirectAncestors=" + includeIndirectAncestors + "]";
-    }
+  public GroupQuery setIncludeOwner(Boolean includeOwner) {
+    this.includeOwner = includeOwner;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name
+        + ", description=" + description + ", status=" + status + ", userGroupType="
+        + userGroupType + ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId
+        + ", needTag=" + needTag + ", needUser=" + needUser + ", needParentId="
+        + needParentId + ", includeOwner=" + includeOwner + ", includeIndirectAncestors="
+        + includeIndirectAncestors + "]";
+  }
 }
