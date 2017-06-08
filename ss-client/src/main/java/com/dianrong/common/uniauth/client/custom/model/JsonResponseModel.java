@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * uniauth的json结果model
+ * Uniauth的json结果model.
  *
  * @author wanglin
  */
@@ -14,39 +14,39 @@ public class JsonResponseModel<T extends Serializable> implements Serializable {
 
   private static final long serialVersionUID = -8045161535931878288L;
 
-  /** 定义结果常量 **/
+  /** 定义结果常量. **/
   /**
-   * 登陆成功
+   * 登陆成功.
    */
   private static final String RESULT_SUCCESS = "success";
 
   /**
-   * 登陆失败
+   * 登陆失败.
    */
   private static final String RESULT_FAILURE = "error";
 
   /**
-   * 结果code
+   * 结果code.
    */
   private final Integer code;
 
   /**
-   * 结果字符串, success 或 failure
+   * 结果字符串, success 或 failure.
    */
   private final String result;
 
   /**
-   * 登陆成功的返回结果
+   * 登陆成功的返回结果.
    */
   private final T content;
 
   /**
-   * 登陆失败返回的message
+   * 登陆失败返回的message.
    */
   private final String message;
 
   /**
-   * 具体异常信息
+   * 具体异常信息.
    */
   private final List<String> errors;
 
@@ -92,7 +92,7 @@ public class JsonResponseModel<T extends Serializable> implements Serializable {
   }
 
   /**
-   * 生成一个成功的结果
+   * 生成一个成功的结果.
    *
    * @return 表示成功的返回结果
    */
@@ -101,7 +101,7 @@ public class JsonResponseModel<T extends Serializable> implements Serializable {
   }
 
   /**
-   * 便利方法, 用于生成一个成功的返回结果,采用默认的结果code
+   * 便利方法, 用于生成一个成功的返回结果,采用默认的结果code.
    *
    * @param content 返回结果内容, 必须是一个序列化的对象类型
    * @return 表示成功的返回结果
@@ -111,9 +111,8 @@ public class JsonResponseModel<T extends Serializable> implements Serializable {
   }
 
   /**
-   * 便利方法,用于生成一个操作失败的结果
+   * 便利方法,用于生成一个操作失败的结果.
    *
-   * @param code 失败的错误码,不能为空
    * @param message 失败的具体描述信息
    * @return 表示失败的返回结果
    */
@@ -122,7 +121,7 @@ public class JsonResponseModel<T extends Serializable> implements Serializable {
   }
 
   /**
-   * 便利方法,用于生成一个操作失败的结果
+   * 便利方法,用于生成一个操作失败的结果.
    *
    * @param code 失败的错误码,不能为空
    * @param message 失败的具体描述信息

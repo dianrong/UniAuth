@@ -5,14 +5,14 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- * 用于处理访问的控制处理逻辑
+ * 用于处理访问的控制处理逻辑.
  *
  * @author wanglin
  */
 public final class ApiControlInvocationHandler implements InvocationHandler {
 
   /**
-   * 目标对象
+   * 目标对象.
    */
   private final Object target;
 

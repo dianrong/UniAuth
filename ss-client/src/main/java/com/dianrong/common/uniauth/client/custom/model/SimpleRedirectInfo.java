@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * uniauth自定义的ajax请求跳转格式实现
+ * Uniauth自定义的ajax请求跳转格式实现.
  *
  * @author wanglin
  */
@@ -24,6 +24,9 @@ public class SimpleRedirectInfo {
     this.info.add(new Item(name, msg));
   }
 
+  /**
+   * 构造函数.
+   */
   public SimpleRedirectInfo(Map<String, String> infoes) {
     this.info = new ArrayList<Item>();
     if (infoes != null && !infoes.isEmpty()) {

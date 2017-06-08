@@ -10,18 +10,18 @@ import lombok.extern.slf4j.Slf4j;
 public class StringUtil {
 
   /**
-   * 手机号码正则
+   * 手机号码正则.
    */
   public static final Pattern PHONE_NUMBER = Pattern.compile("^1(3|4|5|7|8)\\d{9}$");
 
   /**
-   * 邮箱正则
+   * 邮箱正则.
    */
   public static final Pattern EMAIL_NUMBER = Pattern.compile(
       "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
 
   /**
-   * Judge string is null or empty
+   * Judge string is null or empty.
    *
    * @param str str
    * @return boolean
@@ -35,7 +35,7 @@ public class StringUtil {
   }
 
   /**
-   * 获取对象的字符串表示方式
+   * 获取对象的字符串表示方式.
    *
    * @param obj 对象
    * @return 字符串结果
@@ -48,9 +48,8 @@ public class StringUtil {
   }
 
   /**
-   * 获取对象的字符串表示方式
+   * 获取对象的字符串表示方式.
    *
-   * @param obj 对象
    * @return 字符串结果
    */
   public static Integer tryToTranslateStrToInt(String str) {
@@ -66,7 +65,7 @@ public class StringUtil {
   }
 
   /**
-   * Translate Integer object to Long object
+   * Translate Integer object to Long object.
    *
    * @param intNum Integer
    * @return null if intNum is null Long if intNum is not null
@@ -79,9 +78,7 @@ public class StringUtil {
   }
 
   /**
-   * Translate Long object to Integer object
-   *
-   * @param intNum Integer
+   * Translate Long object to Integer object.
    * @return null if intNum is null Long if intNum is not null
    */
   public static Integer translateLongToInteger(Long longNum) {
@@ -92,7 +89,7 @@ public class StringUtil {
   }
 
   /**
-   * 生成目标长度的数字字符串
+   * 生成目标长度的数字字符串.
    */
   public static String generateNumberStr(int length) {
     if (length <= 0) {
@@ -107,7 +104,7 @@ public class StringUtil {
   }
 
   /**
-   * 获取异常信息的第一行简单信息
+   * 获取异常信息的第一行简单信息.
    *
    * @param detailMessage detailMessage
    * @return 返回信息
@@ -140,7 +137,7 @@ public class StringUtil {
   }
 
   /**
-   * Check whether the string is a regular phone number
+   * Check whether the string is a regular phone number.
    *
    * @return true if the parameter phoneNumber is a regular phone number
    */
@@ -149,7 +146,7 @@ public class StringUtil {
   }
 
   /**
-   * Check whether the string is a regular email
+   * Check whether the string is a regular email.
    *
    * @return true if the email string is a regular email
    */
@@ -158,7 +155,7 @@ public class StringUtil {
   }
 
   /**
-   * 判断一个URL是不是一个规范的地址
+   * 判断一个URL是不是一个规范的地址.
    */
   public static boolean isValidUrl(String url) {
     if (strIsNullOrEmpty(url)) {
@@ -168,6 +165,7 @@ public class StringUtil {
       new URL(url);
       return true;
     } catch (MalformedURLException ex) {
+      log.debug(url + " is not a valid url tring", ex);
     }
     return false;
   }

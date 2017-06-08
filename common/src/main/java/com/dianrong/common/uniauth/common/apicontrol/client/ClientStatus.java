@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.client;
 
 /**
- * 当前客户端的状态
+ * 当前客户端的状态.
  *
  * @author wanglin
  */

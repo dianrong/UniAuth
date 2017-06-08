@@ -27,9 +27,6 @@ public class GroupDto extends TenancyBaseDto {
   private List<TagDto> tags;
   @ApiModelProperty("父组id")
   private Integer parentId;
-  /**
-   * private List<UserDto> ownerList;
-   **/
   @ApiModelProperty("与组关联的用户")
   private List<UserDto> users;
   private List<GroupDto> groups;

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 /**
- * 配置uniauth中的filter类型的bean
+ * 配置uniauth中的filter类型的bean.
  *
  * @author wanglin
  */

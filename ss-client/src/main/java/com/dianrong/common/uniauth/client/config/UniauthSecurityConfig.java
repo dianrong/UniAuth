@@ -18,11 +18,9 @@ import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
 
 /**
- * uniauth 针对spring boot的集成配置对象 一般做法是直接继承该类作为spring security配置
- * <p>
+ * Uniauth 针对spring boot的集成配置对象 一般做法是直接继承该类作为spring security配置.<br>
  * 如果需要 重写自定义configure（HttpSecurity http）<br>
- * 请不要忘记: 调用该类中的配置：super.configure(HttpSecurity http)
- * <p>
+ * 请不要忘记: 调用该类中的配置：super.configure(HttpSecurity http)<br>
  *
  * @author wanglin
  */
@@ -45,7 +43,7 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
   private CasAuthenticationEntryPoint casAuthEntryPoint;
 
   /**
-   * configure security filter chain for uniauth
+   * Configure security filter chain for uniauth.
    */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -77,11 +75,12 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /**
-   * #{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas
+   * #{uniauthConfig['cas_server']}/login?
+   * service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas
    */
   private String getInvalidSessionUrl() {
-    String invalidSessionUrl = uniauthConfig.get("cas_server") + "/login?service=" + uniauthConfig
-        .get("domains." + domainDefine.getDomainCode()) + "/login/cas";
+    String invalidSessionUrl = uniauthConfig.get("cas_server") + "/login?service="
+        + uniauthConfig.get("domains." + domainDefine.getDomainCode()) + "/login/cas";
     log.info("invalidSessionUrl is " + invalidSessionUrl);
     return invalidSessionUrl;
   }

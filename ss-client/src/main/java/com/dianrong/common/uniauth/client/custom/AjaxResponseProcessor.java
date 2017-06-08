@@ -5,14 +5,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 定义接口用于处理所有的ajax的返回结果
+ * 定义接口用于处理所有的ajax的返回结果.
  *
  * @author wanglin
  */
 public interface AjaxResponseProcessor {
 
   /**
-   * 返回ajax的返回结果
+   * 返回Ajax的返回结果.
    *
    * @param request HttpServletRequest
    * @param response HttpServletResponse

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 /**
- * 代理具体的EmailNotify实现
+ * 代理具体的EmailNotify实现.
  *
  * @author wanglin
  */
@@ -15,7 +15,7 @@ public class DelegateUniauthEmailNotification implements EmailNotification {
   private final EmailNotification emailNotify;
 
   /**
-   * 根据配置configuration选择创建EmailNotify
+   * 根据配置configuration选择创建EmailNotify.
    *
    * @param config 配置
    * @param fromEmail 发送者的邮箱

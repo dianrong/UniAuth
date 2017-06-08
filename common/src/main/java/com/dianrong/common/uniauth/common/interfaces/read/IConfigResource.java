@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 public interface IConfigResource {
 
   /**
-   * 获取文件list
+   * 获取文件list.
    */
   @POST
   @Path("/query")

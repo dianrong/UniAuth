@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 /**
- * 取得指定语言的所有文案
+ * 取得指定语言的所有文案.
  *
  * @author dreamlee
  */

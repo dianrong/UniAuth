@@ -18,7 +18,7 @@ import org.springframework.security.web.access.regular.SSRegularPattern;
 import org.springframework.util.Assert;
 
 /**
- * uniauth对外的UserDetails实现
+ * Uniauth对外的UserDetails实现.
  *
  * @author wanglin
  */
@@ -35,7 +35,7 @@ public class UserExtInfo implements UserDetails {
   private IPAPermissionDto ipaPermissionDto;
 
   /**
-   * get the correct UserExtInfo
+   * Get the correct UserExtInfo.
    *
    * @return not null
    */
@@ -78,7 +78,7 @@ public class UserExtInfo implements UserDetails {
   }
 
   /**
-   * get current user's all permitted regular patterns set
+   * Get current user's all permitted regular patterns set.
    *
    * @return unmodifiable set , not null
    */
@@ -94,6 +94,9 @@ public class UserExtInfo implements UserDetails {
         authorities, id, userDto, domainDto, permMap, null);
   }
 
+  /**
+   * 构造函数.
+   */
   public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
       boolean credentialsNonExpired, boolean accountNonLocked,
       Collection<? extends GrantedAuthority> authorities, Long id, UserDto userDto,
@@ -104,6 +107,9 @@ public class UserExtInfo implements UserDetails {
         new HashMap<String, UserExtInfoParam>());
   }
 
+  /**
+   * 构造函数.
+   */
   public UserExtInfo(String username, String password, boolean enabled, boolean accountNonExpired,
       boolean credentialsNonExpired, boolean accountNonLocked,
       Collection<? extends GrantedAuthority> authorities, Long id, UserDto userDto,
@@ -126,17 +132,13 @@ public class UserExtInfo implements UserDetails {
         .addUserDetailIfAbsent(domainDto.getCode(), this.loginDomainUserExtInfo);
   }
 
-  /**
-   * @param currentLoginDomainUserInfo can not be null
-   */
   public static UserExtInfo build(UserExtInfoParam currentLoginDomainUserInfo,
       Map<String, UserExtInfoParam> userExtInfos) {
     return build(currentLoginDomainUserInfo, userExtInfos, null);
   }
 
   /**
-   * 等同于方法build(UserExtInfoParam currentLoginDomainUserInfo, Map<String, UserExtInfoParam>
-   * userExtInfos); 增加对IPA数据权限的支持
+   * 增加对IPA数据权限的支持.
    */
   public static UserExtInfo build(UserExtInfoParam currentLoginDomainUserInfo,
       Map<String, UserExtInfoParam> userExtInfos, IPAPermissionDto ipaPermissionDto) {

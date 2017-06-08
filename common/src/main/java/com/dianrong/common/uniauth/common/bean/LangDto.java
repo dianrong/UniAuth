@@ -2,7 +2,9 @@ package com.dianrong.common.uniauth.common.bean;
 
 public class LangDto {
 
-
+  /**
+   * 语言对象Dto.
+   */
   public LangDto(String code, String name) {
     super();
     this.code = code;

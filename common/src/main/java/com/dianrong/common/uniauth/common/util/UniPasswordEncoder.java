@@ -6,6 +6,9 @@ public class UniPasswordEncoder {
 
   }
 
+  /**
+   * 加密密码.
+   */
   public static String encodePassword(String rawPass, Object salt) {
     String passwordSalt = (salt == null ? null : salt.toString());
     byte[] salts = Base64.decode(passwordSalt);

@@ -13,7 +13,7 @@ public enum UserActionEnum {
   UPDATE_PASSWORD_BY_ACCOUNT,;
 
   /**
-   * check the action is update info by account
+   * Check the action is update info by account.
    *
    * @param action UserActionEnum
    * @return true or false

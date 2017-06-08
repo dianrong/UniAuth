@@ -14,7 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
- * 在Uniauth集成系统的客户端中为权限的处理提供一些工具方法
+ * 在Uniauth集成系统的客户端中为权限的处理提供一些工具方法.
  *
  * @author wanglin
  */
@@ -23,7 +23,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public final class PermissionUtil {
 
   /**
-   * 将IPA权限合并到权限集合中
+   * 将IPA权限合并到权限集合中.
    */
   public static final void mergeIPAPermission(IPAPermissionDto ipaPermissionDto,
       Collection<GrantedAuthority> authorities, Map<String, Set<String>> permMap,
@@ -39,7 +39,7 @@ public final class PermissionUtil {
   }
 
   /**
-   * 合并权限
+   * 合并权限.
    */
   public static final void mergeDomainPermission(List<RoleDto> roleDtoList,
       Collection<GrantedAuthority> authorities, Map<String, Set<String>> permMap,
@@ -60,7 +60,7 @@ public final class PermissionUtil {
   }
 
   /**
-   * 合并权限的辅助方法
+   * 合并权限的辅助方法.
    */
   private static <T> void mergePermMap(Map<String, Set<T>> permMap,
       Map<String, Set<T>> subPermMap) {

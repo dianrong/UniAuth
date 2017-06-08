@@ -14,26 +14,26 @@ public interface IDomainRWResource extends IDomainResource {
 
   @POST
   @Path("addnewdomain")
-    // scenario: add new domain
+  // scenario: add new domain
   Response<DomainDto> addNewDomain(DomainParam domainParam);
 
   @POST
   @Path("updatedomain")
-    // scenario: update domain
+  // scenario: update domain
   Response<Void> updateDomain(DomainParam domainParam);
 
   @POST
   @Path("addnewpstakeholder")
-    // scenario: add new stakeholder
+  // scenario: add new stakeholder
   Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam);
 
   @POST
   @Path("updatestakeholder")
-    // scenario: update stakeholder
+  // scenario: update stakeholder
   Response<Void> updateStakeholder(StakeholderParam stakeholderParam);
 
   @POST
   @Path("deletestakeholder")
-    // scenario: delete stakeholder
+  // scenario: delete stakeholder
   Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam);
 }

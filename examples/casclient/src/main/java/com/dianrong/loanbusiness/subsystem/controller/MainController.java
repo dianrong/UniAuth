@@ -14,6 +14,9 @@ public class MainController {
   @Autowired
   private MyService myService;
 
+  /**
+   * 获取Common页面.
+   */
   @RequestMapping(value = "/common", method = RequestMethod.GET)
   public String getCommonPage(HttpServletRequest request) {
     myService.testService();

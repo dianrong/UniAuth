@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * uniauth的ajax请求返回结果实现
+ * Uniauth的ajax请求返回结果实现.
  *
  * @author wanglin
  */
@@ -18,7 +18,7 @@ public class UniauthAjaxResponseProcessor implements AjaxResponseProcessor {
   private ZooKeeperConfig zooKeeperConfig;
 
   /**
-   * 必须指定zooKeeperConfig
+   * 必须指定zooKeeperConfig.
    *
    * @param zooKeeperConfig zooKeeperConfig
    */

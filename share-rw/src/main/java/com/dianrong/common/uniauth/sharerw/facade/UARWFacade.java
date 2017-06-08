@@ -23,6 +23,8 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -35,7 +37,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UARWFacade {
-
+  
   @Value("#{uniauthConfig['uniauth_ws_endpoint']}")
   private String uniWsEndpoint;
 
@@ -45,8 +47,7 @@ public class UARWFacade {
   @Value("#{uniauthConfig['uniauth_api_key']}")
   private String apiKey;
 
-  public UARWFacade() {
-  }
+  public UARWFacade() {}
 
   @Resource(name = "uniauthConfig")
   private Map<String, String> allZkNodeMap;
@@ -64,6 +65,9 @@ public class UARWFacade {
   @Autowired(required = false)
   private ApiCtrlAccountHolder apiCtrlAccountHolder;
 
+  /**
+   * 初始化.
+   */
   @PostConstruct
   public void init() {
     JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
@@ -84,30 +88,33 @@ public class UARWFacade {
             }
           });
     }
-    UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
-    List<?> providers = Arrays
-        .asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
-    domainRWResource = UniauthRSClientFactory
-        .create(uniWsEndpoint, IDomainRWResource.class, providers);
-    groupRWResource = UniauthRSClientFactory
-        .create(uniWsEndpoint, IGroupRWResource.class, providers);
-    permissionRWResource = UniauthRSClientFactory
-        .create(uniWsEndpoint, IPermissionRWResource.class, providers);
+    UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter =
+        new UUIDHeaderClientRequestFilter();
+    List<?> providers =
+        Arrays.asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
+    domainRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
+    groupRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, providers);
+    permissionRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, providers);
     userRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, providers);
     roleRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IRoleRWResource.class, providers);
     auditResource = UniauthRSClientFactory.create(uniWsEndpoint, IAuditResource.class, providers);
-    configRWResource = UniauthRSClientFactory
-        .create(uniWsEndpoint, IConfigRWResource.class, providers);
+    configRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, IConfigRWResource.class, providers);
     tagRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
-    tenancyRWResource = UniauthRSClientFactory
-        .create(uniWsEndpoint, ITenancyRWResource.class, providers);
+    tenancyRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
 
-    ClientFacadeUtil
-        .addApiKey(apiName, apiKey, domainRWResource, groupRWResource, permissionRWResource,
-            userRWResource, roleRWResource, auditResource, configRWResource,
-            tagRWResource, tenancyRWResource);
+    ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource,
+        permissionRWResource, userRWResource, roleRWResource, auditResource, configRWResource,
+        tagRWResource, tenancyRWResource);
   }
 
+  /**
+   * 构造函数.
+   */
   public UARWFacade(String uniWsEndpoint, String account, String password) {
     this.uniWsEndpoint = uniWsEndpoint;
     SimpleApiCtrlAccountHolder simpleApiCtrlAccountHolder = new SimpleApiCtrlAccountHolder();

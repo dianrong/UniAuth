@@ -50,11 +50,6 @@ public class EmailSender implements InitializingBean {
     this.fromEmail = getConfig(internalSmtpFromEmail, DEFAULTFROMEMAIL);
   }
 
-  /**
-   * get integer configuration
-   *
-   * @return integer configuration
-   */
   private int getConfig(String config, int defaultVal) {
     if (StringUtil.strIsNullOrEmpty(config)) {
       return defaultVal;
@@ -66,11 +61,6 @@ public class EmailSender implements InitializingBean {
     return val;
   }
 
-  /**
-   * get string configuration
-   *
-   * @return string configuration
-   */
   private String getConfig(String config, String defaultVal) {
     if (StringUtil.strIsNullOrEmpty(config)) {
       return defaultVal;
@@ -123,10 +113,9 @@ public class EmailSender implements InitializingBean {
         log.debug("Content: \n " + buffer);
         // 配置发送邮件的环境属性
         final Properties props = new Properties();
-                /*
-                 * 可用的属性： mail.store.protocol / mail.transport.protocol / mail.host / mail.user /
-                 * mail.from
-                 */
+        /*
+         * 可用的属性： mail.store.protocol / mail.transport.protocol / mail.host / mail.user / mail.from
+         */
         // 表示SMTP发送邮件，需要进行身份验证
         // props.put("mail.smtp.auth", "true");
         // props.put("mail.smtp.host", "smtp.sendcloud.net");
@@ -182,10 +171,13 @@ public class EmailSender implements InitializingBean {
     }
   }
 
+  /**
+   * 发送邮件.
+   */
   public void sendEmail(String subject, String toEmail, StringBuffer buffer) {
     log.debug("Starting to asynchronous send email to : " + toEmail);
-    EmailWorker emailWorker = new EmailWorker().setSubject(subject).setToEmail(toEmail)
-        .setBuffer(buffer);
+    EmailWorker emailWorker =
+        new EmailWorker().setSubject(subject).setToEmail(toEmail).setBuffer(buffer);
     executor.submit(emailWorker);
     // new Thread(emailWorker).start();
     log.debug("End of asynchronous sending email to : " + toEmail);

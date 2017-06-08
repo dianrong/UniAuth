@@ -4,14 +4,14 @@ import com.dianrong.common.uniauth.sharerw.notification.exp.NotificationNotAvail
 import com.dianrong.common.uniauth.sharerw.notification.exp.SendNotificationFailedException;
 
 /**
- * 发送邮件的接口
+ * 发送邮件的接口.
  *
  * @author wanglin
  */
 public interface EmailNotification extends Notification {
 
   /**
-   * 发送通知消息
+   * 发送通知消息.
    *
    * @param subject 发送的主题
    * @param toEmail 收邮件的地址,不能为空

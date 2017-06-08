@@ -28,6 +28,10 @@ public class MainController {
   @Autowired
   private ServiceProperties casService;
 
+  /**
+   * 登陆Controller.
+   */
+  @SuppressWarnings("deprecation")
   @RequestMapping(value = "/login", method = RequestMethod.GET)
   public String getCommonPage(HttpServletRequest request, HttpServletResponse response)
       throws IOException {

@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
+ * 处理Uniauth的国际化信息.
+ * 
  * @author dreamlee
  */
 @Slf4j
@@ -29,18 +31,18 @@ public class UniauthResourceService implements InitializingBean {
   private List<LangDto> menuCache = Lists.newArrayList();
 
   /**
-   * 应用名称，以语言包形式加载时必须设置（此配置与path互斥）
+   * 应用名称，以语言包形式加载时必须设置（此配置与path互斥）.
    */
   private String appName;
 
   /**
-   * 资源文件路径，普通加载时必须设置（此配置与appName互斥）
+   * 资源文件路径，普通加载时必须设置（此配置与appName互斥）.
    */
   private String path;
 
 
   /**
-   * 菜单配置文件的路径(语言包方式加载不需要设置)
+   * 菜单配置文件的路径(语言包方式加载不需要设置).
    */
   private String menuPath;
 
@@ -56,6 +58,9 @@ public class UniauthResourceService implements InitializingBean {
     this.menuPath = menuPath;
   }
 
+  /**
+   * 加载配置信息.
+   */
   public Map<String, String> getProperties(Locale locale) {
     ResourceBundle bundle = null;
     if (StringUtils.isBlank(appName)) {
@@ -76,8 +81,7 @@ public class UniauthResourceService implements InitializingBean {
   }
 
   /**
-   *
-   * @return
+   * 获取支持的国际化语言列表.
    */
   public List<LangDto> getLanguageList() {
     try {
@@ -99,7 +103,7 @@ public class UniauthResourceService implements InitializingBean {
   }
 
   /**
-   * 加载本地的菜单配置
+   * 加载本地的菜单配置.
    */
   private void loadFromLocal() throws IOException {
     InputStream is = UniauthResourceService.class.getClassLoader().getResourceAsStream(menuPath);
@@ -117,7 +121,7 @@ public class UniauthResourceService implements InitializingBean {
   }
 
   /**
-   * 从语言包中加载菜单配置
+   * 从语言包中加载菜单配置.
    */
   private void loadFromSpi() throws IOException {
     ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -137,7 +141,9 @@ public class UniauthResourceService implements InitializingBean {
     }
   }
 
-
+  /**
+   * 初始化.
+   */
   public void init() {
     try {
       afterPropertiesSet();

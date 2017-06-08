@@ -19,13 +19,16 @@ public class PatternMatchMost {
 
   private static final Pattern EXCLUDE_CHARS_PATTERN =
       Pattern.compile(
-          "[(\\)(\\|)(\\,)(\\[)(\\])(\\{)(\\})(\\()(\\))(\\^)(\\$)(\\.)(\\-)(\\&)(\\?)(\\*)(\\+)(\\\\s)(\\\\S)(\\\\d)(\\\\D)(\\\\w)(\\\\W)]");
+          "[(\\)(\\|)(\\,)(\\[)(\\])(\\{)(\\})(\\()(\\))(\\^)(\\$)(\\.)(\\-)(\\&)"
+          + "(\\?)(\\*)(\\+)(\\\\s)(\\\\S)(\\\\d)(\\\\D)(\\\\w)(\\\\W)]");
 
   private PatternMatchMost() {
 
   }
 
-  // not perfect
+  /**
+   * 找到最匹配当前请求的权限.
+   */
   public static RequestMatcher findMachMostRequestMatcher(HttpServletRequest request,
       Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap) {
     String url = ExtractRequestUrl.extractRequestUrl(request);

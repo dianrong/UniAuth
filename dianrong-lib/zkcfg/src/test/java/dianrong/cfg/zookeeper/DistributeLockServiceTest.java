@@ -1,5 +1,7 @@
 package dianrong.cfg.zookeeper;
 
+import com.dianrong.platform.open.zookeeper.lock.DistributeLockService;
+
 import java.math.BigDecimal;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -15,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.dianrong.platform.open.zookeeper.lock.DistributeLockService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"classpath:applicationContext-test.xml"})
@@ -34,13 +34,14 @@ public class DistributeLockServiceTest {
   @Test
   public void find() throws ExecutionException, InterruptedException {
     logger.info("find begin...");
-    Object result = distributeLockService.tryAcquiredLockAndExcute("/com/dianrong/cfg/1.0.0/test", new Callable() {
-      @Override
-      public Object call() throws Exception {
-        logger.info("work done");
-        return BigDecimal.ONE;
-      }
-    });
+    Object result = distributeLockService.tryAcquiredLockAndExcute("/com/dianrong/cfg/1.0.0/test",
+        new Callable() {
+          @Override
+          public Object call() throws Exception {
+            logger.info("work done");
+            return BigDecimal.ONE;
+          }
+        });
     Assert.assertEquals(result.toString(), "1");
   }
 

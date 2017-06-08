@@ -1,8 +1,5 @@
 package com.dianrong.common.uniauth.sharerw.notification.exp;
 
-/**
- * @author wanglin
- */
 public class NotificationNotAvailableException extends NotificationException {
 
   private static final long serialVersionUID = -3783277420226439420L;

@@ -1,11 +1,13 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.util.Arrays;
 import java.util.List;
+
+import lombok.ToString;
 
 /**
  * Created by Arc on 25/3/2016.
  */
+@ToString
 public class CfgParam extends PageParam {
 
   private static final long serialVersionUID = -1765107973570952500L;
@@ -98,12 +100,5 @@ public class CfgParam extends PageParam {
   public CfgParam setCfgKeyLike(String cfgKeyLike) {
     this.cfgKeyLike = cfgKeyLike;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "CfgParam [id=" + id + ", cfgKey=" + cfgKey + ", cfgKeys=" + cfgKeys + ", cfgKeyLike="
-        + cfgKeyLike + ", cfgTypeId=" + cfgTypeId + ", cfgTypeCode=" + cfgTypeCode
-        + ", value=" + value + ", file=" + Arrays.toString(file) + ", needBLOBs=" + needBLOBs + "]";
   }
 }

@@ -22,17 +22,17 @@ public interface IRoleResource {
 
   @GET
   @Path("allrolecodes")
-    // scenario: get all role codes, dictionary data from role_code table
+  // scenario: get all role codes, dictionary data from role_code table
   Response<List<RoleCodeDto>> getAllRoleCodes();
 
   @POST
   @Path("searchroles")
-    // scenario: search role
+  // scenario: search role
   Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery);
 
   @POST
   @Path("domain/perms")
-    // scenario: retrieve all permissions connected with a role(including all other permissions
-    // under a domain)
+  // scenario: retrieve all permissions connected with a role(including all other permissions
+  // under a domain)
   Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam);
 }

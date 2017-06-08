@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
- * @author wenlongchen
+ * @author wenlongchen.
  * @since May 16, 2016
  */
 @Path("userextendval")
@@ -22,7 +22,7 @@ public interface IUserExtendValResource {
 
   @POST
   @Path("searchbyuseridandstatus")
-    // scenario: search role
+  // scenario: search role
   Response<List<UserExtendValDto>> searchByUserId(UserExtendValParam userExtendValParam);
 
   @POST
@@ -30,7 +30,7 @@ public interface IUserExtendValResource {
   Response<PageDto<UserExtendValDto>> searchByUserIdAndCode(UserExtendValParam userExtendValParam);
 
   /**
-   * search user extend val by user identity,identity include:phone number,email
+   * search user extend val by user identity,identity include:phone number,email.
    *
    * @param userExtendValParam only concerned about status and identity
    * @see #searchByUserId(UserExtendValParam)
@@ -40,7 +40,7 @@ public interface IUserExtendValResource {
   Response<List<UserExtendValDto>> searchByUserIdentity(UserExtendValParam userExtendValParam);
 
   /**
-   * 根据查询条件查询用户扩展属性值
+   * 根据查询条件查询用户扩展属性值.
    *
    * @param userExtendValParam 查询条件对象
    * @return 符合条件的用户扩展属性值列表

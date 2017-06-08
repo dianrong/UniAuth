@@ -16,7 +16,7 @@ import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
 
 /**
- * 用于手态配置SessionManagementFilter
+ * 用于手态配置SessionManagementFilter.
  *
  * @author wanglin
  */
@@ -26,7 +26,7 @@ public class SessionManageBeanPostProcessor implements BeanPostProcessor {
   private ZooKeeperConfig zooKeeperConfig;
 
   /**
-   * 通过注解配置CustomizedRedirectFormat
+   * 通过注解配置CustomizedRedirectFormat.
    */
   @Autowired(required = false)
   private CustomizedRedirectFormat customizedRedirectFormat = new SimpleRedirectFormat();
@@ -43,6 +43,9 @@ public class SessionManageBeanPostProcessor implements BeanPostProcessor {
     return customizedRedirectFormat;
   }
 
+  /**
+   * 设置自定义的跳转格式处理.
+   */
   public void setCustomizedRedirectFormat(CustomizedRedirectFormat customizedRedirectFormat) {
     if (customizedRedirectFormat == null) {
       log.warn("set customizedRedirectFormat is null");
@@ -65,7 +68,8 @@ public class SessionManageBeanPostProcessor implements BeanPostProcessor {
       SessionManagementFilter sessionManagementFilter = (SessionManagementFilter) bean;
       InvalidSessionStrategy invalidSessionStrategy = (InvalidSessionStrategy) ReflectionUtils
           .getField(sessionManagementFilter, "invalidSessionStrategy");
-      List<InvalidSessionStrategy> invalidSessionStrategies = new ArrayList<InvalidSessionStrategy>();
+      List<InvalidSessionStrategy> invalidSessionStrategies =
+          new ArrayList<InvalidSessionStrategy>();
       if (invalidSessionStrategy != null) {
         log.info("SessionManagementFilter has original InvalidSessionStrategy : "
             + invalidSessionStrategy);
@@ -73,9 +77,10 @@ public class SessionManageBeanPostProcessor implements BeanPostProcessor {
       invalidSessionStrategies.add(new CompatibleAjaxInvalidSessionStrategy(invalidSessionStrategy,
           new UniauthAjaxResponseProcessor(this.zooKeeperConfig),
           SimpleRedirectInvalidSessionStrategy.class)
-          .setCustomizedRedirectFormat(this.customizedRedirectFormat));
+              .setCustomizedRedirectFormat(this.customizedRedirectFormat));
       invalidSessionStrategies.add(new RequestCacheInvalidSessionStrategy());
-      CompositeInvalidSessionStrategy compositeInvalidSessionStrategy = new CompositeInvalidSessionStrategy();
+      CompositeInvalidSessionStrategy compositeInvalidSessionStrategy =
+          new CompositeInvalidSessionStrategy();
       compositeInvalidSessionStrategy.setInvalidSessionStrategies(invalidSessionStrategies);
       sessionManagementFilter.setInvalidSessionStrategy(compositeInvalidSessionStrategy);
     }

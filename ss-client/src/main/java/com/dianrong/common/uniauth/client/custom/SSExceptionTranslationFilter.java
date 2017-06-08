@@ -23,13 +23,13 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
   private ZooKeeperConfig zooKeeperConfig;
 
   /**
-   * 如果不注入则使用默认的实现SimpleRedirectFormat
+   * 如果不注入则使用默认的实现SimpleRedirectFormat.
    */
   @Autowired(required = false)
   private CustomizedRedirectFormat customizedRedirectFormat = new SimpleRedirectFormat();
 
   /**
-   * 当ajax请求的时候处理其返回值
+   * 当Ajax请求的时候处理其返回值.
    */
   private AjaxResponseProcessor ajaxResponseProcessor;
 
@@ -72,34 +72,6 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
     if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCorsRequest(request)) {
       log.debug("This ia an ajax or cors request, return json to client side.");
       this.ajaxResponseProcessor.sendAjaxResponse(request, response, customizedRedirectFormat);
-//            String casServerUrl = zooKeeperConfig.getCasServerUrl();
-//            String domainUrl = zooKeeperConfig.getDomainUrl();
-//            domainUrl += "/login/cas";
-//            domainUrl = HttpRequestUtil.encodeUrl(domainUrl);
-//            casServerUrl = casServerUrl.endsWith("/") ? casServerUrl + "login" : casServerUrl + "/login";
-//            String loginUrl = casServerUrl + "?service=" + domainUrl;
-//
-//            response.setContentType("application/json");
-//            response.addHeader("Cache-Control", "no-store");
-//            response.setStatus(200);
-
-      // if (customizedRedirectFormat == null) {
-      // response.getWriter().println("{");
-      // response.getWriter().println("\"info\":");
-      // response.getWriter().println("[");
-      // response.getWriter().println("{");
-      // response.getWriter().println("\"name\": \"" + AppConstants.LOGIN_REDIRECT_URL +
-      // "\",");
-      // response.getWriter().println("\"msg\": \"" + loginUrl + "\"");
-      // response.getWriter().println("}");
-      // response.getWriter().println("]");
-      // response.getWriter().println("}");
-      // } else {
-//            Object redirectObj = customizedRedirectFormat.getRedirectInfo(request, loginUrl);
-//            if (redirectObj != null) {
-//                response.getWriter().println(JsonUtil.object2Jason(redirectObj));
-//            }
-      // }
     } else {
       super.sendStartAuthentication(request, response, chain, reason);
     }

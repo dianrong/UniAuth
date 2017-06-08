@@ -4,7 +4,7 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
- * decide whether uniauth's config env is loaded
+ * Decide whether uniauth's config env is loaded.
  *
  * @author wanglin
  */

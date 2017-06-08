@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 /**
- * 自定义spring security 配置
+ * 自定义spring security 配置.
  *
  * @author wanglin
  */

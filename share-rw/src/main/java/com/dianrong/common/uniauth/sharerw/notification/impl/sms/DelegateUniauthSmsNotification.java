@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 根据配置决定使用默认实现还是notification的实现
+ * 根据配置决定使用默认实现还是notification的实现.
  *
  * @author wanglin
  */
@@ -14,6 +14,9 @@ public class DelegateUniauthSmsNotification implements SmsNotification {
   // 被代理的实现
   private final SmsNotification smsNotify;
 
+  /**
+   * 构造一个Sms发送的实现.
+   */
   public DelegateUniauthSmsNotification(String config, String notificationUserKey,
       String notificationEndpoint) {
     if (useNotificationNotify(config)) {

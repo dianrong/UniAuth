@@ -20,7 +20,6 @@ public interface IAttributeExtendResource {
 
   @POST
   @Path("search-attribute-extend")
-    // scenario: search role
   Response<PageDto<AttributeExtendDto>> searchAttributeExtend(AttributeExtendPageParam pageParam);
 }
 

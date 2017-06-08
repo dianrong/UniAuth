@@ -46,7 +46,7 @@ public class DomainService extends BaseService {
         // 过滤有自定义页面的域
         String customizedLoginUrl =
             allZkNodeMap.get(ZkNodeUtils.getDomainCustomUrlNodeKey(zkNodeName));
-        boolean showInHomePage = ZkNodeUtils.IsShowInHomePage(zkNodeName, allZkNodeMap);
+        boolean showInHomePage = ZkNodeUtils.isShowInHomePage(zkNodeName, allZkNodeMap);
         if (!showInHomePage && customizedLoginUrl != null && !customizedLoginUrl.isEmpty()) {
           continue;
         }

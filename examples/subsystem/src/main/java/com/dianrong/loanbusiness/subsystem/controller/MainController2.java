@@ -14,12 +14,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Slf4j
 public class MainController2 {
 
+  @SuppressWarnings("unused")
   @Autowired
   private MyService myService;
 
+  @SuppressWarnings("unused")
   @Autowired
   private UniClientFacade uniClientFacade;
 
+  /**
+   * 获取Common页面.
+   */
   @RequestMapping(value = "/common", method = RequestMethod.POST)
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
   public String getCommonPage() {
@@ -28,16 +33,12 @@ public class MainController2 {
     return "commonpage";
   }
 
+  /**
+   * 获取Admin页面.
+   */
   @RequestMapping(value = "/admin", method = RequestMethod.POST)
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
   public String getAadminPage() {
-        /*
-         * DomainParam domainParam = new DomainParam(); domainParam.setCode("techops");
-         * Response<List<UrlRoleMappingDto>> response =
-         * uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
-         * 
-         * TestModel tm = new TestModel(); myService.testModel(tm);
-         */
     log.debug("Received request to show admin page");
     return "adminpage";
   }

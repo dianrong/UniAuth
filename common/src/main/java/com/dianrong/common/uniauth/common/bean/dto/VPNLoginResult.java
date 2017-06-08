@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * VPN login接口的返回值
+ * VPN login接口的返回值.
  *
  * @author wanglin
  */

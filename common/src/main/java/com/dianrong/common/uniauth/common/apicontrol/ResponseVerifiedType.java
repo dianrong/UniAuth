@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.apicontrol;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**
- * 访问接口的返回结果
+ * 访问接口的返回结果.
  *
  * @author wanglin
  */
@@ -23,12 +23,11 @@ public enum ResponseVerifiedType {
   ;
 
   /**
-   * translate string to ResponseVerifiedType
+   * Translate string to ResponseVerifiedType.
    *
    * @param typeStr String
    * @return null if typeStr is null or empty string
-   * @throws IllegalArgumentException if typeStr has length, but it is not a valid
-   * ResponseVerifiedType String
+   * @throws IllegalArgumentException if typeStr has length, but it is invalid 
    */
   public static ResponseVerifiedType translateStrToResType(String typeStr) {
     if (StringUtil.strIsNullOrEmpty(typeStr)) {

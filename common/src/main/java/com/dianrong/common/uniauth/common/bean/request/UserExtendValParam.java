@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 
 /**
- * @author wenlongchen
+ * @author wenlongchen.
  * @since May 16, 2016
  */
 @ToString
@@ -32,17 +32,17 @@ public class UserExtendValParam extends PageParam {
   @ApiModelProperty("对应扩展属性的code")
   private String extendCode;
   /**
-   * phone number or email address
+   * Phone number or email address.
    */
   private String identity;
   /**
-   * 是否只查询被用户使用了的属性
+   * 是否只查询被用户使用了的属性.
    */
   @ApiModelProperty("查询条件:是否只返回用户关联了的属性(用于接口:searchbyuseridandcode)")
   private boolean queryOnlyUsed;
 
   /**
-   * 是否包含禁用用户的扩展属性值
+   * 是否包含禁用用户的扩展属性值.
    */
   @ApiModelProperty("查询条件:是否包含禁用用户的扩展属性值(用于接口:search)")
   private Boolean includeDisableUserRelatedExtendVal;
@@ -112,7 +112,7 @@ public class UserExtendValParam extends PageParam {
   }
 
   /**
-   * phone number or email address
+   * Phone number or email address.
    *
    * @return the identity
    */
@@ -120,9 +120,6 @@ public class UserExtendValParam extends PageParam {
     return identity;
   }
 
-  /**
-   * @param identity phone number or email address
-   */
   public void setIdentity(String identity) {
     this.identity = identity;
   }

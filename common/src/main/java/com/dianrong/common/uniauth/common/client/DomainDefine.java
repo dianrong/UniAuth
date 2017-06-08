@@ -31,7 +31,7 @@ public class DomainDefine implements Serializable {
   private static String staticDomainCode;
 
   /**
-   * serviceTicket的验证是否走内网
+   * ServiceTicket的验证是否走内网.
    */
   private boolean serviceTicketValidateWithInnerAddress;
 
@@ -39,10 +39,13 @@ public class DomainDefine implements Serializable {
   private transient UniClientFacade uniClientFacade;
 
   /**
-   * 权限控制类型定义,默认为使用uri_pattern
+   * 权限控制类型定义,默认为使用uri_pattern.
    */
   private CasPermissionControlType controlType = CasPermissionControlType.URI_PATTERN;
 
+  /**
+   * DomainDefine的初始化工作,会check配置的Domain Code是否正确.
+   */
   @PostConstruct
   public void init() {
     Assert.notNull(this.domainCode, "please config domain code , it can not be null");
@@ -63,7 +66,8 @@ public class DomainDefine implements Serializable {
             .getAllLoginDomains(new DomainParam().setDomainCodeList(codes));
         if (result == null) {
           throw new UniauthCommonException(
-              "Init DomainDefine failed, please check uniauth-server is already running or the server can connect to uniauth-server");
+              "Init DomainDefine failed, please check uniauth-server is already "
+                  + "running or the server can connect to uniauth-server");
         } else {
           break;
         }
@@ -78,15 +82,32 @@ public class DomainDefine implements Serializable {
     }
     if (result.getInfo() != null && !result.getInfo().isEmpty()) {
       throw new UniauthCommonException(
-          "query domain info by configed domainCode failed, please check domainCode is correct or uniauth-server is alreay running");
+          "query domain info by configed domainCode failed, please check "
+              + "domainCode is correct or uniauth-server is alreay running");
     }
     List<DomainDto> data = result.getData();
     if (data == null || data.isEmpty()) {
       throw new UniauthCommonException(String.format(
-          "please check whether the configed domainCode [%s] is correct! Need configure a domain in Techops, the domain code is equals [%s]",
+          "please check whether the configed domainCode [%s] is correct! Need "
+              + "configure a domain in Techops, the domain code is equals [%s]",
           domainCode, domainCode));
     }
     return data.get(0).getId();
+  }
+
+  public static Integer getDomainId() {
+    return domainId;
+  }
+
+  /**
+   * 提供静态方法获取当前集成系统的Domain Code.
+   */
+  public static String getStaticDomainCode() {
+    if (DomainDefine.staticDomainCode == null) {
+      throw new UniauthCommonException(
+          "before call getStaticDomainCode, need set domainCode first");
+    }
+    return DomainDefine.staticDomainCode;
   }
 
   public String getDomainCode() {
@@ -130,24 +151,12 @@ public class DomainDefine implements Serializable {
     this.customizedLoginRedirecUrl = customizedLoginRedirecUrl;
   }
 
-  public static Integer getDomainId() {
-    return domainId;
-  }
-
   public static void setDomainId(Integer domainId) {
     DomainDefine.domainId = domainId;
   }
 
   public String getControlType() {
     return controlType.getTypeStr();
-  }
-
-  public static String getStaticDomainCode() {
-    if (DomainDefine.staticDomainCode == null) {
-      throw new UniauthCommonException(
-          "before call getStaticDomainCode, need set domainCode first");
-    }
-    return DomainDefine.staticDomainCode;
   }
 
   public boolean isUseAllDomainUserInfoShareMode() {
@@ -159,25 +168,23 @@ public class DomainDefine implements Serializable {
   }
 
   /**
-   * set permission control type
-   *
-   * @param type type
+   * Set permission control type.
+   * 
    * @throws IllegalArgumentException if parameter type is not a legal CasPermissionControlType
-   * string
+   *         string
    */
   public void setControlType(String type) throws IllegalArgumentException {
     try {
       this.controlType = CasPermissionControlType.valueOf(type);
     } catch (IllegalArgumentException ex) {
       log.debug("illegal argument", ex);
-      throw new IllegalArgumentException(
-          "permission control type supports [" + CasPermissionControlType.allType()
-              + "], please check the param '" + type + "'");
+      throw new IllegalArgumentException("permission control type supports ["
+          + CasPermissionControlType.allType() + "], please check the param '" + type + "'");
     }
   }
 
   /**
-   * 判断当前的定义的权限控制模式是否支持指定的类型
+   * 判断当前的定义的权限控制模式是否支持指定的类型.
    *
    * @param type 指定类型的权限控制模式
    * @return true or false
@@ -200,9 +207,7 @@ public class DomainDefine implements Serializable {
   }
 
   /**
-   * cas 的权限控制类型定义
-   *
-   * @author wanglin
+   * Uniauth的权限控制类型定义.
    */
   public static enum CasPermissionControlType {
     // default type

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ConfigurationCondition;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
- * 作为uniauth的所有condition父类，用于定义一个统一的 condition判断过滤
+ * 作为uniauth的所有condition父类，用于定义一个统一的 condition判断过滤.
  *
  * @author wanglin
  */

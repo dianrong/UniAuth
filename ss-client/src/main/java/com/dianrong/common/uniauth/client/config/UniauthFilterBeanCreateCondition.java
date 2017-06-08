@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
- * decide whether create filter type bean auto
+ * Decide whether create filter type bean auto.
  *
  * @author wanglin
  */

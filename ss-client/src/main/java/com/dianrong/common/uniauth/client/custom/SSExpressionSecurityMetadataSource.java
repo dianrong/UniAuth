@@ -21,6 +21,9 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
   private Map<RequestMatcher, Collection<ConfigAttribute>> originRequestMap;
   private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap;
 
+  /**
+   * 构造函数.
+   */
   public SSExpressionSecurityMetadataSource(
       LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap,
       Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedRequestMap) {
@@ -39,8 +42,8 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
     }
     try {
       Long tenancyId = LoginUserInfoHolder.getCurrentLoginUserTenancyId();
-      LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed = configedRequestMap
-          .get(tenancyId);
+      LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed =
+          configedRequestMap.get(tenancyId);
       if (configed != null) {
         for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : configed.entrySet()) {
           allAttributes.addAll(entry.getValue());
@@ -54,7 +57,8 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
 
   @Override
   public Collection<ConfigAttribute> getAttributes(Object object) {
-    Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+    Map<RequestMatcher, Collection<ConfigAttribute>> allMatchedMap =
+        new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
     final HttpServletRequest request = ((FilterInvocation) object).getRequest();
     for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : originRequestMap
         .entrySet()) {
@@ -65,8 +69,8 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
 
     try {
       Long tenancyId = LoginUserInfoHolder.getCurrentLoginUserTenancyId();
-      LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed = configedRequestMap
-          .get(tenancyId);
+      LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> configed =
+          configedRequestMap.get(tenancyId);
       if (configed != null) {
         for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : configed.entrySet()) {
           if (entry.getKey().matches(request)) {
@@ -77,8 +81,8 @@ public class SSExpressionSecurityMetadataSource implements FilterInvocationSecur
     } catch (UserNotLoginException ex) {
       log.warn("user not login, when call getAttributes(Object object)");
     }
-    RequestMatcher requestMatcher = PatternMatchMost
-        .findMachMostRequestMatcher(request, allMatchedMap);
+    RequestMatcher requestMatcher =
+        PatternMatchMost.findMachMostRequestMatcher(request, allMatchedMap);
     return requestMatcher == null ? null : allMatchedMap.get(requestMatcher);
   }
 

@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.exp;
 
 /**
- * 根据账号密码 加载用户失败异常
+ * 根据账号密码 加载用户失败异常.
  *
  * @author wanglin
  */

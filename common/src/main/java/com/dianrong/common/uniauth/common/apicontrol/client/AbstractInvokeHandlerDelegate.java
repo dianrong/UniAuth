@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.slf4j.Logger;
 
 /**
- * 模板方法，处理调用handler逻辑
+ * 模板方法，处理调用handler逻辑.
  *
  * @author wanglin
  */
@@ -36,7 +36,7 @@ public abstract class AbstractInvokeHandlerDelegate implements InvokeHandlerDele
   }
 
   /**
-   * real method invoke
+   * Real method invoker.
    *
    * @param target target
    * @param proxy proxy

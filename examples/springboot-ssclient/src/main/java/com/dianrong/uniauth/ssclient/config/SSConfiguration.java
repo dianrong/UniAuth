@@ -7,7 +7,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 public class SSConfiguration {
 
-  // 配置view resolver
+  /**
+   * 配置一个InternalResourceViewResolver,用于处理JSP.
+   */
   @Bean
   public InternalResourceViewResolver internalResourceViewResolver() {
     InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();

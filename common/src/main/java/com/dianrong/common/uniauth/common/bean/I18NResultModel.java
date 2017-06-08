@@ -8,7 +8,9 @@ public class I18NResultModel {
 
   private String current;
 
-
+  /**
+   * 构造函数.
+   */
   public I18NResultModel(List<LangDto> supportLanguages, String current) {
     super();
     this.supportLanguages = supportLanguages;

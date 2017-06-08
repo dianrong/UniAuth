@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)
 @Slf4j
-public class SSExceptionTranslationFilterConfigure implements
-    Configure<SSExceptionTranslationFilter> {
+public class SSExceptionTranslationFilterConfigure
+    implements Configure<SSExceptionTranslationFilter> {
 
   private static final String DEFAULT_ERROR_PAGE = "/errors/403.jsp";
 
@@ -45,8 +45,8 @@ public class SSExceptionTranslationFilterConfigure implements
       this.accessDeniedHandlerImpl = defaultAccessDeniedHandler;
     }
 
-    SSExceptionTranslationFilter ssExceptionTranslationFilter = new SSExceptionTranslationFilter(
-        casAuthEntryPoint);
+    SSExceptionTranslationFilter ssExceptionTranslationFilter =
+        new SSExceptionTranslationFilter(casAuthEntryPoint);
     ssExceptionTranslationFilter.setAccessDeniedHandler(accessDeniedHandlerImpl);
     ssExceptionTranslationFilter.setZooKeeperConfig(zooKeeperConfig);
     ssExceptionTranslationFilter.setCustomizedRedirectFormat(customizedRedirectFormat);

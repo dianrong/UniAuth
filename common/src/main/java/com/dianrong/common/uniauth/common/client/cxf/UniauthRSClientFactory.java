@@ -7,24 +7,24 @@ import org.apache.cxf.jaxrs.client.Client;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 
 /**
- * 用于创建接口的代理对象
+ * 用于创建接口的代理对象.
  *
  * @author wanglin
  */
 public final class UniauthRSClientFactory {
 
   /**
-   * api control filter
+   * API  request filter.
    */
   private static final ApiCtlRequestFilter API_CTL_REQ_FILTER = new ApiCtlRequestFilter();
 
   /**
-   * api control filter
+   * API response filter.
    */
   private static final ApiCtlResponseFilter API_CTL_RES_FILTER = new ApiCtlResponseFilter();
 
   /**
-   * create 代理对象
+   * Create代理对象.
    */
   @SuppressWarnings("unchecked")
   public static <T> T create(String baseAddress, Class<T> cls, List<?> providers) {

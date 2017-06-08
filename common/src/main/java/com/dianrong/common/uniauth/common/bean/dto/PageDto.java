@@ -23,6 +23,9 @@ public class PageDto<T extends Serializable> implements Serializable {
     super();
   }
 
+  /**
+   * 构造函数.
+   */
   public PageDto(int currentPage, int pageSize, int totalCount, List<T> data) {
     this.currentPage = currentPage;
     this.pageSize = pageSize;
@@ -30,6 +33,9 @@ public class PageDto<T extends Serializable> implements Serializable {
     this.data = data;
   }
 
+  /**
+   * 返回总页数.
+   */
   @ApiModelProperty(value = "总页数", required = true)
   public int getTotalPage() {
     if ((pageSize <= 0) || (totalCount <= 0)) {

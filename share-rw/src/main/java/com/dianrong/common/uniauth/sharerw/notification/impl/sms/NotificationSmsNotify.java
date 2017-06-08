@@ -10,7 +10,7 @@ import java.util.HashSet;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 依赖notification的一个短信发送实现
+ * 依赖notification的一个短信发送实现.
  *
  * @author wanglin
  */
@@ -23,7 +23,7 @@ public class NotificationSmsNotify implements SmsNotification {
   private final SmsHttpClient smsClient;
 
   /**
-   * 创建一个NotificationSmsNotify
+   * 创建一个NotificationSmsNotify.
    *
    * @param notificationUserKey notification颁发的userKey
    * @param notificationEndpoint notification服务器的地址, 不能为空

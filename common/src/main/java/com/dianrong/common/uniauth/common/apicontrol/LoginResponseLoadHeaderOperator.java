@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.common.apicontrol.model.LoginResponseLoad;
 import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
- * 定义协议操作接口
+ * 定义协议操作接口.
  *
  * @author wanglin
  */

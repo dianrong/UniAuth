@@ -26,6 +26,9 @@ public class ZooKeeperConfig {
     return getParam("domains.techops");
   }
 
+  /**
+   * 获取domians.xxx配置.
+   */
   public String getDomainUrl() {
     if (domainDefine != null) {
       String domainCode = domainDefine.getDomainCode();

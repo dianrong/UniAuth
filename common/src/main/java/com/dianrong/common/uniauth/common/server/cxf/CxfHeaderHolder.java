@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
 /**
- * 负责维护cxf header相关holder
+ * 负责维护cxf header相关holder.
  *
  * @author wanglin
  */
@@ -20,13 +20,16 @@ public enum CxfHeaderHolder {
   private <T> CxfHeaderHolder(Class<?> type) {
     Assert.notNull(type);
     this.type = type;
-    holder = new MANAGED_HOLDER<>();
+    holder = new ManagedHolder<>();
   }
 
   public Object get() {
     return holder.get();
   }
 
+  /**
+   * Set.
+   */
   public void set(Object val) {
     if (val != null) {
       if (!this.type.isAssignableFrom(val.getClass())) {
@@ -41,12 +44,10 @@ public enum CxfHeaderHolder {
 
   // 清空所有holder 信息
   public static void clearAllHolder() {
-    MANAGED_HOLDER.managedHoldersClear();
+    ManagedHolder.managedHoldersClear();
   }
 
-  // 受管理的holder
-  private static class MANAGED_HOLDER<T> extends ThreadLocal<T> {
-
+  private static final class ManagedHolder<T> extends ThreadLocal<T> {
     private static final List<ThreadLocal<?>> holders = new ArrayList<>();
 
     public static final void managedHoldersClear() {
@@ -59,7 +60,7 @@ public enum CxfHeaderHolder {
       }
     }
 
-    MANAGED_HOLDER() {
+    ManagedHolder() {
       super();
       holders.add(this);
     }

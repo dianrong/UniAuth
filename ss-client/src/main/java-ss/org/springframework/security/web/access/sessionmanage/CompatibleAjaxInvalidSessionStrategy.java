@@ -14,19 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 
 /**
- * 兼容ajax请求的InvalidSessionStrategey实现
+ * 兼容Ajax请求的InvalidSessionStrategey实现.
  *
  * @author wanglin
  */
 public class CompatibleAjaxInvalidSessionStrategy implements InvalidSessionStrategy {
 
   /**
-   * 原始InvalidSessionStrategy
+   * 原始InvalidSessionStrategy.
    */
   private InvalidSessionStrategy originalInvalidSessionStrategy;
 
   /**
-   * 希望在ajax请求的时候被该InvalidSessionStrategy忽略的InvalidSessionStrategy
+   * 希望在Ajax请求的时候被该InvalidSessionStrategy忽略的InvalidSessionStrategy.
    */
   private Set<Class<? extends InvalidSessionStrategy>> ignoreWhenAjaxRequest;
 
@@ -44,10 +44,13 @@ public class CompatibleAjaxInvalidSessionStrategy implements InvalidSessionStrat
   }
 
   /**
-   * 当ajax请求的时候处理其返回值
+   * 当Ajax请求的时候处理其返回值.
    */
   private AjaxResponseProcessor ajaxResponseProcessor;
 
+  /**
+   * 构造函数.
+   */
   @SafeVarargs
   public CompatibleAjaxInvalidSessionStrategy(InvalidSessionStrategy originalInvalidSessionStrategy,
       AjaxResponseProcessor ajaxResponseProcessor,

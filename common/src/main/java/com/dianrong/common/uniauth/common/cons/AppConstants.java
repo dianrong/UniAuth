@@ -51,42 +51,42 @@ public interface AppConstants {
   // ROLE_NORMAL
   String ROLE_CODE_ROLE_NORMAL = "ROLE_NORMAL";
 
-  /*** zk节点配置相关的常量定义 */
+  /*** zk节点配置相关的常量定义. */
   /**
    * zk配置中的分隔符,.
    */
   String ZK_CFG_SPLIT = ".";
 
   /**
-   * domain
+   * Domain.
    */
   String ZK_DOMAIN = "domains";
   /**
-   * zk中domain节点的前缀
+   * ZK中domain节点的前缀.
    */
   String ZK_DOMAIN_PREFIX = ZK_DOMAIN + ZK_CFG_SPLIT;
   /**
-   * 域的登陆页属性
+   * 域的登陆页属性.
    */
   String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
   /**
-   * ticket 验证失败url
+   * Ticket 验证失败url.
    **/
   String ZK_DOMAIN_AUTH_FAIL_URL = "auth_fail_url";
   /**
-   * 是否在主页显示登陆项
+   * 是否在主页显示登陆项.
    */
   String ZK_DOMAIN_SHOW_IN_HOME_PAGE = "showInHomePage";
   /**
-   * zk节点中,域的登出地址的节点后缀
+   * ZK节点中,域的登出地址的节点后缀.
    */
   String ZK_DOMAIN_LOGOUT_ADDRESS_NODE_SUFFIX = "logout_address";
   /**
-   * 定义域的所属tenancy的code
+   * 定义域的所属tenancy的code.
    */
   String ZK_DOMAIN_TEANANCY_CODE = "tenancycode";
   /**
-   * zk 配置的node name， st使用的次数
+   * ZK配置的node name， st使用的次数.
    */
   String ZK_NODE_NAME_ST_USED_TIMES = "cas.st_use_times";
 
@@ -131,7 +131,7 @@ public interface AppConstants {
   String PSWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
   String PSWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
   /**
-   * useless after integrate notification and challenge
+   * Useless after integrate notification and challenge.
    */
   @Deprecated
   String PSWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
@@ -244,8 +244,9 @@ public interface AppConstants {
   String UNIAUTH_GLOBAL_VAR_QUEUE_USE_OLD_IMPL = "global.var.queue.old.impl";
 
   // 2 hours
-  long DEFAULT_API_CALL_TOKEN_AVAILABLE_MILLiSECONDS = 1000L * 60L * 60l * 2L;
+  long DEFAULT_API_CALL_TOKEN_AVAILABLE_MILLiSECONDS = 1000L * 60L * 60L * 2L;
 
   // 记录API访问超时的日志logger name
-  String UNIAUTH_API_CALL_TIME_OUT_LOGGER = "com.dianrong.common.uniauth.api.call.socket.timeout.exception";
+  String UNIAUTH_API_CALL_TIME_OUT_LOGGER =
+      "com.dianrong.common.uniauth.api.call.socket.timeout.exception";
 }

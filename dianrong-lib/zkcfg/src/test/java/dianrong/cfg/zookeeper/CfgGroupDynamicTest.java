@@ -1,5 +1,9 @@
 package dianrong.cfg.zookeeper;
 
+import com.dianrong.platform.open.cfg.CfgEvent;
+import com.dianrong.platform.open.cfg.CfgEventListener;
+import com.dianrong.platform.open.cfg.CfgGroup;
+
 import javax.annotation.Resource;
 
 import org.apache.logging.log4j.util.Strings;
@@ -8,10 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.dianrong.platform.open.cfg.CfgEvent;
-import com.dianrong.platform.open.cfg.CfgEventListener;
-import com.dianrong.platform.open.cfg.CfgGroup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"classpath:applicationContext-cfg-group-test.xml",})
@@ -35,7 +35,7 @@ public class CfgGroupDynamicTest {
   }
 
   @Test
-  public void CRUDCfgTest() throws Exception {
+  public void crudCfgTest() throws Exception {
     String key = "keyXie";
     String value = "xiexingxing";
     try {
@@ -70,7 +70,6 @@ public class CfgGroupDynamicTest {
   public void cfgEventListenerTest() throws Exception {
     String key = "keyXie";
     String value1 = "xie";
-    String value2 = "xing";
     MyListener listener = new MyListener();
     mainappGroup.addCfgEventListener(listener);
 
@@ -80,6 +79,7 @@ public class CfgGroupDynamicTest {
     Assert.assertEquals(CfgEvent.ADD, listener.event);
     Assert.assertEquals(key, listener.key);
 
+    String value2 = "xing";
     mainappGroup.updateCfg(PREX + "/" + key, value2);
     Thread.sleep(1000);
     Assert.assertEquals(value2, listener.value);

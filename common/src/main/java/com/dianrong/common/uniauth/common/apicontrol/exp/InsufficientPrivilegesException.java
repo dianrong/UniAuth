@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.exp;
 
 /**
- * 权限不足
+ * 权限不足.
  *
  * @author wanglin
  */

@@ -9,31 +9,30 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 public interface IGroupRWResource extends IGroupResource {
-
-
+  
   @POST
   @Path("addusers")
-    //scenario: add users into one specific group(normal member and owner member)
+  // scenario: add users into one specific group(normal member and owner member)
   Response<Void> addUsersIntoGroup(UserListParam userListParam);
 
   @POST
   @Path("removeusers")
-    //scenario: remove users from one specific group(normal member and owner member)
+  // scenario: remove users from one specific group(normal member and owner member)
   Response<Void> removeUsersFromGroup(UserListParam userListParam);
 
-  //scenario: move users to the target group
+  // scenario: move users to the target group
   @POST
   @Path("moveUser")
   Response<Void> moveGroupUser(UserListParam userListParam);
 
   @POST
   @Path("addnewgroup")
-    //scenario: add new group into one specific group
+  // scenario: add new group into one specific group
   Response<GroupDto> addNewGroupIntoGroup(GroupParam groupParam);
 
   @POST
   @Path("updategroup")
-    //scenario: modify group info
+  // scenario: modify group info
   Response<GroupDto> updateGroup(GroupParam groupParam);
 
   @POST
@@ -42,7 +41,7 @@ public interface IGroupRWResource extends IGroupResource {
 
   @POST
   @Path("saverolestogroup")
-    //scenario: save roles to group
+  // scenario: save roles to group
   Response<Void> saveRolesToGroup(GroupParam groupParam);
 
   @POST
@@ -51,7 +50,7 @@ public interface IGroupRWResource extends IGroupResource {
 
   @POST
   @Path("replacetagstogroup")
-    //scenario: replace tags to group
+  // scenario: replace tags to group
   Response<Void> replaceTagsToGrp(GroupParam groupParam);
 
   @POST

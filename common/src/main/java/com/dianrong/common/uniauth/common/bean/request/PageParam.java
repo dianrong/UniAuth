@@ -27,6 +27,9 @@ public class PageParam extends Operator {
     return this;
   }
 
+  /**
+   * 获取页面大小.
+   */
   public Integer getPageSize() {
     if (pageSize != null && pageSize > AppConstants.MAX_PAGE_SIZE) {
       throw new RuntimeException(
@@ -35,6 +38,9 @@ public class PageParam extends Operator {
     return pageSize;
   }
 
+  /**
+   * 设置页面大小.
+   */
   public PageParam setPageSize(Integer pageSize) {
     if (pageSize != null && pageSize > AppConstants.MAX_PAGE_SIZE) {
       throw new RuntimeException(

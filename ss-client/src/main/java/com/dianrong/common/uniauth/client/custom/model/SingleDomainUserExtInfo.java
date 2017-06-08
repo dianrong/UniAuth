@@ -28,7 +28,7 @@ import org.springframework.security.web.access.regular.SSRegularPattern;
 import org.springframework.util.StringUtils;
 
 /**
- * 单个域的用户信息model
+ * 单个域的用户信息model.
  *
  * @author wanglin
  */
@@ -46,6 +46,9 @@ public final class SingleDomainUserExtInfo extends User {
   // current login user support regular pattern set
   private volatile Set<SSRegularPattern> regularPatterns;
 
+  /**
+   * 判断是否有对应的域.
+   */
   public Boolean hasDomain(String domainPerm) {
     if (permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
       return Boolean.FALSE;
@@ -59,6 +62,9 @@ public final class SingleDomainUserExtInfo extends User {
     }
   }
 
+  /**
+   * 判断是否有对应的权限.
+   */
   public Boolean hasPrivilege(String privilegePerm) {
     if (permMap == null || permMap.get(AppConstants.PERM_TYPE_PRIVILEGE) == null) {
       return Boolean.FALSE;
@@ -72,6 +78,9 @@ public final class SingleDomainUserExtInfo extends User {
     }
   }
 
+  /**
+   * 判断权限.
+   */
   public Boolean hasAnyPrivilege(String... privilegePerms) {
     if (privilegePerms == null || privilegePerms.length == 0) {
       return Boolean.FALSE;
@@ -86,6 +95,9 @@ public final class SingleDomainUserExtInfo extends User {
     }
   }
 
+  /**
+   * 判断权限.
+   */
   public Boolean hasAllPrivileges(String... privilegePerms) {
     if (privilegePerms == null || privilegePerms.length == 0) {
       return Boolean.TRUE;
@@ -100,7 +112,7 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   /**
-   * get current user's all permitted regular patterns set
+   * Get current user's all permitted regular patterns set.
    *
    * @return unmodifiable set , not null
    */
@@ -150,7 +162,7 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   /**
-   * used for pattern cache
+   * Used for pattern cache.
    *
    * @author wanglin
    */
@@ -204,6 +216,9 @@ public final class SingleDomainUserExtInfo extends User {
         authorities, id, userDto, domainDto, permMap, null);
   }
 
+  /**
+   * 构造函数.
+   */
   public SingleDomainUserExtInfo(String username, String password, boolean enabled,
       boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
       Collection<? extends GrantedAuthority> authorities, Long id, UserDto userDto,
@@ -224,6 +239,9 @@ public final class SingleDomainUserExtInfo extends User {
     return emptyAuthorityUserInfo(username, id, userDto, domainDto, null);
   }
 
+  /**
+   * 构造函数.
+   */
   public static SingleDomainUserExtInfo emptyAuthorityUserInfo(String username, Long id,
       UserDto userDto, DomainDto domainDto, IPAPermissionDto ipaPermissionDto) {
     Map<String, Set<String>> permMap = Maps.newHashMap();

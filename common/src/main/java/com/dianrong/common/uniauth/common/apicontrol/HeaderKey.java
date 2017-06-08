@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol;
 
 /**
- * 定义协议头
+ * 定义协议头.
  *
  * @author wanglin
  */

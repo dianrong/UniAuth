@@ -24,6 +24,9 @@ public class ApplicationStarter {
   @Value("${domainCode}")
   private String domainCode;
 
+  /**
+   * 配置DomainDefine.
+   */
   @Bean
   public DomainDefine domainDefine() {
     DomainDefine domainDefine = new DomainDefine();

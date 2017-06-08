@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.exp;
 
 /**
- * token is expired
+ * Token is expired.
  *
  * @author wanglin
  */

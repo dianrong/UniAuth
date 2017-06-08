@@ -6,7 +6,7 @@ import com.dianrong.common.uniauth.common.apicontrol.exp.TokenExpiredException;
 import java.io.Serializable;
 
 /**
- * token process interface
+ * Token process interface.
  *
  * @param <T> WillExpiredCallerCredential type
  * @author wanglin
@@ -14,7 +14,7 @@ import java.io.Serializable;
 public interface TokenProcessor<T extends Serializable> {
 
   /**
-   * generate token from WillExpiredCallerCredential
+   * Generate token from WillExpiredCallerCredential.
    *
    * @param credential credential
    * @return token
@@ -23,7 +23,7 @@ public interface TokenProcessor<T extends Serializable> {
   String sign(CallerCredential<T> credential) throws TokenCreateFailedException;
 
   /**
-   * verify token
+   * Verify token.
    *
    * @param token can not be null
    * @return WillExpiredCallerCredential

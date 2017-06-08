@@ -13,7 +13,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
- * 写个demo程序, 某些有需求想要自己调用uniauth-server API
+ * 写个demo程序, 某些有需求想要自己调用uniauth-server API.
  *
  * @author wanglin
  */
@@ -22,17 +22,22 @@ public class UniauthServerApiInvoke {
 
   public static final String URI = "http://10.8.12.218:8200/uniauth/ws/rs/user/searchusers";
 
+  /**
+   * Main方法.
+   */
   public static void main(String[] args) throws Exception {
     for (int i = 0; i < 1000000; i++) {
       request("dianrong", 300002193L);
     }
-//        System.out.println(request("dianrong", 300002193L));
   }
 
+  /**
+   * 请求.
+   */
   public static String request(String tenancyCode, Long userId) throws Exception {
     InputStream is = null;
     BufferedReader br = null;
-    StringBuilder sBuilder = null;
+    StringBuilder sbuilder = null;
     try {
       @SuppressWarnings({"resource"})
       HttpClient httpClient = new DefaultHttpClient();
@@ -48,9 +53,9 @@ public class UniauthServerApiInvoke {
         is = httpEntity.getContent();
         br = new BufferedReader(new InputStreamReader(is));
         String tempStr;
-        sBuilder = new StringBuilder();
+        sbuilder = new StringBuilder();
         while ((tempStr = br.readLine()) != null) {
-          sBuilder.append(tempStr);
+          sbuilder.append(tempStr);
         }
       }
     } finally {
@@ -61,6 +66,6 @@ public class UniauthServerApiInvoke {
         is.close();
       }
     }
-    return sBuilder == null ? "" : sBuilder.toString();
+    return sbuilder == null ? "" : sbuilder.toString();
   }
 }

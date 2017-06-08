@@ -19,6 +19,9 @@ public class MainController {
   @Value("#{uniauthConfig['domains.custom-casclient']}")
   private String customUrl;
 
+  /**
+   * 登陆Controller.
+   */
   @RequestMapping(value = "/login", method = RequestMethod.GET)
   public String getCommonPage(HttpServletRequest request) {
     String lt = request.getParameter("lt");

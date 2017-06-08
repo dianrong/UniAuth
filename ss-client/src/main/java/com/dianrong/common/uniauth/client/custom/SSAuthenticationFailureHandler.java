@@ -22,12 +22,12 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.util.StringUtils;
 
 /**
- * cas生成st(service ticket)跳转到业务系统，业务系统拿到st去cas做验证的时候验证失败的处理<br/>
+ * Cas生成st(service ticket)跳转到业务系统,业务系统拿到st去cas做验证的时候验证失败的处理.<br/>
  * 如：1.返回json告知失败;2.跳转到业务系统的认证失败页面；
  *
  * @author xiaofeng.chen@dianrong.com
  * @date 2016年12月15日
- * @see CasAuthenticationFilter#setAuthenticationFailureHandler(org.springframework.security.web.authentication.AuthenticationFailureHandler)
+ * @see CasAuthenticationFilter#setAuthenticationFailureHandler(AuthenticationFailureHandler)
  * CasAuthenticationFilter#setAuthenticationFailureHandler
  * @since jdk1.7
  */
@@ -47,6 +47,9 @@ public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
 
   private boolean retryUrlIsValid = false;
 
+  /**
+   * 设置重试的URL.
+   */
   public void setRetryUrl(String retryUrl) {
     if (StringUtils.hasText(retryUrl)) {
       this.retryUrl = retryUrl.trim();

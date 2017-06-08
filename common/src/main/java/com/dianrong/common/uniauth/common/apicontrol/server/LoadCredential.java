@@ -4,14 +4,14 @@ import com.dianrong.common.uniauth.common.apicontrol.exp.LoadCredentialFailedExc
 import java.io.Serializable;
 
 /**
- * Load WillExpiredCallerCredential
+ * Load WillExpiredCallerCredential.
  *
  * @author wanglin
  */
 public interface LoadCredential<T extends Serializable> {
 
   /**
-   * Load Credential by account and password
+   * Load Credential by account and password.
    *
    * @param account account
    * @param password password

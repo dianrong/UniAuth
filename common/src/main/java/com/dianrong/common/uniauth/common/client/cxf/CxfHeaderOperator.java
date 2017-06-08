@@ -6,7 +6,7 @@ import com.dianrong.common.uniauth.common.client.cxf.exp.InvalidHeaderKeyExcepti
 import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
- * 操作cxf的header
+ * 操作cxf的header.
  *
  * @author wanglin
  */

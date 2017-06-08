@@ -185,7 +185,7 @@ public class UserDto extends TenancyBaseDto {
   /**
    * <pre>
    * 根据eva的code获取对应的值
-   * 用户禁用该值或者未设置该值返回null
+   * 用户禁用该值或者未设置该值返回null.
    * </pre>
    */
   public String getEavByCode(String code) {
@@ -227,7 +227,7 @@ public class UserDto extends TenancyBaseDto {
   }
 
   /**
-   * 用于业务处理, 返回用户的账号(Account>Email > phone)
+   * 用于业务处理, 返回用户的账号(Account>Email > phone).
    *
    * @return 用户账号
    */

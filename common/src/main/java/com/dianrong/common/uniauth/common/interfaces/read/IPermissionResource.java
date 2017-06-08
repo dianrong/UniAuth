@@ -24,22 +24,22 @@ public interface IPermissionResource {
 
   @GET
   @Path("allpermtypecodes")
-    // scenario: get all permission type codes, dictionary data from perm_type table
+  // scenario: get all permission type codes, dictionary data from perm_type table
   Response<List<PermTypeDto>> getAllPermTypeCodes();
 
   @POST
   @Path("searchperms")
-    // scenario: search permissions
+  // scenario: search permissions
   Response<PageDto<PermissionDto>> searchPerm(PermissionQuery permissionQuery);
 
   @POST
   @Path("roles")
-    // scenario: retrieve all roles connected with a permission(including all other roles under a
-    // domain)
+  // scenario: retrieve all roles connected with a permission(including all other roles under a
+  // domain)
   Response<List<RoleDto>> getAllRolesToPerm(PermissionParam permissionParam);
 
   @POST
   @Path("urlrolemappings")
-    // scenario: populate url and role mappings for ss-client project
+  // scenario: populate url and role mappings for ss-client project
   Response<List<UrlRoleMappingDto>> getUrlRoleMapping(DomainParam domainParam);
 }

@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.client.cxf.exp;
 
 /**
- * 非法的header key使用异常
+ * 非法的header key使用异常.
  *
  * @author wanglin
  */

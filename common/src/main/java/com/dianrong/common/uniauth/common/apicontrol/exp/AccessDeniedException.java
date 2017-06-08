@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.exp;
 
 /**
- * 访问拒绝异常
+ * 访问拒绝异常.
  *
  * @author wanglin
  */

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface CustomizedRedirectFormat {
 
   /**
-   * 生成一个返回的对象
+   * 生成一个返回的对象.
    *
    * @param request HttpServletRequest
    * @param loginUrl 登陆的url

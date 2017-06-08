@@ -14,10 +14,10 @@ public interface IAttributeExtendRWResource extends IAttributeExtendResource {
 
   @POST
   @Path("add-AttributeExtend")
-  Response<AttributeExtendDto> addAttributeExtend(AttributeExtendParam AttributeExtendParam);
+  Response<AttributeExtendDto> addAttributeExtend(AttributeExtendParam attributeExtendParam);
 
   @POST
   @Path("update-AttributeExtend")
-  Response<Integer> updateAttributeExtend(AttributeExtendParam AttributeExtendParam);
+  Response<Integer> updateAttributeExtend(AttributeExtendParam attributeExtendParam);
 }
 

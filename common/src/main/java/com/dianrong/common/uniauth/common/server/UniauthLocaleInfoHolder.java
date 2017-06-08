@@ -20,9 +20,7 @@ public final class UniauthLocaleInfoHolder {
   };
 
   /**
-   * . set new locale info into holder
-   *
-   * @param newLocal if it is null, do nothing.
+   * Set new locale info into holder.
    */
   public static void setLocale(Locale newLocale) {
     if (newLocale == null) {

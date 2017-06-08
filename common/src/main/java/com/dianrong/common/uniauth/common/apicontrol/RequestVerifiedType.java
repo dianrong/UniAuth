@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.apicontrol;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
 /**
- * 指定请求api的控制类型
+ * 指定请求api的控制类型.
  *
  * @author wanglin
  */
@@ -17,12 +17,11 @@ public enum RequestVerifiedType {
   ;
 
   /**
-   * translate string to RequestVerifiedType
+   * Translate string to RequestVerifiedType.
    *
    * @param typeStr String
    * @return null if typeStr is null or empty string
    * @throws IllegalArgumentException if typeStr has length, but it's not a valid
-   * RequestVerifiedType String
    */
   public static RequestVerifiedType translateStrToReqType(String typeStr) {
     if (StringUtil.strIsNullOrEmpty(typeStr)) {

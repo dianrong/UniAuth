@@ -11,6 +11,9 @@ public class ExtractRequestUrl {
     return extractRequestUrl(request, true);
   }
 
+  /**
+   * 获取请求的request url.
+   */
   public static String extractRequestUrl(HttpServletRequest request, boolean includingQuery) {
     String url = request.getServletPath();
     String pathInfo = request.getPathInfo();

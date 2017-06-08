@@ -40,7 +40,7 @@ public class GroupParam extends Operator {
   private Boolean onlyNeedGrpInfo;
 
   /**
-   * 在返回的user信息列表中是否包含禁用的用户信息
+   * 在返回的user信息列表中是否包含禁用的用户信息.
    */
   private Boolean includeDisableUser;
 

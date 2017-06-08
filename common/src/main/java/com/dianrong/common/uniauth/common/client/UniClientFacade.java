@@ -60,6 +60,9 @@ public class UniClientFacade {
     init();
   }
 
+  /**
+   * 构造一个API调用客户端.
+   */
   public UniClientFacade(String uniWsEndpoint, String apiName, String apiKey, String account,
       String password) {
     this.uniWsEndpoint = uniWsEndpoint;
@@ -88,6 +91,9 @@ public class UniClientFacade {
   private IUserExtendValRWResource userExtendValRWResource;
   private IAttributeExtendRWResource attributeExtendRWResource;
 
+  /**
+   * 初始化.
+   */
   @PostConstruct
   public void init() {
     CheckSdkCfg.checkSdkCfg(uniWsEndpoint);

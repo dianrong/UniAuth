@@ -43,7 +43,8 @@ public class CasAuthenticationFilterConfigure implements Configure<CasAuthentica
   @PostConstruct
   private void init() {
     if (authenticationFailureHandler == null) {
-      SSAuthenticationFailureHandler ssAuthenticationFailureHandler = new SSAuthenticationFailureHandler();
+      SSAuthenticationFailureHandler ssAuthenticationFailureHandler =
+          new SSAuthenticationFailureHandler();
       ssAuthenticationFailureHandler.setDomainDefine(domainDefine);
       ssAuthenticationFailureHandler.setAllZkNodeMap(allZkNodeMap);
       this.authenticationFailureHandler = ssAuthenticationFailureHandler;

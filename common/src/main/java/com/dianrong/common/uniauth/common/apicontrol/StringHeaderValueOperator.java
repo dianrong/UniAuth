@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol;
 
 /**
- * 定义协议操作接口
+ * 定义协议操作接口.
  *
  * @author wanglin
  */

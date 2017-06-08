@@ -8,7 +8,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 /**
- * @author wenlongchen
+ * @author wenlongchen.
  * @since May 16, 2016
  */
 public interface IUserExtendValRWResource extends IUserExtendValResource {

@@ -52,11 +52,13 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
 
   private GatewayResolver gatewayStorage = new DefaultGatewayResolverImpl();
 
-  private AuthenticationRedirectStrategy authenticationRedirectStrategy = new DefaultAuthenticationRedirectStrategy();
+  private AuthenticationRedirectStrategy authenticationRedirectStrategy =
+      new DefaultAuthenticationRedirectStrategy();
 
   private UrlPatternMatcherStrategy ignoreUrlPatternMatcherStrategyClass = null;
 
-  private static final Map<String, Class<? extends UrlPatternMatcherStrategy>> PATTERN_MATCHER_TYPES = new HashMap<String, Class<? extends UrlPatternMatcherStrategy>>();
+  private static final Map<String, Class<? extends UrlPatternMatcherStrategy>> 
+      PATTERN_MATCHER_TYPES = new HashMap<String, Class<? extends UrlPatternMatcherStrategy>>();
 
   static {
     PATTERN_MATCHER_TYPES.put("CONTAINS", ContainsPatternUrlPatternMatcherStrategy.class);
@@ -83,16 +85,16 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
       final String ignoreUrlPatternType = getString(ConfigurationKeys.IGNORE_URL_PATTERN_TYPE);
 
       if (ignorePattern != null) {
-        final Class<? extends UrlPatternMatcherStrategy> ignoreUrlMatcherClass = PATTERN_MATCHER_TYPES
-            .get(ignoreUrlPatternType);
+        final Class<? extends UrlPatternMatcherStrategy> ignoreUrlMatcherClass =
+            PATTERN_MATCHER_TYPES.get(ignoreUrlPatternType);
         if (ignoreUrlMatcherClass != null) {
-          this.ignoreUrlPatternMatcherStrategyClass = ReflectUtils
-              .newInstance(ignoreUrlMatcherClass.getName());
+          this.ignoreUrlPatternMatcherStrategyClass =
+              ReflectUtils.newInstance(ignoreUrlMatcherClass.getName());
         } else {
           try {
             log.trace("Assuming {} is a qualified class name...", ignoreUrlPatternType);
-            this.ignoreUrlPatternMatcherStrategyClass = ReflectUtils
-                .newInstance(ignoreUrlPatternType);
+            this.ignoreUrlPatternMatcherStrategyClass =
+                ReflectUtils.newInstance(ignoreUrlPatternType);
           } catch (final IllegalArgumentException e) {
             log.error("Could not instantiate class [{}]", ignoreUrlPatternType, e);
           }
@@ -102,19 +104,19 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
         }
       }
 
-      final Class<? extends GatewayResolver> gatewayStorageClass = getClass(
-          ConfigurationKeys.GATEWAY_STORAGE_CLASS);
+      final Class<? extends GatewayResolver> gatewayStorageClass =
+          getClass(ConfigurationKeys.GATEWAY_STORAGE_CLASS);
 
       if (gatewayStorageClass != null) {
         setGatewayStorage(ReflectUtils.newInstance(gatewayStorageClass));
       }
 
-      final Class<? extends AuthenticationRedirectStrategy> authenticationRedirectStrategyClass = getClass(
-          ConfigurationKeys.AUTHENTICATION_REDIRECT_STRATEGY_CLASS);
+      final Class<? extends AuthenticationRedirectStrategy> authenticationRedirectStrategyClass =
+          getClass(ConfigurationKeys.AUTHENTICATION_REDIRECT_STRATEGY_CLASS);
 
       if (authenticationRedirectStrategyClass != null) {
-        this.authenticationRedirectStrategy = ReflectUtils
-            .newInstance(authenticationRedirectStrategyClass);
+        this.authenticationRedirectStrategy =
+            ReflectUtils.newInstance(authenticationRedirectStrategyClass);
       }
     }
   }
@@ -124,6 +126,9 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
     CommonUtils.assertNotNull(this.casServerLoginUrl, "casServerLoginUrl cannot be null.");
   }
 
+  /**
+   * 过滤请求.
+   */
   public final void doFilter(final ServletRequest servletRequest,
       final ServletResponse servletResponse, final FilterChain filterChain)
       throws IOException, ServletException {
@@ -168,10 +173,8 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
 
     log.debug("Constructed service url: {}", modifiedServiceUrl);
 
-    final String urlToRedirectTo =
-        CommonUtils
-            .constructRedirectUrl(this.casServerLoginUrl, getProtocol().getServiceParameterName(),
-                modifiedServiceUrl, this.renew, this.gateway);
+    final String urlToRedirectTo = CommonUtils.constructRedirectUrl(this.casServerLoginUrl,
+        getProtocol().getServiceParameterName(), modifiedServiceUrl, this.renew, this.gateway);
 
     log.debug("redirecting to \"{}\"", urlToRedirectTo);
     this.authenticationRedirectStrategy.redirect(request, response, urlToRedirectTo);

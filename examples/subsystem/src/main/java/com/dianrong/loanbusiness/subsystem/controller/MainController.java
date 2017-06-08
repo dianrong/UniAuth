@@ -19,6 +19,7 @@ public class MainController {
   @Autowired
   private MyService myService;
 
+  @SuppressWarnings("unused")
   @Autowired
   private UniClientFacade uniClientFacade;
 
@@ -26,6 +27,9 @@ public class MainController {
   private ZooKeeperConfig zooKeeperConfig;
 
 
+  /**
+   * 获取Common页面.
+   */
   @RequestMapping(value = "/common", method = RequestMethod.GET)
   public String getCommonPage() {
     log.debug("Received request to show common page");
@@ -33,6 +37,9 @@ public class MainController {
     return "commonpage";
   }
 
+  /**
+   * 获取Admin页面.
+   */
   @RequestMapping(value = "/admin", method = RequestMethod.GET)
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
   public String getAadminPage() {
@@ -50,7 +57,9 @@ public class MainController {
 
   }
 
-
+  /**
+   * 测试.
+   */
   @RequestMapping(value = "/test", method = RequestMethod.GET)
   public String test() {
     for (int i = 0; i < 100; i++) {

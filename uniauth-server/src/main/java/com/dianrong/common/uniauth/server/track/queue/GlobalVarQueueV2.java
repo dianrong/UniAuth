@@ -52,11 +52,11 @@ public class GlobalVarQueueV2 {
     this.auditList = new ArrayList<>(AppConstants.AUDIT_INSERT_LIST_CACHE_SIZE);
     // 启动定时任务
     Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(new Runnable() {
-                                                                 @Override
-                                                                 public void run() {
-                                                                   setUpDbInsertRunnable();
-                                                                 }
-                                                               }, AppConstants.AUDIT_INSERT_EVERY_SECOND, AppConstants.AUDIT_INSERT_EVERY_SECOND,
+      @Override
+      public void run() {
+        setUpDbInsertRunnable();
+      }
+    }, AppConstants.AUDIT_INSERT_EVERY_SECOND, AppConstants.AUDIT_INSERT_EVERY_SECOND,
         TimeUnit.SECONDS);
   }
 

@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * LoadUserSuccessCallBack的简单实现
+ * LoadUserSuccessCallBack的简单实现.
  *
  * @author wanglin
  */

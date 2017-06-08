@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.util.Assert;
 
 /**
- * 当前登陆用户的所有域下的权限集合的信息
+ * 当前登陆用户的所有域下的权限集合的信息.
  *
  * @author wanglin
  */
@@ -17,10 +17,11 @@ public final class AllDomainUserExtInfo implements Serializable {
 
   private static final long serialVersionUID = 8347558918889027136L;
   // Map<DomainCode, userExtInfo>
-  private ConcurrentHashMap<String, SingleDomainUserExtInfo> userExtInfoMap = new ConcurrentHashMap<>();
+  private ConcurrentHashMap<String, SingleDomainUserExtInfo> userExtInfoMap =
+      new ConcurrentHashMap<>();
 
   /**
-   * get userExtInfo by domainCode
+   * Get userExtInfo by domainCode.
    *
    * @param domainCode not null
    * @return UserDetails in domain[domainCode]
@@ -32,10 +33,8 @@ public final class AllDomainUserExtInfo implements Serializable {
   }
 
   /**
-   * get userExtInfo by domainCode
-   *
+   * Get userExtInfo by domainCode.
    * @param domainCode not null
-   * @return UserDetails in domain[domainCode]
    * @throws IllegalArgumentException if the domainCode or userDetails is null
    */
   public void addUserDetail(String domainCode, SingleDomainUserExtInfo userDetails) {
@@ -45,7 +44,7 @@ public final class AllDomainUserExtInfo implements Serializable {
   }
 
   /**
-   * get userExtInfo by domainCode
+   * Get userExtInfo by domainCode.
    *
    * @param domainCode not null
    * @return UserDetails in domain[domainCode]
@@ -58,6 +57,9 @@ public final class AllDomainUserExtInfo implements Serializable {
     return userExtInfoMap.putIfAbsent(domainCode, userDetails);
   }
 
+  /**
+   * 任意获取一个域的用户信息.
+   */
   public SingleDomainUserExtInfo getOneSingleDomainUserExtInfo() {
     for (String code : userExtInfoMap.keySet()) {
       return userExtInfoMap.get(code);
@@ -66,7 +68,7 @@ public final class AllDomainUserExtInfo implements Serializable {
   }
 
   /**
-   * get all domain code
+   * Get all domain code.
    *
    * @return Set not null
    */
@@ -80,7 +82,7 @@ public final class AllDomainUserExtInfo implements Serializable {
   }
 
   /**
-   * replace userExtInfo with the domain code
+   * Replace userExtInfo with the domain code.
    *
    * @param domainCode domainCode
    * @param userDetails SingleDomainUserExtInfo

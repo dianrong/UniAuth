@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.exp;
 
 /**
- * 身份认证失败异常
+ * 身份认证失败异常.
  *
  * @author wanglin
  */

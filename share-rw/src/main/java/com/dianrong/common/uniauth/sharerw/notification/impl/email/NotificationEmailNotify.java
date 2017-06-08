@@ -9,7 +9,7 @@ import com.dianrong.platform.notification.http.ResponseMsg;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 依赖点融的notification的一个实现
+ * 依赖点融的notification的一个实现.
  *
  * @author wanglin
  */
@@ -29,7 +29,7 @@ public class NotificationEmailNotify implements EmailNotification {
   private final EmailHttpClient emailClient;
 
   /**
-   * 构造一个NotificationEmailNotify
+   * 构造一个NotificationEmailNotify.
    *
    * @param notificationUserKey notification颁发的一个userKey，不能为空
    * @param notificationEndpoint notification服务器的地址, 不能为空
@@ -42,7 +42,7 @@ public class NotificationEmailNotify implements EmailNotification {
   }
 
   /**
-   * 自定义发送邮件邮箱
+   * 自定义发送邮件邮箱.
    *
    * @param fromEmail 发送邮箱
    */

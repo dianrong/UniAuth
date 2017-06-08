@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 
 /**
- * 组合InvalidSessionStrategy
+ * 组合InvalidSessionStrategy.
  *
  * @author wanglin
  */
@@ -19,6 +19,9 @@ public final class CompositeInvalidSessionStrategy implements InvalidSessionStra
 
   private List<InvalidSessionStrategy> invalidSessionStrategies;
 
+  /**
+   * 获取非法Session的处理策略实现.
+   */
   public List<InvalidSessionStrategy> getInvalidSessionStrategies() {
     if (invalidSessionStrategies == null) {
       return Lists.newArrayList();

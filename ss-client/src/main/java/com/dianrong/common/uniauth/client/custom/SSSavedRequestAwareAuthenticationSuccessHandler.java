@@ -36,6 +36,9 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends
 
   }
 
+  /**
+   * 初始化.
+   */
   @PostConstruct
   public void init() {
     if (StringUtils.hasText(domainDefine.getCustomizedLoginRedirecUrl())) {

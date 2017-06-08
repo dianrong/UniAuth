@@ -6,5 +6,5 @@ package com.dianrong.platform.open.cfg;
  */
 public interface CfgEventListener {
 
-    void onEvent(CfgEvent event, String key, String value);
+  void onEvent(CfgEvent event, String key, String value);
 }

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UniClientCommonService {
-
+  /**
+   * 获取当前的登陆用户信息.
+   */
   public UserExtInfo getLoginUserInfo() {
     UserExtInfo userExtInfo = (UserExtInfo) SecurityContextHolder.getContext().getAuthentication()
         .getPrincipal();

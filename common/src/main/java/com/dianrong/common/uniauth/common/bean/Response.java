@@ -13,12 +13,12 @@ import java.util.List;
 public class Response<T> implements Serializable {
 
   /**
-   * 返回结果常量-成功
+   * 返回结果常量-成功.
    */
   public static final String SUCCESS = "success";
 
   /**
-   * 返回结果常量-失败
+   * 返回结果常量-失败.
    */
   public static final String FAILURE = "error";
 
@@ -55,7 +55,7 @@ public class Response<T> implements Serializable {
   }
 
   /**
-   * 构造请求返回结果
+   * 构造请求返回结果.
    *
    * @param result 请求结果
    * @param info 错误信息列表

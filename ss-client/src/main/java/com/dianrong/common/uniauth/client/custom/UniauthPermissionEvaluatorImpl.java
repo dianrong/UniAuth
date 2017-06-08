@@ -10,12 +10,8 @@ import org.springframework.stereotype.Component;
 public class UniauthPermissionEvaluatorImpl implements UniauthPermissionEvaluator {
 
   public UniauthPermissionEvaluatorImpl() {
-
   }
 
-  /**
-   * @return false always
-   */
   @Override
   public boolean hasPermission(Authentication authentication, Object targetObject,
       Object permission) {
@@ -25,9 +21,6 @@ public class UniauthPermissionEvaluatorImpl implements UniauthPermissionEvaluato
     return false;
   }
 
-  /**
-   * @return false always
-   */
   @Override
   public boolean hasPermission(Authentication authentication, Serializable targetId,
       String targetType, Object permission) {

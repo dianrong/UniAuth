@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.exp;
 
 /**
- * create token failed exception
+ * Create token failed exception.
  *
  * @author wanglin
  */

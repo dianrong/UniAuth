@@ -18,8 +18,8 @@ public class UniauthI18NHolder implements ApplicationContextAware, InitializingB
 
 
   /**
-   * 获取国际化文案（此方法只适用于spring web环境中调用）,如果不在spring
-   * web环境中请自行取到Request，然后调用{@link #getProperties(HttpServletRequest, String)}
+   * 获取国际化文案（此方法只适用于spring web环境中调用）.<br>
+   * 如果不在spring web环境中请自行取到Request，然后调用{@link #getProperties(HttpServletRequest, String)}
    */
   public static String getProperties(String key) {
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
@@ -29,7 +29,7 @@ public class UniauthI18NHolder implements ApplicationContextAware, InitializingB
 
 
   /**
-   * 获取国际化文案
+   * 获取支持的国际化语言.
    */
   public static String getProperties(HttpServletRequest request, String key) {
     if (request == null) {

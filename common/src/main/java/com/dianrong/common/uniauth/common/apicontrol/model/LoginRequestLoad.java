@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import java.io.Serializable;
 
 /**
- * 登陆请求载体
+ * 登陆请求载体.
  *
  * @author wanglin
  */
@@ -16,6 +16,9 @@ public class LoginRequestLoad implements Serializable {
 
   private String password;
 
+  /**
+   * 设置登陆请求的账号,密码.
+   */
   public LoginRequestLoad(String account, String password) {
     super();
     Assert.notNull(account);

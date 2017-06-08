@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * @author wenlongchen
+ * @author wenlongchen.
  * @since May 16, 2016
  */
 @ApiModel("扩展属性")

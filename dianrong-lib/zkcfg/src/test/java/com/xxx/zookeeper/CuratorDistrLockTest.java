@@ -1,12 +1,12 @@
 package com.xxx.zookeeper;
 
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.retry.RetryNTimes;
-
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Curator framework's distributed lock test.
@@ -14,11 +14,14 @@ import java.util.concurrent.TimeUnit;
 public class CuratorDistrLockTest {
 
   /**
-   * Zookeeper info
+   * Zookeeper info.
    */
   private static final String ZK_ADDRESS = "10.18.19.64:12181";
   private static final String ZK_LOCK_PATH = "/temp/lock";
 
+  /**
+   * 主方法.
+   */
   public static void main(String[] args) throws InterruptedException {
     // 1.Connect to zk
     final CuratorFramework client = CuratorFrameworkFactory.newClient(
@@ -61,8 +64,10 @@ public class CuratorDistrLockTest {
       e.printStackTrace();
     } finally {
       try {
-        System.out.println(Thread.currentThread().getName() + " ======== " + Arrays.toString(lock.getParticipantNodes().toArray()));
-        System.out.println(Thread.currentThread().getName() + " isAcquiredInThisProcess " + lock.isAcquiredInThisProcess());
+        System.out.println(Thread.currentThread().getName() 
+            + " ======== " + Arrays.toString(lock.getParticipantNodes().toArray()));
+        System.out.println(Thread.currentThread().getName() 
+            + " isAcquiredInThisProcess " + lock.isAcquiredInThisProcess());
         lock.release();
       } catch (Exception e) {
         e.printStackTrace();

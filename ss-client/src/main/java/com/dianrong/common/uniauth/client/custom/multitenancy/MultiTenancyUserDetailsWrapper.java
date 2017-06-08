@@ -28,6 +28,9 @@ public class MultiTenancyUserDetailsWrapper implements
     Assert.notNull(this.userDetailsService, "UserDetailsService must be set");
   }
 
+  /**
+   * 载入用户的详细信息.
+   */
   public UserDetails loadUserDetails(CasAssertionAuthenticationToken token)
       throws UsernameNotFoundException {
     Assertion assertion = token.getAssertion();
@@ -41,7 +44,7 @@ public class MultiTenancyUserDetailsWrapper implements
     throw new InvalidParameterException("loadUserDetails new userName and tenancy id");
   }
 
-  public void setUserDetailsService(MultiTenancyUserDetailsService aUserDetailsService) {
-    this.userDetailsService = aUserDetailsService;
+  public void setUserDetailsService(MultiTenancyUserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
   }
 }

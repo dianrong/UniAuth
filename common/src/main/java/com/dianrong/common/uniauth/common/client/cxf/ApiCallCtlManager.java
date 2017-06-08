@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 
 /**
- * 管理api权限访问客户端的状态信息
+ * 管理API权限访问客户端的状态信息.
  *
  * @author wanglin
  */
@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 public final class ApiCallCtlManager {
 
   /**
-   * 专门用于记录Uniauth的API访问超时的异常,方便统计
+   * 专门用于记录Uniauth的API访问超时的异常,方便统计.
    */
   private static final Logger LOGGER = org.slf4j.LoggerFactory
       .getLogger(AppConstants.UNIAUTH_API_CALL_TIME_OUT_LOGGER);
@@ -53,24 +53,24 @@ public final class ApiCallCtlManager {
       .newSingleThreadScheduledExecutor();
 
   /**
-   * singleton
+   * Singleton.
    */
   private static final ApiCallCtlManager instance = new ApiCallCtlManager();
 
   /**
-   * @return singleton instance
+   * 获取ApiCallCtlManager实例.
    */
   public static ApiCallCtlManager getInstance() {
     return instance;
   }
 
   /**
-   * all invoke handlers
+   * All invoke handlers.
    */
   private Map<ClientStatus, InvokeHandlerDelegate> handlers = Maps.newConcurrentMap();
 
   /**
-   * default PtHeaderOperator
+   * PtHeaderOperator.
    */
   private StringHeaderValueOperator headerOperator;
 
@@ -79,7 +79,7 @@ public final class ApiCallCtlManager {
   private PtHeaderOperator<LoginResponseLoad> loginResponseHeaderOperator;
 
   /**
-   * login lock object
+   * Login lock object.
    */
   private final Object loginMutex = new Object();
 
@@ -114,12 +114,12 @@ public final class ApiCallCtlManager {
   private volatile ClientStatus status = ClientStatus.ANONYMOUS;
 
   /**
-   * 登陆成功之后换取的token
+   * 登陆成功之后换取的token.
    */
   private volatile String token;
 
   /**
-   * 当前的的token过期的时间
+   * 当前的的token过期的时间.
    */
   private long credentialExpireTime;
 
@@ -167,7 +167,9 @@ public final class ApiCallCtlManager {
 
     public abstract void doBeforeInvoke(Object target, Object proxy, Method method, Object[] args);
 
-    // 实际处理方法
+    /**
+     * 请求调用完成之后.
+     */
     public Object doAfterInvoke(Object target, Object proxy, Method method, Object[] args,
         Object result, Throwable cause) throws Throwable {
       ResponseVerifiedType resultType = null;
@@ -189,8 +191,7 @@ public final class ApiCallCtlManager {
     }
 
     /**
-     * 处理SocketTimeOutException
-     *
+     * 处理SocketTimeOutException.
      * @param cause 异常信息
      * @throws ApiCallSocketTimeOutException 如果异常是SocketTimeoutException
      */
@@ -210,7 +211,7 @@ public final class ApiCallCtlManager {
   }
 
   /**
-   * private constructor
+   * Private constructor.
    */
   private ApiCallCtlManager() {
     super();
@@ -221,8 +222,7 @@ public final class ApiCallCtlManager {
   }
 
   /**
-   * set PtHeaderOperator
-   *
+   * Set PtHeaderOperator.
    * @param headerOperator can not be null
    */
   public ApiCallCtlManager setHeaderOperator(StringHeaderValueOperator headerOperator) {
@@ -234,7 +234,7 @@ public final class ApiCallCtlManager {
   }
 
   /**
-   * create all invoke handlers
+   * Create all invoke handlers.
    */
   private void init() {
     // ANONYMOUS
@@ -346,8 +346,7 @@ public final class ApiCallCtlManager {
 
 
   /**
-   * Set account and password
-   *
+   * Set account and password.
    * @param account can not be null
    * @param password can not be null
    * @return ApiCallCtlManager
@@ -365,7 +364,9 @@ public final class ApiCallCtlManager {
     }
   }
 
-  // login success handle
+  /**
+   * 登陆成功之后的处理Handler.
+   */
   public boolean loginSuccessHandle(final LoginResponseLoad response) {
     if (response == null) {
       log.error("login success, but the reponse is invalid");
@@ -383,7 +384,7 @@ public final class ApiCallCtlManager {
   }
 
   /**
-   * 生成登陆的实体对象
+   * 生成登陆的实体对象.
    *
    * @return 登陆的实体对象
    */
@@ -392,7 +393,7 @@ public final class ApiCallCtlManager {
   }
 
   /**
-   * Core method, decide witch Invoke handler to return
+   * Core method, decide witch invoke handler to return.
    *
    * @return Invoke handler not null
    */
@@ -436,7 +437,9 @@ public final class ApiCallCtlManager {
     return getInvoker();
   }
 
-  // set status
+  /**
+   * 设置当前客户端的状态.
+   */
   public boolean setStatus(ClientStatus expect, ClientStatus update) {
     Assert.notNull(expect);
     Assert.notNull(update);

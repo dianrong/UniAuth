@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
 
 /**
- * configure new LogoutFilter
+ * Configure new LogoutFilter.
  *
  * @author wanglin
  */

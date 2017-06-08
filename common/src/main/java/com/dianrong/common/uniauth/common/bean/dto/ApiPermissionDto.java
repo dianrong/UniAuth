@@ -48,6 +48,9 @@ public class ApiPermissionDto implements Serializable {
     return method;
   }
 
+  /**
+   * 设置权限访问的方法,比如GET,POST等.
+   */
   public ApiPermissionDto setMethod(String method) {
     String methodUpperCase = method == null ? "" : method.toUpperCase();
     this.method = UriMethod.valueOf(methodUpperCase);
@@ -64,7 +67,7 @@ public class ApiPermissionDto implements Serializable {
   }
 
   /**
-   * uri 对应的方法类型
+   * Uri 对应的方法类型.
    *
    * @author wanglin
    */

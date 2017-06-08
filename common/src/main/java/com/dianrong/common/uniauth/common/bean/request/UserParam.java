@@ -35,7 +35,7 @@ public class UserParam extends Operator {
   private List<Integer> includeRoleIds;
 
   /**
-   * 是否忽略密码策略检查
+   * 是否忽略密码策略检查.
    */
   private Boolean ignorePwdStrategyCheck;
 

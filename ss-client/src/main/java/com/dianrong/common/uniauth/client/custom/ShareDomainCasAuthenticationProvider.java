@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
 /**
- * 用于处理多域共享信息的情况
+ * 用于处理多域共享信息的情况.
  *
  * @author wanglin
  */
@@ -44,6 +44,9 @@ public final class ShareDomainCasAuthenticationProvider extends CasAuthenticatio
     return obj instanceof CasAuthenticationToken;
   }
 
+  /**
+   * grantAuthoritesMapperProcess.
+   */
   public void grantAuthoritesMapperProcess(UserDetails userDetails) {
     if (!(userDetails instanceof UserExtInfo)) {
       return;
@@ -52,7 +55,9 @@ public final class ShareDomainCasAuthenticationProvider extends CasAuthenticatio
         .getField(this, "authoritiesMapper");
     if (authoritiesMapper == null) {
       log.warn(
-          "please check AuthenticationProvider implementation, whether there is a fied type of  GrantedAuthoritiesMapper not name of authoritiesMapper. GrantedAuthoritiesMapper is not effective");
+          "please check AuthenticationProvider implementation, whether there is a fied type of  "
+          + "GrantedAuthoritiesMapper not name of authoritiesMapper. "
+          + "GrantedAuthoritiesMapper is not effective");
       return;
     }
 
@@ -76,11 +81,11 @@ public final class ShareDomainCasAuthenticationProvider extends CasAuthenticatio
   private SingleDomainUserExtInfo replaceAuthorities(final SingleDomainUserExtInfo orginalOne,
       final Collection<? extends GrantedAuthority> newAuthorities) {
     Assert.notNull(orginalOne);
-    Collection<? extends GrantedAuthority> _newAuthorities =
+    Collection<? extends GrantedAuthority> tempNewAuthorities =
         newAuthorities == null ? new ArrayList<GrantedAuthority>() : newAuthorities;
     return new SingleDomainUserExtInfo(orginalOne.getUsername(), orginalOne.getPassword(),
         orginalOne.isEnabled(), orginalOne.isAccountNonExpired(),
-        orginalOne.isCredentialsNonExpired(), orginalOne.isAccountNonLocked(), _newAuthorities,
+        orginalOne.isCredentialsNonExpired(), orginalOne.isAccountNonLocked(), tempNewAuthorities,
         orginalOne.getId(), orginalOne.getUserDto(), orginalOne.getDomainDto(),
         orginalOne.getPermMap(), orginalOne.getPermDtoMap());
   }

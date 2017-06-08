@@ -25,7 +25,9 @@ public final class ClientFilterSingleton {
     return instance;
   }
 
-  // 只能被调用一次
+  /**
+   * 初始化HeaderProducer的接口.
+   */
   public static void propSetInvoke(List<HeaderProducer> producers) {
     if (propSetOnce.compareAndSet(false, true)) {
       if (producers != null) {
@@ -80,11 +82,11 @@ public final class ClientFilterSingleton {
           return -1;
         }
       });
-      Map<String, HeaderProducer> _map = new HashMap<String, HeaderProducer>();
+      Map<String, HeaderProducer> map = new HashMap<String, HeaderProducer>();
       for (HeaderProducer hp : producers) {
-        _map.put(hp.key(), hp);
+        map.put(hp.key(), hp);
       }
-      this.producers = new HashSet<HeaderProducer>(_map.values());
+      this.producers = new HashSet<HeaderProducer>(map.values());
     }
   }
 }

@@ -10,7 +10,7 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 
 /**
- * 记录请求的上下文信息
+ * 记录请求的上下文信息.
  *
  * @author wanglin
  */

@@ -15,15 +15,11 @@ import java.util.Map;
  */
 public final class ApiControlHeaderHolder {
 
-  /**
-   * private constructor
-   */
   private ApiControlHeaderHolder() {
     super();
   }
 
-  // header holder
-  public static abstract class HeaderHolder {
+  public abstract static class HeaderHolder {
 
     private ThreadLocal<Map<String, String>> holder = new ThreadLocal<Map<String, String>>() {
       public Map<String, String> initialValue() {
@@ -34,8 +30,7 @@ public final class ApiControlHeaderHolder {
     };
 
     /**
-     * @param key can not be null
-     * @return current val
+     * 获取当前线程中holder中的值.
      */
     public String get(String key) {
       Assert.notNull(key);
@@ -46,10 +41,7 @@ public final class ApiControlHeaderHolder {
     }
 
     /**
-     * Set key and value
-     *
-     * @param key can not be null
-     * @param val value
+     * 设置当前线程中holder中的值.
      */
     public void set(String key, String val) {
       Assert.notNull(key);
@@ -64,24 +56,21 @@ public final class ApiControlHeaderHolder {
     }
 
     /**
-     * get all header
-     *
-     * @return all header
+     * Get all headers.
      */
     public Map<String, String> getAllHeader() {
       return holder.get();
     }
 
     /**
-     * Remove holder value
+     * Remove holder value.
      */
     public void remove() {
       holder.get().clear();
     }
 
     /**
-     * return all header key
-     *
+     * Return all header key.
      * @return can not be null, a empty list at least
      */
     public abstract List<String> getAllKeys();
@@ -109,7 +98,7 @@ public final class ApiControlHeaderHolder {
   };
 
   /**
-   * get all request header holders
+   * Get all request header holders.
    *
    * @return header holder, not null
    */
@@ -118,7 +107,7 @@ public final class ApiControlHeaderHolder {
   }
 
   /**
-   * get all response header holders
+   * Get all response header holders.
    *
    * @return header holder, not null
    */

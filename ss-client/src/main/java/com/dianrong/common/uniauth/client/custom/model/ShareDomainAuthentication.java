@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
 /**
- * 用于共享域的实现
+ * 用于共享域的实现.
  *
  * @author wanglin
  */
@@ -19,6 +19,9 @@ public class ShareDomainAuthentication extends CasAuthenticationToken {
 
   private UserDetails userDetails;
 
+  /**
+   * 构造函数.
+   */
   public ShareDomainAuthentication(String key, Object principal, Object credentials,
       Collection<? extends GrantedAuthority> authorities, UserDetails userDetails,
       Assertion assertion) {

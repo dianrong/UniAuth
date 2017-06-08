@@ -51,14 +51,17 @@ public class ZkNodeUtils {
         + AppConstants.ZK_DOMAIN_LOGIN_PAGE;
   }
 
-  public static boolean IsShowInHomePage(final String nodeName, Map<String, String> infoes) {
+  /**
+   * 判断节点是否是用于处理域在登陆首页显示的控制参数.
+   */
+  public static boolean isShowInHomePage(final String nodeName, Map<String, String> infoes) {
     String key = AppConstants.ZK_DOMAIN_PREFIX + nodeName + AppConstants.ZK_CFG_SPLIT
         + AppConstants.ZK_DOMAIN_SHOW_IN_HOME_PAGE;
     return DEFAULT_TRUE.equalsIgnoreCase(infoes.get(key));
   }
 
   /**
-   * 获取业务系统在service ticket认证失败时配置跳转url的节点名称
+   * 获取业务系统在service ticket认证失败时配置跳转url的节点名称.
    *
    * @param domainName 域编号
    */

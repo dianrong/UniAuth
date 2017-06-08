@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.exp;
 
 /**
- * uniauth common exception
+ * Uniauth common exception.
  *
  * @author wanglin
  */
@@ -10,14 +10,14 @@ public class UniauthCommonException extends RuntimeException {
   private static final long serialVersionUID = -6995860431603669132L;
 
   /**
-   * define a empty method
+   * Define a empty method.
    */
   public UniauthCommonException() {
     super();
   }
 
   /**
-   * define method for parameter msg
+   * Define method for parameter msg.
    *
    * @param msg msg
    */
@@ -26,7 +26,7 @@ public class UniauthCommonException extends RuntimeException {
   }
 
   /**
-   * define method for parameter msg
+   * Define method for parameter msg.
    *
    * @param msg msg
    */

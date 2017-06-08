@@ -24,7 +24,9 @@ public final class ServerFilterSingletion {
     return instance;
   }
 
-  // 只能被调用一次
+  /**
+   * 对外暴露的初始化HeaderConsumer的接口.
+   */
   public static void propSetInvoke(List<HeaderConsumer> consumers) {
     if (propSetOnce.compareAndSet(false, true)) {
       if (consumers != null) {
@@ -79,11 +81,12 @@ public final class ServerFilterSingletion {
           return -1;
         }
       });
-      LinkedHashMap<String, HeaderConsumer> _consumers = new LinkedHashMap<String, HeaderConsumer>();
+      LinkedHashMap<String, HeaderConsumer> tempConsumers =
+          new LinkedHashMap<String, HeaderConsumer>();
       for (HeaderConsumer hc : consumers) {
-        _consumers.put(hc.key(), hc);
+        tempConsumers.put(hc.key(), hc);
       }
-      this.consumers = _consumers;
+      this.consumers = tempConsumers;
     }
   }
 }

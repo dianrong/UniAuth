@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReflectionUtils {
 
-  private ReflectionUtils() {
-  }
+  private ReflectionUtils() {}
 
   /**
    * 反射获取对象的属性值.
@@ -114,6 +113,9 @@ public class ReflectionUtils {
     }
   }
 
+  /**
+   * 给类设置静态属性值.
+   */
   public static void setStaticField(String clazzName, String fieldName, Object fieldValue) {
     try {
       Class<?> clazz = Class.forName(clazzName);
@@ -125,6 +127,9 @@ public class ReflectionUtils {
     }
   }
 
+  /**
+   * 给类设置静态属性值.
+   */
   public static Object getStaticField(String clazzName, String fieldName) {
     Object object = null;
     try {
@@ -138,21 +143,24 @@ public class ReflectionUtils {
     return object;
   }
 
+  /**
+   * 获取操作人用户id.
+   */
   public static Long getOpUserId() {
     Long opUserId = null;
     // SecurityContextHolder.getContext().getAuthentication().getPrincipal()
     try {
-      Class<?> clazz = Class
-          .forName("org.springframework.security.core.context.SecurityContextHolder");
+      Class<?> clazz =
+          Class.forName("org.springframework.security.core.context.SecurityContextHolder");
       if (clazz != null) {
-        Object securityContext = ReflectionUtils
-            .invokeStaticMethodWithoutParam(clazz, "getContext");
+        Object securityContext =
+            ReflectionUtils.invokeStaticMethodWithoutParam(clazz, "getContext");
         if (securityContext != null) {
-          Object authentication = ReflectionUtils
-              .invokeMethodWithoutParam(securityContext, "getAuthentication");
+          Object authentication =
+              ReflectionUtils.invokeMethodWithoutParam(securityContext, "getAuthentication");
           if (authentication != null) {
-            Object principal = ReflectionUtils
-                .invokeMethodWithoutParam(authentication, "getPrincipal");
+            Object principal =
+                ReflectionUtils.invokeMethodWithoutParam(authentication, "getPrincipal");
             if (principal != null) {
               opUserId = (Long) ReflectionUtils.invokeMethodWithoutParam(principal, "getId");
             }
@@ -161,11 +169,15 @@ public class ReflectionUtils {
       }
     } catch (ClassNotFoundException e) {
       log.debug(
-          "class <org.springframework.security.core.context.SecurityContextHolder> not found, maybe getOpUserId() called on the uniauth-server side?");
+          "class <org.springframework.security.core.context.SecurityContextHolder> not found, "
+          + "maybe getOpUserId() called on the uniauth-server side?");
     }
     return opUserId;
   }
 
+  /**
+   * 获取超类的泛型类型.
+   */
   public static Class<?> getSuperClassGenricType(Class<?> clazz, int index) {
     Type genType = clazz.getGenericSuperclass();// 得到泛型父类
     // 如果没有实现ParameterizedType接口，即不支持泛型，直接返回Object.class
@@ -185,8 +197,7 @@ public class ReflectionUtils {
   }
 
   /**
-   * 通过反射,获得指定类的父类的第一个泛型参数的实际类型. 如DaoSupport<Buyer>
-   *
+   * 通过反射,获得指定类的父类的第一个泛型参数的实际类型.
    * @param clazz clazz 需要反射的类,该类必须继承泛型父类
    * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，所以直接返回 <code>Object.class</code>
    */

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
- * create configure bean
+ * Create configure bean.
  *
  * @author wanglin
  */
@@ -28,7 +28,9 @@ public class ConfigureBeanCreator implements ApplicationContextAware {
   }
 
   /**
-   * create bean with the class cls @param cls the class @return new bean @throws
+   * Create bean with the class cls .
+   * @param cls the class 
+   * @return new bean 
    */
   public <T> T create(Class<T> cls) {
     Assert.notNull(cls, "cls can not be null");
@@ -39,10 +41,10 @@ public class ConfigureBeanCreator implements ApplicationContextAware {
       throw new NoSuchConfigureException("no configure for class " + cls);
     }
     for (int i = 0; i < names.length; i++) {
-      Configure<?> _configure = (Configure<?>) applicationContext.getBean(names[i]);
-      if (_configure.isSupport(cls)) {
+      Configure<?> tempConfigure = (Configure<?>) applicationContext.getBean(names[i]);
+      if (tempConfigure.isSupport(cls)) {
         @SuppressWarnings("unchecked")
-        Configure<T> configure = (Configure<T>) _configure;
+        Configure<T> configure = (Configure<T>) tempConfigure;
         return configure.create();
       }
     }

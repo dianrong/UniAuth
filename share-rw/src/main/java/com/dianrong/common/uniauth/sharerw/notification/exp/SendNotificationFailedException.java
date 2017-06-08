@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.sharerw.notification.exp;
 
 /**
- * 发送消息失败
+ * 发送消息失败.
  *
  * @author wanglin
  */

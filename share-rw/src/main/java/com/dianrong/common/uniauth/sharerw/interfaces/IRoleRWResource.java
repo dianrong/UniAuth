@@ -12,12 +12,12 @@ public interface IRoleRWResource extends IRoleResource {
 
   @POST
   @Path("addnewrole")
-    // scenario: add new role
+  // scenario: add new role
   Response<RoleDto> addNewRole(RoleParam roleParam);
 
   @POST
   @Path("updaterole")
-    // scenario: update role
+  // scenario: update role
   Response<Void> updateRole(RoleParam roleParam);
 
   @POST
@@ -26,7 +26,7 @@ public interface IRoleRWResource extends IRoleResource {
 
   @POST
   @Path("savepermstorole")
-    // scenario: save permissions to a role
+  // scenario: save permissions to a role
   Response<Void> savePermsToRole(RoleParam roleParam);
 
   @POST

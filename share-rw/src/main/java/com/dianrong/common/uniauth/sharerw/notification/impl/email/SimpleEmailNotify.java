@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 简单的邮件发送实现
+ * 简单的邮件发送实现.
  *
  * @author wanglin
  */
@@ -39,12 +39,18 @@ public class SimpleEmailNotify implements EmailNotification {
   // 邮件发送人
   private String fromEmail = DEFAULT_FROM_EMAIL;
 
+  /**
+   * 设置邮件服务器的Host.
+   */
   public void setSmtpHost(String smtpHost) {
     Assert.notNull(smtpHost);
     log.info("set email server host : " + smtpHost);
     this.smtpHost = smtpHost;
   }
 
+  /**
+   * 设置邮件服务器的Port.
+   */
   public void setSmtpPort(int smtpPort) {
     if (smtpPort <= 0 || smtpPort >= 65535) {
       throw new IllegalArgumentException("invalid smtpPort set: " + smtpPort);
@@ -53,6 +59,9 @@ public class SimpleEmailNotify implements EmailNotification {
     this.smtpPort = smtpPort;
   }
 
+  /**
+   * 设置发件人邮箱.
+   */
   public void setFromEmail(String fromEmail) {
     Assert.notNull(fromEmail);
     log.info("set email send from email : " + fromEmail);

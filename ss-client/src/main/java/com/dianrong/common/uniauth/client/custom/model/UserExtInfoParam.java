@@ -11,7 +11,7 @@ import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
- * 用于进行UserExtInfo构造的传参model
+ * 用于进行UserExtInfo构造的传参model.
  *
  * @author wanglin
  */

@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.client.cxf.exp;
 
 /**
- * 调用API的超时异常
+ * 调用API的超时异常.
  *
  * @author wanglin
  */

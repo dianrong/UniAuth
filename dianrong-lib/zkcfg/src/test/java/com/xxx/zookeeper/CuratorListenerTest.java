@@ -12,8 +12,10 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
  */
 public class CuratorListenerTest {
 
+  /**
+   * 主方法.
+   */
   public static void main(String[] args) throws Exception {
-
     CuratorFramework curatorFramework = null;
     try {
       RetryPolicy retryPolicy = new ExponentialBackoffRetry(6000, 10);

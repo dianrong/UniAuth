@@ -5,7 +5,6 @@ import java.io.Serializable;
 import org.springframework.security.core.Authentication;
 
 public class SSClientPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
-
   public SSClientPermissionEvaluator() {
   }
 

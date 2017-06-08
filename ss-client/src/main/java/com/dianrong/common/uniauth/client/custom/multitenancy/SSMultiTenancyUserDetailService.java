@@ -56,17 +56,17 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
   private UserInfoCallBack userInfoCallBack;
 
   /**
-   * spring的applicationContext引用
+   * Spring的applicationContext引用.
    */
   private ApplicationContext applicationContext;
 
   /**
-   * load用户信息失败的回调函数
+   * Load用户信息失败的回调函数.
    */
   private LoadUserFailedCallBack loadUserFailedCallBack;
 
   /**
-   * load用户信息成功的回调函数
+   * Load用户信息成功的回调函数.
    */
   private LoadUserSuccessCallBack loadUserSuccessCallBack;
 
@@ -177,10 +177,12 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
             userExtInfo = customeDefineUserExtInfo;
           } catch (Exception e) {
             log.error(
-                "Prepare to use ss-client's UserExtInfo, not the subsystem's customized one, possible reasons:\n (1) "
+                "Prepare to use ss-client's UserExtInfo, not "
+                + "the subsystem's customized one, possible reasons:\n (1) "
                     + userInfoClass + " not found. \n (2) "
                     + userInfoClass
-                    + " is not a instance of UserExtInfo.\n (3) userInfoCallBack.fill(userExtInfo) error.",
+                    + " is not a instance of UserExtInfo.\n (3) "
+                    + "userInfoCallBack.fill(userExtInfo) error.",
                 e);
             userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos, ipaPermissionDto);
           }
@@ -199,7 +201,7 @@ public class SSMultiTenancyUserDetailService implements MultiTenancyUserDetailsS
   }
 
   /**
-   * 加载loadUserFailedCallBack和loadUserSuccessCallBack
+   * 加载loadUserFailedCallBack和loadUserSuccessCallBack.
    */
   @Override
   public void afterPropertiesSet() throws Exception {

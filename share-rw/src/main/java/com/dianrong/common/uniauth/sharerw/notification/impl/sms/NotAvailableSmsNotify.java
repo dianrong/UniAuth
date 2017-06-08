@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
 import com.dianrong.common.uniauth.sharerw.notification.exp.NotificationNotAvailableException;
 
 /**
- * Uniauth提供的一个默认短信发送实现
+ * Uniauth提供的一个默认短信发送实现.
  *
  * @author wanglin
  */

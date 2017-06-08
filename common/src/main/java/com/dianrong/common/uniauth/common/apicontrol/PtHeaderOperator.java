@@ -1,14 +1,14 @@
 package com.dianrong.common.uniauth.common.apicontrol;
 
 /**
- * 定义协议操作接口
+ * 定义协议操作接口.
  *
  * @author wanglin
  */
 public interface PtHeaderOperator<T> {
 
   /**
-   * get value from header
+   * Get value from header.
    *
    * @param key key
    * @return value
@@ -16,7 +16,7 @@ public interface PtHeaderOperator<T> {
   T getHeader(String key);
 
   /**
-   * set header: key - > value
+   * Set header: key - > value.
    *
    * @param key key
    * @param value value

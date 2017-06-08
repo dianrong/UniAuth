@@ -5,7 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- * 提供便利的方式供业务系统获取当前登陆的用户
+ * 提供便利的方式供业务系统获取当前登陆的用户.
  *
  * @author wanglin
  */
