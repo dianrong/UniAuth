@@ -9,14 +9,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * . 用于缓存cross filter的缓存model
+ * 用于缓存Cross filter的缓存model.
  *
  * @author wanglin
  */
 public final class CasCrossFilterCacheModel implements Serializable {
 
-  /**
-   */
   private static final long serialVersionUID = -5705975046679932692L;
 
   /**
@@ -92,9 +90,6 @@ public final class CasCrossFilterCacheModel implements Serializable {
     this.orginRegular = Collections.unmodifiableSet(tempSet);
   }
 
-  /**
-   * @return the orginRegular
-   */
   public Set<String> getOrginRegular() {
     return orginRegular;
   }

@@ -41,7 +41,8 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
   @Override
   protected HandlerResult authenticateUsernamePasswordInternal(
       UsernamePasswordCredential credential) throws GeneralSecurityException, PreventedException {
-    CasUsernamePasswordCredential casUserNameCredential = (CasUsernamePasswordCredential) credential;
+    CasUsernamePasswordCredential casUserNameCredential = 
+        (CasUsernamePasswordCredential) credential;
 
     String userName = StringUtil.trimCompatibleNull(casUserNameCredential.getUsername());
     String password = casUserNameCredential.getPassword();

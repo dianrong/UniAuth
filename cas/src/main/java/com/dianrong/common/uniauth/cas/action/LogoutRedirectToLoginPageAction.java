@@ -7,14 +7,14 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * redirect to login page
+ * Redirect to login page.
  *
  * @author wanglin
  */
 public final class LogoutRedirectToLoginPageAction extends AbstractAction {
 
-  public final static String REDIRECT_URL_KEY = "logoutRedirectUrl";
-  public final static String LOGIN_PAGE_URL = "/login";
+  public static final String REDIRECT_URL_KEY = "logoutRedirectUrl";
+  public static final String LOGIN_PAGE_URL = "/login";
 
   private final LogoutAction originalAction;
 

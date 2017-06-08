@@ -31,7 +31,7 @@ public class TenancyController {
   private MessageSource messageSource;
 
   /**
-   * 获取默认的tenancy的信息
+   * 获取默认的tenancy的信息.
    *
    * @throws IOException response write error
    */
@@ -43,7 +43,7 @@ public class TenancyController {
   }
 
   /**
-   * 校验tenancy_code是否有效
+   * 校验tenancyCode是否有效.
    *
    * @throws IOException response write error
    */

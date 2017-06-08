@@ -66,7 +66,7 @@ public class InitPasswordController {
   }
 
   /**
-   * 处理密码初始化
+   * 处理密码初始化.
    *
    * @param request HttpServletRequest
    * @param response HttpServletResponse
@@ -77,51 +77,51 @@ public class InitPasswordController {
       throws IOException {
     try {
       // 验证验证码
-      String req_verifycode = WebScopeUtil.getParamFromRequest(request, "verify_code");
-      if (StringUtil.strIsNullOrEmpty(req_verifycode)) {
-        responseVal(response, false, UniBundleUtil
-            .getMsg(messageSource, "inipassword.controller.initpassword.captcha.empty"));
+      String reqVerifycode = WebScopeUtil.getParamFromRequest(request, "verify_code");
+      if (StringUtil.strIsNullOrEmpty(reqVerifycode)) {
+        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+            "inipassword.controller.initpassword.captcha.empty"));
         return;
       }
       // 判断验证码
 
       String captcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
-      if (!req_verifycode.equals(captcha)) {
+      if (!reqVerifycode.equals(captcha)) {
         // 验证码不对
-        responseVal(response, false, UniBundleUtil
-            .getMsg(messageSource, "inipassword.controller.initpassword.captcha.wrong"));
+        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+            "inipassword.controller.initpassword.captcha.wrong"));
         return;
       }
 
       // 获取请求的参数信息
-      String req_account = WebScopeUtil
-          .getParamFromRequest(request, AppConstants.REQUEST_PARAMETER_KEY_EMAIL);
-      String req_originpwd = WebScopeUtil.getParamFromRequest(request, "originpwd");
-      String req_newpwd = WebScopeUtil.getParamFromRequest(request, "newpwd");
-      String req_tenancyCode = WebScopeUtil
-          .getParamFromRequest(request, AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
+      String reqAccount =
+          WebScopeUtil.getParamFromRequest(request, AppConstants.REQUEST_PARAMETER_KEY_EMAIL);
+      String reqOriginpwd = WebScopeUtil.getParamFromRequest(request, "originpwd");
+      String reqNewpwd = WebScopeUtil.getParamFromRequest(request, "newpwd");
+      String reqTenancyCode = WebScopeUtil.getParamFromRequest(request,
+          AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
 
       // 后端验证
-      if (StringUtil.strIsNullOrEmpty(req_account)) {
-        responseVal(response, false, UniBundleUtil
-            .getMsg(messageSource, "inipassword.controller.initpassword.userpassword.empty"));
+      if (StringUtil.strIsNullOrEmpty(reqAccount)) {
+        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+            "inipassword.controller.initpassword.userpassword.empty"));
         return;
       }
-      if (StringUtil.strIsNullOrEmpty(req_originpwd)) {
-        responseVal(response, false, UniBundleUtil
-            .getMsg(messageSource, "inipassword.controller.initpassword.originpassword.empty"));
+      if (StringUtil.strIsNullOrEmpty(reqOriginpwd)) {
+        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+            "inipassword.controller.initpassword.originpassword.empty"));
         return;
       }
-      if (StringUtil.strIsNullOrEmpty(req_newpwd)) {
-        responseVal(response, false, UniBundleUtil
-            .getMsg(messageSource, "inipassword.controller.initpassword.newpassword.notempty"));
+      if (StringUtil.strIsNullOrEmpty(reqNewpwd)) {
+        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+            "inipassword.controller.initpassword.newpassword.notempty"));
         return;
       }
 
       // 根据邮箱获取用户原始信息
       UserDto userinfo = null;
       try {
-        userinfo = userInfoManageService.getUserDetailInfo(req_account, req_tenancyCode);
+        userinfo = userInfoManageService.getUserDetailInfo(reqAccount, reqTenancyCode);
       } catch (Exception ex) {
         responseVal(response, false, StringUtil.getExceptionSimpleMessage(ex.getMessage()));
         return;
@@ -129,15 +129,14 @@ public class InitPasswordController {
 
       // 用户不存在
       if (userinfo == null) {
-        responseVal(response, false, UniBundleUtil
-            .getMsg(messageSource, "inipassword.controller.initpassword.user.not.exsist",
-                req_account));
+        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+            "inipassword.controller.initpassword.user.not.exsist", reqAccount));
         return;
       }
 
       // 修改密码
       try {
-        userInfoManageService.updateUserPassword(userinfo.getId(), req_newpwd, req_originpwd);
+        userInfoManageService.updateUserPassword(userinfo.getId(), reqNewpwd, reqOriginpwd);
       } catch (Exception ex) {
         responseVal(response, false, StringUtil.getExceptionSimpleMessage(ex.getMessage()));
         return;
@@ -156,7 +155,7 @@ public class InitPasswordController {
   }
 
   /**
-   * easy way for formated response value
+   * Easy way for formated response value.
    *
    * @param response HttpServletResponse
    * @param processSuccess init password success or not

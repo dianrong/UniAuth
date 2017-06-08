@@ -36,7 +36,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
   private final int stTimeout;
 
   /**
-   * ticket的key的前缀字符,防止在redis中与其他key冲突
+   * Ticket的key的前缀字符,防止在redis中与其他key冲突.
    */
   private String ticketPrefix = "uniauth";
 
@@ -50,6 +50,9 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
     this.registryHolder = registryHolder;
   }
 
+  /**
+   * 构造一个RedisTicketRegistry.
+   */
   public RedisTicketRegistry(RedisTemplate<String, Object> redisTemplate, int tgtTimeout,
       int stTimeout) {
     this.redisTemplate = redisTemplate;
@@ -174,7 +177,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
   }
 
   /**
-   * 获取ticket的key
+   * 获取ticket的key.
    *
    * @param ticketId 不能为空
    * @return 生成的key
@@ -188,6 +191,9 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
     return ticketPrefix;
   }
 
+  /**
+   * 设置Ticket Key的前缀.
+   */
   public void setTicketPrefix(String ticketPrefix) {
     if (!StringUtils.hasText(ticketPrefix)) {
       log.warn("can not set ticketPrefix with empty string.");

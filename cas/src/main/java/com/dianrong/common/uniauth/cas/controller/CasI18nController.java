@@ -41,7 +41,7 @@ public class CasI18nController {
   }
 
   /**
-   * 设置当前的用户的语言信息
+   * 设置当前的用户的语言信息.
    */
   @RequestMapping(value = "/setLanguage", method = {RequestMethod.GET, RequestMethod.POST})
   public void setLocaleLanguage(HttpServletRequest request, HttpServletResponse response) {

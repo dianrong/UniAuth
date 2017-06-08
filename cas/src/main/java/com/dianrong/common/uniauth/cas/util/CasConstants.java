@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.cas.util;
 
 /**
- * cas 用到的常量
+ * Cas 用到的常量.
  *
  * @author wanglin
  */
@@ -24,7 +24,7 @@ public interface CasConstants {
   String PSWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
 
   /**
-   * 用于指定登陆成功之后,跳转的目标地址
+   * 用于指定登陆成功之后,跳转的目标地址.
    */
   public static final String TARGET_URL_PARAMETER = "targetUrl";
 }

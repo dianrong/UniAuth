@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 用户信息管理的controller
+ * 用户信息管理的controller.
  *
  * @author wanglin
  */
@@ -46,7 +46,7 @@ public class UserInfoManageController {
   private MessageSource messageSource;
 
   /**
-   * 更新用户的普通信息,目前只有name
+   * 更新用户的普通信息,目前只有name.
    *
    * @return 更新结果
    */
@@ -68,10 +68,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 更新 email 信息
-   *
-   * @param indentity 发送验证码的邮箱
-   * @return 结果
+   * 更新 email 信息.
    */
   @RequestMapping(value = "email", method = RequestMethod.POST)
   public Response<?> updateEmail(HttpServletRequest request, HttpServletResponse response,
@@ -98,10 +95,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 更新phone信息
-   *
-   * @param indentity 发送验证码的电话号码
-   * @return 结果
+   * 更新phone信息.
    */
   @RequestMapping(value = "phone", method = RequestMethod.POST)
   public Response<?> updatePhone(HttpServletRequest request, HttpServletResponse response,
@@ -128,9 +122,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 更新密码
-   *
-   * @return 结果
+   * 更新密码.
    */
   @RequestMapping(value = "password", method = RequestMethod.POST)
   public Response<?> updatePassword(HttpServletRequest request, HttpServletResponse response,
@@ -151,11 +143,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 判断当前的请求是否处于登陆状态
-   *
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
-   * @return true or false
+   * 判断当前的请求是否处于登陆状态.
    */
   private boolean checkIsLogin(HttpServletRequest request, HttpServletResponse response) {
     try {
@@ -168,11 +156,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 获取当前登陆用户的用户id
-   *
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
-   * @return current login user identity
+   * 获取当前登陆用户的用户id.
    * @throws NotLoginException 如果没有登陆则抛出该异常
    */
   private UserIdentity getCurrentLoginUserId(HttpServletRequest request,

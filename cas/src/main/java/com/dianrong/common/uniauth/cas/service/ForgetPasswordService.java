@@ -24,7 +24,7 @@ public class ForgetPasswordService extends BaseService {
   private UniClientFacade uniClientFacade;
 
   /**
-   * check user exist
+   * Check user exist.
    *
    * @param accountId email or phone number
    */
@@ -42,7 +42,8 @@ public class ForgetPasswordService extends BaseService {
   }
 
   /**
-   * @deprecated {@link #resetPasswordByIdentity(String, Long, String)}
+   * Deprecated.
+   * @see {@link #resetPasswordByIdentity(String, Long, String)}.
    */
   @TenancyIdentity(index = 1)
   @Deprecated
@@ -58,8 +59,7 @@ public class ForgetPasswordService extends BaseService {
   }
 
   /**
-   * reset password by identity
-   *
+   * Reset password by identity.
    * @param identity email or phone number
    */
   @TenancyIdentity(index = 1)

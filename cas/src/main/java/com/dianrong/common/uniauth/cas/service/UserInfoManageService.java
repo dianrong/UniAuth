@@ -61,8 +61,7 @@ public class UserInfoManageService extends BaseService {
   }
 
   /**
-   * 根据账号信息更新用户名
-   *
+   * 根据账号信息更新用户name.
    * @param account 账号
    * @param tenancyId 租户id
    * @param newName 新的姓名
@@ -81,8 +80,7 @@ public class UserInfoManageService extends BaseService {
   }
 
   /**
-   * 根据账号信息更新用户名
-   *
+   * 根据账号信息更新Email.
    * @param account 账号
    * @param tenancyId 租户id
    * @param email 新的邮箱
@@ -101,7 +99,7 @@ public class UserInfoManageService extends BaseService {
   }
 
   /**
-   * 根据账号信息更新电话号码
+   * 根据账号信息更新电话号码.
    *
    * @param account 账号
    * @param tenancyId 租户id
@@ -121,7 +119,7 @@ public class UserInfoManageService extends BaseService {
   }
 
   /**
-   * 根据账号更新密码
+   * 根据账号更新密码.
    *
    * @param account 账号
    * @param tenancyId 租户id
@@ -144,11 +142,7 @@ public class UserInfoManageService extends BaseService {
   }
 
   /**
-   * . 根据邮箱获取用户信息
-   *
-   * @param email 邮箱
-   * @return user
-   * @throws Exception Exception
+   * 根据用户id和原始密码更新用户密码.
    */
   public void updateUserPassword(Long id, String newPassword, String originPassword)
       throws Exception {

@@ -15,6 +15,7 @@ public final class RfreshCasCfgCacheRunnable implements Runnable {
   /**
    * . tomcat 上下文对象 用于在jsp中共享缓存
    */
+  @SuppressWarnings("unused")
   private ServletContext application;
 
   /**

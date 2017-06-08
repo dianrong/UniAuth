@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 /**
- * 用于处理公共异常信息的filter
+ * 用于处理公共异常信息的filter.
  *
  * @author wanglin
  */
@@ -25,7 +25,7 @@ import org.springframework.context.MessageSource;
 public class AppExceptionFilter implements Filter {
 
   /**
-   * 国际化资源对象
+   * 国际化资源对象.
    */
   @Autowired
   private MessageSource messageSource;

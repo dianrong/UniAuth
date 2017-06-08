@@ -6,14 +6,12 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
 import java.security.InvalidParameterException;
 
 /**
- * . 专门用于cas的首页登陆广告轮询的config
+ * 专门用于Cas的首页登陆广告轮询的Config.
  *
  * @author wanglin
  */
 public class CasLoginAdConfigModel extends ConfigDto {
 
-  /**
-   */
   private static final long serialVersionUID = -3358258604250843024L;
 
   /**

@@ -6,7 +6,7 @@ import org.jasig.cas.services.RegexRegisteredService;
 import org.jasig.cas.services.RegisteredService;
 
 /**
- * Uniauth实现的RegexRegisteredService
+ * Uniauth实现的RegexRegisteredService.
  * <p>
  * 对RegexRegisteredService中的某些实现进行自定义
  * </p>

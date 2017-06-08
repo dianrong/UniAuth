@@ -11,7 +11,7 @@ import org.jasig.cas.services.RegisteredServicePublicKey;
 import org.jasig.cas.services.RegisteredServiceUsernameAttributeProvider;
 
 /**
- * 用于生成各种各样的RegisteredService
+ * 用于生成各种各样的RegisteredService.
  *
  * @author wanglin
  */
@@ -29,12 +29,12 @@ public interface RegisteredServiceBuilder {
   RegisteredService build();
 
   /**
-   * 设置生成的RegisteredService的RegisteredServiceProxyPolicy
+   * 设置生成的RegisteredService的RegisteredServiceProxyPolicy.
    */
   RegisteredServiceBuilder setProxyPolicy(RegisteredServiceProxyPolicy serviceProxyPolicy);
 
   /**
-   * 设置serviceId, 用于唯一标识一个RegisteredService
+   * 设置serviceId, 用于唯一标识一个RegisteredService.
    */
   RegisteredServiceBuilder setServiceId(String serviceId);
 

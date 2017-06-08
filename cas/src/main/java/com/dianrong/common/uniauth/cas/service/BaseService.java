@@ -29,28 +29,29 @@ import org.jasig.cas.authentication.AccountDisabledException;
 public abstract class BaseService {
 
   /**
-   * . infoName与异常class的map
+   * InfoName与异常class的map.
    */
-  private static Map<InfoName, Class<? extends Exception>> infoExceptionClass = new HashMap<InfoName, Class<? extends Exception>>() {
-    private static final long serialVersionUID = 7320484331289180713L;
+  private static Map<InfoName, Class<? extends Exception>> infoExceptionClass =
+      new HashMap<InfoName, Class<? extends Exception>>() {
+        private static final long serialVersionUID = 7320484331289180713L;
+        {
+          put(InfoName.REDIRECT, OtherException.class);
+          put(InfoName.BAD_REQUEST, OtherException.class);
+          put(InfoName.VALIDATE_FAIL, ValidateFailException.class);
+          put(InfoName.INTERNAL_ERROR, OtherException.class);
+          put(InfoName.STACKTRACE, OtherException.class);
+          put(InfoName.LOGIN_ERROR_USER_NOT_FOUND, AccountNotFoundException.class);
+          put(InfoName.LOGIN_ERROR_MULTI_USER_FOUND, MultiUsersFoundException.class);
+          put(InfoName.LOGIN_ERROR, UserPasswordNotMatchException.class);
+          put(InfoName.LOGIN_ERROR_STATUS_1, AccountDisabledException.class);
 
-    {
-      put(InfoName.REDIRECT, OtherException.class);
-      put(InfoName.BAD_REQUEST, OtherException.class);
-      put(InfoName.VALIDATE_FAIL, ValidateFailException.class);
-      put(InfoName.INTERNAL_ERROR, OtherException.class);
-      put(InfoName.STACKTRACE, OtherException.class);
-      put(InfoName.LOGIN_ERROR_USER_NOT_FOUND, AccountNotFoundException.class);
-      put(InfoName.LOGIN_ERROR_MULTI_USER_FOUND, MultiUsersFoundException.class);
-      put(InfoName.LOGIN_ERROR, UserPasswordNotMatchException.class);
-      put(InfoName.LOGIN_ERROR_STATUS_1, AccountDisabledException.class);
-
-      put(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT, AccountLockedException.class);
-      put(InfoName.LOGIN_ERROR_NEW_USER, FreshUserException.class);
-      put(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH, CredentialExpiredException.class);
-      put(InfoName.GRP_NOT_OWNER, OtherException.class);
-    }
-  };
+          put(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT, AccountLockedException.class);
+          put(InfoName.LOGIN_ERROR_NEW_USER, FreshUserException.class);
+          put(InfoName.LOGIN_ERROR_EXCEED_MAX_PASSWORD_VALID_MONTH,
+              CredentialExpiredException.class);
+          put(InfoName.GRP_NOT_OWNER, OtherException.class);
+        }
+      };
 
   /**
    * . 根据infoname获取异常的class

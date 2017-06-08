@@ -22,12 +22,12 @@ import org.springframework.webflow.execution.RequestContext;
 public class LoginTypeDecisionAction extends AbstractAction {
 
   /**
-   * 默认的登陆方式，从cas的统一登陆页面登陆
+   * 默认的登陆方式，从cas的统一登陆页面登陆.
    */
   private static final String LOGIN_FROM_CAS = "cas";
 
   /**
-   * 从业务系统的登陆页面进行登陆
+   * 从业务系统的登陆页面进行登陆.
    */
   private static final String LOGIN_FROM_CUSTOM = "custom";
 

@@ -28,6 +28,9 @@ public class TenancyService extends BaseService {
 
   private Object lock = new Object();
 
+  /**
+   * 获取所有启用状态的租户信息.
+   */
   public List<TenancyDto> getAllTenancies() {
     TenancyParam param = new TenancyParam();
     param.setStatus(AppConstants.STATUS_ENABLED);
@@ -47,7 +50,7 @@ public class TenancyService extends BaseService {
   }
 
   /**
-   * 获取uniauth默认的租户的信息, 即点融网
+   * 获取Uniauth默认的租户的信息, 即点融网.
    *
    * @return 默认的TenancyDto
    */
@@ -63,6 +66,9 @@ public class TenancyService extends BaseService {
     return this.defaultTenancy;
   }
 
+  /**
+   * 获取默认的租户编码.
+   */
   public String getDefaultTenancyCode() {
     TenancyDto temp = getDefaultTenancy();
     if (temp != null) {
@@ -71,6 +77,9 @@ public class TenancyService extends BaseService {
     throw new UniauthCommonException("default Tenancy can not be null");
   }
 
+  /**
+   * 判断指定的租户编码是否是默认租户编码.
+   */
   public boolean isDefaultTenancy(String tenancyCode) {
     if (!StringUtils.hasText(tenancyCode)) {
       return false;

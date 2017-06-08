@@ -35,6 +35,9 @@ public class TicketRegistryFactoryBean {
     this.casIsCluster = casIsCluster;
   }
 
+  /**
+   * 根据控制开关决定TicketRegistry的具体实现.
+   */
   public TicketRegistry buildTicketRegistry() {
     if (casIsCluster != null && "true".equalsIgnoreCase(casIsCluster)) {
       return redisTicketRegistry;

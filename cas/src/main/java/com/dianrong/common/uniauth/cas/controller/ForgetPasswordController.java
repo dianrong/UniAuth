@@ -16,7 +16,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   private ForgetPasswordService forgetPasswordService;
 
   /**
-   * . 进入第一页开始验证 清空所有的验证缓存
+   * 进入第一页开始验证 清空所有的验证缓存.
    */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -204,7 +204,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * step3 process, update password
+   * Step3 process, update password.
    *
    * @param request request
    * @param response response

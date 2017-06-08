@@ -29,6 +29,9 @@ public class CfgService extends BaseService {
   @Resource(name = "uniauthConfig")
   private Map<String, String> allZkNodeMap;
 
+  /**
+   * 根据配置Key获取配置对象,主要用于Cas的页面自定义.
+   */
   public List<ConfigDto> queryConfigDtoByCfgKeys(List<String> cfgkeys) throws Exception {
     if (cfgkeys == null || cfgkeys.isEmpty()) {
       return new ArrayList<ConfigDto>();
@@ -48,6 +51,9 @@ public class CfgService extends BaseService {
     return null;
   }
 
+  /**
+   * 根据配置Key模糊匹配返回配置信息列表.
+   */
   public List<ConfigDto> queryConfigDtoByLikeCfgKeys(String likeCfgKey) throws Exception {
     if (StringUtil.strIsNullOrEmpty(likeCfgKey)) {
       return new ArrayList<ConfigDto>();

@@ -30,14 +30,16 @@ public class CasUserLoginCaptchaValidHelper {
   private static final List<String> FAILAURE_EVENT_ID_LSIT = new ArrayList<String>();
 
   /**
-   * . 处理失败的需要关注的异常class对象列表
+   * 处理失败的需要关注的异常class对象列表.
    */
-  private static final List<Class<? extends Exception>> FAILAURE_FOCUS_CLASS_LSIT = new ArrayList<Class<? extends Exception>>();
+  private static final List<Class<? extends Exception>> FAILAURE_FOCUS_CLASS_LSIT =
+      new ArrayList<Class<? extends Exception>>();
 
   /**
-   * . 需要当做正常登陆成功处理的异常列表
+   * 需要当做正常登陆成功处理的异常列表.
    */
-  private static final List<Class<? extends Exception>> FAILAURE_CLASS_AS_SUCCESS_LSIT = new ArrayList<Class<? extends Exception>>();
+  private static final List<Class<? extends Exception>> FAILAURE_CLASS_AS_SUCCESS_LSIT =
+      new ArrayList<Class<? extends Exception>>();
 
   /**
    * . 处理成功的id的列表
@@ -92,9 +94,8 @@ public class CasUserLoginCaptchaValidHelper {
       // 验证码不能为空
       if (StringUtil.strIsNullOrEmpty(captcha)) {
         // 设置提示语
-        messageContext.addMessage(
-            new MessageBuilder().error().code("screen.cas.userlogin.captcha.validation.empty")
-                .build());
+        messageContext.addMessage(new MessageBuilder().error()
+            .code("screen.cas.userlogin.captcha.validation.empty").build());
         return false;
       }
 
@@ -102,9 +103,8 @@ public class CasUserLoginCaptchaValidHelper {
       String serverCaptcha = WebScopeUtil.getCaptchaFromSession(session);
       // 比较验证码
       if (!captcha.equals(serverCaptcha)) {
-        messageContext.addMessage(
-            new MessageBuilder().error().code("screen.cas.userlogin.captcha.validation.wrong")
-                .build());
+        messageContext.addMessage(new MessageBuilder().error()
+            .code("screen.cas.userlogin.captcha.validation.wrong").build());
         return false;
       }
       return true;

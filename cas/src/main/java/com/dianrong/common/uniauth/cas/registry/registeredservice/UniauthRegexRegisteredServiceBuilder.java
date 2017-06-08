@@ -28,7 +28,7 @@ import org.jasig.cas.services.ReturnAllowedAttributeReleasePolicy;
 public class UniauthRegexRegisteredServiceBuilder implements RegisteredServiceBuilder {
 
   /**
-   * 设置所有属性的默认值
+   * 设置所有属性的默认值.
    **/
   private String serviceId = "^(http|https|imaps)://.*";
 
@@ -57,12 +57,12 @@ public class UniauthRegexRegisteredServiceBuilder implements RegisteredServiceBu
   private URL logotUrl;
 
   /**
-   * 默认对应的logouUrl为空
+   * 默认对应的logouUrl为空.
    */
   private URL logoutUrl;
 
   /**
-   * 此标识用于判定serviceId的值是否是初始化的默认值
+   * 此标识用于判定serviceId的值是否是初始化的默认值.
    */
   private boolean serviceIdIsDefault = true;
 
@@ -73,7 +73,7 @@ public class UniauthRegexRegisteredServiceBuilder implements RegisteredServiceBu
   }
 
   /**
-   * 初始化属性中的对象
+   * 初始化属性中的对象.
    */
   private void init() {
     this.requiredHandlers = new HashSet<>();
@@ -82,7 +82,8 @@ public class UniauthRegexRegisteredServiceBuilder implements RegisteredServiceBu
     this.accessStrategy = new DefaultRegisteredServiceAccessStrategy();
 
     // init attributeReleasePolicy
-    ReturnAllowedAttributeReleasePolicy attributeReleasePolicy = new ReturnAllowedAttributeReleasePolicy();
+    ReturnAllowedAttributeReleasePolicy attributeReleasePolicy =
+        new ReturnAllowedAttributeReleasePolicy();
     attributeReleasePolicy.setAllowedAttributes(Arrays.asList("tenancyid"));
     attributeReleasePolicy
         .setPrincipalAttributesRepository(new DefaultPrincipalAttributesRepository());

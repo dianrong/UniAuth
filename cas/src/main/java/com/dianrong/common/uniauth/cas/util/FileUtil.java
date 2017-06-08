@@ -77,20 +77,16 @@ public final class FileUtil {
 
 
   /**
-   * Equals loadProperties(filePath , null)
-   *
+   * 等同于loadProperties(filePath , null).
    * @param filePath filePath
-   * @return LinkedHashMap<String, String>
    */
   public static Map<String, String> loadProperties(String filePath) {
     return loadProperties(filePath, null);
   }
 
   /**
-   * load map from properties file. if defaultMap is null, new a LinkedHashMap
-   *
+   * Load map from properties file. if defaultMap is null, new a LinkedHashMap
    * @param filePath filePath
-   * @return Map<String, String>
    */
   public static Map<String, String> loadProperties(String filePath,
       Map<String, String> defaultMap) {

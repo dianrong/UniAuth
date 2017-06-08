@@ -21,22 +21,22 @@ import org.springframework.stereotype.Component;
 public class NotificationConfig {
 
   /**
-   * sms template name to send a verify code
+   * sms template name to send a verify code.
    */
   @Value("#{uniauthConfig['notification_sms_template']}")
   private String smsTemplateName;
   /**
-   * identity to access notification endpoint
+   * identity to access notification endpoint.
    */
   @Value("#{uniauthConfig['notification_key']}")
   private String notificationUserKey;
   /**
-   * notification system endpoint
+   * notification system endpoint.
    */
   @Value("#{uniauthConfig['notification_endpoint']}")
   private String notificationEndpoint;
   /**
-   * default mail from
+   * default mail from.
    */
   @Value("#{uniauthConfig['internal.mail.smtp.femail']}")
   private String internalSmtpFromEmail;

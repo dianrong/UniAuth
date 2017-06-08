@@ -13,7 +13,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * 处理用户信息的管理分之处理
+ * 处理用户信息的管理分之处理.
  */
 public class PersonalInfoManageAction extends AbstractAction {
 

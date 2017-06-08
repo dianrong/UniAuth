@@ -11,10 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class SingleScheduledThreadPool {
 
-  /**
-   * . 饿汉模式单例
-   */
-  public final static SingleScheduledThreadPool instance = new SingleScheduledThreadPool();
+  public static final SingleScheduledThreadPool INSTANCE = new SingleScheduledThreadPool();
 
   /**
    * . java提供的线程池

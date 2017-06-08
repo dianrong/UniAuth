@@ -18,7 +18,7 @@ import org.jasig.cas.services.RegisteredService;
 import org.jasig.cas.services.ServiceRegistryDao;
 
 /**
- * 实现uniauth自定义的RegisteredService管理逻辑 从zk配置的数据中获取
+ * 实现uniauth自定义的RegisteredService管理逻辑 从zk配置的数据中获取.
  *
  * @author wanglin
  */
@@ -26,12 +26,12 @@ import org.jasig.cas.services.ServiceRegistryDao;
 public final class UniauthServiceRegistryDao implements ServiceRegistryDao {
 
   /**
-   * 配置对象 key -> value
+   * 配置对象 key -> value.
    */
   private Map<String, String> uniauthConfig;
 
   /**
-   * 存储初始化好的RegisteredService
+   * 存储初始化好的RegisteredService.
    */
   private Map<Long, RegisteredService> registeredServiceMap;
 
@@ -60,7 +60,7 @@ public final class UniauthServiceRegistryDao implements ServiceRegistryDao {
   }
 
   /**
-   * 实现从zk配置中导入所有的域的配置
+   * 实现从zk配置中导入所有的域的配置.
    */
   @Override
   public List<RegisteredService> load() {

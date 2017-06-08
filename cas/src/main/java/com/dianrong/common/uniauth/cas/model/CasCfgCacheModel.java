@@ -8,14 +8,12 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
- * . 用于缓存cas的个性化的一些设置参数
+ * 用于缓存Cas的个性化的一些设置参数.
  *
  * @author wanglin
  */
 public class CasCfgCacheModel implements Serializable {
 
-  /**
-   */
   private static final long serialVersionUID = -5416502260004426583L;
 
   private final ConfigDto pageTitle;
@@ -39,14 +37,12 @@ public class CasCfgCacheModel implements Serializable {
   private long getResourceMilles;
 
   /**
-   * . 构造函数
+   * 构造函数.
    *
    * @param pageTitle 页面 title
    * @param pageIcon 页面的icon
-   * @param topImage 页面top的图片
    * @param bottomAllRightText 页面的allright字符串
    * @param backgroundColorText 背景颜色字符串
-   * @param loginPageImages 登陆页面的广告图片
    */
   public CasCfgCacheModel(ConfigDto pageTitle, ConfigDto pageIcon, ConfigDto logo,
       ConfigDto bottomAllRightText, ConfigDto backgroundColorText,
@@ -62,10 +58,8 @@ public class CasCfgCacheModel implements Serializable {
 
 
   /**
-   * . 根据cfg key 获取对应的dto list
-   *
+   * 根据cfg key 获取对应的dto list.
    * @param cfgKey cfg key
-   * @return dto
    */
   public List<CasLoginAdConfigModel> getDtoListByCfgKey(String cfgKey) {
     if (StringUtil.strIsNullOrEmpty(cfgKey)) {
@@ -80,10 +74,8 @@ public class CasCfgCacheModel implements Serializable {
   }
 
   /**
-   * . 根据cfg key 获取对应的dto
-   *
+   * 根据cfg key 获取对应的dto.
    * @param cfgKey cfg key
-   * @return dto
    */
   public ConfigDto getDtoByCfgKey(String cfgKey) {
     if (StringUtil.strIsNullOrEmpty(cfgKey)) {
@@ -106,44 +98,42 @@ public class CasCfgCacheModel implements Serializable {
   }
 
   /**
-   * @return the pageTitle
+   * Return the pageTitle.
    */
   public ConfigDto getPageTitle() {
     return pageTitle;
   }
 
   /**
-   * @return the pageIcon
+   * Return the pageIcon.
    */
   public ConfigDto getPageIcon() {
     return pageIcon;
   }
 
   /**
-   * @return the bottomAllRightText
+   * Return the bottomAllRightText.
    */
   public ConfigDto getBottomAllRightText() {
     return bottomAllRightText;
   }
 
   /**
-   * @return the backgroundColorText
+   * Return the backgroundColorText.
    */
   public ConfigDto getBackgroundColorText() {
     return backgroundColorText;
   }
 
   /**
-   * @return the getResourceMilles
+   * Return the getResourceMilles.
    */
   public long getGetResourceMilles() {
     return getResourceMilles;
   }
 
   /**
-   * .
-   *
-   * @return the logo
+   * Return the logo.
    */
   public ConfigDto getLogo() {
     return logo;
@@ -155,7 +145,7 @@ public class CasCfgCacheModel implements Serializable {
   }
 
   /**
-   * . 根据模板生成一个新的CasCfgCacheModel
+   * 根据模板生成一个新的CasCfgCacheModel.
    */
   public static CasCfgCacheModel buildNewInstance(CasCfgCacheModel model) {
     Assert.notNull(model, "buildNewInstance, CasCfgCacheModel can not be null");

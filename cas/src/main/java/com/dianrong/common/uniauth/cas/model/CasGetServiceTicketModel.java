@@ -3,15 +3,12 @@ package com.dianrong.common.uniauth.cas.model;
 import java.io.Serializable;
 
 /**
- * . 表示获取st的返回结果对象
+ * 表示获取ST的返回结果对象.
  *
  * @author wanglin
  */
 public class CasGetServiceTicketModel implements Serializable {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 5755014981878759609L;
 
   /**

@@ -4,8 +4,11 @@ import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentit
 import com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity.Type;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
+
 import java.lang.reflect.Method;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,17 +26,23 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TenancyIdentityAop {
 
-  @Pointcut(value = "@annotation(com.dianrong.common.uniauth.cas.service.support.annotation.TenancyIdentity)")
-  public void tenancyIdentitySet() {
-  }
+  @Pointcut(
+      value = "@annotation(com.dianrong.common.uniauth"
+          + ".cas.service.support.annotation.TenancyIdentity)")
+  public void tenancyIdentitySet() {}
 
+  /**
+   * 用于处理注解@TenancyIdentity.
+   * 
+   * @see {@link TenancyIdentity}
+   */
   @Around("tenancyIdentitySet()")
   public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
     Object target = joinPoint.getTarget();
     String methodName = joinPoint.getSignature().getName();
     Object[] args = joinPoint.getArgs();
-    Class<?>[] parameterTypes = ((MethodSignature) joinPoint.getSignature()).getMethod()
-        .getParameterTypes();
+    Class<?>[] parameterTypes =
+        ((MethodSignature) joinPoint.getSignature()).getMethod().getParameterTypes();
     Method method = null;
     try {
       method = target.getClass().getMethod(methodName, parameterTypes);
@@ -75,12 +84,6 @@ public class TenancyIdentityAop {
     }
   }
 
-  /**
-   * get the CxfHeaderHolder type
-   *
-   * @param type Type
-   * @return CxfHeaderHolder
-   */
   private CxfHeaderHolder getCxfHeaderHolder(Type type) {
     switch (type) {
       case CODE:

@@ -57,23 +57,23 @@ public class CasLoginSupport {
   private TicketRegistry ticketRegistry;
 
   /**
-   * 标志位, 用于判断是否已经初始化过cookie path
+   * 标志位, 用于判断是否已经初始化过cookie path.
    */
   private volatile boolean pathPopulated;
 
-  /** 登陆跳转相关的parameter 常量定义 **/
+  /** 登陆跳转相关的parameter 常量定义. **/
   /**
-   * 标志位,用于判断登陆成功之后是否跳转
+   * 标志位,用于判断登陆成功之后是否跳转.
    */
   private static final String SERVICE_REDIRECT_PARAMETER = "loginRedirect";
 
   /**
-   * 进行跳转的参数值
+   * 进行跳转的参数值.
    */
   private static final String NEED_REDIRECT_VALUE = "true";
 
   /**
-   * 在登陆的状态下获取tgt对象
+   * 在登陆的状态下获取tgt对象.
    *
    * @return TicketGrantingTicket 对象
    * @throws NotLoginException if not login
@@ -94,7 +94,7 @@ public class CasLoginSupport {
   }
 
   /**
-   * 生成service ticket
+   * 生成service ticket.
    *
    * @param request HttpServletRequest
    * @param ticketGrantingTicketId 当前登陆人对应的ticket granted ticket
@@ -108,13 +108,13 @@ public class CasLoginSupport {
     if (service == null) {
       throw new ValidateFailException("parameter service can not be null");
     }
-    ServiceTicket serviceTicket = this.centralAuthenticationService
-        .grantServiceTicket(ticketGrantingTicketId, service);
+    ServiceTicket serviceTicket =
+        this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicketId, service);
     return serviceTicket.getId();
   }
 
   /**
-   * 获取当前登陆用户的信息
+   * 获取当前登陆用户的信息.
    *
    * @param ticketGrantingTicketId tgt
    * @return Principal
@@ -132,12 +132,10 @@ public class CasLoginSupport {
   }
 
   /**
-   * 通过账号密码登陆,并返回生成的tgt
+   * 通过账号密码登陆,并返回生成的tgt.
    *
    * @param credential 登陆的credential
    * @param warnCookie warnCookie值
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
    * @return 登陆成功, 返回生成的tgt
    * @throws AuthenticationException 登陆失败了
    * @throws TicketException tgt创建失败
@@ -157,8 +155,8 @@ public class CasLoginSupport {
       this.pathPopulated = true;
     }
 
-    TicketGrantingTicket ticketGrantingTicket = this.centralAuthenticationService
-        .createTicketGrantingTicket(credential);
+    TicketGrantingTicket ticketGrantingTicket =
+        this.centralAuthenticationService.createTicketGrantingTicket(credential);
     String ticketGrantingTicketId = ticketGrantingTicket.getId();
 
     // remove tgt
@@ -172,10 +170,7 @@ public class CasLoginSupport {
   }
 
   /**
-   * 登出操作
-   *
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
+   * 登出操作.
    */
   public void casLoginOut(HttpServletRequest request, HttpServletResponse response) {
     // if we have tgt and it is not empty, then destroy tgt first .
@@ -190,7 +185,7 @@ public class CasLoginSupport {
   }
 
   /**
-   * 从HttpServletRequest中获取service
+   * 从HttpServletRequest中获取service.
    *
    * @param request HttpServletRequest
    * @return 如果请求中包含service参数, 则返回对应的service对象. 不然就返回null
@@ -200,12 +195,10 @@ public class CasLoginSupport {
   }
 
   /**
-   * 根据credential登陆,并生成tgt和st,最后返回st
+   * 根据credential登陆,并生成tgt和st,最后返回st.
    *
    * @param credential 登陆凭证(账号,密码等)
    * @param warnCookie warnCookie的值
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
    * @return 登陆成功生成的service ticket的值
    * @throws TicketException 生成service ticket 或者 ticket granted ticket失败
    * @throws ValidateFailException HttpServletRequest的service参数为空或者不符合规范
@@ -230,15 +223,16 @@ public class CasLoginSupport {
    * @return true or false
    */
   public boolean isLoginRedirect(HttpServletRequest request) {
-    boolean redirect = NEED_REDIRECT_VALUE
-        .equalsIgnoreCase(request.getParameter(SERVICE_REDIRECT_PARAMETER));
+    boolean redirect =
+        NEED_REDIRECT_VALUE.equalsIgnoreCase(request.getParameter(SERVICE_REDIRECT_PARAMETER));
     if (redirect) {
       Service service = queryService(request);
       if (service != null) {
         return true;
       }
       log.warn(
-          "request's parameter {} value is {}, but parameter service is null, please check request parameter",
+          "request's parameter {} value is {}, but parameter service is null, "
+          + "please check request parameter",
           SERVICE_REDIRECT_PARAMETER, NEED_REDIRECT_VALUE);
     }
     return false;

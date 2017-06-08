@@ -16,9 +16,6 @@ import org.springframework.util.ReflectionUtils;
 public final class SerialzableServiceTicketRedisRegistryHolder implements
     SerialzableTicketRegistryHolder {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = -178234378526374281L;
   /**
    * . service ticket的policy对象

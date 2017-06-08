@@ -39,6 +39,9 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
     this(userName, password, domain, tenancy, "");
   }
 
+  /**
+   * 构造一个CasUsernamePasswordCredential.
+   */
   public CasUsernamePasswordCredential(String userName, String password, String domain,
       String tenancyCode, String captcha) {
     super(userName, password);

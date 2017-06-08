@@ -55,9 +55,7 @@ public class SpringContextHolder {
   }
 
   /**
-   * . 获取spring bean
-   *
-   * @param beanName bean的class
+   * 获取spring bean.
    * @return 获取的bean对象
    */
   public static <T> T getBean(Class<T> clst) {

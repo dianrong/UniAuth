@@ -64,8 +64,7 @@ public final class WebScopeUtil {
   // sms
 
   /**
-   * set sms verification to session
-   *
+   * Set SMS Verification Code to session.
    * @return true or false
    */
   public static boolean putSmsVerificationToSession(HttpSession session,
@@ -74,25 +73,22 @@ public final class WebScopeUtil {
   }
 
   /**
-   * get sms verification from session
-   *
-   * @return verification
+   * Get SMS Verification Code from session.
    */
   public static ExpiredSessionObj<String> getSmsVerificationFromSession(HttpSession session) {
     return getValFromSession(session, CasConstants.SMS_VERIFICATION_SESSION_KEY);
   }
 
   /**
-   * remove sms verification from session
+   * Remove SMS verification Code from session.
    */
   public static void removeSmsVerification(HttpSession session) {
     session.removeAttribute(CasConstants.SMS_VERIFICATION_SESSION_KEY);
   }
 
   // email
-
   /**
-   * set email verification to session
+   * Set email verification Code to session.
    *
    * @return true or false
    */
@@ -102,7 +98,7 @@ public final class WebScopeUtil {
   }
 
   /**
-   * get email verification from session
+   * Get email verification Code from session.
    *
    * @return verification
    */
@@ -111,14 +107,14 @@ public final class WebScopeUtil {
   }
 
   /**
-   * remove email verification from session
+   * Remove email verification from session.
    */
   public static void removeEmailVerification(HttpSession session) {
     session.removeAttribute(CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
   }
 
   /**
-   * set a flag to session, represent the identity is verified
+   * Set a flag to session, represent the identity is verified.
    *
    * @param session can not be null
    * @param identity can not be null
@@ -131,7 +127,7 @@ public final class WebScopeUtil {
   }
 
   /**
-   * get flag from session, check whether the identity is verified
+   * Get flag from session, check whether the identity is verified.
    *
    * @param session can not be null
    * @return true or false
@@ -204,7 +200,7 @@ public final class WebScopeUtil {
   }
 
   /**
-   * Write json to response stream
+   * Write JSON to response stream.
    *
    * @param response HttpServletResponse
    * @param jsonContent json to be write to response stream

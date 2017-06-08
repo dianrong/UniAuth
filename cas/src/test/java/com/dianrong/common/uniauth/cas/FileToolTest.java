@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.cas;
 
+import com.google.common.collect.Maps;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,10 +11,11 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
-import com.google.common.collect.Maps;
-
 public class FileToolTest {
 
+  /**
+   * 测试读取文件.
+   */
   public Map<String, String> readFiles(String path) throws IOException {
     File file = new File(path);
     if (file.exists() && file.isFile()) {

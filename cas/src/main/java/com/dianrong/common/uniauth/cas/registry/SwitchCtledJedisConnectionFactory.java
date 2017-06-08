@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisShardInfo;
 public class SwitchCtledJedisConnectionFactory extends JedisConnectionFactory {
 
   /**
-   * 添加开关控制参数, 默认为false
+   * 添加开关控制参数, 默认为false.
    */
   private String connectionSwitch = Boolean.FALSE.toString();
 

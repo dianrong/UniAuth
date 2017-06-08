@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.cas.model;
 import java.io.Serializable;
 
 /**
- * . 定义一个标准的http response返回model的格式
+ * 定义一个标准的http response返回model的格式.
  *
  * @author wanglin
  */

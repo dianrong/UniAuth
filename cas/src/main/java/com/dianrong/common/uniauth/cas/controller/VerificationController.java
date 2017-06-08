@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 验证相关的controller
+ * 验证相关的controller.
  *
  * @author wanglin
  */
@@ -58,6 +58,9 @@ public class VerificationController {
 
   private Producer captchaProducer;
 
+  /**
+   * 初始化验证码.
+   */
   @PostConstruct
   public void initCaptcha() {
     Properties props = new Properties();
@@ -72,7 +75,7 @@ public class VerificationController {
   }
 
   /**
-   * 根据session中的identity来发送邮件
+   * 根据session中的identity来发送邮件.
    *
    * @return 结果
    */
@@ -89,29 +92,7 @@ public class VerificationController {
   }
 
   /**
-   * 根据session中的identity来验证验证码
-   *
-   * @param verifyCode 验证码
-   * @return 结果
-   */
-  @ResponseBody
-  @RequestMapping(value = "verify/session", method = RequestMethod.POST)
-  public Response<Void> checkVerification(HttpServletRequest request, HttpServletResponse response,
-      @RequestParam(value = "verifyCode", required = true) String verifyCode) {
-    String identity = WebScopeUtil
-        .getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
-    if (!StringUtils.hasText(identity)) {
-      return Response.failure(Info.build(InfoName.IDENTITY_REQUIRED, "lack of identity"));
-    } else {
-      return checkVerification(request, response, identity, verifyCode);
-    }
-  }
-
-  /**
-   * 发送短信或邮件验证码
-   *
-   * @param identity 发送标识
-   * @return 结果
+   * 发送短信或邮件验证码.
    */
   @ResponseBody
   @RequestMapping(value = "send", method = RequestMethod.POST)
@@ -168,12 +149,26 @@ public class VerificationController {
         .getMsg(messageSource, "verification.controller.verification.invalid.indentiy", identity)));
   }
 
+
   /**
-   * 验证短信或邮件验证码
-   *
-   * @param identity 标识
-   * @param verifyCode 验证码
-   * @return 结果
+   * 根据session中的identity来验证验证码.
+   */
+  @ResponseBody
+  @RequestMapping(value = "verify/session", method = RequestMethod.POST)
+  public Response<Void> checkVerification(HttpServletRequest request, HttpServletResponse response,
+      @RequestParam(value = "verifyCode", required = true) String verifyCode) {
+    String identity = WebScopeUtil
+        .getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
+    if (!StringUtils.hasText(identity)) {
+      return Response.failure(Info.build(InfoName.IDENTITY_REQUIRED, "lack of identity"));
+    } else {
+      return checkVerification(request, response, identity, verifyCode);
+    }
+  }
+
+  
+  /**
+   * 验证短信或邮件验证码.
    */
   @ResponseBody
   @RequestMapping(value = "verify", method = RequestMethod.POST)
@@ -230,7 +225,7 @@ public class VerificationController {
 
 
   /**
-   * image captcha
+   * Write Captcha to outputStream.
    */
   @RequestMapping("captcha")
   public void captcha(HttpServletRequest request, HttpServletResponse response) {

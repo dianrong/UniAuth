@@ -52,7 +52,7 @@
     
     
     <!--  cas cross filter bean -->
-    <bean id="casCrossFilterBean" class="com.dianrong.common.uniauth.cas.cors.CasCORSFilter">
+    <bean id="casCrossFilterBean" class="com.dianrong.common.uniauth.cas.cors.CasCorsFilter">
     		<property name="crossFilterCacheHelper">
     			<bean class="com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper">
     				<property name="defualt_cors_allowed_origins">
@@ -65,26 +65,26 @@
     				</property>
     			</bean>
     		</property>
-    		<property name="cors_allowed_methods">
+    		<property name="corsAllowedMethods">
     			<value>GET;POST;HEAD;OPTIONS;PUT;DELETE</value>
     		</property>
-    		<property name="cors_allowed_headers">
+    		<property name="corsAllowedHeaders">
     			<value>Content-Type;X-Requested-With;accept;Origin;Access-Control-Request-Method;Access-Control-Request-Headers;Cookie</value>
     		</property>
-    		<property name="cors_exposed_headers">
+    		<property name="corsExposedHeaders">
     			<value>Access-Control-Allow-Origin;Access-Control-Allow-Credentials;Access-Control-Allow-Headers</value>
     		</property>
-    		<property name="cors_support_credentials">
+    		<property name="corsSupportCredentials">
     			<value>true</value>
     		</property>
-    		<property name="cors_preflight_maxage">
+    		<property name="corsPreflightMaxage">
     			<value>10</value>
     		</property>
     </bean>
     <!--  cas cross filter bean -->
     
     <!-- xssFilter -->
-    <bean id="xssFilter" class="com.dianrong.common.uniauth.cas.filter.XSSFilter">
+    <bean id="xssFilter" class="com.dianrong.common.uniauth.cas.filter.XssFilter">
         <constructor-arg>
               <list>
                 <ref bean="casRequest1"/>

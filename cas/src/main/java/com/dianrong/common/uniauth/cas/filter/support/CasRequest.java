@@ -8,12 +8,12 @@ import lombok.ToString;
 public class CasRequest {
 
   /**
-   * 请求的url
+   * 请求的url.
    */
   private String url;
 
   /**
-   * 请求的方法, 默认为all
+   * 请求的方法, 默认为all.
    */
   private String method = AppConstants.HTTP_METHOD_ALL;
 

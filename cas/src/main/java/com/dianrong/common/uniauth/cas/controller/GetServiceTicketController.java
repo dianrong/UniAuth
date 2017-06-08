@@ -43,7 +43,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * @author wanglin 用于获取登陆使用的service ticket处理的controller
+ * 用于获取登陆使用的service ticket处理的controller.
+ * 
+ * @author wanglin
  */
 
 @Deprecated
@@ -101,8 +103,8 @@ public class GetServiceTicketController {
       }
 
       final Service service = WebUtils.getService(this.argumentExtractors, request);
-      final ServiceTicket serviceTicket = this.centralAuthenticationService
-          .grantServiceTicket(tgtId, service);
+      final ServiceTicket serviceTicket =
+          this.centralAuthenticationService.grantServiceTicket(tgtId, service);
       if (StringUtils.isEmpty(serviceTicket)) {
         sendResponse(response,
             new CasGetServiceTicketModel(false, "generate service ticket failed"));
@@ -114,6 +116,7 @@ public class GetServiceTicketController {
         sendResponse(response,
             new CasGetServiceTicketModel(false, "generate service ticket failed"));
       } catch (IOException e) {
+        log.warn("sendResponse failed!", e);
       }
       log.warn("failed to query service ticket", ex);
     }
@@ -159,8 +162,8 @@ public class GetServiceTicketController {
       }
       CasRememberMeUsernamePasswordCredential credentials = createCredential(request);
       // call AuthenticationHandlers
-      TicketGrantingTicket ticketGrantingTicketId = this.centralAuthenticationService
-          .createTicketGrantingTicket(credentials);
+      TicketGrantingTicket ticketGrantingTicketId =
+          this.centralAuthenticationService.createTicketGrantingTicket(credentials);
 
       // create service ticket
       final Service service = WebUtils.getService(this.argumentExtractors, request);
@@ -176,8 +179,8 @@ public class GetServiceTicketController {
       // 删除原来的tgt
       this.ticketGrantingTicketCookieGenerator.removeCookie(response);
       // 写入tgt
-      this.ticketGrantingTicketCookieGenerator
-          .addCookie(request, response, ticketGrantingTicketId.getId());
+      this.ticketGrantingTicketCookieGenerator.addCookie(request, response,
+          ticketGrantingTicketId.getId());
       // this.warnCookieGenerator.addCookie(request, response, "true");
       // 返回处理结果
       return captchaValidationProcess(request, response,
@@ -226,23 +229,26 @@ public class GetServiceTicketController {
   /**
    * . 定义异常与异常编码的关联关系
    */
-  private static final Map<Class<? extends Exception>, String> exceptionCodeMap = new HashMap<Class<? extends Exception>, String>() {
-    private static final long serialVersionUID = 296454014783954623L;
-
-    {
-      put(AccountNotFoundException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NOT_FOUND);
-      put(UserPasswordNotMatchException.class,
-          CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NAME_PSWD_NOT_MATCH);
-      put(MultiUsersFoundException.class,
-          CasGetServiceTicketModel.LOGIN_EXCEPTION_MUTILE_USER_FOUND);
-      put(AccountDisabledException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_DISABLED);
-      put(AccountLockedException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_TOO_MANY_FAILED);
-      put(FreshUserException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_INIT_PSWD);
-      put(CredentialExpiredException.class,
-          CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_UPDATE_PSWD);
-      put(FailedLoginException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_LOGINFAILED);
-    }
-  };
+  private static final Map<Class<? extends Exception>, String> exceptionCodeMap =
+      new HashMap<Class<? extends Exception>, String>() {
+        private static final long serialVersionUID = 296454014783954623L;
+        {
+          put(AccountNotFoundException.class,
+              CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NOT_FOUND);
+          put(UserPasswordNotMatchException.class,
+              CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_NAME_PSWD_NOT_MATCH);
+          put(MultiUsersFoundException.class,
+              CasGetServiceTicketModel.LOGIN_EXCEPTION_MUTILE_USER_FOUND);
+          put(AccountDisabledException.class,
+              CasGetServiceTicketModel.LOGIN_EXCEPTION_USER_DISABLED);
+          put(AccountLockedException.class,
+              CasGetServiceTicketModel.LOGIN_EXCEPTION_TOO_MANY_FAILED);
+          put(FreshUserException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_INIT_PSWD);
+          put(CredentialExpiredException.class,
+              CasGetServiceTicketModel.LOGIN_EXCEPTION_NEED_UPDATE_PSWD);
+          put(FailedLoginException.class, CasGetServiceTicketModel.LOGIN_EXCEPTION_LOGINFAILED);
+        }
+      };
 
   /**
    * .
@@ -281,7 +287,8 @@ public class GetServiceTicketController {
     String password = request.getParameter("password");
     boolean rememberMe = Boolean.valueOf(request.getParameter("rememberMe"));
     String tenancyCode = request.getParameter("tenancyCode");
-    CasRememberMeUsernamePasswordCredential credential = new CasRememberMeUsernamePasswordCredential();
+    CasRememberMeUsernamePasswordCredential credential =
+        new CasRememberMeUsernamePasswordCredential();
     credential.setUsername(username);
     credential.setPassword(password);
     credential.setRememberMe(rememberMe);
@@ -321,8 +328,8 @@ public class GetServiceTicketController {
   private CasGetServiceTicketModel captchaValidationProcess(HttpServletRequest request,
       HttpServletResponse response, CasGetServiceTicketModel obj) {
     // this obj can not be null
-    CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil
-        .getCaptchaInfoFromSession(request.getSession());
+    CasLoginCaptchaInfoModel captchaInfo =
+        WebScopeUtil.getCaptchaInfoFromSession(request.getSession());
     if (captchaInfo == null) {
       captchaInfo = new CasLoginCaptchaInfoModel();
       WebScopeUtil.putCaptchaInfoToSession(request.getSession(), captchaInfo);
@@ -330,8 +337,8 @@ public class GetServiceTicketController {
     // 进行处理
     if (!obj.getResultSuccess()) {
       // 重新生成lt
-      final String loginTicket = this.ticketIdGenerator
-          .getNewTicketId(AppConstants.CAS_LOGIN_TICKET_PREFIX);
+      final String loginTicket =
+          this.ticketIdGenerator.getNewTicketId(AppConstants.CAS_LOGIN_TICKET_PREFIX);
       replaceLoginTicket(request, loginTicket);
       obj.setLt(loginTicket);
 

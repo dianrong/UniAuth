@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.cas.model;
 import java.io.Serializable;
 
 /**
- * 会过期的session的model
+ * 一个泛型Model,有过期的处理逻辑.
  */
 public class ExpiredSessionObj<T extends Serializable> implements Serializable {
 
@@ -50,7 +50,7 @@ public class ExpiredSessionObj<T extends Serializable> implements Serializable {
   }
 
   /**
-   * build a new ExpiredSessionObj
+   * Build a new ExpiredSessionObj.
    *
    * @param content the content
    * @param lifeMilles the content alive milliseconds

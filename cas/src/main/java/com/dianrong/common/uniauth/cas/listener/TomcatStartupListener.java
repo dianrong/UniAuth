@@ -19,7 +19,7 @@ public class TomcatStartupListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent sce) {
     log.info("tomcat setup, and contextInitialized event invoked");
     // tomcat 启动 启动起线程开始慢慢刷新缓存
-    SingleScheduledThreadPool.instance
+    SingleScheduledThreadPool.INSTANCE
         .loadScheduledTask(new RfreshCasCfgCacheRunnable(sce.getServletContext()), 0L,
             AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES);
   }
@@ -27,7 +27,7 @@ public class TomcatStartupListener implements ServletContextListener {
   @Override
   public void contextDestroyed(ServletContextEvent sce) {
     // 关闭线程池
-    SingleScheduledThreadPool.instance.shutDownNow();
+    SingleScheduledThreadPool.INSTANCE.shutDownNow();
     log.info("tomcat shutdown, and contextDestroyed event invoked");
   }
 }

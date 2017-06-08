@@ -7,6 +7,9 @@ import org.jasig.cas.web.flow.AuthenticationExceptionHandler;
 
 public class UniauthAuthenticationExceptionHandler extends AuthenticationExceptionHandler {
 
+  /**
+   * 初始化.
+   */
   @PostConstruct
   public void init() {
     List<Class<? extends Exception>> superErrorList = super.getErrors();

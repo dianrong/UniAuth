@@ -3,14 +3,11 @@ package com.dianrong.common.uniauth.cas.model;
 import java.io.Serializable;
 
 /**
- * . 辅助model,记录每一个session进行cas登陆,验证码相关信息 ps. 一个session一个，不用进行多线程的考虑
- *
- * @author wanglin
+ * 辅助model,记录每一个session进行Cas登陆,验证码相关信息<br> 
+ * PS: 一个session一个，不用进行多线程的考虑.
  */
 public class CasLoginCaptchaInfoModel implements Serializable {
 
-  /**
-   */
   private static final long serialVersionUID = -3765249768294450877L;
 
   /**

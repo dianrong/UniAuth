@@ -55,6 +55,9 @@ public final class I18nLanguageConstantUtil {
     private String language;
     private boolean isSelected;
 
+    /**
+     * 构造一个I18nContent.
+     */
     public I18nContent(String localeStr, String language, boolean isSelected) {
       this.localeStr = localeStr;
       this.language = language;

@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * . 用于辅助cas的cross filter获取缓存数据 ps. 目前只缓存orgin数据
+ * 用于辅助cas的cross filter获取缓存数据<br>.
+ * PS: 目前只缓存orgin数据.
  *
  * @author wanglin
  */
@@ -47,7 +48,15 @@ public final class CasCrossFilterCacheHelper {
   /**
    * origins from {@link FilterConfig}.
    */
-  private String defualt_cors_allowed_origins;
+  private String defualtCrosAllowedOrigins;
+
+  public String getDefualtCrosAllowedOrigins() {
+    return defualtCrosAllowedOrigins;
+  }
+
+  public void setDefualtCrosAllowedOrigins(String defualtCrosAllowedOrigins) {
+    this.defualtCrosAllowedOrigins = defualtCrosAllowedOrigins;
+  }
 
   /**
    * . 获取origin列表的接口方法
@@ -62,7 +71,7 @@ public final class CasCrossFilterCacheHelper {
   }
 
   /**
-   * . 获取origin列表的接口方法
+   * 获取origin列表的接口方法.
    *
    * @return orgin 正则表达式列表
    */
@@ -71,14 +80,14 @@ public final class CasCrossFilterCacheHelper {
   }
 
   /**
-   * . init 设置缓存的初始值
+   * 设置缓存的初始值.
    */
   @PostConstruct
   private void init() {
     // 直接刷新缓存
     refreshCache();
     // 开启异步刷新线程
-    SingleScheduledThreadPool.instance
+    SingleScheduledThreadPool.INSTANCE
         .loadScheduledTask(new RefreshCasCrossFilterCacheRunnable(this),
             AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES,
             AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES);
@@ -106,9 +115,9 @@ public final class CasCrossFilterCacheHelper {
       log.warn("CasCrossFilterCacheHelper refresh cache exception", ex);
     }
     if (this.cacheModel == null) {
-      if (!StringUtil.strIsNullOrEmpty(this.defualt_cors_allowed_origins)) {
+      if (!StringUtil.strIsNullOrEmpty(this.defualtCrosAllowedOrigins)) {
         // 使用默认值
-        this.cacheModel = new CasCrossFilterCacheModel(this.defualt_cors_allowed_origins);
+        this.cacheModel = new CasCrossFilterCacheModel(this.defualtCrosAllowedOrigins);
       } else {
         // 使用默认值
         this.cacheModel = new CasCrossFilterCacheModel();
@@ -126,19 +135,5 @@ public final class CasCrossFilterCacheHelper {
       }
     }
     this.patternCache = Collections.unmodifiableSet(tempPattern);
-  }
-
-  /**
-   * @return the defualt_cors_allowed_origins
-   */
-  public String getDefualt_cors_allowed_origins() {
-    return defualt_cors_allowed_origins;
-  }
-
-  /**
-   * @param defualt_cors_allowed_origins the defualt_cors_allowed_origins to set
-   */
-  public void setDefualt_cors_allowed_origins(String defualt_cors_allowed_origins) {
-    this.defualt_cors_allowed_origins = defualt_cors_allowed_origins;
   }
 }

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * 处理cas的个性化定制的controller ps : 普通spring mvc controller 不走web flow
+ * 处理cas的个性化定制的controller ps : 普通spring mvc controller 不走web flow.
  */
 @Controller
 @RequestMapping("/cascfg")

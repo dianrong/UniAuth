@@ -20,7 +20,7 @@ public class XssUrlPathHelper extends UrlPathHelper {
       Set<Entry<String, String>> entrySet = result.entrySet();
       for (Entry<String, String> entry : entrySet) {
         String key = entry.getKey();
-        result.put(key, cleanXSS(entry.getValue()));
+        result.put(key, cleanXss(entry.getValue()));
       }
     }
     return result;
@@ -36,7 +36,7 @@ public class XssUrlPathHelper extends UrlPathHelper {
         List<String> values = entry.getValue();
         List<String> newValues = Lists.newArrayList();
         for (String val : values) {
-          newValues.add(cleanXSS(val));
+          newValues.add(cleanXss(val));
         }
         mvm.put(entry.getKey(), newValues);
       }
@@ -45,9 +45,9 @@ public class XssUrlPathHelper extends UrlPathHelper {
   }
 
   /**
-   * 处理xss攻击的问题
+   * 处理xss攻击的问题.
    */
-  protected String cleanXSS(String value) {
+  protected String cleanXss(String value) {
     return StringEscapeUtils.escapeXml11(value);
   }
 }

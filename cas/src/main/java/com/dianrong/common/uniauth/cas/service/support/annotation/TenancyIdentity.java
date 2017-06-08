@@ -7,8 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 注解用于处理租户标识信息的传递
- *
+ * 注解用于处理租户标识信息的传递.
  * @author wanglin
  */
 @Target(value = ElementType.METHOD)
