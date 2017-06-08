@@ -15,9 +15,8 @@ import org.springframework.util.StringUtils;
 @ApiModel("用户信息")
 @ToString
 public class UserDto extends TenancyBaseDto {
-
-  private static final long serialVersionUID = -1969133233179816584L;
-
+  private static final long serialVersionUID = -5214267853102217886L;
+  
   @ApiModelProperty("主键id")
   private Long id;
   @ApiModelProperty("用户对应的账号")
@@ -42,6 +41,8 @@ public class UserDto extends TenancyBaseDto {
   private Date lastUpdate;
   @ApiModelProperty("状态(0:启用,1:禁用)")
   private Byte status;
+  @ApiModelProperty("连续登陆失败次数")
+  private Byte failCount;
   private Byte userGroupType;
   @ApiModelProperty("用户对应的标签")
   private List<TagDto> tagDtos;
@@ -242,12 +243,21 @@ public class UserDto extends TenancyBaseDto {
   }
 
   /**
-   * 获取用户的姓名展示
+   * 获取用户的姓名展示.
    */
   public String getDisplayName() {
     if (StringUtils.hasText(this.name)) {
       return this.name;
     }
     return this.getAccount();
+  }
+
+  public Byte getFailCount() {
+    return this.failCount;
+  }
+
+  public UserDto setFailCount(Byte failCount) {
+    this.failCount = failCount;
+    return this;
   }
 }

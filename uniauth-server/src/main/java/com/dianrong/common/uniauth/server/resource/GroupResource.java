@@ -59,7 +59,7 @@ public class GroupResource implements IGroupRWResource {
       @ApiImplicitParam(name = "description", value = "组描述", dataType = "string",
           paramType = "query"),
       @ApiImplicitParam(name = "status", value = "状态", dataType = "string", paramType = "query",
-          allowableValues = "0,1"),
+          allowableValues = "0, 1"),
       @ApiImplicitParam(name = "needTag", value = "是否将关联的tag信息一块查出来", dataType = "boolean",
           paramType = "query"),
       @ApiImplicitParam(name = "needUser", value = "是否将关联的user信息一块查出来", dataType = "boolean",

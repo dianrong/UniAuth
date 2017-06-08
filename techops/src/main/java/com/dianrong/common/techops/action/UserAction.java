@@ -1,7 +1,6 @@
 package com.dianrong.common.techops.action;
 
 import com.dianrong.common.techops.bean.LoginUser;
-import com.dianrong.common.techops.service.NotificationService;
 import com.dianrong.common.techops.service.TechOpsService;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -12,9 +11,10 @@ import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
+
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
@@ -29,12 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("user")
 public class UserAction {
-
-  /**
-   * 发送消息的服务.
-   */
-  @Autowired
-  private NotificationService notificationService;
 
   @Resource
   private UARWFacade uarwFacade;
@@ -62,8 +56,6 @@ public class UserAction {
     if (!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
       return userDtoResponse;
     }
-    UserDto userDto = userDtoResponse.getData();
-    notificationService.addUserNotification(userDto);
     return Response.success();
   }
 
@@ -119,8 +111,6 @@ public class UserAction {
     if (!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
       return userDtoResponse;
     }
-    UserDto userDto = userDtoResponse.getData();
-    notificationService.updateUserPwdNotification(userDto);
     return Response.success();
   }
 

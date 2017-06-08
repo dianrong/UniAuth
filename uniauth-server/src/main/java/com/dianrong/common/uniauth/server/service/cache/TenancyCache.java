@@ -7,9 +7,12 @@ import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
+
 import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,7 +32,7 @@ public class TenancyCache {
 
   /**
    * 根据tenancyCode 查询 可用的租户信息.
-   *
+   * 
    * @param tenancyCode tenancyCode, not null
    */
   @Cacheable(key = "#tenancyCode.toUpperCase()")
@@ -46,14 +49,12 @@ public class TenancyCache {
 
   /**
    * 更新租户的信息.
-   *
+   * 
    * @param originalCode 用于更新缓存.
    */
 
-  @Caching(evict = {
-      @CacheEvict(key = "#originalCode.toUpperCase()"),
-      @CacheEvict(key = "#code.toUpperCase()",
-          condition = "#code != null and #code.trim().length() > 0")})
+  @Caching(evict = {@CacheEvict(key = "#originalCode.toUpperCase()"), @CacheEvict(
+      key = "#code.toUpperCase()", condition = "#code != null and #code.trim().length() > 0")})
   public TenancyDto updateTenancy(String originalCode, Long id, String code, String name,
       String contactName, String phone, String description, Byte status) {
     Tenancy updateTenancy = new Tenancy();

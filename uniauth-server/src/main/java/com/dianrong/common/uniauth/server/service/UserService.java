@@ -71,6 +71,8 @@ import com.dianrong.common.uniauth.server.mq.UniauthSender;
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseUserNotifyInfo;
+import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
+import com.dianrong.common.uniauth.server.service.support.NotificationService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -91,21 +93,24 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.annotation.Resource;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+
 /**
  * Created by Arc on 14/1/16.
  */
 @Service
 @Slf4j
-public class UserService extends TenancyBasedService {
-
+public class UserService extends TenancyBasedService implements UserAuthentication {
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -148,11 +153,15 @@ public class UserService extends TenancyBasedService {
   @Autowired
   private GroupService groupService;
 
-  /**
-   * 进行用户数据过滤的filter.
-   */
   @Resource(name = "userDataFilter")
   private DataFilter dataFilter;
+  
+  /**
+   * 发送消息的服务.
+   */
+  @Autowired
+  private NotificationService notificationService;
+
 
   private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -185,6 +194,9 @@ public class UserService extends TenancyBasedService {
     uniauthSender.sendUserAdd(userDto);
     userDto.setPassword(randomPassword);
     asynAddUserPwdLog(user);
+    
+    // 发送通知给用户
+    notificationService.addUserNotification(user);
     return userDto;
   }
 
@@ -324,6 +336,11 @@ public class UserService extends TenancyBasedService {
         notifyInfo.setType(NotifyInfoType.USER_DISABLE);
       }
       uniauthNotify.notify(notifyInfo);
+    }
+    
+    // 通知用户密码修改了
+    if (UserActionEnum.isPasswordChange(userActionEnum)) {
+      notificationService.updateUserPwdNotification(user);
     }
 
     return BeanConverter.convert(user).setPassword(password);
@@ -913,7 +930,6 @@ public class UserService extends TenancyBasedService {
 
   /**
    * 根据账号以及租户信息查询用户的详细信息.
-   *
    * @param loginStatusCheck 是否检测用户的登陆可用状态
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam, boolean loginStatusCheck) {
@@ -1572,5 +1588,18 @@ public class UserService extends TenancyBasedService {
       userDtos.add(BeanConverter.convert(user));
     }
     return userDtos;
+  }
+
+  /**
+   * 所有其他数据源类型都不支持的,走Uniauth进行认证.
+   */
+  @Override
+  public int getOrder() {
+    return Ordered.LOWEST_PRECEDENCE;
+  }
+
+  @Override
+  public boolean supported(LoginParam loginParam) {
+    return true;
   }
 }

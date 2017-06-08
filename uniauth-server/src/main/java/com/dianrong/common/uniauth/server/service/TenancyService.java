@@ -170,6 +170,8 @@ public class TenancyService {
   public TenancyDto addNewTenancy(String code, String name, String contactName, String phone,
       String description, String adminEmail, String adminPassword) {
     CheckEmpty.checkEmpty(code, "code");
+    CheckEmpty.checkEmpty(adminEmail, "adminEmail");
+    CheckEmpty.checkEmpty(adminPassword, "adminPassword");
     dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
     Tenancy tenancy = new Tenancy();
     tenancy.setCode(code);
@@ -196,10 +198,8 @@ public class TenancyService {
     Date now = new Date();
 
     // step2: init super admin
-    String setAdminEmail =
-        StringUtils.hasText(adminEmail) ? adminEmail : UniauthServerConstant.DEFAULT_ADMIN_EMAIL;
-    String setAdminPassword = StringUtils.hasText(adminEmail) ? adminPassword
-        : UniauthServerConstant.DEFAULT_AMDIN_PASSWORD;
+    String setAdminEmail = adminEmail;
+    String setAdminPassword = adminPassword;
     User admin = new User();
     admin.setName("admin");
     admin.setEmail(setAdminEmail);

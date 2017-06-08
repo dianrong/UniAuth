@@ -50,7 +50,7 @@ gradle warTechopsWebsite
 # log out
 JAVA_OPTS="$JAVA_OPTS -Dcatalina.logs=/var/lib/tomcat/logs"
 
-# zookeeper cluster address
+# zookeeper cluster address (zookeeper集群不是必须的, 可单节点)
 DR_CFG_ZOOKEEPER_ENV_URL="10.8.12.85:2181,10.8.12.85:2182,10.8.12.85:2183"
 
 export DR_CFG_ZOOKEEPER_ENV_URL
@@ -168,6 +168,27 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 
 # 配置的uniauth-server的地址。比如：http://localhost:8090/uniauth/ws/rs
 /com/dianrong/cfg/1.0.0/uniauth/uniauth_ws_endpoint http://localhost:8090/uniauth/ws/rs
+
+# 配置cas execution 和 webflow 对象encryption, signing 的密钥, 这一块是为安全考虑(Optional)
+
+具体步骤：
+1. 新增四个zookeeper节点:
+/com/dianrong/cfg/1.0.0/uniauth/cas.tgc.encryption.key MvU58Xs7fOsGQL47K6AXVy7qyDzaSO7_Khh1nC5gbLo
+/com/dianrong/cfg/1.0.0/uniauth/cas.tgc.signing.key 8hALJmFBEq1X4TD824cg15P5U8BjNrdoF9-XqH1KZQ8UdzFRmT_dX6Ao2M46hiCpvXRvRv-HhkQnpmPtG8oA_w
+/com/dianrong/cfg/1.0.0/uniauth/cas.webflow.encryption.key C4SBogp_badO82wC
+/com/dianrong/cfg/1.0.0/uniauth/cas.webflow.signing.key 8_G6JMTdkxiJ5rN0tqFrEOQj200VoxGrRzAp7bvjMFSGdA2IOzdFRsGv3m3GMNVmoSJ0O4miIBrYCHx_FWP4oQ
+这四个节点的值通过下面这个工具生成，具体步骤：
+a. git clone https://github.com/mitreid-connect/json-web-key-generator.git
+b. 切换到json-web-key-generator目录
+c. 使用maven命令 mvn package 
+d. 切换到json-web-key-generator目录下的 target目录
+e. 分别执行 
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 256
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 512
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 96
+java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -s 512
+得到四个k, 按顺序赋值给上面的四个zookeeper节点
+
 ```
 
 #### (2) 邮箱配置
@@ -188,11 +209,7 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 ### 4.2. redis配置
 
 ``` shell
-# a 普通模式
-/com/dianrong/cfg/1.0.0/uniauth/redis.host localhost  # cas采用的redis的host
-/com/dianrong/cfg/1.0.0/uniauth/redis.port 6379       # redis的port
-
-# b 哨兵模式
+# 哨兵模式 (请自行指定具体的master, password, sentinels配置必须为sentinel的地址和端口)
 /com/dianrong/cfg/1.0.0/uniauth/redis.database 0      # redis的数据库index
 /com/dianrong/cfg/1.0.0/uniauth/cas.iscluster true    # true or false  cas是否采用redis存储登陆的ticket
 /com/dianrong/cfg/1.0.0/uniauth/redis.password ''     # 指定redis密码
@@ -224,10 +241,12 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 
 ### 5.1.Spring系统
 
+#### 5.1.1 非Spring boot系统
+
 客户端系统需要使用[spring security](http://projects.spring.io/spring-security/)，引入`ss-client`模块的jar包
 下面以`techops`项目为例
 
-#### (1) web.xml
+##### (1) web.xml
 
 ``` xml
 <!-- spring session publisher -->
@@ -245,7 +264,7 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 </filter-mapping>
 ```
 
-#### (2) applicationContext.xml
+##### (2) applicationContext.xml
 
 不要把下面这一段配置放到SpringMVC对应的xml当中，必须放置到Spring Bean的xml当中。
 
@@ -323,13 +342,67 @@ zookeeper的配置根路径为`/com/dianrong/cfg/1.0.0`, 该默认路径可通�
 <bean id="uniauthPermissionEvaluator" class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
 ```
 
-#### (3) 获取当前登录用户
+##### (3) 获取当前登录用户
 
 可以通过调用UniClientCommonService这个Spring Bean类的getLoginUserInfo()方法获取当前登录用户对象
 
 ```java
 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 ```
+
+#### 5.1.1.2 Spring Boot接入
+
+如果集成的系统使用的是Spring Boot,还需要在5.1.1.1 非Spring Boot系统集成的方式上做一些修改.
+
+##### (1) 将Uniauth的xml配置导入到集成系统的xml配置中。
+
+```xml
+<!--引入uniauth的xml配置-->
+<import resource="classpath:ss-uniauth-client.xml" />
+<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
+<property name="domainCode" value="springboot-ssclient"></property>
+<property name="rejectPublicInvocations" value="false"></property>
+<property name="customizedLoginRedirecUrl" value="/content"></property>
+</bean>
+<!-- do not change: start -->
+<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+<property name="errorPage" value="/errors/403.jsp" />
+</bean>
+<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+<bean id="sas" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+<constructor-arg>
+<list>
+<bean
+class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+<constructor-arg ref="sessionRegistry" />
+</bean>
+<bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+<constructor-arg ref="sessionRegistry" />
+<property name="maximumSessions" value="1" />
+<property name="exceptionIfMaximumExceeded" value="false" />
+</bean>
+</list>
+</constructor-arg>
+</bean>
+<!-- do not change: end -->
+```
+
+说明：该配置相对于原来的配置方式，主要是将filter的配置以及spring security的配置给删掉了。
+
+##### (2) 集成系统引入Uniauth的Spring Security代码配置,继承Uniauth提供的Spring Security父类 UniauthSecurityConfig.
+比如在demo springboot-ssclient中的配置如下：
+
+```java
+@Configuration
+public class WebSecurityConfiguration extends UniauthSecurityConfig {
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/js/**", "/favicon.ico");
+    }
+}
+```
+
+说明：在覆写父类的 protected void configure(HttpSecurity http) throws Exception方法进行security的自定义配置时,不要忘记调用super.configure(HttpSecurity http) ;
 
 ### 5.2.非Spring系统
 

@@ -34,6 +34,7 @@
         </javaClientGenerator>
 
 
+<<<<<<< HEAD
         <table tableName="user" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
@@ -67,6 +68,9 @@
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>
         <table tableName="grp_attribute_records" enableCountByExample="true"
+=======
+        <table tableName="user_third_account" enableCountByExample="true"
+>>>>>>> refs/remotes/origin/develop
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>

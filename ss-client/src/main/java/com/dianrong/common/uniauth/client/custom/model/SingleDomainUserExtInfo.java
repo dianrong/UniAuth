@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
 import com.dianrong.common.uniauth.client.support.PermissionUtil;
+import com.dianrong.common.uniauth.common.bean.dto.AllDomainPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,8 +20,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,13 +32,12 @@ import org.springframework.util.StringUtils;
 
 /**
  * 单个域的用户信息model.
- *
+ * 
  * @author wanglin
  */
 @Slf4j
 @ToString
 public final class SingleDomainUserExtInfo extends User {
-
   private static final long serialVersionUID = 8347558918889027136L;
 
   private Long id;
@@ -47,7 +49,7 @@ public final class SingleDomainUserExtInfo extends User {
   private volatile Set<SSRegularPattern> regularPatterns;
 
   /**
-   * 判断是否有对应的域.
+   * 权限判断是否有对应的域.
    */
   public Boolean hasDomain(String domainPerm) {
     if (permMap == null || permMap.get(AppConstants.PERM_TYPE_DOMAIN) == null) {
@@ -63,7 +65,7 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   /**
-   * 判断是否有对应的权限.
+   * 判断是否有权限.
    */
   public Boolean hasPrivilege(String privilegePerm) {
     if (permMap == null || permMap.get(AppConstants.PERM_TYPE_PRIVILEGE) == null) {
@@ -79,7 +81,7 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   /**
-   * 判断权限.
+   * 判断是否拥有任意一个权限.
    */
   public Boolean hasAnyPrivilege(String... privilegePerms) {
     if (privilegePerms == null || privilegePerms.length == 0) {
@@ -96,7 +98,7 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   /**
-   * 判断权限.
+   * 判断是否所有的权限都有.
    */
   public Boolean hasAllPrivileges(String... privilegePerms) {
     if (privilegePerms == null || privilegePerms.length == 0) {
@@ -113,7 +115,7 @@ public final class SingleDomainUserExtInfo extends User {
 
   /**
    * Get current user's all permitted regular patterns set.
-   *
+   * 
    * @return unmodifiable set , not null
    */
   public Set<SSRegularPattern> getAllPermittedRegularPattern() {
@@ -129,8 +131,8 @@ public final class SingleDomainUserExtInfo extends User {
 
   // for initiate current user's regular pattern set
   private Set<SSRegularPattern> constructPermittedRegularPattern() {
-    Set<PermissionDto> permissions = permDtoMap
-        .get(DomainDefine.CasPermissionControlType.REGULAR_PATTERN.getTypeStr());
+    Set<PermissionDto> permissions =
+        permDtoMap.get(DomainDefine.CasPermissionControlType.REGULAR_PATTERN.getTypeStr());
     if (permissions == null || permissions.isEmpty()) {
       return Collections.emptySet();
     }
@@ -162,12 +164,11 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   /**
-   * Used for pattern cache.
-   *
+   * used for pattern cache.
+   * 
    * @author wanglin
    */
   private static class PatternCacheManager {
-
     /**
      * . Pattern.compile(patternStr) is a heavy method, so cache the patterns
      */
@@ -176,7 +177,7 @@ public final class SingleDomainUserExtInfo extends User {
 
     /**
      * . get Pattern from patternStr, 1 from cache; 2 from Pattern.compile(patternStr)
-     *
+     * 
      * @param patternStr the pattern string
      * @return Pattern. if return is null, means patternStr is a syntax pattern string
      */
@@ -240,10 +241,10 @@ public final class SingleDomainUserExtInfo extends User {
   }
 
   /**
-   * 构造函数.
+   * 空权限的构造函数.
    */
   public static SingleDomainUserExtInfo emptyAuthorityUserInfo(String username, Long id,
-      UserDto userDto, DomainDto domainDto, IPAPermissionDto ipaPermissionDto) {
+      UserDto userDto, DomainDto domainDto, AllDomainPermissionDto ipaPermissionDto) {
     Map<String, Set<String>> permMap = Maps.newHashMap();
     Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
     Collection<GrantedAuthority> authorities = Lists.newArrayList();
@@ -319,18 +320,18 @@ public final class SingleDomainUserExtInfo extends User {
   public int hashCode() {
     final int prime = 31;
     int result = 0;
-    result = prime * result + ((this.userDto.getTenancyId() == null) ? 0
-        : this.userDto.getTenancyId().hashCode());
-    result = prime * result + ((this.userDto.getEmail() == null) ? 0
-        : this.userDto.getEmail().hashCode());
+    result = prime * result
+        + ((this.userDto.getTenancyId() == null) ? 0 : this.userDto.getTenancyId().hashCode());
+    result = prime * result
+        + ((this.userDto.getEmail() == null) ? 0 : this.userDto.getEmail().hashCode());
     if (!StringUtils.hasText(this.userDto.getEmail())) {
-      result = prime * result + ((this.userDto.getPhone() == null) ? 0
-          : this.userDto.getPhone().hashCode());
+      result = prime * result
+          + ((this.userDto.getPhone() == null) ? 0 : this.userDto.getPhone().hashCode());
     }
-    if (!StringUtils.hasText(this.userDto.getEmail()) && !StringUtils
-        .hasText(this.userDto.getPhone())) {
-      result = prime * result + ((this.userDto.getAccount() == null) ? 0
-          : this.userDto.getAccount().hashCode());
+    if (!StringUtils.hasText(this.userDto.getEmail())
+        && !StringUtils.hasText(this.userDto.getPhone())) {
+      result = prime * result
+          + ((this.userDto.getAccount() == null) ? 0 : this.userDto.getAccount().hashCode());
     }
     return result;
   }

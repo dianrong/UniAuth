@@ -4,7 +4,6 @@ package com.dianrong.common.uniauth.common.cons;
  * Created by Arc on 26/1/16.
  */
 public interface AppConstants {
-
   // 0 = 启用
   Byte ZERO_BYTE = (byte) 0;
   // 1 = 禁用
@@ -46,6 +45,7 @@ public interface AppConstants {
   String PERM_TYPE_DOMAIN = "DOMAIN";
   String PERM_TYPE_URIPATTERN = "URI_PATTERN";
   String PERM_TYPE_PRIVILEGE = "PRIVILEGE";
+  String PERM_TYPE_THIRD_ACCOUNT = "THIRD_ACCOUNT";
   String DOMAIN_CODE_TECHOPS = "techops";
 
   // ROLE_NORMAL
@@ -53,16 +53,16 @@ public interface AppConstants {
 
   /*** zk节点配置相关的常量定义. */
   /**
-   * zk配置中的分隔符,.
+   * zk配置中的分隔符.
    */
   String ZK_CFG_SPLIT = ".";
 
   /**
-   * Domain.
+   * domain.
    */
   String ZK_DOMAIN = "domains";
   /**
-   * ZK中domain节点的前缀.
+   * zk中domain节点的前缀.
    */
   String ZK_DOMAIN_PREFIX = ZK_DOMAIN + ZK_CFG_SPLIT;
   /**
@@ -70,7 +70,7 @@ public interface AppConstants {
    */
   String ZK_DOMAIN_LOGIN_PAGE = "loginPage";
   /**
-   * Ticket 验证失败url.
+   * ticket 验证失败url.
    **/
   String ZK_DOMAIN_AUTH_FAIL_URL = "auth_fail_url";
   /**
@@ -78,7 +78,7 @@ public interface AppConstants {
    */
   String ZK_DOMAIN_SHOW_IN_HOME_PAGE = "showInHomePage";
   /**
-   * ZK节点中,域的登出地址的节点后缀.
+   * zk节点中,域的登出地址的节点后缀.
    */
   String ZK_DOMAIN_LOGOUT_ADDRESS_NODE_SUFFIX = "logout_address";
   /**
@@ -86,7 +86,7 @@ public interface AppConstants {
    */
   String ZK_DOMAIN_TEANANCY_CODE = "tenancycode";
   /**
-   * ZK配置的node name， st使用的次数.
+   * zk 配置的node name， st使用的次数.
    */
   String ZK_NODE_NAME_ST_USED_TIMES = "cas.st_use_times";
 
@@ -105,6 +105,7 @@ public interface AppConstants {
   String PERM_TYPE_DOMAIN_ID = "DOMAIN_ID";
   String CFG_TYPE_TEXT = "TEXT";
   String CFG_TYPE_FILE = "FILE";
+
 
   // constants for password forget
 
@@ -131,7 +132,7 @@ public interface AppConstants {
   String PSWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
   String PSWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
   /**
-   * Useless after integrate notification and challenge.
+   * useless after integrate notification and challenge.
    */
   @Deprecated
   String PSWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";

@@ -38,9 +38,14 @@
           p:cookieName="TGC"
           p:cookiePath="/cas"/>
 
-    <bean id="cookieCipherExecutor" class="org.jasig.cas.util.DefaultCipherExecutor"
+<!--    <bean id="cookieCipherExecutor" class="org.jasig.cas.util.DefaultCipherExecutor"
           c:secretKeyEncryption="${tgc.encryption.key}"
-          c:secretKeySigning="${tgc.signing.key}"/>
+          c:secretKeySigning="${tgc.signing.key}"/>-->
+
+    <bean id="cookieCipherExecutor" class="org.jasig.cas.util.BaseStringCipherExecutor"
+          c:secretKeyEncryption="#{uniauthConfig['cas.tgc.encryption.key']?:'XEfh8xUpS5b4xvh36xTctkZ6dsEM_f_E2WmahmdBn7w'}"
+          c:secretKeySigning="#{uniauthConfig['cas.tgc.signing.key']?:'rx8okz3oCZW4f-UahEbxOWiPL9vzGNOYDm1q08yg-Pd4l8HaC9JNAY3H5qQkpl76jcsFhMwWqfm67CFa7UbTdQ'}" />
+
 
     <bean id="cookieValueManager" class="org.jasig.cas.web.support.DefaultCasCookieValueManager"
           c:cipherExecutor-ref="cookieCipherExecutor"/>

@@ -3,27 +3,29 @@ package com.dianrong.common.uniauth.client.custom;
 import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
 import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
 import com.dianrong.common.uniauth.client.custom.model.UserExtInfoParam;
+import com.dianrong.common.uniauth.common.bean.dto.AllDomainPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.IPAPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.access.regular.SSRegularPattern;
 import org.springframework.util.Assert;
 
+
 /**
- * Uniauth对外的UserDetails实现.
- *
+ * uniauth对外的UserDetails实现.
+ * 
  * @author wanglin
  */
 public class UserExtInfo implements UserDetails {
-
   private static final long serialVersionUID = 8347558918889027136L;
   // 通过账号密码登陆的域所对应的userExtInfo,可以通过该对象知道具体是从哪一个域登陆的
   private SingleDomainUserExtInfo loginDomainUserExtInfo;
@@ -32,23 +34,22 @@ public class UserExtInfo implements UserDetails {
   private AllDomainUserExtInfo allDomainUserExtInfo = new AllDomainUserExtInfo();
 
   // 增加对IPA权限的支持
-  private IPAPermissionDto ipaPermissionDto;
+  private AllDomainPermissionDto allDomainPermissionDto;
 
   /**
-   * Get the correct UserExtInfo.
-   *
+   * get the correct UserExtInfo.
+   * 
    * @return not null
    */
   private SingleDomainUserExtInfo getCurrentDomainUserExtInfo() {
-    SingleDomainUserExtInfo currentDomainUserExtInfo = this.allDomainUserExtInfo
-        .getUserDetail(DomainDefine.getStaticDomainCode());
+    SingleDomainUserExtInfo currentDomainUserExtInfo =
+        this.allDomainUserExtInfo.getUserDetail(DomainDefine.getStaticDomainCode());
     // 用户没有对应域的权限 需要构造一个空权限的对象
     if (currentDomainUserExtInfo == null) {
-      SingleDomainUserExtInfo emptyUserInfo = SingleDomainUserExtInfo
-          .emptyAuthorityUserInfo(this.loginDomainUserExtInfo.getUsername(),
-              this.loginDomainUserExtInfo.getId(),
-              this.loginDomainUserExtInfo.getUserDto(),
-              new DomainDto().setCode(DomainDefine.getStaticDomainCode()), this.ipaPermissionDto);
+      SingleDomainUserExtInfo emptyUserInfo = SingleDomainUserExtInfo.emptyAuthorityUserInfo(
+          this.loginDomainUserExtInfo.getUsername(), this.loginDomainUserExtInfo.getId(),
+          this.loginDomainUserExtInfo.getUserDto(),
+          new DomainDto().setCode(DomainDefine.getStaticDomainCode()), this.allDomainPermissionDto);
       // cache
       SingleDomainUserExtInfo exsitOne = this.allDomainUserExtInfo
           .addUserDetailIfAbsent(DomainDefine.getStaticDomainCode(), emptyUserInfo);
@@ -78,8 +79,8 @@ public class UserExtInfo implements UserDetails {
   }
 
   /**
-   * Get current user's all permitted regular patterns set.
-   *
+   * get current user's all permitted regular patterns set.
+   * 
    * @return unmodifiable set , not null
    */
   public Set<SSRegularPattern> getAllPermittedRegularPattern() {
@@ -128,8 +129,8 @@ public class UserExtInfo implements UserDetails {
               userExtInfo.getAuthorities(), userExtInfo.getId(), userExtInfo.getUserDto(),
               userExtInfo.getDomainDto(), userExtInfo.getPermMap(), userExtInfo.getPermDtoMap()));
     }
-    this.allDomainUserExtInfo
-        .addUserDetailIfAbsent(domainDto.getCode(), this.loginDomainUserExtInfo);
+    this.allDomainUserExtInfo.addUserDetailIfAbsent(domainDto.getCode(),
+        this.loginDomainUserExtInfo);
   }
 
   public static UserExtInfo build(UserExtInfoParam currentLoginDomainUserInfo,
@@ -141,7 +142,7 @@ public class UserExtInfo implements UserDetails {
    * 增加对IPA数据权限的支持.
    */
   public static UserExtInfo build(UserExtInfoParam currentLoginDomainUserInfo,
-      Map<String, UserExtInfoParam> userExtInfos, IPAPermissionDto ipaPermissionDto) {
+      Map<String, UserExtInfoParam> userExtInfos, AllDomainPermissionDto ipaPermissionDto) {
     Assert.notNull(currentLoginDomainUserInfo);
     return new UserExtInfo(currentLoginDomainUserInfo.getUsername(),
         currentLoginDomainUserInfo.getPassword(), currentLoginDomainUserInfo.isEnabled(),
@@ -254,12 +255,12 @@ public class UserExtInfo implements UserDetails {
     return this;
   }
 
-  public IPAPermissionDto getIpaPermissionDto() {
-    return ipaPermissionDto;
+  public AllDomainPermissionDto getIpaPermissionDto() {
+    return allDomainPermissionDto;
   }
 
-  public UserExtInfo setIpaPermissionDto(IPAPermissionDto ipaPermissionDto) {
-    this.ipaPermissionDto = ipaPermissionDto;
+  public UserExtInfo setIpaPermissionDto(AllDomainPermissionDto ipaPermissionDto) {
+    this.allDomainPermissionDto = ipaPermissionDto;
     return this;
   }
 
