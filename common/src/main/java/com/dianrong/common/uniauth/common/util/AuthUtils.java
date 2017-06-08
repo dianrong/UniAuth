@@ -23,6 +23,9 @@ public class AuthUtils {
   private static final String LETTERS = "abcdefghijklmnopqrstuvwxyz";
   private static final String SPECIALS = "!@#$%^&*()_+-=,.?/;:{}[]|`~<>'";
 
+  /**
+   * 生成随机的密码盐.
+   */
   public static byte[] createSalt() {
     byte[] salt = new byte[16];
     try {
@@ -35,7 +38,7 @@ public class AuthUtils {
   }
 
   /**
-   * 生成密码
+   * 生成密码.
    *
    * @param length 密码长度
    * @return 密码
@@ -63,6 +66,9 @@ public class AuthUtils {
     return sb.toString();
   }
 
+  /**
+   * 密码加密.
+   */
   public static byte[] digest(String password, byte[] salt) {
     try {
       MessageDigest msgDigest = MessageDigest.getInstance(PSWD_DIGEST_ALGORITHM);
@@ -78,6 +84,9 @@ public class AuthUtils {
     }
   }
 
+  /**
+   * 生成随机密码.
+   */
   public static String randomPassword() {
     StringBuilder sb = new StringBuilder();
     sb.append(SPECIALS.charAt(RandomUtils.nextInt(0, SPECIALS.length()))); // 1
@@ -93,6 +102,9 @@ public class AuthUtils {
     return sb.toString();
   }
 
+  /**
+   * 验证密码是否符合密码策略.
+   */
   public static boolean validatePasswordRule(String password) {
     if (StringUtils.isEmpty(password)) {
       return false;

@@ -63,7 +63,7 @@ public class CompatibleAjaxInvalidSessionStrategy implements InvalidSessionStrat
   public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     // ajax 请求
-    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)) {
+    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCorsRequest(request)) {
       this.ajaxResponseProcessor.sendAjaxResponse(request, response, customizedRedirectFormat);
       if (this.originalInvalidSessionStrategy != null) {
         // 忽略某些不需要处理的InvalidSessionStrategy

@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.common.util;
 
 /**
- * copy from spring
+ * Copy from spring.
  *
  * @author wanglin
  */

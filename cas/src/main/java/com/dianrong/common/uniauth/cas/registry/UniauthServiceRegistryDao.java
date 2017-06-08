@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.cas.registry;
 import com.dianrong.common.uniauth.cas.registry.registeredservice.UniauthRegexRegisteredServiceBuilder;
 import com.dianrong.common.uniauth.cas.util.ServiceUtils;
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.common.util.CRC32;
+import com.dianrong.common.uniauth.common.util.Crc32;
 import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
 import com.google.common.collect.Maps;
 import java.net.MalformedURLException;
@@ -91,7 +91,7 @@ public final class UniauthServiceRegistryDao implements ServiceRegistryDao {
           continue;
         }
         String serviceId = ServiceUtils.getRegularServiceUrl(domainUrl);
-        long id = CRC32.getCRC32(serviceId);
+        long id = Crc32.getCrc32(serviceId);
         // add a default registeredService
         RegisteredService registeredService =
             new UniauthRegexRegisteredServiceBuilder().setName(domainName).setServiceId(serviceId)

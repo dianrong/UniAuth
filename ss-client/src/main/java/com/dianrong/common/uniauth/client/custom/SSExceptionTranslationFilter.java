@@ -69,7 +69,7 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
     // SEC-112: Clear the SecurityContextHolder's Authentication, as the
     // existing Authentication is no longer considered valid
     SecurityContextHolder.getContext().setAuthentication(null);
-    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)) {
+    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCorsRequest(request)) {
       log.debug("This ia an ajax or cors request, return json to client side.");
       this.ajaxResponseProcessor.sendAjaxResponse(request, response, customizedRedirectFormat);
 //            String casServerUrl = zooKeeperConfig.getCasServerUrl();

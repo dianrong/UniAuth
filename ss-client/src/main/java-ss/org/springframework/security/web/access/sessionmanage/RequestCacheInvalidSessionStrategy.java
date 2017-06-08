@@ -25,7 +25,7 @@ public final class RequestCacheInvalidSessionStrategy implements InvalidSessionS
   public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     // ajax请求的上下文不记录
-    if (!(HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request))) {
+    if (!(HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCorsRequest(request))) {
       requestCache.saveRequest(request, response);
     }
   }

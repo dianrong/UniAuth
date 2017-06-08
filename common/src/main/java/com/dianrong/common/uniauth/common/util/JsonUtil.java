@@ -10,9 +10,11 @@ public class JsonUtil {
       .setSerializationInclusion(Include.NON_NULL);
 
   private JsonUtil() {
-
   }
 
+  /**
+   * 对象转JSON.
+   */
   public static String object2Jason(Object obj) {
     try {
       return objectMapper.writeValueAsString(obj);
@@ -22,7 +24,7 @@ public class JsonUtil {
   }
 
   /**
-   * json 转化为object
+   * JSON转化为对象.
    */
   public static <T> T jsonToObject(String json, Class<T> toValueType) {
     if (json == null) {
@@ -36,7 +38,7 @@ public class JsonUtil {
   }
 
   /**
-   * 将一种类型转换为新的类型
+   * 将一种类型转换为新的类型.
    */
   public static <T> T o2o(Object fromValue, Class<T> toValueType) {
     return objectMapper.convertValue(fromValue, toValueType);

@@ -19,7 +19,7 @@ import com.dianrong.common.uniauth.common.interfaces.readwrite.IAttributeExtendR
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
 import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
-import com.dianrong.common.uniauth.common.util.CheckSDKCfg;
+import com.dianrong.common.uniauth.common.util.CheckSdkCfg;
 import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
@@ -90,7 +90,7 @@ public class UniClientFacade {
 
   @PostConstruct
   public void init() {
-    CheckSDKCfg.checkSDKCfg(uniWsEndpoint);
+    CheckSdkCfg.checkSdkCfg(uniWsEndpoint);
     JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
     jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();

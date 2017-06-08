@@ -28,7 +28,7 @@ public class LoginFacade {
    * 用户登陆.
    */
   public UserDto login(LoginParam loginParam) {
-    if (InnerStringUtil.isIPAAccount(loginParam.getAccount())) {
+    if (InnerStringUtil.isIpaAccount(loginParam.getAccount())) {
       return ipaService.login(loginParam);
     }
     return userService.login(loginParam);
@@ -38,7 +38,7 @@ public class LoginFacade {
    * 获取用户详细信息.
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
-    if (InnerStringUtil.isIPAAccount(loginParam.getAccount())) {
+    if (InnerStringUtil.isIpaAccount(loginParam.getAccount())) {
       return ipaService.getUserDetailInfo(loginParam);
     }
     return userService.getUserDetailInfo(loginParam);
@@ -48,7 +48,7 @@ public class LoginFacade {
    * 根据用户的邮箱或者电话获取用户信息.
    */
   public UserDto getUserByEmailOrPhone(LoginParam loginParam) {
-    if (InnerStringUtil.isIPAAccount(loginParam.getAccount())) {
+    if (InnerStringUtil.isIpaAccount(loginParam.getAccount())) {
       return ipaService.getUserByEmailOrPhone(loginParam);
     }
     return userService.getUserByEmailOrPhone(loginParam);

@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpRequestUtil {
 
+  /**
+   * 判断请求是否是Ajax请求.
+   */
   public static Boolean isAjaxRequest(HttpServletRequest httpServletRequest) {
     if (httpServletRequest == null) {
       return Boolean.FALSE;
@@ -24,7 +27,10 @@ public class HttpRequestUtil {
     }
   }
 
-  public static Boolean isCORSRequest(HttpServletRequest httpServletRequest) {
+  /**
+   * 判断请求是否跨域.
+   */
+  public static Boolean isCorsRequest(HttpServletRequest httpServletRequest) {
     if (httpServletRequest == null) {
       return Boolean.FALSE;
     }
@@ -48,9 +54,11 @@ public class HttpRequestUtil {
   }
 
   private HttpRequestUtil() {
-
   }
 
+  /**
+   * URL 编码 指定的url.
+   */
   public static String encodeUrl(String originalUrl) {
     if (originalUrl != null) {
       try {
@@ -63,10 +71,7 @@ public class HttpRequestUtil {
   }
 
   /**
-   * get client ip address
-   *
-   * @param request client request
-   * @return ip address
+   * 获取请求端的IP地址.
    */
   public static String ipAddress(HttpServletRequest request) {
     String ip = request.getHeader("x-forwarded-for");
@@ -93,9 +98,7 @@ public class HttpRequestUtil {
   }
 
   /**
-   * get request url
-   *
-   * @return request url
+   * 获取请求的URL.
    */
   public static String extractRequestUrl(HttpServletRequest request, boolean includingQuery) {
     String url = request.getServletPath();

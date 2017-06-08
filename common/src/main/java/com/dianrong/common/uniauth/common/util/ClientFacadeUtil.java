@@ -7,6 +7,9 @@ import org.apache.cxf.jaxrs.client.WebClient;
  */
 public class ClientFacadeUtil {
 
+  /**
+   * 添加Api Key.
+   */
   public static void addApiKey(String apiName, String apiKey, Object... objs) {
     if (objs != null && apiName != null && apiKey != null) {
       for (Object obj : objs) {

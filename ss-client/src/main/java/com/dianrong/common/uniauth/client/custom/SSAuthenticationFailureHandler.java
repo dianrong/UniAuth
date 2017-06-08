@@ -72,7 +72,7 @@ public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
     log.error("-----------Service Ticket Authentication Failed-------------------:{}",
         exception.getMessage());
     SecurityContextHolder.getContext().setAuthentication(null);
-    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)) {
+    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCorsRequest(request)) {
       response.setContentType("application/json;charset=UTF-8");
       response.addHeader("Cache-Control", "no-store");
       response.getWriter().write(

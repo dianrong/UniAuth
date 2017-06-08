@@ -20,7 +20,7 @@ public class CompatibleAjaxRedirct extends DefaultRedirectStrategy {
   @Override
   public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url)
       throws IOException {
-    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCORSRequest(request)) {
+    if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCorsRequest(request)) {
       log.warn(
           "current request is a ajax request, redirect strategy write json to response. the normal redirect url is {}",
           url);

@@ -12,6 +12,9 @@ public class ReflectionUtils {
   private ReflectionUtils() {
   }
 
+  /**
+   * 反射获取对象的属性值.
+   */
   public static Object getField(Object targetObj, String fieldName, boolean isParentField) {
     Object object = null;
     try {
@@ -30,6 +33,9 @@ public class ReflectionUtils {
     return object;
   }
 
+  /**
+   * 反射获取对象的属性值.
+   */
   public static Object getField(Object targetObj, String fieldName) {
     Object object = null;
     try {
@@ -58,6 +64,9 @@ public class ReflectionUtils {
     return object;
   }
 
+  /**
+   * 反射调用对象的方法.
+   */
   public static Object invokeStaticMethodWithoutParam(Class<?> clazz, String methodName) {
     Object object = null;
     try {
@@ -69,6 +78,9 @@ public class ReflectionUtils {
     return object;
   }
 
+  /**
+   * 反射调用对象的方法.
+   */
   public static Object invokeMethodWithoutParam(Object targetObj, String methodName) {
     Object object = null;
     try {
@@ -80,6 +92,9 @@ public class ReflectionUtils {
     return object;
   }
 
+  /**
+   * 反射调用对象的方法.
+   */
   public static void setUserInfoField(Object targetObj, String fieldName, Object fieldValue) {
     Field field = null;
     Class<?> selfClazz = targetObj.getClass();

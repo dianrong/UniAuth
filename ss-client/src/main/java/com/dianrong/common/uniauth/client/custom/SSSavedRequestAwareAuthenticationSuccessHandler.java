@@ -79,7 +79,7 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler extends
       }
     } else {
       // Use the DefaultSavedRequest URL
-      if (!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCORSRequest(request)) {
+      if (!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCorsRequest(request)) {
         String targetUrl = savedRequest.getRedirectUrl();
         log.debug("Redirecting to DefaultSavedRequest Url: " + targetUrl);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
