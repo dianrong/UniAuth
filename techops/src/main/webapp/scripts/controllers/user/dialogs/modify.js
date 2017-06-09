@@ -2,9 +2,6 @@ define(['../../../utils/constant'], function (constant) {
     var Controller = function ($rootScope,$scope,$uibModalInstance, UserService, AlertService, data) {
     	// update_btn is enable
     	$scope.update_btn_enable = function() {
-    			if (!$scope.user.name) {
-    				return false;
-    			}
     			if (!$scope.user.email && !$scope.user.phone) {
     				return false;
     			}
