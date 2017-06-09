@@ -242,10 +242,12 @@ java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -
 
 ### 5.1.Spring系统
 
+#### 5.1.1 非Spring boot系统
+
 客户端系统需要使用[spring security](http://projects.spring.io/spring-security/)，引入`ss-client`模块的jar包
 下面以`techops`项目为例
 
-#### (1) web.xml
+##### (1) web.xml
 
 ``` xml
 <!-- spring session publisher -->
@@ -263,7 +265,7 @@ java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -
 </filter-mapping>
 ```
 
-#### (2) applicationContext.xml
+##### (2) applicationContext.xml
 
 不要把下面这一段配置放到SpringMVC对应的xml当中，必须放置到Spring Bean的xml当中。
 
@@ -341,13 +343,67 @@ java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -
 <bean id="uniauthPermissionEvaluator" class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
 ```
 
-#### (3) 获取当前登录用户
+##### (3) 获取当前登录用户
 
 可以通过调用UniClientCommonService这个Spring Bean类的getLoginUserInfo()方法获取当前登录用户对象
 
 ```java
 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 ```
+
+#### 5.1.1.2 Spring Boot接入
+
+如果集成的系统使用的是Spring Boot,还需要在5.1.1.1 非Spring Boot系统集成的方式上做一些修改.
+
+##### (1) 将Uniauth的xml配置导入到集成系统的xml配置中。
+
+```xml
+<!--引入uniauth的xml配置-->
+<import resource="classpath:ss-uniauth-client.xml" />
+<bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
+<property name="domainCode" value="springboot-ssclient"></property>
+<property name="rejectPublicInvocations" value="false"></property>
+<property name="customizedLoginRedirecUrl" value="/content"></property>
+</bean>
+<!-- do not change: start -->
+<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+<property name="errorPage" value="/errors/403.jsp" />
+</bean>
+<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+<bean id="sas" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+<constructor-arg>
+<list>
+<bean
+class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+<constructor-arg ref="sessionRegistry" />
+</bean>
+<bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+<constructor-arg ref="sessionRegistry" />
+<property name="maximumSessions" value="1" />
+<property name="exceptionIfMaximumExceeded" value="false" />
+</bean>
+</list>
+</constructor-arg>
+</bean>
+<!-- do not change: end -->
+```
+
+说明：该配置相对于原来的配置方式，主要是将filter的配置以及spring security的配置给删掉了。
+
+##### (2) 集成系统引入Uniauth的Spring Security代码配置,继承Uniauth提供的Spring Security父类 UniauthSecurityConfig.
+比如在demo springboot-ssclient中的配置如下：
+
+```java
+@Configuration
+public class WebSecurityConfiguration extends UniauthSecurityConfig {
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/js/**", "/favicon.ico");
+    }
+}
+```
+
+说明：在覆写父类的 protected void configure(HttpSecurity http) throws Exception方法进行security的自定义配置时,不要忘记调用super.configure(HttpSecurity http) ;
 
 ### 5.2.非Spring系统
 

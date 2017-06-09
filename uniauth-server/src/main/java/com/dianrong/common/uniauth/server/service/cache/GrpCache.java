@@ -9,10 +9,12 @@ import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
+@CacheConfig(cacheNames = {"grp"})
 public class GrpCache {
 
   @Autowired
@@ -25,7 +27,7 @@ public class GrpCache {
    * @param tenancyId 租户id 不能为空
    * @return 组信息
    */
-  @Cacheable(value = "grp", key = "'grp:' +#tenancyId + ':' + #grpCode")
+  @Cacheable(key = "#tenancyId + ':' + #grpCode.toUpperCase()")
   public Grp getGrpInfoByCode(String grpCode, Long tenancyId) {
     Assert.notNull(grpCode);
     Assert.notNull(tenancyId);

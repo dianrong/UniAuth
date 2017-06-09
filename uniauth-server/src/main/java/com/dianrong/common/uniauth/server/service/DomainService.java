@@ -203,7 +203,16 @@ public class DomainService extends TenancyBasedService {
           UniBundle.getMsg("common.parameter.empty", "域ID"));
     }
 
-    if ((domainParam.getStatus() != null && domainParam.getStatus() == AppConstants.ZERO_BYTE)
+    Domain domain = domainMapper.selectByPrimaryKey(domainParam.getId());
+    if (domain != null && AppConstants.DOMAIN_CODE_TECHOPS.equals(domain.getCode())) {
+      if (StringUtils.hasText(domainParam.getCode())
+          && !AppConstants.DOMAIN_CODE_TECHOPS.equals(domain.getCode())) {
+        throw new AppException(InfoName.BAD_REQUEST,
+            UniBundle.getMsg("domain.techops.code.unmodifiable"));
+      }
+    }
+
+    if ((domainParam.getStatus() != null && domainParam.getStatus() == AppConstants.STATUS_ENABLED)
         || domainParam.getStatus() == null) {
       // 如果需要更新code,则加入判断
       if (!StringUtil.strIsNullOrEmpty(domainParam.getCode())) {
@@ -217,7 +226,6 @@ public class DomainService extends TenancyBasedService {
     param.setLastUpdate(new Date());
     param.setTenancyId(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
     domainMapper.updateByPrimaryKeySelective(param);
-    // domainMapper.updateByPrimaryKey(param);
   }
 
   /**
