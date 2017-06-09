@@ -55,7 +55,7 @@
     <bean id="casCrossFilterBean" class="com.dianrong.common.uniauth.cas.cors.CasCorsFilter">
     		<property name="crossFilterCacheHelper">
     			<bean class="com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper">
-    				<property name="defualt_cors_allowed_origins">
+    				<property name="defualtCrosAllowedOrigins">
     					<value>
 	    					^http(s)?://.+\.(dianrong|starlinked|starwin)\.com;
 	    					<!-- ^http(s)?://([a-z]+\-)?[a-z]+(\-[a-z]+)?\.(dianrong|starlinked|starwin)\.com; -->

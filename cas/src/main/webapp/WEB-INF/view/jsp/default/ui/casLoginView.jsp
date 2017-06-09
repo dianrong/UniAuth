@@ -7,7 +7,7 @@
 	queryStr = queryStr == null ? "" : "?" + queryStr;
 	String reqUrl = baseUrl + request.getContextPath() + "/login" + queryStr;
 
-	if (!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCORSRequest(request)) {
+	if (!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCorsRequest(request)) {
 %>
 <jsp:directive.include file="includes/login.jsp" />
 <%
