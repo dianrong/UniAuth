@@ -6,6 +6,7 @@
 * [六. SDK使用](#sdk)
 * [七. 系统说明](#attention)
 
+Uniauth项目的开源QQ交流群号: 463056564  欢迎您的加入
 
 <a id='about'/>
 
