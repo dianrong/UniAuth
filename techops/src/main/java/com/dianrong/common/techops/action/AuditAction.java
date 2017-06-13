@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("audit")
 public class AuditAction {
+
   @Resource
   private UARWFacade uarwFacade;
 

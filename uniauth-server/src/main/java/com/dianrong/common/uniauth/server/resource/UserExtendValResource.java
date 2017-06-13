@@ -10,14 +10,11 @@ import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWR
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.service.UserExtendValService;
 import com.dianrong.common.uniauth.server.service.UserService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,13 +38,11 @@ public class UserExtendValResource implements IUserExtendValRWResource {
       @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "long",
           paramType = "query"),
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
-          dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "status", value = "状态", required = false, dataType = "int",
-          paramType = "query"),})
+          dataType = "long", paramType = "query")})
   @Override
   public Response<List<UserExtendValDto>> searchByUserId(UserExtendValParam userExtendValParam) {
-    List<UserExtendValDto> userExtendValDtos = userExtendValService
-        .searchByUserId(userExtendValParam.getUserId(), userExtendValParam.getStatus());
+    List<UserExtendValDto> userExtendValDtos =
+        userExtendValService.searchByUserId(userExtendValParam.getUserId());
     return Response.success(userExtendValDtos);
   }
 
@@ -59,15 +54,12 @@ public class UserExtendValResource implements IUserExtendValRWResource {
           dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "extendId", value = "扩展属性id", required = true, dataType = "long",
           paramType = "query"),
-      @ApiImplicitParam(name = "status", value = "状态", dataType = "integer", paramType = "query",
-          defaultValue = "0", allowableValues = "0,1"),
       @ApiImplicitParam(name = "value", value = "扩展属性值", dataType = "string",
           paramType = "query"),})
   @Override
   public Response<UserExtendValDto> add(UserExtendValParam userExtendValParam) {
-    UserExtendValDto userExtendValDto =
-        userExtendValService.add(userExtendValParam.getUserId(), userExtendValParam.getExtendId(),
-            userExtendValParam.getValue(), userExtendValParam.getStatus());
+    UserExtendValDto userExtendValDto = userExtendValService.add(userExtendValParam.getUserId(),
+        userExtendValParam.getExtendId(), userExtendValParam.getValue());
     return Response.success(userExtendValDto);
   }
 
@@ -87,14 +79,12 @@ public class UserExtendValResource implements IUserExtendValRWResource {
       @ApiImplicitParam(name = "userId", value = "用户id", dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "extendId", value = "扩展属性id", dataType = "long",
           paramType = "query"),
-      @ApiImplicitParam(name = "value", value = "扩展值", dataType = "string", paramType = "query"),
-      @ApiImplicitParam(name = "status", value = "状态", dataType = "integer", paramType = "query",
-          defaultValue = "0", allowableValues = "0,1"),})
+      @ApiImplicitParam(name = "value", value = "扩展值", dataType = "string", paramType = "query")})
   @Override
   public Response<Integer> updateById(UserExtendValParam userExtendValParam) {
-    int count = userExtendValService.updateById(userExtendValParam.getId(),
-        userExtendValParam.getUserId(), userExtendValParam.getExtendId(),
-        userExtendValParam.getValue(), userExtendValParam.getStatus());
+    int count =
+        userExtendValService.updateById(userExtendValParam.getId(), userExtendValParam.getUserId(),
+            userExtendValParam.getExtendId(), userExtendValParam.getValue());
     return Response.success(count);
   }
 
@@ -135,8 +125,7 @@ public class UserExtendValResource implements IUserExtendValRWResource {
     User user = userService.getUserByAccount(userExtendValParam.getIdentity(),
         userExtendValParam.getTenancyCode(), userExtendValParam.getTenancyId(), true,
         AppConstants.STATUS_ENABLED);
-    List<UserExtendValDto> userExtendValDtos =
-        userExtendValService.searchByUserId(user.getId(), userExtendValParam.getStatus());
+    List<UserExtendValDto> userExtendValDtos = userExtendValService.searchByUserId(user.getId());
     return Response.success(userExtendValDtos);
   }
 
@@ -155,9 +144,9 @@ public class UserExtendValResource implements IUserExtendValRWResource {
   @Override
   @Timed
   public Response<List<UserExtendValDto>> search(UserExtendValParam userExtendValParam) {
-    List<UserExtendValDto> userExtendList = userExtendValService.search(
-        userExtendValParam.getExtendId(), userExtendValParam.getValue(),
-        userExtendValParam.getStatus(), userExtendValParam.getIncludeDisableUserRelatedExtendVal());
+    List<UserExtendValDto> userExtendList =
+        userExtendValService.search(userExtendValParam.getExtendId(), userExtendValParam.getValue(),
+            userExtendValParam.getIncludeDisableUserRelatedExtendVal());
     return Response.success(userExtendList);
   }
 }

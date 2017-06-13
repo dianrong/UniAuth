@@ -3,30 +3,31 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import java.io.Serializable;
 
 public class PermTypeDto implements Serializable {
-    private static final long serialVersionUID = 4831307200565666797L;
-    private Integer id;
-    private String type;
 
-    public Integer getId() {
-        return id;
-    }
+  private static final long serialVersionUID = 4831307200565666797L;
+  private Integer id;
+  private String type;
 
-    public PermTypeDto setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public PermTypeDto setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public PermTypeDto setType(String type) {
-        this.type = type;
-        return this;
-    }
+  public String getType() {
+    return type;
+  }
 
-    @Override
-    public String toString() {
-        return "PermTypeDto [id=" + id + ", type=" + type + "]";
-    }
+  public PermTypeDto setType(String type) {
+    this.type = type;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "PermTypeDto [id=" + id + ", type=" + type + "]";
+  }
 }

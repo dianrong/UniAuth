@@ -4,13 +4,14 @@ import java.util.Collection;
 
 /**
  * Object处理相关的工具类.
- * 
+ *
  * @author wanglin
  */
 public final class ObjectUtil {
 
   /**
    * 判断 o1 和 o2 是否相等.
+   *
    * @return true or false
    */
   public static boolean objectEqual(Object o1, Object o2) {
@@ -26,7 +27,7 @@ public final class ObjectUtil {
 
   /**
    * 判断集合是否为空或为null.
-   * 
+   *
    * @param elements Collection
    * @return 是否为空或null
    */

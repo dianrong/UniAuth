@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.data.entity.ext;
 import com.dianrong.common.uniauth.server.data.entity.Permission;
 
 public class PermissionExt extends Permission {
+
   private Integer domainId;
   protected Integer startIndex;
   protected Integer wantCount;

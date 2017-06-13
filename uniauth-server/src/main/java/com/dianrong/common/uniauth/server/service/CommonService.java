@@ -5,11 +5,9 @@ import com.dianrong.common.uniauth.server.data.entity.PermType;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.service.cache.CommonCache;
 import com.google.common.collect.Maps;
-
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

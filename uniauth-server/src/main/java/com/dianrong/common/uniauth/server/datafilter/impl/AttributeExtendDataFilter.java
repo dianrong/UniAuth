@@ -1,37 +1,36 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
-import com.dianrong.common.uniauth.server.data.entity.UserExtend;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendExample;
-import com.dianrong.common.uniauth.server.data.mapper.UserExtendMapper;
+import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
+import com.dianrong.common.uniauth.server.data.entity.AttributeExtendExample;
+import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * . 用户扩展字段数据过滤处理
- * 
+ * 过滤处理扩展属性.
+ *
  * @author wanglin
  */
-@Service("userExtendDataFilter")
-public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend> {
+@Service("attributeExtendDataFilter")
+public class AttributeExtendDataFilter extends CurrentAbstractDataFilter<AttributeExtend> {
+
   @Autowired
-  private UserExtendMapper userExtendMapper;
+  private AttributeExtendMapper attributeExtendMapper;
 
   @Override
   protected String getProcessTableName() {
-    return UniBundle.getMsg("data.filter.table.name.userextend");
+    return UniBundle.getMsg("data.filter.table.name.AttributeExtend");
   }
 
   @Override
   protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
-    UserExtendExample condition = new UserExtendExample();
-    UserExtendExample.Criteria criteria = condition.createCriteria();
+    AttributeExtendExample condition = new AttributeExtendExample();
+    AttributeExtendExample.Criteria criteria = condition.createCriteria();
     criteria.andTenancyIdEqualTo(getTenancyId());
     // 构造查询条件
     for (FilterData fd : equalsField) {
@@ -44,7 +43,7 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend> 
       }
     }
     // 查询
-    int count = userExtendMapper.countByExample(condition);
+    int count = attributeExtendMapper.countByExample(condition);
     if (count > 0) {
       return true;
     }
@@ -52,11 +51,11 @@ public class UserExtendDataFilter extends CurrentAbstractDataFilter<UserExtend> 
   }
 
   @Override
-  protected UserExtend getEnableRecordByPrimaryKey(Integer id) {
-    CheckEmpty.checkEmpty(id, "userExtendId");
-    UserExtendExample condition = new UserExtendExample();
+  protected AttributeExtend getEnableRecordByPrimaryKey(Integer id) {
+    CheckEmpty.checkEmpty(id, "AttributeExtendId");
+    AttributeExtendExample condition = new AttributeExtendExample();
     condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
-    List<UserExtend> selectByExample = userExtendMapper.selectByExample(condition);
+    List<AttributeExtend> selectByExample = attributeExtendMapper.selectByExample(condition);
     if (selectByExample != null && !selectByExample.isEmpty()) {
       return selectByExample.get(0);
     }

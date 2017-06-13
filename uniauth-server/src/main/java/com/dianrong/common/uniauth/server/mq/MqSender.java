@@ -4,7 +4,7 @@ package com.dianrong.common.uniauth.server.mq;
  * <pre>
  * 定义消息发送接口.
  * </pre>
- * 
+ *
  * @author cwl
  * @created Apr 11, 2016
  */

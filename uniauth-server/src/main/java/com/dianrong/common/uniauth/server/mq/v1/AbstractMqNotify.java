@@ -2,14 +2,12 @@ package com.dianrong.common.uniauth.server.mq.v1;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.mq.MqSender;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 通知模板.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 @Slf4j
 public abstract class AbstractMqNotify implements UniauthNotify {
@@ -33,14 +31,14 @@ public abstract class AbstractMqNotify implements UniauthNotify {
 
   /**
    * 获取发送的routineKey.
-   * 
+   *
    * @return 不能为空
    */
   public abstract String getRoutingKey();
 
   /**
    * 获取发送的实现.
-   * 
+   *
    * @return 不能为空
    */
   protected abstract MqSender getMqSender();

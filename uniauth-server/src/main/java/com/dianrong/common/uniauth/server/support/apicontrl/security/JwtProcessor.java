@@ -12,21 +12,20 @@ import com.dianrong.common.uniauth.server.support.apicontrl.ApiCaller;
 import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermission;
 import com.dianrong.common.uniauth.server.support.apicontrl.security.exp.JwtVerifierCreateFailedException;
 import com.mysql.jdbc.StringUtils;
-
 import javax.annotation.PostConstruct;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  * JWT token processor.
- * 
+ *
  * @author wanglin
  */
 @Slf4j
 @Component
 public class JwtProcessor implements TokenProcessor<ApiCtlPermission> {
+
   // define some constant string
   public static final String ISSUER = "uniauth-server";
   public static final String AUDIENCE = "all-uniauth-integrate-domains";

@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.track;
 
 public class RequestManager {
+
   private static ThreadLocal<GlobalVar> threadLocal = new ThreadLocal<GlobalVar>();
 
   private RequestManager() {

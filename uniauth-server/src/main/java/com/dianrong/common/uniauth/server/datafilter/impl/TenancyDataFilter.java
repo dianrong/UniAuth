@@ -8,19 +8,18 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * tenancy数据过滤的接口.
- * 
+ *
  * @author wanglin
  */
 @Service("tenancyDataFilter")
 public class TenancyDataFilter extends CurrentAbstractDataFilter<Tenancy> {
+
   @Autowired
   private TenancyMapper tenancyMapper;
 

@@ -5,9 +5,8 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 
 /**
  * . 类型转变相关的工具方法.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public class TypeParseUtil {
 

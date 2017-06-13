@@ -11,11 +11,9 @@ import java.io.IOException;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
@@ -33,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("cfg")
 public class ConfigAction {
+
   @Resource
   private UARWFacade uarwFacade;
 

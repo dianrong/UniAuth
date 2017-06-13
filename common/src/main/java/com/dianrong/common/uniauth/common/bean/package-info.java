@@ -1,4 +1,3 @@
-
 @XmlSchema(namespace = "http://uniauth.common.dianrong.com")
 @XmlAccessorType(XmlAccessType.FIELD)
 package com.dianrong.common.uniauth.common.bean;

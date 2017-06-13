@@ -2,11 +2,11 @@ package com.dianrong.common.uniauth.server.datafilter;
 
 /**
  * 用于处理数据过滤的data模型.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public class FilterData {
+
   /**
    * . 过滤的字段类型
    */
@@ -19,7 +19,7 @@ public class FilterData {
 
   /**
    * . 构造函数
-   * 
+   *
    * @param type type
    * @param value value
    */
@@ -38,7 +38,7 @@ public class FilterData {
 
   /**
    * 构造FilterData 对象.
-   * 
+   *
    * @param type type
    * @param value value
    * @return 构造完成的对象

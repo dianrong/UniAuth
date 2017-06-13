@@ -4,50 +4,52 @@ package com.dianrong.common.uniauth.common.bean.dto;
  * Created by Arc on 7/4/2016.
  */
 public class TagTypeDto extends TenancyBaseDto {
-    private static final long serialVersionUID = 4681756553353785511L;
-    private Integer id;
-    private String code;
-    private Integer domainId;
-    private String domainName;
 
-    public Integer getId() {
-        return id;
-    }
+  private static final long serialVersionUID = 4681756553353785511L;
+  private Integer id;
+  private String code;
+  private Integer domainId;
+  private String domainName;
 
-    public TagTypeDto setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public TagTypeDto setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public TagTypeDto setCode(String code) {
-        this.code = code;
-        return this;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public Integer getDomainId() {
-        return domainId;
-    }
+  public TagTypeDto setCode(String code) {
+    this.code = code;
+    return this;
+  }
 
-    public TagTypeDto setDomainId(Integer domainId) {
-        this.domainId = domainId;
-        return this;
-    }
+  public Integer getDomainId() {
+    return domainId;
+  }
 
-    public String getDomainName() {
-        return domainName;
-    }
+  public TagTypeDto setDomainId(Integer domainId) {
+    this.domainId = domainId;
+    return this;
+  }
 
-    public TagTypeDto setDomainName(String domainName) {
-        this.domainName = domainName;
-        return this;
-    }
+  public String getDomainName() {
+    return domainName;
+  }
 
-    @Override
-    public String toString() {
-        return "TagTypeDto [id=" + id + ", code=" + code + ", domainId=" + domainId + ", domainName=" + domainName + "]";
-    }
+  public TagTypeDto setDomainName(String domainName) {
+    this.domainName = domainName;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "TagTypeDto [id=" + id + ", code=" + code + ", domainId=" + domainId + ", domainName="
+        + domainName + "]";
+  }
 }

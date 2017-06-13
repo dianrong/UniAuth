@@ -7,9 +7,7 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Service("tagTypeDataFilter")
 public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
+
   /**
    * . tagType处理的mapper
    */

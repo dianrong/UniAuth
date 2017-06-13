@@ -5,7 +5,6 @@ import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.request.CfgParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
@@ -14,12 +13,11 @@ import javax.ws.rs.Path;
  */
 public interface IConfigRWResource extends IConfigResource {
 
-    @POST
-    @Path("/addOrUpdate")
-    Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam);
+  @POST
+  @Path("/addOrUpdate")
+  Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam);
 
-    @POST
-    @Path("/del")
-    Response<Void> delConfig(PrimaryKeyParam primaryKeyParam);
-
+  @POST
+  @Path("/del")
+  Response<Void> delConfig(PrimaryKeyParam primaryKeyParam);
 }

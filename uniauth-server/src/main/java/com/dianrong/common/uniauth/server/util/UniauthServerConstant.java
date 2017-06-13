@@ -2,9 +2,8 @@ package com.dianrong.common.uniauth.server.util;
 
 /**
  * 定义Uniauth Server专用的常量.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public final class UniauthServerConstant {
   /**

@@ -4,110 +4,112 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class TenancyDto implements Serializable {
-    private static final long serialVersionUID = -6480156107431606880L;
 
-    private Long id;
+  private static final long serialVersionUID = -6480156107431606880L;
 
-    private String code;
+  private Long id;
 
-    private String name;
+  private String code;
 
-    private String contactName;
+  private String name;
 
-    private String phone;
+  private String contactName;
 
-    private String description;
+  private String phone;
 
-    private Byte status;
+  private String description;
 
-    private Date createDate;
+  private Byte status;
 
-    private Date lastUpdate;
+  private Date createDate;
 
-    public Long getId() {
-        return id;
-    }
+  private Date lastUpdate;
 
-    public String getCode() {
-        return code;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public String getContactName() {
-        return contactName;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public String getContactName() {
+    return contactName;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public Byte getStatus() {
-        return status;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
+  public Byte getStatus() {
+    return status;
+  }
 
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
+  public Date getCreateDate() {
+    return createDate;
+  }
 
-    public TenancyDto setId(Long id) {
-        this.id = id;
-        return this;
-    }
+  public Date getLastUpdate() {
+    return lastUpdate;
+  }
 
-    public TenancyDto setCode(String code) {
-        this.code = code;
-        return this;
-    }
+  public TenancyDto setId(Long id) {
+    this.id = id;
+    return this;
+  }
 
-    public TenancyDto setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public TenancyDto setCode(String code) {
+    this.code = code;
+    return this;
+  }
 
-    public TenancyDto setContactName(String contactName) {
-        this.contactName = contactName;
-        return this;
-    }
+  public TenancyDto setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public TenancyDto setPhone(String phone) {
-        this.phone = phone;
-        return this;
-    }
+  public TenancyDto setContactName(String contactName) {
+    this.contactName = contactName;
+    return this;
+  }
 
-    public TenancyDto setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+  public TenancyDto setPhone(String phone) {
+    this.phone = phone;
+    return this;
+  }
 
-    public TenancyDto setStatus(Byte status) {
-        this.status = status;
-        return this;
-    }
+  public TenancyDto setDescription(String description) {
+    this.description = description;
+    return this;
+  }
 
-    public TenancyDto setCreateDate(Date createDate) {
-        this.createDate = createDate;
-        return this;
-    }
+  public TenancyDto setStatus(Byte status) {
+    this.status = status;
+    return this;
+  }
 
-    public TenancyDto setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-        return this;
-    }
+  public TenancyDto setCreateDate(Date createDate) {
+    this.createDate = createDate;
+    return this;
+  }
 
-    @Override
-    public String toString() {
-        return "TenancyDto [id=" + id + ", code=" + code + ", name=" + name + ", contactName=" + contactName + ", phone=" + phone + ", description=" + description + ", status="
-                + status + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate + "]";
-    }
+  public TenancyDto setLastUpdate(Date lastUpdate) {
+    this.lastUpdate = lastUpdate;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "TenancyDto [id=" + id + ", code=" + code + ", name=" + name + ", contactName="
+        + contactName + ", phone=" + phone + ", description=" + description + ", status="
+        + status + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate + "]";
+  }
 }

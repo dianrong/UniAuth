@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
-
 import lombok.ToString;
 
 /**
@@ -10,153 +9,153 @@ import lombok.ToString;
 @ToString
 public class UserQuery extends PageParam {
 
-    private static final long serialVersionUID = -9186367883822216088L;
-    private Long userId;
-    private List<Long> userIds;
-    private String name;
-    private String phone;
-    private String email;
-    private Byte status;
-    private Integer tagId;
-    private Integer groupId;
-    // 需要在groupId != null的情况下才生效
-    private Boolean needDescendantGrpUser;
-    // 是否需要被禁用掉的组的user
-    private Boolean needDisabledGrpUser;
+  private static final long serialVersionUID = -9186367883822216088L;
+  private Long userId;
+  private List<Long> userIds;
+  private String name;
+  private String phone;
+  private String email;
+  private Byte status;
+  private Integer tagId;
+  private Integer groupId;
+  // 需要在groupId != null的情况下才生效
+  private Boolean needDescendantGrpUser;
+  // 是否需要被禁用掉的组的user
+  private Boolean needDisabledGrpUser;
 
-    /**
-     * 根据账号来匹配(phone, email, ldap_no...)
-     */
-    private String account;
-    
-    private Integer roleId;
-    private Boolean needTag;
+  /**
+   * 根据账号来匹配(phone, email, ldap_no...)
+   */
+  private String account;
 
-    private List<Long> excludeUserIds;
+  private Integer roleId;
+  private Boolean needTag;
 
-    public Integer getGroupId() {
-        return groupId;
-    }
+  private List<Long> excludeUserIds;
 
-    public UserQuery setGroupId(Integer groupId) {
-        this.groupId = groupId;
-        return this;
-    }
+  public Integer getGroupId() {
+    return groupId;
+  }
 
-    public Boolean getNeedTag() {
-        return needTag;
-    }
+  public UserQuery setGroupId(Integer groupId) {
+    this.groupId = groupId;
+    return this;
+  }
 
-    public UserQuery setNeedTag(Boolean needTag) {
-        this.needTag = needTag;
-        return this;
-    }
+  public Boolean getNeedTag() {
+    return needTag;
+  }
 
-    public Integer getTagId() {
-        return tagId;
-    }
+  public UserQuery setNeedTag(Boolean needTag) {
+    this.needTag = needTag;
+    return this;
+  }
 
-    public UserQuery setTagId(Integer tagId) {
-        this.tagId = tagId;
-        return this;
-    }
+  public Integer getTagId() {
+    return tagId;
+  }
 
-    public Long getUserId() {
-        return userId;
-    }
+  public UserQuery setTagId(Integer tagId) {
+    this.tagId = tagId;
+    return this;
+  }
 
-    public UserQuery setUserId(Long userId) {
-        this.userId = userId;
-        return this;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public List<Long> getUserIds() {
-        return userIds;
-    }
+  public UserQuery setUserId(Long userId) {
+    this.userId = userId;
+    return this;
+  }
 
-    public UserQuery setUserIds(List<Long> userIds) {
-        this.userIds = userIds;
-        return this;
-    }
+  public List<Long> getUserIds() {
+    return userIds;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public UserQuery setUserIds(List<Long> userIds) {
+    this.userIds = userIds;
+    return this;
+  }
 
-    public UserQuery setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public UserQuery setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public UserQuery setPhone(String phone) {
-        this.phone = phone;
-        return this;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public UserQuery setPhone(String phone) {
+    this.phone = phone;
+    return this;
+  }
 
-    public UserQuery setEmail(String email) {
-        this.email = email;
-        return this;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public Byte getStatus() {
-        return status;
-    }
+  public UserQuery setEmail(String email) {
+    this.email = email;
+    return this;
+  }
 
-    public UserQuery setStatus(Byte status) {
-        this.status = status;
-        return this;
-    }
+  public Byte getStatus() {
+    return status;
+  }
 
-    public Integer getRoleId() {
-        return roleId;
-    }
+  public UserQuery setStatus(Byte status) {
+    this.status = status;
+    return this;
+  }
 
-    public UserQuery setRoleId(Integer roleId) {
-        this.roleId = roleId;
-        return this;
-    }
+  public Integer getRoleId() {
+    return roleId;
+  }
 
-    public Boolean getNeedDescendantGrpUser() {
-        return needDescendantGrpUser;
-    }
+  public UserQuery setRoleId(Integer roleId) {
+    this.roleId = roleId;
+    return this;
+  }
 
-    public UserQuery setNeedDescendantGrpUser(Boolean needDescendantGrpUser) {
-        this.needDescendantGrpUser = needDescendantGrpUser;
-        return this;
-    }
+  public Boolean getNeedDescendantGrpUser() {
+    return needDescendantGrpUser;
+  }
 
-    public Boolean getNeedDisabledGrpUser() {
-        return needDisabledGrpUser;
-    }
+  public UserQuery setNeedDescendantGrpUser(Boolean needDescendantGrpUser) {
+    this.needDescendantGrpUser = needDescendantGrpUser;
+    return this;
+  }
 
-    public UserQuery setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
-        this.needDisabledGrpUser = needDisabledGrpUser;
-        return this;
-    }
+  public Boolean getNeedDisabledGrpUser() {
+    return needDisabledGrpUser;
+  }
 
-    public List<Long> getExcludeUserIds() {
-        return excludeUserIds;
-    }
+  public UserQuery setNeedDisabledGrpUser(Boolean needDisabledGrpUser) {
+    this.needDisabledGrpUser = needDisabledGrpUser;
+    return this;
+  }
 
-    public UserQuery setExcludeUserIds(List<Long> excludeUserIds) {
-        this.excludeUserIds = excludeUserIds;
-        return this;
-    }
+  public List<Long> getExcludeUserIds() {
+    return excludeUserIds;
+  }
 
-    public String getAccount() {
-        return account;
-    }
+  public UserQuery setExcludeUserIds(List<Long> excludeUserIds) {
+    this.excludeUserIds = excludeUserIds;
+    return this;
+  }
 
-    public UserQuery setAccount(String account) {
-        this.account = account;
-        return this;
-    }
+  public String getAccount() {
+    return account;
+  }
+
+  public UserQuery setAccount(String account) {
+    this.account = account;
+    return this;
+  }
 }

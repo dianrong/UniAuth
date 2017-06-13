@@ -16,33 +16,40 @@ import org.springframework.core.Ordered;
 
 @EnableAutoConfiguration
 @Configuration
-@ComponentScan(basePackageClasses={ApplicationStarter.class})
+@ComponentScan(basePackageClasses = {ApplicationStarter.class})
 @PropertySource(value = "classpath:/config/application.yml")
 @ImportResource({"classpath:spring-context.xml"})
 public class ApplicationStarter {
-    public static void main(String[] args) {
-        SpringApplication.run(ApplicationStarter.class, args);
-    }
-    
-    @Value("${domainCode}")
-    private String domainCode;
-    
-    @Bean
-    public DomainDefine domainDefine() {
-        DomainDefine domainDefine = new DomainDefine();
-        domainDefine.setDomainCode(domainCode);
-        domainDefine.setUserInfoClass("com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo");
-        domainDefine.setRejectPublicInvocations(false);
-        domainDefine.setCustomizedLoginRedirecUrl("/content");
-        return domainDefine;
-    }
-    
-    @Bean
-    public FilterRegistrationBean indexFilterRegistration() {
-        CorsFilter corsFilter = new CorsFilter();
-        FilterRegistrationBean registration = new FilterRegistrationBean(corsFilter);
-        registration.addUrlPatterns("/*");
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return registration;
-    }
+
+  public static void main(String[] args) {
+    SpringApplication.run(ApplicationStarter.class, args);
+  }
+
+  @Value("${domainCode}")
+  private String domainCode;
+
+  /**
+   * 配置DomainDefine.
+   */
+  @Bean
+  public DomainDefine domainDefine() {
+    DomainDefine domainDefine = new DomainDefine();
+    domainDefine.setDomainCode(domainCode);
+    domainDefine.setUserInfoClass("com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo");
+    domainDefine.setRejectPublicInvocations(false);
+    domainDefine.setCustomizedLoginRedirecUrl("/content");
+    return domainDefine;
+  }
+
+  /**
+   * 配置跨域的Filter.
+   */
+  @Bean
+  public FilterRegistrationBean indexFilterRegistration() {
+    CorsFilter corsFilter = new CorsFilter();
+    FilterRegistrationBean registration = new FilterRegistrationBean(corsFilter);
+    registration.addUrlPatterns("/*");
+    registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    return registration;
+  }
 }

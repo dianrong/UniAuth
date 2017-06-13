@@ -2,9 +2,8 @@ package com.dianrong.common.uniauth.server.mq.v1.exp;
 
 /**
  * 通知消息发送失败的异常定义.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public class NotifyFailedException extends RuntimeException {
 
