@@ -2,7 +2,7 @@
 ALTER TABLE user_extend MODIFY `description` VARCHAR(200) COMMENT '扩展属性描述';
 ALTER TABLE user_extend ADD category VARCHAR(30) COMMENT '扩展属性类型' after code;
 ALTER TABLE user_extend ADD subcategory VARCHAR(30) COMMENT '扩展属性子类型' after category;
-ALTER TABLE user_extend ADD INDEX index_user_extend_code_tenancy_id (`code`, `tenancy_id`) COMMENT '加快根据Code查询速度';
+ALTER TABLE user_extend ADD INDEX idx_user_extend_code_tenancy_id (`code`, `tenancy_id`) COMMENT '加快根据Code查询速度';
 
 -- Rename table user_extend to attribute_extend
 ALTER TABLE user_extend rename attribute_extend;
@@ -11,14 +11,14 @@ ALTER TABLE user_extend rename attribute_extend;
 ALTER TABLE user ADD staff_no VARCHAR(80) COMMENT '员工编号' after phone;
 ALTER TABLE user ADD ldap_dn VARCHAR(100) COMMENT 'ldap账号' after staff_no;
 ALTER TABLE user ADD user_guid VARCHAR(80) COMMENT '用户的guid' after ldap_dn;
-ALTER TABLE user ADD INDEX index_user_staff_no_tenancy_id (`staff_no`, `tenancy_id`) COMMENT '根据staff_no查询速度加快';
-ALTER TABLE user ADD INDEX index_user_ldap_dn_tenancy_id (`ldap_dn`, `tenancy_id`) COMMENT '根据ldap_dn查询速度加快';
-ALTER TABLE user ADD INDEX index_user_user_guid_tenancy_id (`user_guid`, `tenancy_id`) COMMENT '根据user_guid查询速度加快';
+ALTER TABLE user ADD INDEX idx_user_staff_no_tenancy_id (`staff_no`, `tenancy_id`) COMMENT '根据staff_no查询速度加快';
+ALTER TABLE user ADD INDEX idx_user_ldap_dn_tenancy_id (`ldap_dn`, `tenancy_id`) COMMENT '根据ldap_dn查询速度加快';
+ALTER TABLE user ADD INDEX idx_user_user_guid_tenancy_id (`user_guid`, `tenancy_id`) COMMENT '根据user_guid查询速度加快';
 
 -- Update table user_extend_val
 ALTER TABLE user_extend_val DROP COLUMN status;
 ALTER TABLE user_extend_val change value_ `value` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '扩展属性值';
-ALTER TABLE user_extend_val ADD INDEX index_user_extend_val_value_tenancy_id (`value`, `tenancy_id`) COMMENT '根据扩展属性值索引';
+ALTER TABLE user_extend_val ADD INDEX idx_user_extend_val_value_tenancy_id (`value`, `tenancy_id`) COMMENT '根据扩展属性值索引';
 ALTER TABLE user_extend_val ADD create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间';
 ALTER TABLE user_extend_val ADD last_update DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间';
 
@@ -102,10 +102,10 @@ CREATE TABLE IF NOT EXISTS `user_attribute_records` (
   `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
   `tenancy_id` BIGINT(20) not null default -1 COMMENT'租户id',
   PRIMARY KEY (`id`) COMMENT '主键',
-  INDEX index_user_attribute_records_opt_type_tenancy_id(`opt_type`, `tenancy_id`) COMMENT '加快根据操作类型的查询速度',
-  INDEX index_user_attribute_records_opt_date_tenancy_id(`opt_date`, `tenancy_id`) COMMENT '加快根据操作时间的查询速度',
-  INDEX index_user_attribute_records_pre_val_tenancy_id(`pre_val`, `tenancy_id`) COMMENT '加快根据修改前的值的查询速度',
-  INDEX index_user_attribute_records_cur_val_tenancy_id(`cur_val`, `tenancy_id`) COMMENT '加快根据修改后的值的查询速度',
+  INDEX idx_user_attribute_records_opt_type_tenancy_id(`opt_type`, `tenancy_id`) COMMENT '加快根据操作类型的查询速度',
+  INDEX idx_user_attribute_records_opt_date_tenancy_id(`opt_date`, `tenancy_id`) COMMENT '加快根据操作时间的查询速度',
+  INDEX idx_user_attribute_records_pre_val_tenancy_id(`pre_val`, `tenancy_id`) COMMENT '加快根据修改前的值的查询速度',
+  INDEX idx_user_attribute_records_cur_val_tenancy_id(`cur_val`, `tenancy_id`) COMMENT '加快根据修改后的值的查询速度',
   CONSTRAINT `fk_user_attribute_records_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_attribute_records_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_attribute_records_extend_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `grp_extend_val` (
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
   PRIMARY KEY (`id`) COMMENT '主键',
-  INDEX index_grp_extend_val_value_tenancy_id(`value`, `tenancy_id`) COMMENT '加快根据扩展值查询速度',
+  INDEX idx_grp_extend_val_value_tenancy_id(`value`, `tenancy_id`) COMMENT '加快根据扩展值查询速度',
   CONSTRAINT `fk_grp_extend_val_grp_id` FOREIGN KEY (`grp_id`) REFERENCES `grp` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_extend_val_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_extend_val_extend_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -146,10 +146,10 @@ CREATE TABLE IF NOT EXISTS `grp_attribute_records` (
   `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
   `tenancy_id` BIGINT(20) not null default -1 COMMENT'租户id',
   PRIMARY KEY (`id`) COMMENT '主键',
-  INDEX index_grp_attribute_records_opt_type_tenancy_id(`opt_type`, `tenancy_id`) COMMENT '加快根据操作类型的查询速度',
-  INDEX index_grp_attribute_records_opt_date_tenancy_id(`opt_date`, `tenancy_id`) COMMENT '加快根据操作时间的查询速度',
-  INDEX index_grp_attribute_records_pre_val_tenancy_id(`pre_val`, `tenancy_id`) COMMENT '加快根据修改前的值的查询速度',
-  INDEX index_grp_attribute_records_cur_val_tenancy_id(`cur_val`, `tenancy_id`) COMMENT '加快根据修改后的值的查询速度',
+  INDEX idx_grp_attribute_records_opt_type_tenancy_id(`opt_type`, `tenancy_id`) COMMENT '加快根据操作类型的查询速度',
+  INDEX idx_grp_attribute_records_opt_date_tenancy_id(`opt_date`, `tenancy_id`) COMMENT '加快根据操作时间的查询速度',
+  INDEX idx_grp_attribute_records_pre_val_tenancy_id(`pre_val`, `tenancy_id`) COMMENT '加快根据修改前的值的查询速度',
+  INDEX idx_grp_attribute_records_cur_val_tenancy_id(`cur_val`, `tenancy_id`) COMMENT '加快根据修改后的值的查询速度',
   CONSTRAINT `fk_grp_attribute_records_grp_id` FOREIGN KEY (`grp_id`) REFERENCES `grp` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_attribute_records_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_attribute_records_extend_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
