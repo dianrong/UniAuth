@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.server.test.ldap;
 
 import javax.naming.Name;
-
 import lombok.Data;
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;

@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
@@ -8,19 +7,18 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * . 用户扩展值数据过滤
- * 
+ *
  * @author wanglin
  */
 @Service("userExtendValDataFilter")
 public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExtendVal> {
+
   @Autowired
   private UserExtendValMapper userExtendValMapper;
 
@@ -33,7 +31,7 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExten
   protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
     UserExtendValExample condition = new UserExtendValExample();
     UserExtendValExample.Criteria criteria = condition.createCriteria();
-    criteria.andTenancyIdEqualTo(getTenancyId()).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+    criteria.andTenancyIdEqualTo(getTenancyId());
     // 构造查询条件
     for (FilterData fd : equalsField) {
       switch (fd.getType()) {
@@ -58,8 +56,7 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExten
   protected UserExtendVal getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "UserExtendValId");
     UserExtendValExample condtion = new UserExtendValExample();
-    condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id))
-        .andStatusEqualTo(AppConstants.STATUS_ENABLED);
+    condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
     List<UserExtendVal> infoes = userExtendValMapper.selectByExample(condtion);
     if (infoes != null && infoes.size() > 0) {
       return infoes.get(0);

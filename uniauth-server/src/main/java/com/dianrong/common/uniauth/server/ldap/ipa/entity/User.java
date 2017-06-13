@@ -12,6 +12,7 @@ import org.springframework.ldap.odm.annotations.Id;
 @Data
 @Entry(objectClasses = {"posixaccount"})
 public class User {
+
   @Id
   private Name dn;
 

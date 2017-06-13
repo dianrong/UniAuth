@@ -4,10 +4,11 @@ import java.util.Date;
 
 /**
  * . UserPwdLog 配套的查询条件model
- * 
+ *
  * @author wanglin
  */
 public class UserPwdLogQueryParam {
+
   private Long id;
 
   private Long userId;

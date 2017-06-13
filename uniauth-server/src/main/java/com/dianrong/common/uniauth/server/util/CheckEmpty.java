@@ -8,7 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public class CheckEmpty {
 
-  private CheckEmpty() {}
+  private CheckEmpty() {
+  }
 
   /**
    * 检测参数是否为空.
@@ -26,7 +27,7 @@ public class CheckEmpty {
   public static void checkEmpty(Object idOrCollOrAnyObj, String errorMsg) {
     if (idOrCollOrAnyObj == null || "".equals(idOrCollOrAnyObj.toString().trim())
         || ((idOrCollOrAnyObj instanceof Collection)
-            && (((Collection<?>) idOrCollOrAnyObj)).isEmpty())) {
+        && (((Collection<?>) idOrCollOrAnyObj)).isEmpty())) {
       throw new AppException(InfoName.BAD_REQUEST,
           UniBundle.getMsg("common.parameter.empty", errorMsg));
     }
@@ -34,7 +35,7 @@ public class CheckEmpty {
 
   /**
    * check all objs is blank("" or " "),then throw exception.
-   * 
+   *
    * @param errorMsg tip
    * @param objs obj to check is blank
    */

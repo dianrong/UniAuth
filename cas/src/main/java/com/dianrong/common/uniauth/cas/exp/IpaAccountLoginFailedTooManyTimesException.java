@@ -8,9 +8,9 @@ public class IpaAccountLoginFailedTooManyTimesException extends AccountException
 
   public IpaAccountLoginFailedTooManyTimesException() {
     super();
-}
+  }
 
-public IpaAccountLoginFailedTooManyTimesException(String msg) {
+  public IpaAccountLoginFailedTooManyTimesException(String msg) {
     super(msg);
-}
+  }
 }

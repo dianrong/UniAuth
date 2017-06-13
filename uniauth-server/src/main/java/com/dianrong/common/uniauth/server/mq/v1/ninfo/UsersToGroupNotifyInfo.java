@@ -2,11 +2,11 @@ package com.dianrong.common.uniauth.server.mq.v1.ninfo;
 
 import com.google.common.collect.Lists;
 import java.util.List;
-
 import lombok.ToString;
 
 @ToString
 public class UsersToGroupNotifyInfo extends BaseNotifyInfo {
+
   /**
    * 关联关系中的用户id.
    */

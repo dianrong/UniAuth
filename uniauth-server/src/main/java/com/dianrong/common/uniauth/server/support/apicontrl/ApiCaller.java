@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.server.support.apicontrl;
 import com.dianrong.common.uniauth.common.apicontrol.server.CallerCredential;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
-
 import java.util.Set;
 
 public class ApiCaller implements CallerCredential<ApiCtlPermission> {

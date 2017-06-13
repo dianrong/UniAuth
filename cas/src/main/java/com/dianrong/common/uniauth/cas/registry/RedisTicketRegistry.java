@@ -1,13 +1,14 @@
 package com.dianrong.common.uniauth.cas.registry;
 
+import com.dianrong.common.uniauth.cas.registry.support.SerialzableTicketRegistryHolder;
+import com.dianrong.common.uniauth.common.util.Assert;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.ServiceTicket;
 import org.jasig.cas.ticket.Ticket;
@@ -16,186 +17,189 @@ import org.jasig.cas.ticket.registry.AbstractDistributedTicketRegistry;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 
-import com.dianrong.common.uniauth.cas.registry.support.SerialzableTicketRegistryHolder;
-import com.dianrong.common.uniauth.common.util.Assert;
-
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
-    @NotNull
-    private final RedisTemplate<String, Object> redisTemplate;
 
-    /**
-     * TGT cache entry timeout in seconds.
-     */
-    @Min(0)
-    private final int tgtTimeout;
+  @NotNull
+  private final RedisTemplate<String, Object> redisTemplate;
 
-    /**
-     * ST cache entry timeout in seconds.
-     */
-    @Min(0)
-    private final int stTimeout;
-    
-    /**
-     * ticket的key的前缀字符,防止在redis中与其他key冲突
-     */
-    private String ticketPrefix = "uniauth";
+  /**
+   * TGT cache entry timeout in seconds.
+   */
+  @Min(0)
+  private final int tgtTimeout;
 
-    private SerialzableTicketRegistryHolder registryHolder;
+  /**
+   * ST cache entry timeout in seconds.
+   */
+  @Min(0)
+  private final int stTimeout;
 
-    public SerialzableTicketRegistryHolder getRegistryHolder() {
-        return registryHolder;
+  /**
+   * Ticket的key的前缀字符,防止在redis中与其他key冲突.
+   */
+  private String ticketPrefix = "uniauth";
+
+  private SerialzableTicketRegistryHolder registryHolder;
+
+  public SerialzableTicketRegistryHolder getRegistryHolder() {
+    return registryHolder;
+  }
+
+  public void setRegistryHolder(SerialzableTicketRegistryHolder registryHolder) {
+    this.registryHolder = registryHolder;
+  }
+
+  /**
+   * 构造一个RedisTicketRegistry.
+   */
+  public RedisTicketRegistry(RedisTemplate<String, Object> redisTemplate, int tgtTimeout,
+      int stTimeout) {
+    this.redisTemplate = redisTemplate;
+    this.tgtTimeout = tgtTimeout;
+    this.stTimeout = stTimeout;
+  }
+
+  @Override
+  public void addTicket(Ticket ticket) {
+    log.debug("Adding ticket {}", ticket);
+    try {
+      registryHolder.beforeSerializable(ticket);
+      redisTemplate.opsForValue()
+          .set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
+      registryHolder.afterSerializable(ticket);
+    } catch (final Exception e) {
+      log.error("Failed adding {}", ticket, e);
+      throw e;
     }
+  }
 
-    public void setRegistryHolder(SerialzableTicketRegistryHolder registryHolder) {
-        this.registryHolder = registryHolder;
+  @Override
+  public Ticket getTicket(String ticketId) {
+    try {
+      final Ticket t = (Ticket) this.redisTemplate.opsForValue().get(getTicketKey(ticketId));
+      registryHolder.afterDserializable(t);
+      if (t != null) {
+        return getProxiedTicketInstance(t);
+      }
+    } catch (final Exception e) {
+      log.error("Failed fetching {} ", ticketId, e);
+      throw e;
     }
+    return null;
+  }
 
-    public RedisTicketRegistry(RedisTemplate<String, Object> redisTemplate, int tgtTimeout, int stTimeout) {
-        this.redisTemplate = redisTemplate;
-        this.tgtTimeout = tgtTimeout;
-        this.stTimeout = stTimeout;
+  @Override
+  public boolean deleteTicket(String ticketId) {
+    log.debug("Deleting ticket {}", ticketId);
+    try {
+      Ticket t = getTicket(ticketId);
+      if (t instanceof TicketGrantingTicket) {
+        deleteChildren((TicketGrantingTicket) t);
+      }
+      this.redisTemplate.delete(getTicketKey(ticketId));
+      return true;
+    } catch (final Exception e) {
+      log.error("Failed deleting {}", ticketId, e);
+      throw e;
     }
+  }
 
-    @Override
-    public void addTicket(Ticket ticket) {
-        log.debug("Adding ticket {}", ticket);
-        try {
-            registryHolder.beforeSerializable(ticket);
-            redisTemplate.opsForValue().set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
-            registryHolder.afterSerializable(ticket);
-        } catch (final Exception e) {
-            log.error("Failed adding {}", ticket, e);
-            throw e;
+  /**
+   * Delete TGT's service tickets.
+   *
+   * @param ticket the ticket
+   */
+  private void deleteChildren(final TicketGrantingTicket ticket) {
+    // delete service tickets
+    final Map<String, Service> services = ticket.getServices();
+    if (services != null && !services.isEmpty()) {
+      for (final Map.Entry<String, Service> entry : services.entrySet()) {
+        if (this.deleteServiceTicket(entry.getKey())) {
+          log.trace("Removed service ticket [{}]", entry.getKey());
+        } else {
+          log.trace("Unable to remove service ticket [{}]", entry.getKey());
         }
+      }
     }
+  }
 
-    @Override
-    public Ticket getTicket(String ticketId) {
-        try {
-            final Ticket t = (Ticket) this.redisTemplate.opsForValue().get(getTicketKey(ticketId));
-            registryHolder.afterDserializable(t);
-            if (t != null) {
-                return getProxiedTicketInstance(t);
-            }
-        } catch (final Exception e) {
-            log.error("Failed fetching {} ", ticketId, e);
-            throw e;
-        }
-        return null;
+  /**
+   * . 指定删除service ticket
+   */
+  private boolean deleteServiceTicket(String ticketId) {
+    if (ticketId == null) {
+      return false;
     }
+    log.debug("Deleting ticket {}", ticketId);
+    try {
+      this.redisTemplate.delete(getTicketKey(ticketId));
+      return true;
+    } catch (final Exception e) {
+      log.error("Failed deleting {}", ticketId, e);
+      throw e;
+    }
+  }
 
-    @Override
-    public boolean deleteTicket(String ticketId) {
-        log.debug("Deleting ticket {}", ticketId);
-        try {
-            Ticket t = getTicket(ticketId);
-            if (t instanceof TicketGrantingTicket) {
-                deleteChildren((TicketGrantingTicket) t);
-            }
-            this.redisTemplate.delete(getTicketKey(ticketId));
-            return true;
-        } catch (final Exception e) {
-            log.error("Failed deleting {}", ticketId, e);
-            throw e;
-        }
-    }
+  @Override
+  public Collection<Ticket> getTickets() {
+    // throw new UnsupportedOperationException("GetTickets not supported.");
+    return new ArrayList<Ticket>();
+  }
 
-    /**
-     * Delete TGT's service tickets.
-     *
-     * @param ticket the ticket
-     */
-    private void deleteChildren(final TicketGrantingTicket ticket) {
-        // delete service tickets
-        final Map<String, Service> services = ticket.getServices();
-        if (services != null && !services.isEmpty()) {
-            for (final Map.Entry<String, Service> entry : services.entrySet()) {
-                if (this.deleteServiceTicket(entry.getKey())) {
-                    log.trace("Removed service ticket [{}]", entry.getKey());
-                } else {
-                    log.trace("Unable to remove service ticket [{}]", entry.getKey());
-                }
-            }
-        }
+  @Override
+  protected void updateTicket(Ticket ticket) {
+    log.debug("Updating ticket {}", ticket);
+    try {
+      this.redisTemplate.delete(getTicketKey(ticket.getId()));
+      registryHolder.beforeSerializable(ticket);
+      redisTemplate.opsForValue()
+          .set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
+      registryHolder.afterSerializable(ticket);
+    } catch (final Exception e) {
+      log.error("Failed updating {}", ticket, e);
+      throw e;
     }
+  }
 
-    /**
-     * . 指定删除service ticket
-     * 
-     * @param ticketId
-     * @return
-     */
-    private boolean deleteServiceTicket(String ticketId) {
-        if (ticketId == null) {
-            return false;
-        }
-        log.debug("Deleting ticket {}", ticketId);
-        try {
-            this.redisTemplate.delete(getTicketKey(ticketId));
-            return true;
-        } catch (final Exception e) {
-            log.error("Failed deleting {}", ticketId, e);
-            throw e;
-        }
-    }
+  @Override
+  protected boolean needsCallback() {
+    return true;
+  }
 
-    @Override
-    public Collection<Ticket> getTickets() {
-        // throw new UnsupportedOperationException("GetTickets not supported.");
-        return new ArrayList<Ticket>();
+  private int getTimeout(final Ticket t) {
+    if (t instanceof TicketGrantingTicket) {
+      return this.tgtTimeout;
+    } else if (t instanceof ServiceTicket) {
+      return this.stTimeout;
     }
+    throw new IllegalArgumentException("Invalid ticket type");
+  }
 
-    @Override
-    protected void updateTicket(Ticket ticket) {
-        log.debug("Updating ticket {}", ticket);
-        try {
-            this.redisTemplate.delete(getTicketKey(ticket.getId()));
-            registryHolder.beforeSerializable(ticket);
-            redisTemplate.opsForValue().set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
-            registryHolder.afterSerializable(ticket);
-        } catch (final Exception e) {
-            log.error("Failed updating {}", ticket, e);
-            throw e;
-        }
-    }
+  /**
+   * 获取ticket的key.
+   *
+   * @param ticketId 不能为空
+   * @return 生成的key
+   */
+  protected String getTicketKey(String ticketId) {
+    Assert.notNull(ticketId);
+    return this.ticketPrefix + ":" + ticketId.trim();
+  }
 
-    @Override
-    protected boolean needsCallback() {
-        return true;
-    }
+  public String getTicketPrefix() {
+    return ticketPrefix;
+  }
 
-    private int getTimeout(final Ticket t) {
-        if (t instanceof TicketGrantingTicket) {
-            return this.tgtTimeout;
-        } else if (t instanceof ServiceTicket) {
-            return this.stTimeout;
-        }
-        throw new IllegalArgumentException("Invalid ticket type");
+  /**
+   * 设置Ticket Key的前缀.
+   */
+  public void setTicketPrefix(String ticketPrefix) {
+    if (!StringUtils.hasText(ticketPrefix)) {
+      log.warn("can not set ticketPrefix with empty string.");
+      return;
     }
-    
-    /**
-     * 获取ticket的key
-     * @param ticketId 不能为空
-     * @return 生成的key
-     */
-    protected String getTicketKey(String ticketId) {
-        Assert.notNull(ticketId);
-        return this.ticketPrefix + ":" + ticketId.trim();
-    }
-
-    public String getTicketPrefix() {
-        return ticketPrefix;
-    }
-
-    public void setTicketPrefix(String ticketPrefix) {
-        if(!StringUtils.hasText(ticketPrefix)) {
-            log.warn("can not set ticketPrefix with empty string.");
-            return;
-        }
-        log.info("set new ticketPrefix {}", ticketPrefix);
-        this.ticketPrefix = ticketPrefix;
-    }
+    log.info("set new ticketPrefix {}", ticketPrefix);
+    this.ticketPrefix = ticketPrefix;
+  }
 }

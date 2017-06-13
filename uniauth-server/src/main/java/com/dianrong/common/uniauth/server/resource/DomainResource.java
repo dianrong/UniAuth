@@ -10,10 +10,8 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.server.service.DomainService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
-
 import io.swagger.annotations.Api;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

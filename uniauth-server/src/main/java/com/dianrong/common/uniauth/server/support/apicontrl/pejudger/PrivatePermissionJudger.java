@@ -4,7 +4,6 @@ import com.dianrong.common.uniauth.common.apicontrol.server.CallerCredential;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermission;
 import com.dianrong.common.uniauth.server.support.apicontrl.ServerPermissionCacher;
-
 import java.util.regex.Pattern;
 
 public class PrivatePermissionJudger extends AbstractHttpRequestPermissionJudger {

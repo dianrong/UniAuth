@@ -8,10 +8,8 @@ import com.dianrong.common.uniauth.common.bean.request.CfgParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.server.service.ConfigService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
-
 import io.swagger.annotations.Api;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

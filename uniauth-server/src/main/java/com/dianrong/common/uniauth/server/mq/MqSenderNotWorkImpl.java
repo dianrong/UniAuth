@@ -6,13 +6,15 @@ import lombok.extern.slf4j.Slf4j;
  * <pre>
  * 简单实现MQSender接口，没有实际发送mq消息.
  * </pre>
- * 
+ *
  * @author cwl
  * @created Apr 14, 2016
  */
 @Slf4j
 public class MqSenderNotWorkImpl implements MqSender {
-  private MqSenderNotWorkImpl() {}
+
+  private MqSenderNotWorkImpl() {
+  }
 
   private static final MqSenderNotWorkImpl instance = new MqSenderNotWorkImpl();
 

@@ -4,16 +4,14 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.track.queue.GlobalVarQueue;
 import com.dianrong.common.uniauth.server.track.queue.GlobalVarQueueV2;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * 一个GlobalVarQueue的开关控制类.
- * 
+ *
  * @author wanglin
  */
 @Component
@@ -43,7 +41,7 @@ public class GlobalVarQueueFacade {
 
   /**
    * 开关控制, 是否走旧的实现. 默认采用新的实现
-   * 
+   *
    * @return true 走旧的实现
    */
   private boolean userOldGlobalVarQueueImpl() {

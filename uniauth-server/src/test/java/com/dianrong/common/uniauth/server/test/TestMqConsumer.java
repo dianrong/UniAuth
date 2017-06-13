@@ -11,9 +11,8 @@ import java.io.IOException;
 
 /**
  * 消费mq消息.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public class TestMqConsumer {
 

@@ -3,10 +3,8 @@ package com.dianrong.common.uniauth.server.mq;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UserAddNotifyInfo;
-
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

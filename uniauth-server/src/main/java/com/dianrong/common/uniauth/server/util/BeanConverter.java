@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.bean.dto.ApiPermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto;
 import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
@@ -15,6 +16,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
 import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
@@ -45,6 +47,7 @@ import org.springframework.util.StringUtils;
 /**
  * Created by Arc on 15/1/16.
  */
+@SuppressWarnings("deprecation")
 public class BeanConverter {
 
   /**
@@ -412,6 +415,22 @@ public class BeanConverter {
       userDto.setAccount(user.getUid()).setName(user.getCn()).setEmail(user.getEmail())
           .setPhone(user.getPhone()).setStatus(AppConstants.STATUS_ENABLED);
       return userDto;
+    }
+  }
+
+  /**
+   * 从AttributeExtendDto转换为UserExtendDto.
+   */
+  public static UserExtendDto convert(AttributeExtendDto attributeExtend) {
+    if (attributeExtend == null) {
+      return null;
+    } else {
+      UserExtendDto userExtendDto = new UserExtendDto();
+      userExtendDto.setCode(attributeExtend.getCode())
+          .setDescription(attributeExtend.getDescription()).setId(attributeExtend.getId())
+          .setTenancyCode(attributeExtend.getTenancyCode())
+          .setTenancyId(attributeExtend.getTenancyId());
+      return userExtendDto;
     }
   }
 }

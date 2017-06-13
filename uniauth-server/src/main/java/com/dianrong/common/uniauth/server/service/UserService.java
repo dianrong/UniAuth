@@ -78,7 +78,6 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -93,7 +92,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
@@ -630,7 +628,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 检测电话和邮箱, 不能同时为空.
-   * 
+   *
    * @param phone 电话号码(手机号码)
    * @param email 邮箱地址
    * @param userId 用户的主键ID
@@ -932,7 +930,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 根据账号以及租户信息查询用户的详细信息.
-   * 
    * @param loginStatusCheck 是否检测用户的登陆可用状态
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam, boolean loginStatusCheck) {
@@ -1027,11 +1024,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 获取角色下面所有的权限
-   * 
+   *
    * @param enableRoleIds 可用的角色id集合
-   * @return roleId与对应的权限集合映射;<br/>
-   *         1.如果角色没有任何权限,那么角色的权限是空;<br/>
-   *         2.如果没有任何角色,那么返回empty map
+   * @return roleId与对应的权限集合映射;<br/> 1.如果角色没有任何权限,那么角色的权限是空;<br/> 2.如果没有任何角色,那么返回empty map
    */
   @SuppressWarnings("unchecked")
   private Map<Integer, List<Permission>> getRolePermission(List<Integer> enableRoleIds) {
@@ -1094,7 +1089,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 将domain数据库实体对象转为dto对象.
-   * 
+   *
    * @param domainList domain的数据库实体对象
    * @param roleIdPermissionsMap 角色id/角色的权限集合的映射关系
    * @param domainRoleMap domain id/domain的角色集合的映射关系
@@ -1131,7 +1126,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 封装角色的权限数据,最终确定某个role有某个domain的某些permission.
-   * 
+   *
    * @param roleDto 角色dto,已经封装了角色名称等基本信息
    * @param permTypeMap 权限类型映射数据
    * @param roleIdPermissionsMap 角色id/权限集合映射关系，确定一个角色有哪些权限
@@ -1321,16 +1316,16 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 根据帐号获取用户信息，注意判断用户状态.
-   * 
+   *
    * @param account 帐号唯一编号：邮箱或手机
    * @param tenancyCode 租户编码
    * @param tenancyId 租户Id
    * @param withPhoneChecked 是否根据手机查询true是，false 否
    * @param status 用户启用禁用状态,null表示任意状态
-   * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
-   * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
    * @return 用户信息
    * @throws AppException not found or find multiple user
+   * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
+   * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
    */
   public User getUserByAccount(String account, String tenancyCode, Long tenancyId,
       boolean withPhoneChecked, Byte status) {
@@ -1381,13 +1376,13 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   private void setUserExtendVal(UserDto userDto) {
     List<UserExtendValDto> userExtendValDtos =
-        userExtendValService.searchByUserId(userDto.getId(), AppConstants.STATUS_ENABLED);
+        userExtendValService.searchByUserId(userDto.getId());
     userDto.setUserExtendValDtos(userExtendValDtos);
   }
 
   /**
    * 根据email或phone获取用户信息.
-   * 
+   *
    * @param loginParam email或phone
    * @return 信息model
    */
@@ -1402,7 +1397,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 获取所有的tags,并且根据用户id打上对应的checked标签.
-   * 
+   *
    * @param userId 用户id
    * @param domainId 域名id
    */
@@ -1499,7 +1494,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * . 检验密码是否符合要求
-   * 
+   *
    * @param userId userId
    * @param password the new password
    */
@@ -1545,7 +1540,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * . 异步记录用户的密码设置记录
-   * 
+   *
    * @param user info
    */
   private void asynAddUserPwdLog(final User user) {
@@ -1571,7 +1566,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * get user list by group code and role names.
-   * 
+   *
    * @param groupCode groupCode can not be null
    * @param includeSubGrp include sub group or not
    * @param includeRoleIds roleIds. 如果为空,则不根据角色限定用户列表

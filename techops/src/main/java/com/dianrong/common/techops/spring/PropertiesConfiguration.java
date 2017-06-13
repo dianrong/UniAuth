@@ -1,7 +1,6 @@
 package com.dianrong.common.techops.spring;
 
 import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.EndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.HealthIndicatorAutoConfiguration;
@@ -30,6 +29,7 @@ import org.springframework.context.annotation.ImportResource;
     HealthIndicatorAutoConfiguration.class})
 @ImportResource({"classpath:applicationContext.xml"})
 public class PropertiesConfiguration {
+
   @Bean
   @Autowired
   public EndpointHandlerMapping endpointHandlerMapping(

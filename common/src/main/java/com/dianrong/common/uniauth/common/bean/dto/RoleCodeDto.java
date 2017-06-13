@@ -6,40 +6,41 @@ import java.io.Serializable;
  * Created by Arc on 15/1/16.
  */
 public class RoleCodeDto implements Serializable {
-    private static final long serialVersionUID = -644318011242242347L;
-    private Integer id;
-    private String code;
-    private String description;
 
-    public String getDescription() {
-        return description;
-    }
+  private static final long serialVersionUID = -644318011242242347L;
+  private Integer id;
+  private String code;
+  private String description;
 
-    public RoleCodeDto setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public RoleCodeDto setDescription(String description) {
+    this.description = description;
+    return this;
+  }
 
-    public RoleCodeDto setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public RoleCodeDto setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public RoleCodeDto setCode(String code) {
-        this.code = code;
-        return this;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    @Override
-    public String toString() {
-        return "RoleCodeDto [id=" + id + ", code=" + code + ", description=" + description + "]";
-    }
+  public RoleCodeDto setCode(String code) {
+    this.code = code;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "RoleCodeDto [id=" + id + ", code=" + code + ", description=" + description + "]";
+  }
 }

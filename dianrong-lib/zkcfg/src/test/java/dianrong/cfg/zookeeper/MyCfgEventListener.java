@@ -10,6 +10,6 @@ import com.dianrong.platform.open.cfg.CfgEventListener;
 public class MyCfgEventListener implements CfgEventListener {
   @Override
   public void onEvent(CfgEvent event, String key, String value) {
-    System.err.println("my cfg event listener value = "+ value);
+    System.err.println("my cfg event listener value = " + value);
   }
 }

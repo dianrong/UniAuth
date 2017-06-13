@@ -7,9 +7,7 @@ import com.dianrong.common.uniauth.common.server.UniauthLocaleChangeInterceptor;
 import com.dianrong.common.uniauth.common.server.UniauthResourceService;
 import java.util.List;
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;

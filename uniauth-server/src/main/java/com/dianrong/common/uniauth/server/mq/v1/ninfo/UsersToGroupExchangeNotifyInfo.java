@@ -1,11 +1,11 @@
 package com.dianrong.common.uniauth.server.mq.v1.ninfo;
 
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
-
 import lombok.ToString;
 
 @ToString
 public class UsersToGroupExchangeNotifyInfo extends UsersToGroupNotifyInfo {
+
   /**
    * 关联关系中的组id.
    */

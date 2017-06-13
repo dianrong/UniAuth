@@ -2,9 +2,8 @@ package com.dianrong.common.uniauth.server.datafilter;
 
 /**
  * . 枚举关键字段取值的类型
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public enum FieldType {
   /**

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api("Uniauth的Api调用日志操作接口")
 @RestController
 public class AuditResource implements IAuditResource {
+
   @Autowired
   private AuditService auditService;
 

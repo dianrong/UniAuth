@@ -51,9 +51,7 @@
       and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
     </if>
     <if test="tenancyId == null" >
-       and tenancy_id in ( 
-    	select id from tenancy where code = #{tenancyCode, jdbcType=VARCHAR} and status = 0 
-    )
+       and tenancy_id in (select id from tenancy where code = #{tenancyCode, jdbcType=VARCHAR} and status = 0 )
     </if>
   </select>
   

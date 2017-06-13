@@ -7,6 +7,7 @@ import lombok.ToString;
  */
 @ToString
 public class BaseUserNotifyInfo extends BaseNotifyInfo {
+
   /**
    * 用户id.
    */

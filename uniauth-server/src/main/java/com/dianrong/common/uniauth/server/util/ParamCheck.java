@@ -8,7 +8,9 @@ import com.dianrong.common.uniauth.server.exp.AppException;
  * Created by Arc on 27/1/16.
  */
 public class ParamCheck {
-  private ParamCheck() {}
+
+  private ParamCheck() {
+  }
 
   /**
    * 检查状态.
@@ -24,7 +26,6 @@ public class ParamCheck {
   }
 
   /**
-   *
    * @param pageNumber page's number.
    * @param pageSize the size of one page.
    * @param count the query result count.

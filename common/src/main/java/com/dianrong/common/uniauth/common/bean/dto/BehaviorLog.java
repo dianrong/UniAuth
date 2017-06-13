@@ -4,80 +4,81 @@ import java.util.Date;
 
 public class BehaviorLog extends TenancyBaseDto {
 
-    private Long id;
+  private Long id;
 
-    private Long aid;
+  private Long aid;
 
-    private Short type;
+  private Short type;
 
-    private String target;
+  private String target;
 
-    private String ipAddr;
+  private String ipAddr;
 
-    private Date createD;
+  private Date createD;
 
-    private Short result;
+  private Short result;
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getAid() {
-        return aid;
-    }
+  public Long getAid() {
+    return aid;
+  }
 
-    public void setAid(Long aid) {
-        this.aid = aid;
-    }
+  public void setAid(Long aid) {
+    this.aid = aid;
+  }
 
-    public Short getType() {
-        return type;
-    }
+  public Short getType() {
+    return type;
+  }
 
-    public void setType(Short type) {
-        this.type = type;
-    }
+  public void setType(Short type) {
+    this.type = type;
+  }
 
-    public String getTarget() {
-        return target;
-    }
+  public String getTarget() {
+    return target;
+  }
 
-    public void setTarget(String target) {
-        this.target = target == null ? null : target.trim();
-    }
+  public void setTarget(String target) {
+    this.target = target == null ? null : target.trim();
+  }
 
-    public String getIpAddr() {
-        return ipAddr;
-    }
+  public String getIpAddr() {
+    return ipAddr;
+  }
 
-    public void setIpAddr(String ipAddr) {
-        this.ipAddr = ipAddr == null ? null : ipAddr.trim();
-    }
+  public void setIpAddr(String ipAddr) {
+    this.ipAddr = ipAddr == null ? null : ipAddr.trim();
+  }
 
-    public Date getCreateD() {
-        return createD;
-    }
+  public Date getCreateD() {
+    return createD;
+  }
 
-    public void setCreateD(Date createD) {
-        this.createD = createD;
-    }
+  public void setCreateD(Date createD) {
+    this.createD = createD;
+  }
 
-    public Short getResult() {
-        return result;
-    }
+  public Short getResult() {
+    return result;
+  }
 
-    public void setResult(Short result) {
-        this.result = result;
-    }
+  public void setResult(Short result) {
+    this.result = result;
+  }
 
-    @Override
-    public String toString() {
-        return "BehaviorLog [id=" + id + ", aid=" + aid + ", type=" + type + ", target=" + target + ", ipAddr=" + ipAddr + ", createD=" + createD + ", result=" + result + "]";
-    }
+  @Override
+  public String toString() {
+    return "BehaviorLog [id=" + id + ", aid=" + aid + ", type=" + type + ", target=" + target
+        + ", ipAddr=" + ipAddr + ", createD=" + createD + ", result=" + result + "]";
+  }
 }

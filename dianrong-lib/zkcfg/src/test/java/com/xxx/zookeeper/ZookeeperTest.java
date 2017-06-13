@@ -1,16 +1,22 @@
 package com.xxx.zookeeper;
 
-import org.apache.zookeeper.*;
-import org.apache.zookeeper.data.ACL;
-
 import java.io.IOException;
-import java.util.Arrays;
+
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooKeeper;
 
 /**
  * Created by W510 on 2015/12/3.
  */
 public class ZookeeperTest {
 
+  /**
+   * 主方法.
+   */
   public static void main(String[] args) throws IOException, KeeperException, InterruptedException {
     Watcher watcher = new Watcher() {
       @Override
@@ -19,7 +25,8 @@ public class ZookeeperTest {
       }
     };
     ZooKeeper zooKeeper = new ZooKeeper("192.168.71.136:2181", 3000, watcher);
-    zooKeeper.create("/temp", "hahaha".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+    zooKeeper.create("/temp", "hahaha".getBytes(), 
+        ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 
     while (true) {
       String value = new String(zooKeeper.getData("/temp", false, null));

@@ -2,10 +2,11 @@ package com.dianrong.common.uniauth.server.datafilter;
 
 /**
  * uniauth-server 所有数据过滤的接口.
- * 
+ *
  * @author wanglin
  */
 public interface DataFilter {
+
   /**
    * 添加数据的时候，进行单一字段的check(addFieldsCheck的单一字段版).
    */
@@ -18,7 +19,7 @@ public interface DataFilter {
 
   /**
    * . 根据primaryid 更新记录的时候进行单字段的check(updateFieldsCheck的单字段版)
-   * 
+   *
    * @param type 字段
    * @param id keyid
    * @param fieldValue 需要新加入的值

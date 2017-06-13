@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.server.support.apicontrl.security.exp;
 
 /**
  * Failed to create JWTVerifier exception.
- * 
+ *
  * @author wanglin
  */
 public class JwtVerifierCreateFailedException extends Exception {
