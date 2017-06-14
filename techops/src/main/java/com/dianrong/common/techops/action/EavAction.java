@@ -91,25 +91,12 @@ public class EavAction {
   }
 
   /**
-   * 禁用用户的扩展信息.
+   * 删除用户的扩展信息.
    */
-  @RequestMapping(value = "/user/disable", method = RequestMethod.POST,
+  @RequestMapping(value = "/user/delete", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
   public Response<Integer> disableUserEavCode(@RequestBody UserExtendValParam param) {
     return uniFacade.getUserExtendValRWResource().delById(param);
-  }
-
-  /**
-   * 启用用户的扩展信息.
-   */
-  @RequestMapping(value = "/user/enable", method = RequestMethod.POST,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
-  public Response<Integer> enableUserEavCode(@RequestBody UserExtendValParam param) {
-    UserExtendValParam tcondtion = new UserExtendValParam();
-    tcondtion.setId(param.getId());
-    tcondtion.setStatus((byte) 0);
-    return uniFacade.getUserExtendValRWResource().updateById(tcondtion);
   }
 }

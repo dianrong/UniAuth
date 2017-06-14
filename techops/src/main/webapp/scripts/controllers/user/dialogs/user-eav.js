@@ -70,7 +70,6 @@ define(['../../../utils/constant'], function (constant) {
                 userEav.extendCode=$scope.newUserEav.extendCode;
                 userEav.value=$scope.newUserEav.value;
                 userEav.id = result.id;
-                userEav.status = '0';
                 userEav.userId = $scope.user.id;
                 // 将从未使用中把数据放到使用中的
                 getElemFromToUseToUsed(userEav);
@@ -139,10 +138,10 @@ define(['../../../utils/constant'], function (constant) {
         };
 
         // 禁用
-        $scope.disableUserEav = function(userEav) {
+        $scope.deleteUserEav = function(userEav) {
         	 var param = {};
              param.id = userEav.id;
-             EvaService.disableUserEav(param, function (res) {
+             EvaService.deleteUserEav(param, function (res) {
             	 var result = res.data;
                  if(res.info) {
                      for(var i=0; i<res.info.length;i++) {
@@ -150,33 +149,11 @@ define(['../../../utils/constant'], function (constant) {
                      }
                      return;
                  }
-                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.disableEavSuccess'));
-                 userEav.status = '1';
-                 // 重新计算数据的权重值和排序
+                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.deleteEavSuccess'));
+                 pushElemFromUsedToToUse(userEav);
                  computeNewData(false);
              }, function () {
-                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.disableEavFailure'));
-             });
-        };
-        
-        // 启用
-        $scope.enableUserEav = function(userEav) {
-        	 var param = {};
-             param.id = userEav.id;
-             EvaService.enableUserEav(param, function (res) {
-            	 var result = res.data;
-                 if(res.info) {
-                     for(var i=0; i<res.info.length;i++) {
-                         AlertService.addAlert(constant.messageType.danger, res.info[i].msg);
-                     }
-                     return;
-                 }
-                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.enableEavSuccess'));
-                 userEav.status = '0';
-                 // 重新计算数据的权重值和排序
-                 computeNewData(false);
-             }, function () {
-                 AlertService.addAutoDismissAlert(constant.messageType.danger,$rootScope.translate('userMgr.tips.enableEavFailure'));
+                 AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.deleteEavFailure'));
              });
         };
         
@@ -230,7 +207,7 @@ define(['../../../utils/constant'], function (constant) {
     			}
     		}
     		// 对数据进行排序  按照extendId排序
-    		sortArrays(used, 'status', false, 'id', true);
+    		sortArrays(used, 'id', true);
     		sortArrays(toUse, 'extendId', true);
     		
     		// 赋值
@@ -288,6 +265,28 @@ define(['../../../utils/constant'], function (constant) {
     				 $scope.userEvaUsed = [];
     			 }
     			 $scope.userEvaUsed.push(ele);
+    		 }
+    	};
+    	
+    	// 从已使用中放到未使用中
+    	var pushElemFromUsedToToUse = function(ele) {
+    		if(!$scope.userEvaUsed || $scope.userEvaUsed.length == 0) {
+    			return;
+    		}
+    		var index = -1;
+    		for(var i = 0; i <  $scope.userEvaUsed.length; i++) {
+    			if($scope.userEvaUsed[i].extendId === ele.extendId) {
+    				index = i;
+    				break;
+    			}
+    		}
+    		 if(index > -1) {
+    			 $scope.userEvaUsed.splice(index, 1);
+    			 // 加入到已使用的列表中
+    			 if(!$scope.userEvaToUse) {
+    				 $scope.userEvaToUse = [];
+    			 }
+    			 $scope.userEvaToUse.push(ele);
     		 }
     	};
         
