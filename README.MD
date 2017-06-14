@@ -39,7 +39,7 @@ gradle warTechopsWebsite
 ### 2.2.初始化数据库
 
 在mysql中`create database uniauth`，然后按rt顺序执行`uniauth-server/src/script/sql`  中所有的脚本；
-管理员账号：`shuanggui.fan@dianrong.com`，密码： `$1234qweR`
+管理员账号：`first.admin@test.com`，密码： `$1234qweR`
 
 ### 2.3.配置tomcat7
 
