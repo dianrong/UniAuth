@@ -32,6 +32,7 @@
                              targetPackage="com.dianrong.common.uniauth.server.data.mapper" targetProject="${targetProject}">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
+        
         <table tableName="profile_definition" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
