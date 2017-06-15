@@ -1,14 +1,17 @@
 package com.dianrong.common.uniauth.cas.registry;
 
-import com.dianrong.common.uniauth.cas.registry.support.SerialzableTicketRegistryHolder;
 import com.dianrong.common.uniauth.common.util.Assert;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.ServiceTicket;
 import org.jasig.cas.ticket.Ticket;
@@ -40,16 +43,6 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
    */
   private String ticketPrefix = "uniauth";
 
-  private SerialzableTicketRegistryHolder registryHolder;
-
-  public SerialzableTicketRegistryHolder getRegistryHolder() {
-    return registryHolder;
-  }
-
-  public void setRegistryHolder(SerialzableTicketRegistryHolder registryHolder) {
-    this.registryHolder = registryHolder;
-  }
-
   /**
    * 构造一个RedisTicketRegistry.
    */
@@ -64,10 +57,8 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
   public void addTicket(Ticket ticket) {
     log.debug("Adding ticket {}", ticket);
     try {
-      registryHolder.beforeSerializable(ticket);
       redisTemplate.opsForValue()
           .set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
-      registryHolder.afterSerializable(ticket);
     } catch (final Exception e) {
       log.error("Failed adding {}", ticket, e);
       throw e;
@@ -78,7 +69,6 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
   public Ticket getTicket(String ticketId) {
     try {
       final Ticket t = (Ticket) this.redisTemplate.opsForValue().get(getTicketKey(ticketId));
-      registryHolder.afterDserializable(t);
       if (t != null) {
         return getProxiedTicketInstance(t);
       }
@@ -152,10 +142,8 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
     log.debug("Updating ticket {}", ticket);
     try {
       this.redisTemplate.delete(getTicketKey(ticket.getId()));
-      registryHolder.beforeSerializable(ticket);
       redisTemplate.opsForValue()
           .set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
-      registryHolder.afterSerializable(ticket);
     } catch (final Exception e) {
       log.error("Failed updating {}", ticket, e);
       throw e;
