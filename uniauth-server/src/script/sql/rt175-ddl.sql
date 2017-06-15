@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   PRIMARY KEY (`id`) COMMENT '主键',
   CONSTRAINT `fk_user_detail_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_detail_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT '用户详细信息';
   
 -- -----------------------------------------------------
 -- Table `user_work_relationship`
@@ -78,12 +78,12 @@ CREATE TABLE IF NOT EXISTS `user_work_relationship` (
   `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
   `tenancy_id` BIGINT(20) not null default -1 COMMENT'租户id',
   PRIMARY KEY (`id`) COMMENT '主键' ,
-  INDEX index_user_work_relationship_type_tenancy_id(`type`, `tenancy_id`) COMMENT '加快根据类型查询速度',
+  INDEX idx_user_work_relationship_type_tenancy_id(`type`, `tenancy_id`) COMMENT '加快根据类型查询速度',
   CONSTRAINT `fk_user_work_relationship_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_work_relationship_manager_id` FOREIGN KEY (`manager_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_work_relationship_supervisor_id` FOREIGN KEY (`supervisor_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_work_relationship_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT '用户组织关系表';
   
 -- -----------------------------------------------------
 -- Table `user_attribute_records`
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `user_attribute_records` (
   CONSTRAINT `fk_user_attribute_records_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_attribute_records_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_attribute_records_extend_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT '用户属性操作记录';
   
 -- -----------------------------------------------------
 -- Table `grp_extend_val`
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `grp_extend_val` (
   CONSTRAINT `fk_grp_extend_val_grp_id` FOREIGN KEY (`grp_id`) REFERENCES `grp` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_extend_val_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_extend_val_extend_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT '组的扩展属性表';
   
 -- -----------------------------------------------------
 -- Table `grp_attribute_records`
@@ -153,4 +153,4 @@ CREATE TABLE IF NOT EXISTS `grp_attribute_records` (
   CONSTRAINT `fk_grp_attribute_records_grp_id` FOREIGN KEY (`grp_id`) REFERENCES `grp` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_attribute_records_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_grp_attribute_records_extend_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT '组的扩展属性操作记录';
