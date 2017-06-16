@@ -23,7 +23,7 @@
             <ref bean="tenancyResource" />
             <ref bean="attributeExtendResource"/>
             <ref bean="swaggerResource"/>
-            
+            <ref bean="profileResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />
