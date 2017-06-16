@@ -4,10 +4,15 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
+import lombok.ToString;
+
 /**
  * @author wenlongchen.
  * @since May 16, 2016
  */
+@ToString
 @ApiModel("用户扩展值信息")
 public class UserExtendValDto extends TenancyBaseDto {
 
@@ -37,6 +42,12 @@ public class UserExtendValDto extends TenancyBaseDto {
 
   @ApiModelProperty("扩展属性的描述信息")
   private String extendDescription;
+  
+  @ApiModelProperty("创建时间")
+  private Date createDate;
+
+  @ApiModelProperty("最近更新时间")
+  private Date lastUpdate;
 
   public Long getId() {
     return id;
@@ -92,6 +103,22 @@ public class UserExtendValDto extends TenancyBaseDto {
 
   public void setExtendDescription(String extendDescription) {
     this.extendDescription = extendDescription;
+  }
+
+  public Date getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
+  }
+
+  public Date getLastUpdate() {
+    return lastUpdate;
+  }
+
+  public void setLastUpdate(Date lastUpdate) {
+    this.lastUpdate = lastUpdate;
   }
 }
 

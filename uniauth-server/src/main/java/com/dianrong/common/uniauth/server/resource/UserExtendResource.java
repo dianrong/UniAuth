@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wanglin
  * @see com.dianrong.common.uniauth.server.resource.AttributeExtendResource
  */
-@Deprecated
 @Api(value = "用户扩展属性操作")
+@Deprecated
 @RestController
 public class UserExtendResource implements IUserExtendRWResource {
 

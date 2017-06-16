@@ -50,22 +50,14 @@ define(['../../utils/constant'], function (constant) {
                 },
                 timeout: constant.reqTimeout
             },
-            disableUserEav: {
+            deleteUserEav: {
                 method: 'POST',
                 params: {
                 	element : 'user',
-                    method: 'disable'
+                    method: 'delete'
                 },
                 timeout: constant.reqTimeout
             },
-            enableUserEav: {
-                method: 'POST',
-                params: {
-                	element : 'user',
-                    method: 'enable'
-                },
-                timeout: constant.reqTimeout
-            }
         });
         return svc;
     };
