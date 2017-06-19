@@ -17,7 +17,7 @@ ALTER TABLE user ADD INDEX idx_user_user_guid_tenancy_id (`user_guid`, `tenancy_
 
 -- Update table user_extend_val
 ALTER TABLE user_extend_val DROP COLUMN status;
-ALTER TABLE user_extend_val change value_ `value` VARCHAR(200) NOT NULL DEFAULT '' COMMENT '扩展属性值';
+ALTER TABLE user_extend_val change value_ `value` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '扩展属性值';
 ALTER TABLE user_extend_val ADD INDEX idx_user_extend_val_value_tenancy_id (`value`, `tenancy_id`) COMMENT '根据扩展属性值索引';
 ALTER TABLE user_extend_val ADD create_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间';
 ALTER TABLE user_extend_val ADD last_update DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间';
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `grp_extend_val` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `grp_id` INT(11) NOT NULL COMMENT '对应的组id',
   `extend_id` BIGINT(20) NOT NULL COMMENT '关联的扩展属性id',
-  `value` VARCHAR(200) NOT NULL COMMENT '扩展属性值' DEFAULT '',
+  `value` VARCHAR(512) NOT NULL COMMENT '扩展属性值' DEFAULT '',
   `tenancy_id` BIGINT(20) NOT NULL COMMENT '租户id',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `last_update` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',

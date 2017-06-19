@@ -1,8 +1,3 @@
--- Update table attribute_extend
-ALTER TABLE attribute_extend DROP INDEX idx_user_extend_code_tenancy_id;
-ALTER TABLE attribute_extend MODIFY `category` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '用户邮箱';
-ALTER TABLE attribute_extend ADD INDEX idx_attribute_extend_code_category_tenancy(`code`, `category`, `tenancy_id`) COMMENT '加快根据Code查询速度';
-
 -- -----------------------------------------------------
 -- Table `profile_definition`
 -- -----------------------------------------------------

@@ -10,8 +10,8 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,11 +22,9 @@ import org.springframework.util.StringUtils;
  * 
  * @author wanglin
  */
+@Slf4j
 @Service
 public class NotificationService {
-  // logger
-  private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
-
   /**
    * 发送消息线程池.
    */
@@ -141,7 +139,7 @@ public class NotificationService {
                   String.format(addUserNotTemplate, userInfo.getEmail(), userInfo.getPassword());
               emailNotify.send(NOTIFICATION_TITLE, userInfo.getEmail(), emailContent);
             } catch (Exception ex) {
-              LOGGER.error("failed to send email ", ex);
+              log.error("failed to send email ", ex);
             }
           }
           // send sms
@@ -151,7 +149,7 @@ public class NotificationService {
                   userInfo.getPassword());
               smsNotify.send(userInfo.getPhone(), smsContent);
             } catch (Exception ex) {
-              LOGGER.error("failed to send sms ", ex);
+              log.error("failed to send sms ", ex);
             }
           }
         }
@@ -176,7 +174,7 @@ public class NotificationService {
                   userInfo.getPassword());
               emailNotify.send(NOTIFICATION_TITLE, userInfo.getEmail(), emailContent);
             } catch (Exception ex) {
-              LOGGER.error("failed to send email ", ex);
+              log.error("failed to send email ", ex);
             }
           }
           // send sms
@@ -186,7 +184,7 @@ public class NotificationService {
                   userInfo.getPassword());
               smsNotify.send(userInfo.getPhone(), smsContent);
             } catch (Exception ex) {
-              LOGGER.error("failed to send sms ", ex);
+              log.error("failed to send sms ", ex);
             }
           }
         }
@@ -198,9 +196,9 @@ public class NotificationService {
   private boolean notificationIsOn() {
     boolean isOn = !Boolean.FALSE.toString().equalsIgnoreCase(this.emailSwitch);
     if (isOn) {
-      LOGGER.debug("notification switch is on");
+      log.debug("notification switch is on");
     } else {
-      LOGGER.debug("notification switch is off");
+      log.debug("notification switch is off");
     }
     return isOn;
   }
