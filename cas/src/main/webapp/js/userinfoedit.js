@@ -267,7 +267,7 @@ $(function() {
 			return;
 		}
 		var data = {
-				identity : $('#update_phone_hidden_input').val()
+				identity : $('#update_phone_new_phone').val()
 		};
 		$.ajax({  
             type : "POST", 

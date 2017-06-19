@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.cas.controller;
 
-import com.dianrong.common.uniauth.cas.model.ExpiredSessionObj;
+import com.dianrong.common.uniauth.cas.model.IdentityExpiredSessionObj;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
@@ -16,15 +16,19 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.WaterRipple;
 import com.google.code.kaptcha.util.Config;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Properties;
+
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -120,7 +124,7 @@ public class VerificationController {
       }
       // after sending successfully, set flag to session
       WebScopeUtil.putEmailVerificationToSession(request.getSession(),
-          ExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES));
+          IdentityExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
       return Response.success();
     }
 
@@ -139,7 +143,7 @@ public class VerificationController {
       }
       // after sending successfully, set flag to session
       WebScopeUtil.putSmsVerificationToSession(request.getSession(),
-          ExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES));
+          IdentityExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
       return Response.success();
     }
 
@@ -177,10 +181,10 @@ public class VerificationController {
       @RequestParam(value = "verifyCode", required = true) String verifyCode) {
     // email
     if (StringUtil.isEmailAddress(identity)) {
-      ExpiredSessionObj<String> obj = WebScopeUtil
+      IdentityExpiredSessionObj<String> obj = WebScopeUtil
           .getEmailVerificationFromSession(request.getSession());
       if (obj != null && !obj.isExpired()) {
-        if (verifyCode.equals(obj.getContent())) {
+        if (verifyCode.equals(obj.getContent()) && obj.getIdentity().equals(identity)) {
           // validation successfully
 
           // set flag
@@ -198,10 +202,10 @@ public class VerificationController {
 
     // short message
     if (StringUtil.isPhoneNumber(identity)) {
-      ExpiredSessionObj<String> obj = WebScopeUtil
+      IdentityExpiredSessionObj<String> obj = WebScopeUtil
           .getSmsVerificationFromSession(request.getSession());
       if (obj != null && !obj.isExpired()) {
-        if (verifyCode.equals(obj.getContent())) {
+        if (verifyCode.equals(obj.getContent()) && obj.getIdentity().equals(identity)) {
           // validation successfully
 
           // set flag

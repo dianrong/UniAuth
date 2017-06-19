@@ -10,22 +10,22 @@ public class ExpiredSessionObj<T extends Serializable> implements Serializable {
   private static final long serialVersionUID = -5592978188308898593L;
 
   /**
-   * . 时间戳
+   * 时间戳.
    */
   private long startMilles;
 
   /**
-   * . 存活时间milles
+   * 存活时间milles.
    */
   private long lifeMilles;
 
   /**
-   * . 内容
+   * 内容.
    */
   private T content;
 
   /**
-   * . 构造函数
+   * 构造函数.
    */
   public ExpiredSessionObj(T content, long lifeMilles) {
     this.content = content;
@@ -42,7 +42,7 @@ public class ExpiredSessionObj<T extends Serializable> implements Serializable {
   }
 
   /**
-   * . 判断当前对象是否已过期
+   * 判断当前对象是否已过期.
    */
   public boolean isExpired() {
     long nowMilles = System.currentTimeMillis();
