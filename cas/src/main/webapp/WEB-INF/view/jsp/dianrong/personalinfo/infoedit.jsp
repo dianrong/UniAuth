@@ -1,4 +1,4 @@
-<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/top.jsp" />
+ <jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/top.jsp" />
 
 <div class="container find-pwd-container">
 	<div class="find-pwd-content ng-scope">

@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 public final class UniBundleUtil {
 
   /**
-   * . 无参数的获取i8n value
+   * 无参数的获取i8n value.
    */
   public static String getMsg(MessageSource messageSource, String key) {
     Assert.notNull(messageSource, "get i18n msg, messageSource can not be null");
@@ -21,7 +21,7 @@ public final class UniBundleUtil {
 
 
   /**
-   * . 有参数的获取i8n value
+   * 有参数的获取i8n value.
    */
   public static String getMsg(MessageSource messageSource, String key, Object... arguments) {
     Assert.notNull(messageSource, "get i18n msg, messageSource can not be null");
@@ -29,7 +29,7 @@ public final class UniBundleUtil {
   }
 
   /**
-   * . 判断传入的语言是当前选中的语言否
+   * 判断传入的语言是当前选中的语言否.
    */
   public static boolean isSelected(String localeStr) {
     if (localeStr == null) {

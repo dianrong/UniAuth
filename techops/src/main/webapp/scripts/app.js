@@ -297,6 +297,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "DomainController",
             templateUrl: "views/domain/domain.html"
         }).
+        state('batch', {
+            url: "/batch-process",
+            controller: "BatchController",
+            templateUrl: "views/batch/batch.html"
+        }).
         state('audit', {
             url: "/audit",
             controller: "AuditController",

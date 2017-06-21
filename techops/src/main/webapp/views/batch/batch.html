@@ -1,0 +1,78 @@
+<div class="row">
+	<div class="col-md-3" style="border-right: 1px solid;">
+		<div class="row">
+			<div class="col-md-10  col-md-offset-1">
+				<div class="radio">
+					<label> <input type="radio" name="optionsRadios"
+						id="batch-add-user" value="batch-add-user" ng-model="process_param.type">{{ 'batch.process.page.add.user.label' | translate }}
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10  col-md-offset-1">
+				<div class="radio">
+					<label> <input type="radio" name="optionsRadios"
+						id="batch-disable-user" value="batch-disable-user" ng-model="process_param.type"> {{ 'batch.process.page.disable.user.label' | translate }}
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-10  col-md-offset-1">
+				<div class="radio">
+					<label> <input type="radio" name="optionsRadios"
+						id="batch-relate-user-grp" value="batch-relate-user-grp" ng-model="process_param.type"> {{'batch.process.page.relate.user.grp.label' | translate }}
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-5">
+				<form>
+					<div class="form-group">
+						<label for="update_file_type">{{'batch.process.page.upload.file.label' | translate }}</label> <input type="file"
+							name="file" accept=".csv,.CSV" nv-file-select uploader="uploader" ng-model="process_param.file" id="update_file_type">
+					</div>
+					<div class="form-group" ng-show="is_relate_user_grp();">
+						<label for="grp_code_label">{{'batch.process.page.grp.code.label' | translate }}</label> <input type="text"
+							class="form-control" id="grp_code_label" placeholder="{{'batch.process.page.grp.code.label' | translate }}" ng-model="process_param.grp_code">
+					</div>
+				</form>
+			</div>
+			<div class="col-md-offset-2 col-md-3">
+				<button type="button" class="btn btn-primary" style="width: 100px;" ng-disabled="!process_btn_enable();" ng-click="batch_process();">{{'batch.process.page.start.process.label' | translate}}</button>
+			</div>
+		</div>
+		<div class="row" ng-show="process_result.successes || process_result.errors">
+		  <div class="col-md-offset-1 col-md-10">
+		      <h2 ng-bind="process_result.process_type"></h2>
+		      <div class="h4">{{'batch.process.page.process.result.total.nums' | translate}}<span class="h3"  ng-bind="process_result.successes.length + process_result.errors.length"></span></div>
+		  </div>
+		</div>
+		<div class="row" ng-show="process_result.successes" style="color: #3c763d;">
+          <div class="col-md-offset-1 col-md-10">
+            <h3>{{'batch.process.page.process.success.tips' | translate}}</h3>
+            <div class="h4">{{'batch.process.page.process.result.nums' | translate}} <sapn ng-bind="process_result.successes.length"></sapn></div>
+            <p ng-show="process_result.errors.length > 0">
+                <div ng-repeat="item in process_result.successes">
+                    {{item}}
+                </div>
+            </p>
+          </div>
+        </div>
+        <div class="row" ng-show="process_result.errors && process_result.errors.length > 0" style="color: #a94442;">
+          <div class="col-md-offset-1 col-md-10">
+            <h3>{{'batch.process.page.process.failure.tips' | translate}}</h3>
+            <div class="h4">{{'batch.process.page.process.result.nums' | translate}} <sapn ng-bind="process_result.errors.length"></sapn></div>
+            <p>
+                <div ng-repeat="item in process_result.errors">
+                    {{item.identity}} : {{item.msg}}
+                </div>
+            </p>
+          </div>
+        </div>
+	</div>
+</div>

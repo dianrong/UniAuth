@@ -8,7 +8,9 @@ import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendValParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+
 import javax.annotation.Resource;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 扩展信息管理相关action.
  */
+@SuppressWarnings("deprecation")
 @RestController
 @RequestMapping("eav")
 public class EavAction {

@@ -1,21 +1,25 @@
 package com.dianrong.common.uniauth.cas.util;
 
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
-import com.dianrong.common.uniauth.cas.model.ExpiredSessionObj;
 import com.dianrong.common.uniauth.cas.model.HttpResponseModel;
+import com.dianrong.common.uniauth.cas.model.IdentityExpiredSessionObj;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLDecoder;
+
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.http.entity.ContentType;
 import org.springframework.util.StringUtils;
 
@@ -68,14 +72,14 @@ public final class WebScopeUtil {
    * @return true or false
    */
   public static boolean putSmsVerificationToSession(HttpSession session,
-      ExpiredSessionObj<String> verification) {
+      IdentityExpiredSessionObj<String> verification) {
     return putValToSession(session, CasConstants.SMS_VERIFICATION_SESSION_KEY, verification);
   }
 
   /**
    * Get SMS Verification Code from session.
    */
-  public static ExpiredSessionObj<String> getSmsVerificationFromSession(HttpSession session) {
+  public static IdentityExpiredSessionObj<String> getSmsVerificationFromSession(HttpSession session) {
     return getValFromSession(session, CasConstants.SMS_VERIFICATION_SESSION_KEY);
   }
 
@@ -93,7 +97,7 @@ public final class WebScopeUtil {
    * @return true or false
    */
   public static boolean putEmailVerificationToSession(HttpSession session,
-      ExpiredSessionObj<String> verification) {
+      IdentityExpiredSessionObj<String> verification) {
     return putValToSession(session, CasConstants.EMAIL_VERIFICATION_SESSION_KEY, verification);
   }
 
@@ -102,7 +106,7 @@ public final class WebScopeUtil {
    *
    * @return verification
    */
-  public static ExpiredSessionObj<String> getEmailVerificationFromSession(HttpSession session) {
+  public static IdentityExpiredSessionObj<String> getEmailVerificationFromSession(HttpSession session) {
     return getValFromSession(session, CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
   }
 

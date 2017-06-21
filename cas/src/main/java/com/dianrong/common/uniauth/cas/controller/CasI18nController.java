@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * @author wanglin
  */
+@Slf4j
 @Controller
 @RequestMapping("/i18n")
-@Slf4j
 public class CasI18nController {
 
   /**
-   * . 参数
+   * 参数.
    */
   private final String setLocaleParameterKey = "locale";
 
   /**
-   * . 获取当前系统的语言信息
+   * 获取当前系统的语言信息.
    */
   @RequestMapping(value = "/getLanguage", method = RequestMethod.GET)
   public void getLocaleLanguage(HttpServletRequest request, HttpServletResponse response) {
@@ -37,7 +37,6 @@ public class CasI18nController {
     } catch (IOException e) {
       log.warn("query i18n language failed");
     }
-    ;
   }
 
   /**
@@ -56,6 +55,5 @@ public class CasI18nController {
     } catch (IOException e) {
       log.warn("refresh i18n language failed");
     }
-    ;
   }
 }
