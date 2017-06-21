@@ -150,6 +150,10 @@ $(function() {
          		   }
          	   } else {
          		 	var count_btn = $('.find-pwd-container .steps #input2');
+         		 	// show verify code
+         		 	if (data.data) {
+         		 		$('#verify_code_div').html(data.data);
+         		 	}
                 	countBtn(count_btn, function(new_label){
                 		count_btn.html(new_label)
                 	},function(){

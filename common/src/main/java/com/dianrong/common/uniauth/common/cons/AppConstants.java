@@ -89,6 +89,10 @@ public interface AppConstants {
    * zk 配置的node name， st使用的次数.
    */
   String ZK_NODE_NAME_ST_USED_TIMES = "cas.st_use_times";
+  /**
+   * zk 配置cas的短信和邮箱验证码的显示开关.
+   */
+  String ZK_CAS_VERIFY_CODE_SHOW = "cas.verify_code.show";
 
 
   String SERVICE_LOGIN_SUFFIX = "/login/cas";

@@ -114,6 +114,7 @@
 							<button type="button" class="btn btn-primary col-sm-2"  id="get_email_captcha">
 								<spring:message code="screen.personal.info.edit.updateemail.btn.getcaptcha" />
 							</button>
+							<div id="email_verify_code_div"></div>
 					</div>
 					<div class="form-group">
 							<div class="showwarninfo" style="text-align: center;">
@@ -164,6 +165,7 @@
 								<button type="button" class="btn btn-primary col-sm-2"  id="get_phone_captcha">
 									<spring:message code="screen.personal.info.edit.updatephone.btn.getcaptcha" />
 								</button>
+								<div id="phone_verify_code_div"></div>
 						</div>
 						<div class="form-group">
 								<div class="showwarninfo" style="text-align: center;">

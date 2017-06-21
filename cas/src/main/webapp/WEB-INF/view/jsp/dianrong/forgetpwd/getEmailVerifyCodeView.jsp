@@ -50,6 +50,7 @@
 						  	</div>
 						  	<div class="col-sm-2">
 						    		<button type="button" class="btn btn-primary btn-sendemail" id="input2"><spring:message code="screen.password.reset.get.verfycode"/></button>
+						    		<div id="verify_code_div"></div>
 						  	</div>
 					  </div>
 					  <div class="form-group">
