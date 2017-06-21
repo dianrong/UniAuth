@@ -62,18 +62,14 @@ public class BatchService {
     for (int i = 0; i < content.size(); i++) {
       String paramStr = content.get(i);
       String[] params = split(paramStr, ",");
-      if (params.length < 3) {
-        throw new BatchProcessException(
-            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
-      }
-      if (StringUtils.isBlank(params[1]) && StringUtils.isBlank(params[2])) {
+      if (StringUtils.isBlank(getItem(params ,1)) && StringUtils.isBlank(getItem(params ,2))) {
         throw new BatchProcessException(
             UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
       }
       UserParam userParam = new UserParam();
-      userParam.setName(params[0]);
-      userParam.setEmail(params[1]);
-      userParam.setPhone(params[2]);
+      userParam.setName(getItem(params ,0));
+      userParam.setEmail(getItem(params, 1));
+      userParam.setPhone(getItem(params, 2));
       addUserParams.add(userParam);
     }
 
@@ -139,17 +135,13 @@ public class BatchService {
     for (int i = 0; i < content.size(); i++) {
       String paramStr = content.get(i);
       String[] params = split(paramStr, ",");
-      if (params.length < 2) {
-        throw new BatchProcessException(
-            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
-      }
-      if (StringUtils.isBlank(params[0]) && StringUtils.isBlank(params[1])) {
+      if (StringUtils.isBlank(getItem(params ,0)) && StringUtils.isBlank(getItem(params ,1))) {
         throw new BatchProcessException(
             UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
       }
       UserParam userParam = new UserParam();
-      userParam.setEmail(params[0]);
-      userParam.setPhone(params[1]);
+      userParam.setEmail(getItem(params ,0));
+      userParam.setPhone(getItem(params ,1));
       disableUserParams.add(userParam);
     }
 
@@ -207,17 +199,13 @@ public class BatchService {
     for (int i = 0; i < content.size(); i++) {
       String paramStr = content.get(i);
       String[] params = split(paramStr, ",");
-      if (params.length < 2) {
-        throw new BatchProcessException(
-            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
-      }
-      if (StringUtils.isBlank(params[0]) && StringUtils.isBlank(params[1])) {
+      if (StringUtils.isBlank(getItem(params ,0)) && StringUtils.isBlank(getItem(params ,1))) {
         throw new BatchProcessException(
             UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
       }
       UserParam userParam = new UserParam();
-      userParam.setEmail(params[0]);
-      userParam.setPhone(params[1]);
+      userParam.setEmail(getItem(params ,0));
+      userParam.setPhone(getItem(params ,1));
       uParams.add(userParam);
     }
 
@@ -268,6 +256,17 @@ public class BatchService {
     return items;
   }
 
+  /**
+   * 从数组中获取对应index的数据,不报数组越界错误.
+   */
+  private <T> T getItem(T[] items, int index) {
+    int length = items.length;
+    if (index >= length) {
+      return null;
+    }
+    return items[index];
+  }
+  
   /**
    * 根据Id禁用用户.
    */
