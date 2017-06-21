@@ -18,6 +18,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -76,121 +77,126 @@ public class SSMultiTenancyUserDetailService
   @Override
   public UserDetails loadUserByUsername(String userName, long tenancyId)
       throws UsernameNotFoundException, DataAccessException {
-    String currentDomainCode = domainDefine.getDomainCode();
-    String userInfoClass = domainDefine.getUserInfoClass();
-    CheckDomainDefine.checkDomainDefine(currentDomainCode);
-    if (userName == null || "".equals(userName.toString())) {
-      UsernameNotFoundException t = new UsernameNotFoundException(userName + " not found");
-      loadUserFailedCallBack.loadUserFailed(userName, tenancyId, t);
-      throw t;
-    } else {
-      LoginParam loginParam = new LoginParam();
-      loginParam.setAccount(userName);
-      loginParam.setTenancyId(tenancyId);
-      Response<UserDetailDto> response =
-          uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
-      UserDetailDto userDetailDto = response.getData();
-
-      if (userDetailDto == null) {
+    CxfHeaderHolder.TENANCYID.set(tenancyId);
+    try {
+      String currentDomainCode = domainDefine.getDomainCode();
+      String userInfoClass = domainDefine.getUserInfoClass();
+      CheckDomainDefine.checkDomainDefine(currentDomainCode);
+      if (userName == null || "".equals(userName.toString())) {
         UsernameNotFoundException t = new UsernameNotFoundException(userName + " not found");
         loadUserFailedCallBack.loadUserFailed(userName, tenancyId, t);
         throw t;
       } else {
-        UserDto userDto = userDetailDto.getUserDto();
-        // 增加对IPA数据源的支持
-        AllDomainPermissionDto ipaPermissionDto = userDetailDto.getAllDomainPermissionDto();
-        Long id = userDto.getId();
-        List<DomainDto> domainDtoList = userDetailDto.getDomainList();
-        Map<String, UserExtInfoParam> userExtInfos = new HashMap<>();
-        if (domainDtoList != null && !domainDtoList.isEmpty()) {
-          List<DomainDto> tempDomainDtoList = null;
-          if (!domainDefine.isUseAllDomainUserInfoShareMode()) {
-            tempDomainDtoList = new ArrayList<DomainDto>();
-            for (DomainDto domainDto : domainDtoList) {
-              String domainCode = domainDto.getCode();
-              if (currentDomainCode.equals(domainCode)) {
-                tempDomainDtoList.add(domainDto);
-                break;
+        LoginParam loginParam = new LoginParam();
+        loginParam.setAccount(userName);
+        loginParam.setTenancyId(tenancyId);
+        Response<UserDetailDto> response =
+            uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
+        UserDetailDto userDetailDto = response.getData();
+
+        if (userDetailDto == null) {
+          UsernameNotFoundException t = new UsernameNotFoundException(userName + " not found");
+          loadUserFailedCallBack.loadUserFailed(userName, tenancyId, t);
+          throw t;
+        } else {
+          UserDto userDto = userDetailDto.getUserDto();
+          // 增加对IPA数据源的支持
+          AllDomainPermissionDto ipaPermissionDto = userDetailDto.getAllDomainPermissionDto();
+          Long id = userDto.getId();
+          List<DomainDto> domainDtoList = userDetailDto.getDomainList();
+          Map<String, UserExtInfoParam> userExtInfos = new HashMap<>();
+          if (domainDtoList != null && !domainDtoList.isEmpty()) {
+            List<DomainDto> tempDomainDtoList = null;
+            if (!domainDefine.isUseAllDomainUserInfoShareMode()) {
+              tempDomainDtoList = new ArrayList<DomainDto>();
+              for (DomainDto domainDto : domainDtoList) {
+                String domainCode = domainDto.getCode();
+                if (currentDomainCode.equals(domainCode)) {
+                  tempDomainDtoList.add(domainDto);
+                  break;
+                }
               }
+            } else {
+              tempDomainDtoList = domainDtoList;
             }
-          } else {
-            tempDomainDtoList = domainDtoList;
+            for (DomainDto domainDto : tempDomainDtoList) {
+              Collection<GrantedAuthority> authorities = Sets.newHashSet();
+              Map<String, Set<String>> permMap = Maps.newHashMap();
+              Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
+              PermissionUtil.mergeDomainPermission(domainDto.getRoleList(), authorities, permMap,
+                  permDtoMap);
+              // 增加对IPA账号的支持
+              PermissionUtil.mergeIPAPermission(ipaPermissionDto, authorities, permMap, permDtoMap);
+
+              UserExtInfoParam userExtInfoParam = new UserExtInfoParam();
+              userExtInfoParam.setUsername(userName).setPassword("fake_password").setEnabled(true)
+                  .setAccountNonExpired(true).setCredentialsNonExpired(true)
+                  .setAccountNonLocked(true).setAuthorities(authorities).setId(id)
+                  .setUserDto(userDto).setDomainDto(domainDto).setPermMap(permMap)
+                  .setPermDtoMap(permDtoMap);
+              userExtInfos.put(domainDto.getCode(), userExtInfoParam);
+            }
           }
-          for (DomainDto domainDto : tempDomainDtoList) {
+          UserExtInfoParam currentDomainUserInfo = userExtInfos.get(currentDomainCode);
+          if (currentDomainUserInfo == null) {
+            UserExtInfoParam userExtInfoParam = new UserExtInfoParam();
             Collection<GrantedAuthority> authorities = Sets.newHashSet();
             Map<String, Set<String>> permMap = Maps.newHashMap();
             Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
-            PermissionUtil.mergeDomainPermission(domainDto.getRoleList(), authorities, permMap,
-                permDtoMap);
             // 增加对IPA账号的支持
             PermissionUtil.mergeIPAPermission(ipaPermissionDto, authorities, permMap, permDtoMap);
-
-            UserExtInfoParam userExtInfoParam = new UserExtInfoParam();
             userExtInfoParam.setUsername(userName).setPassword("fake_password").setEnabled(true)
                 .setAccountNonExpired(true).setCredentialsNonExpired(true).setAccountNonLocked(true)
-                .setAuthorities(authorities).setId(id).setUserDto(userDto).setDomainDto(domainDto)
+                .setAuthorities(authorities).setId(id).setUserDto(userDto)
+                .setDomainDto(new DomainDto().setCode(DomainDefine.getStaticDomainCode()))
                 .setPermMap(permMap).setPermDtoMap(permDtoMap);
-            userExtInfos.put(domainDto.getCode(), userExtInfoParam);
+            userExtInfos.put(currentDomainCode, userExtInfoParam);
+            currentDomainUserInfo = userExtInfos.get(currentDomainCode);
           }
-        }
-        UserExtInfoParam currentDomainUserInfo = userExtInfos.get(currentDomainCode);
-        if (currentDomainUserInfo == null) {
-          UserExtInfoParam userExtInfoParam = new UserExtInfoParam();
-          Collection<GrantedAuthority> authorities = Sets.newHashSet();
-          Map<String, Set<String>> permMap = Maps.newHashMap();
-          Map<String, Set<PermissionDto>> permDtoMap = Maps.newHashMap();
-          // 增加对IPA账号的支持
-          PermissionUtil.mergeIPAPermission(ipaPermissionDto, authorities, permMap, permDtoMap);
-          userExtInfoParam.setUsername(userName).setPassword("fake_password").setEnabled(true)
-              .setAccountNonExpired(true).setCredentialsNonExpired(true).setAccountNonLocked(true)
-              .setAuthorities(authorities).setId(id).setUserDto(userDto)
-              .setDomainDto(new DomainDto().setCode(DomainDefine.getStaticDomainCode()))
-              .setPermMap(permMap).setPermDtoMap(permDtoMap);
-          userExtInfos.put(currentDomainCode, userExtInfoParam);
-          currentDomainUserInfo = userExtInfos.get(currentDomainCode);
-        }
 
-        UserExtInfo userExtInfo;
+          UserExtInfo userExtInfo;
 
-        if (userInfoClass == null || "".equals(userInfoClass.trim())) {
-          userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos, ipaPermissionDto);
-        } else {
-          try {
-            Class<?> clazz = Class.forName(userInfoClass);
-            Constructor<?> construct = clazz.getConstructor(String.class, String.class,
-                Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Collection.class,
-                Long.class, UserDto.class, DomainDto.class, Map.class, Map.class);
-            UserExtInfo customeDefineUserExtInfo =
-                (UserExtInfo) construct.newInstance(currentDomainUserInfo.getUsername(),
-                    currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(),
-                    currentDomainUserInfo.isAccountNonExpired(),
-                    currentDomainUserInfo.isCredentialsNonExpired(),
-                    currentDomainUserInfo.isAccountNonLocked(),
-                    currentDomainUserInfo.getAuthorities(), currentDomainUserInfo.getId(),
-                    currentDomainUserInfo.getUserDto(), currentDomainUserInfo.getDomainDto(),
-                    currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap());
-            // 增加对IPA权限的支持
-            customeDefineUserExtInfo.setIpaPermissionDto(ipaPermissionDto);
-            if (userInfoCallBack != null) {
-              userInfoCallBack.fill(customeDefineUserExtInfo);
-            }
-            userExtInfo = customeDefineUserExtInfo;
-          } catch (Exception e) {
-            log.error(
-                "Prepare to use ss-client's UserExtInfo, not the subsystem's"
-                + " customized one, possible reasons:\n (1) "
-                    + userInfoClass + " not found. \n (2) " + userInfoClass
-                    + " is not a instance of UserExtInfo.\n (3)"
-                    + " userInfoCallBack.fill(userExtInfo) error.",
-                e);
+          if (userInfoClass == null || "".equals(userInfoClass.trim())) {
             userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos, ipaPermissionDto);
+          } else {
+            try {
+              Class<?> clazz = Class.forName(userInfoClass);
+              Constructor<?> construct = clazz.getConstructor(String.class, String.class,
+                  Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Collection.class,
+                  Long.class, UserDto.class, DomainDto.class, Map.class, Map.class);
+              UserExtInfo customeDefineUserExtInfo =
+                  (UserExtInfo) construct.newInstance(currentDomainUserInfo.getUsername(),
+                      currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(),
+                      currentDomainUserInfo.isAccountNonExpired(),
+                      currentDomainUserInfo.isCredentialsNonExpired(),
+                      currentDomainUserInfo.isAccountNonLocked(),
+                      currentDomainUserInfo.getAuthorities(), currentDomainUserInfo.getId(),
+                      currentDomainUserInfo.getUserDto(), currentDomainUserInfo.getDomainDto(),
+                      currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap());
+              // 增加对IPA权限的支持
+              customeDefineUserExtInfo.setIpaPermissionDto(ipaPermissionDto);
+              if (userInfoCallBack != null) {
+                userInfoCallBack.fill(customeDefineUserExtInfo);
+              }
+              userExtInfo = customeDefineUserExtInfo;
+            } catch (Exception e) {
+              log.error("Prepare to use ss-client's UserExtInfo, not the subsystem's"
+                  + " customized one, possible reasons:\n (1) " + userInfoClass
+                  + " not found. \n (2) " + userInfoClass
+                  + " is not a instance of UserExtInfo.\n (3)"
+                  + " userInfoCallBack.fill(userExtInfo) error.", e);
+              userExtInfo =
+                  UserExtInfo.build(currentDomainUserInfo, userExtInfos, ipaPermissionDto);
+            }
           }
-        }
 
-        // 登陆成功之后, 回调
-        loadUserSuccessCallBack.loadUserSuccess(userExtInfo);
-        return userExtInfo;
+          // 登陆成功之后, 回调
+          loadUserSuccessCallBack.loadUserSuccess(userExtInfo);
+          return userExtInfo;
+        }
       }
+    } finally {
+      CxfHeaderHolder.TENANCYID.set(null);
     }
   }
 

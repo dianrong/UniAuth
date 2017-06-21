@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.util;
+package com.dianrong.common.techops.util;
 
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import com.google.common.collect.Maps;
@@ -7,6 +7,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * 国际化资源处理对象.
+ */
 public class UniBundle {
 
   public static String getMsg(String key) {
@@ -30,7 +33,7 @@ public class UniBundle {
       Locale locale = UniauthLocaleInfoHolder.getLocale();
       ResourceBundle resourceBundle = RESOURCEBUNDLES.get(locale);
       if (resourceBundle == null) {
-        RESOURCEBUNDLES.putIfAbsent(locale, ResourceBundle.getBundle("UniauthResource", locale));
+        RESOURCEBUNDLES.putIfAbsent(locale, ResourceBundle.getBundle("techops", locale));
       }
 
       return RESOURCEBUNDLES.get(locale);
