@@ -2,7 +2,11 @@ package com.dianrong.uniauth.ssclient;
 
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 
+import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
+import com.dianrong.uniauth.ssclient.config.MyAuthenticationProvider;
 import org.apache.catalina.filters.CorsFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -26,7 +30,10 @@ public class ApplicationStarter {
     
     @Value("${domainCode}")
     private String domainCode;
-    
+
+    @Autowired
+    private UniClientFacade uniClientFacade;
+
     @Bean
     public DomainDefine domainDefine() {
         DomainDefine domainDefine = new DomainDefine();
@@ -36,7 +43,7 @@ public class ApplicationStarter {
         domainDefine.setCustomizedLoginRedirecUrl("/content");
         return domainDefine;
     }
-    
+
     @Bean
     public FilterRegistrationBean indexFilterRegistration() {
         CorsFilter corsFilter = new CorsFilter();
@@ -44,5 +51,12 @@ public class ApplicationStarter {
         registration.addUrlPatterns("/*");
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registration;
+    }
+
+    @Bean
+    public MyAuthenticationProvider myAuthenticationProvider() {
+        return (MyAuthenticationProvider) new MyAuthenticationProvider(uniClientFacade).setMode(
+            Mode.PERMISSION)
+            /*.setDomainDefine(domainCode)*/;
     }
 }
