@@ -15,9 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 public class WebSecurityConfiguration extends UniauthSecurityConfig {
 
-  @Autowired
-  private MyAuthenticationProvider myAuthenticationProvider;
-
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static-content","/**/ajax-content.jsp");
@@ -25,12 +22,6 @@ public class WebSecurityConfiguration extends UniauthSecurityConfig {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.authenticationProvider(myAuthenticationProvider)
-        .authorizeRequests()
-        .antMatchers("/api/**").hasRole("techops")
-        .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().csrf().disable()
-        .httpBasic();
+   super.configure(http);
   }
 }
