@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.customer.basicauth.cache.CacheMapBO;
 import com.dianrong.common.uniauth.common.customer.basicauth.cache.service.CacheMapServiceImpl;
 import com.dianrong.common.uniauth.common.customer.basicauth.cache.service.CacheService;
 import com.dianrong.common.uniauth.common.customer.basicauth.factory.ModeFactory;
@@ -98,7 +99,7 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
     if (infoList == null) {
       Response<UserDto> response = uniClientFacade.getUserResource().login(loginParam);
       infoList = response.getInfo();
-      cacheService.setDataToCache(infoList, RESPONSE_USER_KEY);
+      cacheService.setDataToCache(new CacheMapBO(infoList), RESPONSE_USER_KEY);
     }
 
     if (infoList != null && !infoList.isEmpty()) {
@@ -150,7 +151,7 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
       Response<UserDetailDto> responseDetail = uniClientFacade.getUserResource()
           .getUserDetailInfo(loginParam);
       userDetailDto = responseDetail.getData();
-      cacheService.setDataToCache(userDetailDto, USER_DETAIL_DTO_KEY);
+      cacheService.setDataToCache(new CacheMapBO(userDetailDto), USER_DETAIL_DTO_KEY);
     }
 
     ModeFactory modeFactory = new ModeFactory();

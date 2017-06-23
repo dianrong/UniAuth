@@ -57,11 +57,8 @@ public class CacheMapManager {
     cacheMap.remove(key);
   }
 
-  public void set(final String key, final Object value,
+  public void set(final String key, final CacheMapBO cacheMapBO,
       final long seconds) {
-    // 增加值的工作
-    CacheMapBO cacheMapBO = new CacheMapBO();
-    cacheMapBO.setValue(value);
     long now = new Date().getTime();
 
     long expires = seconds * 1000;
@@ -74,8 +71,8 @@ public class CacheMapManager {
     log.info("缓存更新完成.");
   }
 
-  public void set(final String key, final Object value) {
-    set(key, value, DEFAULT_EXPIRES_TIME_SECONDS);
+  public void set(final String key, final CacheMapBO cacheMapBO) {
+    set(key, cacheMapBO, DEFAULT_EXPIRES_TIME_SECONDS);
   }
 
   public void clearCache() {

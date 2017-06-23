@@ -9,6 +9,10 @@ public class CacheMapBO {
 
   private Long expires;
 
+  public CacheMapBO(Object value) {
+    this.value = value;
+  }
+
   public Object getValue() {
     return value;
   }
