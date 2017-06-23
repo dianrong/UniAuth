@@ -2,13 +2,12 @@ package com.dianrong.common.uniauth.server.support.apicontrl;
 
 import com.dianrong.common.uniauth.common.apicontrol.StringHeaderValueOperator;
 import com.dianrong.common.uniauth.common.util.Assert;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * 用于协议header的get和set.
- * 
+ *
  * @author wanglin
  */
 public class UniauthServerHeaderOperator implements StringHeaderValueOperator {

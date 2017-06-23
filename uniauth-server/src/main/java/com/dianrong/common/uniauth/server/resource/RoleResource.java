@@ -10,13 +10,10 @@ import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 import com.dianrong.common.uniauth.server.service.RoleService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
-
 import io.swagger.annotations.Api;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
-
 
 
 @Api("角色信息操作接口")

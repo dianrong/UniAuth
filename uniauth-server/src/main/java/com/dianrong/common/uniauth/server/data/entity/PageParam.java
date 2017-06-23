@@ -2,10 +2,11 @@ package com.dianrong.common.uniauth.server.data.entity;
 
 /**
  * . 分页相关的字段定义
- * 
+ *
  * @author wanglin
  */
 public class PageParam {
+
   private int pageSize;
 
   private int pageOffSet;

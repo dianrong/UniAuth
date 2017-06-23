@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.data.entity.ext;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 
 public class RoleExt extends Role {
+
   private String roleCode;
   private Integer permissionId;
 

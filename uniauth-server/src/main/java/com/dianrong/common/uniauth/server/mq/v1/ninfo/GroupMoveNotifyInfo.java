@@ -1,11 +1,11 @@
 package com.dianrong.common.uniauth.server.mq.v1.ninfo;
 
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
-
 import lombok.ToString;
 
 @ToString
 public class GroupMoveNotifyInfo extends BaseGroupNotifyInfo {
+
   /**
    * 目标组id.
    */

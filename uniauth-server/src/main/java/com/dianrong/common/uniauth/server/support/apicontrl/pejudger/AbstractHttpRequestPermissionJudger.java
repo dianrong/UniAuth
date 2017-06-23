@@ -7,14 +7,13 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermission;
 import com.dianrong.common.uniauth.server.support.apicontrl.ApiCtlPermissionItem;
-
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import javax.servlet.http.HttpServletRequest;
 
 public abstract class AbstractHttpRequestPermissionJudger
     implements PermissionJudger<ApiCtlPermission, HttpServletRequest> {
+
   @Override
   public boolean judge(CallerCredential<ApiCtlPermission> credential, HttpServletRequest request) {
     Assert.notNull(credential);
@@ -51,7 +50,7 @@ public abstract class AbstractHttpRequestPermissionJudger
 
   /**
    * Get pattern.
-   * 
+   *
    * @param patternStr patternStr
    * @return pattern
    * @throws PatternSyntaxException - If the expression's syntax is invalid

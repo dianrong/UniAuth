@@ -165,6 +165,9 @@ $(function() {
             	   if(data.info) {
             		   $('#update_email_warninfo').html(data.info[0].msg);
             	   } else {
+            		   if (data.data) {
+            			   $('#email_verify_code_div').html(data.data);
+            		   }
             		   // success
             		   var count_btn = $('#get_email_captcha');
 	                   	countBtn(count_btn, function(new_label){
@@ -267,7 +270,7 @@ $(function() {
 			return;
 		}
 		var data = {
-				identity : $('#update_phone_hidden_input').val()
+				identity : $('#update_phone_new_phone').val()
 		};
 		$.ajax({  
             type : "POST", 
@@ -278,6 +281,9 @@ $(function() {
             	   if(data.info) {
             		   $('#update_phone_warninfo').html(data.info[0].msg);
             	   } else {
+            		   if (data.data) {
+            			   $('#phone_verify_code_div').html(data.data);
+            		   }
             		   // success
             		   var count_btn = $('#get_phone_captcha');
 	                   	countBtn(count_btn, function(new_label){

@@ -33,18 +33,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 /**
  * uniauth server的接口访问控制filter.
- * 
+ *
  * @author wanglin
  */
 @Component("apiControlFilter")
 @Slf4j
 public class ApiControlFilter extends GenericFilterBean {
+
   // ANONYMOUS domain
   public static final String ANONYMOUS_DOMAIN_NAME = "ANONYMOUS";
 
@@ -103,8 +105,8 @@ public class ApiControlFilter extends GenericFilterBean {
             }
           } else {
             // 权限不足
-            throw new InsufficientPrivilegesException(
-                HttpRequestUtil.extractRequestUrl(httpRequest, false));
+            throw new InsufficientPrivilegesException(String.format("%s:%s",
+                httpRequest.getMethod(), HttpRequestUtil.extractRequestUrl(httpRequest, false)));
           }
         } catch (LoadCredentialFailedException e) {
           log.info("load credential failed ", e);
@@ -158,7 +160,7 @@ public class ApiControlFilter extends GenericFilterBean {
 
   /**
    * Get Api caller info.
-   * 
+   *
    * @param headerOperator process header
    * @param requestType requestType
    * @return api caller info
@@ -207,7 +209,7 @@ public class ApiControlFilter extends GenericFilterBean {
 
   /**
    * 是否开启check的开关，默认是true.
-   * 
+   *
    * @return true or false
    */
   private boolean apiCallPermCheck() {

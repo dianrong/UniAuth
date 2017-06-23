@@ -5,7 +5,6 @@ import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.util.CollectionUtils;

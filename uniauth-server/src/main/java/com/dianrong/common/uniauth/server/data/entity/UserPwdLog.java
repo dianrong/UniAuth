@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * . 用户密码记录表
- * 
+ *
  * @author wanglin
  */
 public class UserPwdLog {

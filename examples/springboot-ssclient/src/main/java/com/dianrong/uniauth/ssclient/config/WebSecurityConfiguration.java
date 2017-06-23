@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  * @author wanglin
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends UniauthSecurityConfig {
 
   @Autowired
@@ -37,4 +36,3 @@ public class WebSecurityConfiguration extends UniauthSecurityConfig {
         .httpBasic();
   }
 }
-

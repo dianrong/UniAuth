@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TenancyCodeHeaderConsumer extends AbstractTenancyCodeHeaderConsumer {
+
   @Override
   public void consume(String tenancyCode) {
     CxfHeaderHolder.TENANCYCODE.set(tenancyCode);

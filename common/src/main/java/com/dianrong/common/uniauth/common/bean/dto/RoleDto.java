@@ -1,179 +1,181 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Created by Arc on 14/1/16.
  */
 @ApiModel("角色信息")
 public class RoleDto extends TenancyBaseDto {
-    private static final long serialVersionUID = 1578124776064866724L;
 
-    @ApiModelProperty("主键id")
-    private Integer id;
+  private static final long serialVersionUID = 1578124776064866724L;
 
-    @ApiModelProperty("名称")
-    private String name;
+  @ApiModelProperty("主键id")
+  private Integer id;
 
-    @ApiModelProperty("描述")
-    private String description;
+  @ApiModelProperty("名称")
+  private String name;
 
-    @ApiModelProperty("状态(0,1)")
-    private Byte status;
+  @ApiModelProperty("描述")
+  private String description;
 
-    @ApiModelProperty("角色所在域的id")
-    private Integer domainId;
+  @ApiModelProperty("状态(0,1)")
+  private Byte status;
 
-    @ApiModelProperty("角色类型的id")
-    private Integer roleCodeId;
+  @ApiModelProperty("角色所在域的id")
+  private Integer domainId;
 
-    private Integer permissionId;
+  @ApiModelProperty("角色类型的id")
+  private Integer roleCodeId;
 
-    @ApiModelProperty("对应的域信息")
-    private DomainDto domain;
-    private String roleCode;
+  private Integer permissionId;
 
-    private List<GroupDto> groupList;
-    private Map<String, Set<String>> permMap;
-    private Map<String, Set<PermissionDto>> permDtoMap;
+  @ApiModelProperty("对应的域信息")
+  private DomainDto domain;
+  private String roleCode;
 
-    // whether this role connected with this permission
-    // private boolean permChecked;
-    // whether this role connected with this user
-    // private boolean roleChecked;
-    // whether this role connected with this group
-    // private boolean groupChecked;
+  private List<GroupDto> groupList;
+  private Map<String, Set<String>> permMap;
+  private Map<String, Set<PermissionDto>> permDtoMap;
 
-    // whether this role connected with a permission, user or group
-    private Boolean checked;
+  // whether this role connected with this permission
+  // private boolean permChecked;
+  // whether this role connected with this user
+  // private boolean roleChecked;
+  // whether this role connected with this group
+  // private boolean groupChecked;
 
-    public Integer getPermissionId() {
-        return permissionId;
-    }
+  // whether this role connected with a permission, user or group
+  private Boolean checked;
 
-    public RoleDto setPermissionId(Integer permissionId) {
-        this.permissionId = permissionId;
-        return this;
-    }
+  public Integer getPermissionId() {
+    return permissionId;
+  }
 
-    public Integer getRoleCodeId() {
-        return roleCodeId;
-    }
+  public RoleDto setPermissionId(Integer permissionId) {
+    this.permissionId = permissionId;
+    return this;
+  }
 
-    public RoleDto setRoleCodeId(Integer roleCodeId) {
-        this.roleCodeId = roleCodeId;
-        return this;
-    }
+  public Integer getRoleCodeId() {
+    return roleCodeId;
+  }
 
-    public Integer getDomainId() {
-        return domainId;
-    }
+  public RoleDto setRoleCodeId(Integer roleCodeId) {
+    this.roleCodeId = roleCodeId;
+    return this;
+  }
 
-    public RoleDto setDomainId(Integer domainId) {
-        this.domainId = domainId;
-        return this;
-    }
+  public Integer getDomainId() {
+    return domainId;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public RoleDto setDomainId(Integer domainId) {
+    this.domainId = domainId;
+    return this;
+  }
 
-    public RoleDto setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public RoleDto setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public RoleDto setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public RoleDto setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public RoleDto setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Byte getStatus() {
-        return status;
-    }
+  public RoleDto setDescription(String description) {
+    this.description = description;
+    return this;
+  }
 
-    public RoleDto setStatus(Byte status) {
-        this.status = status;
-        return this;
-    }
+  public Byte getStatus() {
+    return status;
+  }
 
-    public DomainDto getDomain() {
-        return domain;
-    }
+  public RoleDto setStatus(Byte status) {
+    this.status = status;
+    return this;
+  }
 
-    public RoleDto setDomain(DomainDto domain) {
-        this.domain = domain;
-        return this;
-    }
+  public DomainDto getDomain() {
+    return domain;
+  }
 
-    public String getRoleCode() {
-        return roleCode;
-    }
+  public RoleDto setDomain(DomainDto domain) {
+    this.domain = domain;
+    return this;
+  }
 
-    public RoleDto setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
-        return this;
-    }
+  public String getRoleCode() {
+    return roleCode;
+  }
 
-    public List<GroupDto> getGroupList() {
-        return groupList;
-    }
+  public RoleDto setRoleCode(String roleCode) {
+    this.roleCode = roleCode;
+    return this;
+  }
 
-    public RoleDto setGroupList(List<GroupDto> groupList) {
-        this.groupList = groupList;
-        return this;
-    }
+  public List<GroupDto> getGroupList() {
+    return groupList;
+  }
+
+  public RoleDto setGroupList(List<GroupDto> groupList) {
+    this.groupList = groupList;
+    return this;
+  }
 
 
-    public Map<String, Set<String>> getPermMap() {
-        return permMap;
-    }
+  public Map<String, Set<String>> getPermMap() {
+    return permMap;
+  }
 
-    public RoleDto setPermMap(Map<String, Set<String>> permMap) {
-        this.permMap = permMap;
-        return this;
-    }
+  public RoleDto setPermMap(Map<String, Set<String>> permMap) {
+    this.permMap = permMap;
+    return this;
+  }
 
-    public Boolean getChecked() {
-        return checked;
-    }
+  public Boolean getChecked() {
+    return checked;
+  }
 
-    public RoleDto setChecked(Boolean checked) {
-        this.checked = checked;
-        return this;
-    }
+  public RoleDto setChecked(Boolean checked) {
+    this.checked = checked;
+    return this;
+  }
 
-    public Map<String, Set<PermissionDto>> getPermDtoMap() {
-        return permDtoMap;
-    }
+  public Map<String, Set<PermissionDto>> getPermDtoMap() {
+    return permDtoMap;
+  }
 
-    public RoleDto setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
-        this.permDtoMap = permDtoMap;
-        return this;
-    }
+  public RoleDto setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
+    this.permDtoMap = permDtoMap;
+    return this;
+  }
 
-    @Override
-    public String toString() {
-        return "RoleDto [id=" + id + ", name=" + name + ", description=" + description + ", status=" + status + ", domainId=" + domainId + ", roleCodeId=" + roleCodeId
-                + ", permissionId=" + permissionId + ", domain=" + domain + ", roleCode=" + roleCode + ", groupList=" + groupList + ", permMap=" + permMap + ", permDtoMap="
-                + permDtoMap + ", checked=" + checked + "]";
-    }
+  @Override
+  public String toString() {
+    return "RoleDto [id=" + id + ", name=" + name + ", description=" + description + ", status="
+        + status + ", domainId=" + domainId + ", roleCodeId=" + roleCodeId
+        + ", permissionId=" + permissionId + ", domain=" + domain + ", roleCode=" + roleCode
+        + ", groupList=" + groupList + ", permMap=" + permMap + ", permDtoMap="
+        + permDtoMap + ", checked=" + checked + "]";
+  }
 }

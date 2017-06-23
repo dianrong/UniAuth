@@ -1,12 +1,10 @@
 package com.dianrong.common.uniauth.server.metrics.custom;
 
 import com.codahale.metrics.health.HealthCheck;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

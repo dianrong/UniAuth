@@ -82,9 +82,9 @@ define(['../../../utils/constant'], function (constant) {
                         return;
                     }
                     exchangeItemToFirst(eavCode, $scope.eavCodes);
-                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.updateEavSuccess'));
+                    AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('userMgr.tips.modifyEavSuccess'));
                 }, function () {
-                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.updateEavFailure'));
+                    AlertService.addAutoDismissAlert(constant.messageType.danger, $rootScope.translate('userMgr.tips.modifyEavFailure'));
                 });
             }
             eavCode.editable = false;

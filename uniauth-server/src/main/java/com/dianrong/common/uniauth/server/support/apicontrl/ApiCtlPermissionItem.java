@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  * 权限信息.
- * 
+ *
  * @author wanglin
  */
 public class ApiCtlPermissionItem implements Serializable {

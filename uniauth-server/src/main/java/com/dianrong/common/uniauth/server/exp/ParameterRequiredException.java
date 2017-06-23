@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.common.bean.InfoName;
 
 /**
  * 参数缺失的异常类型定义.
- * 
+ *
  * @author wanglin
  */
 public class ParameterRequiredException extends AppException {

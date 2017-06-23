@@ -8,11 +8,9 @@ import ch.qos.logback.classic.Level;
 import com.google.common.base.Charsets;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.CharStreams;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 

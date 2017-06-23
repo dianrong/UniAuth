@@ -2,9 +2,8 @@ package com.dianrong.common.uniauth.server.datafilter;
 
 /**
  * . 数据过滤的类型枚举
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 public enum FilterType {
   /**

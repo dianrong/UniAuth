@@ -11,14 +11,11 @@ import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -28,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-
 /**
  * Created by Arc on 15/1/16.
  */
@@ -36,6 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class ServerExAopHandler {
+
   // todo: should migrate to zoo keeper
   private static final boolean IS_PRINT_STACKTRACE = true;
 
@@ -46,7 +43,8 @@ public class ServerExAopHandler {
   private TenancyService tenancyService;
 
   @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.resource.*.*(..))")
-  public void anyServerResources() {}
+  public void anyServerResources() {
+  }
 
   /**
    * 统一处理系统异常信息.

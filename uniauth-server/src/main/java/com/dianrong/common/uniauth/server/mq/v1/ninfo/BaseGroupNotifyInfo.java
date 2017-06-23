@@ -4,6 +4,7 @@ import lombok.ToString;
 
 @ToString
 public class BaseGroupNotifyInfo extends BaseNotifyInfo {
+
   /**
    * 组id.
    */

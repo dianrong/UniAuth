@@ -13,9 +13,7 @@ import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;

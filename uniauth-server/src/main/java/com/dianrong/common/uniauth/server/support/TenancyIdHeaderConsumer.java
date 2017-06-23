@@ -2,13 +2,13 @@ package com.dianrong.common.uniauth.server.support;
 
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.server.cxf.server.impl.AbstractTenancyIdHeaderConsumer;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class TenancyIdHeaderConsumer extends AbstractTenancyIdHeaderConsumer {
+
   @Override
   public void consume(String value) {
     try {

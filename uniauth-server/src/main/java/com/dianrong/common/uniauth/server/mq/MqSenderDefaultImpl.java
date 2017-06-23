@@ -11,12 +11,13 @@ import org.springframework.util.Assert;
  * <pre>
  * mqSender默认实现.
  * </pre>
- * 
+ *
  * @author cwl
  * @created Apr 11, 2016
  */
 @Slf4j
 public class MqSenderDefaultImpl implements MqSender {
+
   private RabbitTemplate template;
 
   // for declare exchange
@@ -27,7 +28,8 @@ public class MqSenderDefaultImpl implements MqSender {
   private AtomicBoolean init = new AtomicBoolean(false);
 
   // 私有构造函数
-  private MqSenderDefaultImpl() {}
+  private MqSenderDefaultImpl() {
+  }
 
   @Override
   public void send(String key, Object msgObj) {
@@ -76,7 +78,7 @@ public class MqSenderDefaultImpl implements MqSender {
 
   /**
    * build a UNIAUTH standard MQSender implementation.
-   * 
+   *
    * @param template RabbitTemplate can not be null
    * @param admin RabbitAdmin can not be null
    * @param exchangeName String exchange name

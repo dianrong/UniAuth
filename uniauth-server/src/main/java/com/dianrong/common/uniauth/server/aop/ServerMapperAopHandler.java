@@ -5,10 +5,8 @@ import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
-
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -18,32 +16,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-
 @Aspect
 @Component
 @Slf4j
 public class ServerMapperAopHandler {
+
   @Autowired
   private GlobalVarQueueFacade globalVarQueue;
 
   @Pointcut(
       value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.insert*(..)) ")
-  public void insertMappers() {}
+  public void insertMappers() {
+  }
 
   @Pointcut(
       value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.update*(..)) ")
-  public void updateMappers() {}
+  public void updateMappers() {
+  }
 
   @Pointcut(
       value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.delete*(..)) ")
-  public void deleteMappers() {}
+  public void deleteMappers() {
+  }
 
   @Pointcut(value = "execution(public * com.dianrong.common.uniauth.server.data.mapper.*.*(..)) ")
-  public void mappers() {}
+  public void mappers() {
+  }
 
   @Pointcut(value = "!execution(public * com.dianrong.common.uniauth.server.data.mapper"
       + ".AuditMapper.*(..))")
-  public void notAuditMapper() {}
+  public void notAuditMapper() {
+  }
 
   /**
    * 处理mapper操作日志.

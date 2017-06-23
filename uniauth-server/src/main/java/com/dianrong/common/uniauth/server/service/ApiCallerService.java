@@ -8,7 +8,6 @@ import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class ApiCallerService {
 
   /**
    * Get API caller info.
-   * 
+   *
    * @param account account
    * @param password password
    * @return ApiCallerInfoDto or null
