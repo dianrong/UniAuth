@@ -19,9 +19,11 @@ import com.dianrong.common.uniauth.common.apicontrol.server.PermissionJudger;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.server.support.apicontrl.security.JwtProcessor;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -29,7 +31,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -101,8 +105,8 @@ public class ApiControlFilter extends GenericFilterBean {
             }
           } else {
             // 权限不足
-            throw new InsufficientPrivilegesException(
-                HttpRequestUtil.extractRequestUrl(httpRequest, false));
+            throw new InsufficientPrivilegesException(String.format("%s:%s",
+                httpRequest.getMethod(), HttpRequestUtil.extractRequestUrl(httpRequest, false)));
           }
         } catch (LoadCredentialFailedException e) {
           log.info("load credential failed ", e);
