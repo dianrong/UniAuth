@@ -65,7 +65,7 @@
           <!--p:database="#{uniauthConfig['redis.database']?:'0'}"   p:pool-config-ref="poolConfig"/>-->
 
     <bean id="connectionFactory" class="com.dianrong.common.uniauth.cas.registry.SwitchCtledJedisConnectionFactory"
-    	p:password="#{uniauthConfig['redis.password']?:'mypass1'}" p:database="#{uniauthConfig['redis.database']?:'0'}"
+    	p:password="#{uniauthConfig['redis.password']}" p:database="#{uniauthConfig['redis.database']?:'0'}"
     	p:connectionSwitch="#{uniauthConfig['cas.iscluster']?:'false'}">
         <constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration"></constructor-arg>
         <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
@@ -79,7 +79,7 @@
         <constructor-arg name="source">
             <map>
                 <entry key="spring.redis.sentinel.master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></entry>
-                <entry key="spring.redis.sentinel.nodes" value="#{uniauthConfig['redis.sentinels']?:'10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000'}"></entry>
+                <entry key="spring.redis.sentinel.nodes" value="#{uniauthConfig['redis.sentinels']}"></entry>
             </map>
         </constructor-arg>
     </bean>
