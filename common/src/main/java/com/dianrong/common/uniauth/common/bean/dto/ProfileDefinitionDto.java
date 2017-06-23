@@ -30,7 +30,7 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
   private Map<String, String> attributes;
   
   @ApiModelProperty("所有子ProfileId的集合")
-  private Set<Long> descendantProfileId;
+  private Set<Long> descendantProfileIds;
 
   public String getName() {
     return name;
@@ -59,15 +59,6 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
     return this;
   }
 
-  public Set<Long> getDescendantProfileId() {
-    return descendantProfileId;
-  }
-
-  public ProfileDefinitionDto setDescendantProfileId(Set<Long> descendantProfileId) {
-    this.descendantProfileId = descendantProfileId;
-    return this;
-  }
-
   public Long getId() {
     return id;
   }
@@ -83,6 +74,15 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
 
   public ProfileDefinitionDto setAttributes(Map<String, String> attributes) {
     this.attributes = attributes;
+    return this;
+  }
+
+  public Set<Long> getDescendantProfileIds() {
+    return descendantProfileIds;
+  }
+
+  public ProfileDefinitionDto setDescendantProfileIds(Set<Long> descendantProfileIds) {
+    this.descendantProfileIds = descendantProfileIds;
     return this;
   }
 }

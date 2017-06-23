@@ -13,13 +13,20 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Resource;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class AttributeExtendService extends TenancyBasedService {
 
@@ -35,18 +42,9 @@ public class AttributeExtendService extends TenancyBasedService {
   public AttributeExtendDto add(String code, String category, String subcategory,
       String description) {
     CheckEmpty.checkEmpty(code, "attributeExtendCode");
-
-    // 过滤数据
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
-        code.trim());
-
-    AttributeExtend attributeExtend = new AttributeExtend();
-    attributeExtend.setCode(code);
-    attributeExtend.setCategory(category);
-    attributeExtend.setSubcategory(subcategory);
-    attributeExtend.setDescription(description);
-    attributeExtend.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    attributeExtendMapper.insertSelective(attributeExtend);
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code.trim());
+    AttributeExtend attributeExtend =
+        innerAddAttributeExtend(code, category, subcategory, description);
     AttributeExtendDto attributeExtendDto =
         BeanConverter.convert(attributeExtend, AttributeExtendDto.class);
     return attributeExtendDto;
@@ -111,6 +109,39 @@ public class AttributeExtendService extends TenancyBasedService {
     PageDto<AttributeExtendDto> pageDto =
         new PageDto<AttributeExtendDto>(pageNumber, pageSize, count, attributeExtendDtos);
     return pageDto;
+  }
+
+  /**
+   * 如果不存在则添加一个.
+   */
+  @Transactional
+  public AttributeExtend addAttributeExtendIfNonExistent(String code, String category,
+      String subcategory, String description) {
+    CheckEmpty.checkEmpty(code, "attributeExtendCode");
+    AttributeExtendExample example = new AttributeExtendExample();
+    AttributeExtendExample.Criteria criteria = example.createCriteria();
+    criteria.andCodeEqualTo(code).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<AttributeExtend> attributeExtends = attributeExtendMapper.selectByExample(example);
+    if (attributeExtends != null && !attributeExtends.isEmpty()) {
+      return attributeExtends.get(0);
+    }
+    log.debug("add new attibute code: {}", code );
+    return innerAddAttributeExtend(code, category, subcategory,description);
+  }
+
+  /**
+   * 添加一个新的扩展属性. 代码不做Code的唯一性校验.
+   */
+  private AttributeExtend innerAddAttributeExtend(String code, String category, String subcategory,
+      String description) {
+    AttributeExtend attributeExtend = new AttributeExtend();
+    attributeExtend.setCode(code);
+    attributeExtend.setCategory(category);
+    attributeExtend.setSubcategory(subcategory);
+    attributeExtend.setDescription(description);
+    attributeExtend.setTenancyId(tenancyService.getTenancyIdWithCheck());
+    attributeExtendMapper.insertSelective(attributeExtend);
+    return attributeExtend;
   }
 }
 

@@ -78,7 +78,7 @@ public class ConfigService extends TenancyBasedService {
     } else {
       if (!StringUtil.strIsNullOrEmpty(cfgKey)) {
         // 添加判断比较
-        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,
+        dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,
             cfgKey);
       }
 

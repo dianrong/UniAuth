@@ -103,11 +103,11 @@ public class PermissionService extends TenancyBasedService {
     CheckEmpty.checkEmpty(value, "权限的值");
 
     // 域名id必须是有效的
-    domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID,
+    domainDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
         domainId);
 
     // 同一个域下面不能出现重复数据
-    dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_VALUE, value),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_PERM_TYPE_ID, permTypeId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
@@ -138,7 +138,7 @@ public class PermissionService extends TenancyBasedService {
     CheckEmpty.checkEmpty(value, "权限的值");
 
     // 域名id必须是有效的
-    domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID,
+    domainDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
         domainId);
 
     Byte status = permissionParam.getStatus();

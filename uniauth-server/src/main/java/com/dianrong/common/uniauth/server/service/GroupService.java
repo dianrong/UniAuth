@@ -130,8 +130,8 @@ public class GroupService extends TenancyBasedService {
       throw new AppException(InfoName.BAD_REQUEST,
           UniBundle.getMsg("group.parameter.targetid.equals.sourceid"));
     }
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, sourceGroup);
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, targetGroup);
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, sourceGroup);
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, targetGroup);
     grpPathMapper.moveTreeStepOne(sourceGroup);
     Map<String, Object> moveParam = new HashMap<>();
     moveParam.put("subAncestor", sourceGroup);
@@ -390,10 +390,10 @@ public class GroupService extends TenancyBasedService {
     }
 
     // 父group需要存在
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID,
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
         targetGroupId);
     // 子group不能存在
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
         groupCode);
 
     Grp grp = BeanConverter.convert(groupParam);

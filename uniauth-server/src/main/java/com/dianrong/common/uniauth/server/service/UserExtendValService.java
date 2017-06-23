@@ -59,7 +59,7 @@ public class UserExtendValService extends TenancyBasedService {
     CheckEmpty.checkEmpty(extendId, "extend_id");
 
     // 数据过滤
-    dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
 

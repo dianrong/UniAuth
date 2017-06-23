@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionPathMapper" >
+    
+    <!-- 添加Profile和子Profile的关联关系 -->
+    <insert id="relateProfileAndSubProfile" parameterType="java.util.Map">
+        insert into profile_definition_path (ancestor, descendant, deepth) 
+        select ancestor, descendant, deepth from 
+        (   
+            select #{ancestorId,jdbcType=BIGINT} as ancestor, #{ancestorId,jdbcType=BIGINT} as descendant, 0 as deepth from profile_definition_path
+            union
+	        select #{ancestorId,jdbcType=BIGINT} as ancestor, subtree.descendant as descendant, subtree.deepth+1 as deepth
+	        from profile_definition_path as subtree where subtree.ancestor in 
+	        <foreach collection="descendantIds" item="descendantId" separator=","  open="(" close=")">
+	            descendantId
+	        </foreach>
+        ) tb
+    </insert>
+    
+    <!-- 判断给出的一组ProfileId是否有关联关系 -->
+    <select id="isRelated" parameterType="java.util.Set">
+        select count(ancestor) from profile_definition_path where ancestor in 
+        <foreach collection="profileIds" item="profileId" separator=","  open="(" close=")">
+            profileId
+        </foreach>
+        and descendant in 
+        <foreach collection="profileIds" item="profileId" separator=","  open="(" close=")">
+            profileId
+        </foreach>
+        <![CDATA[ and deepth <> 0 ]]> 
+    </select>
+</mapper>

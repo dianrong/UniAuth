@@ -3,6 +3,8 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionPath;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionPathExample;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface ProfileDefinitionPathMapper {
@@ -61,4 +63,8 @@ public interface ProfileDefinitionPathMapper {
      * @mbggenerated Thu Jun 15 16:06:56 CST 2017
      */
     int updateByExample(@Param("record") ProfileDefinitionPath record, @Param("example") ProfileDefinitionPathExample example);
+    
+    int relateProfileAndSubProfile(@Param("ancestorId")Long ancestorId, @Param("descendantIds")Set<Long> descendantIds);
+    
+    int isRelated(Set<Long> profileIds);
 }

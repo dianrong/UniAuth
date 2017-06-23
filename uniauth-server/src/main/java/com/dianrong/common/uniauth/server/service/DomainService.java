@@ -56,7 +56,7 @@ public class DomainService extends TenancyBasedService {
     CheckEmpty.checkEmpty(domainCode, "域编码");
 
     // 检查code
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
         domainCode);
 
     DomainExample example = new DomainExample();
@@ -235,7 +235,7 @@ public class DomainService extends TenancyBasedService {
 
     if (domainId != null) {
       // 必须要合法的数据才能插入
-      dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
+      dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
     } else {
       throw new AppException(InfoName.BAD_REQUEST,
           UniBundle.getMsg("common.parameter.empty", "域相关人ID"));

@@ -172,7 +172,7 @@ public class TenancyService {
     CheckEmpty.checkEmpty(code, "code");
     CheckEmpty.checkEmpty(adminEmail, "adminEmail");
     CheckEmpty.checkEmpty(adminPassword, "adminPassword");
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
     Tenancy tenancy = new Tenancy();
     tenancy.setCode(code);
     tenancy.setName(StringUtils.hasText(name) ? name : code);

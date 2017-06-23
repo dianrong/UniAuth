@@ -61,4 +61,9 @@ public interface ProfileDefinitionAttributeMapper {
      * @mbggenerated Thu Jun 15 16:06:56 CST 2017
      */
     int updateByExample(@Param("record") ProfileDefinitionAttribute record, @Param("example") ProfileDefinitionAttributeExample example);
+    
+    /**
+     * 批量插入数据.
+     */
+    int batchInsert(List<ProfileDefinitionAttribute> list);
 }

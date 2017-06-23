@@ -47,7 +47,7 @@ public class ProfileDefinitionParam extends PageParam {
   /**
    * 子Profile Id列表.
    */
-  private Set<Long> descendantProfileId;
+  private Set<Long> descendantProfileIds;
 
   public String getName() {
     return name;
@@ -76,15 +76,6 @@ public class ProfileDefinitionParam extends PageParam {
     return this;
   }
   
-  public Set<Long> getDescendantProfileId() {
-    return descendantProfileId;
-  }
-
-  public ProfileDefinitionParam setDescendantProfileId(Set<Long> descendantProfileId) {
-    this.descendantProfileId = descendantProfileId;
-    return this;
-  }
-
   public Long getId() {
     return id;
   }
@@ -100,6 +91,15 @@ public class ProfileDefinitionParam extends PageParam {
 
   public ProfileDefinitionParam setAttributes(Map<String, String> attributes) {
     this.attributes = attributes;
+    return this;
+  }
+
+  public Set<Long> getDescendantProfileIds() {
+    return descendantProfileIds;
+  }
+
+  public ProfileDefinitionParam setDescendantProfileIds(Set<Long> descendantProfileIds) {
+    this.descendantProfileIds = descendantProfileIds;
     return this;
   }
 }

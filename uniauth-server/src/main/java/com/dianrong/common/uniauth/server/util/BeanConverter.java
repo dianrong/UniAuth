@@ -8,6 +8,7 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
@@ -32,6 +33,7 @@ import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
 import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
@@ -42,6 +44,10 @@ import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
+
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -432,5 +438,21 @@ public class BeanConverter {
           .setTenancyId(attributeExtend.getTenancyId());
       return userExtendDto;
     }
+  }
+
+  /**
+   * 从ProfileDefinition转换为UserExtendDto.
+   */
+  public static ProfileDefinitionDto convert(ProfileDefinition profileDefinition,
+      Map<String, String> attributes, Set<Long> descendantProfileIds) {
+    ProfileDefinitionDto profileDefinitionDto = new ProfileDefinitionDto();
+    if (profileDefinition != null) {
+      profileDefinitionDto.setCode(profileDefinition.getCode())
+          .setDescription(profileDefinition.getDescription()).setId(profileDefinition.getId())
+          .setName(profileDefinition.getName())
+          .setTenancyId(StringUtil.translateLongToInteger(profileDefinition.getTenancyId()));
+    }
+    profileDefinitionDto.setAttributes(attributes).setDescendantProfileIds(descendantProfileIds);
+    return profileDefinitionDto;
   }
 }

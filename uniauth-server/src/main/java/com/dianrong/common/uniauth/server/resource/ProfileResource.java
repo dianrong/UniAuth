@@ -17,7 +17,7 @@ public class ProfileResource implements IProfileRWResource {
 
   @Autowired
   private ProfileService profileService;
-  
+
   @Override
   public Response<ProfileDefinitionDto> getProfileDefinition(Long id) {
     return null;
@@ -25,7 +25,8 @@ public class ProfileResource implements IProfileRWResource {
 
   @Override
   public Response<ProfileDefinitionDto> addNewProfileDefinition(ProfileDefinitionParam param) {
-    return Response.success(profileService.addNewProfileDefinition(param));
+    return Response.success(profileService.addNewProfileDefinition(param.getName(), param.getCode(),
+        param.getDescription(), param.getAttributes(), param.getDescendantProfileIds()));
   }
 
   @Override
