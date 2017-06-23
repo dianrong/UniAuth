@@ -1,12 +1,14 @@
 package com.dianrong.uniauth.ssclient.config;
 
 import com.dianrong.common.uniauth.client.config.UniauthSecurityConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 /**
- * 自定义spring security 配置.
+ * 自定义spring security 配置
  *
  * @author wanglin
  */
@@ -15,11 +17,11 @@ public class WebSecurityConfiguration extends UniauthSecurityConfig {
 
   @Override
   public void configure(WebSecurity web) throws Exception {
-    web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static-content", "/**/ajax-content.jsp");
+    web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static-content","/**/ajax-content.jsp");
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    super.configure(http);
+   super.configure(http);
   }
 }
