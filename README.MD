@@ -212,8 +212,9 @@ java -jar json-web-key-generator-0.4-SNAPSHOT-jar-with-dependencies.jar -t oct -
 ``` shell
 # 哨兵模式 (请自行指定具体的master, password, sentinels配置必须为sentinel的地址和端口)
 /com/dianrong/cfg/1.0.0/uniauth/redis.database 0      # redis的数据库index
-/com/dianrong/cfg/1.0.0/uniauth/cas.iscluster true    # true or false  cas是否采用redis存储登陆的ticket
-/com/dianrong/cfg/1.0.0/uniauth/redis.password ''     # 指定redis密码
+/com/dianrong/cfg/1.0.0/uniauth/cas.iscluster true    # true or false, 默认为false. cas是否通过redis来存储ticket. 如果不想cas依赖redis则此处可配置为false. 
+/com/dianrong/cfg/1.0.0/uniauth/redis.uniauth.use_redis     # true or false, 默认为true. 是否采用redis作为uniauth-server的缓存实现. 如果不想uniauth-server依赖redis，则此处可配置为false.
+/com/dianrong/cfg/1.0.0/uniauth/redis.password 'password'     # 指定redis密码. 如果无密码,则无需配置该节点.
 /com/dianrong/cfg/1.0.0/uniauth/redis.master mymaster # 指定master节点name
 /com/dianrong/cfg/1.0.0/uniauth/redis.sentinels 10.18.19.51:5000,10.18.19.101:5000 # 指定 redis集群节点列表,例如：10.18.19.67:5000,10.18.19.51:5000,10.18.19.101:5000
 ```
