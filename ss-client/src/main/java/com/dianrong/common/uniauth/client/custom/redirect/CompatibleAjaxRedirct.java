@@ -27,7 +27,7 @@ public class CompatibleAjaxRedirct extends DefaultRedirectStrategy {
           url);
       response.setContentType("application/json;charset=UTF-8");
       response.addHeader("Cache-Control", "no-store");
-      response.getWriter().write(JsonUtil.object2Jason(JsonResponseModel.success()));
+      response.getWriter().write(JsonUtil.object2Jason(JsonResponseModel.success(url)));
       response.flushBuffer();
       return;
     }
