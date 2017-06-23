@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.customer.basicauth.handler;
 
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType;
 import java.util.ArrayList;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -9,6 +10,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
  */
 public interface ModeHandler {
 
-  ArrayList<SimpleGrantedAuthority> handle(UserDetailDto userDetailDto, String domainDefine,
-      String permissionType);
+  /**
+   * 获取权限的处理器
+   * @param userDetailDto
+   * @param domainCode 域名code
+   * @param permissionType 域允许的权限类型
+   * @return
+   */
+  ArrayList<SimpleGrantedAuthority> handle(UserDetailDto userDetailDto, String domainCode,
+      PermissionType permissionType);
 }

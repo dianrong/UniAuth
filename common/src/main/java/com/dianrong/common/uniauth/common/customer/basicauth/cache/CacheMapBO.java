@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.common.customer.basicauth.cache;
 /**
  * Created by denghb on 6/22/17.
  */
-public class CacheMapVO {
+public class CacheMapBO {
 
   private Object value;
 

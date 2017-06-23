@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.customer.basicauth;
 
 import static com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode.ROLE_CODE;
+import static com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType.DOMAIN;
 
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
@@ -14,8 +15,10 @@ import com.dianrong.common.uniauth.common.customer.basicauth.cache.service.Cache
 import com.dianrong.common.uniauth.common.customer.basicauth.cache.service.CacheService;
 import com.dianrong.common.uniauth.common.customer.basicauth.factory.ModeFactory;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
+import com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,36 +41,38 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
   private UniClientFacade uniClientFacade;
   private String tenancyCode = AppConstants.DEFAULT_TANANCY_CODE;
   private Mode mode = ROLE_CODE;
-  private String permissionType = AppConstants.PERM_TYPE_DOMAIN;
-  private String domainDefine = AppConstants.DOMAIN_CODE_TECHOPS;
+  private PermissionType permissionType = DOMAIN;
+  private String domainCode = AppConstants.DOMAIN_CODE_TECHOPS;
+  private String USER_DETAIL_DTO_KEY = "UserDetailDto";
+  private String RESPONSE_USER_KEY = "ResponseUser";
   private CacheService cacheService = new CacheMapServiceImpl();
 
   public void setCacheService(
-      CacheService cacheService) {
+      @NonNull CacheService cacheService) {
     this.cacheService = cacheService;
   }
 
-  public DelegateAuthenticationProvider(UniClientFacade uniClientFacade) {
+  public DelegateAuthenticationProvider(@NonNull UniClientFacade uniClientFacade) {
     this.uniClientFacade = uniClientFacade;
   }
 
-  public DelegateAuthenticationProvider setTenancyCode(String tenancyCode) {
+  public DelegateAuthenticationProvider setTenancyCode(@NonNull String tenancyCode) {
     this.tenancyCode = tenancyCode;
     return this;
   }
 
-  public DelegateAuthenticationProvider setMode(Mode mode) {
+  public DelegateAuthenticationProvider setMode(@NonNull Mode mode) {
     this.mode = mode;
     return this;
   }
 
-  public DelegateAuthenticationProvider setPermissionType(String permissionType) {
+  public DelegateAuthenticationProvider setPermissionType(@NonNull PermissionType permissionType) {
     this.permissionType = permissionType;
     return this;
   }
 
-  public DelegateAuthenticationProvider setDomainDefine(String domainDefine) {
-    this.domainDefine = domainDefine;
+  public DelegateAuthenticationProvider setDomainDefine(@NonNull String domainCode) {
+    this.domainCode = domainCode;
     return this;
   }
 
@@ -89,13 +94,12 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
     loginParam.setPassword(password);
     loginParam.setTenancyCode(tenancyCode);
     loginParam.setIp(remoteAddress);
-    Response<UserDto> response = cacheService.getResponseUserFromCache();
-    if (response == null) {
-      response = uniClientFacade.getUserResource().login(loginParam);
-      cacheService.setResponseUserToCache(response);
+    List<Info> infoList = (List<Info>) cacheService.getDataFromCache(RESPONSE_USER_KEY);
+    if (infoList == null) {
+      Response<UserDto> response = uniClientFacade.getUserResource().login(loginParam);
+      infoList = response.getInfo();
+      cacheService.setDataToCache(infoList, RESPONSE_USER_KEY);
     }
-
-    List<Info> infoList = response.getInfo();
 
     if (infoList != null && !infoList.isEmpty()) {
       Info info = infoList.get(0);
@@ -139,18 +143,19 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
     }
 
     // 首先从缓存中拿数据
-    UserDetailDto userDetailDto = cacheService.getUserDetailFromCache();
+    UserDetailDto userDetailDto = (UserDetailDto) cacheService
+        .getDataFromCache(USER_DETAIL_DTO_KEY);
     // 缓存中不存在，再从数据库拿数据，并且把拿到的数据更新到缓存
     if (userDetailDto == null) {
       Response<UserDetailDto> responseDetail = uniClientFacade.getUserResource()
           .getUserDetailInfo(loginParam);
       userDetailDto = responseDetail.getData();
-      cacheService.setUserDetailToCache(userDetailDto);
+      cacheService.setDataToCache(userDetailDto, USER_DETAIL_DTO_KEY);
     }
 
     ModeFactory modeFactory = new ModeFactory();
     ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorityArrayList = modeFactory
-        .getHandlerBean(mode).handle(userDetailDto, domainDefine, permissionType);
+        .getHandlerBean(mode).handle(userDetailDto, domainCode, permissionType);
 
     return new UsernamePasswordAuthenticationToken(userName, password,
         simpleGrantedAuthorityArrayList);

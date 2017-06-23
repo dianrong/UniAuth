@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.customer.basicauth.cache;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -15,11 +16,9 @@ public class CacheMapManager {
 
   private final int MAX_EXPIRES_TIME = 10 * 60 * 1000;
 
-  private static Map<String, CacheMapVO> cacheMap = new ConcurrentHashMap<>(); // 缓存容器
+  private static ConcurrentMap<String, CacheMapBO> cacheMap = new ConcurrentHashMap<>(); // 缓存容器
 
   private volatile static CacheMapManager cacheMapManager; // 缓存实例对象
-
-  private volatile boolean updateFlag = true;// 正在更新时的阀门，为false时表示当前没有更新缓存，为true时表示当前正在更新缓存
 
   private CacheMapManager() {
 
@@ -40,21 +39,17 @@ public class CacheMapManager {
   }
 
   public Object get(final String key) {
-    if (this.updateFlag) {
-      log.info("缓存正在更新,暂时不走缓存拿数据.");
-      return null;
-    }
-    CacheMapVO cacheMapVO = cacheMap.get(key);
+    CacheMapBO cacheMapBO = cacheMap.get(key);
     long now = new Date().getTime();
     // 判断是否有这个值存在
-    if (cacheMapVO == null) {
+    if (cacheMapBO == null) {
       return null;
       // 判断保存的值是否过期
-    } else if (now >= cacheMapVO.getExpires()) {
+    } else if (now >= cacheMapBO.getExpires()) {
       cacheMap.remove(key);
       return null;
     } else {
-      return cacheMapVO.getValue();
+      return cacheMapBO.getValue();
     }
   }
 
@@ -64,11 +59,9 @@ public class CacheMapManager {
 
   public void set(final String key, final Object value,
       final long seconds) {
-    this.updateFlag = true;// 正在更新
-    log.info("正在更新缓存...");
     // 增加值的工作
-    CacheMapVO cacheMapVO = new CacheMapVO();
-    cacheMapVO.setValue(value);
+    CacheMapBO cacheMapBO = new CacheMapBO();
+    cacheMapBO.setValue(value);
     long now = new Date().getTime();
 
     long expires = seconds * 1000;
@@ -76,9 +69,8 @@ public class CacheMapManager {
       expires = MAX_EXPIRES_TIME;
     }
     expires += now;
-    cacheMapVO.setExpires(expires);
-    cacheMap.put(key, cacheMapVO);
-    this.updateFlag = false;// 正在更新
+    cacheMapBO.setExpires(expires);
+    cacheMap.putIfAbsent(key, cacheMapBO);
     log.info("缓存更新完成.");
   }
 
