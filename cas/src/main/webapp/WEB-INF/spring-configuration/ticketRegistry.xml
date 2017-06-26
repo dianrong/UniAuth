@@ -79,7 +79,7 @@
         <constructor-arg name="source">
             <map>
                 <entry key="spring.redis.sentinel.master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></entry>
-                <entry key="spring.redis.sentinel.nodes" value="#{uniauthConfig['redis.sentinels']}"></entry>
+                <entry key="spring.redis.sentinel.nodes" value="#{uniauthConfig['redis.sentinels']?:'127.0.0.1:26379'}"></entry>
             </map>
         </constructor-arg>
     </bean>
