@@ -67,4 +67,6 @@ public interface ProfileDefinitionPathMapper {
     int relateProfileAndSubProfile(@Param("ancestorId")Long ancestorId, @Param("descendantIds")Set<Long> descendantIds);
     
     int isRelated(Set<Long> profileIds);
+    
+    List<ProfileDefinitionPath> getProfileTreeLinks(Long profileId);
 }

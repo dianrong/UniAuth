@@ -130,6 +130,14 @@ public class AttributeExtendService extends TenancyBasedService {
   }
 
   /**
+   * 根据ProfileId获取关联的扩展属性.
+   */
+  public List<AttributeExtend> getAttributesByProfileId(Long profileId) {
+    CheckEmpty.checkEmpty(profileId, "profile definition id");
+    return attributeExtendMapper.getAttributesByProfileId(profileId);
+  }
+  
+  /**
    * 添加一个新的扩展属性. 代码不做Code的唯一性校验.
    */
   private AttributeExtend innerAddAttributeExtend(String code, String category, String subcategory,

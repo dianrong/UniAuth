@@ -20,7 +20,7 @@ public class ProfileResource implements IProfileRWResource {
 
   @Override
   public Response<ProfileDefinitionDto> getProfileDefinition(Long id) {
-    return null;
+    return Response.success(profileService.getProfileDefinition(id));
   }
 
   @Override

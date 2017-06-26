@@ -16,21 +16,24 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
 
   @ApiModelProperty("主键Id.即ProfileId")
   private Long id;
-  
+
   @ApiModelProperty("Profile的名称,可为中文")
   private String name;
-  
+
   @ApiModelProperty("所有Profile区分开来的编码")
   private String code;
-  
+
   @ApiModelProperty("Profile的描述信息")
   private String description;
-  
+
   @ApiModelProperty("Profile对应的扩展属性列表(扩展属性Code和描述)")
   private Map<String, String> attributes;
-  
-  @ApiModelProperty("所有子ProfileId的集合")
+
+  @ApiModelProperty("所有子ProfileId的集合,用于在添加和更新的时候指定profile的下一层的profile id集合")
   private Set<Long> descendantProfileIds;
+
+  @ApiModelProperty("用于在返回结果的时候嵌套返回子ProfileId的关系")
+  private Set<ProfileDefinitionDto> subProfiles;
 
   public String getName() {
     return name;
@@ -83,6 +86,15 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
 
   public ProfileDefinitionDto setDescendantProfileIds(Set<Long> descendantProfileIds) {
     this.descendantProfileIds = descendantProfileIds;
+    return this;
+  }
+
+  public Set<ProfileDefinitionDto> getSubProfiles() {
+    return subProfiles;
+  }
+
+  public ProfileDefinitionDto setSubProfiles(Set<ProfileDefinitionDto> subProfiles) {
+    this.subProfiles = subProfiles;
     return this;
   }
 }

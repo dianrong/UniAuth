@@ -29,4 +29,12 @@
         </foreach>
         <![CDATA[ and deepth <> 0 ]]> 
     </select>
+    
+    <select id="getProfileTreeLinks" resultType="hashmap" parameterType="java.lang.Long" >
+         select 
+            <include refid="Base_Column_List" />
+        from profile_definition_path where descendant in (
+            select descendant from profile_definition_path where ancestor = #{profileId,jdbcType=BIGINT}
+        ) and deepth = 1;
+    </select>
 </mapper>

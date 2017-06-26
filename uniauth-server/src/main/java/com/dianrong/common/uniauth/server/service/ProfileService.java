@@ -5,6 +5,7 @@ import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionPath;
 import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
@@ -13,16 +14,20 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Lists;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class ProfileService extends TenancyBasedService {
 
@@ -83,5 +88,40 @@ public class ProfileService extends TenancyBasedService {
       profileDefinitionPathService.relateProfileAndSubProfile(profileDefinition.getId(), descendantProfileIds);
     }
     return BeanConverter.convert(profileDefinition, attributes, descendantProfileIds);
+  }
+  
+  /**
+   * 根据ProfileId获取一个Profile的定义.
+   * @param id  Profile Id
+   */
+  public ProfileDefinitionDto getProfileDefinition(Long id) {
+    CheckEmpty.checkEmpty(id, "profile definition id");
+    ProfileDefinition profileDefinition = profileDefinitionMapper.selectByPrimaryKey(id);
+    if (profileDefinition == null) {
+      log.debug("get profile definition by primary key {}, but not found one!", id);
+      return null;
+    }
+    // get profile attributes
+    List<AttributeExtend> attributeExtends = attributeExtendService.getAttributesByProfileId(id);
+    Map<String, String> attributes = new LinkedHashMap<>();
+    if (!ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
+      for (AttributeExtend ae: attributeExtends) {
+        attributes.put(ae.getCode(), ae.getDescription());
+      }
+    }
+    
+    // get sub profile set
+    
+    return null;
+  }
+  
+  
+  /**
+   * 根据Profile Id获取子Profile的信息.
+   */
+  public ProfileDefinitionDto getProfileTreeByProfileId(Long profileId) {
+    CheckEmpty.checkEmpty(profileId, "profile definition id");
+    
+    return profileDefinitionPathMapper.isRelated(profileIds) > 0;
   }
 }
