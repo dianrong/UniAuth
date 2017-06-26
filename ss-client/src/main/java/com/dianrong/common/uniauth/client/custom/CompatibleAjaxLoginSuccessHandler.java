@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import com.dianrong.common.uniauth.client.custom.redirect.CompatibleAjaxRedirct;
+import com.dianrong.common.uniauth.client.custom.redirect.CompatibleAjaxRedirect;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 public class CompatibleAjaxLoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler
     implements LogoutSuccessHandler {
 
-  private RedirectStrategy compatibleAjaxRedirect = new CompatibleAjaxRedirct();
+  private RedirectStrategy compatibleAjaxRedirect = new CompatibleAjaxRedirect();
   
   @Override
   public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,

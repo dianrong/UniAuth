@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import com.dianrong.common.uniauth.client.custom.redirect.CompatibleAjaxRedirct;
+import com.dianrong.common.uniauth.client.custom.redirect.CompatibleAjaxRedirect;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 
@@ -31,7 +31,7 @@ public class SSSavedRequestAwareAuthenticationSuccessHandler
   @Autowired
   private DomainDefine domainDefine;
 
-  private RedirectStrategy compatibleAjaxRedirect = new CompatibleAjaxRedirct();
+  private RedirectStrategy compatibleAjaxRedirect = new CompatibleAjaxRedirect();
 
   public SSSavedRequestAwareAuthenticationSuccessHandler() {}
 

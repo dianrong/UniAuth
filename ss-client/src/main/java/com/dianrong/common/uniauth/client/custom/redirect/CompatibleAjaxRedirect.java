@@ -15,7 +15,7 @@ import org.springframework.security.web.DefaultRedirectStrategy;
  * @author wanglin
  */
 @Slf4j
-public class CompatibleAjaxRedirct extends DefaultRedirectStrategy {
+public class CompatibleAjaxRedirect extends DefaultRedirectStrategy {
 
   @Override
   public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url)
