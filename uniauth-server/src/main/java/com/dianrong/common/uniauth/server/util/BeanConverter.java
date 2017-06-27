@@ -9,8 +9,10 @@ import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
+import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionPathDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.SimpleProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
@@ -25,8 +27,10 @@ import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.ApiPermission;
+import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
@@ -34,6 +38,8 @@ import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
 import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionPath;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
@@ -44,7 +50,10 @@ import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
+import com.google.common.collect.Lists;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -443,8 +452,16 @@ public class BeanConverter {
   /**
    * 从ProfileDefinition转换为UserExtendDto.
    */
+  public static ProfileDefinitionDto convert(ProfileDefinition profileDefinition) {
+    return convert(profileDefinition, null, null, null);
+  }
+
+  /**
+   * 从ProfileDefinition转换为UserExtendDto.
+   */
   public static ProfileDefinitionDto convert(ProfileDefinition profileDefinition,
-      Map<String, String> attributes, Set<Long> descendantProfileIds) {
+      Map<String, String> attributes, Set<Long> descendantProfileIds,
+      Set<SimpleProfileDefinitionDto> subProfiles) {
     ProfileDefinitionDto profileDefinitionDto = new ProfileDefinitionDto();
     if (profileDefinition != null) {
       profileDefinitionDto.setCode(profileDefinition.getCode())
@@ -452,7 +469,56 @@ public class BeanConverter {
           .setName(profileDefinition.getName())
           .setTenancyId(StringUtil.translateLongToInteger(profileDefinition.getTenancyId()));
     }
-    profileDefinitionDto.setAttributes(attributes).setDescendantProfileIds(descendantProfileIds);
+    profileDefinitionDto.setAttributes(attributes).setDescendantProfileIds(descendantProfileIds)
+        .setSubProfiles(subProfiles);
     return profileDefinitionDto;
+  }
+
+  /**
+   * 从ProfileDefinitionPath转换为ProfileDefinitionPathDto.
+   */
+  public static ProfileDefinitionPathDto convert(ProfileDefinitionPath profileDefinitionPath) {
+    if (profileDefinitionPath == null) {
+      return null;
+    }
+    ProfileDefinitionPathDto profileDefinitionPathDto = new ProfileDefinitionPathDto();
+    profileDefinitionPathDto.setAncestor(profileDefinitionPath.getAncestor())
+        .setCreateDate(profileDefinitionPath.getCreateDate())
+        .setDeepth(profileDefinitionPath.getDeepth())
+        .setDescendant(profileDefinitionPath.getDescendant())
+        .setLastUpdate(profileDefinitionPath.getLastUpdate());
+    return profileDefinitionPathDto;
+  }
+
+  /**
+   * 从AttributeExtend转换为ProfileDefinitionAttribute.
+   */
+  public static ProfileDefinitionAttribute convert(Long profileId,
+      AttributeExtend attributeExtend) {
+    if (attributeExtend == null) {
+      return null;
+    }
+    Assert.notNull(profileId);
+    ProfileDefinitionAttribute item = new ProfileDefinitionAttribute();
+    item.setAttributeId(attributeExtend.getId());
+    item.setProfileId(profileId);
+    item.setCreateDate(new Date());
+    item.setLastUpdate(new Date());
+    return item;
+  }
+
+  /**
+   * 从ProfileDefinitionPath转换为ProfileDefinitionPathDto.
+   */
+  public static List<ProfileDefinitionAttribute> convert(Long profileId,
+      List<AttributeExtend> attributeExtends) {
+    if (attributeExtends == null) {
+      return null;
+    }
+    List<ProfileDefinitionAttribute> results = Lists.newArrayList();
+    for (AttributeExtend ae : attributeExtends) {
+      results.add(convert(profileId, ae));
+    }
+    return results;
   }
 }

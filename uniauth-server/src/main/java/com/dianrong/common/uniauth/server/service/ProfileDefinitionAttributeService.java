@@ -2,7 +2,9 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttributeExample;
 import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionAttributeMapper;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
 
 import java.util.List;
 
@@ -27,5 +29,37 @@ public class ProfileDefinitionAttributeService extends TenancyBasedService {
       return;
     }
     profileDefinitionAttributeMapper.batchInsert(infoes);
+  }
+  
+  /**
+   * 根据条件删除记录.
+   * @param profileId Profile的id, 不能为空.
+   * @param attributeId 扩展属性的id, 可为空.
+   */
+  public void delete(Long profileId, Long attributeId) {
+    CheckEmpty.checkEmpty(profileId, "profile definition id");
+    ProfileDefinitionAttributeExample example = new ProfileDefinitionAttributeExample();
+    ProfileDefinitionAttributeExample.Criteria criteria =  example.createCriteria();
+    criteria.andProfileIdEqualTo(profileId);
+    if (attributeId != null) {
+      criteria.andAttributeIdEqualTo(attributeId);
+    }
+    profileDefinitionAttributeMapper.deleteByExample(example);
+  }
+  
+  /**
+   * 根据条件查询Profile和Attribute的关联关系信息.
+   * @param profileId Profile的id, 不能为空.
+   * @param attributeId 扩展属性的id, 可为空.
+   */
+  public List<ProfileDefinitionAttribute> query(Long profileId, Long attributeId) {
+    CheckEmpty.checkEmpty(profileId, "profile definition id");
+    ProfileDefinitionAttributeExample example = new ProfileDefinitionAttributeExample();
+    ProfileDefinitionAttributeExample.Criteria criteria =  example.createCriteria();
+    criteria.andProfileIdEqualTo(profileId);
+    if (attributeId != null) {
+      criteria.andAttributeIdEqualTo(attributeId);
+    }
+    return profileDefinitionAttributeMapper.selectByExample(example);
   }
 }

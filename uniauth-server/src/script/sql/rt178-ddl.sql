@@ -21,9 +21,10 @@ CREATE TABLE IF NOT EXISTS `profile_definition_path` (
   `ancestor` BIGINT(20) NOT NULL COMMENT '父Profile id', 
   `descendant` BIGINT(20) NOT NULL COMMENT '子Profile id',
   `deepth` TINYINT(3) NOT NULL COMMENT '关联层级数',
+  `num` TINYINT(3) NOT NULL COMMENT '同一种层级关联关系的数量'
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `last_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
-  UNIQUE INDEX uq_idx_profile_definition_path(`ancestor`, `descendant`, `deepth`),
+  UNIQUE INDEX uq_idx_profile_definition_path(`ancestor`, `descendant`, `deepth`, `num`),
   CONSTRAINT `fk_profile_definition_path_ancestor` FOREIGN KEY (`ancestor`) REFERENCES `profile_definition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_profile_definition_path_descendant` FOREIGN KEY (`descendant`) REFERENCES `profile_definition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT 'Profile之间的关联关系';

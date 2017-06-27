@@ -69,4 +69,8 @@ public interface ProfileDefinitionPathMapper {
     int isRelated(Set<Long> profileIds);
     
     List<ProfileDefinitionPath> getProfileTreeLinks(Long profileId);
+    
+    List<Long> querySubProfileId(Set<Long> profileIds);
+    
+    int dropRelationByProfileId(Long profileId);
 }

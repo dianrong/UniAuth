@@ -16,11 +16,15 @@ import org.apache.cxf.jaxrs.ext.PATCH;
  */
 public interface IProfileRWResource extends IProfileResource{
 
-  // scenario: define a new profile
+  /**
+   * 新增一个Profile的定义.
+   */
   @POST
   Response<ProfileDefinitionDto> addNewProfileDefinition(ProfileDefinitionParam param);
 
-  // scenario: update profile
+  /**
+   * 更新一个Profile的定义.
+   */
   @POST
   @Path("{profileId}")
   Response<ProfileDefinitionDto> updateProfileDefinition(@PathParam("id") Long id,

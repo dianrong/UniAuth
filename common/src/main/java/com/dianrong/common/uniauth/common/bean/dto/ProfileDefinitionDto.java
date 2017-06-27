@@ -33,7 +33,7 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
   private Set<Long> descendantProfileIds;
 
   @ApiModelProperty("用于在返回结果的时候嵌套返回子ProfileId的关系")
-  private Set<ProfileDefinitionDto> subProfiles;
+  private Set<SimpleProfileDefinitionDto> subProfiles;
 
   public String getName() {
     return name;
@@ -89,11 +89,11 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
     return this;
   }
 
-  public Set<ProfileDefinitionDto> getSubProfiles() {
+  public Set<SimpleProfileDefinitionDto> getSubProfiles() {
     return subProfiles;
   }
 
-  public ProfileDefinitionDto setSubProfiles(Set<ProfileDefinitionDto> subProfiles) {
+  public ProfileDefinitionDto setSubProfiles(Set<SimpleProfileDefinitionDto> subProfiles) {
     this.subProfiles = subProfiles;
     return this;
   }
