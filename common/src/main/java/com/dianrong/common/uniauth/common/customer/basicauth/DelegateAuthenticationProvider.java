@@ -44,12 +44,11 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
   private Mode mode = ROLE_CODE;
   private PermissionType permissionType = DOMAIN;
   private String domainCode = AppConstants.DOMAIN_CODE_TECHOPS;
-  private String USER_DETAIL_DTO_KEY = "UserDetailDto";
-  private String RESPONSE_USER_KEY = "ResponseUser";
+  private static final String USER_DETAIL_DTO_KEY = "UserDetailDto";
+  private static final String RESPONSE_USER_KEY = "ResponseUser";
   private CacheService cacheService = new CacheMapServiceImpl();
 
-  public void setCacheService(
-      @NonNull CacheService cacheService) {
+  public void setCacheService(@NonNull CacheService cacheService) {
     this.cacheService = cacheService;
   }
 
@@ -82,7 +81,7 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
     String userName = authentication.getName();
     String password = (String) authentication.getCredentials();
 
-    //get remote ip address
+    // get remote ip address
     String remoteAddress = null;
     Object details = authentication.getDetails();
     if (details instanceof WebAuthenticationDetails) {
@@ -144,19 +143,19 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
     }
 
     // 首先从缓存中拿数据
-    UserDetailDto userDetailDto = (UserDetailDto) cacheService
-        .getDataFromCache(USER_DETAIL_DTO_KEY);
+    UserDetailDto userDetailDto =
+        (UserDetailDto) cacheService.getDataFromCache(USER_DETAIL_DTO_KEY);
     // 缓存中不存在，再从数据库拿数据，并且把拿到的数据更新到缓存
     if (userDetailDto == null) {
-      Response<UserDetailDto> responseDetail = uniClientFacade.getUserResource()
-          .getUserDetailInfo(loginParam);
+      Response<UserDetailDto> responseDetail =
+          uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
       userDetailDto = responseDetail.getData();
       cacheService.setDataToCache(new CacheMapBO(userDetailDto), USER_DETAIL_DTO_KEY);
     }
 
     ModeFactory modeFactory = new ModeFactory();
-    ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorityArrayList = modeFactory
-        .getHandlerBean(mode).handle(userDetailDto, domainCode, permissionType);
+    ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorityArrayList =
+        modeFactory.getHandlerBean(mode).handle(userDetailDto, domainCode, permissionType);
 
     return new UsernamePasswordAuthenticationToken(userName, password,
         simpleGrantedAuthorityArrayList);

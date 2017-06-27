@@ -32,12 +32,15 @@ public class ProfileResource implements IProfileRWResource {
   @Override
   public Response<ProfileDefinitionDto> updateProfileDefinition(Long id,
       ProfileDefinitionParam param) {
-    return null;
+    return Response
+        .success(profileService.updateProfileDefinition(id, param.getName(), param.getCode(),
+            param.getDescription(), param.getAttributes(), param.getDescendantProfileIds()));
   }
 
   @Override
   public Response<ProfileDefinitionDto> extendProfileDefinition(Long id,
       ProfileDefinitionParam param) {
-    return null;
+    return Response.success(profileService.extendProfileDefinition(id, param.getAttributes(),
+        param.getDescendantProfileIds()));
   }
 }

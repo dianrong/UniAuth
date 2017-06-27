@@ -484,7 +484,6 @@ public class BeanConverter {
     ProfileDefinitionPathDto profileDefinitionPathDto = new ProfileDefinitionPathDto();
     profileDefinitionPathDto.setAncestor(profileDefinitionPath.getAncestor())
         .setCreateDate(profileDefinitionPath.getCreateDate())
-        .setDeepth(profileDefinitionPath.getDeepth())
         .setDescendant(profileDefinitionPath.getDescendant())
         .setLastUpdate(profileDefinitionPath.getLastUpdate());
     return profileDefinitionPathDto;

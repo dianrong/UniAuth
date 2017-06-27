@@ -20,9 +20,6 @@ public class ProfileDefinitionPathDto extends TenancyBaseDto {
   @ApiModelProperty("该关联关系对应的子profileId")
   private Long descendant;
 
-  @ApiModelProperty("该关联关系对应的深度")
-  private Byte deepth;
-
   @ApiModelProperty("记录创建时间")
   private Date createDate;
 
@@ -47,15 +44,6 @@ public class ProfileDefinitionPathDto extends TenancyBaseDto {
 
   public ProfileDefinitionPathDto setDescendant(Long descendant) {
     this.descendant = descendant;
-    return this;
-  }
-
-  public Byte getDeepth() {
-    return deepth;
-  }
-
-  public ProfileDefinitionPathDto setDeepth(Byte deepth) {
-    this.deepth = deepth;
     return this;
   }
 

@@ -5,54 +5,10 @@
 
 	<!-- 批量添加关联关系 -->
 	<insert id="batchInsert" parameterType="java.util.List">
-		insert into profile_definition_path (ancestor, descendant, deepth,
-		num) values
+		insert into profile_definition_path (ancestor, descendant) values
 		<foreach collection="profileDefinitionPaths" item="item"
 			separator="," open="(" close=")">
-			item.ancestor, item.descendant,
-			item.deepth, item.num
+			item.ancestor, item.descendant
 		</foreach>
 	</insert>
-
-	<select id="getProfileTreeLinks" resultType="hashmap"
-		parameterType="java.lang.Long">
-		select
-		<include refid="Base_Column_List" />
-		from profile_definition_path where descendant in (
-		select descendant
-		from profile_definition_path where ancestor =
-		#{profileId,jdbcType=BIGINT}
-		) and deepth = 1
-		union
-		select
-		<include refid="Base_Column_List" />
-		from profile_definition_path where descendant =
-		#{profileId,jdbcType=BIGINT}
-		and ancestor =
-		#{profileId,jdbcType=BIGINT} and deepth = 0;
-	</select>
-
-	<!-- 查询某组Profile的子Profile集合 -->
-	<insert id="querySubProfileId" parameterType="java.util.Set">
-		select descendant from profile_definition_path where ancestor in
-		<foreach collection="profileIds" item="item" separator=","
-			open="(" close=")">
-			item
-		</foreach>
-	</insert>
-
-	<!-- 根据ProfileId和一系列的子ProfileId找出在更新操作中需要关注的信息 -->
-	<select id="queryConcernedProfilePathInfo" resultType="BaseResultMap"
-		parameterType="map">
-		select
-		<include refid="Base_Column_List" />
-		from profile_definition_path where ancestor in (
-		  select ancestor from profile_definition_path where descendant = #{profileId,jdbcType=BIGINT}
-		) 
-		and descendant in 
-		<foreach collection="subProfileIds" item="item" separator=","
-            open="(" close=")">
-            item
-        </foreach> order by ancestor
-	</select>
 </mapper>
