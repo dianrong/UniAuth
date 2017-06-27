@@ -22,7 +22,10 @@ dependencies {
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
 	
 	compile 'javax.servlet:javax.servlet-api'
-	
+
+    // spring security
+    compileOnly "org.springframework.security:spring-security-web:4.2.1.RELEASE"
+    compileOnly "org.springframework.security:spring-security-config:4.2.1.RELEASE"
 	// cas
 	compileOnly 'org.jasig.cas.client:cas-client-core:3.4.1'
 	

@@ -7,16 +7,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 /**
- * 自定义spring security 配置.
+ * 自定义spring security 配置
+ *
  * @author wanglin
  */
 @Configuration
 public class WebSecurityConfiguration extends UniauthSecurityConfig {
   public void configure(WebSecurity web) throws Exception {
-    web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static-content", "/**/ajax-content.jsp");
+    web.ignoring().antMatchers("/js/**", "/favicon.ico", "/static-content","/**/ajax-content.jsp");
   }
 
   protected void configure(HttpSecurity http) throws Exception {
-    super.configure(http);
+   super.configure(http);
   }
 }

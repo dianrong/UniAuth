@@ -1,12 +1,13 @@
 package com.dianrong.common.uniauth.cas.controller;
 
-import com.dianrong.common.uniauth.cas.model.ExpiredSessionObj;
+import com.dianrong.common.uniauth.cas.model.IdentityExpiredSessionObj;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
 import com.dianrong.common.uniauth.sharerw.notification.SmsNotification;
@@ -16,15 +17,21 @@ import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.WaterRipple;
 import com.google.code.kaptcha.util.Config;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
+
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -45,7 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class VerificationController {
 
   // 邮箱或者短信验证码的长度
-  private static final int VERIFICATION_LENGHT = 6;
+  private static final int VERIFICATION_LENGTH = 6;
 
   @Autowired
   private SmsNotification smsNotify;
@@ -55,6 +62,9 @@ public class VerificationController {
 
   @Autowired
   private MessageSource messageSource;
+  
+  @Resource(name = "uniauthConfig")
+  private Map<String, String> allZkNodeMap;
 
   private Producer captchaProducer;
 
@@ -81,7 +91,7 @@ public class VerificationController {
    */
   @ResponseBody
   @RequestMapping(value = "send/session", method = RequestMethod.GET)
-  public Response<Void> sendVerification(HttpServletRequest request, HttpServletResponse response) {
+  public Response<String> sendVerification(HttpServletRequest request, HttpServletResponse response) {
     String identity = WebScopeUtil
         .getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
     if (!StringUtils.hasText(identity)) {
@@ -96,7 +106,7 @@ public class VerificationController {
    */
   @ResponseBody
   @RequestMapping(value = "send", method = RequestMethod.POST)
-  public Response<Void> sendVerification(HttpServletRequest request, HttpServletResponse response,
+  public Response<String> sendVerification(HttpServletRequest request, HttpServletResponse response,
       @RequestParam(value = "identity", required = true) String identity) {
     String verification = getVerificationNumber();
     String verificationMsg = UniBundleUtil
@@ -120,8 +130,8 @@ public class VerificationController {
       }
       // after sending successfully, set flag to session
       WebScopeUtil.putEmailVerificationToSession(request.getSession(),
-          ExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES));
-      return Response.success();
+          IdentityExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
+      return Response.success(showVerifyCode()?verification:"");
     }
 
     // send short message
@@ -139,8 +149,8 @@ public class VerificationController {
       }
       // after sending successfully, set flag to session
       WebScopeUtil.putSmsVerificationToSession(request.getSession(),
-          ExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES));
-      return Response.success();
+          IdentityExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
+      return Response.success(showVerifyCode()?verification:"");
     }
 
     // error
@@ -177,10 +187,10 @@ public class VerificationController {
       @RequestParam(value = "verifyCode", required = true) String verifyCode) {
     // email
     if (StringUtil.isEmailAddress(identity)) {
-      ExpiredSessionObj<String> obj = WebScopeUtil
+      IdentityExpiredSessionObj<String> obj = WebScopeUtil
           .getEmailVerificationFromSession(request.getSession());
       if (obj != null && !obj.isExpired()) {
-        if (verifyCode.equals(obj.getContent())) {
+        if (verifyCode.equals(obj.getContent()) && obj.getIdentity().equals(identity)) {
           // validation successfully
 
           // set flag
@@ -198,10 +208,10 @@ public class VerificationController {
 
     // short message
     if (StringUtil.isPhoneNumber(identity)) {
-      ExpiredSessionObj<String> obj = WebScopeUtil
+      IdentityExpiredSessionObj<String> obj = WebScopeUtil
           .getSmsVerificationFromSession(request.getSession());
       if (obj != null && !obj.isExpired()) {
-        if (verifyCode.equals(obj.getContent())) {
+        if (verifyCode.equals(obj.getContent()) && obj.getIdentity().equals(identity)) {
           // validation successfully
 
           // set flag
@@ -249,6 +259,13 @@ public class VerificationController {
 
   // 生成数字验
   private String getVerificationNumber() {
-    return StringUtil.generateNumberStr(VERIFICATION_LENGHT);
+    return StringUtil.generateNumberStr(VERIFICATION_LENGTH);
+  }
+  
+  /**
+   * 判断是否将短信或者邮箱验证码返回到前端.
+   */
+  private boolean showVerifyCode() {
+    return Boolean.TRUE.toString().equalsIgnoreCase(allZkNodeMap.get(AppConstants.ZK_CAS_VERIFY_CODE_SHOW));
   }
 }

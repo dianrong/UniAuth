@@ -24,7 +24,7 @@ public class UniBundle {
 
   private static class ResourceBundlueHolder {
 
-    private static ConcurrentMap<Locale, ResourceBundle> RESOURCEBUNDLES = Maps.newConcurrentMap();
+    private static final ConcurrentMap<Locale, ResourceBundle> RESOURCEBUNDLES = Maps.newConcurrentMap();
 
     public static ResourceBundle getResource() {
       Locale locale = UniauthLocaleInfoHolder.getLocale();

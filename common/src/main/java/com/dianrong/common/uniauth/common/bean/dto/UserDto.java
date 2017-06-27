@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 @ApiModel("用户信息")
 @ToString
 public class UserDto extends TenancyBaseDto {
-  private static final long serialVersionUID = -5214267853102217886L;
+  private static final long serialVersionUID = -1969133233179816584L;
   
   @ApiModelProperty("主键id")
   private Long id;

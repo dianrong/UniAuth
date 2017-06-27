@@ -2,7 +2,11 @@ package com.dianrong.uniauth.ssclient;
 
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 
+import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
+import com.dianrong.uniauth.ssclient.config.MyAuthenticationProvider;
 import org.apache.catalina.filters.CorsFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -16,40 +20,43 @@ import org.springframework.core.Ordered;
 
 @EnableAutoConfiguration
 @Configuration
-@ComponentScan(basePackageClasses = {ApplicationStarter.class})
+@ComponentScan(basePackageClasses={ApplicationStarter.class})
 @PropertySource(value = "classpath:/config/application.yml")
 @ImportResource({"classpath:spring-context.xml"})
 public class ApplicationStarter {
+    public static void main(String[] args) {
+        SpringApplication.run(ApplicationStarter.class, args);
+    }
+    
+    @Value("${domainCode}")
+    private String domainCode;
 
-  public static void main(String[] args) {
-    SpringApplication.run(ApplicationStarter.class, args);
-  }
+    @Autowired
+    private UniClientFacade uniClientFacade;
 
-  @Value("${domainCode}")
-  private String domainCode;
+    @Bean
+    public DomainDefine domainDefine() {
+        DomainDefine domainDefine = new DomainDefine();
+        domainDefine.setDomainCode(domainCode);
+        domainDefine.setUserInfoClass("com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo");
+        domainDefine.setRejectPublicInvocations(false);
+        domainDefine.setCustomizedLoginRedirecUrl("/content");
+        return domainDefine;
+    }
 
-  /**
-   * 配置DomainDefine.
-   */
-  @Bean
-  public DomainDefine domainDefine() {
-    DomainDefine domainDefine = new DomainDefine();
-    domainDefine.setDomainCode(domainCode);
-    domainDefine.setUserInfoClass("com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo");
-    domainDefine.setRejectPublicInvocations(false);
-    domainDefine.setCustomizedLoginRedirecUrl("/content");
-    return domainDefine;
-  }
+    @Bean
+    public FilterRegistrationBean indexFilterRegistration() {
+        CorsFilter corsFilter = new CorsFilter();
+        FilterRegistrationBean registration = new FilterRegistrationBean(corsFilter);
+        registration.addUrlPatterns("/*");
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registration;
+    }
 
-  /**
-   * 配置跨域的Filter.
-   */
-  @Bean
-  public FilterRegistrationBean indexFilterRegistration() {
-    CorsFilter corsFilter = new CorsFilter();
-    FilterRegistrationBean registration = new FilterRegistrationBean(corsFilter);
-    registration.addUrlPatterns("/*");
-    registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    return registration;
-  }
+    @Bean
+    public MyAuthenticationProvider myAuthenticationProvider() {
+        return (MyAuthenticationProvider) new MyAuthenticationProvider(uniClientFacade).setMode(
+            Mode.PERMISSION)
+            /*.setDomainDefine(domainCode)*/;
+    }
 }
