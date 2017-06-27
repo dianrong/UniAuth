@@ -3,10 +3,10 @@
 <mapper
 	namespace="com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionAttributeMapper">
 	<insert id="batchInsert" parameterType="java.util.List">
-		insert into profile_definition_attribute (profile_id, attribute_id)
+		insert into profile_definition_attribute (profile_id, extend_id)
 		values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.profileId,jdbcType=BIGINT}, #{item.attributeId,jdbcType=BIGINT})
+			(#{item.profileId,jdbcType=BIGINT}, #{item.extendId,jdbcType=BIGINT})
 		</foreach>
 	</insert>
 </mapper>

@@ -32,11 +32,11 @@ CREATE TABLE IF NOT EXISTS `profile_definition_path` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `profile_definition_attribute` (
   `profile_id` BIGINT(20) NOT NULL COMMENT 'Profile id', 
-  `attribute_id` BIGINT(20) NOT NULL COMMENT '扩展属性id',
+  `extend_id` BIGINT(20) NOT NULL COMMENT '扩展属性id',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `last_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
-  UNIQUE INDEX uq_idx_profile_definition_attribute(`profile_id`, `attribute_id`),
+  UNIQUE INDEX uq_idx_profile_definition_attribute(`profile_id`, `extend_id`),
   CONSTRAINT `fk_profile_definition_attribute_profile_id` FOREIGN KEY (`profile_id`) REFERENCES `profile_definition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_profile_definition_attribute_attribute_id` FOREIGN KEY (`attribute_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_profile_definition_attribute_attribute_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT 'Profile与扩展属性之间的关联关系';
   

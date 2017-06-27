@@ -70,7 +70,7 @@ public class ProfileDefinitionAttributeService extends TenancyBasedService {
         (new ProcessListQuery<ProfileDefinitionAttribute, Long>() {
           @Override
           public Long getId(ProfileDefinitionAttribute o) {
-            return o.getAttributeId();
+            return o.getExtendId();
           }
         }).getProcessList(existProfileDefinitionAttributes, destDefinitionAttributes, true);
     batchInsert(listToInsert);
@@ -80,16 +80,16 @@ public class ProfileDefinitionAttributeService extends TenancyBasedService {
    * 根据条件删除记录.
    * 
    * @param profileId Profile的id, 不能为空.
-   * @param attributeId 扩展属性的id, 可为空.
+   * @param extendId 扩展属性的id, 可为空.
    */
   @Transactional
-  public void delete(Long profileId, Long attributeId) {
+  public void delete(Long profileId, Long extendId) {
     CheckEmpty.checkEmpty(profileId, "profile definition id");
     ProfileDefinitionAttributeExample example = new ProfileDefinitionAttributeExample();
     ProfileDefinitionAttributeExample.Criteria criteria = example.createCriteria();
     criteria.andProfileIdEqualTo(profileId);
-    if (attributeId != null) {
-      criteria.andAttributeIdEqualTo(attributeId);
+    if (extendId != null) {
+      criteria.andExtendIdEqualTo(extendId);
     }
     profileDefinitionAttributeMapper.deleteByExample(example);
   }
@@ -98,15 +98,15 @@ public class ProfileDefinitionAttributeService extends TenancyBasedService {
    * 根据条件查询Profile和Attribute的关联关系信息.
    * 
    * @param profileId Profile的id, 不能为空.
-   * @param attributeId 扩展属性的id, 可为空.
+   * @param extendId 扩展属性的id, 可为空.
    */
-  public List<ProfileDefinitionAttribute> query(Long profileId, Long attributeId) {
+  public List<ProfileDefinitionAttribute> query(Long profileId, Long extendId) {
     CheckEmpty.checkEmpty(profileId, "profile definition id");
     ProfileDefinitionAttributeExample example = new ProfileDefinitionAttributeExample();
     ProfileDefinitionAttributeExample.Criteria criteria = example.createCriteria();
     criteria.andProfileIdEqualTo(profileId);
-    if (attributeId != null) {
-      criteria.andAttributeIdEqualTo(attributeId);
+    if (extendId != null) {
+      criteria.andExtendIdEqualTo(extendId);
     }
     return profileDefinitionAttributeMapper.selectByExample(example);
   }

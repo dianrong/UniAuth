@@ -499,7 +499,7 @@ public class BeanConverter {
     }
     Assert.notNull(profileId);
     ProfileDefinitionAttribute item = new ProfileDefinitionAttribute();
-    item.setAttributeId(attributeExtend.getId());
+    item.setExtendId(attributeExtend.getId());
     item.setProfileId(profileId);
     item.setCreateDate(new Date());
     item.setLastUpdate(new Date());

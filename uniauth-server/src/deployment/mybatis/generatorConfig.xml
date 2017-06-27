@@ -33,7 +33,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         
-        <table tableName="profile_definition_path" enableCountByExample="true"
+        <table tableName="profile_definition_attribute" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true">
         </table>

@@ -133,7 +133,7 @@ public class ProfileCache {
         (new ProcessListQuery<ProfileDefinitionAttribute, Long>() {
           @Override
           public Long getId(ProfileDefinitionAttribute o) {
-            return o.getAttributeId();
+            return o.getExtendId();
           }
         }).getProcessList(existProfileDefinitionAttributes, destDefinitionAttributes, true);
     profileDefinitionAttributeService.batchInsert(listToInsert);
@@ -143,11 +143,11 @@ public class ProfileCache {
         (new ProcessListQuery<ProfileDefinitionAttribute, Long>() {
           @Override
           public Long getId(ProfileDefinitionAttribute o) {
-            return o.getAttributeId();
+            return o.getExtendId();
           }
         }).getProcessList(existProfileDefinitionAttributes, destDefinitionAttributes, false);
     for (ProfileDefinitionAttribute delItem : listToDelete) {
-      profileDefinitionAttributeService.delete(id, delItem.getAttributeId());
+      profileDefinitionAttributeService.delete(id, delItem.getExtendId());
     }
   }
   
