@@ -61,7 +61,8 @@ public class RoleDataFilter extends CurrentAbstractDataFilter<Role> {
   protected Role getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "roleId");
     RoleExample condition = new RoleExample();
-    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+        .andTenancyIdEqualTo(getTenancyId());
     List<Role> selectByExample = roleMapper.selectByExample(condition);
     if (selectByExample != null && !selectByExample.isEmpty()) {
       return selectByExample.get(0);

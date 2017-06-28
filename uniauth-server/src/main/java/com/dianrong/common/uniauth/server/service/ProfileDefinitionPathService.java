@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.support.ProcessListQuery;
+import com.dianrong.common.uniauth.server.service.support.ProfileSupport;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
@@ -168,29 +169,12 @@ public class ProfileDefinitionPathService extends TenancyBasedService {
     Set<Long> profileIdSet = Sets.newHashSet();
     for (Long descendantProfileId : subProfileIds) {
       SimpleProfileDefinitionDto spdp = getProfilePathTree(descendantProfileId);
-      collectSubProfileId(spdp, profileIdSet);
+      ProfileSupport.collectSubProfileId(spdp, profileIdSet);
       if (profileIdSet.contains(profileId)) {
         return true;
       }
     }
     return false;
-  }
-
-  /**
-   * 获取SimpleProfileDefinitionDto树形结构中所有的ProfileId的集合.
-   */
-  private void collectSubProfileId(SimpleProfileDefinitionDto spdp, Set<Long> profileIdSet) {
-    if (spdp == null) {
-      return;
-    }
-    profileIdSet.add(spdp.getId());
-    Set<SimpleProfileDefinitionDto> subProfiles = spdp.getSubProfiles();
-    if (ObjectUtil.collectionIsEmptyOrNull(subProfiles)) {
-      return;
-    }
-    for (SimpleProfileDefinitionDto tspdp : subProfiles) {
-      collectSubProfileId(tspdp, profileIdSet);
-    }
   }
 
   /**

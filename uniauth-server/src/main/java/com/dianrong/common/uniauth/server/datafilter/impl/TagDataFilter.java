@@ -59,7 +59,8 @@ public class TagDataFilter extends CurrentAbstractDataFilter<Tag> {
   protected Tag getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "tagId");
     TagExample condition = new TagExample();
-    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED);
+    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+        .andTenancyIdEqualTo(getTenancyId());
     List<Tag> selectByExample = tagMapper.selectByExample(condition);
 
     if (selectByExample != null && !selectByExample.isEmpty()) {

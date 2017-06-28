@@ -59,7 +59,7 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
   protected TagType getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "tagTypeId");
     TagTypeExample condition = new TagTypeExample();
-    condition.createCriteria().andIdEqualTo(id);
+    condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(getTenancyId());
     List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
 
     if (selectByExample != null && !selectByExample.isEmpty()) {

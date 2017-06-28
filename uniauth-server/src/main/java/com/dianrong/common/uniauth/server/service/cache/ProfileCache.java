@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionExample;
 import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
@@ -16,7 +17,6 @@ import com.dianrong.common.uniauth.server.service.ProfileDefinitionAttributeServ
 import com.dianrong.common.uniauth.server.service.ProfileDefinitionPathService;
 import com.dianrong.common.uniauth.server.service.support.ProcessListQuery;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
-import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Lists;
 
 import java.util.LinkedHashMap;
@@ -67,14 +67,17 @@ public class ProfileCache {
   /**
    * 根据Id获取Profile的定义.
    */
-  @Cacheable(key = "#id")
-  public ProfileDefinitionDto getProfileDefinition(Long id) {
-    CheckEmpty.checkEmpty(id, "profile definition id");
-    ProfileDefinition rootProfileDefinition = profileDefinitionMapper.selectByPrimaryKey(id);
-    if (rootProfileDefinition == null) {
+  @Cacheable(key = "#tenancyId + ':' + #id")
+  public ProfileDefinitionDto getProfileDefinition(Long id, Long tenancyId) {
+    ProfileDefinitionExample queryExample = new ProfileDefinitionExample();
+    ProfileDefinitionExample.Criteria criteria=queryExample.createCriteria();
+    criteria.andIdEqualTo(id).andTenancyIdEqualTo(tenancyId);
+    List<ProfileDefinition> pdList = profileDefinitionMapper.selectByExample(queryExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(pdList)) {
       log.debug("get profile definition by primary key {}, but not found one!", id);
       return null;
     }
+    ProfileDefinition rootProfileDefinition = pdList.get(0);
     // get profile attributes
     List<AttributeExtend> attributeExtends = attributeExtendService.getAttributesByProfileId(id);
     Map<String, String> attributes = new LinkedHashMap<>();
@@ -92,8 +95,8 @@ public class ProfileCache {
    * 更新一个Profile.
    */
   @Transactional
-  @CacheEvict(key = "#id")
-  public void updateProfileDefinition(Long id, String name, String code,
+  @CacheEvict(key = "#tenancyId + ':' + #id")
+  public void updateProfileDefinition(Long id, Long tenancyId, String name, String code,
       String description, Map<String, String> attributes, Set<Long> descendantProfileIds) {
     // Id 必须要存在.
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
@@ -155,10 +158,9 @@ public class ProfileCache {
    * 扩展Profile的扩展属性和子Profile.
    */
   @Transactional
-  @CacheEvict(key = "#id")
-  public void extendProfileDefinition(Long id, Map<String, String> attributes,
+  @CacheEvict(key = "#tenancyId + ':' + #id")
+  public void extendProfileDefinition(Long id, Long tenancyId, Map<String, String> attributes,
       Set<Long> descendantProfileIds) {
-    // Id 必须要存在.
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
     // 处理Profile的关联关系.
     profileDefinitionPathService.extendSubProfilePath(id, descendantProfileIds);
