@@ -38,9 +38,27 @@ public enum UserActionEnum {
    * 判断是否在修改密码.
    */
   public static boolean isPasswordChange(UserActionEnum action) {
+    return isUpdatePwdAdmin(action) || isUpdatePwdSelf(action);
+  }
+  
+  /**
+   * 管理员重置密码.
+   */
+  public static boolean isUpdatePwdAdmin(UserActionEnum action) {
     switch (action) {
       case RESET_PASSWORD:
         return true;
+      default:
+        break;
+    }
+    return false;
+  }
+  
+  /**
+   * 自己修改密码.
+   */
+  public static boolean isUpdatePwdSelf(UserActionEnum action) {
+    switch (action) {
       case RESET_PASSWORD_AND_CHECK:
         return true;
       case UPDATE_PASSWORD_BY_ACCOUNT:
