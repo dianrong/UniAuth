@@ -73,6 +73,7 @@ import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseUserNotifyInfo;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
 import com.dianrong.common.uniauth.server.service.support.NotificationService;
+import com.dianrong.common.uniauth.server.service.support.NotifyType;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -196,7 +197,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     asynAddUserPwdLog(user);
     
     // 发送通知给用户
-    notificationService.addUserNotification(user);
+    notificationService.notify(user, randomPassword, NotifyType.ADD_USER);
     return userDto;
   }
 
@@ -339,8 +340,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     
     // 通知用户密码修改了
-    if (UserActionEnum.isPasswordChange(userActionEnum)) {
-      notificationService.updateUserPwdNotification(user);
+    if (UserActionEnum.isUpdatePwdAdmin(userActionEnum)) {
+      notificationService.notify(user, password, NotifyType.UPDATE_PSWD_ADMIN);
+    }
+ // 通知用户密码修改了
+    if (UserActionEnum.isUpdatePwdSelf(userActionEnum)) {
+      notificationService.notify(user, password, NotifyType.UPDATE_PSWD_SELF);
     }
 
     return BeanConverter.convert(user).setPassword(password);
@@ -1213,6 +1218,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     // add password set log
     asynAddUserPwdLog(user);
+    
+    notificationService.notify(user, password, NotifyType.UPDATE_PSWD_SELF);
   }
 
   /**
