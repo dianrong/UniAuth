@@ -50,7 +50,7 @@ public class NotifyTemplates {
     updatePwdAdminSmsEmail.append("系统管理员重置了您的系统账户密码!您的登录账号为:%s,临时登陆密码为:%s");
     updatePwdAdminSmsEmail.append(" 请到: %s 去登陆");
     TEMPLATES.put(NotifyType.UPDATE_PSWD_ADMIN,
-        new SimpleNotifyTemplate(updatePwdAdminEmail.toString(), updatePwdAdminEmail.toString()));
+        new SimpleNotifyTemplate(updatePwdAdminEmail.toString(), updatePwdAdminSmsEmail.toString()));
 
     // update pwd self
     StringBuilder updatePwdSelfEmail = new StringBuilder();
