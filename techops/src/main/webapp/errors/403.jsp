@@ -4,7 +4,7 @@
 <%@ page import="com.dianrong.common.uniauth.common.server.UniauthI18NHolder" %>
 <%
 
-	if(!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCORSRequest(request)) {
+	if(!HttpRequestUtil.isAjaxRequest(request) && !HttpRequestUtil.isCorsRequest(request)) {
 		response.setContentType("text/html; charset=UTF-8");
 %>
 		<%=UniauthI18NHolder.getProperties(request,"constant.noPermission") %>
