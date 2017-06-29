@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
@@ -30,11 +31,16 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +63,8 @@ public class TagService extends TenancyBasedService {
   private GrpTagMapper grpTagMapper;
   @Autowired
   private DomainMapper domainMapper;
+  @Autowired
+  private DomainService domainService;
 
   @Resource(name = "tagTypeDataFilter")
   private DataFilter dataFilter;
@@ -69,8 +77,8 @@ public class TagService extends TenancyBasedService {
    */
   public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode,
       String fuzzyTagCode, Byte tagStatus, Integer tagTypeId, Long userId, Integer domainId,
-      String domainCode, List<Integer> domainIds, Integer grpId, Integer pageNumber,
-      Integer pageSize) {
+      String domainCode, List<Integer> domainIds, Integer grpId, Boolean needDomainInfo,
+      Integer pageNumber, Integer pageSize) {
     CheckEmpty.checkEmpty(pageNumber, "pageNumber");
     CheckEmpty.checkEmpty(pageSize, "pageSize");
     TagExample tagExample = new TagExample();
@@ -170,6 +178,16 @@ public class TagService extends TenancyBasedService {
       List<TagDto> tagDtos = new ArrayList<>();
       for (Tag tag : tags) {
         tagDtos.add(BeanConverter.convert(tag));
+      }
+      if (needDomainInfo != null && needDomainInfo) {
+        List<Integer> tagTypeIds = Lists.newArrayList();
+        for (TagDto tagDto : tagDtos) {
+          tagTypeIds.add(tagDto.getTagTypeId());
+        }
+        Map<Integer, DomainDto> domainMap = domainService.getDomainMapByTagTypeIds(tagTypeIds);
+        for (TagDto tagDto : tagDtos) {
+          tagDto.setDomain(domainMap.get(tagDto.getTagTypeId()));
+        }
       }
       return new PageDto<>(pageNumber, pageSize, count, tagDtos);
     } else {

@@ -3,10 +3,13 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import lombok.ToString;
+
 /**
  * @author wenlongchen.
  * @since May 16, 2016
  */
+@ToString
 @ApiModel("扩展属性")
 public class AttributeExtendDto extends TenancyBaseDto {
 

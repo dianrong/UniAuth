@@ -3,6 +3,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import lombok.ToString;
+
+@ToString
 public class ApiCallerInfoDto implements Serializable {
 
   private static final long serialVersionUID = -7245175906463018288L;

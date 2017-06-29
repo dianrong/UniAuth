@@ -32,8 +32,8 @@ public class TagResource implements ITagRWResource {
     PageDto<TagDto> tagDtoPageDto = tagService.searchTags(tagQuery.getId(), tagQuery.getTagIds(),
         tagQuery.getCode(), tagQuery.getFuzzyCode(), tagQuery.getStatus(), tagQuery.getTagTypeId(),
         tagQuery.getUserId(), tagQuery.getDomainId(), tagQuery.getDomainCode(),
-        tagQuery.getDomainIds(), tagQuery.getGroupId(), tagQuery.getPageNumber(),
-        tagQuery.getPageSize());
+        tagQuery.getDomainIds(), tagQuery.getGroupId(), tagQuery.getNeedDomainInfo(),
+        tagQuery.getPageNumber(), tagQuery.getPageSize());
     return Response.success(tagDtoPageDto);
   }
 

@@ -2,6 +2,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.io.Serializable;
 
+import lombok.ToString;
+
+@ToString
 public class StakeholderDto implements Serializable {
 
   private static final long serialVersionUID = 2120671490345809592L;

@@ -43,7 +43,8 @@ public class RoleResource implements IRoleRWResource {
   public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
     PageDto<RoleDto> roleDtos = roleService.searchRole(roleQuery.getRoleIds(), roleQuery.getId(),
         roleQuery.getDomainId(), roleQuery.getName(), roleQuery.getRoleCodeId(),
-        roleQuery.getStatus(), roleQuery.getPageNumber(), roleQuery.getPageSize());
+        roleQuery.getStatus(), roleQuery.getNeedDomainInfo(),
+        roleQuery.getPageNumber(), roleQuery.getPageSize());
     return Response.success(roleDtos);
   }
 

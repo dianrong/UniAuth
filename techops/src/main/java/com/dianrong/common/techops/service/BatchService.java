@@ -4,10 +4,8 @@ import com.dianrong.common.techops.bean.BatchProcessResult;
 import com.dianrong.common.techops.exp.BatchProcessException;
 import com.dianrong.common.techops.util.UniBundle;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
@@ -175,24 +173,12 @@ public class BatchService {
 
   /**
    * 批量关联用户和组.
+   * @param grpId 组id,不能为空
    * 
    * @throws BatchProcessException 批量处理异常
    */
-  public BatchProcessResult relateUserGrp(String grpCode, InputStream inputStream)
+  public BatchProcessResult relateUserGrp(Integer grpId, InputStream inputStream)
       throws IOException {
-    // check group exist
-    GroupQuery groupQuery = new GroupQuery();
-    groupQuery.setCode(grpCode);
-    groupQuery.setStatus(AppConstants.STATUS_ENABLED);
-    Response<PageDto<GroupDto>> grpResponse =
-        uarwFacade.getGroupRWResource().queryGroup(groupQuery);
-    if (!CollectionUtils.isEmpty(grpResponse.getInfo()) || grpResponse.getData() == null
-        || grpResponse.getData().getData() == null || grpResponse.getData().getData().isEmpty()) {
-      throw new BatchProcessException(UniBundle.getMsg("service.batch.process.query.grp.none"));
-    }
-
-    // get group id
-    Integer grpId = grpResponse.getData().getData().get(0).getId();
     List<String> content = readContentFromInputStream(inputStream);
     // 解析文件内容
     List<UserParam> uParams = Lists.newArrayList();

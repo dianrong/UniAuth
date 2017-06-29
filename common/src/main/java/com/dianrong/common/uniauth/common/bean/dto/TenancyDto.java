@@ -3,6 +3,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import lombok.ToString;
+
+@ToString
 public class TenancyDto implements Serializable {
 
   private static final long serialVersionUID = -6480156107431606880L;
@@ -104,12 +107,5 @@ public class TenancyDto implements Serializable {
   public TenancyDto setLastUpdate(Date lastUpdate) {
     this.lastUpdate = lastUpdate;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "TenancyDto [id=" + id + ", code=" + code + ", name=" + name + ", contactName="
-        + contactName + ", phone=" + phone + ", description=" + description + ", status="
-        + status + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate + "]";
   }
 }
