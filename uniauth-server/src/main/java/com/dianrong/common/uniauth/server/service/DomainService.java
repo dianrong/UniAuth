@@ -8,13 +8,17 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
 import com.dianrong.common.uniauth.server.data.entity.StakeholderExample;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.StakeholderMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -23,10 +27,16 @@ import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +50,8 @@ public class DomainService extends TenancyBasedService {
   private DomainMapper domainMapper;
   @Autowired
   private StakeholderMapper stakeholderMapper;
+  @Autowired
+  private TagTypeMapper  tagTypeMapper;
 
   /**
    * . 进行域名数据过滤的filter
@@ -168,6 +180,68 @@ public class DomainService extends TenancyBasedService {
     return domainDtoList;
   }
 
+  /**
+   * 根据标签类型id集合获取标签类型id与域信息的Map.
+   */
+  public Map<Integer, DomainDto> getDomainMapByTagTypeIds(List<Integer> tagTypeIds) {
+    Map<Integer, DomainDto> map = Maps.newHashMap();
+    if (ObjectUtil.collectionIsEmptyOrNull(tagTypeIds)) {
+      return map;
+    }
+    
+    TagTypeExample tagTypeExample = new TagTypeExample();
+    TagTypeExample.Criteria tagTypeCriteria =  tagTypeExample.createCriteria();
+    tagTypeCriteria.andIdIn(tagTypeIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(tagTypes)) {
+      return map;
+    }
+    List<Integer>  domainIds = Lists.newArrayList();
+    for (TagType tt: tagTypes) {
+      domainIds.add(tt.getDomainId());
+    }
+    
+    DomainExample domainExample = new DomainExample();
+    DomainExample.Criteria domainCriteria = domainExample.createCriteria();
+    domainCriteria.andIdIn(domainIds);
+    List<Domain>domains = domainMapper.selectByExample(domainExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(domains)) {
+      return map;
+    }
+    Map<Integer, Domain> domainMap = Maps.newHashMap();
+    for (Domain domain: domains) {
+      domainMap.put(domain.getId(), domain);
+    }
+    for (TagType tagType:tagTypes) {
+      Domain domain = domainMap.get(tagType.getDomainId());
+      if (domain != null) {
+        map.put(tagType.getId(), BeanConverter.convert(domain));
+      }
+    }
+    return map;
+  }
+  
+  /**
+   * 根据DomainId集合获取域Id与域信息的Map.
+   */
+  public Map<Integer, DomainDto> getDomainMapByDomainIds(List<Integer> domainIds) {
+    Map<Integer, DomainDto> map = Maps.newHashMap();
+    if (ObjectUtil.collectionIsEmptyOrNull(domainIds)) {
+      return map;
+    }
+    DomainExample domainExample = new DomainExample();
+    DomainExample.Criteria domainCriteria = domainExample.createCriteria();
+    domainCriteria.andIdIn(domainIds);
+    List<Domain>domains = domainMapper.selectByExample(domainExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(domains)) {
+      return map;
+    }
+    for (Domain domain: domains) {
+      map.put(domain.getId(), BeanConverter.convert(domain));
+    }
+    return map;
+  }
+  
   /**
    * 根据主键获取域详细信息.
    */

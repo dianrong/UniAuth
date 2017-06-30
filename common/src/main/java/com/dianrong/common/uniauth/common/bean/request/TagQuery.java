@@ -2,9 +2,12 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
+import lombok.ToString;
+
 /**
  * Created by Arc on 7/4/2016.
  */
+@ToString
 public class TagQuery extends PageParam {
 
   private static final long serialVersionUID = -7447070647269360141L;
@@ -19,6 +22,10 @@ public class TagQuery extends PageParam {
   private List<Integer> domainIds;
   private Long userId;
   private Integer groupId;
+  /**
+   * 参数控制在query的时候,是否需要将关联的域的信息也返回.
+   */
+  private Boolean needDomainInfo;
 
   public String getDomainCode() {
     return domainCode;
@@ -118,12 +125,13 @@ public class TagQuery extends PageParam {
     this.groupId = groupId;
     return this;
   }
+  
+  public Boolean getNeedDomainInfo() {
+    return needDomainInfo;
+  }
 
-  @Override
-  public String toString() {
-    return "TagQuery [id=" + id + ", tagIds=" + tagIds + ", code=" + code + ", fuzzyCode="
-        + fuzzyCode + ", status=" + status + ", tagTypeId=" + tagTypeId + ", domainId="
-        + domainId + ", domainCode=" + domainCode + ", domainIds=" + domainIds + ", userId="
-        + userId + ", groupId=" + groupId + "]";
+  public TagQuery setNeedDomainInfo(Boolean needDomainInfo) {
+    this.needDomainInfo = needDomainInfo;
+    return this;
   }
 }

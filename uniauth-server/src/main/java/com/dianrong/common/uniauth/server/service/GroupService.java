@@ -74,7 +74,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -178,6 +180,7 @@ public class GroupService extends TenancyBasedService {
     if (code != null) {
       criteria.andCodeEqualTo(code);
     }
+
     if (!CollectionUtils.isEmpty(groupIds)) {
       criteria.andIdIn(groupIds);
     }

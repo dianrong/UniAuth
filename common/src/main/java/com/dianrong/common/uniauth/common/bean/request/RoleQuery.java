@@ -2,6 +2,9 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 public class RoleQuery extends PageParam {
 
   private static final long serialVersionUID = -2330120093448174753L;
@@ -12,6 +15,19 @@ public class RoleQuery extends PageParam {
   private Integer roleCodeId;
   private List<Integer> roleIds;
   private Integer domainId;
+  /**
+   * 参数控制在query的时候,是否需要将关联的域的信息也返回.
+   */
+  private Boolean needDomainInfo;
+
+  public Boolean getNeedDomainInfo() {
+    return needDomainInfo;
+  }
+
+  public RoleQuery setNeedDomainInfo(Boolean needDomainInfo) {
+    this.needDomainInfo = needDomainInfo;
+    return this;
+  }
 
   public Integer getId() {
     return id;
@@ -74,12 +90,5 @@ public class RoleQuery extends PageParam {
   public RoleQuery setRoleIds(List<Integer> roleIds) {
     this.roleIds = roleIds;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "RoleQuery [id=" + id + ", name=" + name + ", description=" + description + ", status="
-        + status + ", roleCodeId=" + roleCodeId + ", roleIds=" + roleIds
-        + ", domainId=" + domainId + "]";
   }
 }

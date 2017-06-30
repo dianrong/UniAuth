@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.ToString;
+
 /**
  * Created by Arc on 14/1/16.
  */
+@ToString
 @ApiModel("角色信息")
 public class RoleDto extends TenancyBaseDto {
 
@@ -168,14 +171,5 @@ public class RoleDto extends TenancyBaseDto {
   public RoleDto setPermDtoMap(Map<String, Set<PermissionDto>> permDtoMap) {
     this.permDtoMap = permDtoMap;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "RoleDto [id=" + id + ", name=" + name + ", description=" + description + ", status="
-        + status + ", domainId=" + domainId + ", roleCodeId=" + roleCodeId
-        + ", permissionId=" + permissionId + ", domain=" + domain + ", roleCode=" + roleCode
-        + ", groupList=" + groupList + ", permMap=" + permMap + ", permDtoMap="
-        + permDtoMap + ", checked=" + checked + "]";
   }
 }

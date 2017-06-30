@@ -1,8 +1,11 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import lombok.ToString;
+
 /**
  * Created by Arc on 7/4/2016.
  */
+@ToString
 public class TagTypeDto extends TenancyBaseDto {
 
   private static final long serialVersionUID = 4681756553353785511L;
@@ -45,11 +48,5 @@ public class TagTypeDto extends TenancyBaseDto {
   public TagTypeDto setDomainName(String domainName) {
     this.domainName = domainName;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "TagTypeDto [id=" + id + ", code=" + code + ", domainId=" + domainId + ", domainName="
-        + domainName + "]";
   }
 }
