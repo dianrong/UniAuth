@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
@@ -437,6 +438,31 @@ public class RoleService extends TenancyBasedService {
       return new PageDto<>(pageNumber, pageSize, count, roleDtos);
     } else {
       return null;
+    }
+  }
+
+  @Transactional
+  public void relateUsersAndRole(Integer roleId, List<Long> userIds) {
+    CheckEmpty.checkEmpty(roleId, "roleId");
+    // roleId 必须要存在
+    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, roleId);
+    UserRoleExample userRoleExample = new UserRoleExample();
+    UserRoleExample.Criteria criteria = userRoleExample.createCriteria();
+    criteria.andRoleIdEqualTo(roleId);
+    List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+    List<Long> existUserIds = Lists.newArrayList();
+    if (!ObjectUtil.collectionIsEmptyOrNull(userRoleKeys)) {
+      for (UserRoleKey urk : userRoleKeys) {
+        existUserIds.add(urk.getUserId());
+      }
+    }
+    List<Long> insertUserIds = userIds;
+    insertUserIds.removeAll(existUserIds);
+    for (Long userId:insertUserIds) {
+      UserRoleKey record = new UserRoleKey();
+      record.setRoleId(roleId);
+      record.setUserId(userId);
+      userRoleMapper.insert(record);
     }
   }
 

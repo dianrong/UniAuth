@@ -12,6 +12,10 @@ import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import com.dianrong.common.uniauth.server.service.TagService;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,6 +87,20 @@ public class TagResource implements ITagRWResource {
   public Response<Void> replaceGroupsAndUsersToTag(TagParam tagParam) {
     tagService.replaceGroupsAndUsersToTag(tagParam.getId(), tagParam.getGrpIds(),
         tagParam.getUserIds(), tagParam.getNeedProcessGoupIds(), tagParam.getNeedProcessUserIds());
+    return Response.success();
+  }
+
+  @ApiOperation("批量关联用户和标签")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
+          dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "tagId", value = "标签Id", dataType = "int", required = true,
+          paramType = "query"),
+      @ApiImplicitParam(name = "userIds", value = "需要添加角色用户id列表", dataType = "java.util.List",
+          required = true, paramType = "query")})
+  @Override
+  public Response<Void> relateUsersAndTag(TagParam tagParam) {
+    tagService.relateUsersAndTag(tagParam.getId(), tagParam.getUserIds());
     return Response.success();
   }
 }

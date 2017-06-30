@@ -125,7 +125,7 @@
                             <div ng-if="process_param.tag_param.selected.id">
                                 <div>{{'batch.process.page.query.id' | translate}}: <strong>'{{process_param.tag_param.selected.id}}'</strong></div>
                                 <div>{{'batch.process.page.query.code' | translate}}: <strong>'{{process_param.tag_param.selected.code}}'</strong></div>
-                                <div>{{'batch.process.page.query.name' | translate}}: <strong>'{{process_param.tag_param.selected.domain.displayName}}'</strong> </div>
+                                <div>{{'batch.process.page.query.domain' | translate}}: <strong>'{{process_param.tag_param.selected.domain.displayName}}'</strong> </div>
                             </div>
                         </div>
                     </div>
@@ -156,9 +156,9 @@
 					{{'batch.process.page.process.result.nums' | translate}}
 					<sapn ng-bind="process_result.successes.length"></sapn>
 				</div>
-				<p ng-show="process_result.errors.length > 0">
-				<div ng-repeat="item in process_result.successes">{{item}}</div>
-				</p>
+				<div ng-show="process_result.errors.length > 0">
+				    <div ng-repeat="item in process_result.successes">{{item}}</div>
+				</div>
 			</div>
 		</div>
 		<div class="row"
@@ -170,10 +170,8 @@
 					{{'batch.process.page.process.result.nums' | translate}}
 					<sapn ng-bind="process_result.errors.length"></sapn>
 				</div>
-				<p>
 				<div ng-repeat="item in process_result.errors">
 					{{item.identity}} : {{item.msg}}</div>
-				</p>
 			</div>
 		</div>
 	</div>

@@ -5,13 +5,13 @@ define(
 					AlertService, FileUploader, GroupService, TagService,
 					RoleService) {
 				// params
-				$scope.process_param = {};
+				var process_param = $scope.process_param = {};
 
 				// 条件查询结果
-				$scope.query_result = {};
+				var query_result = $scope.query_result = {};
 
 				// 批处理结果
-				$scope.process_result = {};
+				var process_result = $scope.process_result = {};
 
 				// batch process enable
 				$scope.process_btn_enable = function() {
@@ -33,7 +33,6 @@ define(
 
 				// grp 输入框是否显示.
 				$scope.is_show_grp_query = function() {
-					console.log($scope.process_param);
 					if ($scope.process_param.type) {
 						var handler = batch_process_handler.getHander();
 						if (handler && handler.grp_query_show) {
@@ -129,7 +128,7 @@ define(
 							},
 							addParams : function(fileItem) {
 								var p = {
-									groupId : process_param.grp_param.selected.id
+									groupId : $scope.process_param.grp_param.selected.id
 								};
 								fileItem.formData.push(p);
 							},
@@ -140,7 +139,7 @@ define(
 								return constant.apiBase + "/batch/relate-user-grp";
 							},
 							process_btn_enable : function() {
-								if ($scope.process_param.grp_param.selected) {
+								if ($scope.process_param.grp_param && $scope.process_param.grp_param.selected) {
 									return true;
 								}
 								return false;
@@ -183,7 +182,7 @@ define(
 							},
 							addParams : function(fileItem) {
 								var p = {
-									tagId : process_param.tag_param.selected.id
+									tagId : $scope.process_param.tag_param.selected.id
 								};
 								fileItem.formData.push(p);
 							},
@@ -191,7 +190,7 @@ define(
 								return constant.apiBase + "/batch/relate-user-tag";
 							},
 							process_btn_enable : function() {
-								if ($scope.process_param.tag_param.selected) {
+								if ($scope.process_param.tag_param && $scope.process_param.tag_param.selected) {
 									return true;
 								}
 								return false;
@@ -210,7 +209,7 @@ define(
 							},
 							addParams : function(fileItem) {
 								var p = {
-									roleId : process_param.role_param.selected.id
+									roleId : $scope.process_param.role_param.selected.id
 								};
 								fileItem.formData.push(p);
 							},
@@ -218,7 +217,7 @@ define(
 								return constant.apiBase + "/batch/relate-user-role";
 							},
 							process_btn_enable : function() {
-								if ($scope.process_param.role_param.selected) {
+								if ($scope.process_param.role_param && $scope.process_param.role_param.selected) {
 									return true;
 								}
 								return false;
@@ -269,9 +268,11 @@ define(
 
 				uploader.onBeforeUploadItem = function(fileItem) {
 					var process_type = $scope.process_param.type;
-					batch_process_handler.getHander().addParams(fileItem);
-					fileItem.url = batch_process_handler.getHander()
-							.process_url();
+					var handler = batch_process_handler.getHander(); 
+					if (handler && handler.addParams) {
+						batch_process_handler.getHander().addParams(fileItem);
+					}
+					fileItem.url = handler.process_url();
 					fileItem.onProgress = function(progress) {
 						AlertService
 								.addAutoDismissAlert(

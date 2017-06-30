@@ -74,9 +74,9 @@ public class BatchAction {
       + "and principal.permMap['DOMAIN'].contains('techops')")
   public Response<BatchProcessResult> relateUserGrp(@RequestParam(value = "file", required = true) MultipartFile file, @RequestParam(value = "groupId", required = true)Integer groupId) throws IOException {
     try {
-      return Response.success(batchService.relateUserGrp(groupId, file.getInputStream()));
+      return Response.success(batchService.relateUsersGrp(file.getInputStream(), groupId));
     } catch(BatchProcessException bpe) {
-      LOGGER.error("failed to process batch relate user and group", bpe);
+      LOGGER.error("failed to process batch relate users and group", bpe);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));
     }
   }
@@ -89,7 +89,12 @@ public class BatchAction {
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
       + "and principal.permMap['DOMAIN'].contains('techops')")
   public Response<BatchProcessResult> relateUserTag(@RequestParam(value = "file", required = true) MultipartFile file, @RequestParam(value = "tagId", required = true)Integer tagId) throws IOException {
-    return null;
+    try {
+      return Response.success(batchService.relateUsersTag(file.getInputStream(), tagId));
+    } catch(BatchProcessException bpe) {
+      LOGGER.error("failed to process batch relate users and tag", bpe);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));
+    }
   }
   
   /**
@@ -100,7 +105,12 @@ public class BatchAction {
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
       + "and principal.permMap['DOMAIN'].contains('techops')")
   public Response<BatchProcessResult> relateUserRole(@RequestParam(value = "file", required = true) MultipartFile file, @RequestParam(value = "roleId", required = true)Integer roleId) throws IOException {
-    return null;
+    try {
+      return Response.success(batchService.relateUsersRole(file.getInputStream(), roleId));
+    } catch(BatchProcessException bpe) {
+      LOGGER.error("failed to process batch relate users and role", bpe);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));
+    }
   }
   
   /**

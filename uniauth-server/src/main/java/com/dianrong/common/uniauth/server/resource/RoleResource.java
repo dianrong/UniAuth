@@ -11,6 +11,10 @@ import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 import com.dianrong.common.uniauth.server.service.RoleService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,10 +45,10 @@ public class RoleResource implements IRoleRWResource {
   @Override
   @Timed
   public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
-    PageDto<RoleDto> roleDtos = roleService.searchRole(roleQuery.getRoleIds(), roleQuery.getId(),
-        roleQuery.getDomainId(), roleQuery.getName(), roleQuery.getRoleCodeId(),
-        roleQuery.getStatus(), roleQuery.getNeedDomainInfo(),
-        roleQuery.getPageNumber(), roleQuery.getPageSize());
+    PageDto<RoleDto> roleDtos =
+        roleService.searchRole(roleQuery.getRoleIds(), roleQuery.getId(), roleQuery.getDomainId(),
+            roleQuery.getName(), roleQuery.getRoleCodeId(), roleQuery.getStatus(),
+            roleQuery.getNeedDomainInfo(), roleQuery.getPageNumber(), roleQuery.getPageSize());
     return Response.success(roleDtos);
   }
 
@@ -79,6 +83,20 @@ public class RoleResource implements IRoleRWResource {
   @Override
   public Response<Void> savePermsToRole(RoleParam roleParam) {
     roleService.savePermsToRole(roleParam.getId(), roleParam.getPermIds());
+    return Response.success();
+  }
+
+  @ApiOperation("批量关联用户和角色")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
+          dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "roleId", value = "角色Id", dataType = "int", required = true,
+          paramType = "query"),
+      @ApiImplicitParam(name = "userIds", value = "需要添加角色用户id列表", dataType = "java.util.List",
+          required = true, paramType = "query")})
+  @Override
+  public Response<Void> relateUsersAndRole(RoleParam roleParam) {
+    roleService.relateUsersAndRole(roleParam.getId(), roleParam.getUserIds());
     return Response.success();
   }
 

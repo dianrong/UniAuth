@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
@@ -488,6 +489,31 @@ public class TagService extends TenancyBasedService {
           }
         }
       }
+    }
+  }
+  
+  @Transactional
+  public void relateUsersAndTag(Integer tagId, List<Long> userIds) {
+    CheckEmpty.checkEmpty(tagId, "tagId");
+    // roleId 必须要存在
+    tagDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, tagId);
+    UserTagExample userTagExample = new UserTagExample();
+    UserTagExample.Criteria criteria = userTagExample.createCriteria();
+    criteria.andTagIdEqualTo(tagId);
+    List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+    List<Long> existUserIds = Lists.newArrayList();
+    if (!ObjectUtil.collectionIsEmptyOrNull(userTagKeys)) {
+      for (UserTagKey utk : userTagKeys) {
+        existUserIds.add(utk.getUserId());
+      }
+    }
+    List<Long> insertUserIds = userIds;
+    insertUserIds.removeAll(existUserIds);
+    for (Long userId:insertUserIds) {
+      UserTagKey record = new UserTagKey();
+      record.setTagId(tagId);
+      record.setUserId(userId);
+      userTagMapper.insert(record);
     }
   }
 }

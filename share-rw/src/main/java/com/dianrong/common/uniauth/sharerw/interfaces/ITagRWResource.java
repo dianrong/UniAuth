@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
@@ -37,4 +38,8 @@ public interface ITagRWResource extends ITagResource {
   @POST
   @Path("replace-grps-users-to-tag")
   Response<Void> replaceGroupsAndUsersToTag(TagParam tagParam);
+  
+  @POST
+  @Path("relate-users-and-tag")
+  Response<Void> relateUsersAndTag(TagParam tagParam);
 }

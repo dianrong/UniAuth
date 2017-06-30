@@ -6,6 +6,8 @@ import com.dianrong.common.techops.util.UniBundle;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.RoleParam;
+import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
@@ -43,6 +45,9 @@ public class BatchService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BatchService.class);
 
+  // 身份识别的内容有多少列.
+  public static final int USER_IDENTITY_LINE_NUM = 2;
+
   @Resource
   private UARWFacade uarwFacade;
 
@@ -54,30 +59,15 @@ public class BatchService {
    */
   public BatchProcessResult addUser(InputStream inputStream)
       throws IOException, BatchProcessException {
-    List<String> content = readContentFromInputStream(inputStream);
-    // 解析文件内容
-    List<UserParam> addUserParams = Lists.newArrayList();
-    for (int i = 0; i < content.size(); i++) {
-      String paramStr = content.get(i);
-      String[] params = split(paramStr, ",");
-      if (StringUtils.isBlank(getItem(params ,1)) && StringUtils.isBlank(getItem(params ,2))) {
-        throw new BatchProcessException(
-            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
-      }
-      UserParam userParam = new UserParam();
-      userParam.setName(getItem(params ,0));
-      userParam.setEmail(getItem(params, 1));
-      userParam.setPhone(getItem(params, 2));
-      addUserParams.add(userParam);
-    }
-
+    // 第三列是用户姓名
+    List<InputAnalysisResult> results = processInput(inputStream, 3);
     // 实际添加处理前的预处理,检查文件内容格式
-    if (!addUserParams.isEmpty()) {
+    if (!results.isEmpty()) {
       Set<String> emails = Sets.newHashSet();
       Set<String> phones = Sets.newHashSet();
-      for (UserParam addUserParam : addUserParams) {
-        String email = addUserParam.getEmail();
-        String phone = addUserParam.getPhone();
+      for (InputAnalysisResult result : results) {
+        String email = result.getUserParam().getEmail();
+        String phone = result.getUserParam().getPhone();
         if (!StringUtils.isBlank(email)) {
           if (!StringUtil.isEmailAddress(email)) {
             throw new BatchProcessException(
@@ -103,8 +93,11 @@ public class BatchService {
 
     BatchProcessResult processResult = new BatchProcessResult();
     // 批量添加用户
-    for (UserParam addUserParam : addUserParams) {
+    for (InputAnalysisResult result : results) {
       Response<UserDto> response = null;
+      UserParam addUserParam = result.getUserParam();
+      // 额外的一列是姓名
+      addUserParam.setName(result.getAppendInfo().get(0));
       try {
         response = uarwFacade.getUserRWResource().addNewUser(addUserParam);
       } catch (Exception ex) {
@@ -127,25 +120,11 @@ public class BatchService {
    * @throws BatchProcessException 批量处理异常
    */
   public BatchProcessResult disableUser(InputStream inputStream) throws IOException {
-    List<String> content = readContentFromInputStream(inputStream);
-    // 解析文件内容
-    List<UserParam> disableUserParams = Lists.newArrayList();
-    for (int i = 0; i < content.size(); i++) {
-      String paramStr = content.get(i);
-      String[] params = split(paramStr, ",");
-      if (StringUtils.isBlank(getItem(params ,0)) && StringUtils.isBlank(getItem(params ,1))) {
-        throw new BatchProcessException(
-            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
-      }
-      UserParam userParam = new UserParam();
-      userParam.setEmail(getItem(params ,0));
-      userParam.setPhone(getItem(params ,1));
-      disableUserParams.add(userParam);
-    }
-
+    List<InputAnalysisResult> results = processInput(inputStream);
     BatchProcessResult processResult = new BatchProcessResult();
     // 批量添加用户
-    for (UserParam disableUserParam : disableUserParams) {
+    for (InputAnalysisResult result : results) {
+      UserParam disableUserParam = result.getUserParam();
       String identity = getIdentity(disableUserParam);
       // 根据条件查找用户
       List<UserDto> users = queryUser(disableUserParam, AppConstants.STATUS_ENABLED);
@@ -173,31 +152,18 @@ public class BatchService {
 
   /**
    * 批量关联用户和组.
+   * 
    * @param grpId 组id,不能为空
    * 
    * @throws BatchProcessException 批量处理异常
    */
-  public BatchProcessResult relateUserGrp(Integer grpId, InputStream inputStream)
+  public BatchProcessResult relateUsersGrp(InputStream inputStream, Integer grpId)
       throws IOException {
-    List<String> content = readContentFromInputStream(inputStream);
-    // 解析文件内容
-    List<UserParam> uParams = Lists.newArrayList();
-    for (int i = 0; i < content.size(); i++) {
-      String paramStr = content.get(i);
-      String[] params = split(paramStr, ",");
-      if (StringUtils.isBlank(getItem(params ,0)) && StringUtils.isBlank(getItem(params ,1))) {
-        throw new BatchProcessException(
-            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
-      }
-      UserParam userParam = new UserParam();
-      userParam.setEmail(getItem(params ,0));
-      userParam.setPhone(getItem(params ,1));
-      uParams.add(userParam);
-    }
-
+    List<InputAnalysisResult> results = processInput(inputStream);
     BatchProcessResult processResult = new BatchProcessResult();
     Set<Long> userIds = Sets.newHashSet();
-    for (UserParam userParam : uParams) {
+    for (InputAnalysisResult result : results) {
+      UserParam userParam = result.getUserParam();
       String identity = getIdentity(userParam);
       // 根据条件查找用户
       List<UserDto> users = queryUser(userParam);
@@ -223,6 +189,168 @@ public class BatchService {
       throw new BatchProcessException(response.getInfo().get(0).getMsg());
     }
     return processResult;
+  }
+
+  /**
+   * 批量关联用户和标签.
+   * 
+   * @param tagId 标签id,不能为空
+   * 
+   * @throws BatchProcessException 批量处理异常
+   */
+  public BatchProcessResult relateUsersTag(InputStream inputStream, Integer tagId)
+      throws IOException {
+    List<InputAnalysisResult> results = processInput(inputStream);
+    BatchProcessResult processResult = new BatchProcessResult();
+    Set<Long> userIds = Sets.newHashSet();
+    for (InputAnalysisResult result : results) {
+      UserParam userParam = result.getUserParam();
+      String identity = getIdentity(userParam);
+      // 根据条件查找用户
+      List<UserDto> users = queryUser(userParam);
+      if (users.isEmpty()) {
+        processResult.getErrors().add(BatchProcessResult.Failure.build(identity,
+            UniBundle.getMsg("service.batch.process.query.user.none")));
+        continue;
+      } else {
+        for (UserDto ud : users) {
+          userIds.add(ud.getId());
+        }
+        processResult.getSuccesses().add(identity);
+      }
+    }
+
+    // 关联用户和标签
+    TagParam tagParam = new TagParam();
+    tagParam.setId(tagId);
+    tagParam.setUserIds(new ArrayList<>(userIds));
+    Response<Void> response = uarwFacade.getTagRWResource().relateUsersAndTag(tagParam);
+    if (!CollectionUtils.isEmpty(response.getInfo())) {
+      throw new BatchProcessException(response.getInfo().get(0).getMsg());
+    }
+    return processResult;
+  }
+
+  /**
+   * 批量关联用户和角色.
+   * 
+   * @param roleId 角色id,不能为空
+   * 
+   * @throws BatchProcessException 批量处理异常
+   */
+  public BatchProcessResult relateUsersRole(InputStream inputStream, Integer roleId)
+      throws IOException {
+    List<InputAnalysisResult> results = processInput(inputStream);
+    BatchProcessResult processResult = new BatchProcessResult();
+    Set<Long> userIds = Sets.newHashSet();
+    for (InputAnalysisResult result : results) {
+      UserParam userParam = result.getUserParam();
+      String identity = getIdentity(userParam);
+      // 根据条件查找用户
+      List<UserDto> users = queryUser(userParam);
+      if (users.isEmpty()) {
+        processResult.getErrors().add(BatchProcessResult.Failure.build(identity,
+            UniBundle.getMsg("service.batch.process.query.user.none")));
+        continue;
+      } else {
+        for (UserDto ud : users) {
+          userIds.add(ud.getId());
+        }
+        processResult.getSuccesses().add(identity);
+      }
+    }
+
+    // 关联用户和标签
+    RoleParam roleParam = new RoleParam();
+    roleParam.setId(roleId);
+    roleParam.setUserIds(new ArrayList<>(userIds));
+    Response<Void> response = uarwFacade.getRoleRWResource().relateUsersAndRole(roleParam);
+    if (!CollectionUtils.isEmpty(response.getInfo())) {
+      throw new BatchProcessException(response.getInfo().get(0).getMsg());
+    }
+    return processResult;
+  }
+
+  /**
+   * 关联用户和组信息.
+   * 
+   * @throws BatchProcessException 批量处理异常
+   */
+  public BatchProcessResult relateUserGrp(InputStream inputStream) throws IOException {
+    return null;
+  }
+
+  /**
+   * 批量处理的解析结果存放对象.
+   */
+  private static class InputAnalysisResult {
+    private UserParam userParam;
+    /**
+     * 按顺序存放额外结果.
+     */
+    private List<String> appendInfo;
+
+    public List<String> getAppendInfo() {
+      return appendInfo;
+    }
+
+    public InputAnalysisResult setAppendInfo(List<String> appendInfo) {
+      this.appendInfo = appendInfo;
+      return this;
+    }
+
+    public UserParam getUserParam() {
+      return userParam;
+    }
+
+    public InputAnalysisResult setUserParam(UserParam userParam) {
+      this.userParam = userParam;
+      return this;
+    }
+  }
+
+  /**
+   * 相当于processInput(inputStream, 2).
+   */
+  private List<InputAnalysisResult> processInput(InputStream inputStream) throws IOException {
+    return processInput(inputStream, USER_IDENTITY_LINE_NUM);
+  }
+
+  /**
+   * 解析输入流.
+   * 
+   * @param inputStream 输入流
+   * @param lineNum 没一行有多少列需要解析
+   */
+  private List<InputAnalysisResult> processInput(InputStream inputStream, int lineNum)
+      throws IOException {
+    List<String> content = readContentFromInputStream(inputStream);
+    // 解析文件内容
+    List<InputAnalysisResult> results = Lists.newArrayList();
+    for (int i = 0; i < content.size(); i++) {
+      String paramStr = content.get(i);
+      String[] params = split(paramStr, ",");
+      String email = getItem(params, 0);
+      String phone = getItem(params, 1);
+      if (StringUtils.isBlank(email) && StringUtils.isBlank(phone)) {
+        throw new BatchProcessException(
+            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
+      }
+      InputAnalysisResult result = new InputAnalysisResult();
+      UserParam userParam = new UserParam();
+      userParam.setEmail(email);
+      userParam.setPhone(phone);
+      result.setUserParam(userParam);
+      if (lineNum > USER_IDENTITY_LINE_NUM) {
+        List<String> appendInfo = Lists.newArrayList();
+        for (int j = USER_IDENTITY_LINE_NUM; j < lineNum; j++) {
+          appendInfo.add(getItem(params, j));
+        }
+        result.setAppendInfo(appendInfo);
+      }
+      results.add(result);
+    }
+    return results;
   }
 
   /**
@@ -252,7 +380,7 @@ public class BatchService {
     }
     return items[index];
   }
-  
+
   /**
    * 根据Id禁用用户.
    */
@@ -276,8 +404,8 @@ public class BatchService {
    */
   private List<UserDto> queryUser(UserParam userParam, Byte status) {
     UserQuery query = new UserQuery();
-    query.setEmail(userParam.getEmail());
-    query.setPhone(userParam.getPhone());
+    query.setEmail(StringUtils.isBlank(userParam.getEmail()) ? null : userParam.getEmail());
+    query.setPhone(StringUtils.isBlank(userParam.getPhone()) ? null : userParam.getPhone());
     if (status != null) {
       query.setStatus(status);
     }
