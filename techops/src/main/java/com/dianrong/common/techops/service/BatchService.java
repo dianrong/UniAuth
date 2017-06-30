@@ -320,7 +320,7 @@ public class BatchService {
    * 解析输入流.
    * 
    * @param inputStream 输入流
-   * @param lineNum 没一行有多少列需要解析
+   * @param lineNum 每一行有多少列需要解析
    */
   private List<InputAnalysisResult> processInput(InputStream inputStream, int lineNum)
       throws IOException {
