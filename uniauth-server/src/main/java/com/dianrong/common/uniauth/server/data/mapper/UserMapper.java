@@ -109,4 +109,6 @@ public interface UserMapper {
   List<User> selectByEmailOrPhone(Map<String, String> map);
 
   List<User> getUsersByGroupCodeRoleIds(Map<String, Object> param);
+  
+  User getUserByIdentity(Map<String, String> param);
 }

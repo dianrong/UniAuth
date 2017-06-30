@@ -130,5 +130,4 @@ public class Response<T> implements Serializable {
   public static <T> Response<T> failure(InfoName name, String errMsg) {
     return failure(Info.build(name, errMsg));
   }
-
 }

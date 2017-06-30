@@ -2,17 +2,25 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.request.ProfileParam;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.service.cache.ProfileCache;
 import com.dianrong.common.uniauth.server.service.support.ProfileSupport;
+import com.dianrong.common.uniauth.server.service.support.QueryProfileDefinition;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,14 +28,46 @@ import org.springframework.stereotype.Service;
 /**
  * 用户Profile操作的service实现.
  */
+@Slf4j
 @Service
 public class UserProfileService extends TenancyBasedService {
 
   @Autowired
   private ProfileService profileService;
-  
+
+  @Autowired
+  private UserExtendValService userExtendValService;
+
+  @Autowired
+  private ProfileCache profileCache;
+
+  @Autowired
+  private UserService userService;
+
+  /**
+   * 实现类似于getUserProfile.判定用户的身份是通过identity来判断.
+   * 
+   * @param identity 用户的身份识别标识. 比如:Email, Phone, Staff_no,Ldap_dn, User_guid等.
+   * @param profileId Profile定义的Id.
+   * @param identityType 登陆类型,对应于枚举:UserIdentityType
+   * @return 用户的属性集合.
+   */
+  public Map<String, Object> getUserProfileByIdentity(String identity, Long profileId,
+      UserIdentityType identityType) {
+    CheckEmpty.checkEmpty(profileId, "profileId");
+    User user = userService.getUserByIdentity(identity, identityType);
+    if (user == null) {
+      throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg(
+          "common.profile.parameter.user.identity.not.found", identityType.getType(), identity));
+    }
+    Long uniauthId = user.getId();
+    log.debug("find one user by {} = {}" ,identityType.getType(), identity);
+    return getUserProfile(uniauthId, profileId);
+  }
+
   /**
    * 根据UniauthId和profileId获取用户的属性.
+   * 
    * @param uniauthId uniauthId
    * @param profileId profileId
    * @return 用户的属性集合
@@ -44,12 +84,20 @@ public class UserProfileService extends TenancyBasedService {
     if (ObjectUtil.collectionIsEmptyOrNull(profileIds)) {
       return Collections.emptyMap();
     }
-    return null;
-  }
 
-  public Response<Map<String, Object>> getUserProfileByIdentity(String identity, Long profileId,
-      Long identityType) {
-    return null;
+    // 根据extend_attribute_id 获取所有的属性.
+    Map<String, UserExtendVal> extendValMap =
+        userExtendValService.queryAttributeVal(uniauthId, new ArrayList<>(profileIds));
+    if (extendValMap.isEmpty()) {
+      return Collections.emptyMap();
+    }
+    final Long tenancyId = tenancyService.getTenancyIdWithCheck();
+    return ProfileSupport.getProfileAttributes(pdDto, extendValMap, new QueryProfileDefinition() {
+      @Override
+      public ProfileDefinitionDto querySimpleProfileDefinition(Long id) {
+        return profileCache.getSimpleProfileDefinition(id, tenancyId);
+      }
+    });
   }
 
   public Response<Map<String, Object>> addOrUpdateUserProfile(Long userId, Long profileId,

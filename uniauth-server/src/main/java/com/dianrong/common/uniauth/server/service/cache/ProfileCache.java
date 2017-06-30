@@ -33,11 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Profile的Cache操作.
+ * 
  * @author wanglin
  *
  */
@@ -45,32 +47,57 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @CacheConfig(cacheNames = {"profile"})
 public class ProfileCache {
-  
+
   /**
    * 进行角色数据过滤的filter.
    */
   @Resource(name = "profileDefinitionDataFilter")
   private DataFilter dataFilter;
-  
+
   @Autowired
   private ProfileDefinitionMapper profileDefinitionMapper;
 
   @Autowired
   private ProfileDefinitionPathService profileDefinitionPathService;
-  
+
   @Autowired
   private AttributeExtendService attributeExtendService;
-  
+
   @Autowired
   private ProfileDefinitionAttributeService profileDefinitionAttributeService;
-  
+
+  /**
+   * 只获取指定Profile的定义,包括其关联的属性集合,但是不包括子Profile的相关信息.
+   */
+  @Cacheable(key = "#tenancyId + :simple':' + #id")
+  public ProfileDefinitionDto getSimpleProfileDefinition(Long id, Long tenancyId) {
+    ProfileDefinitionExample queryExample = new ProfileDefinitionExample();
+    ProfileDefinitionExample.Criteria criteria = queryExample.createCriteria();
+    criteria.andIdEqualTo(id).andTenancyIdEqualTo(tenancyId);
+    List<ProfileDefinition> pdList = profileDefinitionMapper.selectByExample(queryExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(pdList)) {
+      log.debug("get profile definition by primary key {}, but not found one!", id);
+      return null;
+    }
+    ProfileDefinition rootProfileDefinition = pdList.get(0);
+    // get profile attributes
+    List<AttributeExtend> attributeExtends = attributeExtendService.getAttributesByProfileId(id);
+    Map<String, String> attributes = new LinkedHashMap<>();
+    if (!ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
+      for (AttributeExtend ae : attributeExtends) {
+        attributes.put(ae.getCode(), ae.getDescription());
+      }
+    }
+    return BeanConverter.convert(rootProfileDefinition, attributes, null, null);
+  }
+
   /**
    * 根据Id获取Profile的定义.
    */
   @Cacheable(key = "#tenancyId + ':' + #id")
   public ProfileDefinitionDto getProfileDefinition(Long id, Long tenancyId) {
     ProfileDefinitionExample queryExample = new ProfileDefinitionExample();
-    ProfileDefinitionExample.Criteria criteria=queryExample.createCriteria();
+    ProfileDefinitionExample.Criteria criteria = queryExample.createCriteria();
     criteria.andIdEqualTo(id).andTenancyIdEqualTo(tenancyId);
     List<ProfileDefinition> pdList = profileDefinitionMapper.selectByExample(queryExample);
     if (ObjectUtil.collectionIsEmptyOrNull(pdList)) {
@@ -90,12 +117,13 @@ public class ProfileCache {
     return BeanConverter.convert(rootProfileDefinition, attributes, null,
         dpdDto == null ? null : dpdDto.getSubProfiles());
   }
-  
+
   /**
    * 更新一个Profile.
    */
   @Transactional
-  @CacheEvict(key = "#tenancyId + ':' + #id")
+  @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
+      @CacheEvict(key = "#tenancyId + :simple':' + #id")})
   public void updateProfileDefinition(Long id, Long tenancyId, String name, String code,
       String description, Map<String, String> attributes, Set<Long> descendantProfileIds) {
     // Id 必须要存在.
@@ -153,12 +181,13 @@ public class ProfileCache {
       profileDefinitionAttributeService.delete(id, delItem.getExtendId());
     }
   }
-  
+
   /**
    * 扩展Profile的扩展属性和子Profile.
    */
   @Transactional
-  @CacheEvict(key = "#tenancyId + ':' + #id")
+  @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
+      @CacheEvict(key = "#tenancyId + :simple':' + #id")})
   public void extendProfileDefinition(Long id, Long tenancyId, Map<String, String> attributes,
       Set<Long> descendantProfileIds) {
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);

@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.interfaces.read;
 
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 
 import java.util.Map;
 
@@ -29,5 +30,5 @@ public interface IUserProfileResource {
   @GET
   @Path("{identity}?profile_id={profileId}&identity_type={identityType}")
   Response<Map<String, Object>> getUserProfileByIdentity(@PathParam("identity") String identity,
-      @PathParam("profileId") Long profileId, @PathParam("identityType") Long identityType);
+      @PathParam("profileId") Long profileId, @PathParam("identityType") UserIdentityType identityType);
 }

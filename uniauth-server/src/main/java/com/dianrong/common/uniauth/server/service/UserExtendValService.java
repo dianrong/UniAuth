@@ -3,7 +3,9 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
+import com.dianrong.common.uniauth.server.data.entity.AttributeExtendExample;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
@@ -22,6 +24,7 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
@@ -247,6 +250,42 @@ public class UserExtendValService extends TenancyBasedService {
     }
 
     return userExtendValDtos;
+  }
+
+  /**
+   * 根据用户和扩展属性id集合获取扩展属性Code和扩展属性值的Map.
+   * <p>UserExtendCode->UserExtendVal</p>
+   */
+  public Map<String, UserExtendVal> queryAttributeVal(Long userId, List<Long> extendAttributeIds) {
+    CheckEmpty.checkEmpty(userId, "userId");
+    Map<String, UserExtendVal> resultMap = Maps.newHashMap();
+    if (ObjectUtil.collectionIsEmptyOrNull(extendAttributeIds)) {
+      return resultMap;
+    }
+    AttributeExtendExample attributeExtendExample = new AttributeExtendExample();
+    AttributeExtendExample.Criteria criteria = attributeExtendExample.createCriteria();
+    criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck()).andIdIn(extendAttributeIds);
+    List<AttributeExtend> attributeExtends = attributeExtendMapper.selectByExample(attributeExtendExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
+      return resultMap;
+    }
+    Map<Long, AttributeExtend> attributeExtendMap = Maps.newHashMap();
+    for (AttributeExtend ae: attributeExtends) {
+      attributeExtendMap.put(ae.getId(), ae);
+    }
+    
+    UserExtendValExample userExtendValExample = new UserExtendValExample();
+    UserExtendValExample.Criteria uevCriteria = userExtendValExample.createCriteria();
+    uevCriteria.andExtendIdIn(extendAttributeIds).andUserIdEqualTo(userId)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<UserExtendVal> userExtendVals = userExtendValMapper.selectByExample(userExtendValExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(userExtendVals)) {
+      return resultMap;
+    }
+    for (UserExtendVal val:userExtendVals) {
+      resultMap.put(attributeExtendMap.get(val.getExtendId()).getCode(), val);
+    }
+    return resultMap;
   }
 }
 

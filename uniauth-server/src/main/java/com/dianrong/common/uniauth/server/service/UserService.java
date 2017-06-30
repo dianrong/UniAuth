@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
@@ -78,6 +79,8 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -92,6 +95,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
@@ -155,7 +159,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   @Resource(name = "userDataFilter")
   private DataFilter dataFilter;
-  
+
   /**
    * 发送消息的服务.
    */
@@ -194,7 +198,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     uniauthSender.sendUserAdd(userDto);
     userDto.setPassword(randomPassword);
     asynAddUserPwdLog(user);
-    
+
     // 发送通知给用户
     notificationService.addUserNotification(user);
     return userDto;
@@ -337,7 +341,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       }
       uniauthNotify.notify(notifyInfo);
     }
-    
+
     // 通知用户密码修改了
     if (UserActionEnum.isPasswordChange(userActionEnum)) {
       notificationService.updateUserPwdNotification(user);
@@ -661,8 +665,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate email
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_EMAIL,
-          email);
+      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_EMAIL, email);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL,
           email);
@@ -687,8 +690,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate phone
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_PHONE,
-          phone);
+      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_PHONE, phone);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE,
           phone);
@@ -930,6 +932,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 根据账号以及租户信息查询用户的详细信息.
+   * 
    * @param loginStatusCheck 是否检测用户的登陆可用状态
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam, boolean loginStatusCheck) {
@@ -1026,7 +1029,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    * 获取角色下面所有的权限
    *
    * @param enableRoleIds 可用的角色id集合
-   * @return roleId与对应的权限集合映射;<br/> 1.如果角色没有任何权限,那么角色的权限是空;<br/> 2.如果没有任何角色,那么返回empty map
+   * @return roleId与对应的权限集合映射;<br/>
+   *         1.如果角色没有任何权限,那么角色的权限是空;<br/>
+   *         2.如果没有任何角色,那么返回empty map
    */
   @SuppressWarnings("unchecked")
   private Map<Integer, List<Permission>> getRolePermission(List<Integer> enableRoleIds) {
@@ -1375,8 +1380,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   private void setUserExtendVal(UserDto userDto) {
-    List<UserExtendValDto> userExtendValDtos =
-        userExtendValService.searchByUserId(userDto.getId());
+    List<UserExtendValDto> userExtendValDtos = userExtendValService.searchByUserId(userDto.getId());
     userDto.setUserExtendValDtos(userExtendValDtos);
   }
 
@@ -1565,11 +1569,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * get user list by group code and role names.
+   * Get user list by group code and role names.
    *
-   * @param groupCode groupCode can not be null
-   * @param includeSubGrp include sub group or not
-   * @param includeRoleIds roleIds. 如果为空,则不根据角色限定用户列表
+   * @param groupCode groupCode can not be null.
+   * @param includeSubGrp include sub group or not.
+   * @param includeRoleIds roleIds. 如果为空,则不根据角色限定用户列表.
    */
   public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp,
       List<Integer> includeRoleIds) {
@@ -1588,6 +1592,21 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       userDtos.add(BeanConverter.convert(user));
     }
     return userDtos;
+  }
+
+  /**
+   * 根据用户的Identity和Identity的类型获取用户信息.
+   * @param identity 用户的标识信息,不能为空.
+   * @param identityType 标识类型,不能为空.
+   */
+  public User getUserByIdentity(String identity, UserIdentityType identityType) {
+    CheckEmpty.checkEmpty(identity, "identity");
+    CheckEmpty.checkEmpty(identityType, "identityType");
+    
+    Map<String, String> param = Maps.newHashMap();
+    param.put("identity", identity);
+    param.put("identityType", identityType.getType());
+    return userMapper.getUserByIdentity(param);
   }
 
   /**
