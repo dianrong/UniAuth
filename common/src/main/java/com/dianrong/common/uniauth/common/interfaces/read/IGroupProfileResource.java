@@ -22,6 +22,6 @@ public interface IGroupProfileResource {
   // scenario: get group profile
   @GET
   @Path("{groupId}?profile_id={profileId}")
-  Response<Map<String, Object>> getGroupProfile(@PathParam("groupId") Long groupId,
+  Response<Map<String, Object>> getGroupProfile(@PathParam("groupId") Integer groupId,
       @PathParam("profileId") Long profileId);
 }

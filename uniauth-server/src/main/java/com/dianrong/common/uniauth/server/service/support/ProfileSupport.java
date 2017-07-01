@@ -5,7 +5,7 @@ import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.dto.SimpleProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -19,7 +19,7 @@ import java.util.Set;
 public final class ProfileSupport {
 
   /**
-   * 拼装出用户的Profile的所有属性值.
+   * 拼装出Profile的所有属性值.
    * 
    * @param profileDefinition Profile的根Profile定义,以及与子Profile的关联关系等信息.
    * @param extendValMap 属性编码与属性值的关联关系,不能为空.
@@ -27,7 +27,7 @@ public final class ProfileSupport {
    *        一个QueryProfileDefinition实现,用于遍历的根据ProfileDefinitionId获取Profile定义的详细信息. 不能为空.
    */
   public static Map<String, Object> getProfileAttributes(ProfileDefinitionDto profileDefinition,
-      Map<String, UserExtendVal> extendValMap, QueryProfileDefinition queryProfileDefinition) {
+      Map<String, ExtendVal> extendValMap, QueryProfileDefinition queryProfileDefinition) {
     // 扩展属性值Map
     Map<String, Object> profileAttributes = Maps.newHashMap();
     Map<String, AttributeExtendDto> profileAttributeDefine = profileDefinition.getAttributes();
@@ -36,9 +36,9 @@ public final class ProfileSupport {
       Map<String, String> currentProfileAttributes = Maps.newHashMap();
       for (Entry<String, AttributeExtendDto> entry : profileAttributeDefine.entrySet()) {
         String attributeCode = entry.getKey();
-        UserExtendVal ueVal = extendValMap.get(attributeCode);
-        if (ueVal != null) {
-          currentProfileAttributes.put(attributeCode, ueVal.getValue());
+        ExtendVal extendVal = extendValMap.get(attributeCode);
+        if (extendVal != null) {
+          currentProfileAttributes.put(attributeCode, extendVal.getValue());
         } else {
           currentProfileAttributes.put(attributeCode, null);
         }

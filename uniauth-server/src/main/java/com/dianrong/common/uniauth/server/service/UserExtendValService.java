@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtendExample;
+import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
@@ -15,10 +16,10 @@ import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
 import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
-import com.dianrong.common.uniauth.server.datafilter.impl.UserExtendValDataFilter;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -40,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wenlongchen.
@@ -59,14 +61,15 @@ public class UserExtendValService extends TenancyBasedService {
   private UserMapper userMapper;
 
   @Resource(name = "userExtendValDataFilter")
-  private UserExtendValDataFilter dataFilter;
+  private DataFilter dataFilter;
 
   /**
    * 添加一个用户扩展属性值.
    */
+  @Transactional
   public UserExtendValDto add(Long userId, Long extendId, String value) {
-    CheckEmpty.checkEmpty(userId, "user_id");
-    CheckEmpty.checkEmpty(extendId, "extend_id");
+    CheckEmpty.checkEmpty(userId, "userId");
+    CheckEmpty.checkEmpty(extendId, "extendId");
 
     // 数据过滤
     dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
@@ -83,6 +86,42 @@ public class UserExtendValService extends TenancyBasedService {
 
     return BeanConverter.convert(userExtendVal, UserExtendValDto.class);
   }
+  
+  /**
+   * 添加或者更新用户属性.
+   */
+  @Transactional
+  public UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
+    CheckEmpty.checkEmpty(userId, "userId");
+    CheckEmpty.checkEmpty(extendId, "extendId");
+
+    // 数据过滤
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
+        FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
+        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
+
+    UserExtendValExample userExtendValExample = new UserExtendValExample();
+    UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
+    criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<UserExtendVal> existUserExtendVal = userExtendValMapper.selectByExample(userExtendValExample);
+    UserExtendVal record = new UserExtendVal();
+    if (ObjectUtil.collectionIsEmptyOrNull(existUserExtendVal)) {
+      // add
+      record.setExtendId(extendId);
+      record.setUserId(userId);
+      record.setValue(value);
+      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
+      userExtendValMapper.insert(record);
+    } else {
+      // update 
+      record.setValue(value);
+      userExtendValMapper.updateByExampleSelective(record, userExtendValExample);
+      record.setExtendId(extendId);
+      record.setUserId(userId);
+      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
+    }
+    return BeanConverter.convert(record, UserExtendValDto.class);
+  }
 
   /**
    * 根据扩展属性值的主键id删除数据.
@@ -97,6 +136,7 @@ public class UserExtendValService extends TenancyBasedService {
   /**
    * 根据扩展属性值的主键id修改数据.
    */
+  @Transactional
   public int updateById(Long id, Long userId, Long extendId, String value) {
     CheckEmpty.checkEmpty(id, "id");
     if (userId == null && extendId == null && StringUtils.isBlank(value)) {
@@ -256,9 +296,9 @@ public class UserExtendValService extends TenancyBasedService {
    * 根据用户和扩展属性id集合获取扩展属性Code和扩展属性值的Map.
    * <p>UserExtendCode->UserExtendVal</p>
    */
-  public Map<String, UserExtendVal> queryAttributeVal(Long userId, List<Long> extendAttributeIds) {
+  public Map<String, ExtendVal> queryAttributeVal(Long userId, List<Long> extendAttributeIds) {
     CheckEmpty.checkEmpty(userId, "userId");
-    Map<String, UserExtendVal> resultMap = Maps.newHashMap();
+    Map<String, ExtendVal> resultMap = Maps.newHashMap();
     if (ObjectUtil.collectionIsEmptyOrNull(extendAttributeIds)) {
       return resultMap;
     }

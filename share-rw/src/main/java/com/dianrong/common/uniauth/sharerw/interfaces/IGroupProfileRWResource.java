@@ -15,6 +15,6 @@ public interface IGroupProfileRWResource extends IGroupProfileResource {
   // scenario: add or update group profile
   @PUT
   @Path("{groupId}?profile_id={profileId}")
-  Response<Map<String, Object>> addOrUpdateUserProfile(@PathParam("groupId") Long groupId,
+  Response<Map<String, Object>> addOrUpdateGrpProfile(@PathParam("groupId") Integer groupId,
       @PathParam("profileId") Long profileId, ProfileParam param);
 }

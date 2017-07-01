@@ -1,12 +1,10 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
-import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.cache.ProfileCache;
@@ -21,24 +19,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 用户Profile操作的service实现.
+ * 组Profile操作的service实现.
  */
-@Slf4j
 @Service
-public class UserProfileService extends TenancyBasedService {
+public class GroupProfileService extends TenancyBasedService {
 
   @Autowired
   private ProfileService profileService;
 
   @Autowired
-  private UserExtendValService userExtendValService;
+  private GroupExtendValService grpExtendValService;
 
   @Autowired
   private AttributeExtendService attributeExtendService;
@@ -46,39 +41,15 @@ public class UserProfileService extends TenancyBasedService {
   @Autowired
   private ProfileCache profileCache;
 
-  @Autowired
-  private UserService userService;
-
   /**
-   * 实现类似于getUserProfile.判定用户的身份是通过identity来判断.
+   * 根据groupId和profileId获取组的属性集合.
    * 
-   * @param identity 用户的身份识别标识. 比如:Email, Phone, Staff_no,Ldap_dn, User_guid等.
-   * @param profileId Profile定义的Id.
-   * @param identityType 登陆类型,对应于枚举:UserIdentityType
-   * @return 用户的属性集合.
-   */
-  public Map<String, Object> getUserProfileByIdentity(String identity, Long profileId,
-      UserIdentityType identityType) {
-    CheckEmpty.checkEmpty(profileId, "profileId");
-    User user = userService.getUserByIdentity(identity, identityType);
-    if (user == null) {
-      throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg(
-          "common.profile.parameter.user.identity.not.found", identityType.getType(), identity));
-    }
-    Long uniauthId = user.getId();
-    log.debug("find one user by {} = {}", identityType.getType(), identity);
-    return getUserProfile(uniauthId, profileId);
-  }
-
-  /**
-   * 根据UniauthId和profileId获取用户的属性.
-   * 
-   * @param uniauthId uniauthId
+   * @param groupId 组的Id
    * @param profileId profileId
-   * @return 用户的属性集合
+   * @return 组的属性集合
    */
-  public Map<String, Object> getUserProfile(Long uniauthId, Long profileId) {
-    CheckEmpty.checkEmpty(uniauthId, "uniauthId");
+  public Map<String, Object> getGroupProfile(Integer groupId, Long profileId) {
+    CheckEmpty.checkEmpty(groupId, "groupId");
     CheckEmpty.checkEmpty(profileId, "profileId");
     ProfileDefinitionDto pdDto = profileService.getProfileDefinition(profileId);
     if (pdDto == null) {
@@ -89,10 +60,9 @@ public class UserProfileService extends TenancyBasedService {
     if (ObjectUtil.collectionIsEmptyOrNull(profileIds)) {
       return Collections.emptyMap();
     }
-
     // 根据extend_attribute_id 获取所有的属性.
     Map<String, ExtendVal> extendValMap =
-        userExtendValService.queryAttributeVal(uniauthId, new ArrayList<>(profileIds));
+        grpExtendValService.queryAttributeVal(groupId, new ArrayList<>(profileIds));
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }
@@ -106,12 +76,12 @@ public class UserProfileService extends TenancyBasedService {
   }
 
   /**
-   * 更新用户的扩展属性.并根据ProfileId返回更新后的Profile.
+   * 更新组的扩展属性.并根据ProfileId返回更新后的Profile.
    */
   @Transactional
-  public Map<String, Object> addOrUpdateUserProfile(Long uniauthId, Long profileId,
+  public Map<String, Object> addOrUpdateGrpProfile(Integer grpId, Long profileId,
       Map<String, AttributeValModel> attributes) {
-    CheckEmpty.checkEmpty(uniauthId, "uniauthId");
+    CheckEmpty.checkEmpty(grpId, "groupId");
     CheckEmpty.checkEmpty(profileId, "profileId");
     if (attributes != null && !attributes.isEmpty()) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
@@ -121,9 +91,9 @@ public class UserProfileService extends TenancyBasedService {
         AttributeExtend attributeExtend = attributeExtendService
             .addAttributeExtendIfNonExistent(attributeCode, attributeVal);
         String value = attributeVal != null ? attributeVal.getValue() : null;
-        userExtendValService.addOrUpdate(uniauthId, attributeExtend.getId(), value);
+        grpExtendValService.addOrUpdate(grpId, attributeExtend.getId(), value);
       }
     }
-    return getUserProfile(uniauthId, profileId);
+    return getGroupProfile(grpId, profileId);
   }
 }
