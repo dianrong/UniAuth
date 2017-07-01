@@ -5,6 +5,7 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttributeExample;
 import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionAttributeMapper;
+import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.support.ProcessListQuery;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
@@ -48,15 +49,15 @@ public class ProfileDefinitionAttributeService extends TenancyBasedService {
    * 扩展Profile的扩展属性.
    */
   @Transactional
-  public void extendProfileAttributes(Long id, Map<String, String> attributes) {
+  public void extendProfileAttributes(Long id, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(id, "profile definition id");
     // 处理扩展属性
     List<AttributeExtend> attributeExtends = Lists.newArrayList();
     // 关联Profile_definition和扩展属性
     if (attributes != null && !attributes.isEmpty()) {
-      for (Map.Entry<String, String> entry : attributes.entrySet()) {
+      for (Map.Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         AttributeExtend attributeExtend = attributeExtendService
-            .addAttributeExtendIfNonExistent(entry.getKey(), null, null, entry.getValue());
+            .addAttributeExtendIfNonExistent(entry.getKey(), entry.getValue());
         attributeExtends.add(attributeExtend);
       }
     }

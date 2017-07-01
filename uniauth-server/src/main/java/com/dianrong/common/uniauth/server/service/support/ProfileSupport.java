@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service.support;
 
+import com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.dto.SimpleProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.util.Assert;
@@ -29,11 +30,11 @@ public final class ProfileSupport {
       Map<String, UserExtendVal> extendValMap, QueryProfileDefinition queryProfileDefinition) {
     // 扩展属性值Map
     Map<String, Object> profileAttributes = Maps.newHashMap();
-    Map<String, String> profileAttributeDefine = profileDefinition.getAttributes();
+    Map<String, AttributeExtendDto> profileAttributeDefine = profileDefinition.getAttributes();
     // 处理根Profile的属性值
     if (profileAttributeDefine != null && !profileAttributeDefine.isEmpty()) {
       Map<String, String> currentProfileAttributes = Maps.newHashMap();
-      for (Entry<String, String> entry : profileAttributeDefine.entrySet()) {
+      for (Entry<String, AttributeExtendDto> entry : profileAttributeDefine.entrySet()) {
         String attributeCode = entry.getKey();
         UserExtendVal ueVal = extendValMap.get(attributeCode);
         if (ueVal != null) {

@@ -40,9 +40,9 @@ public class ProfileDefinitionParam extends PageParam {
   private String description;
 
   /**
-   * Profile对应的扩展属性列表.扩展属性Code->Description
+   * Profile对应的扩展属性列表.扩展属性Code->AttributeExtend
    */
-  private Map<String, String> attributes;
+  private Map<String, AttributeExtendParam> attributes;
 
   /**
    * 子Profile Id列表.
@@ -85,11 +85,11 @@ public class ProfileDefinitionParam extends PageParam {
     return this;
   }
 
-  public Map<String, String> getAttributes() {
+  public Map<String, AttributeExtendParam> getAttributes() {
     return attributes;
   }
 
-  public ProfileDefinitionParam setAttributes(Map<String, String> attributes) {
+  public ProfileDefinitionParam setAttributes(Map<String, AttributeExtendParam> attributes) {
     this.attributes = attributes;
     return this;
   }

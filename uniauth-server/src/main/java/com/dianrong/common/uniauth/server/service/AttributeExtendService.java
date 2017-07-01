@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -115,6 +116,18 @@ public class AttributeExtendService extends TenancyBasedService {
    * 如果不存在则添加一个.
    */
   @Transactional
+  public AttributeExtend addAttributeExtendIfNonExistent(String code,
+      AttributeValModel attributeVal) {
+    String category = attributeVal != null ? attributeVal.getCategory() : null;
+    String subCategory = attributeVal != null ? attributeVal.getSubcategory() : null;
+    String description = attributeVal != null ? attributeVal.getDescription() : null;
+    return addAttributeExtendIfNonExistent(code, category, subCategory, description);
+  }
+
+  /**
+   * 如果不存在则添加一个.
+   */
+  @Transactional
   public AttributeExtend addAttributeExtendIfNonExistent(String code, String category,
       String subcategory, String description) {
     CheckEmpty.checkEmpty(code, "attributeExtendCode");
@@ -125,8 +138,8 @@ public class AttributeExtendService extends TenancyBasedService {
     if (attributeExtends != null && !attributeExtends.isEmpty()) {
       return attributeExtends.get(0);
     }
-    log.debug("add new attibute code: {}", code );
-    return innerAddAttributeExtend(code, category, subcategory,description);
+    log.debug("add new attibute code: {}", code);
+    return innerAddAttributeExtend(code, category, subcategory, description);
   }
 
   /**
@@ -136,7 +149,7 @@ public class AttributeExtendService extends TenancyBasedService {
     CheckEmpty.checkEmpty(profileId, "profile definition id");
     return attributeExtendMapper.getAttributesByProfileId(profileId);
   }
-  
+
   /**
    * 添加一个新的扩展属性. 代码不做Code的唯一性校验.
    */

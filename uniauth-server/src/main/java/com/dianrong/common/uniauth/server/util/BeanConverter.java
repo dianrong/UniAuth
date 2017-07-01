@@ -21,6 +21,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
 import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
+import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
@@ -50,11 +51,14 @@ import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
+import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.springframework.util.StringUtils;
@@ -457,10 +461,10 @@ public class BeanConverter {
   }
 
   /**
-   * 从ProfileDefinition转换为UserExtendDto.
+   * 转换为ProfileDefinitionDto.
    */
   public static ProfileDefinitionDto convert(ProfileDefinition profileDefinition,
-      Map<String, String> attributes, Set<Long> descendantProfileIds,
+      Map<String, AttributeExtendDto> attributes, Set<Long> descendantProfileIds,
       Set<SimpleProfileDefinitionDto> subProfiles) {
     ProfileDefinitionDto profileDefinitionDto = new ProfileDefinitionDto();
     if (profileDefinition != null) {
@@ -519,5 +523,74 @@ public class BeanConverter {
       results.add(convert(profileId, ae));
     }
     return results;
+  }
+  
+  /**
+   * 从AttributeExtendParam转换为AttributeValModel.
+   */
+  public static AttributeValModel convert(AttributeExtendParam attributeExtendParam){
+    if (attributeExtendParam == null) {
+      return null;
+    }
+    AttributeValModel model = new AttributeValModel();
+    model.setCategory(attributeExtendParam.getCategory());
+    model.setCode(attributeExtendParam.getCode());
+    model.setDescription(attributeExtendParam.getDescription());
+    model.setValue(attributeExtendParam.getValue());
+    model.setSubcategory(attributeExtendParam.getSubcategory());
+    model.setId(attributeExtendParam.getId());
+    return model;
+  }
+  
+  public static Map<String, AttributeValModel> convertToModel(Map<String, AttributeExtendParam> attributes){
+    if (attributes == null) {
+      return null;
+    }
+    Map<String, AttributeValModel> resultMap = Maps.newHashMap();
+    for(Entry<String, AttributeExtendParam> entry: attributes.entrySet()) {
+      resultMap.put(entry.getKey(), convert(entry.getValue()));
+    }
+    return resultMap;
+  }
+  
+  public static AttributeValModel convert(AttributeExtend attributeExtend){
+    if (attributeExtend == null) {
+      return null;
+    }
+    AttributeValModel model = new AttributeValModel();
+    model.setCategory(attributeExtend.getCategory());
+    model.setCode(attributeExtend.getCode());
+    model.setDescription(attributeExtend.getDescription());
+    model.setSubcategory(attributeExtend.getSubcategory());
+    model.setId(attributeExtend.getId());
+    return model;
+  }
+  
+  /**
+   * 从AttributeValModel转换为AttributeExtendDto.
+   */
+  public static AttributeExtendDto convert(AttributeValModel attributeValModel){
+    if (attributeValModel == null) {
+      return null;
+    }
+    AttributeExtendDto attributeExtendDto = new AttributeExtendDto();
+    attributeExtendDto.setCategory(attributeValModel.getCategory());
+    attributeExtendDto.setCode(attributeValModel.getCode());
+    attributeExtendDto.setDescription(attributeValModel.getDescription());
+    attributeExtendDto.setValue(attributeValModel.getValue());
+    attributeExtendDto.setSubcategory(attributeValModel.getSubcategory());
+    attributeExtendDto.setId(attributeValModel.getId());
+    return attributeExtendDto;
+  }
+  
+  public static Map<String, AttributeExtendDto> convertToDto(Map<String, AttributeValModel> attributes){
+    if (attributes == null) {
+      return null;
+    }
+    Map<String, AttributeExtendDto> resultMap = Maps.newHashMap();
+    for(Entry<String, AttributeValModel> entry: attributes.entrySet()) {
+      resultMap.put(entry.getKey(), convert(entry.getValue()));
+    }
+    return resultMap;
   }
 }

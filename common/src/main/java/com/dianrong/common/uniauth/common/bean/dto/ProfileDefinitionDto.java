@@ -37,7 +37,7 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
   private String description;
 
   @ApiModelProperty("Profile对应的扩展属性列表(扩展属性Code和描述)")
-  private Map<String, String> attributes;
+  private Map<String, AttributeExtendDto> attributes;
 
   @ApiModelProperty("所有子ProfileId的集合,用于在添加和更新的时候指定profile的下一层的profile id集合")
   private Set<Long> descendantProfileIds;
@@ -81,11 +81,11 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
     return this;
   }
 
-  public Map<String, String> getAttributes() {
+  public Map<String, AttributeExtendDto> getAttributes() {
     return attributes;
   }
 
-  public ProfileDefinitionDto setAttributes(Map<String, String> attributes) {
+  public ProfileDefinitionDto setAttributes(Map<String, AttributeExtendDto> attributes) {
     this.attributes = attributes;
     return this;
   }

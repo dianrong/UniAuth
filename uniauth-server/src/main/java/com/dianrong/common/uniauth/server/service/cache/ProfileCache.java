@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.AttributeExtendService;
 import com.dianrong.common.uniauth.server.service.ProfileDefinitionAttributeService;
 import com.dianrong.common.uniauth.server.service.ProfileDefinitionPathService;
@@ -82,13 +83,13 @@ public class ProfileCache {
     ProfileDefinition rootProfileDefinition = pdList.get(0);
     // get profile attributes
     List<AttributeExtend> attributeExtends = attributeExtendService.getAttributesByProfileId(id);
-    Map<String, String> attributes = new LinkedHashMap<>();
+    Map<String, AttributeValModel> attributes = new LinkedHashMap<>();
     if (!ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
       for (AttributeExtend ae : attributeExtends) {
-        attributes.put(ae.getCode(), ae.getDescription());
+        attributes.put(ae.getCode(), BeanConverter.convert(ae));
       }
     }
-    return BeanConverter.convert(rootProfileDefinition, attributes, null, null);
+    return convert(rootProfileDefinition, attributes, null, null);
   }
 
   /**
@@ -107,15 +108,14 @@ public class ProfileCache {
     ProfileDefinition rootProfileDefinition = pdList.get(0);
     // get profile attributes
     List<AttributeExtend> attributeExtends = attributeExtendService.getAttributesByProfileId(id);
-    Map<String, String> attributes = new LinkedHashMap<>();
+    Map<String, AttributeValModel> attributes = new LinkedHashMap<>();
     if (!ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
       for (AttributeExtend ae : attributeExtends) {
-        attributes.put(ae.getCode(), ae.getDescription());
+        attributes.put(ae.getCode(), BeanConverter.convert(ae));
       }
     }
     SimpleProfileDefinitionDto dpdDto = profileDefinitionPathService.getProfilePathTree(id);
-    return BeanConverter.convert(rootProfileDefinition, attributes, null,
-        dpdDto == null ? null : dpdDto.getSubProfiles());
+    return convert(rootProfileDefinition, attributes, null, dpdDto);
   }
 
   /**
@@ -125,7 +125,8 @@ public class ProfileCache {
   @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
       @CacheEvict(key = "#tenancyId + :simple':' + #id")})
   public void updateProfileDefinition(Long id, Long tenancyId, String name, String code,
-      String description, Map<String, String> attributes, Set<Long> descendantProfileIds) {
+      String description, Map<String, AttributeValModel> attributes,
+      Set<Long> descendantProfileIds) {
     // Id 必须要存在.
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
     if (!StringUtils.isBlank(code)) {
@@ -146,9 +147,9 @@ public class ProfileCache {
     List<AttributeExtend> attributeExtends = Lists.newArrayList();
     // 关联Profile_definition和扩展属性
     if (attributes != null && !attributes.isEmpty()) {
-      for (Map.Entry<String, String> entry : attributes.entrySet()) {
+      for (Map.Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         AttributeExtend attributeExtend = attributeExtendService
-            .addAttributeExtendIfNonExistent(entry.getKey(), null, null, entry.getValue());
+            .addAttributeExtendIfNonExistent(entry.getKey(), entry.getValue());
         attributeExtends.add(attributeExtend);
       }
     }
@@ -188,12 +189,22 @@ public class ProfileCache {
   @Transactional
   @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
       @CacheEvict(key = "#tenancyId + :simple':' + #id")})
-  public void extendProfileDefinition(Long id, Long tenancyId, Map<String, String> attributes,
+  public void extendProfileDefinition(Long id, Long tenancyId, Map<String, AttributeValModel> attributes,
       Set<Long> descendantProfileIds) {
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
     // 处理Profile的关联关系.
     profileDefinitionPathService.extendSubProfilePath(id, descendantProfileIds);
     // 处理扩展属性
     profileDefinitionAttributeService.extendProfileAttributes(id, attributes);
+  }
+
+  /**
+   * 便利的构造方法,构造一个ProfileDefinitionDto.
+   */
+  private ProfileDefinitionDto convert(ProfileDefinition rootProfileDefinition,
+      Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds,
+      SimpleProfileDefinitionDto dpdDto) {
+    return BeanConverter.convert(rootProfileDefinition, BeanConverter.convertToDto(attributes),
+        null, dpdDto == null ? null : dpdDto.getSubProfiles());
   }
 }

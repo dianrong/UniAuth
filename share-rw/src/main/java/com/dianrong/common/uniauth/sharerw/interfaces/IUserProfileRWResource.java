@@ -12,9 +12,11 @@ import javax.ws.rs.PathParam;
 
 public interface IUserProfileRWResource extends IUserProfileResource {
 
-  // scenario: add or update user profile
+  /**
+   * 更新某个用户的扩展属性值,并且根据传入的profileId返回对应的Profile.
+   */
   @PUT
-  @Path("{userId}?profile_id={profileId}")
-  Response<Map<String, Object>> addOrUpdateUserProfile(@PathParam("userId") Long userId,
+  @Path("{uniauthId}?profile_id={profileId}")
+  Response<Map<String, Object>> addOrUpdateUserProfile(@PathParam("uniauthId") Long uniauthId,
       @PathParam("profileId") Long profileId, ProfileParam param);
 }

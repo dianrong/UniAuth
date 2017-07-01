@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.request.ProfileDefinitionParam;
 import com.dianrong.common.uniauth.server.service.ProfileService;
+import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.sharerw.interfaces.IProfileRWResource;
 
 import io.swagger.annotations.Api;
@@ -26,7 +27,7 @@ public class ProfileResource implements IProfileRWResource {
   @Override
   public Response<ProfileDefinitionDto> addNewProfileDefinition(ProfileDefinitionParam param) {
     return Response.success(profileService.addNewProfileDefinition(param.getName(), param.getCode(),
-        param.getDescription(), param.getAttributes(), param.getDescendantProfileIds()));
+        param.getDescription(), BeanConverter.convertToModel(param.getAttributes()), param.getDescendantProfileIds()));
   }
 
   @Override
@@ -34,13 +35,13 @@ public class ProfileResource implements IProfileRWResource {
       ProfileDefinitionParam param) {
     return Response
         .success(profileService.updateProfileDefinition(id, param.getName(), param.getCode(),
-            param.getDescription(), param.getAttributes(), param.getDescendantProfileIds()));
+            param.getDescription(), BeanConverter.convertToModel(param.getAttributes()), param.getDescendantProfileIds()));
   }
 
   @Override
   public Response<ProfileDefinitionDto> extendProfileDefinition(Long id,
       ProfileDefinitionParam param) {
-    return Response.success(profileService.extendProfileDefinition(id, param.getAttributes(),
+    return Response.success(profileService.extendProfileDefinition(id, BeanConverter.convertToModel(param.getAttributes()),
         param.getDescendantProfileIds()));
   }
 }

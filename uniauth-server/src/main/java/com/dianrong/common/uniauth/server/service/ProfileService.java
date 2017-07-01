@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.cache.ProfileCache;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
@@ -51,7 +52,7 @@ public class ProfileService extends TenancyBasedService {
 
   @Transactional
   public ProfileDefinitionDto addNewProfileDefinition(String name, String code, String description,
-      Map<String, String> attributes, Set<Long> descendantProfileIds) {
+      Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {
     CheckEmpty.checkEmpty(code, "profile definition code");
     // code不能重复
     dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
@@ -73,9 +74,9 @@ public class ProfileService extends TenancyBasedService {
     List<AttributeExtend> attributeExtends = Lists.newArrayList();
     // 添加扩展属性
     if (attributes != null && !attributes.isEmpty()) {
-      for (Map.Entry<String, String> entry : attributes.entrySet()) {
+      for (Map.Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         AttributeExtend attributeExtend = attributeExtendService
-            .addAttributeExtendIfNonExistent(entry.getKey(), null, null, entry.getValue());
+            .addAttributeExtendIfNonExistent(entry.getKey(), entry.getValue());
         attributeExtends.add(attributeExtend);
       }
     }
@@ -91,7 +92,7 @@ public class ProfileService extends TenancyBasedService {
     }
     SimpleProfileDefinitionDto dpdDto =
         profileDefinitionPathService.getProfilePathTree(profileDefinition.getId());
-    return BeanConverter.convert(profileDefinition, attributes, descendantProfileIds,
+    return BeanConverter.convert(profileDefinition, BeanConverter.convertToDto(attributes), descendantProfileIds,
         dpdDto == null ? null : dpdDto.getSubProfiles());
   }
 
@@ -110,10 +111,10 @@ public class ProfileService extends TenancyBasedService {
    */
   @Transactional
   public ProfileDefinitionDto updateProfileDefinition(Long id, String name, String code,
-      String description, Map<String, String> attributes, Set<Long> descendantProfileIds) {
+      String description, Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {
     CheckEmpty.checkEmpty(id, "profile definition id");
-    profileCache.updateProfileDefinition(id, tenancyService.getTenancyIdWithCheck(), name, code, description, attributes,
-        descendantProfileIds);
+    profileCache.updateProfileDefinition(id, tenancyService.getTenancyIdWithCheck(), name, code,
+        description, attributes, descendantProfileIds);
     // 返回最新结果.
     return getProfileDefinition(id);
   }
@@ -121,10 +122,11 @@ public class ProfileService extends TenancyBasedService {
   /**
    * 扩展Profile的扩展属性和子Profile.
    */
-  public ProfileDefinitionDto extendProfileDefinition(Long id, Map<String, String> attributes,
+  public ProfileDefinitionDto extendProfileDefinition(Long id, Map<String, AttributeValModel> attributes,
       Set<Long> descendantProfileIds) {
     CheckEmpty.checkEmpty(id, "profile definition id");
-    profileCache.extendProfileDefinition(id, tenancyService.getTenancyIdWithCheck(), attributes, descendantProfileIds);
+    profileCache.extendProfileDefinition(id, tenancyService.getTenancyIdWithCheck(), attributes,
+        descendantProfileIds);
     // 返回最新结果.
     return getProfileDefinition(id);
   }
