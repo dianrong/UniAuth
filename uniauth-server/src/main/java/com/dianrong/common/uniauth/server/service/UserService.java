@@ -75,7 +75,10 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseUserNotifyInfo;
 import com.dianrong.common.uniauth.server.service.common.CommonService;
 import com.dianrong.common.uniauth.server.service.common.NotificationService;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
+import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -157,18 +160,18 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   private UserPwdLogMapper userPwdLogMapper;
 
   @Autowired
-  private GroupService groupService;
+  private GroupInnerService groupInnerService;
+  
+  @Autowired
+  private UserProfileInnerService userProfileInnerService;
 
   @Resource(name = "userDataFilter")
   private DataFilter dataFilter;
 
-  /**
-   * 发送消息的服务.
-   */
   @Autowired
   private NotificationService notificationService;
 
-
+  // 异步处理线程池.
   private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
   /**
@@ -196,7 +199,15 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     userMapper.insert(user);
     UserDto userDto = BeanConverter.convert(user);
 
-    // 用户添加成功后发送mq
+    // 联动更新扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
+    attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
+    attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
+    userProfileInnerService.addOrUpdateUserAttributes(userDto.getId(), attributes);
+    
+    
+    // 用户添加成功后发送MQ
     uniauthSender.sendUserAdd(userDto);
     userDto.setPassword(randomPassword);
     asynAddUserPwdLog(user);
@@ -243,8 +254,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.entity.status.isone", userIdentity, User.class.getSimpleName()));
     }
-    // 辅助标识位
-    boolean isUpdatePassword = false;
     switch (userActionEnum) {
       case LOCK:
         user.setFailCount(AppConstants.MAX_AUTH_FAIL_COUNT);
@@ -253,7 +262,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         user.setFailCount(AppConstants.ZERO_BYTE);
         break;
       case RESET_PASSWORD:
-        isUpdatePassword = true;
         checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
         byte[] salt = AuthUtils.createSalt();
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
@@ -300,8 +308,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("common.parameter.wrong", "origin password"));
         }
-
-        isUpdatePassword = true;
         // 验证新密码
         checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
         byte[] salttemp = AuthUtils.createSalt();
@@ -314,7 +320,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         break;
     }
     user.setLastUpdate(new Date());
-    if (isUpdatePassword) {
+    if (UserActionEnum.isPasswordChange(userActionEnum)) {
       // 特殊设置的密码, 需要在登陆的时候重新设置密码
       if (ignorePwdStrategyCheck != null && ignorePwdStrategyCheck) {
         user.setPasswordDate(null);
@@ -322,14 +328,13 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
 
     userMapper.updateByPrimaryKey(user);
-
-    // 记录日志设置记录
-    if (isUpdatePassword) {
-      // 如果特设设置的密码, 则不记录密码设置日志
-      if (ignorePwdStrategyCheck == null || !ignorePwdStrategyCheck) {
-        asynAddUserPwdLog(user);
-      }
-    }
+    
+    // 联动更新扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
+    attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
+    attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
+    userProfileInnerService.addOrUpdateUserAttributes(user.getId(), attributes);
 
     // 发送通知
     if (UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
@@ -346,7 +351,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     // 通知用户密码修改了
     if (UserActionEnum.isPasswordChange(userActionEnum)) {
+      // 通知用户修改密码 
       notificationService.updateUserPwdNotification(user);
+      // 如果特设设置的密码, 则不记录密码设置日志
+      if (ignorePwdStrategyCheck == null || !ignorePwdStrategyCheck) {
+        asynAddUserPwdLog(user);
+      }
     }
 
     return BeanConverter.convert(user).setPassword(password);
@@ -762,7 +772,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     VPNLoginResult result = BeanConverter.convert(user);
 
     // 计算用户的组结构
-    List<Grp> grps = groupService.listUserLastGrpPath(user.getId());
+    List<Grp> grps = groupInnerService.listUserLastGrpPath(user.getId());
     List<String> grpCodes = Lists.newArrayList();
 
     for (Grp grp : grps) {
@@ -1499,7 +1509,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * . 检验密码是否符合要求
+   * 检验密码是否符合要求.
    *
    * @param userId userId
    * @param password the new password
@@ -1518,7 +1528,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
 
     // 密码设置策略检查
-
     // 符合密码复杂度
     if (!AuthUtils.validatePasswordRule(password)) {
       throw new AppException(InfoName.VALIDATE_FAIL,
@@ -1545,7 +1554,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * . 异步记录用户的密码设置记录
+   * 异步记录用户的密码设置记录.
    *
    * @param user info
    */

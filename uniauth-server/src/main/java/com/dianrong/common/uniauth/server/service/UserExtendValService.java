@@ -59,7 +59,7 @@ public class UserExtendValService extends TenancyBasedService {
   
   @Resource(name = "userExtendValDataFilter")
   private DataFilter dataFilter;
-
+  
   /**
    * 添加一个用户扩展属性值.
    */
@@ -78,9 +78,7 @@ public class UserExtendValService extends TenancyBasedService {
     userExtendVal.setUserId(userId);
     userExtendVal.setValue(value);
     userExtendVal.setTenancyId(tenancyService.getTenancyIdWithCheck());
-
     userExtendValMapper.insertSelective(userExtendVal);
-
     return BeanConverter.convert(userExtendVal, UserExtendValDto.class);
   }
 

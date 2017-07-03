@@ -59,10 +59,13 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotify
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
+import com.dianrong.common.uniauth.server.service.inner.GroupProfileInnerService;
+import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Maps;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -119,6 +122,9 @@ public class GroupService extends TenancyBasedService {
   // Another service
   @Autowired
   private GroupInnerService groupInnerService;
+  
+  @Autowired
+  private GroupProfileInnerService groupProfileInnerService;
   
   // Data filter
   @Resource(name = "groupDataFilter")
@@ -408,6 +414,13 @@ public class GroupService extends TenancyBasedService {
     grp.setLastUpdate(now);
     grp.setTenancyId(tenancyService.getTenancyIdWithCheck());
     grpMapper.insert(grp);
+    // 联动添加组的扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
+    attributes.put(AtrributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
+    attributes.put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(), groupParam.getDescription());
+    groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
+    
     GrpPath grpPath = new GrpPath();
     grpPath.setDeepth(AppConstants.ZERO_BYTE);
     grpPath.setDescendant(grp.getId());
@@ -461,6 +474,14 @@ public class GroupService extends TenancyBasedService {
     grp.setCode(groupCode);
     grp.setLastUpdate(new Date());
     grpMapper.updateByPrimaryKeySelective(grp);
+    
+    // 联动添加组的扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.GROUP_NAME.getAttributeCode(), groupName);
+    attributes.put(AtrributeDefine.GROUP_CODE.getAttributeCode(), groupCode);
+    attributes.put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(), description);
+    groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
+    
     Integer count = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());
     if (count != null && count > 1) {
       throw new AppException(InfoName.VALIDATE_FAIL,

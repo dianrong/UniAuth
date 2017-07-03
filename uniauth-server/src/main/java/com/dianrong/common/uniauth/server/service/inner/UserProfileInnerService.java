@@ -29,6 +29,26 @@ public class UserProfileInnerService extends TenancyBasedService {
   private AttributeExtendInnerService attributeExtendInnerService;
 
   /**
+   * 更新用户的扩展属性值.
+   */
+  @Transactional
+  public void addOrUpdateUserAttributes(Long userId, Map<String, String> attributes) {
+    CheckEmpty.checkEmpty(userId, "userId");
+    if (attributes != null && !attributes.isEmpty()) {
+      for (Entry<String, String> entry : attributes.entrySet()) {
+        String attributeCode = entry.getKey();
+        String value = entry.getValue();
+        AttributeExtend attributeExtend = attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
+        if (attributeExtend != null) {
+          userExtendValInnerService.addOrUpdate(userId, attributeExtend.getId(), value);
+        } else {
+          log.error("System define user attribute {} is not exist!", attributeCode);
+        }
+      }
+    }
+  }
+  
+  /**
    * 更新用户的扩展属性.
    */
   @Transactional
@@ -42,7 +62,7 @@ public class UserProfileInnerService extends TenancyBasedService {
         AttributeExtend attributeExtend = attributeExtendInnerService
             .addAttributeExtendIfNonExistent(attributeCode, attributeVal);
         String value = attributeVal != null ? attributeVal.getValue() : null;
-        // 判断如果是System定义的Code,则需要通过其他方式去更新
+        // 判断如果是System定义的Code,则需要继续更新系统表中相应的数据
         AtrributeDefine sysUserAtrributeDefine =
             AtrributeDefine.getSystemDefineUserAttribute(attributeCode);
         if (sysUserAtrributeDefine != null) {
@@ -52,6 +72,8 @@ public class UserProfileInnerService extends TenancyBasedService {
                 sysUserAtrributeDefine.getDefineTable().getIdentityFieldName(),
                 sysUserAtrributeDefine.getDefineTable().getTableName(),
                 sysUserAtrributeDefine.getFieldName(), value);
+            // 更新扩展属性表中的相应字段
+            userExtendValInnerService.addOrUpdate(uniauthId, attributeExtend.getId(), value);
           } else {
             log.debug("System define attribute {} is not writable, so update just ignore!");
           }

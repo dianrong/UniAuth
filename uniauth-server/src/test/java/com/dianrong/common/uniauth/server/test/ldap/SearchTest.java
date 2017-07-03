@@ -3,26 +3,23 @@ package com.dianrong.common.uniauth.server.test.ldap;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
+import com.dianrong.common.uniauth.server.test.BaseTest;
+
 import java.util.List;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.OperationNotSupportedException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:applicationContext-test.xml")
-public class SearchTest extends AbstractJUnit4SpringContextTests {
+public class SearchTest extends BaseTest {
 
   @Autowired
   private LdapTemplate ldapTemplate;

@@ -29,6 +29,26 @@ public class GroupProfileInnerService extends TenancyBasedService {
   private AttributeExtendInnerService attributeExtendInnerService;
 
   /**
+   * 更新组的扩展属性值.
+   */
+  @Transactional
+  public void addOrUpdateUserAttributes(Integer grpId, Map<String, String> attributes) {
+    CheckEmpty.checkEmpty(grpId, "groupId");
+    if (attributes != null && !attributes.isEmpty()) {
+      for (Entry<String, String> entry : attributes.entrySet()) {
+        String attributeCode = entry.getKey();
+        String value = entry.getValue();
+        AttributeExtend attributeExtend = attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
+        if (attributeExtend != null) {
+          groupExtendValInnerService.addOrUpdate(grpId, attributeExtend.getId(), value);
+        } else {
+          log.error("System define group attribute {} is not exist!", attributeCode);
+        }
+      }
+    }
+  }
+  
+  /**
    * 更新组的扩展属性.
    */
   @Transactional

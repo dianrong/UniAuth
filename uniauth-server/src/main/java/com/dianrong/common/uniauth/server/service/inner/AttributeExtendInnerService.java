@@ -65,6 +65,19 @@ public class AttributeExtendInnerService extends TenancyBasedService {
   public AttributeExtend addAttributeExtendIfNonExistent(String code, String category,
       String subcategory, String description) {
     CheckEmpty.checkEmpty(code, "attributeExtendCode");
+    AttributeExtend attributeExtend = queryAttributeExtendByCode(code);
+    if (attributeExtend != null) {
+      return attributeExtend;
+    }
+    log.debug("add new attibute code: {}", code);
+    return innerAddAttributeExtend(code, category, subcategory, description);
+  }
+  
+  /**
+   * 查询AttributeExtend.
+   */
+  public AttributeExtend queryAttributeExtendByCode(String code) {
+    CheckEmpty.checkEmpty(code, "attributeExtendCode");
     AttributeExtendExample example = new AttributeExtendExample();
     AttributeExtendExample.Criteria criteria = example.createCriteria();
     criteria.andCodeEqualTo(code).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
@@ -72,8 +85,7 @@ public class AttributeExtendInnerService extends TenancyBasedService {
     if (attributeExtends != null && !attributeExtends.isEmpty()) {
       return attributeExtends.get(0);
     }
-    log.debug("add new attibute code: {}", code);
-    return innerAddAttributeExtend(code, category, subcategory, description);
+    return null;
   }
 
   /**

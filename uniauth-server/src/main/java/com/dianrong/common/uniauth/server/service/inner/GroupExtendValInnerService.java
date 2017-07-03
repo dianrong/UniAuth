@@ -80,22 +80,45 @@ public class GroupExtendValInnerService extends TenancyBasedService {
     criteria.andGrpIdEqualTo(groupId).andExtendIdEqualTo(extendId)
         .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     List<GrpExtendVal> existGrpExtendVal = grpExtendValMapper.selectByExample(grpExtendValExample);
-    GrpExtendVal record = new GrpExtendVal();
+    GrpExtendVal record;
     if (ObjectUtil.collectionIsEmptyOrNull(existGrpExtendVal)) {
       // add
-      record.setExtendId(extendId);
-      record.setGrpId(groupId);
-      record.setValue(value);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-      grpExtendValMapper.insert(record);
+      record = addNew(groupId, extendId, value);
     } else {
       // update
-      record.setValue(value);
-      grpExtendValMapper.updateByExampleSelective(record, grpExtendValExample);
+      record = update(groupId, extendId, value);
       record.setExtendId(extendId);
       record.setGrpId(groupId);
       record.setTenancyId(tenancyService.getTenancyIdWithCheck());
     }
     return BeanConverter.convert(record, GrpExtendValDto.class);
+  }
+  
+  /**
+   * 新增.
+   */
+  @Transactional
+  private GrpExtendVal addNew(Integer grpId, Long extendId, String value) {
+    GrpExtendVal record = new GrpExtendVal();
+    record.setExtendId(extendId);
+    record.setGrpId(grpId);
+    record.setValue(value);
+    record.setTenancyId(tenancyService.getTenancyIdWithCheck());
+    grpExtendValMapper.insert(record);
+    return record;
+  }
+
+  /**
+   * 更新.
+   */
+  @Transactional
+  private GrpExtendVal update(Integer grpId, Long extendId, String value) {
+    GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
+    GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
+    criteria.andGrpIdEqualTo(grpId).andExtendIdEqualTo(extendId)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    GrpExtendVal record = new GrpExtendVal();
+    grpExtendValMapper.updateByExampleSelective(record, grpExtendValExample);
+    return record;
   }
 }

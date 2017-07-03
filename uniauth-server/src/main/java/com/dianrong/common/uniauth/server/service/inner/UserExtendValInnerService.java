@@ -10,6 +10,9 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord;
+import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord.RecordOperate;
+import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord.RecordType;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Maps;
@@ -55,18 +58,13 @@ public class UserExtendValInnerService extends TenancyBasedService {
         .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     List<UserExtendVal> existUserExtendVal =
         userExtendValMapper.selectByExample(userExtendValExample);
-    UserExtendVal record = new UserExtendVal();
+    UserExtendVal record;
     if (ObjectUtil.collectionIsEmptyOrNull(existUserExtendVal)) {
       // add
-      record.setExtendId(extendId);
-      record.setUserId(userId);
-      record.setValue(value);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-      userExtendValMapper.insert(record);
+      record = addNew(userId, extendId, value);
     } else {
       // update
-      record.setValue(value);
-      userExtendValMapper.updateByExampleSelective(record, userExtendValExample);
+      record = update(userId, extendId, value);
       record.setExtendId(extendId);
       record.setUserId(userId);
       record.setTenancyId(tenancyService.getTenancyIdWithCheck());
@@ -75,7 +73,38 @@ public class UserExtendValInnerService extends TenancyBasedService {
   }
 
   /**
+   * 新增.
+   */
+  @Transactional
+  @ExtendAttributeRecord(type = RecordType.USER, operate = RecordOperate.ADD)
+  private UserExtendVal addNew(Long userId, Long extendId, String value) {
+    UserExtendVal record = new UserExtendVal();
+    record.setExtendId(extendId);
+    record.setUserId(userId);
+    record.setValue(value);
+    record.setTenancyId(tenancyService.getTenancyIdWithCheck());
+    userExtendValMapper.insert(record);
+    return record;
+  }
+
+  /**
+   * 更新.
+   */
+  @Transactional
+  @ExtendAttributeRecord(type = RecordType.USER, operate = RecordOperate.UPDATE)
+  private UserExtendVal update(Long userId, Long extendId, String value) {
+    UserExtendValExample userExtendValExample = new UserExtendValExample();
+    UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
+    criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    UserExtendVal record = new UserExtendVal();
+    userExtendValMapper.updateByExampleSelective(record, userExtendValExample);
+    return record;
+  }
+
+  /**
    * 更新系统自定义的用户属性值.
+   * 
    * @param userId 用户id
    * @param idFieldName 在表中用户id所在的字段名
    * @param tableName 需要更新的表名.

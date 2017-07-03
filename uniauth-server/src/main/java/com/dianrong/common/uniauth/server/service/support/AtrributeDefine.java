@@ -44,7 +44,7 @@ public enum AtrributeDefine {
   // Table group
   GROUP_NAME(AtrributeTable.GRP, "name"), 
   GROUP_CODE(AtrributeTable.GRP, "code", false), 
-  GROUP_DESCRiPTION(AtrributeTable.GRP, "description"),;
+  GROUP_DESCRiPTION(AtrributeTable.GRP, "description");
 
   public static final String UN_READER_VALUE = "Property is no permission to read";
 
