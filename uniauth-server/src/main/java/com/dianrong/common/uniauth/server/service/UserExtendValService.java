@@ -56,7 +56,7 @@ public class UserExtendValService extends TenancyBasedService {
 
   @Autowired
   private UserMapper userMapper;
-
+  
   @Resource(name = "userExtendValDataFilter")
   private DataFilter dataFilter;
 
@@ -82,42 +82,6 @@ public class UserExtendValService extends TenancyBasedService {
     userExtendValMapper.insertSelective(userExtendVal);
 
     return BeanConverter.convert(userExtendVal, UserExtendValDto.class);
-  }
-  
-  /**
-   * 添加或者更新用户属性.
-   */
-  @Transactional
-  public UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
-    CheckEmpty.checkEmpty(userId, "userId");
-    CheckEmpty.checkEmpty(extendId, "extendId");
-
-    // 数据过滤
-    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-
-    UserExtendValExample userExtendValExample = new UserExtendValExample();
-    UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
-    criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-    List<UserExtendVal> existUserExtendVal = userExtendValMapper.selectByExample(userExtendValExample);
-    UserExtendVal record = new UserExtendVal();
-    if (ObjectUtil.collectionIsEmptyOrNull(existUserExtendVal)) {
-      // add
-      record.setExtendId(extendId);
-      record.setUserId(userId);
-      record.setValue(value);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-      userExtendValMapper.insert(record);
-    } else {
-      // update 
-      record.setValue(value);
-      userExtendValMapper.updateByExampleSelective(record, userExtendValExample);
-      record.setExtendId(extendId);
-      record.setUserId(userId);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    }
-    return BeanConverter.convert(record, UserExtendValDto.class);
   }
 
   /**

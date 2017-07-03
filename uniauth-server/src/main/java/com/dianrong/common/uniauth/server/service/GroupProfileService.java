@@ -8,7 +8,6 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.cache.ProfileCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.inner.GroupExtendValInnerService;
 import com.dianrong.common.uniauth.server.service.inner.GroupProfileInnerService;
 import com.dianrong.common.uniauth.server.service.support.ProfileSupport;
 import com.dianrong.common.uniauth.server.service.support.QueryProfileDefinition;
@@ -33,7 +32,7 @@ public class GroupProfileService extends TenancyBasedService {
   private ProfileService profileService;
 
   @Autowired
-  private GroupExtendValInnerService groupExtendValInnerService;
+  private GroupExtendValService groupExtendValService;
 
   @Autowired
   private ProfileCache profileCache;
@@ -62,7 +61,7 @@ public class GroupProfileService extends TenancyBasedService {
     }
     // 根据extend_attribute_id 获取所有的属性.
     Map<String, ExtendVal> extendValMap =
-        groupExtendValInnerService.queryAttributeVal(groupId, new ArrayList<>(profileIds));
+        groupExtendValService.queryAttributeVal(groupId, new ArrayList<>(profileIds));
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }

@@ -12,7 +12,6 @@ import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserThirdAccountMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.inner.UserInnerService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -41,7 +40,7 @@ public class UserThirdAccountService extends TenancyBasedService {
   private UserMapper userMapper;
 
   @Autowired
-  private UserInnerService userInnerService;
+  private UserService userService;
 
   /**
    * 根据第三方账号获取对应的Uniauth账号.
@@ -118,7 +117,7 @@ public class UserThirdAccountService extends TenancyBasedService {
     Long userId = null;
     UserDto userDto = null;
     if (user == null) {
-      userDto = userInnerService.addNewUser(name, insertPhone, email);
+      userDto = userService.addNewUser(name, insertPhone, email);
       log.info("{} login, create a new Uniauth user:ThirdAccout: {}, Name:{}, Email:{}, Phone:{}",
           type.toString(), thirdAccount, name, email, phone);
       userId = userDto.getId();

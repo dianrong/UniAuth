@@ -10,8 +10,6 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.cache.ProfileCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
-import com.dianrong.common.uniauth.server.service.inner.UserInnerService;
 import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.support.ProfileSupport;
 import com.dianrong.common.uniauth.server.service.support.QueryProfileDefinition;
@@ -39,13 +37,13 @@ public class UserProfileService extends TenancyBasedService {
   private ProfileService profileService;
 
   @Autowired
-  private UserExtendValInnerService userExtendValInnerService;
+  private UserExtendValService userExtendValService;
 
   @Autowired
   private ProfileCache profileCache;
 
   @Autowired
-  private UserInnerService userInnerService;
+  private UserService userService;
   
   @Autowired
   private UserProfileInnerService userProfileInnerService;
@@ -61,7 +59,7 @@ public class UserProfileService extends TenancyBasedService {
   public Map<String, Object> getUserProfileByIdentity(String identity, Long profileId,
       UserIdentityType identityType) {
     CheckEmpty.checkEmpty(profileId, "profileId");
-    User user = userInnerService.getUserByIdentity(identity, identityType);
+    User user = userService.getUserByIdentity(identity, identityType);
     if (user == null) {
       throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg(
           "common.profile.parameter.user.identity.not.found", identityType.getType(), identity));
@@ -93,7 +91,7 @@ public class UserProfileService extends TenancyBasedService {
 
     // 根据extend_attribute_id 获取所有的属性.
     Map<String, ExtendVal> extendValMap =
-        userExtendValInnerService.queryAttributeVal(uniauthId, new ArrayList<>(profileIds));
+        userExtendValService.queryAttributeVal(uniauthId, new ArrayList<>(profileIds));
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }

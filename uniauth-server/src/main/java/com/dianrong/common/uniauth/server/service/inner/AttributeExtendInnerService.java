@@ -45,7 +45,7 @@ public class AttributeExtendInnerService extends TenancyBasedService {
         BeanConverter.convert(attributeExtend, AttributeExtendDto.class);
     return attributeExtendDto;
   }
-
+  
   /**
    * 如果不存在则添加一个.
    */
@@ -75,7 +75,7 @@ public class AttributeExtendInnerService extends TenancyBasedService {
     log.debug("add new attibute code: {}", code);
     return innerAddAttributeExtend(code, category, subcategory, description);
   }
-  
+
   /**
    * 根据ProfileId获取关联的扩展属性.
    */
@@ -83,7 +83,7 @@ public class AttributeExtendInnerService extends TenancyBasedService {
     CheckEmpty.checkEmpty(profileId, "profile definition id");
     return attributeExtendMapper.getAttributesByProfileId(profileId);
   }
-
+  
   /**
    * 添加一个新的扩展属性. 代码不做Code的唯一性校验.
    */

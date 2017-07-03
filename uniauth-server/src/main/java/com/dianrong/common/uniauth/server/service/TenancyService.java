@@ -165,7 +165,7 @@ public class TenancyService {
    * @return 租户信息
    */
   public TenancyDto getEnableTenancyByCode(String tenancyCode) {
-    return tenancyInnerService.getEnableTenancyByCode(tenancyCode);
+    return tenancyCache.getEnableTenancyByCode(tenancyCode);
   }
 
   /**

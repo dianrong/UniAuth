@@ -50,16 +50,6 @@ public class TenancyInnerService {
   }
 
   /**
-   * 根据租户编码获取一个启用的租户.
-   *
-   * @param tenancyCode 租户编码
-   * @return 租户信息
-   */
-  public TenancyDto getEnableTenancyByCode(String tenancyCode) {
-    return tenancyCache.getEnableTenancyByCode(tenancyCode);
-  }
-
-  /**
    * 获取一个可用的租户Identity 优先级为：tenancyId > tenancyCode.
    *
    * @return tenancyId for current request
