@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service.support;
+package com.dianrong.common.uniauth.server.service.common;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.data.entity.User;
@@ -19,9 +19,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * 用于消息发送的service, 比如:修改密码通知,新建用户通知.
- * 
- * @author wanglin
  */
+
 @Slf4j
 @Service
 public class NotificationService {

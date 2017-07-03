@@ -3,12 +3,7 @@ package com.dianrong.common.uniauth.server.mq;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 
 /**
- * <pre>
- * uniauth中的消息发送接口.
- * </pre>
- *
- * @author cwl
- * @created Apr 11, 2016
+ * Uniauth中的消息发送接口.
  */
 public interface UniauthSender {
 

@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service;
+package com.dianrong.common.uniauth.server.service.inner;
 
 import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
@@ -28,10 +28,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 组扩展属性值处理Service.
+ * 组扩展属性值Service的内部实现. 
  */
 @Service
-public class GroupExtendValService extends TenancyBasedService {
+public class GroupExtendValInnerService extends TenancyBasedService {
 
   @Autowired
   private GrpExtendValMapper grpExtendValMapper;
@@ -39,6 +39,7 @@ public class GroupExtendValService extends TenancyBasedService {
   @Autowired
   private AttributeExtendMapper attributeExtendMapper;
 
+  // Data filter
   @Resource(name = "grpExtendValDataFilter")
   private DataFilter dataFilter;
 
@@ -113,6 +114,4 @@ public class GroupExtendValService extends TenancyBasedService {
     }
     return BeanConverter.convert(record, GrpExtendValDto.class);
   }
-
 }
-

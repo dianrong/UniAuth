@@ -2,20 +2,9 @@ package com.dianrong.common.uniauth.server.data.entity;
 
 public class ExtendVal {
 
-  private Long id;
-  
   private Long extendId;
 
   private String value;
-
-  public Long getId() {
-    return id;
-  }
-
-  public ExtendVal setId(Long id) {
-    this.id = id;
-    return this;
-  }
 
   public Long getExtendId() {
     return extendId;

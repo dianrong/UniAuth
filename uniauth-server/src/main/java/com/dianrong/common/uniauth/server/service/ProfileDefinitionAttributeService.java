@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttributeExample;
 import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionAttributeMapper;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.ProcessListQuery;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;

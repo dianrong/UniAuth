@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service;
+package com.dianrong.common.uniauth.server.service.inner;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
@@ -75,7 +75,6 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseUserNotifyInfo;
 import com.dianrong.common.uniauth.server.service.common.CommonService;
 import com.dianrong.common.uniauth.server.service.common.NotificationService;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -103,20 +102,18 @@ import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-
 /**
- * Created by Arc on 14/1/16.
+ *用户Service的内部实现. 
  */
-@Service
 @Slf4j
-public class UserService extends TenancyBasedService implements UserAuthentication {
+@Service
+public class UserInnerService extends TenancyBasedService {
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -129,8 +126,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   private DomainMapper domainMapper;
   @Autowired
   private PermissionMapper permissionMapper;
-  @Autowired
-  private CommonService commonService;
   @Autowired
   private GrpMapper grpMapper;
   @Autowired
@@ -146,29 +141,29 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   @Autowired
   private RolePermissionMapper rolePermissionMapper;
   @Autowired
+  private UserPwdLogMapper userPwdLogMapper;
+  
+  // Notification
+  @Autowired
+  private NotificationService notificationService;
+  @Autowired
   private UniauthSender uniauthSender;
   @Autowired
   private UniauthNotify uniauthNotify;
 
+  // Another service
   @Autowired
-  private UserExtendValService userExtendValService;
-
+  private CommonService commonService;
   @Autowired
-  private UserPwdLogMapper userPwdLogMapper;
-
+  private UserExtendValInnerService userExtendValService;
   @Autowired
-  private GroupService groupService;
+  private GroupInnerService groupService;
 
+  // Data filter
   @Resource(name = "userDataFilter")
   private DataFilter dataFilter;
 
-  /**
-   * 发送消息的服务.
-   */
-  @Autowired
-  private NotificationService notificationService;
-
-
+  // 异步操作线程池.
   private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
   /**
@@ -1499,7 +1494,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * . 检验密码是否符合要求
+   * 检验密码是否符合要求.
    *
    * @param userId userId
    * @param password the new password
@@ -1545,7 +1540,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * . 异步记录用户的密码设置记录
+   * 异步记录用户的密码设置记录.
    *
    * @param user info
    */
@@ -1610,17 +1605,5 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     param.put("identityType", identityType.getType());
     return userMapper.getUserByIdentity(param);
   }
-
-  /**
-   * 所有其他数据源类型都不支持的,走Uniauth进行认证.
-   */
-  @Override
-  public int getOrder() {
-    return Ordered.LOWEST_PRECEDENCE;
-  }
-
-  @Override
-  public boolean supported(LoginParam loginParam) {
-    return true;
-  }
+  
 }

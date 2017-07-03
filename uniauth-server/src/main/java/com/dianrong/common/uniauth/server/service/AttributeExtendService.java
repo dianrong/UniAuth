@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtendExample;
 import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
@@ -10,10 +9,11 @@ import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
+import com.dianrong.common.uniauth.server.service.cache.AttributeExtendCache;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
-import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,9 @@ public class AttributeExtendService extends TenancyBasedService {
 
   @Autowired
   private AttributeExtendMapper attributeExtendMapper;
+  
+  @Autowired
+  private AttributeExtendCache attributeExtendCache;
 
   @Resource(name = "attributeExtendDataFilter")
   private DataFilter dataFilter;
@@ -55,10 +58,7 @@ public class AttributeExtendService extends TenancyBasedService {
    * 根据id获取数据.
    */
   public AttributeExtendDto getById(Long id) {
-    AttributeExtend attributeExtend = attributeExtendMapper.selectByPrimaryKey(id);
-    AttributeExtendDto attributeExtendDto =
-        BeanConverter.convert(attributeExtend, AttributeExtendDto.class);
-    return attributeExtendDto;
+    return attributeExtendCache.getById(id);
   }
 
   /**
@@ -67,18 +67,7 @@ public class AttributeExtendService extends TenancyBasedService {
   public int updateByKey(Long id, String code, String category, String subcategory,
       String description) {
     CheckEmpty.checkEmpty(id, "id");
-    if (!StringUtil.strIsNullOrEmpty(code)) {
-      // 过滤数据
-      dataFilter.updateFieldCheck(TypeParseUtil.parseToIntegerFromObject(id),
-          FieldType.FIELD_TYPE_CODE, code.trim());
-    }
-    AttributeExtend attributeExtend = new AttributeExtend();
-    attributeExtend.setCode(code);
-    attributeExtend.setCategory(category);
-    attributeExtend.setSubcategory(subcategory);
-    attributeExtend.setDescription(description);
-    attributeExtend.setId(id);
-    return attributeExtendMapper.updateByPrimaryKeySelective(attributeExtend);
+    return attributeExtendCache.updateByKey(id, code, category, subcategory, description);
   }
 
   /**

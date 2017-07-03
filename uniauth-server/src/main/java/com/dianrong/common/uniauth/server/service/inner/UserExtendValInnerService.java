@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service;
+package com.dianrong.common.uniauth.server.service.inner;
 
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
@@ -44,9 +44,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 用户扩展属性值Service的内部实现. 
+ */
 @Slf4j
 @Service
-public class UserExtendValService extends TenancyBasedService {
+public class UserExtendValInnerService extends TenancyBasedService {
 
   @Autowired
   private UserExtendValMapper userExtendValMapper;
@@ -56,7 +59,8 @@ public class UserExtendValService extends TenancyBasedService {
 
   @Autowired
   private UserMapper userMapper;
-
+  
+  // Data filter
   @Resource(name = "userExtendValDataFilter")
   private DataFilter dataFilter;
 
@@ -324,5 +328,5 @@ public class UserExtendValService extends TenancyBasedService {
     }
     return resultMap;
   }
+  
 }
-
