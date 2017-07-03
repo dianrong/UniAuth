@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service;
+package com.dianrong.common.uniauth.server.service.inner;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.SimpleProfileDefinitionDto;
@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class ProfileDefinitionPathService extends TenancyBasedService {
+public class ProfileDefinitionPathInnerService extends TenancyBasedService {
 
   @Autowired
   private ProfileDefinitionPathMapper profileDefinitionPathMapper;

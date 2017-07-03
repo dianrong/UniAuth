@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service;
+package com.dianrong.common.uniauth.server.service.inner;
 
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.dto.SimpleProfileDefinitionDto;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ProfileService extends TenancyBasedService {
+public class ProfileInnerService extends TenancyBasedService {
 
   @Resource(name = "profileDefinitionDataFilter")
   private DataFilter dataFilter;

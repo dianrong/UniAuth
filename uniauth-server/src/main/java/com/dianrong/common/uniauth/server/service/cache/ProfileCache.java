@@ -13,9 +13,9 @@ import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
-import com.dianrong.common.uniauth.server.service.AttributeExtendService;
-import com.dianrong.common.uniauth.server.service.ProfileDefinitionAttributeService;
-import com.dianrong.common.uniauth.server.service.ProfileDefinitionPathService;
+import com.dianrong.common.uniauth.server.service.inner.AttributeExtendInnerService;
+import com.dianrong.common.uniauth.server.service.inner.ProfileDefinitionAttributeInnerService;
+import com.dianrong.common.uniauth.server.service.inner.ProfileDefinitionPathInnerService;
 import com.dianrong.common.uniauth.server.service.support.ProcessListQuery;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.google.common.collect.Lists;
@@ -59,13 +59,13 @@ public class ProfileCache {
   private ProfileDefinitionMapper profileDefinitionMapper;
 
   @Autowired
-  private ProfileDefinitionPathService profileDefinitionPathService;
+  private ProfileDefinitionPathInnerService profileDefinitionPathService;
 
   @Autowired
-  private AttributeExtendService attributeExtendService;
+  private AttributeExtendInnerService attributeExtendService;
 
   @Autowired
-  private ProfileDefinitionAttributeService profileDefinitionAttributeService;
+  private ProfileDefinitionAttributeInnerService profileDefinitionAttributeService;
 
   /**
    * 只获取指定Profile的定义,包括其关联的属性集合,但是不包括子Profile的相关信息.
@@ -77,7 +77,7 @@ public class ProfileCache {
     criteria.andIdEqualTo(id).andTenancyIdEqualTo(tenancyId);
     List<ProfileDefinition> pdList = profileDefinitionMapper.selectByExample(queryExample);
     if (ObjectUtil.collectionIsEmptyOrNull(pdList)) {
-      log.debug("get profile definition by primary key {}, but not found one!", id);
+      log.debug("get profile definition by primary key {}, but found none!", id);
       return null;
     }
     ProfileDefinition rootProfileDefinition = pdList.get(0);
@@ -102,7 +102,7 @@ public class ProfileCache {
     criteria.andIdEqualTo(id).andTenancyIdEqualTo(tenancyId);
     List<ProfileDefinition> pdList = profileDefinitionMapper.selectByExample(queryExample);
     if (ObjectUtil.collectionIsEmptyOrNull(pdList)) {
-      log.debug("get profile definition by primary key {}, but not found one!", id);
+      log.debug("get profile definition by primary key {}, but found none!", id);
       return null;
     }
     ProfileDefinition rootProfileDefinition = pdList.get(0);

@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service;
+package com.dianrong.common.uniauth.server.service.inner;
 
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
@@ -26,13 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 @Service
-public class ProfileDefinitionAttributeService extends TenancyBasedService {
+public class ProfileDefinitionAttributeInnerService extends TenancyBasedService {
 
   @Autowired
   private ProfileDefinitionAttributeMapper profileDefinitionAttributeMapper;
 
   @Autowired
-  private AttributeExtendService attributeExtendService;
+  private AttributeExtendInnerService attributeExtendService;
 
   /**
    * 批量添加Profile与扩展属性的关联关系.

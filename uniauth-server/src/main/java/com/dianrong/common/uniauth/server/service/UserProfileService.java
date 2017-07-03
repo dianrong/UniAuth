@@ -4,13 +4,15 @@ import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.cache.ProfileCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.support.ProfileSupport;
 import com.dianrong.common.uniauth.server.service.support.QueryProfileDefinition;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
@@ -19,14 +21,12 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用户Profile操作的service实现.
@@ -39,16 +39,16 @@ public class UserProfileService extends TenancyBasedService {
   private ProfileService profileService;
 
   @Autowired
-  private UserExtendValService userExtendValService;
-
-  @Autowired
-  private AttributeExtendService attributeExtendService;
+  private UserExtendValInnerService userExtendValInnerService;
 
   @Autowired
   private ProfileCache profileCache;
 
   @Autowired
-  private UserService userService;
+  private UserInnerService userInnerService;
+  
+  @Autowired
+  private UserProfileInnerService userProfileInnerService;
 
   /**
    * 实现类似于getUserProfile.判定用户的身份是通过identity来判断.
@@ -61,7 +61,7 @@ public class UserProfileService extends TenancyBasedService {
   public Map<String, Object> getUserProfileByIdentity(String identity, Long profileId,
       UserIdentityType identityType) {
     CheckEmpty.checkEmpty(profileId, "profileId");
-    User user = userService.getUserByIdentity(identity, identityType);
+    User user = userInnerService.getUserByIdentity(identity, identityType);
     if (user == null) {
       throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg(
           "common.profile.parameter.user.identity.not.found", identityType.getType(), identity));
@@ -93,7 +93,7 @@ public class UserProfileService extends TenancyBasedService {
 
     // 根据extend_attribute_id 获取所有的属性.
     Map<String, ExtendVal> extendValMap =
-        userExtendValService.queryAttributeVal(uniauthId, new ArrayList<>(profileIds));
+        userExtendValInnerService.queryAttributeVal(uniauthId, new ArrayList<>(profileIds));
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }
@@ -109,22 +109,9 @@ public class UserProfileService extends TenancyBasedService {
   /**
    * 更新用户的扩展属性.并根据ProfileId返回更新后的Profile.
    */
-  @Transactional
   public Map<String, Object> addOrUpdateUserProfile(Long uniauthId, Long profileId,
       Map<String, AttributeValModel> attributes) {
-    CheckEmpty.checkEmpty(uniauthId, "uniauthId");
-    CheckEmpty.checkEmpty(profileId, "profileId");
-    if (attributes != null && !attributes.isEmpty()) {
-      for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
-        String attributeCode = entry.getKey();
-        AttributeValModel attributeVal = entry.getValue();
-        // attributes 中的属性如果不存在则需要先添加
-        AttributeExtend attributeExtend = attributeExtendService
-            .addAttributeExtendIfNonExistent(attributeCode, attributeVal);
-        String value = attributeVal != null ? attributeVal.getValue() : null;
-        userExtendValService.addOrUpdate(uniauthId, attributeExtend.getId(), value);
-      }
-    }
+    userProfileInnerService.addOrUpdateUserProfile(uniauthId, attributes);
     return getUserProfile(uniauthId, profileId);
   }
 }

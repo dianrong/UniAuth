@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.server.service.support;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Maps;
 
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,45 +46,49 @@ public enum AtrributeDefine {
   GROUP_CODE(AtrributeTable.GRP, "code", false), 
   GROUP_DESCRiPTION(AtrributeTable.GRP, "description"),;
 
-  /**
-   * 系统定义表中的User的属性集合.
-   */
-  private static final Set<String> SYSTEM_DEFINE_USE_ATTRIBUTES = Sets.newHashSet();
+  public static final String UN_READER_VALUE = "Property is no permission to read";
 
   /**
-   * 系统定义表中的Group的属性集合.
+   * 系统定义表中的User的属性编码与定义的Map.
    */
-  private static final Set<String> SYSTEM_DEFINE_GROUP_ATTRIBUTES = Sets.newHashSet();
+  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_USE_ATTRIBUTES_MAP = Maps.newHashMap();
+
+  /**
+   * 系统定义表中的Group的属性编码与定义的Map.
+   */
+  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP = Maps.newHashMap();
+  
 
   static {
     for (AtrributeDefine ad : AtrributeDefine.values()) {
       if (AtrributeTable.isUserTable(ad.getDefineTable())) {
-        SYSTEM_DEFINE_USE_ATTRIBUTES.add(ad.getAttributeCode());
+        SYSTEM_DEFINE_USE_ATTRIBUTES_MAP.put(ad.getAttributeCode(), ad);
       }
       if (AtrributeTable.isGrpTable(ad.getDefineTable())) {
-        SYSTEM_DEFINE_GROUP_ATTRIBUTES.add(ad.getAttributeCode());
+        SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP.put(ad.getAttributeCode(), ad);
       }
     }
   }
 
   /**
-   * 判断传入的属性Code是否属于系统定义的User属性.
+   * 根据传入的属性Code返回系统定义的用户属性定义.
+   * @return 如果为空,则传入的attributeCode不是系统预定义的.
    */
-  public static final boolean isSystemDefineUserAttribute(String attributeCode) {
+  public static final AtrributeDefine getSystemDefineUserAttribute(String attributeCode) {
     if (StringUtils.isBlank(attributeCode)) {
-      return false;
+      return null;
     }
-    return SYSTEM_DEFINE_USE_ATTRIBUTES.contains(attributeCode);
+    return SYSTEM_DEFINE_USE_ATTRIBUTES_MAP.get(attributeCode);
   }
 
   /**
    * 判断传入的属性Code是否属于系统定义的Group属性.
    */
-  public static final boolean isSystemDefineGroupAttribute(String attributeCode) {
+  public static final AtrributeDefine getSystemDefineGroupAttribute(String attributeCode) {
     if (StringUtils.isBlank(attributeCode)) {
-      return false;
+      return null;
     }
-    return SYSTEM_DEFINE_GROUP_ATTRIBUTES.contains(attributeCode);
+    return SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP.get(attributeCode);
   }
 
   private AtrributeDefine(AtrributeTable defineTable, String fieldName) {

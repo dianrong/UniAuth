@@ -3,8 +3,10 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
+
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface UserExtendValMapper {
@@ -104,4 +106,6 @@ public interface UserExtendValMapper {
   int countByCode(Map<String, String> params);
 
   int countByUserExtend(Map<String, String> params);
+  
+  int updateSystemDefineUserAttribute(Map<String, Object> params);
 }
