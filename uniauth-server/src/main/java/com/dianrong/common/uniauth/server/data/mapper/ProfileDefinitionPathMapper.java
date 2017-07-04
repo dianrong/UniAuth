@@ -69,5 +69,5 @@ public interface ProfileDefinitionPathMapper {
    */
   List<ProfileDefinitionPath> queryConcernedProfilePathInfo(@Param("profileId") Long profileId, @Param("subProfileIds") List<Long> subProfileIds);
   
-  int batchInsert(List<ProfileDefinitionPath> profileDefinitionPaths);
+  int batchInsert(@Param("profileDefinitionPaths")List<ProfileDefinitionPath> profileDefinitionPaths);
 }

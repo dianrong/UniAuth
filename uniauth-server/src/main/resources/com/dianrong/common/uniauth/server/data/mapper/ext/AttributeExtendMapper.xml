@@ -5,9 +5,9 @@
     select 
         <include refid="Base_Column_List" />
     from attribute_extend where id in (
-        select attribute_id 
+        select extend_id 
         from profile_definition_attribute 
-        where profile_id = #{id, jdbcType=BIGINT}
+        where profile_id = #{profileId, jdbcType=BIGINT}
     )
   </select>
 </mapper>
