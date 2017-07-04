@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service.support;
+package com.dianrong.common.uniauth.server.service.attributerecord;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -28,12 +28,14 @@ public @interface ExtendAttributeRecord {
   RecordOperate operate();
 
   /**
-   * 用户id或者组id所在参数列表的位置, 从0开始.当没有指定EL表达式该参数才起作用.
+   * 用户id或者组id所在参数列表的位置, 从0开始.<br>
+   * 当没有指定EL表达式,该参数才起作用.
    */
   int identityIndex() default 0;
   
   /**
-   * 扩展属性id所在参数列表的位置.当没有指定EL表达式该参数才起作用.
+   * 扩展属性id所在参数列表的位置.<br>
+   * 当没有指定EL表达式该参数才起作用.
    */
   int extendIdIndex() default 1;
   

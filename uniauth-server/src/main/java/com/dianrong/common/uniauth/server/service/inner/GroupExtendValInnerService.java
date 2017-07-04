@@ -3,6 +3,9 @@ package com.dianrong.common.uniauth.server.service.inner;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordType;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Maps;
@@ -51,6 +54,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
    * 新增.
    */
   @Transactional
+  @ExtendAttributeRecord(type = RecordType.GROUP, operate = RecordOperate.ADD)
   public GrpExtendVal addNew(Integer grpId, Long extendId, String value) {
     GrpExtendVal record = new GrpExtendVal();
     record.setExtendId(extendId);
@@ -65,6 +69,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
    * 更新.
    */
   @Transactional
+  @ExtendAttributeRecord(type = RecordType.GROUP, operate = RecordOperate.UPDATE)
   public GrpExtendVal update(Integer grpId, Long extendId, String value) {
     GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
     GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();

@@ -1,6 +1,9 @@
-package com.dianrong.common.uniauth.server.aop;
+package com.dianrong.common.uniauth.server.service.attributerecord;
 
-import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord;
+import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
+import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
+import com.dianrong.common.uniauth.server.service.attributerecord.exp.InvalidParameterTypeException;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.AttributeRecordHandler;
 import com.google.common.collect.Maps;
 
 import java.lang.reflect.Method;
@@ -14,6 +17,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
@@ -40,19 +44,66 @@ public class AttributeRecordAopHandler {
   public void attributeRecord() {}
 
   /**
+   * 通过工厂获取对应的处理handler.
+   */
+  @Autowired
+  private AttributeRecordHanlderFactory attributeRecordHanlderFactory;
+  
+  @Autowired
+  private AttributeRecordsQueue attributeRecordsQueue;
+
+  /**
    * 记录属性扩展操作记录.
    */
   @Around("attributeRecord()")
   public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
     Object identity = getIndentity(joinPoint);
     Object extendId = getExtendId(joinPoint);
-    return joinPoint.proceed();
+    TypeOperate typeOperate = getTypeOperate(joinPoint);
+    AttributeRecordHandler handler = attributeRecordHanlderFactory.getHandler(typeOperate);
+    boolean parameterCheckOk = true;
+    ExtendVal originalVal = null;
+    try {
+      originalVal = handler.invokeTargetBefore(identity, extendId);
+    } catch (InvalidParameterTypeException ite) {
+      parameterCheckOk = false;
+      log.error(
+          "AttributeRecordHandler invoke target before parameter is invalid.TypeOperate:{}, Identity:{}, Extendid:{}",
+          typeOperate, identity, extendId, ite);
+    }
+    Throwable throwable = null;
+    try {
+      return joinPoint.proceed();
+    } catch (Throwable t) {
+      log.error("invoke failed!", t);
+      throwable = t;
+      throw t;
+    } finally {
+      if (parameterCheckOk) {
+        AttributeRecords attributeRecord = handler.invokeTargetAfter(identity, extendId, originalVal, throwable);
+        if (attributeRecordsQueue.add(attributeRecord)) {
+          log.debug("success add {} to records queue!", attributeRecord);
+        } else {
+          log.error("failed add {} to records queue!", attributeRecord);
+        }
+      }
+    }
+  }
+
+  private TypeOperate getTypeOperate(ProceedingJoinPoint joinPoint) {
+    Method targetMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
+    ExtendAttributeRecord extendAttributeRecord =
+        targetMethod.getAnnotation(ExtendAttributeRecord.class);
+    TypeOperate typeOperate = new TypeOperate();
+    typeOperate.setOperate(extendAttributeRecord.operate());
+    typeOperate.setType(extendAttributeRecord.type());
+    return typeOperate;
   }
 
   private Object getIndentity(ProceedingJoinPoint joinPoint) {
-    // get expression
-    Method targetMethod =((MethodSignature)joinPoint.getSignature()).getMethod();
-    ExtendAttributeRecord extendAttributeRecord = targetMethod.getAnnotation(ExtendAttributeRecord.class);
+    Method targetMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
+    ExtendAttributeRecord extendAttributeRecord =
+        targetMethod.getAnnotation(ExtendAttributeRecord.class);
     String expression = extendAttributeRecord.identity();
     if (!StringUtils.isBlank(expression)) {
       return getElExpress(joinPoint, expression);
@@ -64,10 +115,11 @@ public class AttributeRecordAopHandler {
     }
     return args[identityIndex];
   }
-  
+
   private Object getExtendId(ProceedingJoinPoint joinPoint) {
-    Method targetMethod =((MethodSignature)joinPoint.getSignature()).getMethod();
-    ExtendAttributeRecord extendAttributeRecord = targetMethod.getAnnotation(ExtendAttributeRecord.class);
+    Method targetMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
+    ExtendAttributeRecord extendAttributeRecord =
+        targetMethod.getAnnotation(ExtendAttributeRecord.class);
     String expression = extendAttributeRecord.extendId();
     if (!StringUtils.isBlank(expression)) {
       return getElExpress(joinPoint, expression);
@@ -79,16 +131,16 @@ public class AttributeRecordAopHandler {
     }
     return args[identityIndex];
   }
-  
+
   private Object getElExpress(ProceedingJoinPoint joinPoint, String expression) {
     Object[] args = joinPoint.getArgs();
-    Method method = ((MethodSignature)joinPoint.getSignature()).getMethod();
+    Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
     Expression exp = getExp(expression);
-    MethodBasedEvaluationContext evaluationContext = new MethodBasedEvaluationContext(null,
-        method, args, this.paramNameDiscoverer);
+    MethodBasedEvaluationContext evaluationContext =
+        new MethodBasedEvaluationContext(null, method, args, this.paramNameDiscoverer);
     return exp.getValue(evaluationContext);
   }
-  
+
   private Expression getExp(String expression) {
     Expression exp = cache.get(expression);
     if (exp != null) {

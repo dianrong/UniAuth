@@ -3,10 +3,10 @@ package com.dianrong.common.uniauth.server.service.inner;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordType;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord;
-import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord.RecordOperate;
-import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord.RecordType;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Maps;
 
@@ -29,8 +29,7 @@ public class UserExtendValInnerService extends TenancyBasedService {
    * 新增.
    */
   @Transactional
-  @ExtendAttributeRecord(type = RecordType.USER, operate = RecordOperate.ADD, identity = "#userId",
-      extendId = "#extendId")
+  @ExtendAttributeRecord(type = RecordType.USER, operate = RecordOperate.ADD)
   public UserExtendVal addNew(Long userId, Long extendId, String value) {
     UserExtendVal record = new UserExtendVal();
     record.setExtendId(extendId);
