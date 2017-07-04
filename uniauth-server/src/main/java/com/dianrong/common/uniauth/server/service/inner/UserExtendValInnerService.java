@@ -38,7 +38,7 @@ public class UserExtendValInnerService extends TenancyBasedService {
     record.setUserId(userId);
     record.setValue(value);
     record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    userExtendValMapper.insertSelective(record);
+    userExtendValMapper.insert(record);
     return record;
   }
 

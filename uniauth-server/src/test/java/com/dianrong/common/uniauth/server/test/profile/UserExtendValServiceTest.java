@@ -4,6 +4,8 @@ import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
 import com.dianrong.common.uniauth.server.test.BaseTest;
 
+import java.io.IOException;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +15,7 @@ public class UserExtendValServiceTest extends BaseTest {
   private UserExtendValInnerService userExtendValInnerService;
   
   @Test
-  public void addOrUpdateTest() {
+  public void addOrUpdateTest() throws IOException {
     CxfHeaderHolder.TENANCYCODE.set("DIANRONG");
     Long userId = 300000019L;
     Long extendId =1L;

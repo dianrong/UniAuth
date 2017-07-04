@@ -63,7 +63,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
     record.setGrpId(grpId);
     record.setValue(value);
     record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    grpExtendValMapper.insertSelective(record);
+    grpExtendValMapper.insert(record);
     return record;
   }
 

@@ -40,7 +40,7 @@ public class AttributeRecordAopHandler {
   private final ConcurrentMap<String, Expression> cache = Maps.newConcurrentMap();
 
   @Pointcut(
-      value = "@annotation(com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord)")
+      value = "@annotation(com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord)")
   public void attributeRecord() {}
 
   /**

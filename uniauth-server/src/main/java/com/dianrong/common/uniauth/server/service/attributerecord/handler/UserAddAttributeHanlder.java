@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.InvalidParameterTypeException;
@@ -47,14 +48,15 @@ public class UserAddAttributeHanlder extends AbstractAttributeRecordHandler {
           userId, attributeExtendId);
       return null;
     }
-    AttributeRecords record = new AttributeRecords();
+    UserAttributeRecords record = new UserAttributeRecords();
     Date now = new Date();
     record.setCurVal(userExtendVal.getValue());
     record.setOptType(RecordOperate.ADD.toString());
     record.setOptDate(now);
     record.setExtendId(attributeExtendId);
     record.setTenancyId(userExtendVal.getTenancyId());
-    record.setPreVal(userExtendVal.getValue());
+    record.setPreVal(null);
+    record.setUserId(userId);
     return record;
   }
 

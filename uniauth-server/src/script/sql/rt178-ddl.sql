@@ -40,3 +40,7 @@ CREATE TABLE IF NOT EXISTS `profile_definition_attribute` (
   CONSTRAINT `fk_profile_definition_attribute_attribute_id` FOREIGN KEY (`extend_id`) REFERENCES `attribute_extend` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT 'Profile与扩展属性之间的关联关系';
   
+  -- Update Table `user_extend_val` define
+  ALTER TABLE user_extend_val ADD UNIQUE INDEX uq_idx_user_extend_val(`user_id`, `extend_id`, `tenancy_id`);
+  -- Update Table `grp_extend_val` define
+  ALTER TABLE grp_extend_val ADD UNIQUE INDEX uq_idx_grp_extend_val(`grp_id`, `extend_id`, `tenancy_id`);

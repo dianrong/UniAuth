@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.GrpAttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.InvalidParameterTypeException;
@@ -47,7 +48,7 @@ public class GrpAddAttributeHanlder extends AbstractAttributeRecordHandler {
           grpId, attributeExtendId);
       return null;
     }
-    AttributeRecords record = new AttributeRecords();
+    GrpAttributeRecords record = new GrpAttributeRecords();
     Date now = new Date();
     record.setCurVal(grpExtendVal.getValue());
     record.setOptType(RecordOperate.ADD.toString());
@@ -55,6 +56,7 @@ public class GrpAddAttributeHanlder extends AbstractAttributeRecordHandler {
     record.setExtendId(attributeExtendId);
     record.setTenancyId(grpExtendVal.getTenancyId());
     record.setPreVal(null);
+    record.setGrpId(grpId);
     return record;
   }
 }
