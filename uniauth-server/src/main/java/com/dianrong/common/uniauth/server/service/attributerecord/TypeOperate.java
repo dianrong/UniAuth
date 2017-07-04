@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service.attributerecord;
 
+import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordType;
 
@@ -23,7 +24,7 @@ public class TypeOperate {
    * 操作:新增，修改，删除等.
    */
   RecordOperate operate;
-
+  
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -47,5 +48,15 @@ public class TypeOperate {
     if (type != other.type)
       return false;
     return true;
+  }
+  
+
+  public static TypeOperate build(RecordType type, RecordOperate operate) {
+    Assert.notNull(type);
+    Assert.notNull(operate);
+    TypeOperate typeOperate = new TypeOperate();
+    typeOperate.operate = operate;
+    typeOperate.type = type;
+    return typeOperate;
   }
 }

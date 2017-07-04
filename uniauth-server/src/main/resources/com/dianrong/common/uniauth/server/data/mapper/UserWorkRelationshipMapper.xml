@@ -163,14 +163,12 @@
       supervisor_id, type, assignment_date, 
       hire_date, business_unit_name, department_name, 
       legal_entity_name, work_phone, work_location, 
-      work_address, create_date, last_update, 
-      tenancy_id)
+      work_address, tenancy_id)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{managerId,jdbcType=BIGINT}, 
       #{supervisorId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{assignmentDate,jdbcType=TIMESTAMP}, 
       #{hireDate,jdbcType=TIMESTAMP}, #{businessUnitName,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, 
       #{legalEntityName,jdbcType=VARCHAR}, #{workPhone,jdbcType=VARCHAR}, #{workLocation,jdbcType=VARCHAR}, 
-      #{workAddress,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, 
-      #{tenancyId,jdbcType=BIGINT})
+      #{workAddress,jdbcType=VARCHAR}, #{tenancyId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.dianrong.common.uniauth.server.data.entity.UserWorkRelationship" >
     <!--
@@ -372,8 +370,6 @@
       work_phone = #{record.workPhone,jdbcType=VARCHAR},
       work_location = #{record.workLocation,jdbcType=VARCHAR},
       work_address = #{record.workAddress,jdbcType=VARCHAR},
-      create_date = #{record.createDate,jdbcType=TIMESTAMP},
-      last_update = #{record.lastUpdate,jdbcType=TIMESTAMP},
       tenancy_id = #{record.tenancyId,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -454,8 +450,6 @@
       work_phone = #{workPhone,jdbcType=VARCHAR},
       work_location = #{workLocation,jdbcType=VARCHAR},
       work_address = #{workAddress,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
       tenancy_id = #{tenancyId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

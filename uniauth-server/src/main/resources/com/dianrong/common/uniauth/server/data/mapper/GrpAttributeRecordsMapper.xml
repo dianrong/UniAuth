@@ -156,13 +156,12 @@
     -->
     insert into grp_attribute_records (id, grp_id, opt_type, 
       opt_id, opt_name, opt_date, 
-      extend_id, pre_val, cur_val, 
-      create_date, last_update, tenancy_id
+      extend_id, pre_val, cur_val, tenancy_id
       )
     values (#{id,jdbcType=BIGINT}, #{grpId,jdbcType=INTEGER}, #{optType,jdbcType=VARCHAR}, 
       #{optId,jdbcType=BIGINT}, #{optName,jdbcType=VARCHAR}, #{optDate,jdbcType=TIMESTAMP}, 
       #{extendId,jdbcType=BIGINT}, #{preVal,jdbcType=VARCHAR}, #{curVal,jdbcType=VARCHAR}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, #{tenancyId,jdbcType=BIGINT}
+      #{tenancyId,jdbcType=BIGINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.dianrong.common.uniauth.server.data.entity.GrpAttributeRecords" >
@@ -325,8 +324,6 @@
       extend_id = #{record.extendId,jdbcType=BIGINT},
       pre_val = #{record.preVal,jdbcType=VARCHAR},
       cur_val = #{record.curVal,jdbcType=VARCHAR},
-      create_date = #{record.createDate,jdbcType=TIMESTAMP},
-      last_update = #{record.lastUpdate,jdbcType=TIMESTAMP},
       tenancy_id = #{record.tenancyId,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -391,8 +388,6 @@
       extend_id = #{extendId,jdbcType=BIGINT},
       pre_val = #{preVal,jdbcType=VARCHAR},
       cur_val = #{curVal,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
       tenancy_id = #{tenancyId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

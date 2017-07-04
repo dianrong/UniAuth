@@ -149,11 +149,9 @@
       This element was generated on Thu Jun 15 16:07:49 CST 2017.
     -->
     insert into profile_definition (id, code, name, 
-      description, create_date, last_update, 
-      tenancy_id)
+      description, tenancy_id)
     values (#{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{lastUpdate,jdbcType=TIMESTAMP}, 
-      #{tenancyId,jdbcType=BIGINT})
+      #{description,jdbcType=VARCHAR},#{tenancyId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.dianrong.common.uniauth.server.data.entity.ProfileDefinition" >
     <!--
@@ -265,8 +263,6 @@
       code = #{record.code,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       description = #{record.description,jdbcType=VARCHAR},
-      create_date = #{record.createDate,jdbcType=TIMESTAMP},
-      last_update = #{record.lastUpdate,jdbcType=TIMESTAMP},
       tenancy_id = #{record.tenancyId,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -311,8 +307,6 @@
     set code = #{code,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      last_update = #{lastUpdate,jdbcType=TIMESTAMP},
       tenancy_id = #{tenancyId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

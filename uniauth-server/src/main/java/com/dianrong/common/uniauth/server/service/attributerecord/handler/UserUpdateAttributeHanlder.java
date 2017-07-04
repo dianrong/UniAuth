@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.InvalidParameterTypeException;
@@ -14,24 +15,26 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class UserAddAttributeHanlder extends AbstractAttributeRecordHandler {
+public class UserUpdateAttributeHanlder extends AbstractAttributeRecordHandler {
 
   private UserExtendValInnerService userExtendValInnerService;
   
-  public UserAddAttributeHanlder(UserExtendValInnerService userExtendValInnerService) {
+  public UserUpdateAttributeHanlder(UserExtendValInnerService userExtendValInnerService) {
     Assert.notNull(userExtendValInnerService);
     this.userExtendValInnerService = userExtendValInnerService;
   }
   
   @Override
   public ExtendVal invokeTargetBefore(Object identity, Object extendId) {
-    if (StringUtil.translateObjectToLong(identity) == null) {
+    Long userId = StringUtil.translateObjectToLong(identity);
+    if (userId == null) {
       throw new InvalidParameterTypeException(identity + " can not translate to a Long!");
     }
-    if (StringUtil.translateObjectToLong(extendId) == null) {
+    Long attributeExtendId = StringUtil.translateObjectToLong(extendId);
+    if (attributeExtendId == null) {
       throw new InvalidParameterTypeException(extendId + " can not translate to a Long!");
     }
-    return null;
+    return userExtendValInnerService.queryByUserIdAndExtendId(userId, attributeExtendId);
   }
 
   @Override
@@ -39,22 +42,22 @@ public class UserAddAttributeHanlder extends AbstractAttributeRecordHandler {
       ExtendVal originalVal) {
     Long userId = StringUtil.translateObjectToLong(identity);
     Long attributeExtendId = StringUtil.translateObjectToLong(extendId);
-    UserExtendVal userExtendVal =
-        userExtendValInnerService.queryByUserIdAndExtendId(userId, attributeExtendId);
-    if (userExtendVal == null) {
+    if (!(originalVal instanceof GrpExtendVal)) {
       log.warn(
-          "add user extend value records, the user extend value is null, so ignored. userId: {}, extendId:{}",
-          userId, attributeExtendId);
+          "update operate, but original value is not valid!");
       return null;
     }
+    UserExtendVal userExtendVal =
+        userExtendValInnerService.queryByUserIdAndExtendId(userId, attributeExtendId);
+    UserExtendVal originalUserExtendVal = (UserExtendVal)originalVal;
     AttributeRecords record = new AttributeRecords();
     Date now = new Date();
-    record.setCurVal(userExtendVal.getValue());
-    record.setOptType(RecordOperate.ADD.toString());
+    record.setCurVal(userExtendVal == null? null: userExtendVal.getValue());
+    record.setOptType(RecordOperate.UPDATE.toString());
     record.setOptDate(now);
     record.setExtendId(attributeExtendId);
-    record.setTenancyId(userExtendVal.getTenancyId());
-    record.setPreVal(userExtendVal.getValue());
+    record.setTenancyId(originalUserExtendVal.getTenancyId());
+    record.setPreVal(originalUserExtendVal.getValue());
     return record;
   }
 

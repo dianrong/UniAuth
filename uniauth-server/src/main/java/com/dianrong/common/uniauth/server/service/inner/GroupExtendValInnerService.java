@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
@@ -10,6 +11,7 @@ import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Maps;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +80,20 @@ public class GroupExtendValInnerService extends TenancyBasedService {
     GrpExtendVal record = new GrpExtendVal();
     grpExtendValMapper.updateByExampleSelective(record, grpExtendValExample);
     return record;
+  }
+  
+  /**
+   * 根据GrpId和扩展属性Id查找信息.
+   */
+  public GrpExtendVal queryByGrpIdAndExtendId(Integer grpId, Long extendId) {
+    GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
+    GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
+    criteria.andGrpIdEqualTo(grpId).andExtendIdEqualTo(extendId)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<GrpExtendVal> grpExtendValList = grpExtendValMapper.selectByExample(grpExtendValExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(grpExtendValList)) {
+      return null;
+    }
+    return grpExtendValList.get(0);
   }
 }

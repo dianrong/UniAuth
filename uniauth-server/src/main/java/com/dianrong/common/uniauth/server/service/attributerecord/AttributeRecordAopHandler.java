@@ -48,7 +48,7 @@ public class AttributeRecordAopHandler {
    */
   @Autowired
   private AttributeRecordHanlderFactory attributeRecordHanlderFactory;
-  
+
   @Autowired
   private AttributeRecordsQueue attributeRecordsQueue;
 
@@ -67,9 +67,9 @@ public class AttributeRecordAopHandler {
       originalVal = handler.invokeTargetBefore(identity, extendId);
     } catch (InvalidParameterTypeException ite) {
       parameterCheckOk = false;
-      log.error(
-          "AttributeRecordHandler invoke target before parameter is invalid.TypeOperate:{}, Identity:{}, Extendid:{}",
-          typeOperate, identity, extendId, ite);
+      log.error(String.format(
+          "AttributeRecordHandler invoke target before parameter is invalid.TypeOperate:%s, Identity:%s, Extendid:%s",
+          typeOperate, identity, extendId), ite);
     }
     Throwable throwable = null;
     try {
@@ -80,11 +80,16 @@ public class AttributeRecordAopHandler {
       throw t;
     } finally {
       if (parameterCheckOk) {
-        AttributeRecords attributeRecord = handler.invokeTargetAfter(identity, extendId, originalVal, throwable);
-        if (attributeRecordsQueue.add(attributeRecord)) {
-          log.debug("success add {} to records queue!", attributeRecord);
+        AttributeRecords attributeRecord =
+            handler.invokeTargetAfter(identity, extendId, originalVal, throwable);
+        if (attributeRecord != null) {
+          if (attributeRecordsQueue.add(attributeRecord)) {
+            log.debug("success add {} to records queue!", attributeRecord);
+          } else {
+            log.error("failed add {} to records queue!", attributeRecord);
+          }
         } else {
-          log.error("failed add {} to records queue!", attributeRecord);
+          log.warn("invokeTargetAfter return is null, so just ignored!");
         }
       }
     }

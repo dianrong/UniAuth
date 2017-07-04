@@ -1,10 +1,16 @@
 package com.dianrong.common.uniauth.server.service.attributerecord;
 
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.server.data.mapper.GrpAttributeRecordsMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserAttributeRecordsMapper;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
+import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordType;
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.NotSupportedTypeOperateException;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.AttributeRecordHandler;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpAddAttributeHanlder;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpUpdateAttributeHanlder;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserAddAttributeHanlder;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserUpdateAttributeHanlder;
+import com.dianrong.common.uniauth.server.service.inner.GroupExtendValInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
@@ -19,30 +25,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 public final class AttributeRecordHanlderFactory implements InitializingBean {
+  
+  @Autowired
+  private UserExtendValInnerService userExtendValInnerService;
+
+  @Autowired
+  private GroupExtendValInnerService groupExtendValInnerService;
 
   /**
    * 缓存AttributeRecordHandler.
    */
   private final Map<TypeOperate, AttributeRecordHandler> caches = Maps.newHashMap();
 
-  @Autowired
-  private GrpAttributeRecordsMapper grpAttributeRecordsMapper;
-
-  @Autowired
-  private UserAttributeRecordsMapper userAttributeRecordsMapper;
-
   /**
-   * 此种方式通过Spring的autowird自动注入.
+   * 此种方式通过Spring的@Autowired自动注入.
    */
   public AttributeRecordHanlderFactory() {}
 
   /**
-   * 通过代码配置的方式.
+   * 构造器方式注入
    */
-  public AttributeRecordHanlderFactory(GrpAttributeRecordsMapper grpAttributeRecordsMapper,
-      UserAttributeRecordsMapper userAttributeRecordsMapper) {
-    this.setGrpAttributeRecordsMapper(grpAttributeRecordsMapper);
-    this.setUserAttributeRecordsMapper(userAttributeRecordsMapper);
+  public AttributeRecordHanlderFactory(UserExtendValInnerService userExtendValInnerService,
+      GroupExtendValInnerService groupExtendValInnerService) {
+    this.setUserExtendValInnerService(userExtendValInnerService);
+    this.setGroupExtendValInnerService(groupExtendValInnerService);
   }
 
   /**
@@ -62,7 +68,14 @@ public final class AttributeRecordHanlderFactory implements InitializingBean {
    * 类的初始化方法.
    */
   public void init() {
-
+    caches.put(TypeOperate.build(RecordType.USER, RecordOperate.ADD),
+        new UserAddAttributeHanlder(userExtendValInnerService));
+    caches.put(TypeOperate.build(RecordType.USER, RecordOperate.UPDATE),
+        new UserUpdateAttributeHanlder(userExtendValInnerService));
+    caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.ADD),
+        new GrpAddAttributeHanlder(groupExtendValInnerService));
+    caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.UPDATE),
+        new GrpUpdateAttributeHanlder(groupExtendValInnerService));
   }
 
   @Override
@@ -70,13 +83,13 @@ public final class AttributeRecordHanlderFactory implements InitializingBean {
     init();
   }
 
-  public void setUserAttributeRecordsMapper(UserAttributeRecordsMapper userAttributeRecordsMapper) {
-    Assert.notNull(userAttributeRecordsMapper);
-    this.userAttributeRecordsMapper = userAttributeRecordsMapper;
+  public void setUserExtendValInnerService(UserExtendValInnerService userExtendValInnerService) {
+    Assert.notNull(userExtendValInnerService);
+    this.userExtendValInnerService = userExtendValInnerService;
   }
 
-  public void setGrpAttributeRecordsMapper(GrpAttributeRecordsMapper grpAttributeRecordsMapper) {
-    Assert.notNull(grpAttributeRecordsMapper);
-    this.grpAttributeRecordsMapper = grpAttributeRecordsMapper;
+  public void setGroupExtendValInnerService(GroupExtendValInnerService groupExtendValInnerService) {
+    Assert.notNull(groupExtendValInnerService);
+    this.groupExtendValInnerService = groupExtendValInnerService;
   }
 }

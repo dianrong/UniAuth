@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
@@ -10,6 +11,7 @@ import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Maps;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,21 @@ public class UserExtendValInnerService extends TenancyBasedService {
     UserExtendVal record = new UserExtendVal();
     userExtendValMapper.updateByExampleSelective(record, userExtendValExample);
     return record;
+  }
+  
+  /**
+   * 根据UserId和扩展属性Id查找信息.
+   */
+  public UserExtendVal queryByUserIdAndExtendId(Long userId, Long extendId) {
+    UserExtendValExample userExtendValExample = new UserExtendValExample();
+    UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
+    criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<UserExtendVal> userExtendValList = userExtendValMapper.selectByExample(userExtendValExample);
+    if (ObjectUtil.collectionIsEmptyOrNull(userExtendValList)) {
+      return null;
+    }
+    return userExtendValList.get(0);
   }
 
   /**
