@@ -1,13 +1,26 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
+import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +41,13 @@ public class UserProfileInnerService extends TenancyBasedService {
   @Autowired
   private AttributeExtendInnerService attributeExtendInnerService;
 
+  @Autowired
+  private UserExtendValMapper userExtendValMapper;
+
+  // Data filter
+  @Resource(name = "userExtendValDataFilter")
+  private DataFilter userExtendValDataFilter;
+
   /**
    * 更新用户的扩展属性值.
    */
@@ -40,7 +60,7 @@ public class UserProfileInnerService extends TenancyBasedService {
         String value = entry.getValue();
         AttributeExtend attributeExtend = attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
         if (attributeExtend != null) {
-          userExtendValInnerService.addOrUpdate(userId, attributeExtend.getId(), value);
+          addOrUpdate(userId, attributeExtend.getId(), value);
         } else {
           log.error("System define user attribute {} is not exist!", attributeCode);
         }
@@ -73,15 +93,47 @@ public class UserProfileInnerService extends TenancyBasedService {
                 sysUserAtrributeDefine.getDefineTable().getTableName(),
                 sysUserAtrributeDefine.getFieldName(), value);
             // 更新扩展属性表中的相应字段
-            userExtendValInnerService.addOrUpdate(uniauthId, attributeExtend.getId(), value);
+            addOrUpdate(uniauthId, attributeExtend.getId(), value);
           } else {
             log.debug("System define attribute {} is not writable, so update just ignore!");
           }
         } else {
           // 普通扩展属性
-          userExtendValInnerService.addOrUpdate(uniauthId, attributeExtend.getId(), value);
+          addOrUpdate(uniauthId, attributeExtend.getId(), value);
         }
       }
     }
+  }
+  
+  /**
+   * 添加或者更新用户属性.
+   */
+  private UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
+    CheckEmpty.checkEmpty(userId, "userId");
+    CheckEmpty.checkEmpty(extendId, "extendId");
+
+    // 数据过滤
+    userExtendValDataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
+        FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
+        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
+
+    UserExtendValExample userExtendValExample = new UserExtendValExample();
+    UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
+    criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<UserExtendVal> existUserExtendVal =
+        userExtendValMapper.selectByExample(userExtendValExample);
+    UserExtendVal record;
+    if (ObjectUtil.collectionIsEmptyOrNull(existUserExtendVal)) {
+      // add
+      record = userExtendValInnerService.addNew(userId, extendId, value);
+    } else {
+      // update
+      record = userExtendValInnerService.update(userId, extendId, value);
+      record.setExtendId(extendId);
+      record.setUserId(userId);
+      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
+    }
+    return BeanConverter.convert(record, UserExtendValDto.class);
   }
 }

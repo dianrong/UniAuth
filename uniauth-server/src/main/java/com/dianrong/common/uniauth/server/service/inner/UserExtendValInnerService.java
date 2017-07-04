@@ -1,26 +1,16 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
-import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
-import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
-import com.dianrong.common.uniauth.server.datafilter.DataFilter;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
-import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord;
 import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord.RecordOperate;
 import com.dianrong.common.uniauth.server.service.support.ExtendAttributeRecord.RecordType;
-import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Maps;
 
-import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,55 +25,19 @@ public class UserExtendValInnerService extends TenancyBasedService {
   @Autowired
   private UserExtendValMapper userExtendValMapper;
 
-  // Data filter
-  @Resource(name = "userExtendValDataFilter")
-  private DataFilter dataFilter;
-
-  /**
-   * 添加或者更新用户属性.
-   */
-  @Transactional
-  public UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
-    CheckEmpty.checkEmpty(userId, "userId");
-    CheckEmpty.checkEmpty(extendId, "extendId");
-
-    // 数据过滤
-    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-
-    UserExtendValExample userExtendValExample = new UserExtendValExample();
-    UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
-    criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)
-        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-    List<UserExtendVal> existUserExtendVal =
-        userExtendValMapper.selectByExample(userExtendValExample);
-    UserExtendVal record;
-    if (ObjectUtil.collectionIsEmptyOrNull(existUserExtendVal)) {
-      // add
-      record = addNew(userId, extendId, value);
-    } else {
-      // update
-      record = update(userId, extendId, value);
-      record.setExtendId(extendId);
-      record.setUserId(userId);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    }
-    return BeanConverter.convert(record, UserExtendValDto.class);
-  }
-
   /**
    * 新增.
    */
   @Transactional
-  @ExtendAttributeRecord(type = RecordType.USER, operate = RecordOperate.ADD)
-  private UserExtendVal addNew(Long userId, Long extendId, String value) {
+  @ExtendAttributeRecord(type = RecordType.USER, operate = RecordOperate.ADD, identity = "#userId",
+      extendId = "#extendId")
+  public UserExtendVal addNew(Long userId, Long extendId, String value) {
     UserExtendVal record = new UserExtendVal();
     record.setExtendId(extendId);
     record.setUserId(userId);
     record.setValue(value);
     record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    userExtendValMapper.insert(record);
+    userExtendValMapper.insertSelective(record);
     return record;
   }
 
@@ -92,7 +46,7 @@ public class UserExtendValInnerService extends TenancyBasedService {
    */
   @Transactional
   @ExtendAttributeRecord(type = RecordType.USER, operate = RecordOperate.UPDATE)
-  private UserExtendVal update(Long userId, Long extendId, String value) {
+  public UserExtendVal update(Long userId, Long extendId, String value) {
     UserExtendValExample userExtendValExample = new UserExtendValExample();
     UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
     criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)

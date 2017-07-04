@@ -1,23 +1,13 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
-import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
-import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
-import com.dianrong.common.uniauth.server.datafilter.DataFilter;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
-import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Maps;
 
-import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,11 +21,6 @@ public class GroupExtendValInnerService extends TenancyBasedService {
 
   @Autowired
   private GrpExtendValMapper grpExtendValMapper;
-
-  // Data filter
-  @Resource(name = "grpExtendValDataFilter")
-  private DataFilter dataFilter;
-
 
   /**
    * 更新系统自定义的组属性值.
@@ -61,50 +46,18 @@ public class GroupExtendValInnerService extends TenancyBasedService {
     params.put("value", value);
     grpExtendValMapper.updateSystemDefineGrpAttribute(params);
   }
-
-  /**
-   * 添加或者更新用户属性.
-   */
-  @Transactional
-  public GrpExtendValDto addOrUpdate(Integer groupId, Long extendId, String value) {
-    CheckEmpty.checkEmpty(groupId, "groupId");
-    CheckEmpty.checkEmpty(extendId, "extendId");
-
-    // 数据过滤
-    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_GRP_ID, groupId),
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-
-    GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
-    GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
-    criteria.andGrpIdEqualTo(groupId).andExtendIdEqualTo(extendId)
-        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-    List<GrpExtendVal> existGrpExtendVal = grpExtendValMapper.selectByExample(grpExtendValExample);
-    GrpExtendVal record;
-    if (ObjectUtil.collectionIsEmptyOrNull(existGrpExtendVal)) {
-      // add
-      record = addNew(groupId, extendId, value);
-    } else {
-      // update
-      record = update(groupId, extendId, value);
-      record.setExtendId(extendId);
-      record.setGrpId(groupId);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    }
-    return BeanConverter.convert(record, GrpExtendValDto.class);
-  }
   
   /**
    * 新增.
    */
   @Transactional
-  private GrpExtendVal addNew(Integer grpId, Long extendId, String value) {
+  public GrpExtendVal addNew(Integer grpId, Long extendId, String value) {
     GrpExtendVal record = new GrpExtendVal();
     record.setExtendId(extendId);
     record.setGrpId(grpId);
     record.setValue(value);
     record.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    grpExtendValMapper.insert(record);
+    grpExtendValMapper.insertSelective(record);
     return record;
   }
 
@@ -112,7 +65,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
    * 更新.
    */
   @Transactional
-  private GrpExtendVal update(Integer grpId, Long extendId, String value) {
+  public GrpExtendVal update(Integer grpId, Long extendId, String value) {
     GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
     GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
     criteria.andGrpIdEqualTo(grpId).andExtendIdEqualTo(extendId)

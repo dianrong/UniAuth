@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.test.profile;
 
+import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
 import com.dianrong.common.uniauth.server.test.BaseTest;
 
@@ -13,9 +14,10 @@ public class UserExtendValServiceTest extends BaseTest {
   
   @Test
   public void addOrUpdateTest() {
-    Long userId = 1L;
-    Long extendId =2L;
+    CxfHeaderHolder.TENANCYCODE.set("DIANRONG");
+    Long userId = 300000019L;
+    Long extendId =1L;
     String value = "test";
-    userExtendValInnerService.addOrUpdate(userId, extendId, value);
+    userExtendValInnerService.addNew(userId, extendId, value);
   }
 }

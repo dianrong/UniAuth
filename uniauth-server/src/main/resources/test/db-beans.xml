@@ -34,7 +34,7 @@
           p:dataSource-ref="dataSource"/>
 
     <!-- JNDI Data Source -->
-   <bean id="dataSource" class="javax.sql.DataSource">
+   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
       <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
       <property name="url" value="jdbc:mysql://localhost:3306/ssuniauth?useUnicode=true&amp;characterEncoding=UTF-8"/>
       <property name="username" value="root"/>

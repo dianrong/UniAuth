@@ -51,7 +51,8 @@ public class AttributeRecordAopHandler {
 
   private Object getIndentity(ProceedingJoinPoint joinPoint) {
     // get expression
-    ExtendAttributeRecord extendAttributeRecord = joinPoint.getTarget().getClass().getAnnotation(ExtendAttributeRecord.class);
+    Method targetMethod =((MethodSignature)joinPoint.getSignature()).getMethod();
+    ExtendAttributeRecord extendAttributeRecord = targetMethod.getAnnotation(ExtendAttributeRecord.class);
     String expression = extendAttributeRecord.identity();
     if (!StringUtils.isBlank(expression)) {
       return getElExpress(joinPoint, expression);
@@ -65,7 +66,8 @@ public class AttributeRecordAopHandler {
   }
   
   private Object getExtendId(ProceedingJoinPoint joinPoint) {
-    ExtendAttributeRecord extendAttributeRecord = joinPoint.getTarget().getClass().getAnnotation(ExtendAttributeRecord.class);
+    Method targetMethod =((MethodSignature)joinPoint.getSignature()).getMethod();
+    ExtendAttributeRecord extendAttributeRecord = targetMethod.getAnnotation(ExtendAttributeRecord.class);
     String expression = extendAttributeRecord.extendId();
     if (!StringUtils.isBlank(expression)) {
       return getElExpress(joinPoint, expression);
@@ -92,7 +94,7 @@ public class AttributeRecordAopHandler {
     if (exp != null) {
       return exp;
     }
-    exp = parser.parseExpression("hello");
+    exp = parser.parseExpression(expression);
     cache.putIfAbsent(expression, exp);
     return cache.get(expression);
   }
