@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.server.service.attributerecord.handler;
 
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
-import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.service.attributerecord.AttributeValIdentity;
@@ -29,8 +28,8 @@ public class UserDeleteAttributeHanlder extends UserBaseHanlder {
   @Override
   protected AttributeRecords doInvokeTargetAfter(AttributeValIdentity valIdentity,
       ExtendVal originalVal) {
-    if (!(originalVal instanceof GrpExtendVal)) {
-      log.warn("delete operate, but original value is not valid!");
+    if (!(originalVal instanceof UserExtendVal)) {
+      log.warn("delete operate, but original value is invalid!");
       return null;
     }
     UserExtendVal userExtendVal = super.query(valIdentity);

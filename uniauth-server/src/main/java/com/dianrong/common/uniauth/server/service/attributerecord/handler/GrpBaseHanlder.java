@@ -37,7 +37,7 @@ public abstract class GrpBaseHanlder extends AbstractAttributeRecordHandler {
    * 查找记录.
    */
   protected GrpExtendVal query(AttributeValIdentity valIdentity) {
-    Long primaryId = valIdentity.getExtendId();
+    Long primaryId = valIdentity.getPrimaryId();
     if (primaryId != null) {
       log.debug(
           "primary id is exist, so get group extend value record by primary id. Primary id {}",

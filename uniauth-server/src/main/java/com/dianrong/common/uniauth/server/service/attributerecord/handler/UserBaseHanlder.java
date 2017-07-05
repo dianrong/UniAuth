@@ -37,7 +37,7 @@ public abstract class UserBaseHanlder extends AbstractAttributeRecordHandler {
    * 查找记录.
    */
   protected UserExtendVal query(AttributeValIdentity valIdentity) {
-    Long primaryId = valIdentity.getExtendId();
+    Long primaryId = valIdentity.getPrimaryId();
     if (primaryId != null) {
       log.debug("primary id is exist, so get user extend value record by primary id. Primary id {}",
           primaryId);

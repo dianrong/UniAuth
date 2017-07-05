@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.server.service.attributerecord.handler;
 
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
-import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.service.attributerecord.AttributeValIdentity;
@@ -29,7 +28,7 @@ public class UserUpdateAttributeHanlder extends UserBaseHanlder {
   @Override
   protected AttributeRecords doInvokeTargetAfter(AttributeValIdentity valIdentity,
       ExtendVal originalVal) {
-    if (!(originalVal instanceof GrpExtendVal)) {
+    if (!(originalVal instanceof UserExtendVal)) {
       log.warn("update operate, but original value is not valid!");
       return null;
     }

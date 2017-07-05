@@ -2,8 +2,12 @@ package com.dianrong.common.uniauth.server.service.attributerecord;
 
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.GrpAttributeRecords;
+import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecords;
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.InvalidParameterTypeException;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.AttributeRecordHandler;
+import com.dianrong.common.uniauth.server.service.inner.GrpAttributeRecordsInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserAttributeRecordsInnerService;
 import com.google.common.collect.Maps;
 
 import java.lang.reflect.Method;
@@ -50,7 +54,10 @@ public class AttributeRecordAopHandler {
   private AttributeRecordHanlderFactory attributeRecordHanlderFactory;
 
   @Autowired
-  private AttributeRecordsQueue attributeRecordsQueue;
+  private UserAttributeRecordsInnerService userAttributeRecordsInnerService;
+
+  @Autowired
+  private GrpAttributeRecordsInnerService grpAttributeRecordsInnerService;
 
   /**
    * 记录属性扩展操作记录.
@@ -82,16 +89,26 @@ public class AttributeRecordAopHandler {
         AttributeRecords attributeRecord =
             handler.invokeTargetAfter(valIdentity, originalVal, throwable);
         if (attributeRecord != null) {
-          if (attributeRecordsQueue.add(attributeRecord)) {
-            log.debug("success add {} to records queue!", attributeRecord);
-          } else {
-            log.error("failed add {} to records queue!", attributeRecord);
-          }
-        } else {
-          log.warn("invokeTargetAfter return is null, so just ignored!");
+          // 目前暂时需要同步提交数据,后期再修改为其他方式提交效率.
+          // 因为通过异步有一个问题,如果整个大事务操作Rollback了,但是记录却错误的记录进去了
+          insertRecords(attributeRecord);
         }
       }
     }
+  }
+
+  private void insertRecords(AttributeRecords record) {
+    if (record instanceof UserAttributeRecords) {
+      userAttributeRecordsInnerService.insert((UserAttributeRecords) record);
+      log.debug("success insert {}", record);
+      return;
+    }
+    if (record instanceof GrpAttributeRecords) {
+      grpAttributeRecordsInnerService.insert((GrpAttributeRecords) record);
+      log.debug("success insert {}", record);
+      return;
+    }
+    log.warn("{} is not supported to insert, so just ignored!", record);
   }
 
   private TypeOperate getTypeOperate(ProceedingJoinPoint joinPoint) {
@@ -113,7 +130,7 @@ public class AttributeRecordAopHandler {
     ExtendAttributeRecord extendAttributeRecord =
         targetMethod.getAnnotation(ExtendAttributeRecord.class);
     Object[] args = joinPoint.getArgs();
-    
+
     // get primary key
     Long primaryId = null;
     String primaryIdExp = extendAttributeRecord.primaryId();
@@ -126,16 +143,16 @@ public class AttributeRecordAopHandler {
         if (primaryIdIndex >= args.length) {
           log.error("ExtendAttributeRecord primary index param is error! {}", primaryIdIndex);
         }
-        primaryId =  Long.valueOf(args[primaryIdIndex].toString());
+        primaryId = Long.valueOf(args[primaryIdIndex].toString());
       }
     }
     if (primaryId != null) {
       valIdentity.setPrimaryId(primaryId);
       return valIdentity;
     }
-    
+
     // 如果没有指定主键id,继续通过identity和extendId去匹配.
-    
+
     // Identity
     Object identity;
     String identityExp = extendAttributeRecord.identity();
@@ -149,7 +166,7 @@ public class AttributeRecordAopHandler {
       identity = args[identityIndex];
     }
     valIdentity.setIdentity(identity);
-    
+
     // ExtendId
     Long extendId;
     String extendIdExp = extendAttributeRecord.extendId();

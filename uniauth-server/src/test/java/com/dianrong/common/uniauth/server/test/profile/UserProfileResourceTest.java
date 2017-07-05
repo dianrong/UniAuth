@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.server.resource.UserProfileResource;
 import com.dianrong.common.uniauth.server.test.BaseTest;
 import com.google.common.collect.Maps;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
@@ -62,10 +63,16 @@ public class UserProfileResourceTest extends BaseTest {
     attributes.put("teacher_name", new AttributeExtendParam().setValue("xx老师"));
     attributes.put("deskmate_name", new AttributeExtendParam().setValue("同桌1"));
     attributes.put("class_monitor_name", new AttributeExtendParam().setValue("班长"));
+    attributes.put("school", new AttributeExtendParam().setValue("学校"));
 
     Response<Map<String, Object>> response =
         userProfileResource.addOrUpdateUserProfile(uniauthId, profileId, param);
     System.out.println(JsonUtil.object2Jason(response));
+    try {
+      System.in.read();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
