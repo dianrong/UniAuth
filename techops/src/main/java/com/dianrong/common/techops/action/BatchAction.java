@@ -26,9 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("batch")
-public class BatchProcessAction {
+public class BatchAction {
   
-  private static final Logger LOGGER = LoggerFactory.getLogger(BatchProcessAction.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BatchAction.class);
   
   @Autowired
   private BatchService batchService;
@@ -72,12 +72,55 @@ public class BatchProcessAction {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
       + "and principal.permMap['DOMAIN'].contains('techops')")
-  public Response<BatchProcessResult> relateUserGrp(@RequestParam(value = "file", required = true) MultipartFile file, @RequestParam(value = "groupCode", required = true)String groupCode) throws IOException {
+  public Response<BatchProcessResult> relateUserGrp(@RequestParam(value = "file", required = true) MultipartFile file, @RequestParam(value = "groupId", required = true)Integer groupId) throws IOException {
     try {
-      return Response.success(batchService.relateUserGrp(groupCode, file.getInputStream()));
+      return Response.success(batchService.relateUsersGrp(file.getInputStream(), groupId));
     } catch(BatchProcessException bpe) {
-      LOGGER.error("failed to process batch relate user and group", bpe);
+      LOGGER.error("failed to process batch relate users and group", bpe);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));
     }
+  }
+  
+  /**
+   * 批量关联用户和标签.
+   */
+  @RequestMapping(value = "relate-user-tag", method = RequestMethod.POST,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
+      + "and principal.permMap['DOMAIN'].contains('techops')")
+  public Response<BatchProcessResult> relateUserTag(@RequestParam(value = "file", required = true) MultipartFile file, @RequestParam(value = "tagId", required = true)Integer tagId) throws IOException {
+    try {
+      return Response.success(batchService.relateUsersTag(file.getInputStream(), tagId));
+    } catch(BatchProcessException bpe) {
+      LOGGER.error("failed to process batch relate users and tag", bpe);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));
+    }
+  }
+  
+  /**
+   * 批量关联用户和角色.
+   */
+  @RequestMapping(value = "relate-user-role", method = RequestMethod.POST,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
+      + "and principal.permMap['DOMAIN'].contains('techops')")
+  public Response<BatchProcessResult> relateUserRole(@RequestParam(value = "file", required = true) MultipartFile file, @RequestParam(value = "roleId", required = true)Integer roleId) throws IOException {
+    try {
+      return Response.success(batchService.relateUsersRole(file.getInputStream(), roleId));
+    } catch(BatchProcessException bpe) {
+      LOGGER.error("failed to process batch relate users and role", bpe);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));
+    }
+  }
+  
+  /**
+   * 批量关联多个用户和多个组.
+   */
+  @RequestMapping(value = "relate-user-mult-grp", method = RequestMethod.POST,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
+      + "and principal.permMap['DOMAIN'].contains('techops')")
+  public Response<BatchProcessResult> relateUserMultGrp(@RequestParam(value = "file", required = true) MultipartFile file) throws IOException {
+    return null;
   }
 }

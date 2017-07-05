@@ -56,6 +56,18 @@ public class GroupQuery extends PageParam {
 
   @ApiModelProperty("是否查询非直属的父组信息")
   private Boolean includeIndirectAncestors;
+  
+  @ApiModelProperty("匹配名称或编码")
+  private String codeName;
+
+  public String getCodeName() {
+    return codeName;
+  }
+
+  public GroupQuery setCodeName(String codeName) {
+    this.codeName = codeName;
+    return this;
+  }
 
   public Boolean getIncludeIndirectAncestors() {
     return includeIndirectAncestors;

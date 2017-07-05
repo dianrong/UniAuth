@@ -2,9 +2,12 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.io.Serializable;
 
+import lombok.ToString;
+
 /**
  * Created by Arc on 15/1/16.
  */
+@ToString
 public class RoleCodeDto implements Serializable {
 
   private static final long serialVersionUID = -644318011242242347L;
@@ -37,10 +40,5 @@ public class RoleCodeDto implements Serializable {
   public RoleCodeDto setCode(String code) {
     this.code = code;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "RoleCodeDto [id=" + id + ", code=" + code + ", description=" + description + "]";
   }
 }

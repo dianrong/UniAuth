@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 @ApiModel("组信息")
 public class GroupDto extends TenancyBaseDto {
 
@@ -175,14 +178,5 @@ public class GroupDto extends TenancyBaseDto {
   public GroupDto setIsRootGrp(Boolean isRootGrp) {
     this.isRootGrp = isRootGrp;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "GroupDto [id=" + id + ", code=" + code + ", name=" + name + ", createDate=" + createDate
-        + ", lastUpdate=" + lastUpdate + ", status=" + status + ", description="
-        + description + ", tags=" + tags + ", parentId=" + parentId + ", users=" + users
-        + ", groups=" + groups + ", roleChecked=" + roleChecked + ", tagChecked="
-        + tagChecked + ", ownerMarkup=" + ownerMarkup + ", isRootGrp=" + isRootGrp + "]";
   }
 }

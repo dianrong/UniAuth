@@ -4,9 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
+import lombok.ToString;
+
 /**
  * Created by Arc on 7/4/2016.
  */
+@ToString
 @ApiModel("标签信息")
 public class TagDto extends TenancyBaseDto {
 
@@ -28,6 +31,8 @@ public class TagDto extends TenancyBaseDto {
   private Date createDate;
   @ApiModelProperty("最近更新时间")
   private Date lastUpdate;
+  @ApiModelProperty("对应的域信息")
+  private DomainDto domain;
 
   // whether this tag directly connected with a user
   @ApiModelProperty("辅助字段,判断标签是否与某个用户有关联关系")
@@ -127,11 +132,12 @@ public class TagDto extends TenancyBaseDto {
     return this;
   }
 
-  @Override
-  public String toString() {
-    return "TagDto [id=" + id + ", code=" + code + ", status=" + status + ", description="
-        + description + ", tagTypeId=" + tagTypeId + ", tagTypeCode=" + tagTypeCode
-        + ", createDate=" + createDate + ", lastUpdate=" + lastUpdate + ", tagUserChecked="
-        + tagUserChecked + ", tagGrouprChecked=" + tagGrouprChecked + "]";
+  public DomainDto getDomain() {
+    return domain;
+  }
+
+  public TagDto setDomain(DomainDto domain) {
+    this.domain = domain;
+    return this;
   }
 }

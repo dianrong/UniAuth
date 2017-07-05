@@ -189,6 +189,7 @@ public class GroupService extends TenancyBasedService {
     if (code != null) {
       criteria.andCodeEqualTo(code);
     }
+
     if (!CollectionUtils.isEmpty(groupIds)) {
       criteria.andIdIn(groupIds);
     }

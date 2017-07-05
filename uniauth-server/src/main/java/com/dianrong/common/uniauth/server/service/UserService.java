@@ -73,8 +73,9 @@ import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseUserNotifyInfo;
 import com.dianrong.common.uniauth.server.service.common.CommonService;
-import com.dianrong.common.uniauth.server.service.common.NotificationService;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.common.notify.NotificationService;
+import com.dianrong.common.uniauth.server.service.common.notify.NotifyType;
 import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
 import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
@@ -161,7 +162,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   @Autowired
   private GroupInnerService groupInnerService;
-  
+
   @Autowired
   private UserProfileInnerService userProfileInnerService;
 
@@ -205,15 +206,15 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
     attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
     userProfileInnerService.addOrUpdateUserAttributes(userDto.getId(), attributes);
-    
-    
+
+
     // 用户添加成功后发送MQ
     uniauthSender.sendUserAdd(userDto);
     userDto.setPassword(randomPassword);
     asynAddUserPwdLog(user);
 
     // 发送通知给用户
-    notificationService.addUserNotification(user);
+    notificationService.notify(user, randomPassword, NotifyType.ADD_USER);
     return userDto;
   }
 
@@ -328,7 +329,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
 
     userMapper.updateByPrimaryKey(user);
-    
+
     // 联动更新扩展属性值
     Map<String, String> attributes = Maps.newHashMap();
     attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
@@ -349,14 +350,14 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       uniauthNotify.notify(notifyInfo);
     }
 
+
     // 通知用户密码修改了
-    if (UserActionEnum.isPasswordChange(userActionEnum)) {
-      // 通知用户修改密码 
-      notificationService.updateUserPwdNotification(user);
-      // 如果特设设置的密码, 则不记录密码设置日志
-      if (ignorePwdStrategyCheck == null || !ignorePwdStrategyCheck) {
-        asynAddUserPwdLog(user);
-      }
+    if (UserActionEnum.isUpdatePwdAdmin(userActionEnum)) {
+      notificationService.notify(user, password, NotifyType.UPDATE_PSWD_ADMIN);
+    }
+    // 通知用户密码修改了
+    if (UserActionEnum.isUpdatePwdSelf(userActionEnum)) {
+      notificationService.notify(user, password, NotifyType.UPDATE_PSWD_SELF);
     }
 
     return BeanConverter.convert(user).setPassword(password);
@@ -1230,6 +1231,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     // add password set log
     asynAddUserPwdLog(user);
+
+    notificationService.notify(user, password, NotifyType.UPDATE_PSWD_SELF);
   }
 
   /**
@@ -1607,13 +1610,14 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 根据用户的Identity和Identity的类型获取用户信息.
+   * 
    * @param identity 用户的标识信息,不能为空.
    * @param identityType 标识类型,不能为空.
    */
   public User getUserByIdentity(String identity, UserIdentityType identityType) {
     CheckEmpty.checkEmpty(identity, "identity");
     CheckEmpty.checkEmpty(identityType, "identityType");
-    
+
     Map<String, String> param = Maps.newHashMap();
     param.put("identity", identity);
     param.put("identityType", identityType.getType());

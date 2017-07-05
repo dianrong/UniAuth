@@ -2,9 +2,12 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.util.Date;
 
+import lombok.ToString;
+
 /**
  * Created by Arc on 24/3/2016.
  */
+@ToString
 public class AuditDto extends TenancyBaseDto {
 
   private static final long serialVersionUID = -1081049216491108772L;
@@ -157,14 +160,5 @@ public class AuditDto extends TenancyBaseDto {
   public AuditDto setReqResult(String reqResult) {
     this.reqResult = reqResult;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "AuditDto [id=" + id + ", userId=" + userId + ", requestDate=" + requestDate
-        + ", domainId=" + domainId + ", reqIp=" + reqIp + ", reqUuid=" + reqUuid + ", reqUrl="
-        + reqUrl + ", reqSequence=" + reqSequence + ", reqClass=" + reqClass + ", reqMethod="
-        + reqMethod + ", reqSuccess=" + reqSuccess + ", reqException=" + reqException
-        + ", reqElapse=" + reqElapse + ", reqParam=" + reqParam + ", reqResult=" + reqResult + "]";
   }
 }
