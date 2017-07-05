@@ -97,6 +97,21 @@ public class ProfileDefinitionAttributeInnerService extends TenancyBasedService 
   }
 
   /**
+   * 根据ProfileIds查询所有相关的关联信息.
+   * @param profileIds ProfileId的集合.
+   */
+  public List<ProfileDefinitionAttribute> queryByProfileIds(List<Long> profileIds) {
+    List<ProfileDefinitionAttribute> list = Lists.newArrayList();
+    if (ObjectUtil.collectionIsEmptyOrNull(profileIds)) {
+      return list;
+    }
+    ProfileDefinitionAttributeExample example = new ProfileDefinitionAttributeExample();
+    ProfileDefinitionAttributeExample.Criteria criteria = example.createCriteria();
+    criteria.andProfileIdIn(profileIds);
+    return profileDefinitionAttributeMapper.selectByExample(example);
+  }
+  
+  /**
    * 根据条件查询Profile和Attribute的关联关系信息.
    * 
    * @param profileId Profile的id, 不能为空.

@@ -17,14 +17,11 @@ import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
-import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
-import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -37,14 +34,10 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class UserExtendValService extends TenancyBasedService {
 
@@ -57,6 +50,9 @@ public class UserExtendValService extends TenancyBasedService {
   @Autowired
   private UserMapper userMapper;
   
+  @Autowired
+  private UserExtendValInnerService userExtendValInnerService;
+  
   @Resource(name = "userExtendValDataFilter")
   private DataFilter dataFilter;
   
@@ -65,20 +61,7 @@ public class UserExtendValService extends TenancyBasedService {
    */
   @Transactional
   public UserExtendValDto add(Long userId, Long extendId, String value) {
-    CheckEmpty.checkEmpty(userId, "userId");
-    CheckEmpty.checkEmpty(extendId, "extendId");
-
-    // 数据过滤
-    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-
-    UserExtendVal userExtendVal = new UserExtendVal();
-    userExtendVal.setExtendId(extendId);
-    userExtendVal.setUserId(userId);
-    userExtendVal.setValue(value);
-    userExtendVal.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    userExtendValMapper.insertSelective(userExtendVal);
+    UserExtendVal userExtendVal = userExtendValInnerService.addNew(userId, extendId, value);
     return BeanConverter.convert(userExtendVal, UserExtendValDto.class);
   }
 
@@ -88,8 +71,7 @@ public class UserExtendValService extends TenancyBasedService {
    * @return 删除的个数
    */
   public int delById(Long id) {
-    CheckEmpty.checkEmpty(id, "id");
-    return userExtendValMapper.deleteByPrimaryKey(id);
+    return userExtendValInnerService.delById(id);
   }
 
   /**
@@ -97,31 +79,7 @@ public class UserExtendValService extends TenancyBasedService {
    */
   @Transactional
   public int updateById(Long id, Long userId, Long extendId, String value) {
-    CheckEmpty.checkEmpty(id, "id");
-    if (userId == null && extendId == null && StringUtils.isBlank(value)) {
-      // none to update, just ignore
-      log.warn("user extend value update! update item is null, so just return, the id is {}!", id);
-      return 0;
-    }
-    // 过滤数据
-    List<FilterData> filterFileds = new ArrayList<FilterData>();
-    if (userId != null) {
-      filterFileds.add(FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId));
-    }
-    if (extendId != null) {
-      filterFileds.add(FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-    }
-    if (!filterFileds.isEmpty()) {
-      dataFilter.updateFieldsCheck(TypeParseUtil.parseToIntegerFromObject(id),
-          filterFileds.toArray(new FilterData[filterFileds.size()]));
-    }
-
-    UserExtendVal userExtendVal = new UserExtendVal();
-    userExtendVal.setId(id);
-    userExtendVal.setExtendId(extendId);
-    userExtendVal.setUserId(userId);
-    userExtendVal.setValue(value);
-    return userExtendValMapper.updateByPrimaryKeySelective(userExtendVal);
+    return userExtendValInnerService.updateById(id, userId, extendId, value);
   }
 
   /**

@@ -70,7 +70,7 @@ public class ProfileCache {
   /**
    * 只获取指定Profile的定义,包括其关联的属性集合,但是不包括子Profile的相关信息.
    */
-  @Cacheable(key = "#tenancyId + :simple':' + #id")
+  @Cacheable(key = "#tenancyId + ':simple:' + #id")
   public ProfileDefinitionDto getSimpleProfileDefinition(Long id, Long tenancyId) {
     ProfileDefinitionExample queryExample = new ProfileDefinitionExample();
     ProfileDefinitionExample.Criteria criteria = queryExample.createCriteria();
@@ -123,7 +123,7 @@ public class ProfileCache {
    */
   @Transactional
   @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
-      @CacheEvict(key = "#tenancyId + :simple':' + #id")})
+      @CacheEvict(key = "#tenancyId + ':simple:' + #id")})
   public void updateProfileDefinition(Long id, Long tenancyId, String name, String code,
       String description, Map<String, AttributeValModel> attributes,
       Set<Long> descendantProfileIds) {
@@ -188,7 +188,7 @@ public class ProfileCache {
    */
   @Transactional
   @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
-      @CacheEvict(key = "#tenancyId + :simple':' + #id")})
+      @CacheEvict(key = "#tenancyId + ':simple:' + #id")})
   public void extendProfileDefinition(Long id, Long tenancyId, Map<String, AttributeValModel> attributes,
       Set<Long> descendantProfileIds) {
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);

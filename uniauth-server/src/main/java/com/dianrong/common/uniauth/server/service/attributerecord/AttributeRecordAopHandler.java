@@ -57,19 +57,18 @@ public class AttributeRecordAopHandler {
    */
   @Around("attributeRecord()")
   public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
-    Object identity = getIndentity(joinPoint);
-    Object extendId = getExtendId(joinPoint);
+    AttributeValIdentity valIdentity = getValIndentity(joinPoint);
     TypeOperate typeOperate = getTypeOperate(joinPoint);
     AttributeRecordHandler handler = attributeRecordHanlderFactory.getHandler(typeOperate);
     boolean parameterCheckOk = true;
     ExtendVal originalVal = null;
     try {
-      originalVal = handler.invokeTargetBefore(identity, extendId);
+      originalVal = handler.invokeTargetBefore(valIdentity);
     } catch (InvalidParameterTypeException ite) {
       parameterCheckOk = false;
       log.error(String.format(
-          "AttributeRecordHandler invoke target before parameter is invalid.TypeOperate:%s, Identity:%s, Extendid:%s",
-          typeOperate, identity, extendId), ite);
+          "AttributeRecordHandler invoke target before parameter is invalid.TypeOperate:%s, Identity:%s",
+          typeOperate, valIdentity), ite);
     }
     Throwable throwable = null;
     try {
@@ -81,7 +80,7 @@ public class AttributeRecordAopHandler {
     } finally {
       if (parameterCheckOk) {
         AttributeRecords attributeRecord =
-            handler.invokeTargetAfter(identity, extendId, originalVal, throwable);
+            handler.invokeTargetAfter(valIdentity, originalVal, throwable);
         if (attributeRecord != null) {
           if (attributeRecordsQueue.add(attributeRecord)) {
             log.debug("success add {} to records queue!", attributeRecord);
@@ -105,36 +104,66 @@ public class AttributeRecordAopHandler {
     return typeOperate;
   }
 
-  private Object getIndentity(ProceedingJoinPoint joinPoint) {
+  /**
+   * 通过分析注解获取能唯一标识扩展属性值记录的标识.
+   */
+  private AttributeValIdentity getValIndentity(ProceedingJoinPoint joinPoint) {
+    AttributeValIdentity valIdentity = new AttributeValIdentity();
     Method targetMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
     ExtendAttributeRecord extendAttributeRecord =
         targetMethod.getAnnotation(ExtendAttributeRecord.class);
-    String expression = extendAttributeRecord.identity();
-    if (!StringUtils.isBlank(expression)) {
-      return getElExpress(joinPoint, expression);
-    }
     Object[] args = joinPoint.getArgs();
-    int identityIndex = extendAttributeRecord.identityIndex();
-    if (identityIndex >= args.length) {
-      log.error("ExtendAttributeRecord identity index param is error! {}", identityIndex);
+    
+    // get primary key
+    Long primaryId = null;
+    String primaryIdExp = extendAttributeRecord.primaryId();
+    if (!StringUtils.isBlank(primaryIdExp)) {
+      // 直接转换,如果有错误直接抛出取
+      primaryId = Long.valueOf(getElExpress(joinPoint, primaryIdExp).toString());
+    } else {
+      int primaryIdIndex = extendAttributeRecord.primaryIdIndex();
+      if (primaryIdIndex >= 0) {
+        if (primaryIdIndex >= args.length) {
+          log.error("ExtendAttributeRecord primary index param is error! {}", primaryIdIndex);
+        }
+        primaryId =  Long.valueOf(args[primaryIdIndex].toString());
+      }
     }
-    return args[identityIndex];
-  }
-
-  private Object getExtendId(ProceedingJoinPoint joinPoint) {
-    Method targetMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
-    ExtendAttributeRecord extendAttributeRecord =
-        targetMethod.getAnnotation(ExtendAttributeRecord.class);
-    String expression = extendAttributeRecord.extendId();
-    if (!StringUtils.isBlank(expression)) {
-      return getElExpress(joinPoint, expression);
+    if (primaryId != null) {
+      valIdentity.setPrimaryId(primaryId);
+      return valIdentity;
     }
-    Object[] args = joinPoint.getArgs();
-    int identityIndex = extendAttributeRecord.extendIdIndex();
-    if (identityIndex >= args.length) {
-      log.error("ExtendAttributeRecord extendId index param is error! {}", identityIndex);
+    
+    // 如果没有指定主键id,继续通过identity和extendId去匹配.
+    
+    // Identity
+    Object identity;
+    String identityExp = extendAttributeRecord.identity();
+    if (!StringUtils.isBlank(identityExp)) {
+      identity = getElExpress(joinPoint, identityExp);
+    } else {
+      int identityIndex = extendAttributeRecord.identityIndex();
+      if (identityIndex >= args.length) {
+        log.error("ExtendAttributeRecord identity index param is error! {}", identityIndex);
+      }
+      identity = args[identityIndex];
     }
-    return args[identityIndex];
+    valIdentity.setIdentity(identity);
+    
+    // ExtendId
+    Long extendId;
+    String extendIdExp = extendAttributeRecord.extendId();
+    if (!StringUtils.isBlank(extendIdExp)) {
+      extendId = Long.valueOf(getElExpress(joinPoint, extendIdExp).toString());
+    } else {
+      int extendIdIndex = extendAttributeRecord.extendIdIndex();
+      if (extendIdIndex >= args.length) {
+        log.error("ExtendAttributeRecord extendId index param is error! {}", extendIdIndex);
+      }
+      extendId = Long.valueOf(args[extendIdIndex].toString());
+    }
+    valIdentity.setExtendId(extendId);
+    return valIdentity;
   }
 
   private Object getElExpress(ProceedingJoinPoint joinPoint, String expression) {

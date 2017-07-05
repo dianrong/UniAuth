@@ -6,10 +6,6 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
-import com.dianrong.common.uniauth.server.datafilter.DataFilter;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
-import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
@@ -19,8 +15,6 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,10 +37,6 @@ public class GroupProfileInnerService extends TenancyBasedService {
   
   @Autowired
   private GrpExtendValMapper grpExtendValMapper;
-
-  // Data filter
-  @Resource(name = "grpExtendValDataFilter")
-  private DataFilter grpExtendValDataFilter;
 
   /**
    * 更新组的扩展属性值.
@@ -92,6 +82,8 @@ public class GroupProfileInnerService extends TenancyBasedService {
                 sysGrpAtrributeDefine.getDefineTable().getIdentityFieldName(),
                 sysGrpAtrributeDefine.getDefineTable().getTableName(),
                 sysGrpAtrributeDefine.getFieldName(), value);
+            // 同时更新在扩展属性表中的属性
+            addOrUpdate(grpId, attributeExtend.getId(), value);
           } else {
             log.debug("System define attribute {} is not writable, so update just ignore!");
           }
@@ -109,12 +101,6 @@ public class GroupProfileInnerService extends TenancyBasedService {
   private GrpExtendValDto addOrUpdate(Integer groupId, Long extendId, String value) {
     CheckEmpty.checkEmpty(groupId, "groupId");
     CheckEmpty.checkEmpty(extendId, "extendId");
-
-    // 数据过滤
-    grpExtendValDataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_GRP_ID, groupId),
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-
     GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
     GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
     criteria.andGrpIdEqualTo(groupId).andExtendIdEqualTo(extendId)
@@ -126,10 +112,8 @@ public class GroupProfileInnerService extends TenancyBasedService {
       record = groupExtendValInnerService.addNew(groupId, extendId, value);
     } else {
       // update
-      record = groupExtendValInnerService.update(groupId, extendId, value);
-      record.setExtendId(extendId);
-      record.setGrpId(groupId);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
+      groupExtendValInnerService.update(groupId, extendId, value);
+      record = groupExtendValInnerService.queryByGrpIdAndExtendId(groupId, extendId);
     }
     return BeanConverter.convert(record, GrpExtendValDto.class);
   }

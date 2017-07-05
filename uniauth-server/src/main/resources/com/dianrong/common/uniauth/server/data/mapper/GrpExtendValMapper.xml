@@ -149,9 +149,9 @@
       This element was generated on Thu Jun 01 18:13:03 CST 2017.
     -->
     insert into grp_extend_val (id, grp_id, extend_id, 
-      value, tenancy_id
+      value, tenancy_id)
     values (#{id,jdbcType=BIGINT}, #{grpId,jdbcType=INTEGER}, #{extendId,jdbcType=BIGINT}, 
-      #{value,jdbcType=VARCHAR}, #{tenancyId,jdbcType=BIGINT}
+      #{value,jdbcType=VARCHAR}, #{tenancyId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.dianrong.common.uniauth.server.data.entity.GrpExtendVal" useGeneratedKeys="true" keyProperty="id">
     <!--

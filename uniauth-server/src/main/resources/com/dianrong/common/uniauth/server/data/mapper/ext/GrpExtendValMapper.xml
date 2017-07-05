@@ -3,6 +3,12 @@
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper" >
   <update id="updateSystemDefineGrpAttribute" parameterType="map">
     UPDATE ${tableName} SET ${fieldName} = #{value, jdbcType=VARCHAR} 
-    WHERE ${idFieldName} = #{grpId}
+    WHERE ${idFiledName} = #{grpId}
   </update>
+  
+  <update id="updateValue">
+        UPDATE grp_extend_val SET value = #{value, jdbcType=VARCHAR} where grp_id
+        = #{grpId, jdbcType=INTEGER} and extend_id = #{extendId,
+        jdbcType=BIGINT}
+    </update>
 </mapper>

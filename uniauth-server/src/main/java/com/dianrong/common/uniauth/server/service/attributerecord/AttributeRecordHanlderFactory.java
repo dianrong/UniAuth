@@ -6,8 +6,10 @@ import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttribut
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.NotSupportedTypeOperateException;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.AttributeRecordHandler;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpAddAttributeHanlder;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpDeleteAttributeHanlder;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpUpdateAttributeHanlder;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserAddAttributeHanlder;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserDeleteAttributeHanlder;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserUpdateAttributeHanlder;
 import com.dianrong.common.uniauth.server.service.inner.GroupExtendValInnerService;
 import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
@@ -72,10 +74,14 @@ public final class AttributeRecordHanlderFactory implements InitializingBean {
         new UserAddAttributeHanlder(userExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.USER, RecordOperate.UPDATE),
         new UserUpdateAttributeHanlder(userExtendValInnerService));
+    caches.put(TypeOperate.build(RecordType.USER, RecordOperate.DELETE),
+        new UserDeleteAttributeHanlder(userExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.ADD),
         new GrpAddAttributeHanlder(groupExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.UPDATE),
         new GrpUpdateAttributeHanlder(groupExtendValInnerService));
+    caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.DELETE),
+        new GrpDeleteAttributeHanlder(groupExtendValInnerService));
   }
 
   @Override

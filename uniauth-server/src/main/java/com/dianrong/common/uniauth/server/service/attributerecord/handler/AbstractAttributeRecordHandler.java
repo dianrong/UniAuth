@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.service.attributerecord.handler;
 
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
+import com.dianrong.common.uniauth.server.service.attributerecord.AttributeValIdentity;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,16 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractAttributeRecordHandler implements AttributeRecordHandler {
   
-  public AttributeRecords invokeTargetAfter(Object identity, Object extendId, ExtendVal originalVal, Throwable throwable) {
+  @Override
+  public AttributeRecords invokeTargetAfter(AttributeValIdentity valIdentity, ExtendVal originalVal, Throwable throwable) {
     if (throwable != null) {
       log.debug("attribute value process error!", throwable);
       return null;
     }
-    return doInvokeTargetAfter(identity, extendId, originalVal);
+    return doInvokeTargetAfter(valIdentity, originalVal);
   }
   
   /**
    * 具体处理业务方法.
+   * @param valIdentity 唯一标识一条记录,不能为空.
    */
-  protected abstract AttributeRecords doInvokeTargetAfter(Object identity, Object extendId, ExtendVal originalVal);
+  protected abstract AttributeRecords doInvokeTargetAfter(AttributeValIdentity valIdentity, ExtendVal originalVal);
 }

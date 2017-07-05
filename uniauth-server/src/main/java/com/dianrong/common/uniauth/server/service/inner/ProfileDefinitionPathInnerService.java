@@ -203,6 +203,7 @@ public class ProfileDefinitionPathInnerService extends TenancyBasedService {
       SimpleProfileDefinitionDto spdp = new SimpleProfileDefinitionDto();
       spdp.setId(pdp.getDescendant());
       getSubProfileInfo(spdp);
+      subPdpList.add(spdp);
     }
     parentPdp.setSubProfiles(subPdpList);
   }

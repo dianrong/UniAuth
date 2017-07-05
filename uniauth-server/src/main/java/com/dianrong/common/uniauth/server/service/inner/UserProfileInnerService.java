@@ -6,10 +6,6 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
-import com.dianrong.common.uniauth.server.datafilter.DataFilter;
-import com.dianrong.common.uniauth.server.datafilter.FieldType;
-import com.dianrong.common.uniauth.server.datafilter.FilterData;
-import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
@@ -19,8 +15,6 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,10 +37,6 @@ public class UserProfileInnerService extends TenancyBasedService {
 
   @Autowired
   private UserExtendValMapper userExtendValMapper;
-
-  // Data filter
-  @Resource(name = "userExtendValDataFilter")
-  private DataFilter userExtendValDataFilter;
 
   /**
    * 更新用户的扩展属性值.
@@ -111,12 +101,6 @@ public class UserProfileInnerService extends TenancyBasedService {
   private UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
     CheckEmpty.checkEmpty(userId, "userId");
     CheckEmpty.checkEmpty(extendId, "extendId");
-
-    // 数据过滤
-    userExtendValDataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
-        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-
     UserExtendValExample userExtendValExample = new UserExtendValExample();
     UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
     criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)
@@ -129,10 +113,8 @@ public class UserProfileInnerService extends TenancyBasedService {
       record = userExtendValInnerService.addNew(userId, extendId, value);
     } else {
       // update
-      record = userExtendValInnerService.update(userId, extendId, value);
-      record.setExtendId(extendId);
-      record.setUserId(userId);
-      record.setTenancyId(tenancyService.getTenancyIdWithCheck());
+      userExtendValInnerService.update(userId, extendId, value);
+      record = userExtendValInnerService.queryByUserIdAndExtendId(userId, extendId);
     }
     return BeanConverter.convert(record, UserExtendValDto.class);
   }

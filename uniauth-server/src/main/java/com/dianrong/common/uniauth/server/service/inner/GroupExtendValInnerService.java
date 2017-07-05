@@ -4,6 +4,10 @@ import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterData;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordOperate;
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordType;
@@ -13,6 +17,8 @@ import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +33,10 @@ public class GroupExtendValInnerService extends TenancyBasedService {
   @Autowired
   private GrpExtendValMapper grpExtendValMapper;
 
+  // Data filter
+  @Resource(name = "grpExtendValDataFilter")
+  private DataFilter dataFilter;
+  
   /**
    * 更新系统自定义的组属性值.
    * 
@@ -58,6 +68,14 @@ public class GroupExtendValInnerService extends TenancyBasedService {
   @Transactional
   @ExtendAttributeRecord(type = RecordType.GROUP, operate = RecordOperate.ADD)
   public GrpExtendVal addNew(Integer grpId, Long extendId, String value) {
+    CheckEmpty.checkEmpty(grpId, "grpId");
+    CheckEmpty.checkEmpty(extendId, "extendId");
+    
+    // 数据过滤
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
+        FilterData.buildFilterData(FieldType.FIELD_TYPE_GRP_ID, grpId),
+        FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
+    
     GrpExtendVal record = new GrpExtendVal();
     record.setExtendId(extendId);
     record.setGrpId(grpId);
@@ -72,14 +90,10 @@ public class GroupExtendValInnerService extends TenancyBasedService {
    */
   @Transactional
   @ExtendAttributeRecord(type = RecordType.GROUP, operate = RecordOperate.UPDATE)
-  public GrpExtendVal update(Integer grpId, Long extendId, String value) {
-    GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
-    GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
-    criteria.andGrpIdEqualTo(grpId).andExtendIdEqualTo(extendId)
-        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-    GrpExtendVal record = new GrpExtendVal();
-    grpExtendValMapper.updateByExampleSelective(record, grpExtendValExample);
-    return record;
+  public void update(Integer grpId, Long extendId, String value) {
+    CheckEmpty.checkEmpty(grpId, "grpId");
+    CheckEmpty.checkEmpty(extendId, "extendId");
+    grpExtendValMapper.updateValue(grpId, extendId, value);
   }
   
   /**
@@ -95,5 +109,13 @@ public class GroupExtendValInnerService extends TenancyBasedService {
       return null;
     }
     return grpExtendValList.get(0);
+  }
+  
+  /**
+   * 根据主键id查找.
+   */
+  public GrpExtendVal queryByPrimaykey(Long primaryId) {
+    CheckEmpty.checkEmpty(primaryId, "primaryId");
+    return grpExtendValMapper.selectByPrimaryKey(primaryId);
   }
 }

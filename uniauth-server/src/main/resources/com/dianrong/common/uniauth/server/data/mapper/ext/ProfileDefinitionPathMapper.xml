@@ -7,8 +7,8 @@
 	<insert id="batchInsert" parameterType="java.util.List">
 		insert into profile_definition_path (ancestor, descendant) values
 		<foreach collection="profileDefinitionPaths" item="item"
-			separator="," open="(" close=")">
-			item.ancestor, item.descendant
+			separator=",">
+			(#{item.ancestor, jdbcType=BIGINT}, #{item.descendant, jdbcType=BIGINT})
 		</foreach>
 	</insert>
 </mapper>

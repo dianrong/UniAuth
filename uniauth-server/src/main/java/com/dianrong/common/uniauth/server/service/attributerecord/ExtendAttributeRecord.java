@@ -28,6 +28,12 @@ public @interface ExtendAttributeRecord {
   RecordOperate operate();
 
   /**
+   * 主键Id所在的参数位置. 如果要需要使用该参数,需要主动指定<br>
+   * 当没有对应的EL表达式(primaryId),该参数才起作用.
+   */
+  int primaryIdIndex() default -1;
+  
+  /**
    * 用户id或者组id所在参数列表的位置, 从0开始.<br>
    * 当没有指定EL表达式,该参数才起作用.
    */
@@ -38,6 +44,12 @@ public @interface ExtendAttributeRecord {
    * 当没有指定EL表达式该参数才起作用.
    */
   int extendIdIndex() default 1;
+  
+  
+  /**
+   * EL表达式计算primaryId的值.
+   */
+  String primaryId() default "";
   
   /**
    * EL表达式计算identity的值.
