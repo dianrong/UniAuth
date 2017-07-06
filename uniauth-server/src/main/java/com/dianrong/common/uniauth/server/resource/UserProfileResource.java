@@ -28,46 +28,18 @@ public class UserProfileResource implements IUserProfileRWResource {
   @Autowired
   private UserProfileService userProfileService;
 
-  @ApiOperation("根据Uniauth中的用户Id和ProfileId获取用户的属性集合")
-  @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "uniauthId", value = "用户在Uniauth系统中的唯一Id", dataType = "long",
-          required = true, paramType = "query"),
-      @ApiImplicitParam(name = "profileId", value = "Profile定义的Id", dataType = "long",
-          required = true, paramType = "query"),
-      @ApiImplicitParam(name = "time", value = "某个时间点", dataType = "long", paramType = "query")})
-  @Timed
-  @Override
-  public Response<Map<String, Object>> getUserProfile(Long uniauthId, Long profileId, Long time) {
-    System.out.println(time);
-    return Response.success(userProfileService.getUserProfile(uniauthId, profileId));
-  }
-
-  @ApiOperation("根据用户的Identity和Identity类型和ProfileId获取用户的属性集合(启用用户)")
-  @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "identity", value = "用户的唯一标识值", dataType = "string", required = true,
-          paramType = "query"),
-      @ApiImplicitParam(name = "profileId", value = "Profile定义的Id", dataType = "long",
-      required = true, paramType = "query"),
-      @ApiImplicitParam(name = "tenancyId", value = "租户Id", dataType = "long",
-      required = true, paramType = "query"),
-      @ApiImplicitParam(name = "identityType", value = "identity的类型", dataType = "string",
-          required = true, paramType = "query",
-          allowableValues = "EMAIL, PHONE, STAFF_NO, LDAP_DN, USER_GUID")})
+  @ApiOperation("根据Identity获取用户对应的Profile")
   @Timed
   @Override
   public Response<Map<String, Object>> getUserProfileByIdentity(String identity, Long profileId,
-      Long tenancyId, UserIdentityType identityType) {
+      Long tenancyId, UserIdentityType identityType, Long time) {
     return Response.success(
-        userProfileService.getUserProfileByIdentity(identity, profileId, tenancyId, identityType));
+        userProfileService.getUserProfileByIdentity(identity, profileId, tenancyId, identityType, time));
   }
 
   @ApiOperation("更新一个用户的扩展属性值(如果扩展属性不存在,则添加),随后返回对应ProfileId的Profile.")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",
-          required = true, paramType = "query"),
-      @ApiImplicitParam(name = "uniauthId", value = "用户在Uniauth系统中的唯一Id", dataType = "long",
-          required = true, paramType = "query"),
-      @ApiImplicitParam(name = "profileId", value = "Profile定义的Id", dataType = "long",
           required = true, paramType = "query"),
       @ApiImplicitParam(name = "attributes", value = "更新的扩展属性值集合", dataType = "java.util.Map",
           required = true, paramType = "query")})

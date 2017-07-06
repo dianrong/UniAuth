@@ -58,8 +58,7 @@ public class GroupDataFilter extends CurrentAbstractDataFilter<Grp> {
   protected Grp getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "grpId");
     GrpExample condition = new GrpExample();
-    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED)
-        .andTenancyIdEqualTo(getTenancyId());
+    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED);
     List<Grp> selectByExample = grpMapper.selectByExample(condition);
     if (selectByExample != null && !selectByExample.isEmpty()) {
       return selectByExample.get(0);

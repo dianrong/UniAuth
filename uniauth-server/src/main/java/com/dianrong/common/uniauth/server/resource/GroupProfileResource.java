@@ -28,11 +28,6 @@ public class GroupProfileResource implements IGroupProfileRWResource {
   private GroupProfileService groupProfileService;
   
   @ApiOperation("根据Uniauth中的组Id和ProfileId获取用户的属性集合")
-  @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "groupId", value = "组Id", dataType = "int",
-          required = true, paramType = "query"),
-      @ApiImplicitParam(name = "profileId", value = "Profile定义的Id", dataType = "long",
-          required = true, paramType = "query")})
   @Timed
   @Override
   public Response<Map<String, Object>> getGroupProfile(Integer groupId, Long profileId) {
@@ -42,10 +37,6 @@ public class GroupProfileResource implements IGroupProfileRWResource {
   @ApiOperation("更新一个组的扩展属性值(如果扩展属性不存在,则添加),随后返回对应ProfileId的Profile.")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",
-          required = true, paramType = "query"),
-      @ApiImplicitParam(name = "groupId", value = "组id", dataType = "int",
-          required = true, paramType = "query"),
-      @ApiImplicitParam(name = "profileId", value = "Profile定义的Id", dataType = "long",
           required = true, paramType = "query"),
       @ApiImplicitParam(name = "attributes", value = "更新的扩展属性值集合", dataType = "java.util.Map",
           required = true, paramType = "query")})

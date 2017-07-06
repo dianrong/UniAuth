@@ -34,7 +34,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
       for (FilterData fd : equalsField) {
         Object v1 = getObjectValue(record, fd.getType());
         Object v2 = fd.getValue();
-        if (!ObjectUtil.objectEqual(v1, v2)) {
+        if (!ObjectUtil.objectEqualIgnoreCase(v1, v2)) {
           isEqual = false;
           break;
         }
@@ -119,7 +119,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
     }
     return null;
   }
-
+  
   /**
    * 处理查询数据中是否存在对应的字段相等的情况.
    * @param equalsField 字段列表,一定不为空.

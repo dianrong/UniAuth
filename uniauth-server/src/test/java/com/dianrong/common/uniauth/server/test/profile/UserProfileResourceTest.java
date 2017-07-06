@@ -74,7 +74,7 @@ public class UserProfileResourceTest extends BaseTest {
     Long profileId = 4L;
     Long uniauthId = 300000020L;
     Response<Map<String, Object>> response =
-        userProfileResource.getUserProfile(uniauthId, profileId, null);
+        userProfileResource.getUserProfileByIdentity(uniauthId.toString(), profileId, null, null, null);
     System.out.println(JsonUtil.object2Jason(response));
   }
 
@@ -83,7 +83,7 @@ public class UserProfileResourceTest extends BaseTest {
     Long profileId = 3L;
     String identity = "15982871999";
     Response<Map<String, Object>> response =
-        userProfileResource.getUserProfileByIdentity(identity, profileId, 1L,UserIdentityType.PHONE);
+        userProfileResource.getUserProfileByIdentity(identity, profileId, 1L,UserIdentityType.PHONE, null);
     System.out.println(JsonUtil.object2Jason(response));
   }
 }

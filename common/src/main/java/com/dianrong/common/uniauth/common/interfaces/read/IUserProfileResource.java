@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -20,15 +21,10 @@ import javax.ws.rs.core.MediaType;
 @Consumes({MediaType.APPLICATION_JSON})
 public interface IUserProfileResource {
 
-  // scenario: get user profile
-  @GET
-  @Path("{uniauthId}?profile_id={profileId}&time={time}")
-  Response<Map<String, Object>> getUserProfile(@PathParam("uniauthId") Long uniauthId,
-      @PathParam("profileId") Long profileId, @PathParam("time") Long time);
-
   // scenario: get user profile by identity type
   @GET
-  @Path("{identity}?profile_id={profileId}&tenancyId={tenancyId}&identity_type={identityType}")
-  Response<Map<String, Object>> getUserProfileByIdentity(@PathParam("identity") String identity, @PathParam("tenancyId") Long tenancyId, 
-      @PathParam("profileId") Long profileId, @PathParam("identityType") UserIdentityType identityType);
+  @Path("{identity}")
+  Response<Map<String, Object>> getUserProfileByIdentity(@PathParam("identity") String identity,
+      @QueryParam("profileId") Long profileId, @QueryParam("tenancyId") Long tenancyId,
+      @QueryParam("identityType") UserIdentityType identityType, @QueryParam("time") Long time);
 }

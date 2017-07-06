@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -21,7 +22,7 @@ public interface IGroupProfileResource {
 
   // scenario: get group profile
   @GET
-  @Path("{groupId}?profile_id={profileId}")
+  @Path("{groupId}")
   Response<Map<String, Object>> getGroupProfile(@PathParam("groupId") Integer groupId,
-      @PathParam("profileId") Long profileId);
+      @QueryParam("profileId") Long profileId);
 }

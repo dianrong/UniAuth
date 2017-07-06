@@ -58,8 +58,7 @@ public class GrpExtendValDataFilter extends CurrentAbstractDataFilter<GrpExtendV
   protected GrpExtendVal getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "GrpExtendValId");
     GrpExtendValExample condtion = new GrpExtendValExample();
-    condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id))
-        .andTenancyIdEqualTo(getTenancyId());
+    condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
     List<GrpExtendVal> infoes = grpExtendValMapper.selectByExample(condtion);
     if (infoes != null && infoes.size() > 0) {
       return infoes.get(0);

@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
 import com.dianrong.common.uniauth.server.data.entity.User;
@@ -62,17 +63,26 @@ public class UserProfileService extends TenancyBasedService {
    * @param profileId Profile定义的Id.
    * @param tenancyId 租户Id.
    * @param identityType 登陆类型,对应于枚举:UserIdentityType
+   * @param time 如果该参数传值,则代表获取对应时间点用户的Profile.
    * @return 用户的属性集合.
    */
   public Map<String, Object> getUserProfileByIdentity(String identity, Long profileId,
-      Long tenancyId, UserIdentityType identityType) {
+      Long tenancyId, UserIdentityType identityType, Long time) {
     CheckEmpty.checkEmpty(profileId, "profileId");
+    CheckEmpty.checkEmpty(identity, "identity");
+    Long uniauthId = StringUtil.translateStringToLong(identity);
+    if (identityType == null && uniauthId != null) {
+      log.debug("get user profile by uniauthId.UniauthId:{}", uniauthId);
+      return getUserProfile(uniauthId, profileId);
+    }
+    log.debug("get user profile by identity.identity:{}, identityType:{}, tenancyId:{}", uniauthId,
+        identityType, tenancyId);
     User user = userService.getUserByIdentity(identity, tenancyId, identityType);
     if (user == null) {
       throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg(
           "common.profile.parameter.user.identity.not.found", identityType.getType(), identity));
     }
-    Long uniauthId = user.getId();
+    uniauthId = user.getId();
     log.debug("find one user by {} = {}", identityType.getType(), identity);
     return getUserProfile(uniauthId, profileId);
   }
@@ -96,7 +106,7 @@ public class UserProfileService extends TenancyBasedService {
     if (ObjectUtil.collectionIsEmptyOrNull(profileIds)) {
       return Collections.emptyMap();
     }
-    
+
     // 获取profile对应的所有的extendId
     List<ProfileDefinitionAttribute> profileDefinitionAttributeList =
         profileDefinitionAttributeInnerService.queryByProfileIds(new ArrayList<Long>(profileIds));
@@ -104,7 +114,7 @@ public class UserProfileService extends TenancyBasedService {
       return Collections.emptyMap();
     }
     List<Long> extendIds = Lists.newArrayList();
-    for (ProfileDefinitionAttribute pda: profileDefinitionAttributeList) {
+    for (ProfileDefinitionAttribute pda : profileDefinitionAttributeList) {
       extendIds.add(pda.getExtendId());
     }
     // 根据extend_attribute_id 获取所有的属性.

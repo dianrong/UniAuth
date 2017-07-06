@@ -24,6 +24,8 @@
             <ref bean="attributeExtendResource"/>
             <ref bean="swaggerResource"/>
             <ref bean="profileResource"/>
+            <ref bean="userProfileResource"/>
+            <ref bean="groupProfileResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />

@@ -90,6 +90,22 @@ public class StringUtil {
   }
 
   /**
+   * 将一个String转化为Long.
+   * @return 不能正常转化则返回null.
+   */
+  public static Long translateStringToLong(String str) {
+    if (str == null) {
+      return null;
+    }
+    try {
+      return Long.parseLong(str.trim());
+    } catch(NumberFormatException nfe) {
+      log.debug("failed to translate "+ str +" to a Long",  nfe);
+      return null;
+    }
+  }
+  
+  /**
    * 将一个Object转化为Long.
    * @return 不能正常转化则返回null.
    */

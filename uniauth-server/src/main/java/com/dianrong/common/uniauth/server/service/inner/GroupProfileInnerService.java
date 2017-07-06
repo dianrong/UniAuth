@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
@@ -15,6 +16,8 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +40,9 @@ public class GroupProfileInnerService extends TenancyBasedService {
   
   @Autowired
   private GrpExtendValMapper grpExtendValMapper;
+  
+  @Resource(name = "grpExtendValDataFilter")
+  private DataFilter dataFilter;
 
   /**
    * 更新组的扩展属性值.

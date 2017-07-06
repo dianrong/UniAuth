@@ -62,7 +62,7 @@ public class UserDataFilter extends CurrentAbstractDataFilter<User> {
     CheckEmpty.checkEmpty(id, "userId");
     UserExample condition = new UserExample();
     condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id))
-        .andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
+        .andStatusEqualTo(AppConstants.STATUS_ENABLED);
     List<User> selectByExample = userMapper.selectByExample(condition);
     if (selectByExample != null && !selectByExample.isEmpty()) {
       return selectByExample.get(0);

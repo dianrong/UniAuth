@@ -27,7 +27,7 @@ public interface IProfileRWResource extends IProfileResource{
    */
   @POST
   @Path("{profileId}")
-  Response<ProfileDefinitionDto> updateProfileDefinition(@PathParam("id") Long id,
+  Response<ProfileDefinitionDto> updateProfileDefinition(@PathParam("profileId") Long profileId,
       ProfileDefinitionParam param);
 
   // scenario: extend profile
@@ -36,6 +36,6 @@ public interface IProfileRWResource extends IProfileResource{
    */
   @PATCH
   @Path("{profileId}")
-  Response<ProfileDefinitionDto> extendProfileDefinition(@PathParam("id") Long id,
+  Response<ProfileDefinitionDto> extendProfileDefinition(@PathParam("profileId") Long profileId,
       ProfileDefinitionParam param);
 }

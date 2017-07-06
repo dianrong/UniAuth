@@ -7,7 +7,9 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +61,7 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
   protected TagType getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "tagTypeId");
     TagTypeExample condition = new TagTypeExample();
-    condition.createCriteria().andIdEqualTo(id).andTenancyIdEqualTo(getTenancyId());
+    condition.createCriteria().andIdEqualTo(id);
     List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
 
     if (selectByExample != null && !selectByExample.isEmpty()) {

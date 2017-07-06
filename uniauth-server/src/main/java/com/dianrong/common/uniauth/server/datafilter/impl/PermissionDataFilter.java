@@ -65,8 +65,7 @@ public class PermissionDataFilter extends CurrentAbstractDataFilter<Permission> 
   protected Permission getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "permissionId");
     PermissionExample condition = new PermissionExample();
-    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED)
-        .andTenancyIdEqualTo(getTenancyId());
+    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED);
     List<Permission> selectByExample = permissionMapper.selectByExample(condition);
     if (selectByExample != null && !selectByExample.isEmpty()) {
       return selectByExample.get(0);

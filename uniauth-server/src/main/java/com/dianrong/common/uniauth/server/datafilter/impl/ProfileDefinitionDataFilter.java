@@ -59,8 +59,7 @@ public class ProfileDefinitionDataFilter extends CurrentAbstractDataFilter<Profi
   protected ProfileDefinition getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "profileDefinitionId");
     ProfileDefinitionExample condition = new ProfileDefinitionExample();
-    condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id))
-        .andTenancyIdEqualTo(getTenancyId());
+    condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
     List<ProfileDefinition> selectByExample = profileDefinitionMapper.selectByExample(condition);
     if (selectByExample != null && !selectByExample.isEmpty()) {
       return selectByExample.get(0);
