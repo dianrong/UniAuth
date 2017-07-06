@@ -60,13 +60,14 @@ public class UserProfileService extends TenancyBasedService {
    * 
    * @param identity 用户的身份识别标识. 比如:Email, Phone, Staff_no,Ldap_dn, User_guid等.
    * @param profileId Profile定义的Id.
+   * @param tenancyId 租户Id.
    * @param identityType 登陆类型,对应于枚举:UserIdentityType
    * @return 用户的属性集合.
    */
   public Map<String, Object> getUserProfileByIdentity(String identity, Long profileId,
-      UserIdentityType identityType) {
+      Long tenancyId, UserIdentityType identityType) {
     CheckEmpty.checkEmpty(profileId, "profileId");
-    User user = userService.getUserByIdentity(identity, identityType);
+    User user = userService.getUserByIdentity(identity, tenancyId, identityType);
     if (user == null) {
       throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg(
           "common.profile.parameter.user.identity.not.found", identityType.getType(), identity));
@@ -112,11 +113,10 @@ public class UserProfileService extends TenancyBasedService {
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }
-    final Long tenancyId = tenancyService.getTenancyIdWithCheck();
     return ProfileSupport.getProfileAttributes(pdDto, extendValMap, new QueryProfileDefinition() {
       @Override
       public ProfileDefinitionDto querySimpleProfileDefinition(Long id) {
-        return profileCache.getSimpleProfileDefinition(id, tenancyId);
+        return profileCache.getSimpleProfileDefinition(id);
       }
     });
   }

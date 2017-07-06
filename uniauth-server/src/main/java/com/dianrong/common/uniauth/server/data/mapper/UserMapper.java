@@ -110,5 +110,5 @@ public interface UserMapper {
 
   List<User> getUsersByGroupCodeRoleIds(Map<String, Object> param);
   
-  User getUserByIdentity(Map<String, String> param);
+  User getUserByIdentity(Map<String, Object> param);
 }

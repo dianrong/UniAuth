@@ -70,11 +70,11 @@ public class ProfileCache {
   /**
    * 只获取指定Profile的定义,包括其关联的属性集合,但是不包括子Profile的相关信息.
    */
-  @Cacheable(key = "#tenancyId + ':simple:' + #id")
-  public ProfileDefinitionDto getSimpleProfileDefinition(Long id, Long tenancyId) {
+  @Cacheable(key = "'simple:' + #id")
+  public ProfileDefinitionDto getSimpleProfileDefinition(Long id) {
     ProfileDefinitionExample queryExample = new ProfileDefinitionExample();
     ProfileDefinitionExample.Criteria criteria = queryExample.createCriteria();
-    criteria.andIdEqualTo(id).andTenancyIdEqualTo(tenancyId);
+    criteria.andIdEqualTo(id);
     List<ProfileDefinition> pdList = profileDefinitionMapper.selectByExample(queryExample);
     if (ObjectUtil.collectionIsEmptyOrNull(pdList)) {
       log.debug("get profile definition by primary key {}, but found none!", id);
@@ -95,11 +95,11 @@ public class ProfileCache {
   /**
    * 根据Id获取Profile的定义.
    */
-  @Cacheable(key = "#tenancyId + ':' + #id")
-  public ProfileDefinitionDto getProfileDefinition(Long id, Long tenancyId) {
+  @Cacheable(key = "#id")
+  public ProfileDefinitionDto getProfileDefinition(Long id) {
     ProfileDefinitionExample queryExample = new ProfileDefinitionExample();
     ProfileDefinitionExample.Criteria criteria = queryExample.createCriteria();
-    criteria.andIdEqualTo(id).andTenancyIdEqualTo(tenancyId);
+    criteria.andIdEqualTo(id);
     List<ProfileDefinition> pdList = profileDefinitionMapper.selectByExample(queryExample);
     if (ObjectUtil.collectionIsEmptyOrNull(pdList)) {
       log.debug("get profile definition by primary key {}, but found none!", id);
@@ -122,9 +122,9 @@ public class ProfileCache {
    * 更新一个Profile.
    */
   @Transactional
-  @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
-      @CacheEvict(key = "#tenancyId + ':simple:' + #id")})
-  public void updateProfileDefinition(Long id, Long tenancyId, String name, String code,
+  @Caching(evict = {@CacheEvict(key = "#id"),
+      @CacheEvict(key = "'simple:' + #id")})
+  public void updateProfileDefinition(Long id, String name, String code,
       String description, Map<String, AttributeValModel> attributes,
       Set<Long> descendantProfileIds) {
     // Id 必须要存在.
@@ -187,8 +187,8 @@ public class ProfileCache {
    * 扩展Profile的扩展属性和子Profile.
    */
   @Transactional
-  @Caching(evict = {@CacheEvict(key = "#tenancyId + ':' + #id"),
-      @CacheEvict(key = "#tenancyId + ':simple:' + #id")})
+  @Caching(evict = {@CacheEvict(key = "#id"),
+      @CacheEvict(key = "'simple:' + #id")})
   public void extendProfileDefinition(Long id, Long tenancyId, Map<String, AttributeValModel> attributes,
       Set<Long> descendantProfileIds) {
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);

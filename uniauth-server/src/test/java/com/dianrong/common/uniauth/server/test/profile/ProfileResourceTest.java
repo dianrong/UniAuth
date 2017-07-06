@@ -82,7 +82,6 @@ public class ProfileResourceTest extends BaseTest {
 
   @Test
   public void testGetProfileDefinition() {
-    CxfHeaderHolder.TENANCYCODE.set("dianrong");
     Long profileId = 4L;
     Response<ProfileDefinitionDto> response = profileResource.getProfileDefinition(profileId);
     System.out.println(JsonUtil.object2Jason(response));

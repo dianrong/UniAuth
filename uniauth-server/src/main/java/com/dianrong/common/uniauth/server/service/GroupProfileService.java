@@ -84,11 +84,10 @@ public class GroupProfileService extends TenancyBasedService {
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }
-    final Long tenancyId = tenancyService.getTenancyIdWithCheck();
     return ProfileSupport.getProfileAttributes(pdDto, extendValMap, new QueryProfileDefinition() {
       @Override
       public ProfileDefinitionDto querySimpleProfileDefinition(Long id) {
-        return profileCache.getSimpleProfileDefinition(id, tenancyId);
+        return profileCache.getSimpleProfileDefinition(id);
       }
     });
   }

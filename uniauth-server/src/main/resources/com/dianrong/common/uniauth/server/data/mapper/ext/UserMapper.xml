@@ -123,5 +123,6 @@
         <include refid="Base_Column_List" />
         from user
         where status = 0 and ${identityType} = #{identity, jdbcType=VARCHAR}
+        and tenancy_id = #{tenancyId, jdbcType=BIGINT}
 	</select>
 </mapper>

@@ -23,5 +23,5 @@ public interface IProfileResource {
    */
   @GET
   @Path("{profileId}")
-  Response<ProfileDefinitionDto> getProfileDefinition(@PathParam("id") Long id);
+  Response<ProfileDefinitionDto> getProfileDefinition(@PathParam("profileId") Long id);
 }

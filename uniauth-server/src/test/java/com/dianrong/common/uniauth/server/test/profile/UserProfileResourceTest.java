@@ -10,7 +10,6 @@ import com.dianrong.common.uniauth.server.resource.UserProfileResource;
 import com.dianrong.common.uniauth.server.test.BaseTest;
 import com.google.common.collect.Maps;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
@@ -68,30 +67,23 @@ public class UserProfileResourceTest extends BaseTest {
     Response<Map<String, Object>> response =
         userProfileResource.addOrUpdateUserProfile(uniauthId, profileId, param);
     System.out.println(JsonUtil.object2Jason(response));
-    try {
-      System.in.read();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   @Test
   public void testGetUserProfile() {
-    CxfHeaderHolder.TENANCYCODE.set("dianrong");
     Long profileId = 4L;
     Long uniauthId = 300000020L;
     Response<Map<String, Object>> response =
-        userProfileResource.getUserProfile(uniauthId, profileId);
+        userProfileResource.getUserProfile(uniauthId, profileId, null);
     System.out.println(JsonUtil.object2Jason(response));
   }
 
   @Test
   public void testGetUserProfileByIdentity() {
-    CxfHeaderHolder.TENANCYCODE.set("dianrong");
     Long profileId = 3L;
     String identity = "15982871999";
     Response<Map<String, Object>> response =
-        userProfileResource.getUserProfileByIdentity(identity, profileId, UserIdentityType.PHONE);
+        userProfileResource.getUserProfileByIdentity(identity, profileId, 1L,UserIdentityType.PHONE);
     System.out.println(JsonUtil.object2Jason(response));
   }
 }

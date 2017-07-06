@@ -104,7 +104,7 @@ public class ProfileService extends TenancyBasedService {
    */
   public ProfileDefinitionDto getProfileDefinition(Long id) {
     CheckEmpty.checkEmpty(id, "profile definition id");
-    return profileCache.getProfileDefinition(id, tenancyService.getTenancyIdWithCheck());
+    return profileCache.getProfileDefinition(id);
   }
 
   /**
@@ -115,7 +115,7 @@ public class ProfileService extends TenancyBasedService {
       String description, Map<String, AttributeValModel> attributes,
       Set<Long> descendantProfileIds) {
     CheckEmpty.checkEmpty(id, "profile definition id");
-    profileCache.updateProfileDefinition(id, tenancyService.getTenancyIdWithCheck(), name, code,
+    profileCache.updateProfileDefinition(id,name, code,
         description, attributes, descendantProfileIds);
     // 返回最新结果.
     return getProfileDefinition(id);

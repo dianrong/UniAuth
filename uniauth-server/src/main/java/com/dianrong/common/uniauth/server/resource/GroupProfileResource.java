@@ -29,8 +29,6 @@ public class GroupProfileResource implements IGroupProfileRWResource {
   
   @ApiOperation("根据Uniauth中的组Id和ProfileId获取用户的属性集合")
   @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",
-          required = true, paramType = "query"),
       @ApiImplicitParam(name = "groupId", value = "组Id", dataType = "int",
           required = true, paramType = "query"),
       @ApiImplicitParam(name = "profileId", value = "Profile定义的Id", dataType = "long",

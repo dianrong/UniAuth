@@ -22,13 +22,13 @@ public interface IUserProfileResource {
 
   // scenario: get user profile
   @GET
-  @Path("{uniauthId}?profile_id={profileId}")
+  @Path("{uniauthId}?profile_id={profileId}&time={time}")
   Response<Map<String, Object>> getUserProfile(@PathParam("uniauthId") Long uniauthId,
-      @PathParam("profileId") Long profileId);
+      @PathParam("profileId") Long profileId, @PathParam("time") Long time);
 
   // scenario: get user profile by identity type
   @GET
-  @Path("{identity}?profile_id={profileId}&identity_type={identityType}")
-  Response<Map<String, Object>> getUserProfileByIdentity(@PathParam("identity") String identity,
+  @Path("{identity}?profile_id={profileId}&tenancyId={tenancyId}&identity_type={identityType}")
+  Response<Map<String, Object>> getUserProfileByIdentity(@PathParam("identity") String identity, @PathParam("tenancyId") Long tenancyId, 
       @PathParam("profileId") Long profileId, @PathParam("identityType") UserIdentityType identityType);
 }

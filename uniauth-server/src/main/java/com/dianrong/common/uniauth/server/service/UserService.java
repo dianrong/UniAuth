@@ -1612,14 +1612,17 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    * 根据用户的Identity和Identity的类型获取用户信息.
    * 
    * @param identity 用户的标识信息,不能为空.
+   * @param tenancyId 租户的id.
    * @param identityType 标识类型,不能为空.
    */
-  public User getUserByIdentity(String identity, UserIdentityType identityType) {
+  public User getUserByIdentity(String identity, Long tenancyId, UserIdentityType identityType) {
     CheckEmpty.checkEmpty(identity, "identity");
+    CheckEmpty.checkEmpty(tenancyId, "tenancyId");
     CheckEmpty.checkEmpty(identityType, "identityType");
 
-    Map<String, String> param = Maps.newHashMap();
+    Map<String, Object> param = Maps.newHashMap();
     param.put("identity", identity);
+    param.put("tenancyId", tenancyId);
     param.put("identityType", identityType.getType());
     return userMapper.getUserByIdentity(param);
   }

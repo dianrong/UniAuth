@@ -221,7 +221,7 @@ public class UserExtendValService extends TenancyBasedService {
     }
     AttributeExtendExample attributeExtendExample = new AttributeExtendExample();
     AttributeExtendExample.Criteria criteria = attributeExtendExample.createCriteria();
-    criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck()).andIdIn(extendAttributeIds);
+    criteria.andIdIn(extendAttributeIds);
     List<AttributeExtend> attributeExtends = attributeExtendMapper.selectByExample(attributeExtendExample);
     if (ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
       return resultMap;
@@ -233,8 +233,7 @@ public class UserExtendValService extends TenancyBasedService {
     
     UserExtendValExample userExtendValExample = new UserExtendValExample();
     UserExtendValExample.Criteria uevCriteria = userExtendValExample.createCriteria();
-    uevCriteria.andExtendIdIn(extendAttributeIds).andUserIdEqualTo(userId)
-        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    uevCriteria.andExtendIdIn(extendAttributeIds).andUserIdEqualTo(userId);
     List<UserExtendVal> userExtendVals = userExtendValMapper.selectByExample(userExtendValExample);
     if (ObjectUtil.collectionIsEmptyOrNull(userExtendVals)) {
       return resultMap;

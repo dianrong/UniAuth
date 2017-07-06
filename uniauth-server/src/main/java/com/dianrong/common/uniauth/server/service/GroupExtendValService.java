@@ -48,7 +48,7 @@ public class GroupExtendValService extends TenancyBasedService {
     }
     AttributeExtendExample attributeExtendExample = new AttributeExtendExample();
     AttributeExtendExample.Criteria criteria = attributeExtendExample.createCriteria();
-    criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck()).andIdIn(extendAttributeIds);
+    criteria.andIdIn(extendAttributeIds);
     List<AttributeExtend> attributeExtends = attributeExtendMapper.selectByExample(attributeExtendExample);
     if (ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
       return resultMap;
@@ -60,8 +60,7 @@ public class GroupExtendValService extends TenancyBasedService {
     
     GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
     GrpExtendValExample.Criteria gevCriteria = grpExtendValExample.createCriteria();
-    gevCriteria.andExtendIdIn(extendAttributeIds).andGrpIdEqualTo(grpId)
-        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    gevCriteria.andExtendIdIn(extendAttributeIds).andGrpIdEqualTo(grpId);
     List<GrpExtendVal> grpExtendVals = grpExtendValMapper.selectByExample(grpExtendValExample);
     if (ObjectUtil.collectionIsEmptyOrNull(grpExtendVals)) {
       return resultMap;

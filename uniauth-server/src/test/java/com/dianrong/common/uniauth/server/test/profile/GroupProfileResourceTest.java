@@ -47,7 +47,6 @@ public class GroupProfileResourceTest extends BaseTest {
 
   @Test
   public void testGetGroupProfile() {
-    CxfHeaderHolder.TENANCYCODE.set("dianrong");
     Long profileId = 8L;
     Integer grpId = 100003;
     Response<Map<String, Object>> response =
