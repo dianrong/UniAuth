@@ -57,11 +57,14 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupAddNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupMoveNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
+import com.dianrong.common.uniauth.server.service.inner.GroupProfileInnerService;
+import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.ArrayList;
@@ -112,15 +115,21 @@ public class GroupService extends TenancyBasedService {
   @Autowired
   private TagTypeMapper tagTypeMapper;
 
+  // Notification
   @Autowired
   private UniauthNotify uniauthNotify;
 
-  /**
-   * 进行组数据过滤的filter.
-   */
+  // Another service
+  @Autowired
+  private GroupInnerService groupInnerService;
+  
+  @Autowired
+  private GroupProfileInnerService groupProfileInnerService;
+  
+  // Data filter
   @Resource(name = "groupDataFilter")
   private DataFilter dataFilter;
-
+  
   /**
    * 移动组.
    */
@@ -132,8 +141,8 @@ public class GroupService extends TenancyBasedService {
       throw new AppException(InfoName.BAD_REQUEST,
           UniBundle.getMsg("group.parameter.targetid.equals.sourceid"));
     }
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, sourceGroup);
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, targetGroup);
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, sourceGroup);
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, targetGroup);
     grpPathMapper.moveTreeStepOne(sourceGroup);
     Map<String, Object> moveParam = new HashMap<>();
     moveParam.put("subAncestor", sourceGroup);
@@ -393,10 +402,10 @@ public class GroupService extends TenancyBasedService {
     }
 
     // 父group需要存在
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID,
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
         targetGroupId);
     // 子group不能存在
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
         groupCode);
 
     Grp grp = BeanConverter.convert(groupParam);
@@ -406,6 +415,13 @@ public class GroupService extends TenancyBasedService {
     grp.setLastUpdate(now);
     grp.setTenancyId(tenancyService.getTenancyIdWithCheck());
     grpMapper.insert(grp);
+    // 联动添加组的扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
+    attributes.put(AtrributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
+    attributes.put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(), groupParam.getDescription());
+    groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
+    
     GrpPath grpPath = new GrpPath();
     grpPath.setDeepth(AppConstants.ZERO_BYTE);
     grpPath.setDescendant(grp.getId());
@@ -459,6 +475,14 @@ public class GroupService extends TenancyBasedService {
     grp.setCode(groupCode);
     grp.setLastUpdate(new Date());
     grpMapper.updateByPrimaryKeySelective(grp);
+    
+    // 联动添加组的扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.GROUP_NAME.getAttributeCode(), groupName);
+    attributes.put(AtrributeDefine.GROUP_CODE.getAttributeCode(), groupCode);
+    attributes.put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(), description);
+    groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
+    
     Integer count = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());
     if (count != null && count > 1) {
       throw new AppException(InfoName.VALIDATE_FAIL,
@@ -1156,48 +1180,6 @@ public class GroupService extends TenancyBasedService {
    * @return 组信息列表. 以从根组到子组的顺序排序
    */
   public List<Grp> listUserLastGrpPath(Long userId) {
-    CheckEmpty.checkEmpty(userId, "userId");
-    List<Grp> grps = Lists.newArrayList();
-    UserGrpExample ugExample = new UserGrpExample();
-    UserGrpExample.Criteria ugCriteria = ugExample.createCriteria();
-    ugCriteria.andTypeEqualTo(AppConstants.ZERO_BYTE).andUserIdEqualTo(userId);
-    ugExample.setOrderByClause(" grp_id desc");
-    List<UserGrpKey> userGrpList = userGrpMapper.selectByExample(ugExample);
-    if (ObjectUtil.collectionIsEmptyOrNull(userGrpList)) {
-      return grps;
-    }
-    Integer grpId = userGrpList.get(0).getGrpId();
-    GrpPathExample gpExample = new GrpPathExample();
-    GrpPathExample.Criteria gpCriteria = gpExample.createCriteria();
-    gpCriteria.andDescendantEqualTo(grpId);
-    gpExample.setOrderByClause("deepth desc");
-    List<GrpPath> grpPathList = grpPathMapper.selectByExample(gpExample);
-    if (ObjectUtil.collectionIsEmptyOrNull(grpPathList)) {
-      return grps;
-    }
-    List<Integer> grpIds = Lists.newArrayList();
-    for (GrpPath gp : grpPathList) {
-      grpIds.add(gp.getAncestor());
-    }
-    GrpExample grpExample = new GrpExample();
-    GrpExample.Criteria grpCriteria = grpExample.createCriteria();
-    grpCriteria.andIdIn(grpIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-    List<Grp> grpList = grpMapper.selectByExample(grpExample);
-    if (ObjectUtil.collectionIsEmptyOrNull(grpList)) {
-      return grps;
-    }
-    Map<Integer, Grp> grpMap = Maps.newHashMap();
-    for (Grp grp : grpList) {
-      grpMap.put(grp.getId(), grp);
-    }
-
-    // 按照depth从大到小的顺序来放入list
-    for (Integer gid : grpIds) {
-      Grp grpItem = grpMap.get(gid);
-      if (grpItem != null) {
-        grps.add(grpItem);
-      }
-    }
-    return grps;
+    return groupInnerService.listUserLastGrpPath(userId);
   }
 }

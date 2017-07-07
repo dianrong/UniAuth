@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.regex.Pattern;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -88,6 +89,54 @@ public class StringUtil {
     return new Integer(longNum.toString());
   }
 
+  /**
+   * 将一个String转化为Long.
+   * @return 不能正常转化则返回null.
+   */
+  public static Long translateStringToLong(String str) {
+    if (str == null) {
+      return null;
+    }
+    try {
+      return Long.parseLong(str.trim());
+    } catch(NumberFormatException nfe) {
+      log.debug("failed to translate "+ str +" to a Long",  nfe);
+      return null;
+    }
+  }
+  
+  /**
+   * 将一个Object转化为Long.
+   * @return 不能正常转化则返回null.
+   */
+  public static Long translateObjectToLong(Object object) {
+    if (object == null) {
+      return null;
+    }
+    try {
+      return Long.parseLong(object.toString());
+    } catch(NumberFormatException nfe) {
+      log.debug("failed to translate "+ object +" to a Long",  nfe);
+      return null;
+    }
+  }
+  
+  /**
+   * 将一个Object转化为Integer.
+   * @return 不能正常转化则返回null.
+   */
+  public static Integer translateObjectToInteger(Object object) {
+    if (object == null) {
+      return null;
+    }
+    try {
+      return Integer.parseInt(object.toString());
+    } catch(NumberFormatException nfe) {
+      log.debug("failed to translate "+ object +" to a Integer",  nfe);
+      return null;
+    }
+  }
+  
   /**
    * 生成目标长度的数字字符串.
    */

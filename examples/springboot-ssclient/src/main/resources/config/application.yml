@@ -7,7 +7,7 @@ spring:
   profiles: local
 
 DR_CFG_ZOOKEEPER_ENV_URL: "localhost:2181"
-domainCode: springboot-ssclient1
+domainCode: springboot-ssclient
 server: 
   port: 8180
   session:

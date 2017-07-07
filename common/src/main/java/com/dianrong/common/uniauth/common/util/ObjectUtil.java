@@ -24,6 +24,25 @@ public final class ObjectUtil {
     }
     return o1.equals(o2);
   }
+  
+  /**
+   * 判断 o1 和 o2 是否相等.
+   *
+   * @return true or false
+   */
+  public static boolean objectEqualIgnoreCase(Object o1, Object o2) {
+    if (o1 == null && o2 == null) {
+      return true;
+    }
+    // 其中某个字段为空了 都不能认为是相等的
+    if (o1 == null || o2 == null) {
+      return false;
+    }
+    if ((o1 instanceof String) && (o2 instanceof String)) {
+      return ((String)o1).equalsIgnoreCase((String)o2);
+    }
+    return o1.equals(o2);
+  }
 
   /**
    * 判断集合是否为空或为null.

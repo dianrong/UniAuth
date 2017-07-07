@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.server.support.apicontrl;
 
 /**
- * help class for saving request account per request.
+ * Help class for saving request account per request.
  *
  * @author wanglin
  */

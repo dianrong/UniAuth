@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://www.springframework.org/schema/cache
+                        http://www.springframework.org/schema/cache/spring-cache.xsd
+                        ">
+    <import resource="classpath:ss-uniauth-common.xml"/>
+    <import resource="cxf-beans.xml" />
+    <import resource="spring-mq.xml" />
+    <import resource="db-beans.xml" />
+    <import resource="ipa-beans.xml" />
+    <import resource="metrics-beans.xml" />
+   <import resource="spring-cache.xml"/>
+
+    <!-- aop -->
+    <aop:aspectj-autoproxy/>
+    
+    <cache:annotation-driven/>
+
+    <!-- context -->
+    <context:component-scan base-package="com.dianrong.common.uniauth.server" />
+    
+    <!-- notification -->
+    <bean id="smsNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.sms.DelegateUniauthSmsNotification">
+        <constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+        <constructor-arg index="1" value="#{uniauthConfig['notification_key']}"/>
+        <constructor-arg index="2" value="#{uniauthConfig['notification_endpoint']}"/>
+    </bean>
+     <bean id="emailNotify" class="com.dianrong.common.uniauth.sharerw.notification.impl.email.DelegateUniauthEmailNotification">
+         <constructor-arg index="0" value="#{uniauthConfig['notify.notification']}"/>
+         <constructor-arg index="1" value="#{uniauthConfig['internal.mail.smtp.femail']}"/>
+         <constructor-arg index="2" value="#{uniauthConfig['internal.mail.smtp.host']}"/>
+         <constructor-arg index="3" value="#{uniauthConfig['internal.mail.smtp.port']?:'0'}"/>
+         <constructor-arg index="4" value="#{uniauthConfig['notification_key']}"/>
+         <constructor-arg index="5" value="#{uniauthConfig['notification_endpoint']}"/>
+    </bean>
+</beans>

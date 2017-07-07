@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service;
+package com.dianrong.common.uniauth.server.service.common;
 
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 提供通用服务的一个Service.
+ */
 @Service
 @Slf4j
 public class CommonService {

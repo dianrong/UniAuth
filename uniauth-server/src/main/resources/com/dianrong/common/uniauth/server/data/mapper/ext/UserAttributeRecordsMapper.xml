@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.UserAttributeRecordsMapper" >
+  <select id="queryUserHisotryProfileVal" resultMap="BaseResultMap" >
+        SELECT
+        t1.cur_val, t1.pre_val, t1.opt_type, t1.extend_id, t1.tenancy_id
+        FROM
+        user_attribute_records t1
+        INNER JOIN
+        (
+            SELECT
+            MAX(t.id) AS
+            id
+            FROM
+            (
+                SELECT
+                id, extend_id
+                FROM
+                user_attribute_records
+                WHERE
+                user_id = #{userId, jdbcType=BIGINT}
+                <![CDATA[AND opt_date <= #{optDate, jdbcType=TIMESTAMP} ]]>
+                and extend_id in 
+                <foreach collection="extendIds" item="item" separator="," open="(" close=")">
+                    #{item, jdbcType=BIGINT}
+		        </foreach>
+            ) t
+            GROUP BY  t.extend_id
+        ) t2 ON t1.id = t2.id
+  </select>
+</mapper>

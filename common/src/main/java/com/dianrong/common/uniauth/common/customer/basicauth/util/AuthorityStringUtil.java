@@ -5,6 +5,9 @@ package com.dianrong.common.uniauth.common.customer.basicauth.util;
  */
 public class AuthorityStringUtil {
 
+  /**
+   * 转换Role为Spring security认识的类型.
+   */
   public static String roleAuthrorityFormat(String permType) {
     if (permType == null) {
       return permType;

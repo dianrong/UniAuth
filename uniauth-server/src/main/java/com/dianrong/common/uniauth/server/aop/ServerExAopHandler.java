@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.aop;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.request.Operator;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.TenancyService;
@@ -11,11 +12,13 @@ import com.dianrong.common.uniauth.server.track.GlobalVar;
 import com.dianrong.common.uniauth.server.track.GlobalVarQueueFacade;
 import com.dianrong.common.uniauth.server.track.RequestManager;
 import com.dianrong.common.uniauth.server.util.JasonUtil;
-import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -76,17 +79,14 @@ public class ServerExAopHandler {
           if (param != null) {
             String jasonParam = JasonUtil.object2Jason(param);
             gv.setReqParam(jasonParam);
-            Class<?> paramClazz = param.getClass();
-            Method getOpUserId = paramClazz.getMethod("getOpUserId", (Class[]) null);
-            Long opUserId = (Long) getOpUserId.invoke(param, (Object[]) null);
-            gv.setUserId(opUserId);
+            if (param instanceof Operator) {
+              Operator operatorParam = (Operator)param;
+              gv.setUserId(operatorParam.getOpUserId());
+              gv.setDomainId(operatorParam.getOpDomainId());
 
-            Method getOpDomainId = paramClazz.getMethod("getOpDomainId", (Class[]) null);
-            Integer opDomainId = (Integer) getOpDomainId.invoke(param, (Object[]) null);
-            gv.setDomainId(opDomainId);
-
-            origin.setUserId(opUserId);
-            origin.setDomainId(opDomainId);
+              origin.setUserId(operatorParam.getOpUserId());
+              origin.setDomainId(operatorParam.getOpDomainId());
+            }
           }
         }
       } catch (Exception e) {

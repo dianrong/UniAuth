@@ -13,14 +13,18 @@ import com.dianrong.common.uniauth.server.data.mapper.CfgTypeMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.apache.cxf.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,9 +43,6 @@ public class ConfigService extends TenancyBasedService {
   @Autowired
   private CfgTypeMapper cfgTypeMapper;
 
-  /**
-   * . 进行配置数据过滤的filter
-   */
   @Resource(name = "cfgDataFilter")
   private DataFilter dataFilter;
 
@@ -78,7 +79,7 @@ public class ConfigService extends TenancyBasedService {
     } else {
       if (!StringUtil.strIsNullOrEmpty(cfgKey)) {
         // 添加判断比较
-        dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,
+        dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CFG_KEY,
             cfgKey);
       }
 
