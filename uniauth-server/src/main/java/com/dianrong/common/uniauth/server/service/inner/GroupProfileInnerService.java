@@ -34,7 +34,7 @@ public class GroupProfileInnerService extends TenancyBasedService {
 
   @Autowired
   private GroupExtendValInnerService groupExtendValInnerService;
-  
+
   @Autowired
   private ExtendValInnerService extendValInnerService;
 
@@ -58,12 +58,8 @@ public class GroupProfileInnerService extends TenancyBasedService {
         String attributeCode = entry.getKey();
         String value = entry.getValue();
         AttributeExtend attributeExtend =
-            attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
-        if (attributeExtend != null) {
-          addOrUpdate(grpId, attributeExtend.getId(), value);
-        } else {
-          log.error("System define group attribute {} is not exist!", attributeCode);
-        }
+            attributeExtendInnerService.addAttributeExtendIfNonExistent(attributeCode, null);
+        addOrUpdate(grpId, attributeExtend.getId(), value);
       }
     }
   }

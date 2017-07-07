@@ -31,7 +31,7 @@ public class UserProfileInnerService extends TenancyBasedService {
 
   @Autowired
   private UserExtendValInnerService userExtendValInnerService;
-  
+
   @Autowired
   private ExtendValInnerService extendValInnerService;
 
@@ -52,12 +52,8 @@ public class UserProfileInnerService extends TenancyBasedService {
         String attributeCode = entry.getKey();
         String value = entry.getValue();
         AttributeExtend attributeExtend =
-            attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
-        if (attributeExtend != null) {
-          addOrUpdate(userId, attributeExtend.getId(), value);
-        } else {
-          log.error("System define user attribute {} is not exist!", attributeCode);
-        }
+            attributeExtendInnerService.addAttributeExtendIfNonExistent(attributeCode, null);
+        addOrUpdate(userId, attributeExtend.getId(), value);
       }
     }
   }

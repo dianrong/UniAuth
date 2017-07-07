@@ -43,6 +43,7 @@ public class ExtendValInnerService extends TenancyBasedService {
     params.put("tableName", tableName);
     params.put("fieldName", fieldName);
     params.put("value", value);
+    params.put("tenancyId", tenancyService.getTenancyIdWithCheck());
     if (!needUpdateChcek) {
       extendValMapper.updateSystemDefineAttribute(params);
       return;

@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.server.test.profile;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.ProfileParam;
-import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.server.resource.GroupProfileResource;
 import com.dianrong.common.uniauth.server.test.BaseTest;
@@ -24,10 +23,10 @@ public class GroupProfileResourceTest extends BaseTest {
 
   @Test
   public void testAddOrUpdateGrpProfile() {
-    CxfHeaderHolder.TENANCYCODE.set("dianrong");
-    Long profileId = 8L;
-    Integer grpId = 100003;
+    Long profileId = 1L;
+    Integer grpId = 100013;
     ProfileParam param = new ProfileParam();
+    param.setTenancyCode("dianrong");
     Map<String, AttributeExtendParam> attributes = Maps.newHashMap();
     param.setAttributes(attributes);
     attributes.put("name",
@@ -37,9 +36,11 @@ public class GroupProfileResourceTest extends BaseTest {
     attributes.put("user_target",
         new AttributeExtendParam().setValue("指定组的目的"));
     attributes.put("color",
-        new AttributeExtendParam().setValue("black"));
+        new AttributeExtendParam().setValue("black-white"));
     attributes.put("class",
-        new AttributeExtendParam().setValue("good"));
+        new AttributeExtendParam().setValue(null));
+    attributes.put("description",
+        new AttributeExtendParam().setValue("小王写的description"));
     Response<Map<String, Object>> response =
         groupProfileResource.addOrUpdateGrpProfile(grpId, profileId, param);
     System.out.println(JsonUtil.object2Jason(response));
@@ -47,10 +48,10 @@ public class GroupProfileResourceTest extends BaseTest {
 
   @Test
   public void testGetGroupProfile() {
-    Long profileId = 8L;
-    Integer grpId = 100003;
+    Long profileId = 1L;
+    Integer grpId = 100013;
     Response<Map<String, Object>> response =
-        groupProfileResource.getGroupProfile(grpId, profileId, null);
+        groupProfileResource.getGroupProfile(grpId, profileId, 1499417817655L);
     System.out.println(JsonUtil.object2Jason(response));
   }
 }
