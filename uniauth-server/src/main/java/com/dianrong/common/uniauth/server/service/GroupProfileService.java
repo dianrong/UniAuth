@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,15 +47,16 @@ public class GroupProfileService extends TenancyBasedService {
 
   @Autowired
   private ProfileDefinitionAttributeInnerService profileDefinitionAttributeInnerService;
-
+  
   /**
    * 根据groupId和profileId获取组的属性集合.
    * 
    * @param groupId 组的Id
    * @param profileId profileId
+   * @param time 指定查询历史Profile
    * @return 组的属性集合
    */
-  public Map<String, Object> getGroupProfile(Integer groupId, Long profileId) {
+  public Map<String, Object> getGroupProfile(Integer groupId, Long profileId, Date time) {
     CheckEmpty.checkEmpty(groupId, "groupId");
     CheckEmpty.checkEmpty(profileId, "profileId");
     ProfileDefinitionDto pdDto = profileService.getProfileDefinition(profileId);
@@ -80,7 +82,7 @@ public class GroupProfileService extends TenancyBasedService {
 
     // 根据extend_attribute_id 获取所有的属性.
     Map<String, ExtendVal> extendValMap =
-        groupExtendValService.queryAttributeVal(groupId, extendIds);
+        groupExtendValService.queryAttributeVal(groupId, extendIds, time);
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }
@@ -98,6 +100,6 @@ public class GroupProfileService extends TenancyBasedService {
   public Map<String, Object> addOrUpdateGrpProfile(Integer grpId, Long profileId,
       Map<String, AttributeValModel> attributes) {
     groupProfileInnerService.addOrUpdateGrpProfile(grpId, attributes);
-    return getGroupProfile(grpId, profileId);
+    return getGroupProfile(grpId, profileId, null);
   }
 }

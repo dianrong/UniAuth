@@ -8,12 +8,14 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtendExample;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
 import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserAttributeRecordsMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
@@ -27,6 +29,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +37,13 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class UserExtendValService extends TenancyBasedService {
 
@@ -49,13 +55,16 @@ public class UserExtendValService extends TenancyBasedService {
 
   @Autowired
   private UserMapper userMapper;
+
+  @Autowired
+  private UserAttributeRecordsMapper userAttributeRecordsMapper;
   
   @Autowired
   private UserExtendValInnerService userExtendValInnerService;
-  
+
   @Resource(name = "userExtendValDataFilter")
   private DataFilter dataFilter;
-  
+
   /**
    * 添加一个用户扩展属性值.
    */
@@ -211,9 +220,12 @@ public class UserExtendValService extends TenancyBasedService {
 
   /**
    * 根据用户和扩展属性id集合获取扩展属性Code和扩展属性值的Map.
-   * <p>UserExtendCode->UserExtendVal</p>
+   * <p>
+   * UserExtendCode->UserExtendVal
+   * </p>
    */
-  public Map<String, ExtendVal> queryAttributeVal(Long userId, List<Long> extendAttributeIds) {
+  public Map<String, ExtendVal> queryAttributeVal(Long userId, List<Long> extendAttributeIds,
+      Date time) {
     CheckEmpty.checkEmpty(userId, "userId");
     Map<String, ExtendVal> resultMap = Maps.newHashMap();
     if (ObjectUtil.collectionIsEmptyOrNull(extendAttributeIds)) {
@@ -222,26 +234,69 @@ public class UserExtendValService extends TenancyBasedService {
     AttributeExtendExample attributeExtendExample = new AttributeExtendExample();
     AttributeExtendExample.Criteria criteria = attributeExtendExample.createCriteria();
     criteria.andIdIn(extendAttributeIds);
-    List<AttributeExtend> attributeExtends = attributeExtendMapper.selectByExample(attributeExtendExample);
+    List<AttributeExtend> attributeExtends =
+        attributeExtendMapper.selectByExample(attributeExtendExample);
     if (ObjectUtil.collectionIsEmptyOrNull(attributeExtends)) {
       return resultMap;
     }
     Map<Long, AttributeExtend> attributeExtendMap = Maps.newHashMap();
-    for (AttributeExtend ae: attributeExtends) {
+    for (AttributeExtend ae : attributeExtends) {
       attributeExtendMap.put(ae.getId(), ae);
     }
-    
+    if (ObjectUtil.collectionIsEmptyOrNull(extendAttributeIds)) {
+      return resultMap;
+    }
+    if (time == null) {
+      queryAttributeVal(userId, extendAttributeIds, resultMap, attributeExtendMap);
+      return resultMap;
+    } else {
+      Long now = System.currentTimeMillis();
+      if (time.getTime() > now) {
+        log.debug("query the future profile is not supported");
+        return resultMap;
+      }
+      queryAttributeVal(userId, extendAttributeIds, time, resultMap,
+          attributeExtendMap);
+      return resultMap;
+    }
+  }
+
+  /**
+   * 获取Now用户的Profile.
+   */
+  private void queryAttributeVal(Long userId, List<Long> extendAttributeIds,
+      Map<String, ExtendVal> resultMap, Map<Long, AttributeExtend> attributeExtendMap) {
     UserExtendValExample userExtendValExample = new UserExtendValExample();
     UserExtendValExample.Criteria uevCriteria = userExtendValExample.createCriteria();
     uevCriteria.andExtendIdIn(extendAttributeIds).andUserIdEqualTo(userId);
     List<UserExtendVal> userExtendVals = userExtendValMapper.selectByExample(userExtendValExample);
     if (ObjectUtil.collectionIsEmptyOrNull(userExtendVals)) {
-      return resultMap;
+      return;
     }
-    for (UserExtendVal val:userExtendVals) {
+    for (UserExtendVal val : userExtendVals) {
       resultMap.put(attributeExtendMap.get(val.getExtendId()).getCode(), val);
     }
-    return resultMap;
+  }
+
+ /**
+  * 获取历史的Profile信息.
+  */
+  private void queryAttributeVal(Long userId, List<Long> extendAttributeIds,
+      Date optDate, Map<String, ExtendVal> resultMap, Map<Long, AttributeExtend> attributeExtendMap) {
+    List<UserAttributeRecords> userAttributeRecordsList = userAttributeRecordsMapper.queryUserHisotryProfileVal(userId, optDate);
+    if (ObjectUtil.collectionIsEmptyOrNull(userAttributeRecordsList)) {
+      return;
+    }
+    for (UserAttributeRecords val : userAttributeRecordsList) {
+      UserExtendVal uev = new UserExtendVal(); 
+      uev.setCreateDate(val.getOptDate());
+      uev.setLastUpdate(val.getOptDate());
+      uev.setExtendId(val.getExtendId());
+      uev.setTenancyId(val.getTenancyId());
+      uev.setUserId(userId);
+      uev.setValue(val.getCurVal());
+      resultMap.put(attributeExtendMap.get(val.getExtendId()).getCode(), uev);
+    }
   }
 }
 

@@ -50,7 +50,7 @@ public class GroupProfileResourceTest extends BaseTest {
     Long profileId = 8L;
     Integer grpId = 100003;
     Response<Map<String, Object>> response =
-        groupProfileResource.getGroupProfile(grpId, profileId);
+        groupProfileResource.getGroupProfile(grpId, profileId, null);
     System.out.println(JsonUtil.object2Jason(response));
   }
 }

@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.common.interfaces.read;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 
+import java.util.Date;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -24,5 +25,5 @@ public interface IGroupProfileResource {
   @GET
   @Path("{groupId}")
   Response<Map<String, Object>> getGroupProfile(@PathParam("groupId") Integer groupId,
-      @QueryParam("profileId") Long profileId);
+      @QueryParam("profileId") Long profileId, @QueryParam("time") Date time);
 }

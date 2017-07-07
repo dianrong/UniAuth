@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class GroupProfileResource implements IGroupProfileRWResource {
   @ApiOperation("根据Uniauth中的组Id和ProfileId获取用户的属性集合")
   @Timed
   @Override
-  public Response<Map<String, Object>> getGroupProfile(Integer groupId, Long profileId) {
-    return Response.success(groupProfileService.getGroupProfile(groupId, profileId));
+  public Response<Map<String, Object>> getGroupProfile(Integer groupId, Long profileId, Date time) {
+    return Response.success(groupProfileService.getGroupProfile(groupId, profileId, time));
   }
 
   @ApiOperation("更新一个组的扩展属性值(如果扩展属性不存在,则添加),随后返回对应ProfileId的Profile.")

@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,13 +68,13 @@ public class UserProfileService extends TenancyBasedService {
    * @return 用户的属性集合.
    */
   public Map<String, Object> getUserProfileByIdentity(String identity, Long profileId,
-      Long tenancyId, UserIdentityType identityType, Long time) {
+      Long tenancyId, UserIdentityType identityType, Date time) {
     CheckEmpty.checkEmpty(profileId, "profileId");
     CheckEmpty.checkEmpty(identity, "identity");
     Long uniauthId = StringUtil.translateStringToLong(identity);
     if (identityType == null && uniauthId != null) {
       log.debug("get user profile by uniauthId.UniauthId:{}", uniauthId);
-      return getUserProfile(uniauthId, profileId);
+      return getUserProfile(uniauthId, profileId, time);
     }
     log.debug("get user profile by identity.identity:{}, identityType:{}, tenancyId:{}", uniauthId,
         identityType, tenancyId);
@@ -84,7 +85,7 @@ public class UserProfileService extends TenancyBasedService {
     }
     uniauthId = user.getId();
     log.debug("find one user by {} = {}", identityType.getType(), identity);
-    return getUserProfile(uniauthId, profileId);
+    return getUserProfile(uniauthId, profileId, time);
   }
 
   /**
@@ -95,6 +96,16 @@ public class UserProfileService extends TenancyBasedService {
    * @return 用户的属性集合
    */
   public Map<String, Object> getUserProfile(Long uniauthId, Long profileId) {
+    return getUserProfile(uniauthId, profileId, null);
+  }
+  
+  /**
+   * 根据UniauthId和profileId获取用户的属性.
+   * 
+   * @param time 过去的某个时间点,用于查询历史Profile.
+   * @return 用户的属性集合
+   */
+  public Map<String, Object> getUserProfile(Long uniauthId, Long profileId, Date time) {
     CheckEmpty.checkEmpty(uniauthId, "uniauthId");
     CheckEmpty.checkEmpty(profileId, "profileId");
     ProfileDefinitionDto pdDto = profileService.getProfileDefinition(profileId);
@@ -119,7 +130,7 @@ public class UserProfileService extends TenancyBasedService {
     }
     // 根据extend_attribute_id 获取所有的属性.
     Map<String, ExtendVal> extendValMap =
-        userExtendValService.queryAttributeVal(uniauthId, extendIds);
+        userExtendValService.queryAttributeVal(uniauthId, extendIds, time);
     if (extendValMap.isEmpty()) {
       return Collections.emptyMap();
     }

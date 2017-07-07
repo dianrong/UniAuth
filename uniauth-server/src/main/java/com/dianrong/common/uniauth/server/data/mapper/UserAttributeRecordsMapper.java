@@ -2,7 +2,10 @@ package com.dianrong.common.uniauth.server.data.mapper;
 
 import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecordsExample;
+
+import java.util.Date;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface UserAttributeRecordsMapper {
@@ -96,4 +99,7 @@ public interface UserAttributeRecordsMapper {
    * @mbggenerated Thu Jun 01 18:13:03 CST 2017
    */
   int updateByPrimaryKey(UserAttributeRecords record);
+
+  List<UserAttributeRecords> queryUserHisotryProfileVal(@Param("userId") Long userId,
+      @Param("optDate") Date optDate);
 }
