@@ -225,7 +225,7 @@ public class UserExtendValService extends TenancyBasedService {
    * </p>
    */
   public Map<String, ExtendVal> queryAttributeVal(Long userId, List<Long> extendAttributeIds,
-      Date time) {
+      Long time) {
     CheckEmpty.checkEmpty(userId, "userId");
     Map<String, ExtendVal> resultMap = Maps.newHashMap();
     if (ObjectUtil.collectionIsEmptyOrNull(extendAttributeIds)) {
@@ -251,11 +251,11 @@ public class UserExtendValService extends TenancyBasedService {
       return resultMap;
     } else {
       Long now = System.currentTimeMillis();
-      if (time.getTime() > now) {
+      if (time > now) {
         log.debug("query the future profile is not supported");
         return resultMap;
       }
-      queryAttributeVal(userId, extendAttributeIds, time, resultMap,
+      queryAttributeVal(userId, extendAttributeIds, new Date(time), resultMap,
           attributeExtendMap);
       return resultMap;
     }
@@ -283,7 +283,7 @@ public class UserExtendValService extends TenancyBasedService {
   */
   private void queryAttributeVal(Long userId, List<Long> extendAttributeIds,
       Date optDate, Map<String, ExtendVal> resultMap, Map<Long, AttributeExtend> attributeExtendMap) {
-    List<UserAttributeRecords> userAttributeRecordsList = userAttributeRecordsMapper.queryUserHisotryProfileVal(userId, optDate);
+    List<UserAttributeRecords> userAttributeRecordsList = userAttributeRecordsMapper.queryUserHisotryProfileVal(userId, optDate, extendAttributeIds);
     if (ObjectUtil.collectionIsEmptyOrNull(userAttributeRecordsList)) {
       return;
     }

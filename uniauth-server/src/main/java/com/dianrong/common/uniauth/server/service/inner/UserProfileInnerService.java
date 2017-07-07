@@ -31,6 +31,9 @@ public class UserProfileInnerService extends TenancyBasedService {
 
   @Autowired
   private UserExtendValInnerService userExtendValInnerService;
+  
+  @Autowired
+  private ExtendValInnerService extendValInnerService;
 
   @Autowired
   private AttributeExtendInnerService attributeExtendInnerService;
@@ -48,7 +51,8 @@ public class UserProfileInnerService extends TenancyBasedService {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         String value = entry.getValue();
-        AttributeExtend attributeExtend = attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
+        AttributeExtend attributeExtend =
+            attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
         if (attributeExtend != null) {
           addOrUpdate(userId, attributeExtend.getId(), value);
         } else {
@@ -57,7 +61,7 @@ public class UserProfileInnerService extends TenancyBasedService {
       }
     }
   }
-  
+
   /**
    * 更新用户的扩展属性.
    */
@@ -78,10 +82,11 @@ public class UserProfileInnerService extends TenancyBasedService {
         if (sysUserAtrributeDefine != null) {
           // 系统预定义的扩展属性. 比如User表,UserDetail表中定义好的属性.
           if (sysUserAtrributeDefine.isWritable()) {
-            userExtendValInnerService.updateSystemDefineUserAttribute(uniauthId,
+            extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
                 sysUserAtrributeDefine.getDefineTable().getIdentityFieldName(),
                 sysUserAtrributeDefine.getDefineTable().getTableName(),
-                sysUserAtrributeDefine.getFieldName(), value);
+                sysUserAtrributeDefine.getFieldName(), value,
+                sysUserAtrributeDefine.getDefineTable().isUpdateAttributeCheck());
             // 更新扩展属性表中的相应字段
             addOrUpdate(uniauthId, attributeExtend.getId(), value);
           } else {
@@ -94,7 +99,7 @@ public class UserProfileInnerService extends TenancyBasedService {
       }
     }
   }
-  
+
   /**
    * 添加或者更新用户属性.
    */

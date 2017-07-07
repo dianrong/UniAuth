@@ -34,13 +34,16 @@ public class GroupProfileInnerService extends TenancyBasedService {
 
   @Autowired
   private GroupExtendValInnerService groupExtendValInnerService;
+  
+  @Autowired
+  private ExtendValInnerService extendValInnerService;
 
   @Autowired
   private AttributeExtendInnerService attributeExtendInnerService;
-  
+
   @Autowired
   private GrpExtendValMapper grpExtendValMapper;
-  
+
   @Resource(name = "grpExtendValDataFilter")
   private DataFilter dataFilter;
 
@@ -54,7 +57,8 @@ public class GroupProfileInnerService extends TenancyBasedService {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         String value = entry.getValue();
-        AttributeExtend attributeExtend = attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
+        AttributeExtend attributeExtend =
+            attributeExtendInnerService.queryAttributeExtendByCode(attributeCode);
         if (attributeExtend != null) {
           addOrUpdate(grpId, attributeExtend.getId(), value);
         } else {
@@ -63,7 +67,7 @@ public class GroupProfileInnerService extends TenancyBasedService {
       }
     }
   }
-  
+
   /**
    * 更新组的扩展属性.
    */
@@ -84,10 +88,11 @@ public class GroupProfileInnerService extends TenancyBasedService {
         if (sysGrpAtrributeDefine != null) {
           // 系统预定义的扩展属性. 比如Grp表中定义好的属性.
           if (sysGrpAtrributeDefine.isWritable()) {
-            groupExtendValInnerService.updateSystemDefineGrpAttribute(grpId,
+            extendValInnerService.addOrUpdateSystemDefineAttribute(grpId,
                 sysGrpAtrributeDefine.getDefineTable().getIdentityFieldName(),
                 sysGrpAtrributeDefine.getDefineTable().getTableName(),
-                sysGrpAtrributeDefine.getFieldName(), value);
+                sysGrpAtrributeDefine.getFieldName(), value,
+                sysGrpAtrributeDefine.getDefineTable().isUpdateAttributeCheck());
             // 同时更新在扩展属性表中的属性
             addOrUpdate(grpId, attributeExtend.getId(), value);
           } else {
@@ -99,7 +104,7 @@ public class GroupProfileInnerService extends TenancyBasedService {
       }
     }
   }
-  
+
 
   /**
    * 添加或者更新用户属性.

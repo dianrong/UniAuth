@@ -24,11 +24,11 @@ public class ProfileResourceTest extends BaseTest {
 
   @Test
   public void testAddNewProfileDefinition() {
-    CxfHeaderHolder.TENANCYCODE.set("dianrong");
     ProfileDefinitionParam param = new ProfileDefinitionParam();
     param.setName("组的基础Profile");
     param.setCode("BasicGroupProle");
     param.setDescription("组的基础Profile");
+    param.setTenancyCode("dianrong");
     Map<String, AttributeExtendParam> attributes = Maps.newHashMap();
     param.setAttributes(attributes);
     Set<Long> descendantProfileIds = Sets.newHashSet();
@@ -50,6 +50,32 @@ public class ProfileResourceTest extends BaseTest {
     System.out.println(JsonUtil.object2Jason(response));
   }
 
+  public static void main(String[] args) {
+    ProfileDefinitionParam param = new ProfileDefinitionParam();
+    param.setName("组的基础Profile");
+    param.setCode("BasicGroupProle");
+    param.setDescription("组的基础Profile");
+    param.setTenancyCode("dianrong");
+    Map<String, AttributeExtendParam> attributes = Maps.newHashMap();
+    param.setAttributes(attributes);
+    Set<Long> descendantProfileIds = Sets.newHashSet();
+    descendantProfileIds.add(3L);
+    param.setDescendantProfileIds(descendantProfileIds);
+    attributes.put("user_target",
+        new AttributeExtendParam().setDescription("组的使用目标").setCategory("basic_group"));
+    attributes.put("class",
+        new AttributeExtendParam().setDescription("类型").setCategory("basic_group"));
+    attributes.put("color",
+        new AttributeExtendParam().setDescription("组的标识色").setCategory("basic_group"));
+    attributes.put("description",
+        new AttributeExtendParam().setDescription("描述").setCategory("basic_group"));
+    attributes.put("name",
+        new AttributeExtendParam().setDescription("名称").setCategory("basic_group"));
+    attributes.put("code",
+        new AttributeExtendParam().setDescription("组编码").setCategory("basic_group"));
+    System.out.println(param);
+  }
+  
   @Test
   public void testUpdateProfileDefinition2() {
     CxfHeaderHolder.TENANCYCODE.set("dianrong");

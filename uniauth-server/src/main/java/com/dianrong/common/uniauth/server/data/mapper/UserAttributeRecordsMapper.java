@@ -101,5 +101,5 @@ public interface UserAttributeRecordsMapper {
   int updateByPrimaryKey(UserAttributeRecords record);
 
   List<UserAttributeRecords> queryUserHisotryProfileVal(@Param("userId") Long userId,
-      @Param("optDate") Date optDate);
+      @Param("optDate") Date optDate, @Param("extendIds") List<Long> extendIds);
 }

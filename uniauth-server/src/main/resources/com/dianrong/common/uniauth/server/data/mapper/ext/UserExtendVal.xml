@@ -55,14 +55,9 @@
 		)
 	</select>
 
-	<update id="updateSystemDefineUserAttribute" parameterType="map">
-		UPDATE ${tableName} SET ${fieldName} = #{value, jdbcType=VARCHAR}
-		where ${idFieldName} = #{userId}
-	</update>
-
-	<update id="updateValue">
-		UPDATE user_extend_val SET value = #{value, jdbcType=VARCHAR} where user_id
-		= #{userId, jdbcType=BIGINT} and extend_id = #{extendId,
-		jdbcType=BIGINT}
-	</update>
+    <update id="updateValue">
+        UPDATE user_extend_val SET value = #{value, jdbcType=VARCHAR} where user_id
+        = #{userId, jdbcType=BIGINT} and extend_id = #{extendId,
+        jdbcType=BIGINT}
+    </update>
 </mapper>

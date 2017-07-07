@@ -8,7 +8,7 @@ import java.util.Set;
  * 定义扩展属性相关的Table.
  */
 public enum AtrributeTable {
-  USER("user", "id"), USER_DETAIL("user_detail", "user_id"), GRP("grp", "id");
+  USER("user", "id", false), USER_DETAIL("user_detail", "user_id", true), GRP("grp", "id", false);
   private static final Set<AtrributeTable> USER_TABLE = Sets.newHashSet();
   private static final Set<AtrributeTable> GROUP_TABLE = Sets.newHashSet();
 
@@ -29,10 +29,16 @@ public enum AtrributeTable {
   private final String tableName;
 
   private final String identityFieldName;
+  
+  /**
+   * 在进行扩展属性更新的时候是否需要在更新前检查一下记录是否存在.
+   */
+  private final boolean updateAttributeCheck;
 
-  private AtrributeTable(String tableName, String identityFieldName) {
+  private AtrributeTable(String tableName, String identityFieldName, boolean updateAttributeCheck) {
     this.tableName = tableName;
     this.identityFieldName = identityFieldName;
+    this.updateAttributeCheck = updateAttributeCheck;
   }
 
   public String getTableName() {
@@ -41,5 +47,9 @@ public enum AtrributeTable {
 
   public String getIdentityFieldName() {
     return identityFieldName;
+  }
+
+  public boolean isUpdateAttributeCheck() {
+    return updateAttributeCheck;
   }
 }

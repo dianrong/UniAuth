@@ -107,7 +107,5 @@ public interface UserExtendValMapper {
 
   int countByUserExtend(Map<String, String> params);
   
-  int updateSystemDefineUserAttribute(Map<String, Object> params);
-  
   int updateValue(@Param("userId")Long userId, @Param("extendId")Long extendId, @Param("value")String value);
 }

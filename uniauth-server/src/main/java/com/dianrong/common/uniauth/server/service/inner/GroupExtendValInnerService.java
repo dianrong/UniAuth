@@ -13,10 +13,8 @@ import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttribut
 import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord.RecordType;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-import com.google.common.collect.Maps;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -36,32 +34,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
   // Data filter
   @Resource(name = "grpExtendValDataFilter")
   private DataFilter dataFilter;
-  
-  /**
-   * 更新系统自定义的组属性值.
-   * 
-   * @param grpId 组Id
-   * @param idFieldName 在表中用户id所在的字段名
-   * @param tableName 需要更新的表名.
-   * @param fieldName 需要更新的字段名.
-   * @param value 属性需要更新成的值.
-   */
-  @Transactional
-  public void updateSystemDefineGrpAttribute(Integer grpId, String idFiledName, String tableName,
-      String fieldName, String value) {
-    CheckEmpty.checkEmpty(grpId, "grpId");
-    CheckEmpty.checkEmpty(idFiledName, "idFiledName");
-    CheckEmpty.checkEmpty(tableName, "tableName");
-    CheckEmpty.checkEmpty(fieldName, "fieldName");
-    Map<String, Object> params = Maps.newHashMap();
-    params.put("grpId", grpId);
-    params.put("tableName", tableName);
-    params.put("idFiledName", idFiledName);
-    params.put("fieldName", fieldName);
-    params.put("value", value);
-    grpExtendValMapper.updateSystemDefineGrpAttribute(params);
-  }
-  
+
   /**
    * 新增.
    */
@@ -70,12 +43,12 @@ public class GroupExtendValInnerService extends TenancyBasedService {
   public GrpExtendVal addNew(Integer grpId, Long extendId, String value) {
     CheckEmpty.checkEmpty(grpId, "grpId");
     CheckEmpty.checkEmpty(extendId, "extendId");
-    
+
     // 数据过滤
     dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_GRP_ID, grpId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
-    
+
     GrpExtendVal record = new GrpExtendVal();
     record.setExtendId(extendId);
     record.setGrpId(grpId);
@@ -95,7 +68,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
     CheckEmpty.checkEmpty(extendId, "extendId");
     grpExtendValMapper.updateValue(grpId, extendId, value);
   }
-  
+
   /**
    * 根据GrpId和扩展属性Id查找信息.
    */
@@ -110,7 +83,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
     }
     return grpExtendValList.get(0);
   }
-  
+
   /**
    * 根据主键id查找.
    */

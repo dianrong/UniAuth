@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.common.interfaces.read;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 
-import java.util.Date;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -27,5 +26,5 @@ public interface IUserProfileResource {
   @Path("{identity}")
   Response<Map<String, Object>> getUserProfileByIdentity(@PathParam("identity") String identity,
       @QueryParam("profileId") Long profileId, @QueryParam("tenancyId") Long tenancyId,
-      @QueryParam("identityType") UserIdentityType identityType, @QueryParam("time") Date time);
+      @QueryParam("identityType") UserIdentityType identityType, @QueryParam("time") Long time);
 }

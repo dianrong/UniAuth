@@ -101,5 +101,5 @@ public interface GrpAttributeRecordsMapper {
   int updateByPrimaryKey(GrpAttributeRecords record);
 
   List<GrpAttributeRecords> queryGrpHisotryProfileVal(@Param("grpId") Integer grpId,
-      @Param("optDate") Date optDate);
+      @Param("optDate") Date optDate, @Param("extendIds") List<Long> extendIds);
 }

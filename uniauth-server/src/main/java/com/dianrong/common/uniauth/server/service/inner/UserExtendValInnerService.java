@@ -14,11 +14,9 @@ import com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttribut
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
-import com.google.common.collect.Maps;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -136,31 +134,6 @@ public class UserExtendValInnerService extends TenancyBasedService {
     return userExtendValList.get(0);
   }
 
-  /**
-   * 更新系统自定义的用户属性值.
-   * 
-   * @param userId 用户id
-   * @param idFieldName 在表中用户id所在的字段名
-   * @param tableName 需要更新的表名.
-   * @param fieldName 需要更新的字段名.
-   * @param value 属性需要更新成的值.
-   */
-  @Transactional
-  public void updateSystemDefineUserAttribute(Long userId, String idFieldName, String tableName,
-      String fieldName, String value) {
-    CheckEmpty.checkEmpty(userId, "userId");
-    CheckEmpty.checkEmpty(idFieldName, "idFieldName");
-    CheckEmpty.checkEmpty(tableName, "tableName");
-    CheckEmpty.checkEmpty(fieldName, "fieldName");
-    Map<String, Object> params = Maps.newHashMap();
-    params.put("idFieldName", idFieldName);
-    params.put("userId", userId);
-    params.put("tableName", tableName);
-    params.put("fieldName", fieldName);
-    params.put("value", value);
-    userExtendValMapper.updateSystemDefineUserAttribute(params);
-  }
-  
   /**
    * 根据主键id查找.
    */

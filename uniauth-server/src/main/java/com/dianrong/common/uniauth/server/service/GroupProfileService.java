@@ -19,7 +19,6 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +55,7 @@ public class GroupProfileService extends TenancyBasedService {
    * @param time 指定查询历史Profile
    * @return 组的属性集合
    */
-  public Map<String, Object> getGroupProfile(Integer groupId, Long profileId, Date time) {
+  public Map<String, Object> getGroupProfile(Integer groupId, Long profileId, Long time) {
     CheckEmpty.checkEmpty(groupId, "groupId");
     CheckEmpty.checkEmpty(profileId, "profileId");
     ProfileDefinitionDto pdDto = profileService.getProfileDefinition(profileId);

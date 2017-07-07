@@ -4,7 +4,6 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.ProfileParam;
-import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.server.resource.UserProfileResource;
 import com.dianrong.common.uniauth.server.test.BaseTest;
@@ -25,12 +24,12 @@ public class UserProfileResourceTest extends BaseTest {
 
   @Test
   public void testAddOrUpdateUserProfile() {
-    CxfHeaderHolder.TENANCYCODE.set("dianrong");
-    Long profileId = 4L;
-    Long uniauthId = 300000020L;
+    Long profileId = 1L;
+    Long uniauthId = 300000010L;
     ProfileParam param = new ProfileParam();
     Map<String, AttributeExtendParam> attributes = Maps.newHashMap();
     param.setAttributes(attributes);
+    param.setTenancyCode("dianrong");
     attributes.put("name",
         new AttributeExtendParam().setValue("小王").setDescription("姓名").setCode("name"));
     attributes.put("email", new AttributeExtendParam().setValue("123472679@qq.com")
@@ -63,12 +62,16 @@ public class UserProfileResourceTest extends BaseTest {
     attributes.put("deskmate_name", new AttributeExtendParam().setValue("同桌1"));
     attributes.put("class_monitor_name", new AttributeExtendParam().setValue("班长"));
     attributes.put("school", new AttributeExtendParam().setValue("学校"));
+    
+    attributes.put("first_name", new AttributeExtendParam().setValue("王"));
+    attributes.put("last_name", new AttributeExtendParam().setValue("万飞"));
+    attributes.put("display_name", new AttributeExtendParam().setValue("小王"));
 
     Response<Map<String, Object>> response =
         userProfileResource.addOrUpdateUserProfile(uniauthId, profileId, param);
     System.out.println(JsonUtil.object2Jason(response));
   }
-
+  
   @Test
   public void testGetUserProfile() {
     Long profileId = 4L;

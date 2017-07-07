@@ -13,7 +13,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class UserProfileResource implements IUserProfileRWResource {
   @Timed
   @Override
   public Response<Map<String, Object>> getUserProfileByIdentity(String identity, Long profileId,
-      Long tenancyId, UserIdentityType identityType, Date time) {
+      Long tenancyId, UserIdentityType identityType, Long time) {
     return Response.success(
         userProfileService.getUserProfileByIdentity(identity, profileId, tenancyId, identityType, time));
   }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
 	namespace="com.dianrong.common.uniauth.server.data.mapper.GrpAttributeRecordsMapper">
-	<select id="queryGrpHisotryProfileVal">
+	<select id="queryGrpHisotryProfileVal" resultMap="BaseResultMap" >
 		SELECT
 		t1.cur_val, t1.pre_val, t1.opt_type, t1.extend_id, t1.tenancy_id
 		FROM
@@ -20,7 +20,11 @@
 				grp_attribute_records
 				WHERE
 				grp_id = #{grpId, jdbcType=INTEGER}
-				<![CDATA[AND opt_date < #{optDate, jdbcType=TIMESTAMP} ]]>     
+				<![CDATA[AND opt_date <= #{optDate, jdbcType=TIMESTAMP} ]]>
+				and extend_id in 
+                <foreach collection="extendIds" item="item" separator="," open="(" close=")">
+                    #{item, jdbcType=BIGINT}
+                </foreach>
 			) t
 			GROUP BY t.extend_id
 		) t2 ON t1.id = t2.id
