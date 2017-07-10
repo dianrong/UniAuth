@@ -174,7 +174,7 @@ public class XssFilter extends OncePerRequestFilter {
     }
 
     /**
-     * 获取指定参数名的所有值的数组，如：checkbox的所有数据. 接收数组变量 ，如checkobx类型
+     * 获取指定参数名的所有值的数组，如：checkbox的所有数据. 接收数组变量.
      */
     @Override
     public String[] getParameterValues(String name) {
