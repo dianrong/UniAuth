@@ -802,11 +802,13 @@ public class GroupService extends TenancyBasedService {
       List<User> users = userMapper.selectByExample(userExample);
 
       Map<Long, UserDto> userDtoMap = new HashMap<>();
-
-      for (User user : users) {
-        UserDto userDto = BeanConverter.convert(user);
-        userDtoMap.put(userDto.getId(), userDto);
+      if (!CollectionUtils.isEmpty(users)) {
+        for (User user : users) {
+          UserDto userDto = BeanConverter.convert(user);
+          userDtoMap.put(userDto.getId(), userDto);
+        }
       }
+
       // 将用户组装成用户集合到组里
       for (GroupDto groupDto : groupDtos) {
         List<Long> userIds = userGrpIdsPair.get(groupDto.getId());
@@ -825,16 +827,6 @@ public class GroupService extends TenancyBasedService {
     }
 
     return groupDtos;
-  }
-
-  /**
-   * 根据很多个组Id去获取UserGrpKey信息
-   */
-  public List<UserGrpKey> getGroupTreeInId(ArrayList<Integer> grpIdList, Byte userGroupType) {
-    UserGrpExample userGrpExample = new UserGrpExample();
-    userGrpExample.createCriteria().andTypeEqualTo(userGroupType)
-        .andGrpIdIn(grpIdList);
-    return userGrpMapper.selectByExample(userGrpExample);
   }
 
   /**
