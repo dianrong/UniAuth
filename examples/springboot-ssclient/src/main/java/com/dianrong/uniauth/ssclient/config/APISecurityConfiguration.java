@@ -3,7 +3,6 @@ package com.dianrong.uniauth.ssclient.config;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,12 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
- * 自定义spring security 配置.
- * 
- * @author wanglin
+ * 如果需要使用basic auth的功能，可参考配置.
  */
 @Order(0)
-@Configuration
 public class APISecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
