@@ -5,6 +5,7 @@ import com.dianrong.common.uniauth.common.customer.basicauth.handler.PermissionH
 import com.dianrong.common.uniauth.common.customer.basicauth.handler.PermissionTypeHandler;
 import com.dianrong.common.uniauth.common.customer.basicauth.handler.RoleCodeHandler;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 public class ModeFactory implements IModeFactory {
 
-  private static Map<Enum, ModeHandler> handlerMap = new HashMap<>();
+  private static Map<Mode, ModeHandler> handlerMap = new HashMap<>();
 
   static {
     handlerMap.put(Mode.ROLE_CODE, new RoleCodeHandler());
