@@ -93,6 +93,7 @@
                 <ref bean="casRequest4"/>
               </list>
         </constructor-arg>
+        <property name="excludeParameters" value="password, originPassword"/>
     </bean>
     <bean id="casRequest1" class="com.dianrong.common.uniauth.cas.filter.support.CasRequest">
         <constructor-arg>
