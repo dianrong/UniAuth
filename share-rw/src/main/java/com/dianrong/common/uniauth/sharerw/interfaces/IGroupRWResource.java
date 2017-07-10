@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
 
+import java.util.List;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
@@ -57,4 +58,8 @@ public interface IGroupRWResource extends IGroupResource {
   @POST
   @Path("move")
   Response<Void> moveGroup(GroupParam groupParam);
+
+  @POST
+  @Path("get-group-by-id-or-code")
+  Response<List<GroupDto>> getGroupTreeByIdOrCode(GroupParam groupParam);
 }

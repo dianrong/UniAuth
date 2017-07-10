@@ -13,6 +13,15 @@ public class GroupParam extends Operator {
   private String name;
   private String description;
   private Byte status;
+  private Byte userStatus;
+
+  public Byte getUserStatus() {
+    return userStatus;
+  }
+
+  public void setUserStatus(Byte userStatus) {
+    this.userStatus = userStatus;
+  }
 
   // when add
   private Integer targetGroupId;

@@ -15,17 +15,13 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
@@ -113,6 +109,25 @@ public class GroupResource implements IGroupRWResource {
         groupParam.getTagId(), groupParam.getNeedOwnerMarkup(), groupParam.getOpUserId(),
         groupParam.getIncludeDisableUser());
     return Response.success(grpDto);
+  }
+
+  @ApiOperation(value = "根据组Id或者Code查询组信息")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "id", value = "根组id", dataType = "long",
+          paramType = "query"),
+      @ApiImplicitParam(name = "code", value = "根组code(如果和id不传，则根据code查询)", dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "userGroupType", value = "用户与组的关联关系(0,1)",
+          dataType = "integer", paramType = "query", allowableValues = "0,1"),
+      @ApiImplicitParam(name = "userStatus", value = "用户是否启用(0,1)",
+          dataType = "integer", paramType = "query", allowableValues = "0,1"),
+  })
+  @Override
+  public Response<List<GroupDto>> getGroupTreeByIdOrCode(GroupParam groupParam) {
+    List<GroupDto> groupDtos = groupService
+        .getGroupTreeByIdOrCode(groupParam.getId(), groupParam.getCode(),
+            groupParam.getUserGroupType(), groupParam.getUserStatus());
+    return Response.success(groupDtos);
   }
 
   @ApiOperation(value = "添加用户与组的关联关系")

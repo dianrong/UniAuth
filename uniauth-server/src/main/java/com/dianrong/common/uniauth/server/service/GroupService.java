@@ -63,7 +63,6 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -74,9 +73,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -703,6 +700,106 @@ public class GroupService extends TenancyBasedService {
     } else {
       return null;
     }
+  }
+
+  /**
+   * 根据组Id或者组code获取组信息
+   */
+  public List<GroupDto> getGroupTreeByIdOrCode(Integer groupId, String groupCode, Byte userGroupType, Byte userStatus) {
+    Grp rootGrp = null;
+    if (groupId != null) {
+      rootGrp = grpMapper.selectByPrimaryKey(groupId);
+      if (rootGrp == null || !AppConstants.ZERO_BYTE.equals(rootGrp.getStatus())) {
+        throw new AppException(InfoName.VALIDATE_FAIL,
+            UniBundle.getMsg("common.entity.not found", groupId, Grp.class.getSimpleName()));
+      }
+    } else if (groupCode != null) {
+      GrpExample grpExample = new GrpExample();
+      grpExample.createCriteria().andCodeEqualTo(groupCode)
+          .andStatusEqualTo(AppConstants.STATUS_ENABLED)
+          .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+      List<Grp> grps = grpMapper.selectByExample(grpExample);
+      if (CollectionUtils.isEmpty(grps)) {
+        throw new AppException(InfoName.VALIDATE_FAIL,
+            UniBundle.getMsg("common.entity.code.not found", groupCode, Grp.class.getSimpleName()));
+      }
+      rootGrp = grps.get(0);
+    } else if (groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
+      throw new AppException(InfoName.VALIDATE_FAIL,
+          UniBundle
+              .getMsg("common.entity.not found", groupId, groupCode, Grp.class.getSimpleName()));
+    }
+
+    List<Grp> grps = grpMapper.getGroupTree(rootGrp.getId());
+    List<GroupDto> groupDtos = new ArrayList<>();
+    Map<Integer, GroupDto> groupIdGroupDtoPair = new HashMap<>();
+
+    if (!CollectionUtils.isEmpty(grps)) {
+      for(Grp grp : grps) {
+        GroupDto groupDto = BeanConverter.convert(grp);
+        groupIdGroupDtoPair.put(grp.getId(), groupDto);
+        groupDtos.add(groupDto);
+      }
+    }
+
+    if(userGroupType == null) {
+      userGroupType = AppConstants.ZERO_TYPE;
+    }
+    UserGrpExample userGrpExample = new UserGrpExample();
+    userGrpExample.createCriteria().andTypeEqualTo(userGroupType)
+        .andGrpIdIn(new ArrayList<Integer>(groupIdGroupDtoPair.keySet()));
+    List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+    // userId作为key，grpId集合作为value
+    Map<Long, List<Integer>> userGrpIdsPair = new HashMap<>();
+    if (!CollectionUtils.isEmpty(userGrpKeys)) {
+      for (UserGrpKey userGrpKey : userGrpKeys) {
+        Long userId = userGrpKey.getUserId();
+        Integer grpId = userGrpKey.getGrpId();
+        List<Integer> grpIds = userGrpIdsPair.get(userId);
+        if (grpIds == null) {
+          grpIds = new ArrayList<>();
+          userGrpIdsPair.put(userId, grpIds);
+        }
+        grpIds.add(grpId);
+      }
+
+      if(userStatus == null) {
+        userStatus = AppConstants.STATUS_ENABLED;
+      }
+      // 查询组里所有的用户
+      UserExample userExample = new UserExample();
+      userExample.createCriteria().andIdIn(new ArrayList<Long>(userGrpIdsPair.keySet()))
+          .andStatusEqualTo(userStatus)
+          .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+      List<User> users = userMapper.selectByExample(userExample);
+      for (User user : users) {
+        List<Integer> grpIds = userGrpIdsPair.get(user.getId());
+        UserDto userDto = BeanConverter.convert(user);
+        for (Integer grpId : grpIds) {
+          GroupDto groupDto = groupIdGroupDtoPair.get(grpId);
+          List<UserDto> userDtoList = groupDto.getUsers();
+          if (userDtoList == null) {
+            userDtoList = new ArrayList<>();
+            groupDto.setUsers(userDtoList);
+          }
+          userDtoList.add(userDto);
+        }
+      }
+    }
+
+    return groupDtos;
+  }
+
+  /**
+   * 根据很多个组Id去获取UserGrpKey信息
+   * @param grpIdList
+   * @return
+   */
+  public List<UserGrpKey> getGroupTreeInId(ArrayList<Integer> grpIdList, Byte userGroupType) {
+    UserGrpExample userGrpExample = new UserGrpExample();
+    userGrpExample.createCriteria().andTypeEqualTo(userGroupType)
+        .andGrpIdIn(grpIdList);
+    return userGrpMapper.selectByExample(userGrpExample);
   }
 
   /**
