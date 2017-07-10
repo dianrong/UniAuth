@@ -19,10 +19,5 @@ public class WebSecurityConfiguration extends UniauthSecurityConfig {
 
   protected void configure(HttpSecurity http) throws Exception {
    super.configure(http);
-   http.authorizeRequests()
-   .antMatchers("/actuator/**").hasRole("ADMIN")
-   .antMatchers("/ajax/apiuser").hasRole("ADMIN")
-   .antMatchers("/ajax/authorityGroup").hasRole("ADMIN")
-   .anyRequest().hasRole("NORMAL");
   }
 }
