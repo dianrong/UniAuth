@@ -19,14 +19,6 @@ public class CacheMapBo<T> {
     this.value = value;
     this.expires = expires;
   }
-  
-  /**
-   * 构造一个会过期的缓存对象.
-   */
-  public CacheMapBo(T value) {
-    this.value = value;
-    this.expires = System.currentTimeMillis();
-  }
 
   public T getValue() {
     return value;
