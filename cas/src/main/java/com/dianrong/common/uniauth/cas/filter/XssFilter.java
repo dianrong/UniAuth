@@ -5,6 +5,7 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -14,19 +15,26 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class XssFilter extends OncePerRequestFilter {
 
-  //匹配不需要过滤路径的正则表达式
+  // 匹配不需要过滤路径的正则表达式
   private final Set<CasRequestPatternCache> requestPattern;
+
+  /**
+   * 放过的参数名集合.
+   */
+  private final Set<String> excludeParameters = Sets.newHashSet();
 
   /**
    * 构造函数.
@@ -46,8 +54,7 @@ public class XssFilter extends OncePerRequestFilter {
    * Xss过滤.
    */
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-      FilterChain filterChain)
-      throws ServletException, IOException {
+      FilterChain filterChain) throws ServletException, IOException {
     if (checkIfPassWithoutProcess(request)) {
       filterChain.doFilter(request, response);
     } else {
@@ -58,6 +65,7 @@ public class XssFilter extends OncePerRequestFilter {
 
   /**
    * 检查是否可以放过不处理.
+   * 
    * @return 是否可以放过不处理
    */
   private boolean checkIfPassWithoutProcess(HttpServletRequest request) {
@@ -65,8 +73,8 @@ public class XssFilter extends OncePerRequestFilter {
     for (CasRequestPatternCache pattern : this.requestPattern) {
       String patternMethod = pattern.getMethod();
       // check method
-      if (patternMethod.equalsIgnoreCase(AppConstants.HTTP_METHOD_ALL) || patternMethod
-          .equalsIgnoreCase(requestMethod)) {
+      if (patternMethod.equalsIgnoreCase(AppConstants.HTTP_METHOD_ALL)
+          || patternMethod.equalsIgnoreCase(requestMethod)) {
         // check request url
         String requestUri = request.getRequestURI();
         if (StringUtils.isNotBlank(requestUri)) {
@@ -78,6 +86,18 @@ public class XssFilter extends OncePerRequestFilter {
       }
     }
     return false;
+  }
+
+  public void setExcludeParameters(String parameters) {
+    if (StringUtils.isBlank(parameters)) {
+      return;
+    }
+    String[] excludeParameterArray = parameters.split(",");
+    for (String excludeParameter : excludeParameterArray) {
+      if (!StringUtils.isBlank(excludeParameter)) {
+        excludeParameters.add(excludeParameter);
+      }
+    }
   }
 
   /**
@@ -109,7 +129,7 @@ public class XssFilter extends OncePerRequestFilter {
    */
   private class EscapeScriptWrapper extends HttpServletRequestWrapper {
 
-    private Map<String, String[]> parameterMap;  //所有参数的Map集合
+    private Map<String, String[]> parameterMap; // 所有参数的Map集合
     private Pattern tmpPattern = Pattern.compile("[sS][cC][rR][iI][pP][tT]");
 
     public EscapeScriptWrapper(HttpServletRequest request) {
@@ -117,7 +137,7 @@ public class XssFilter extends OncePerRequestFilter {
       parameterMap = request.getParameterMap();
     }
 
-    //重写几个HttpServletRequestWrapper中的方法
+    // 重写几个HttpServletRequestWrapper中的方法
 
     /**
      * 获取所有参数名.
@@ -143,16 +163,18 @@ public class XssFilter extends OncePerRequestFilter {
     @Override
     public String getParameter(String name) {
       String[] results = parameterMap.get(name);
-      if (results == null || results.length <= 0) {
+      if (results == null || results.length == 0) {
         return null;
       } else {
+        if (excludeParameters.contains(name)) {
+          return results[0];
+        }
         return escapeXss(results[0]);
       }
     }
 
     /**
-     * 获取指定参数名的所有值的数组，如：checkbox的所有数据.
-     * 接收数组变量 ，如checkobx类型
+     * 获取指定参数名的所有值的数组，如：checkbox的所有数据. 接收数组变量 ，如checkobx类型
      */
     @Override
     public String[] getParameterValues(String name) {
@@ -160,9 +182,10 @@ public class XssFilter extends OncePerRequestFilter {
       if (results == null || results.length <= 0) {
         return results;
       } else {
-        int length = results.length;
-        for (int i = 0; i < length; i++) {
-          results[i] = escapeXss(results[i]);
+        if (!excludeParameters.contains(name)) {
+          for (int i = 0; i < results.length; i++) {
+            results[i] = escapeXss(results[i]);
+          }
         }
         return results;
       }
