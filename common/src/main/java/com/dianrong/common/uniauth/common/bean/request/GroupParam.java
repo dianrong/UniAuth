@@ -15,14 +15,6 @@ public class GroupParam extends Operator {
   private Byte status;
   private Byte userStatus;
 
-  public Byte getUserStatus() {
-    return userStatus;
-  }
-
-  public void setUserStatus(Byte userStatus) {
-    this.userStatus = userStatus;
-  }
-
   // when add
   private Integer targetGroupId;
   // when delete
@@ -204,6 +196,14 @@ public class GroupParam extends Operator {
   public GroupParam setIncludeDisableUser(Boolean includeDisableUser) {
     this.includeDisableUser = includeDisableUser;
     return this;
+  }
+
+  public Byte getUserStatus() {
+    return userStatus;
+  }
+
+  public void setUserStatus(Byte userStatus) {
+    this.userStatus = userStatus;
   }
 
   @Override

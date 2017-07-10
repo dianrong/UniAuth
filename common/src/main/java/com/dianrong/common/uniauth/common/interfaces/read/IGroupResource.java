@@ -75,4 +75,13 @@ public interface IGroupResource {
   @POST
   @Path("list-group-relate-to-user")
   Response<List<GroupDto>> listGroupsRelateToUser(GroupQuery query);
+
+  /**
+   * 根据组id或者code查询组信息
+   * @param groupParam
+   * @return
+   */
+  @POST
+  @Path("get-group-by-id-or-code")
+  Response<List<GroupDto>> getGroupTreeByIdOrCode(GroupParam groupParam);
 }

@@ -115,7 +115,7 @@ public class GroupResource implements IGroupRWResource {
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "根组id", dataType = "long",
           paramType = "query"),
-      @ApiImplicitParam(name = "code", value = "根组code(如果和id不传，则根据code查询)", dataType = "string",
+      @ApiImplicitParam(name = "code", value = "根组code(如果组id不传，则根据code查询)", dataType = "string",
           paramType = "query"),
       @ApiImplicitParam(name = "userGroupType", value = "用户与组的关联关系(0,1)",
           dataType = "integer", paramType = "query", allowableValues = "0,1"),

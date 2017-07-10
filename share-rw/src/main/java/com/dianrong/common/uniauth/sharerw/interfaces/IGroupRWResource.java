@@ -58,8 +58,4 @@ public interface IGroupRWResource extends IGroupResource {
   @POST
   @Path("move")
   Response<Void> moveGroup(GroupParam groupParam);
-
-  @POST
-  @Path("get-group-by-id-or-code")
-  Response<List<GroupDto>> getGroupTreeByIdOrCode(GroupParam groupParam);
 }
