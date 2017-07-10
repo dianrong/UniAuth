@@ -17,6 +17,7 @@ import com.dianrong.common.uniauth.server.ldap.ipa.dao.UserDao;
 import com.dianrong.common.uniauth.server.ldap.ipa.entity.User;
 import com.dianrong.common.uniauth.server.ldap.ipa.support.IpaUtil;
 import com.dianrong.common.uniauth.server.service.cache.TenancyCache;
+import com.dianrong.common.uniauth.server.service.common.CommonService;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
@@ -24,11 +25,13 @@ import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.AuthenticationException;

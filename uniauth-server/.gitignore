@@ -11,3 +11,4 @@ out
 build
 logs
 catalina.base_IS_UNDEFINED
+/catalina.logs_IS_UNDEFINED/

@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
@@ -71,14 +72,21 @@ import com.dianrong.common.uniauth.server.mq.UniauthSender;
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseUserNotifyInfo;
+import com.dianrong.common.uniauth.server.service.common.CommonService;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.common.notify.NotificationService;
+import com.dianrong.common.uniauth.server.service.common.notify.NotifyType;
+import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
-import com.dianrong.common.uniauth.server.service.support.NotificationService;
-import com.dianrong.common.uniauth.server.service.support.NotifyType;
+import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -93,6 +101,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
@@ -152,18 +161,18 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   private UserPwdLogMapper userPwdLogMapper;
 
   @Autowired
-  private GroupService groupService;
+  private GroupInnerService groupInnerService;
+
+  @Autowired
+  private UserProfileInnerService userProfileInnerService;
 
   @Resource(name = "userDataFilter")
   private DataFilter dataFilter;
-  
-  /**
-   * 发送消息的服务.
-   */
+
   @Autowired
   private NotificationService notificationService;
 
-
+  // 异步处理线程池.
   private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
   /**
@@ -191,11 +200,19 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     userMapper.insert(user);
     UserDto userDto = BeanConverter.convert(user);
 
-    // 用户添加成功后发送mq
+    // 联动更新扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
+    attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
+    attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
+    userProfileInnerService.addOrUpdateUserAttributes(userDto.getId(), attributes);
+
+
+    // 用户添加成功后发送MQ
     uniauthSender.sendUserAdd(userDto);
     userDto.setPassword(randomPassword);
     asynAddUserPwdLog(user);
-    
+
     // 发送通知给用户
     notificationService.notify(user, randomPassword, NotifyType.ADD_USER);
     return userDto;
@@ -238,8 +255,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.entity.status.isone", userIdentity, User.class.getSimpleName()));
     }
-    // 辅助标识位
-    boolean isUpdatePassword = false;
     switch (userActionEnum) {
       case LOCK:
         user.setFailCount(AppConstants.MAX_AUTH_FAIL_COUNT);
@@ -248,7 +263,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         user.setFailCount(AppConstants.ZERO_BYTE);
         break;
       case RESET_PASSWORD:
-        isUpdatePassword = true;
         checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
         byte[] salt = AuthUtils.createSalt();
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
@@ -295,8 +309,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("common.parameter.wrong", "origin password"));
         }
-
-        isUpdatePassword = true;
         // 验证新密码
         checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
         byte[] salttemp = AuthUtils.createSalt();
@@ -309,7 +321,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         break;
     }
     user.setLastUpdate(new Date());
-    if (isUpdatePassword) {
+    if (UserActionEnum.isPasswordChange(userActionEnum)) {
       // 特殊设置的密码, 需要在登陆的时候重新设置密码
       if (ignorePwdStrategyCheck != null && ignorePwdStrategyCheck) {
         user.setPasswordDate(null);
@@ -318,13 +330,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     userMapper.updateByPrimaryKey(user);
 
-    // 记录日志设置记录
-    if (isUpdatePassword) {
-      // 如果特设设置的密码, 则不记录密码设置日志
-      if (ignorePwdStrategyCheck == null || !ignorePwdStrategyCheck) {
-        asynAddUserPwdLog(user);
-      }
-    }
+    // 联动更新扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
+    attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
+    attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
+    userProfileInnerService.addOrUpdateUserAttributes(user.getId(), attributes);
 
     // 发送通知
     if (UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {
@@ -338,12 +349,13 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       }
       uniauthNotify.notify(notifyInfo);
     }
-    
+
+
     // 通知用户密码修改了
     if (UserActionEnum.isUpdatePwdAdmin(userActionEnum)) {
       notificationService.notify(user, password, NotifyType.UPDATE_PSWD_ADMIN);
     }
- // 通知用户密码修改了
+    // 通知用户密码修改了
     if (UserActionEnum.isUpdatePwdSelf(userActionEnum)) {
       notificationService.notify(user, password, NotifyType.UPDATE_PSWD_SELF);
     }
@@ -666,8 +678,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate email
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_EMAIL,
-          email);
+      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_EMAIL, email);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL,
           email);
@@ -692,8 +703,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate phone
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_PHONE,
-          phone);
+      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_PHONE, phone);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE,
           phone);
@@ -763,7 +773,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     VPNLoginResult result = BeanConverter.convert(user);
 
     // 计算用户的组结构
-    List<Grp> grps = groupService.listUserLastGrpPath(user.getId());
+    List<Grp> grps = groupInnerService.listUserLastGrpPath(user.getId());
     List<String> grpCodes = Lists.newArrayList();
 
     for (Grp grp : grps) {
@@ -935,6 +945,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 根据账号以及租户信息查询用户的详细信息.
+   * 
    * @param loginStatusCheck 是否检测用户的登陆可用状态
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam, boolean loginStatusCheck) {
@@ -1031,7 +1042,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    * 获取角色下面所有的权限
    *
    * @param enableRoleIds 可用的角色id集合
-   * @return roleId与对应的权限集合映射;<br/> 1.如果角色没有任何权限,那么角色的权限是空;<br/> 2.如果没有任何角色,那么返回empty map
+   * @return roleId与对应的权限集合映射;<br/>
+   *         1.如果角色没有任何权限,那么角色的权限是空;<br/>
+   *         2.如果没有任何角色,那么返回empty map
    */
   @SuppressWarnings("unchecked")
   private Map<Integer, List<Permission>> getRolePermission(List<Integer> enableRoleIds) {
@@ -1218,7 +1231,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     // add password set log
     asynAddUserPwdLog(user);
-    
+
     notificationService.notify(user, password, NotifyType.UPDATE_PSWD_SELF);
   }
 
@@ -1382,8 +1395,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   private void setUserExtendVal(UserDto userDto) {
-    List<UserExtendValDto> userExtendValDtos =
-        userExtendValService.searchByUserId(userDto.getId());
+    List<UserExtendValDto> userExtendValDtos = userExtendValService.searchByUserId(userDto.getId());
     userDto.setUserExtendValDtos(userExtendValDtos);
   }
 
@@ -1500,7 +1512,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * . 检验密码是否符合要求
+   * 检验密码是否符合要求.
    *
    * @param userId userId
    * @param password the new password
@@ -1519,7 +1531,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
 
     // 密码设置策略检查
-
     // 符合密码复杂度
     if (!AuthUtils.validatePasswordRule(password)) {
       throw new AppException(InfoName.VALIDATE_FAIL,
@@ -1546,7 +1557,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * . 异步记录用户的密码设置记录
+   * 异步记录用户的密码设置记录.
    *
    * @param user info
    */
@@ -1572,11 +1583,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * get user list by group code and role names.
+   * Get user list by group code and role names.
    *
-   * @param groupCode groupCode can not be null
-   * @param includeSubGrp include sub group or not
-   * @param includeRoleIds roleIds. 如果为空,则不根据角色限定用户列表
+   * @param groupCode groupCode can not be null.
+   * @param includeSubGrp include sub group or not.
+   * @param includeRoleIds roleIds. 如果为空,则不根据角色限定用户列表.
    */
   public List<UserDto> getUsersByGroupCodeRoleIds(String groupCode, Boolean includeSubGrp,
       List<Integer> includeRoleIds) {
@@ -1595,6 +1606,25 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       userDtos.add(BeanConverter.convert(user));
     }
     return userDtos;
+  }
+
+  /**
+   * 根据用户的Identity和Identity的类型获取用户信息.
+   * 
+   * @param identity 用户的标识信息,不能为空.
+   * @param tenancyId 租户的id.
+   * @param identityType 标识类型,不能为空.
+   */
+  public User getUserByIdentity(String identity, Long tenancyId, UserIdentityType identityType) {
+    CheckEmpty.checkEmpty(identity, "identity");
+    CheckEmpty.checkEmpty(tenancyId, "tenancyId");
+    CheckEmpty.checkEmpty(identityType, "identityType");
+
+    Map<String, Object> param = Maps.newHashMap();
+    param.put("identity", identity);
+    param.put("tenancyId", tenancyId);
+    param.put("identityType", identityType.getType());
+    return userMapper.getUserByIdentity(param);
   }
 
   /**

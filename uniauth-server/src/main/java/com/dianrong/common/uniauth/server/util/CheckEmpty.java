@@ -34,7 +34,7 @@ public class CheckEmpty {
   }
 
   /**
-   * check all objs is blank("" or " "),then throw exception.
+   * Check all objs is blank("" or " "),then throw exception.
    *
    * @param errorMsg tip
    * @param objs obj to check is blank

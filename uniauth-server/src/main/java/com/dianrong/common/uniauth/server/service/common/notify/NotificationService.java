@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service.support;
+package com.dianrong.common.uniauth.server.service.common.notify;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.data.entity.User;

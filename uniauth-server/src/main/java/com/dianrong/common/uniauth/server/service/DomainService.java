@@ -23,6 +23,7 @@ import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -53,9 +54,6 @@ public class DomainService extends TenancyBasedService {
   @Autowired
   private TagTypeMapper  tagTypeMapper;
 
-  /**
-   * . 进行域名数据过滤的filter
-   */
   @Resource(name = "domainDataFilter")
   private DataFilter dataFilter;
 
@@ -68,7 +66,7 @@ public class DomainService extends TenancyBasedService {
     CheckEmpty.checkEmpty(domainCode, "域编码");
 
     // 检查code
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
         domainCode);
 
     DomainExample example = new DomainExample();
@@ -309,7 +307,7 @@ public class DomainService extends TenancyBasedService {
 
     if (domainId != null) {
       // 必须要合法的数据才能插入
-      dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
+      dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
     } else {
       throw new AppException(InfoName.BAD_REQUEST,
           UniBundle.getMsg("common.parameter.empty", "域相关人ID"));

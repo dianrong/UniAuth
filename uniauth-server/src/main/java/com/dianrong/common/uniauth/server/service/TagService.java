@@ -28,6 +28,7 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -204,7 +205,7 @@ public class TagService extends TenancyBasedService {
     CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
 
     // 不能存在重复的数据
-    tagDataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    tagDataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId),
         new FilterData(FieldType.FIELD_TYPE_CODE, code));
 
@@ -290,7 +291,7 @@ public class TagService extends TenancyBasedService {
   public TagTypeDto addNewTagType(String code, Integer domainId) {
     CheckEmpty.checkEmpty(domainId, "domainId");
     CheckEmpty.checkEmpty(code, "code");
-    dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
     TagType tagType = new TagType();
@@ -496,7 +497,7 @@ public class TagService extends TenancyBasedService {
   public void relateUsersAndTag(Integer tagId, List<Long> userIds) {
     CheckEmpty.checkEmpty(tagId, "tagId");
     // roleId 必须要存在
-    tagDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, tagId);
+    tagDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, tagId);
     UserTagExample userTagExample = new UserTagExample();
     UserTagExample.Criteria criteria = userTagExample.createCriteria();
     criteria.andTagIdEqualTo(tagId);

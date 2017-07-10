@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service.support;
+package com.dianrong.common.uniauth.server.service.common.notify;
 
 /**
  * 管理消息通知的各种模板.

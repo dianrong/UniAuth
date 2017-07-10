@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.server.service.support;
+package com.dianrong.common.uniauth.server.service.common.notify;
 
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.Assert;
@@ -56,14 +56,14 @@ public class NotifyTemplates {
     StringBuilder updatePwdSelfEmail = new StringBuilder();
     updatePwdSelfEmail.append("====================================================<br />");
     updatePwdSelfEmail.append("            ");
-    updatePwdSelfEmail.append("%s:您好! 您的密码信息已修改成功!<br />");
+    updatePwdSelfEmail.append("%s:您好! 您已成功修改密码,原密码将不能使用.如有疑问,请咨询点融it.service团队!<br />");
     updatePwdSelfEmail.append("            ");
-    updatePwdSelfEmail.append("如果不是您本人操作,请到: %s 去找回您的密码!       <br />");
+    updatePwdSelfEmail.append("系统地址: %s  <br />");
     updatePwdSelfEmail.append("====================================================<br />");
     // sms
     StringBuilder updatePwdSelfSmsEmail = new StringBuilder();
-    updatePwdSelfSmsEmail.append("%s:您好! 您的密码信息已修改成功!");
-    updatePwdSelfSmsEmail.append("如果不是您本人操作,请到: %s 去找回您的密码!");
+    updatePwdSelfSmsEmail.append("%s:您好! 您已成功修改密码,原密码将不能使用.如有疑问,请咨询点融it.service团队!");
+    updatePwdSelfSmsEmail.append("系统地址: %s");
     TEMPLATES.put(NotifyType.UPDATE_PSWD_SELF,
         new SimpleNotifyTemplate(updatePwdSelfEmail.toString(), updatePwdSelfSmsEmail.toString()) {
           @Override

@@ -9,9 +9,9 @@ public enum FilterType {
   /**
    * 数据如果存在,则报错.
    */
-  FILTER_TYPE_EXSIT_DATA,
+  EXSIT_DATA,
   /**
    * 如果数据不存在,则报错.
    */
-  FILTER_TYPE_NO_DATA
+  NO_DATA
 }

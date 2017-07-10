@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
@@ -34,16 +33,20 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.cache.TenancyCache;
+import com.dianrong.common.uniauth.server.service.common.CommonService;
+import com.dianrong.common.uniauth.server.service.inner.TenancyInnerService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.dianrong.common.uniauth.server.util.UniauthServerConstant;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -81,20 +84,22 @@ public class TenancyService {
   private GrpRoleMapper grpRoleMapper;
 
   @Autowired
-  private CommonService commonService;
-
-  @Autowired
   private DomainMapper domainMapper;
-
-  @Resource(name = "uniauthConfig")
-  private Map<String, String> allZkNodeMap;
 
   @Autowired
   private TenancyCache tenancyCache;
 
+  // Data filter
   @Resource(name = "tenancyDataFilter")
   private DataFilter dataFilter;
-
+  
+  // Another service
+  @Autowired
+  private CommonService commonService;
+  
+  @Autowired
+  private TenancyInnerService tenancyInnerService;
+  
   /**
    * 根据条件获取租户信息.
    */
@@ -141,7 +146,7 @@ public class TenancyService {
    * @see AppConstants.TENANCY_UNRELATED_TENANCY_ID
    */
   public Long getOneCanUsedTenancyId() {
-    return getTenancyId(false);
+    return tenancyInnerService.getOneCanUsedTenancyId();
   }
 
   /**
@@ -150,7 +155,7 @@ public class TenancyService {
    * @return tenancyId for current thread
    */
   public Long getTenancyIdWithCheck() {
-    return getTenancyId(true);
+    return tenancyInnerService.getTenancyIdWithCheck();
   }
 
   /**
@@ -172,7 +177,7 @@ public class TenancyService {
     CheckEmpty.checkEmpty(code, "code");
     CheckEmpty.checkEmpty(adminEmail, "adminEmail");
     CheckEmpty.checkEmpty(adminPassword, "adminPassword");
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
     Tenancy tenancy = new Tenancy();
     tenancy.setCode(code);
     tenancy.setName(StringUtils.hasText(name) ? name : code);
@@ -337,42 +342,5 @@ public class TenancyService {
     }
     return tenancyCache.updateTenancy(tenancy.getCode(), id, code, name, contactName, phone,
         description, status);
-  }
-
-  /**
-   * 获取一个可用的租户Identity 优先级为：tenancyId > tenancyCode.
-   *
-   * @return tenancyId for current request
-   */
-  private Long getTenancyId(boolean check) {
-    Long tenancyId = (Long) CxfHeaderHolder.TENANCYID.get();
-    if (tenancyId != null) {
-      return tenancyId;
-    }
-    String tenancyCode = (String) CxfHeaderHolder.TENANCYCODE.get();
-    if (StringUtils.hasText(tenancyCode)) {
-      TenancyDto dto = tenancyCache.getEnableTenancyByCode(tenancyCode);
-      if (dto != null) {
-        return dto.getId();
-      }
-    }
-    if (check) {
-      if (checkTenancyIdentity()) {
-        throw new AppException(InfoName.TENANCY_IDENTITY_REQUIRED,
-            UniBundle.getMsg("common.parameter.tenancyidentity.required"));
-      } else {
-        return tenancyCache.getEnableTenancyByCode(AppConstants.DEFAULT_TANANCY_CODE).getId();
-      }
-    }
-    return AppConstants.TENANCY_UNRELATED_TENANCY_ID;
-  }
-
-  /**
-   * A switch to control check tenancyIdentity forcibly.
-   *
-   * @return true or false
-   */
-  private boolean checkTenancyIdentity() {
-    return "true".equalsIgnoreCase(allZkNodeMap.get(AppConstants.CHECK_TENANCY_IDENTITY_FORCIBLY));
   }
 }

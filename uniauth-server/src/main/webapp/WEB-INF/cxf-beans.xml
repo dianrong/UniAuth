@@ -23,7 +23,9 @@
             <ref bean="tenancyResource" />
             <ref bean="attributeExtendResource"/>
             <ref bean="swaggerResource"/>
-            
+            <ref bean="profileResource"/>
+            <ref bean="userProfileResource"/>
+            <ref bean="groupProfileResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />
@@ -66,7 +68,7 @@
         <property name="version" value="1.0.0" />
         <property name="title" value="Uniauth-Server Api列表" />
         <property name="contact" value="shenglong.qian@dianrong.com, wanfei.wang@dianrong.com" />
-        <property name="license" value="2016 Dianrong, Inc." />
+        <property name="license" value="2017 Dianrong, Inc." />
         <property name="basePath" value="#{uniauthConfig['uniauth.contextpath'] != null ? uniauthConfig['uniauth.contextpath']+'/ws/rs':'/ws/rs'}"/>
         <property name="scan" value="true" />
     </bean>

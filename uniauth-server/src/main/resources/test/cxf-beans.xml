@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://cxf.apache.org/jaxrs
+                        http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <!-- CXF Configuration -->
+    <jaxrs:server address="/rs">
+        <jaxrs:serviceBeans>
+            <ref bean="domainResource" />
+            <ref bean="groupResource" />
+            <ref bean="permissionResource" />
+            <ref bean="roleResource" />
+            <ref bean="userResource" />
+            <ref bean="auditResource" />
+            <ref bean="configResource" />
+            <ref bean="tagResource" />
+            <ref bean="userExtendResource" />
+            <ref bean="userExtendValResource" />
+            <ref bean="tenancyResource" />
+            <ref bean="attributeExtendResource"/>
+            <ref bean="swaggerResource"/>
+            <ref bean="profileResource"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="jacksonJsonProvider" />
+            <ref bean="cxfServerHeaderFilter" />
+            <!--<ref bean="wadlGenerator" />-->
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+        </jaxrs:inInterceptors>
+    </jaxrs:server>
+
+	<bean id="cxfServerHeaderFilter"  class="com.dianrong.common.uniauth.common.server.cxf.server.ServerFilterSingletion"  factory-method="getInstance"/>
+
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+        <property name="serializationInclusion" value="NON_NULL"/>
+    </bean>
+    
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="jacksonObjectMapper" />
+		<property name="targetMethod" value="configure" />
+		<property name="arguments">
+			<list>
+				<value type="com.fasterxml.jackson.databind.DeserializationFeature">FAIL_ON_UNKNOWN_PROPERTIES</value>
+				<value>false</value>
+			</list>
+		</property>
+	</bean>
+    
+    <bean id="jacksonJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+        <constructor-arg ref="jacksonObjectMapper"></constructor-arg>
+    </bean>
+
+    <!--<bean id="wadlGenerator" class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator">-->
+        <!--<property name="linkAnyMediaTypeToXmlSchema" value="true" />-->
+    <!--</bean>-->
+    <!-- CXF Configuration Ends -->
+    
+    <!--  swagger -->
+    <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
+        <property name="resourcePackage" value="com.dianrong.common.uniauth.server.resource" />
+        <property name="version" value="1.0.0" />
+        <property name="title" value="Uniauth-Server Api列表" />
+        <property name="contact" value="shenglong.qian@dianrong.com, wanfei.wang@dianrong.com" />
+        <property name="license" value="2016 Dianrong, Inc." />
+        <property name="basePath" value="#{uniauthConfig['uniauth.contextpath'] != null ? uniauthConfig['uniauth.contextpath']+'/ws/rs':'/ws/rs'}"/>
+        <property name="scan" value="true" />
+    </bean>
+    
+    <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
+    <bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
+</beans>

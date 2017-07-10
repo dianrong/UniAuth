@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import com.google.common.collect.Maps;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -32,7 +33,6 @@ public class UniBundle {
       if (resourceBundle == null) {
         RESOURCEBUNDLES.putIfAbsent(locale, ResourceBundle.getBundle("UniauthResource", locale));
       }
-
       return RESOURCEBUNDLES.get(locale);
     }
   }

@@ -60,4 +60,16 @@ public class MainController {
     public String homePagePermissionType() {
         return "This my permissionType page";
     }
+    
+    @RequestMapping(value = "/put-request", method = RequestMethod.PUT)
+    @ResponseBody
+    public String putRequest() {
+        return "this is put request";
+    }
+    
+    @RequestMapping(value = "/del-request", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteRequest() {
+        return "this is delete request";
+    }
 }

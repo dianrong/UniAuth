@@ -35,6 +35,7 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.cache.CommonCache;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -81,13 +82,13 @@ public class RoleService extends TenancyBasedService {
   private DomainService domainService;
 
   /**
-   * . 进行角色数据过滤的filter
+   * 进行角色数据过滤的filter.
    */
   @Resource(name = "roleDataFilter")
   private DataFilter dataFilter;
 
   /**
-   * . 进行域名数据过滤的filter
+   * 进行域名数据过滤的filter.
    */
   @Resource(name = "domainDataFilter")
   private DataFilter domainDataFilter;
@@ -111,10 +112,10 @@ public class RoleService extends TenancyBasedService {
     CheckEmpty.checkEmpty(name, "name");
 
     // domainid必须是有效的
-    domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID,
+    domainDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
         domainId);
     // 不能存在domainid，roleCodeId，name完全一致的 role
-    dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, roleCodeId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, name));
@@ -445,7 +446,7 @@ public class RoleService extends TenancyBasedService {
   public void relateUsersAndRole(Integer roleId, List<Long> userIds) {
     CheckEmpty.checkEmpty(roleId, "roleId");
     // roleId 必须要存在
-    dataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID, roleId);
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, roleId);
     UserRoleExample userRoleExample = new UserRoleExample();
     UserRoleExample.Criteria criteria = userRoleExample.createCriteria();
     criteria.andRoleIdEqualTo(roleId);
