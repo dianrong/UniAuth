@@ -15,12 +15,12 @@ public class ProfileDefinitionDto extends TenancyBaseDto {
   private static final long serialVersionUID = -1765107973570952500L;
   
   /**
-   * Profile的属性Key
+   * Profile的属性Key.
    */
   public static final String ATTRIBUTES = "attributes";
   
   /**
-   * Profile的子Profile的key
+   * Profile的子Profile的key.
    */
   public static final String SUB_PROFILE = "subProfile";
 

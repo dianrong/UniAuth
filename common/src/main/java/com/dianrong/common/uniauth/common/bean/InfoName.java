@@ -40,5 +40,8 @@ public enum InfoName {
   @ApiModelProperty("请求缺少必要的租户身份信息，租户id或者租户code")
   TENANCY_IDENTITY_REQUIRED,
   @ApiModelProperty("请求中缺少必要的身份信息")
-  IDENTITY_REQUIRED,;
+  IDENTITY_REQUIRED,
+  @ApiModelProperty("没有权限访问")
+  NO_PRIVILEGE,
+  ;
 }

@@ -77,9 +77,7 @@ public interface IGroupResource {
   Response<List<GroupDto>> listGroupsRelateToUser(GroupQuery query);
 
   /**
-   * 根据组id或者code查询组信息
-   * @param groupParam
-   * @return
+   * 根据组id或者code查询组信息.
    */
   @POST
   @Path("get-group-by-id-or-code")
