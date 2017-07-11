@@ -7,7 +7,7 @@ import java.util.Date;
 import lombok.ToString;
 
 @ToString
-@ApiModel("用户的工作上下级关系")
+@ApiModel("汇报关系信息")
 public class UserWorkRelationshipDto extends TenancyBaseDto {
 
   private static final long serialVersionUID = 2660609756037424927L;

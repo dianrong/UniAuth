@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.sharerw.interfaces;
 
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.UserDetailInfoDto;
-import com.dianrong.common.uniauth.common.bean.request.UserDetailInfoParam;
+import com.dianrong.common.uniauth.common.bean.dto.UserWorkRelationshipDto;
+import com.dianrong.common.uniauth.common.bean.request.UserWorkRelationshipParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IUserWorkRelationshipResource;
 
 import javax.ws.rs.POST;
@@ -15,9 +15,9 @@ public interface IUserWorkRelationshipRWResource extends IUserWorkRelationshipRe
 
   @POST
   @Path("add-or-update")
-  Response<UserDetailInfoDto> addOrUpdateUserDetail(UserDetailInfoParam param);
+  Response<UserWorkRelationshipDto> addOrUpdateUserWrokRelationship(UserWorkRelationshipParam param);
   
   @POST
   @Path("update")
-  Response<UserDetailInfoDto> updateUserDetail(UserDetailInfoParam param);
+  Response<UserWorkRelationshipDto> updateUserWrokRelationship(UserWorkRelationshipParam param);
 }

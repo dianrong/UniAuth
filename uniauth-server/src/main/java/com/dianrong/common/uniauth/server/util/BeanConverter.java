@@ -21,6 +21,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailInfoDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserWorkRelationshipDto;
 import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
@@ -50,6 +51,7 @@ import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserDetail;
+import com.dianrong.common.uniauth.server.data.entity.UserWorkRelationship;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
@@ -620,7 +622,7 @@ public class BeanConverter {
         .setTenancyId(StringUtil.translateLongToInteger(userDetail.getTenancyId()));
     return userDetailDto;
   }
-  
+
   public static UserDetail convert(UserDetailInfoDto userDetailDto) {
     if (userDetailDto == null) {
       return null;
@@ -650,5 +652,27 @@ public class BeanConverter {
     userDetail.setWeibo(userDetailDto.getWeibo());
     userDetail.setTenancyId(StringUtil.translateIntegerToLong(userDetailDto.getTenancyId()));
     return userDetail;
+  }
+
+  public static UserWorkRelationshipDto convert(UserWorkRelationship userWorkRelationship) {
+    if (userWorkRelationship == null) {
+      return null;
+    }
+    UserWorkRelationshipDto userWorkRelationshipDto = new UserWorkRelationshipDto();
+    userWorkRelationshipDto.setAssignmentDate(userWorkRelationship.getAssignmentDate())
+        .setBusinessUnitName(userWorkRelationship.getBusinessUnitName())
+        .setCreateDate(userWorkRelationship.getCreateDate())
+        .setDepartmentName(userWorkRelationship.getDepartmentName())
+        .setHireDate(userWorkRelationship.getHireDate()).setId(userWorkRelationship.getId())
+        .setLastUpdate(userWorkRelationship.getLastUpdate())
+        .setLegalEntityName(userWorkRelationship.getLegalEntityName())
+        .setManagerId(userWorkRelationship.getManagerId())
+        .setSupervisorId(userWorkRelationship.getSupervisorId())
+        .setType(userWorkRelationship.getType()).setUserId(userWorkRelationship.getUserId())
+        .setWorkAddress(userWorkRelationship.getWorkAddress())
+        .setWorkLocation(userWorkRelationship.getWorkLocation())
+        .setWorkPhone(userWorkRelationship.getWorkPhone())
+        .setTenancyId(StringUtil.translateLongToInteger(userWorkRelationship.getTenancyId()));
+    return userWorkRelationshipDto;
   }
 }

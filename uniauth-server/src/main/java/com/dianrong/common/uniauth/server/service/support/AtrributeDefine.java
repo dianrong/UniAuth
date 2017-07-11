@@ -24,7 +24,7 @@ public enum AtrributeDefine {
   LAST_NAME(AtrributeTable.USER_DETAIL, "last_name"), 
   DISPLAY_NAME(AtrributeTable.USER_DETAIL, "display_name"), 
   NICK_NAME( AtrributeTable.USER_DETAIL, "nick_name"), 
-  IDENTITY_CARD(AtrributeTable.USER_DETAIL, "identity_card"), 
+  IDENTITY_NO(AtrributeTable.USER_DETAIL, "identity_no"), 
   MOTTO(AtrributeTable.USER_DETAIL, "motto"), 
   IMAGE(AtrributeTable.USER_DETAIL, "image"), 
   SSN(AtrributeTable.USER_DETAIL, "ssn"), 
@@ -39,8 +39,12 @@ public enum AtrributeDefine {
   TITLE(AtrributeTable.USER_DETAIL, "title"), 
   AID(AtrributeTable.USER_DETAIL, "aid"), 
   ENTRY_DATE(AtrributeTable.USER_DETAIL, "entry_date"), 
-  LEAVE_DATE( AtrributeTable.USER_DETAIL, "leave_date"),
+  LEAVE_DATE(AtrributeTable.USER_DETAIL, "leave_date"),
 
+  // Table user_work_relationship
+  MANAGER_ID(AtrributeTable.USER_WORK_RELATIONSHIP, "manager_id", false),
+  SUPERVISOR_ID(AtrributeTable.USER_WORK_RELATIONSHIP, "supervisor_id", false),
+  
   // Table group
   GROUP_NAME(AtrributeTable.GRP, "name"), 
   GROUP_CODE(AtrributeTable.GRP, "code", false), 
