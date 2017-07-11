@@ -69,8 +69,9 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
   // 缓存的默认实现.
   private CacheService cacheService = new CacheMapServiceImpl();
 
-  public void setCacheService(@NonNull CacheService cacheService) {
+  public DelegateAuthenticationProvider setCacheService(@NonNull CacheService cacheService) {
     this.cacheService = cacheService;
+    return this;
   }
 
   public DelegateAuthenticationProvider(@NonNull UniClientFacade uniClientFacade) {
