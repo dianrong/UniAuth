@@ -8,10 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 /**
- * Created by denghb on 6/23/17.
+ * 如果需要使用Basic Auth的功能，可参考配置
  */
-@Configuration
 @Order(1)
+@Configuration
 public class HttpBasicSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Autowired
@@ -19,12 +19,8 @@ public class HttpBasicSecurityConfiguration extends WebSecurityConfigurerAdapter
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.authenticationProvider(myAuthenticationProvider)
-        .authorizeRequests()
-        .antMatchers("/api/**").hasRole("techops")
-        .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().csrf().disable()
-        .httpBasic();
+    http.authenticationProvider(myAuthenticationProvider).antMatcher("/api/**").authorizeRequests()
+        .anyRequest().hasRole("techops").and().sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable().httpBasic();
   }
 }

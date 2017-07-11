@@ -15,9 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
- * 自定义spring security 配置.
- * 
- * @author wanglin
+ * 如果需要使用Basic Auth的功能，可参考配置.
  */
 @Order(0)
 @Configuration

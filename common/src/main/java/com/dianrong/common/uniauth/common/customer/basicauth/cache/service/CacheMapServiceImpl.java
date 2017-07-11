@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.common.customer.basicauth.cache.service;
 
-import com.dianrong.common.uniauth.common.customer.basicauth.cache.CacheMapBO;
 import com.dianrong.common.uniauth.common.customer.basicauth.cache.CacheMapManager;
 
 /**
@@ -14,7 +13,7 @@ public class CacheMapServiceImpl implements CacheService {
   }
 
   @Override
-  public void setDataToCache(CacheMapBO cacheMapBO, String key) {
-    CacheMapManager.getInstance().set(key, cacheMapBO);
+  public void setDataToCache(String key, Object cache) {
+    CacheMapManager.getInstance().set(key, cache);
   }
 }

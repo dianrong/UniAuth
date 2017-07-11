@@ -54,7 +54,8 @@ public class PermissionTypeHandler implements ModeHandler {
   }
 
   private void getByPermissionType(List<RoleDto> roleList,
-      ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorityArrayList, PermissionType permissionType) {
+      ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorityArrayList,
+      PermissionType permissionType) {
     for (RoleDto roleDto : roleList) {
       Set<String> permTypeSet = roleDto.getPermMap().get(permissionType);
       for (String permType : permTypeSet) {

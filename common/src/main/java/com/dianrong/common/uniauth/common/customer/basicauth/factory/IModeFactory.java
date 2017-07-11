@@ -1,6 +1,5 @@
 package com.dianrong.common.uniauth.common.customer.basicauth.factory;
 
-
 import com.dianrong.common.uniauth.common.customer.basicauth.handler.ModeHandler;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
 
