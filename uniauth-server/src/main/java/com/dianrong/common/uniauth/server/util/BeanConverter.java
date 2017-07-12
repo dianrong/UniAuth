@@ -546,18 +546,9 @@ public class BeanConverter {
     return model;
   }
 
-  public static Map<String, AttributeValModel> convertToModel(
-      Map<String, AttributeExtendParam> attributes) {
-    if (attributes == null) {
-      return null;
-    }
-    Map<String, AttributeValModel> resultMap = Maps.newHashMap();
-    for (Entry<String, AttributeExtendParam> entry : attributes.entrySet()) {
-      resultMap.put(entry.getKey(), convert(entry.getValue()));
-    }
-    return resultMap;
-  }
-
+  /**
+   * 对象转换.
+   */
   public static AttributeValModel convert(AttributeExtend attributeExtend) {
     if (attributeExtend == null) {
       return null;
@@ -588,18 +579,9 @@ public class BeanConverter {
     return attributeExtendDto;
   }
 
-  public static Map<String, AttributeExtendDto> convertToDto(
-      Map<String, AttributeValModel> attributes) {
-    if (attributes == null) {
-      return null;
-    }
-    Map<String, AttributeExtendDto> resultMap = Maps.newHashMap();
-    for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
-      resultMap.put(entry.getKey(), convert(entry.getValue()));
-    }
-    return resultMap;
-  }
-
+  /**
+   * 对象转换.
+   */
   public static UserDetailInfoDto convert(UserDetail userDetail) {
     if (userDetail == null) {
       return null;
@@ -623,6 +605,9 @@ public class BeanConverter {
     return userDetailDto;
   }
 
+  /**
+   * 对象转换.
+   */
   public static UserDetail convert(UserDetailInfoDto userDetailDto) {
     if (userDetailDto == null) {
       return null;
@@ -654,6 +639,9 @@ public class BeanConverter {
     return userDetail;
   }
 
+  /**
+   * 对象转换.
+   */
   public static UserWorkRelationshipDto convert(UserWorkRelationship userWorkRelationship) {
     if (userWorkRelationship == null) {
       return null;
@@ -674,5 +662,36 @@ public class BeanConverter {
         .setWorkPhone(userWorkRelationship.getWorkPhone())
         .setTenancyId(StringUtil.translateLongToInteger(userWorkRelationship.getTenancyId()));
     return userWorkRelationshipDto;
+  }
+  
+
+  /**
+   * 对象转换.
+   */
+  public static Map<String, AttributeExtendDto> convertToDto(
+      Map<String, AttributeValModel> attributes) {
+    if (attributes == null) {
+      return null;
+    }
+    Map<String, AttributeExtendDto> resultMap = Maps.newHashMap();
+    for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
+      resultMap.put(entry.getKey(), convert(entry.getValue()));
+    }
+    return resultMap;
+  }
+  
+  /**
+   * 对象转换.
+   */
+  public static Map<String, AttributeValModel> convertToModel(
+      Map<String, AttributeExtendParam> attributes) {
+    if (attributes == null) {
+      return null;
+    }
+    Map<String, AttributeValModel> resultMap = Maps.newHashMap();
+    for (Entry<String, AttributeExtendParam> entry : attributes.entrySet()) {
+      resultMap.put(entry.getKey(), convert(entry.getValue()));
+    }
+    return resultMap;
   }
 }

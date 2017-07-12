@@ -45,7 +45,7 @@ public final class AttributeRecordHanlderFactory implements InitializingBean {
   public AttributeRecordHanlderFactory() {}
 
   /**
-   * 构造器方式注入
+   * 构造器方式注入.
    */
   public AttributeRecordHanlderFactory(UserExtendValInnerService userExtendValInnerService,
       GroupExtendValInnerService groupExtendValInnerService) {

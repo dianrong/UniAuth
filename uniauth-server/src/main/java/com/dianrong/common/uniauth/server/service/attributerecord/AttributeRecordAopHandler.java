@@ -44,7 +44,8 @@ public class AttributeRecordAopHandler {
   private final ConcurrentMap<String, Expression> cache = Maps.newConcurrentMap();
 
   @Pointcut(
-      value = "@annotation(com.dianrong.common.uniauth.server.service.attributerecord.ExtendAttributeRecord)")
+      value = "@annotation(com.dianrong.common.uniauth"
+          + ".server.service.attributerecord.ExtendAttributeRecord)")
   public void attributeRecord() {}
 
   /**
@@ -74,7 +75,8 @@ public class AttributeRecordAopHandler {
     } catch (InvalidParameterTypeException ite) {
       parameterCheckOk = false;
       log.error(String.format(
-          "AttributeRecordHandler invoke target before parameter is invalid.TypeOperate:%s, Identity:%s",
+          "AttributeRecordHandler invoke target before parameter"
+          + " is invalid.TypeOperate:%s, Identity:%s",
           typeOperate, valIdentity), ite);
     }
     Throwable throwable = null;

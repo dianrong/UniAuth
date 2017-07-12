@@ -30,8 +30,8 @@ public class ProfileResource implements IProfileRWResource {
 
   @ApiOperation("新增Profile定义")
   @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "tenancyId", value = "租户id(或者tenancyCode)", dataType = "long", required = true,
-          paramType = "query"),
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或者tenancyCode)", dataType = "long",
+          required = true, paramType = "query"),
       @ApiImplicitParam(name = "name", value = "名称", dataType = "string", required = true,
           paramType = "query"),
       @ApiImplicitParam(name = "code", value = "编码(唯一标识)", dataType = "string", required = true,

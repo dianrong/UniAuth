@@ -26,13 +26,13 @@ public enum AtrributeDefine {
   FIRST_NAME(AtrributeTable.USER_DETAIL, "first_name"), 
   LAST_NAME(AtrributeTable.USER_DETAIL, "last_name"), 
   DISPLAY_NAME(AtrributeTable.USER_DETAIL, "display_name"), 
-  NICK_NAME( AtrributeTable.USER_DETAIL, "nick_name"), 
+  NICK_NAME(AtrributeTable.USER_DETAIL, "nick_name"), 
   IDENTITY_NO(AtrributeTable.USER_DETAIL, "identity_no"), 
   MOTTO(AtrributeTable.USER_DETAIL, "motto"), 
   IMAGE(AtrributeTable.USER_DETAIL, "image"), 
   SSN(AtrributeTable.USER_DETAIL, "ssn"), 
   WEIBO(AtrributeTable.USER_DETAIL, "weibo"), 
-  WECHAT_NO( AtrributeTable.USER_DETAIL, "wechat_no"), 
+  WECHAT_NO(AtrributeTable.USER_DETAIL, "wechat_no"), 
   ADDRESS(AtrributeTable.USER_DETAIL, "address"), 
   BIRTHDAY(AtrributeTable.USER_DETAIL, "birthday", Date.class), 
   GENDER(AtrributeTable.USER_DETAIL, "gender"), 
@@ -58,12 +58,14 @@ public enum AtrributeDefine {
   /**
    * 系统定义表中的User的属性编码与定义的Map.
    */
-  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_USE_ATTRIBUTES_MAP = Maps.newHashMap();
+  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_USE_ATTRIBUTES_MAP =
+      Maps.newHashMap();
 
   /**
    * 系统定义表中的Group的属性编码与定义的Map.
    */
-  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP = Maps.newHashMap();
+  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP = 
+      Maps.newHashMap();
   
 
   static {
@@ -102,7 +104,8 @@ public enum AtrributeDefine {
     this(defineTable, fieldName, fieldName, true, true, clz);
   }
 
-  private AtrributeDefine(AtrributeTable defineTable, String fieldName, boolean writable, Class<?> clz) {
+  private AtrributeDefine(AtrributeTable defineTable, 
+      String fieldName, boolean writable, Class<?> clz) {
     this(defineTable, fieldName, fieldName, true, writable, clz);
   }
   

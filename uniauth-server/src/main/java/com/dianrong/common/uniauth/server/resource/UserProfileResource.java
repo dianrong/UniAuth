@@ -33,8 +33,8 @@ public class UserProfileResource implements IUserProfileRWResource {
   @Override
   public Response<Map<String, Object>> getUserProfileByIdentity(String identity, Long profileId,
       Long tenancyId, UserIdentityType identityType, Long time) {
-    return Response.success(
-        userProfileService.getUserProfileByIdentity(identity, profileId, tenancyId, identityType, time));
+    return Response.success(userProfileService.getUserProfileByIdentity(identity, profileId,
+        tenancyId, identityType, time));
   }
 
   @ApiOperation("更新一个用户的扩展属性值(如果扩展属性不存在,则添加),随后返回对应ProfileId的Profile.")

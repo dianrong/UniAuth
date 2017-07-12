@@ -23,8 +23,6 @@ public class GroupProfileResourceTest extends BaseTest {
 
   @Test
   public void testAddOrUpdateGrpProfile() {
-    Long profileId = 1L;
-    Integer grpId = 100013;
     ProfileParam param = new ProfileParam();
     param.setTenancyCode("dianrong");
     Map<String, AttributeExtendParam> attributes = Maps.newHashMap();
@@ -41,6 +39,8 @@ public class GroupProfileResourceTest extends BaseTest {
         new AttributeExtendParam().setValue(null));
     attributes.put("description",
         new AttributeExtendParam().setValue("小王写的description"));
+    Long profileId = 1L;
+    Integer grpId = 100013;
     Response<Map<String, Object>> response =
         groupProfileResource.addOrUpdateGrpProfile(grpId, profileId, param);
     System.out.println(JsonUtil.object2Jason(response));

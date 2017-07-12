@@ -26,7 +26,7 @@ public class GroupProfileResource implements IGroupProfileRWResource {
 
   @Autowired
   private GroupProfileService groupProfileService;
-  
+
   @ApiOperation("根据Uniauth中的组Id和ProfileId获取用户的属性集合")
   @Timed
   @Override
@@ -44,7 +44,7 @@ public class GroupProfileResource implements IGroupProfileRWResource {
   @Override
   public Response<Map<String, Object>> addOrUpdateGrpProfile(Integer groupId, Long profileId,
       ProfileParam param) {
-    return Response
-        .success(groupProfileService.addOrUpdateGrpProfile(groupId, profileId, BeanConverter.convertToModel(param.getAttributes())));
+    return Response.success(groupProfileService.addOrUpdateGrpProfile(groupId, profileId,
+        BeanConverter.convertToModel(param.getAttributes())));
   }
 }

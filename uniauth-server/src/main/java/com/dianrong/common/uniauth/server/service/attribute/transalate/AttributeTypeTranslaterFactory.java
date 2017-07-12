@@ -12,15 +12,19 @@ import java.util.Map;
  */
 public final class AttributeTypeTranslaterFactory {
 
-  private static final Map<Class<?>, AttributeTypeTranslater> ATTRIBUTE_TYPE_TRANSLATERS = Maps.newConcurrentMap();
-  
+  private static final Map<Class<?>, AttributeTypeTranslater> ATTRIBUTE_TYPE_TRANSLATERS =
+      Maps.newConcurrentMap();
+
   static {
     ATTRIBUTE_TYPE_TRANSLATERS.put(Date.class, new DateTranslater());
     ATTRIBUTE_TYPE_TRANSLATERS.put(Integer.class, new IntegerTranslater());
     ATTRIBUTE_TYPE_TRANSLATERS.put(Long.class, new LongTranslater());
     ATTRIBUTE_TYPE_TRANSLATERS.put(String.class, new StringTranslater());
   }
-  
+
+  /**
+   * 根据不同的类型获取AttributeTypeTranslater.
+   */
   public static final AttributeTypeTranslater getTranslator(Class<?> clz) {
     Assert.notNull(clz);
     AttributeTypeTranslater translator = ATTRIBUTE_TYPE_TRANSLATERS.get(clz);

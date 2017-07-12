@@ -52,7 +52,8 @@ public final class ProfileSupport {
       Map<String, Object> subProfileDefine = Maps.newHashMap();
       for (SimpleProfileDefinitionDto subProfile : subProfiles) {
         Long profileId = subProfile.getId();
-        ProfileDefinitionDto subProfileDefinition = queryProfileDefinition.querySimpleProfileDefinition(profileId);
+        ProfileDefinitionDto subProfileDefinition = 
+            queryProfileDefinition.querySimpleProfileDefinition(profileId);
         subProfileDefinition.setSubProfiles(subProfile.getSubProfiles());
         Map<String, Object> subProfileAttributes =
             getProfileAttributes(subProfileDefinition, extendValMap, queryProfileDefinition);

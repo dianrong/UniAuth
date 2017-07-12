@@ -122,11 +122,9 @@ public class ProfileCache {
    * 更新一个Profile.
    */
   @Transactional
-  @Caching(evict = {@CacheEvict(key = "#id"),
-      @CacheEvict(key = "'simple:' + #id")})
-  public void updateProfileDefinition(Long id, String name, String code,
-      String description, Map<String, AttributeValModel> attributes,
-      Set<Long> descendantProfileIds) {
+  @Caching(evict = {@CacheEvict(key = "#id"), @CacheEvict(key = "'simple:' + #id")})
+  public void updateProfileDefinition(Long id, String name, String code, String description,
+      Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {
     // Id 必须要存在.
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
     if (!StringUtils.isBlank(code)) {
@@ -187,10 +185,9 @@ public class ProfileCache {
    * 扩展Profile的扩展属性和子Profile.
    */
   @Transactional
-  @Caching(evict = {@CacheEvict(key = "#id"),
-      @CacheEvict(key = "'simple:' + #id")})
-  public void extendProfileDefinition(Long id, Long tenancyId, Map<String, AttributeValModel> attributes,
-      Set<Long> descendantProfileIds) {
+  @Caching(evict = {@CacheEvict(key = "#id"), @CacheEvict(key = "'simple:' + #id")})
+  public void extendProfileDefinition(Long id, Long tenancyId,
+      Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
     // 处理Profile的关联关系.
     profileDefinitionPathService.extendSubProfilePath(id, descendantProfileIds);

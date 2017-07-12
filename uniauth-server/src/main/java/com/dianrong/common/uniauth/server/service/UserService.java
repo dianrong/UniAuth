@@ -198,13 +198,13 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     user.setPhone(phone);
     user.setStatus(AppConstants.STATUS_ENABLED);
     userMapper.insert(user);
-    UserDto userDto = BeanConverter.convert(user);
 
     // 联动更新扩展属性值
     Map<String, String> attributes = Maps.newHashMap();
     attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
     attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
     attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
+    UserDto userDto = BeanConverter.convert(user);
     userProfileInnerService.addOrUpdateUserAttributes(userDto.getId(), attributes);
 
 

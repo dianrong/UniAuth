@@ -25,7 +25,8 @@ public class GrpAddAttributeHanlder extends GrpBaseHanlder {
     GrpExtendVal grpExtendVal = query(valIdentity);
     if (grpExtendVal == null) {
       log.warn(
-          "add grp extend value records, the group extend value is null, so ignored. the identity: {}",
+          "add grp extend value records, the group extend value is null, "
+          + "so ignored. the identity: {}",
           valIdentity);
       return null;
     }

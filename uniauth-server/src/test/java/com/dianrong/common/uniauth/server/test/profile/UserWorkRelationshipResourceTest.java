@@ -16,7 +16,7 @@ public class UserWorkRelationshipResourceTest extends BaseTest {
 
   @Autowired
   private UserWorkRelationshipResource userWorkRelationshipResource;
-  
+
   @Test
   public void testSearchByUserId() {
     UserWorkRelationshipParam param = new UserWorkRelationshipParam();
@@ -24,7 +24,7 @@ public class UserWorkRelationshipResourceTest extends BaseTest {
     Response<UserWorkRelationshipDto> response = userWorkRelationshipResource.searchByUserId(param);
     System.out.println(JsonUtil.object2Jason(response));
   }
-  
+
   @Test
   public void testAddOrUpdateUserWrokRelationship() {
     UserWorkRelationshipParam param = new UserWorkRelationshipParam();
@@ -38,17 +38,19 @@ public class UserWorkRelationshipResourceTest extends BaseTest {
     param.setManagerId(300000001L);
     param.setSupervisorId(300000010L);
     param.setWorkAddress("软件园C区");
-    Response<UserWorkRelationshipDto> response = userWorkRelationshipResource.addOrUpdateUserWrokRelationship(param);
+    Response<UserWorkRelationshipDto> response =
+        userWorkRelationshipResource.addOrUpdateUserWrokRelationship(param);
     System.out.println(JsonUtil.object2Jason(response));
   }
-  
+
   @Test
   public void testUpdateUserWrokRelationship() {
     UserWorkRelationshipParam param = new UserWorkRelationshipParam();
     param.setTenancyCode("dianrong");
     param.setUserId(300000011L);
     param.setManagerId(300000011L);
-    Response<UserWorkRelationshipDto> response = userWorkRelationshipResource.updateUserWrokRelationship(param);
+    Response<UserWorkRelationshipDto> response =
+        userWorkRelationshipResource.updateUserWrokRelationship(param);
     System.out.println(JsonUtil.object2Jason(response));
   }
 }

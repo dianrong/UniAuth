@@ -99,8 +99,9 @@ public interface GrpExtendValMapper {
    * @mbggenerated Thu Jun 01 18:13:03 CST 2017
    */
   int updateByPrimaryKey(GrpExtendVal record);
-  
+
   int updateSystemDefineGrpAttribute(Map<String, Object> params);
-  
-  int updateValue(@Param("grpId")Integer grpId, @Param("extendId")Long extendId, @Param("value")String value);
+
+  int updateValue(@Param("grpId") Integer grpId, @Param("extendId") Long extendId,
+      @Param("value") String value);
 }

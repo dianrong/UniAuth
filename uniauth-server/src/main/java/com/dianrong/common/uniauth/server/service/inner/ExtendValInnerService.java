@@ -23,7 +23,7 @@ public class ExtendValInnerService extends TenancyBasedService {
   /**
    * 添加(或更新)系统自定义的属性值.
    * 
-   * @param identity id属性
+   * @param identityId id属性
    * @param idFieldName 在表中用户id所在的字段名
    * @param tableName 需要更新的表名.
    * @param fieldName 需要更新的字段名.

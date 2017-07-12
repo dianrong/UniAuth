@@ -53,7 +53,6 @@ public class ProfileResourceTest extends BaseTest {
   @Test
   public void testUpdateProfileDefinition2() {
     CxfHeaderHolder.TENANCYCODE.set("dianrong");
-    Long profileId = 8L;
     ProfileDefinitionParam param = new ProfileDefinitionParam();
     param.setName("组的基础Profile");
     param.setCode("BasicGroupProle");
@@ -75,6 +74,7 @@ public class ProfileResourceTest extends BaseTest {
         new AttributeExtendParam().setDescription("名称").setCategory("basic_group"));
     attributes.put("code",
         new AttributeExtendParam().setDescription("组编码").setCategory("basic_group"));
+    Long profileId = 8L;
     Response<ProfileDefinitionDto> response =
         profileResource.updateProfileDefinition(profileId, param);
     System.out.println(JsonUtil.object2Jason(response));
@@ -90,7 +90,6 @@ public class ProfileResourceTest extends BaseTest {
   @Test
   public void testUpdateProfileDefinition() {
     CxfHeaderHolder.TENANCYCODE.set("dianrong");
-    Long profileId = 4L;
 
     // extend attributes
     ProfileDefinitionParam param = new ProfileDefinitionParam();
@@ -113,6 +112,7 @@ public class ProfileResourceTest extends BaseTest {
     descendantProfileIds.add(6L);
     descendantProfileIds.add(5L);
     param.setDescendantProfileIds(descendantProfileIds);
+    Long profileId = 4L;
     Response<ProfileDefinitionDto> response =
         profileResource.updateProfileDefinition(profileId, param);
     System.out.println(JsonUtil.object2Jason(response));
@@ -120,7 +120,6 @@ public class ProfileResourceTest extends BaseTest {
 
   @Test
   public void testExtendProfileDefinition() {
-    Long profileId = 1L;
     // extend attributes
     ProfileDefinitionParam param = new ProfileDefinitionParam();
     param.setTenancyCode("dianrong");
@@ -130,6 +129,7 @@ public class ProfileResourceTest extends BaseTest {
         new AttributeExtendParam().setDescription("描述").setCategory("basic"));
     Set<Long> descendantProfileIds = Sets.newHashSet();
     param.setDescendantProfileIds(descendantProfileIds);
+    Long profileId = 1L;
     Response<ProfileDefinitionDto> response =
         profileResource.extendProfileDefinition(profileId, param);
     System.out.println(JsonUtil.object2Jason(response));

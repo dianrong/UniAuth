@@ -112,8 +112,7 @@ public class RoleService extends TenancyBasedService {
     CheckEmpty.checkEmpty(name, "name");
 
     // domainid必须是有效的
-    domainDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
-        domainId);
+    domainDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
     // 不能存在domainid，roleCodeId，name完全一致的 role
     dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
@@ -442,6 +441,11 @@ public class RoleService extends TenancyBasedService {
     }
   }
 
+  /**
+   * 替换用户与角色的关联关系.
+   * @param roleId 角色Id.
+   * @param userIds 用户Id集合.
+   */
   @Transactional
   public void relateUsersAndRole(Integer roleId, List<Long> userIds) {
     CheckEmpty.checkEmpty(roleId, "roleId");
@@ -459,7 +463,7 @@ public class RoleService extends TenancyBasedService {
     }
     List<Long> insertUserIds = userIds;
     insertUserIds.removeAll(existUserIds);
-    for (Long userId:insertUserIds) {
+    for (Long userId : insertUserIds) {
       UserRoleKey record = new UserRoleKey();
       record.setRoleId(roleId);
       record.setUserId(userId);

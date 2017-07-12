@@ -24,7 +24,7 @@ public class UserWorkRelationshipResource implements IUserWorkRelationshipRWReso
 
   @Autowired
   private UserWorkRelationshipService userWorkRelationshipService;
-  
+
   @ApiOperation("根据关联的用户id获取用户的汇报关系信息")
   @ApiImplicitParams(value = {@ApiImplicitParam(name = "userId", value = "关联的用户id", required = true,
       dataType = "long", paramType = "query")})
@@ -40,7 +40,8 @@ public class UserWorkRelationshipResource implements IUserWorkRelationshipRWReso
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或者传租户code(tenancyCode))", required = true,
           dataType = "long", paramType = "query")})
   @Override
-  public Response<UserWorkRelationshipDto> addOrUpdateUserWrokRelationship(UserWorkRelationshipParam param) {
+  public Response<UserWorkRelationshipDto> addOrUpdateUserWrokRelationship(
+      UserWorkRelationshipParam param) {
     return Response.success(userWorkRelationshipService.addOrUpdateUserWrokRelationship(param));
   }
 
@@ -51,7 +52,8 @@ public class UserWorkRelationshipResource implements IUserWorkRelationshipRWReso
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或者传租户code(tenancyCode))", required = true,
           dataType = "long", paramType = "query")})
   @Override
-  public Response<UserWorkRelationshipDto> updateUserWrokRelationship(UserWorkRelationshipParam param) {
+  public Response<UserWorkRelationshipDto> updateUserWrokRelationship(
+      UserWorkRelationshipParam param) {
     return Response.success(userWorkRelationshipService.updateUserWrokRelationship(param));
   }
 }

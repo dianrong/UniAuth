@@ -18,10 +18,9 @@ import redis.clients.jedis.JedisShardInfo;
  */
 public class UniauthJedisConnectionFactory extends JedisConnectionFactory {
 
- private Switch configSwitch;
+  private Switch configSwitch;
 
-  public UniauthJedisConnectionFactory() {
-  }
+  public UniauthJedisConnectionFactory() {}
 
   public UniauthJedisConnectionFactory(JedisShardInfo shardInfo) {
     super(shardInfo);

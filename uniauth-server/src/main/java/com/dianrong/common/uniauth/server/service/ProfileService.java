@@ -51,6 +51,15 @@ public class ProfileService extends TenancyBasedService {
   @Autowired
   private ProfileCache profileCache;
 
+  /**
+   * 添加一个新的Profile.
+   * @param name 名称
+   * @param code 编码,不能重复.
+   * @param description 描述.
+   * @param attributes 对应的所有属性的Map.
+   * @param descendantProfileIds 子Profile Id 集合.
+   * @return 生成的Profile对象.
+   */
   @Transactional
   public ProfileDefinitionDto addNewProfileDefinition(String name, String code, String description,
       Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {

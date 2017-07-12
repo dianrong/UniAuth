@@ -19,7 +19,8 @@ public abstract class ProcessListQuery<T, E> {
    * @param insertList true or false. 是获取插入的列表还是删除的列表.
    * @return 得到的结果.
    */
-  public List<T> getProcessList(final List<T> exsistList, final List<T> destList, boolean insertList) {
+  public List<T> getProcessList(final List<T> exsistList, 
+      final List<T> destList, boolean insertList) {
     List<T> innerExistList = exsistList == null ? new ArrayList<T>() : exsistList;
     List<T> innerDestList = destList == null ? new ArrayList<T>() : destList;
 
