@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * . 国际化处理相关的请求处理
+ * 国际化处理相关的请求处理.
  *
  * @author wanglin
  */
@@ -35,7 +35,7 @@ public class CasI18nController {
     try {
       response.getWriter().write(UniauthLocaleInfoHolder.getLocale().toString());
     } catch (IOException e) {
-      log.warn("query i18n language failed");
+      log.warn("query i18n language failed", e);
     }
   }
 
@@ -53,7 +53,7 @@ public class CasI18nController {
       }
       response.getWriter().write("success");
     } catch (IOException e) {
-      log.warn("refresh i18n language failed");
+      log.warn("refresh i18n language failed", e);
     }
   }
 }

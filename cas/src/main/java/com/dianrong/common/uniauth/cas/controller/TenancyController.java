@@ -32,8 +32,6 @@ public class TenancyController {
 
   /**
    * 获取默认的tenancy的信息.
-   *
-   * @throws IOException response write error
    */
   @RequestMapping(value = "/getDefault", method = RequestMethod.GET)
   public void getDefaultTenancyInfo(HttpServletRequest request, HttpServletResponse response)
@@ -44,8 +42,6 @@ public class TenancyController {
 
   /**
    * 校验tenancyCode是否有效.
-   *
-   * @throws IOException response write error
    */
   @RequestMapping(value = "/check/{tenancyCode}", method = {RequestMethod.GET, RequestMethod.POST})
   public void checkTenancyCode(HttpServletRequest request, HttpServletResponse response,

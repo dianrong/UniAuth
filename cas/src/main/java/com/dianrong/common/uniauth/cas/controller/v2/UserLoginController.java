@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 该controller用于通过纯api的方式进行登陆操作.
+ * 该controller用于通过纯API的方式进行登陆操作.
  *
  * @author wanglin
  */
@@ -93,8 +93,6 @@ public class UserLoginController {
    * @param password 密码
    * @param tenancyCode 租户编码
    * @param service 登陆系统service
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
    * @return 登陆结果
    */
   @RequestMapping(value = "login", method = RequestMethod.POST)
@@ -143,9 +141,7 @@ public class UserLoginController {
    * <P>
    * 如果当前处于登陆状态,则直接登出. 如果不处于登陆状态,则直接忽略
    * </p>
-   *
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
+   * 
    * @return 总是返回成功
    */
   @RequestMapping(value = "logout", method = {RequestMethod.POST, RequestMethod.GET})
@@ -157,10 +153,8 @@ public class UserLoginController {
 
   /**
    * 生成service ticket(该接口调用必须在用户登陆的状态下).
-   *
+   * 
    * @param service 用于生成service ticket的service参数
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
    * @return 结果
    */
   @RequestMapping(value = "ticket", method = RequestMethod.POST)

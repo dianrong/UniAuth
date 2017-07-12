@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.cas.cors;
+package com.dianrong.common.uniauth.cas.filter;
 
 import com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper;
 import java.io.IOException;
@@ -27,7 +27,7 @@ import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 
 /**
- * Created by Arc on 1/3/2016.
+ * 用于处理CAS中跨域请求的问题.
  */
 public class CasCorsFilter implements Filter {
 

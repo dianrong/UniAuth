@@ -19,23 +19,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * . 初始化密码的处理controller
+ * 初始化密码的处理controller.
  *
  * @author wanglin
  */
+@Slf4j
 @Controller
 @RequestMapping("/initPassword")
-@Slf4j
 public class InitPasswordController {
 
-  // define InitPasswordController process result code
-  // success
+  // Define InitPasswordController process result code
+  // Success
   private static final int INITPWDSUCCESSCODE = 0;
-  // failure
+  // Failure
   private static final int INITPWDFAILEDCODE = 1;
 
   /**
-   * . 用户信息管理服务
+   * 用户信息管理服务.
    */
   @Autowired
   private UserInfoManageService userInfoManageService;
@@ -44,7 +44,7 @@ public class InitPasswordController {
   private MessageSource messageSource;
 
   /**
-   * . 跳转到初始化密码处理页面
+   * 跳转到初始化密码处理页面.
    *
    * @param request HttpServletRequest
    * @param response HttpServletResponse
@@ -83,8 +83,8 @@ public class InitPasswordController {
             "inipassword.controller.initpassword.captcha.empty"));
         return;
       }
+      
       // 判断验证码
-
       String captcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
       if (!reqVerifycode.equals(captcha)) {
         // 验证码不对

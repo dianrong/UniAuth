@@ -52,7 +52,7 @@
     
     
     <!--  cas cross filter bean -->
-    <bean id="casCrossFilterBean" class="com.dianrong.common.uniauth.cas.cors.CasCorsFilter">
+    <bean id="casCrossFilterBean" class="com.dianrong.common.uniauth.cas.filter.CasCorsFilter">
     		<property name="crossFilterCacheHelper">
     			<bean class="com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper">
     				<property name="defualtCrosAllowedOrigins">

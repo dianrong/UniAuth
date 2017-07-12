@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * . 定义i18n所有支持的语言
+ * 定义I18n所有支持的语言.
  *
  * @author wanglin
  */
@@ -19,13 +21,13 @@ public final class I18nLanguageConstantUtil {
   }
 
   /**
-   * . i18n menu配置文件路径
+   * I18n menu配置文件路径.
    */
   private static final String MENU_PATH = "menus.properties";
 
   private static final Map<String, String> LOCAL_MAP;
 
-  // init
+  // INIT
   static {
     try {
       LOCAL_MAP = new LinkedHashMap<>(FileUtil.loadProperties(MENU_PATH));
@@ -37,7 +39,7 @@ public final class I18nLanguageConstantUtil {
   }
 
   /**
-   * . 辅助方法 返回当前系统支持的国际化语言
+   * 辅助方法 返回当前系统支持的国际化语言.
    */
   public static List<I18nContent> getAllI18nLanguages() {
     List<I18nContent> data = new ArrayList<>();
@@ -49,6 +51,7 @@ public final class I18nLanguageConstantUtil {
     return data;
   }
 
+  @ToString
   public static class I18nContent {
 
     private String localeStr;
@@ -86,11 +89,6 @@ public final class I18nLanguageConstantUtil {
 
     public void setSelected(boolean isSelected) {
       this.isSelected = isSelected;
-    }
-
-    @Override
-    public String toString() {
-      return this.localeStr + ":" + this.language + ":" + this.isSelected;
     }
   }
 }

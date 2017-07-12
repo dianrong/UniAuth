@@ -24,7 +24,7 @@ import org.apache.http.entity.ContentType;
 import org.springframework.util.StringUtils;
 
 /**
- * . request，response，session等的一些统一操作的工具方法
+ * Request, Response, Session等的一些统一操作的工具方法.
  *
  * @author wanglin
  */
@@ -36,21 +36,21 @@ public final class WebScopeUtil {
   }
 
   /**
-   * . set captcha to session
+   * Set captcha to session.
    */
   public static boolean putCaptchaToSession(HttpSession session, String captcha) {
     return putValToSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY, captcha);
   }
 
   /**
-   * . get captcha from session
+   * Get captcha from session.
    */
   public static String getCaptchaFromSession(HttpSession session) {
     return getValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY);
   }
 
   /**
-   * . set captchaInfo to session
+   * Set captchaInfo to session.
    */
   public static boolean putCaptchaInfoToSession(HttpSession session,
       CasLoginCaptchaInfoModel captchaInfo) {
@@ -59,14 +59,13 @@ public final class WebScopeUtil {
   }
 
   /**
-   * . get captchaInfo from session
+   * Get captchaInfo from session.
    */
   public static CasLoginCaptchaInfoModel getCaptchaInfoFromSession(HttpSession session) {
     return getValFromSession(session, AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
   }
 
-  // sms
-
+  // SMS
   /**
    * Set SMS Verification Code to session.
    * @return true or false
@@ -150,7 +149,7 @@ public final class WebScopeUtil {
   }
 
   /**
-   * . get captchaInfo from session
+   * Get captchaInfo from session.
    */
   public static boolean loginNeedCaptcha(HttpSession session) {
     CasLoginCaptchaInfoModel captchaInfo = getCaptchaInfoFromSession(session);
@@ -161,7 +160,7 @@ public final class WebScopeUtil {
   }
 
   /**
-   * . set object to session
+   * Set object to session.
    */
   public static boolean putValToSession(HttpSession session, String key, Serializable val) {
     if (session == null) {
@@ -172,9 +171,8 @@ public final class WebScopeUtil {
   }
 
   /**
-   * . get object from session
+   * Get object from session.
    *
-   * @param session HttpSession
    * @param key key
    * @return Object
    */
@@ -188,10 +186,9 @@ public final class WebScopeUtil {
 
 
   /**
-   * . 以json格式返回结果
+   * 以JSON格式返回结果.
    *
    * @param obj 返回结果对象
-   * @throws IOException response write error
    */
   public static void sendJsonToResponse(HttpServletResponse response, HttpResponseModel<?> obj)
       throws IOException {
@@ -205,9 +202,7 @@ public final class WebScopeUtil {
 
   /**
    * Write JSON to response stream.
-   *
-   * @param response HttpServletResponse
-   * @param jsonContent json to be write to response stream
+   * @param jsonContent JSON to be write to response stream
    */
   public static void writeJsonContentToResponse(ServletResponse response, String jsonContent) {
     try {
@@ -220,10 +215,7 @@ public final class WebScopeUtil {
   }
 
   /**
-   * . 判断两个service是否是同一个service
-   *
-   * @param service1 service1
-   * @param service2 urservice2
+   * 判断两个service是否是同一个service.
    */
   public static boolean judgeTwoServiceIsEqual(String service1, String service2) {
     if (service1 == null || service2 == null) {
@@ -250,22 +242,19 @@ public final class WebScopeUtil {
   }
 
   /**
-   * . get parameter from request
+   * Get parameter from request.
    *
-   * @param request httpRequest
    * @param key parameterKey
-   * @return value
    */
   public static String getParamFromRequest(HttpServletRequest request, String key) {
     return request.getParameter(key);
   }
 
   /**
-   * . set attribute to request
+   * Set attribute to request.
    *
-   * @param request httpRequest
-   * @param key attributeKey
-   * @param value the value to set to httpRequest
+   * @param key attributeKey.
+   * @param value the value to set to httpRequest.
    */
   public static void setAttribute(HttpServletRequest request, String key, Object value) {
     request.setAttribute(key, value);

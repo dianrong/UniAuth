@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * . 抽取cas登陆相关操作的公用代码，其他模块采用 组合方式使用
+ * 抽取CAS登陆相关操作的公用代码，其他模块采用 组合方式使用.
  *
  * @author wanglin
  */

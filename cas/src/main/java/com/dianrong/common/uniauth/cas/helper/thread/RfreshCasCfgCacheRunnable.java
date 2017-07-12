@@ -5,7 +5,7 @@ import javax.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * . 刷新cas cfg的线程
+ * 刷新CAS CFG的线程.
  *
  * @author wanglin
  */
@@ -13,13 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 public final class RfreshCasCfgCacheRunnable implements Runnable {
 
   /**
-   * . tomcat 上下文对象 用于在jsp中共享缓存
+   * Tomcat上下文对象 用于在jsp中共享缓存.
    */
   @SuppressWarnings("unused")
   private ServletContext application;
 
   /**
-   * . 更新缓存
+   * 更新缓存.
    */
   public RfreshCasCfgCacheRunnable(ServletContext application) {
     this.application = application;
