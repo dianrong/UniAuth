@@ -67,10 +67,6 @@ public class InitPasswordController {
 
   /**
    * 处理密码初始化.
-   *
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
-   * @throws IOException HttpServletResponse IOException
    */
   @RequestMapping(value = "/process", method = RequestMethod.POST)
   protected void processInit(HttpServletRequest request, HttpServletResponse response)
@@ -156,9 +152,7 @@ public class InitPasswordController {
 
   /**
    * Easy way for formated response value.
-   *
-   * @param response HttpServletResponse
-   * @param processSuccess init password success or not
+   * @param processSuccess Init password success or failed.
    * @param msg process result message
    * @throws IOException HttpServletResponse IOException
    */
