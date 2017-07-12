@@ -35,11 +35,12 @@ public class UniauthSimpleAccessDeniedHandler implements AccessDeniedHandler {
         response.getWriter().write(JsonUtil.object2Jason(Arrays.asList(info)));
         response.flushBuffer();
       } else {
+        log.debug("Request no privilege.");
         response.setContentType("text/html; charset=UTF-8");
         response.getWriter().write("You do not have permission to access this resource!");
+        response.getWriter().write("<a href='/logout/cas'>Logout</a>");
+        response.flushBuffer();
       }
-      response.getWriter().write("<a href='/logout/cas'>Logout</a>");
-      response.flushBuffer();
     }
   }
 }

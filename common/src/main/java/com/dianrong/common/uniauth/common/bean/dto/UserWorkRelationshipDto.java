@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -12,34 +13,49 @@ public class UserWorkRelationshipDto extends TenancyBaseDto {
 
   private static final long serialVersionUID = 2660609756037424927L;
 
+  @ApiModelProperty("主键id")
   private Long id;
 
+  @ApiModelProperty("关联的用户id")
   private Long userId;
 
+  @ApiModelProperty("经理的id")
   private Long managerId;
 
+  @ApiModelProperty("监管员的id")
   private Long supervisorId;
 
+  @ApiModelProperty("类型")
   private Byte type;
 
+  @ApiModelProperty("到该岗位日期")
   private Date assignmentDate;
 
+  @ApiModelProperty("被聘用日期")
   private Date hireDate;
 
+  @ApiModelProperty("所属业务部门名称")
   private String businessUnitName;
 
+  @ApiModelProperty("所属部门名称")
   private String departmentName;
 
+  @ApiModelProperty("法定实体名称")
   private String legalEntityName;
 
+  @ApiModelProperty("工作电话")
   private String workPhone;
 
+  @ApiModelProperty("工作位置")
   private String workLocation;
 
+  @ApiModelProperty("工作地址")
   private String workAddress;
 
+  @ApiModelProperty("记录创建时间")
   private Date createDate;
 
+  @ApiModelProperty("记录最新更新时间")
   private Date lastUpdate;
 
   public Long getId() {
