@@ -32,7 +32,7 @@ public class ExtendValInnerService extends TenancyBasedService {
    */
   @Transactional
   public void addOrUpdateSystemDefineAttribute(Object identityId, String idFieldName,
-      String tableName, String fieldName, String value, boolean needUpdateChcek) {
+      String tableName, String fieldName, Object value, boolean needUpdateChcek) {
     CheckEmpty.checkEmpty(identityId, "identityId");
     CheckEmpty.checkEmpty(idFieldName, "idFieldName");
     CheckEmpty.checkEmpty(tableName, "tableName");

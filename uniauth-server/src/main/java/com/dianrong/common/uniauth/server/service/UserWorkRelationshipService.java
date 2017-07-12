@@ -128,11 +128,11 @@ public class UserWorkRelationshipService extends TenancyBasedService {
     Long supervisorId = param.getSupervisorId();
     if (updateEmptyVal || managerId != null) {
       attributes.put(AtrributeDefine.MANAGER_ID.getAttributeCode(),
-          managerId == null ? null : managerId.toString());
+          AtrributeDefine.MANAGER_ID.getTypeTranslater().toString(managerId));
     }
     if (updateEmptyVal || supervisorId != null) {
       attributes.put(AtrributeDefine.SUPERVISOR_ID.getAttributeCode(),
-          supervisorId == null ? null : supervisorId.toString());
+          AtrributeDefine.SUPERVISOR_ID.getTypeTranslater().toString(supervisorId));
     }
     userProfileInnerService.addOrUpdateUserAttributes(param.getUserId(), attributes);
   }

@@ -68,6 +68,12 @@ public class UserProfileResourceTest extends BaseTest {
      attributes.put("first_name", new AttributeExtendParam().setValue("王"));
      attributes.put("last_name", new AttributeExtendParam().setValue("万飞"));
      attributes.put("display_name", new AttributeExtendParam().setValue("小王"));
+     
+     attributes.put("birthday", new AttributeExtendParam().setValue("1499830875321"));
+     attributes.put("aid", new AttributeExtendParam().setValue("10086"));
+     
+     attributes.put("manager_id", new AttributeExtendParam().setValue("300000011"));
+     attributes.put("supervisor_id", new AttributeExtendParam().setValue("300000011"));
 
     Response<Map<String, Object>> response =
         userProfileResource.addOrUpdateUserProfile(uniauthId, profileId, param);

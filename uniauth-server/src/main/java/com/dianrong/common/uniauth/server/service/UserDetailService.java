@@ -153,7 +153,7 @@ public class UserDetailService extends TenancyBasedService {
   private void updateAttributes(Map<String, String> attributes, AtrributeDefine define, Object val,
       boolean updateEmptyVal) {
     if (updateEmptyVal || val != null) {
-      attributes.put(define.getAttributeCode(), val == null ? null : val.toString());
+      attributes.put(define.getAttributeCode(), define.getTypeTranslater().toString(val));
     }
   }
 

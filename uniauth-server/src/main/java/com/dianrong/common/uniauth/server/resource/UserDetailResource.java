@@ -20,11 +20,10 @@ public class UserDetailResource implements IUserDetailRWResource {
 
   @Autowired
   private UserDetailService userDetailService;
-  
+
   @ApiOperation("根据关联的用户id获取用户的detail信息")
-  @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "userId", value = "关联的用户id", required = true, dataType = "long",
-          paramType = "query")})
+  @ApiImplicitParams(value = {@ApiImplicitParam(name = "userId", value = "关联的用户id", required = true,
+      dataType = "long", paramType = "query")})
   @Override
   public Response<UserDetailInfoDto> searchByUserId(UserDetailInfoParam param) {
     return Response.success(userDetailService.searchByUserId(param.getUserId()));
@@ -32,17 +31,21 @@ public class UserDetailResource implements IUserDetailRWResource {
 
   @ApiOperation("新增或修改用户的detail信息(所有属性更新))")
   @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "userId", value = "关联的用户id", required = true, dataType = "string",
-          paramType = "query")})
+      @ApiImplicitParam(name = "userId", value = "关联的用户id", required = true, dataType = "long",
+          paramType = "query"),
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或者传租户code(tenancyCode))", required = true,
+          dataType = "long", paramType = "query")})
   @Override
   public Response<UserDetailInfoDto> addOrUpdateUserDetail(UserDetailInfoParam param) {
     return Response.success(userDetailService.addOrUpdateUserDetail(param));
   }
-  
+
   @ApiOperation("更新用户detail信息(只更新不为空的字段)")
   @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "userId", value = "关联的用户id", required = true, dataType = "string",
-          paramType = "query")})
+      @ApiImplicitParam(name = "userId", value = "关联的用户id", required = true, dataType = "long",
+          paramType = "query"),
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或者传租户code(tenancyCode))", required = true,
+          dataType = "long", paramType = "query")})
   @Override
   public Response<UserDetailInfoDto> updateUserDetail(UserDetailInfoParam param) {
     return Response.success(userDetailService.updateUserDetail(param));

@@ -185,7 +185,7 @@
       #{address,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{gender,jdbcType=VARCHAR}, 
       #{position,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
       #{aid,jdbcType=BIGINT}, #{lastPositionModifyDate,jdbcType=TIMESTAMP}, #{entryDate,jdbcType=TIMESTAMP}, 
-      #{leaveDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR},, #{tenancyId,jdbcType=BIGINT})
+      #{leaveDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{tenancyId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.dianrong.common.uniauth.server.data.entity.UserDetail" useGeneratedKeys="true" keyProperty="id">
     <!--

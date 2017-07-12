@@ -81,7 +81,8 @@ public class UserProfileInnerService extends TenancyBasedService {
             extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
                 sysUserAtrributeDefine.getDefineTable().getIdentityFieldName(),
                 sysUserAtrributeDefine.getDefineTable().getTableName(),
-                sysUserAtrributeDefine.getFieldName(), value,
+                sysUserAtrributeDefine.getFieldName(),
+                sysUserAtrributeDefine.getTypeTranslater().toRealType(value),
                 sysUserAtrributeDefine.getDefineTable().isUpdateAttributeCheck());
             // 更新扩展属性表中的相应字段
             addOrUpdate(uniauthId, attributeExtend.getId(), value);
