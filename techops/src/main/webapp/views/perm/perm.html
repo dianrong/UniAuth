@@ -25,7 +25,7 @@
 
 <div class="panel-body pull-right">
     <a class="btn btn-info" ng-click="launch('add')" role="button">{{ 'permMgr.addPerm' | translate}}</a>
-    <button class="btn btn-info" ng-click="queryPerm()">{{ 'dialog.query' | translate}}</button>
+    <button class="btn btn-info" ng-click="queryPerm(0)">{{ 'dialog.query' | translate}}</button>
 </div>
 
 <div>
@@ -64,5 +64,5 @@
         </tr>
         </tbody>
     </table>
-    <uib-pagination ng-if="perms && perms.length" boundary-links="true" ng-change="queryPerm()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+    <uib-pagination ng-if="perms && perms.length" boundary-links="true" ng-change="queryPerm()" items-per-page="pagination.pageSize"  max-size="pagination.showPageNum" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
 </div>

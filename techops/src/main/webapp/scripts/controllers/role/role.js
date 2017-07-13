@@ -31,11 +31,12 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         }
         $scope.pagination = {
             pageSize: constant.pageSize,
+            showPageNum: constant.showPageNum,
             curPage: 1,
             totalCount: 0
         };
 
-        $scope.queryRole = function () {
+        $scope.queryRole = function (curPage) {
             if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
                 $scope.rolesLoading = constant.loadEmpty;
                 return;
@@ -44,7 +45,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             if (!params) {
                 params = {};
             }
-            params.pageNumber = $scope.pagination.curPage - 1;
+            params.pageNumber = curPage === undefined ? $scope.pagination.curPage - 1 : curPage;
             params.pageSize = $scope.pagination.pageSize;
 
             $scope.roles = [];

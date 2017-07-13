@@ -78,7 +78,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       // to active whenever 'contacts.list' or one of its decendents is active.
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
-
+      
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
       $rootScope.translate=function(msg){

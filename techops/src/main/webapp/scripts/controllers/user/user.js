@@ -16,16 +16,17 @@ define(['../../utils/constant'], function (constant) {
         }
         $scope.pagination = {
             pageSize: constant.pageSize,
+            showPageNum: constant.showPageNum,
             curPage: 1,
             totalCount: 0
         };
 
-        $scope.queryUser = function () {
+        $scope.queryUser = function (curPage) {
             var params = $scope.userQuery;
             if (!params) {
                 params = {};
             }
-            params.pageNumber = $scope.pagination.curPage - 1;
+            params.pageNumber = curPage === undefined ? $scope.pagination.curPage - 1 : curPage;
             params.pageSize = $scope.pagination.pageSize;
 
             $scope.users = [];
