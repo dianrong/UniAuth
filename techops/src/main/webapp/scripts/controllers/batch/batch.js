@@ -84,11 +84,11 @@ define(
 				$scope.refresh_roles = function(name) {
 					var params = {
 						name : name,
-						needDomainInfo : true,
 						status : 0,
 						pageNumber : 0,
 						pageSize : 16
 					};
+					params.domainId = $rootScope.loginDomainsDropdown.option.id;
 					return RoleService.getRoles(params).$promise.then(function(
 							response) {
 						if (response.data && response.data.data) {
@@ -103,11 +103,11 @@ define(
 				$scope.refresh_tags = function(code) {
 					var params = {
 						fuzzyCode : code,
-						needDomainInfo : true,
 						status : 0,
 						pageNumber : 0,
 						pageSize : 16
 					};
+					params.domainId = $rootScope.loginDomainsDropdown.option.id;
 					return TagService.getTags(params).$promise.then(function(
 							response) {
 						if (response.data && response.data.data) {
@@ -173,6 +173,42 @@ define(
 							}
 						}, 
 						{
+							// 批量添加角色
+							type : function() {
+								return 'batch-add-role';
+							},
+							addParams : function(fileItem) {
+								var p = {
+										domainId : $rootScope.loginDomainsDropdown.option.id
+								};
+								fileItem.formData.push(p);
+							},
+							process_url : function() {
+								return constant.apiBase + "/batch/add-role";
+							},
+							finish_i18n_code : function() {
+								return 'batch.process.finish.add.role';
+							}
+						}, 
+						{
+							// 批量添加权限
+							type : function() {
+								return 'batch-add-permission';
+							},
+							addParams : function(fileItem) {
+								var p = {
+										domainId : $rootScope.loginDomainsDropdown.option.id
+								};
+								fileItem.formData.push(p);
+							},
+							process_url : function() {
+								return constant.apiBase + "/batch/add-permission";
+							},
+							finish_i18n_code : function() {
+								return 'batch.process.finish.add.permission';
+							}
+						}, 
+						{
 							// 批量关联用户和标签
 							type : function() {
 								return 'batch-relate-user-tag';
@@ -224,18 +260,6 @@ define(
 							},
 							finish_i18n_code : function() {
 								return 'batch.process.finish.relate.user.role';
-							}
-						}, 
-						{
-							// 批量关联多个用户和多个组 
-							type : function() {
-								return 'batch-relate-user-mult-grp';
-							},
-							process_url : function() {
-								return constant.apiBase + "/batch/relate-user-mult-grp";
-							},
-							finish_i18n_code : function() {
-								return 'batch.process.finish.relate.user.mult.grp';
 							}
 						} ];
 					var getHander = function(type) {
@@ -292,9 +316,13 @@ define(
 							return;
 						}
 						$scope.process_result = response.data;
-						$scope.process_result['process_type'] = $rootScope
-								.translate(batch_process_handler.getHander(
-										process_type).finish_i18n_code());
+						if (process_type) {
+							$scope.process_result['process_type'] = $rootScope
+							.translate(batch_process_handler.getHander(
+									process_type).finish_i18n_code());
+						} else {
+							$scope.process_result['process_type'] = "Error";
+						}
 					}
 					fileItem.onError = function(response, status, headers) {
 						AlertService
