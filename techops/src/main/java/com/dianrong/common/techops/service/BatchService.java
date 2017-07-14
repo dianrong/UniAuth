@@ -2,10 +2,18 @@ package com.dianrong.common.techops.service;
 
 import com.dianrong.common.techops.bean.BatchProcessResult;
 import com.dianrong.common.techops.exp.BatchProcessException;
+import com.dianrong.common.techops.service.analysis.IdentityAnalysisResult;
+import com.dianrong.common.techops.service.analysis.InputAnalyzer;
+import com.dianrong.common.techops.service.analysis.NormalAnalysisResult;
 import com.dianrong.common.techops.util.UniBundle;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
@@ -13,18 +21,19 @@ import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -45,27 +54,23 @@ public class BatchService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BatchService.class);
 
-  // 身份识别的内容有多少列.
-  public static final int USER_IDENTITY_LINE_NUM = 2;
-
   @Resource
   private UARWFacade uarwFacade;
 
   /**
    * 处理批量添加用户.
    * 
-   * @param path 批量上传的文件的输入流
    * @throws BatchProcessException 批量处理异常
    */
   public BatchProcessResult addUser(InputStream inputStream)
       throws IOException, BatchProcessException {
     // 第三列是用户姓名
-    List<InputAnalysisResult> results = processInput(inputStream, 3);
+    List<IdentityAnalysisResult> results = InputAnalyzer.analysisInputForIdentity(inputStream, 3);
     // 实际添加处理前的预处理,检查文件内容格式
     if (!results.isEmpty()) {
       Set<String> emails = Sets.newHashSet();
       Set<String> phones = Sets.newHashSet();
-      for (InputAnalysisResult result : results) {
+      for (IdentityAnalysisResult result : results) {
         String email = result.getUserParam().getEmail();
         String phone = result.getUserParam().getPhone();
         if (!StringUtils.isBlank(email)) {
@@ -93,7 +98,7 @@ public class BatchService {
 
     BatchProcessResult processResult = new BatchProcessResult();
     // 批量添加用户
-    for (InputAnalysisResult result : results) {
+    for (IdentityAnalysisResult result : results) {
       Response<UserDto> response = null;
       UserParam addUserParam = result.getUserParam();
       // 额外的一列是姓名
@@ -120,10 +125,10 @@ public class BatchService {
    * @throws BatchProcessException 批量处理异常
    */
   public BatchProcessResult disableUser(InputStream inputStream) throws IOException {
-    List<InputAnalysisResult> results = processInput(inputStream);
+    List<IdentityAnalysisResult> results = InputAnalyzer.analysisInputForIdentity(inputStream);
     BatchProcessResult processResult = new BatchProcessResult();
     // 批量添加用户
-    for (InputAnalysisResult result : results) {
+    for (IdentityAnalysisResult result : results) {
       UserParam disableUserParam = result.getUserParam();
       String identity = getIdentity(disableUserParam);
       // 根据条件查找用户
@@ -151,6 +156,17 @@ public class BatchService {
   }
 
   /**
+   * 根据Id禁用用户.
+   */
+  private Response<UserDto> disableUser(Long userId) {
+    UserParam param = new UserParam();
+    param.setId(userId);
+    param.setStatus(AppConstants.STATUS_DISABLED);
+    param.setUserActionEnum(UserActionEnum.STATUS_CHANGE);
+    return uarwFacade.getUserRWResource().updateUser(param);
+  }
+
+  /**
    * 批量关联用户和组.
    * 
    * @param grpId 组id,不能为空
@@ -159,10 +175,10 @@ public class BatchService {
    */
   public BatchProcessResult relateUsersGrp(InputStream inputStream, Integer grpId)
       throws IOException {
-    List<InputAnalysisResult> results = processInput(inputStream);
+    List<IdentityAnalysisResult> results = InputAnalyzer.analysisInputForIdentity(inputStream);
     BatchProcessResult processResult = new BatchProcessResult();
     Set<Long> userIds = Sets.newHashSet();
-    for (InputAnalysisResult result : results) {
+    for (IdentityAnalysisResult result : results) {
       UserParam userParam = result.getUserParam();
       String identity = getIdentity(userParam);
       // 根据条件查找用户
@@ -200,10 +216,10 @@ public class BatchService {
    */
   public BatchProcessResult relateUsersTag(InputStream inputStream, Integer tagId)
       throws IOException {
-    List<InputAnalysisResult> results = processInput(inputStream);
+    List<IdentityAnalysisResult> results = InputAnalyzer.analysisInputForIdentity(inputStream);
     BatchProcessResult processResult = new BatchProcessResult();
     Set<Long> userIds = Sets.newHashSet();
-    for (InputAnalysisResult result : results) {
+    for (IdentityAnalysisResult result : results) {
       UserParam userParam = result.getUserParam();
       String identity = getIdentity(userParam);
       // 根据条件查找用户
@@ -240,10 +256,10 @@ public class BatchService {
    */
   public BatchProcessResult relateUsersRole(InputStream inputStream, Integer roleId)
       throws IOException {
-    List<InputAnalysisResult> results = processInput(inputStream);
+    List<IdentityAnalysisResult> results = InputAnalyzer.analysisInputForIdentity(inputStream);
     BatchProcessResult processResult = new BatchProcessResult();
     Set<Long> userIds = Sets.newHashSet();
-    for (InputAnalysisResult result : results) {
+    for (IdentityAnalysisResult result : results) {
       UserParam userParam = result.getUserParam();
       String identity = getIdentity(userParam);
       // 根据条件查找用户
@@ -277,119 +293,183 @@ public class BatchService {
    * @throws BatchProcessException 批量处理异常
    */
   public BatchProcessResult relateUserGrp(InputStream inputStream) throws IOException {
-    return null;
+    // TODO 目前该块需求不明确,暂时不实现
+    return new BatchProcessResult();
   }
 
   /**
-   * 批量处理的解析结果存放对象.
-   */
-  private static class InputAnalysisResult {
-    private UserParam userParam;
-    /**
-     * 按顺序存放额外结果.
-     */
-    private List<String> appendInfo;
-
-    public List<String> getAppendInfo() {
-      return appendInfo;
-    }
-
-    public InputAnalysisResult setAppendInfo(List<String> appendInfo) {
-      this.appendInfo = appendInfo;
-      return this;
-    }
-
-    public UserParam getUserParam() {
-      return userParam;
-    }
-
-    public InputAnalysisResult setUserParam(UserParam userParam) {
-      this.userParam = userParam;
-      return this;
-    }
-  }
-
-  /**
-   * 相当于processInput(inputStream, 2).
-   */
-  private List<InputAnalysisResult> processInput(InputStream inputStream) throws IOException {
-    return processInput(inputStream, USER_IDENTITY_LINE_NUM);
-  }
-
-  /**
-   * 解析输入流.
+   * 批量添加角色.
    * 
-   * @param inputStream 输入流
-   * @param lineNum 每一行有多少列需要解析
+   * @param inputStream 上传文件输入流.
+   * @param domainId 操作所在域id.
+   * @throws BatchProcessException 批量处理异常.
    */
-  private List<InputAnalysisResult> processInput(InputStream inputStream, int lineNum)
+  public BatchProcessResult addRole(InputStream inputStream, Integer domainId) throws IOException {
+    // 添加角色需要三列内容: 角色名称, 角色CODE,角色描述.
+    List<NormalAnalysisResult> results = InputAnalyzer.analysisInput(inputStream, 3);
+    BatchProcessResult processResult = new BatchProcessResult();
+    if (ObjectUtil.collectionIsEmptyOrNull(results)) {
+      LOGGER.warn("Batch add roles, but the inputStream content is empty!!!");
+      return processResult;
+    }
+    Map<String, Integer> roleCodeMap = getRoleCodeMap();
+    for (NormalAnalysisResult result : results) {
+      List<String> addInfo = result.getInfo();
+      String roleCode = addInfo.get(1);
+      if (StringUtils.isBlank(roleCode) || roleCodeMap.get(roleCode.trim().toUpperCase()) == null) {
+        LOGGER.warn("Batch add roles, RoleCode is invalid,  line number: {}, roleCode:{}. ",
+            result.getLineNumber(), roleCode);
+        processResult.getErrors()
+            .add(BatchProcessResult.Failure.build(
+                UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()),
+                UniBundle.getMsg("service.batch.process.role.type.invalid", roleCode)));
+        continue;
+      }
+      Integer roleCodeId = roleCodeMap.get(roleCode.trim().toUpperCase());
+      RoleParam param = new RoleParam();
+      param.setName(addInfo.get(0));
+      param.setRoleCodeId(roleCodeId);
+      param.setDescription(addInfo.get(2));
+      param.setDomainId(domainId);
+      Response<RoleDto> addRoleResponse = null;
+      try {
+        addRoleResponse = uarwFacade.getRoleRWResource().addNewRole(param);
+      } catch (Throwable t) {
+        String addParam = JsonUtil.object2Jason(param);
+        LOGGER.error("Failed add role:" + addParam, t);
+        processResult.getErrors()
+            .add(BatchProcessResult.Failure.build(
+                UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()),
+                UniBundle.getMsg("service.batch.process.add.role.failed", addParam)));
+        continue;
+      }
+      if (!ObjectUtil.collectionIsEmptyOrNull(addRoleResponse.getInfo())) {
+        String addParam = JsonUtil.object2Jason(param);
+        LOGGER.warn("Failed add new Role:{}, the msg is:", addParam,
+            addRoleResponse.getInfo().get(0).getMsg());
+        processResult.getErrors()
+            .add(BatchProcessResult.Failure.build(
+                UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()),
+                UniBundle.getMsg("service.batch.process.add.role.failed",
+                    addParam + ", Msg: " + addRoleResponse.getInfo().get(0).getMsg())));
+        continue;
+      }
+      processResult.getSuccesses()
+          .add(UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()));
+    }
+    return processResult;
+  }
+
+  /**
+   * 批量添加权限.
+   * 
+   * @param inputStream 上传文件输入流.
+   * @param domainId 操作所在域id.
+   * @throws BatchProcessException 批量处理异常
+   */
+  public BatchProcessResult addPermission(InputStream inputStream, Integer domainId)
       throws IOException {
-    List<String> content = readContentFromInputStream(inputStream);
-    // 解析文件内容
-    List<InputAnalysisResult> results = Lists.newArrayList();
-    for (int i = 0; i < content.size(); i++) {
-      String paramStr = content.get(i);
-      String[] params = split(paramStr, ",");
-      String email = getItem(params, 0);
-      String phone = getItem(params, 1);
-      if (StringUtils.isBlank(email) && StringUtils.isBlank(phone)) {
-        throw new BatchProcessException(
-            UniBundle.getMsg("service.batch.process.file.analysis.fail", i + 1, paramStr));
+    // 添加权限需要的:权限值,权限类型,扩展值,权限描述
+    List<NormalAnalysisResult> results = InputAnalyzer.analysisInput(inputStream, 4);
+    BatchProcessResult processResult = new BatchProcessResult();
+    if (ObjectUtil.collectionIsEmptyOrNull(results)) {
+      LOGGER.warn("Batch add permissions, but the inputStream content is empty!!!");
+      return processResult;
+    }
+    Map<String, Integer> permissionMap = getPermissionMap();
+    for (NormalAnalysisResult result : results) {
+      List<String> addInfo = result.getInfo();
+      String permType = addInfo.get(1);
+      if (StringUtils.isBlank(permType)
+          || permissionMap.get(permType.trim().toUpperCase()) == null) {
+        LOGGER.warn(
+            "Batch add roles, Permission type is invalid,  line number: {}, permission type:{}. ",
+            result.getLineNumber(), permType);
+        processResult.getErrors()
+            .add(BatchProcessResult.Failure.build(
+                UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()),
+                UniBundle.getMsg("service.batch.process.perm.type.invalid", permType)));
+        continue;
       }
-      InputAnalysisResult result = new InputAnalysisResult();
-      UserParam userParam = new UserParam();
-      userParam.setEmail(email);
-      userParam.setPhone(phone);
-      result.setUserParam(userParam);
-      if (lineNum > USER_IDENTITY_LINE_NUM) {
-        List<String> appendInfo = Lists.newArrayList();
-        for (int j = USER_IDENTITY_LINE_NUM; j < lineNum; j++) {
-          appendInfo.add(getItem(params, j));
-        }
-        result.setAppendInfo(appendInfo);
+      Integer permissionTypeId = permissionMap.get(permType.trim().toUpperCase());
+      PermissionParam permissionParam = new PermissionParam();
+      permissionParam.setPermTypeId(permissionTypeId);
+      permissionParam.setValue(addInfo.get(0));
+      permissionParam.setValueExt(addInfo.get(2));
+      permissionParam.setDescription(addInfo.get(3));
+      permissionParam.setDomainId(domainId);
+      Response<PermissionDto> addPermResponse = null;
+      try {
+        addPermResponse = uarwFacade.getPermissionRWResource().addNewPerm(permissionParam);
+      } catch (Throwable t) {
+        String addParam = JsonUtil.object2Jason(permissionParam);
+        LOGGER.error("Failed add permission:" + addParam, t);
+        processResult.getErrors()
+            .add(BatchProcessResult.Failure.build(
+                UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()),
+                UniBundle.getMsg("service.batch.process.add.perm.failed", addParam)));
+        continue;
       }
-      results.add(result);
+      if (!ObjectUtil.collectionIsEmptyOrNull(addPermResponse.getInfo())) {
+        String addParam = JsonUtil.object2Jason(permissionParam);
+        LOGGER.warn("Failed add new Permission:{}, the msg is:", addParam,
+            addPermResponse.getInfo().get(0).getMsg());
+        processResult.getErrors()
+            .add(BatchProcessResult.Failure.build(
+                UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()),
+                UniBundle.getMsg("service.batch.process.add.perm.failed",
+                    addParam + ", Msg: " + addPermResponse.getInfo().get(0).getMsg())));
+        continue;
+      }
+      processResult.getSuccesses()
+          .add(UniBundle.getMsg("service.batch.process.line.num", result.getLineNumber()));
     }
-    return results;
+    return processResult;
   }
 
   /**
-   * 解析字符串.处理最后一个来分隔符的情况.
+   * 获取角色Code与角色codeId的映射信息.其中角色Code转化为大写.
    */
-  private String[] split(String str, String delimiter) {
-    if (StringUtils.isBlank(str)) {
-      return new String[] {};
+  private Map<String, Integer> getRoleCodeMap() {
+    Response<List<RoleCodeDto>> response = uarwFacade.getRoleRWResource().getAllRoleCodes();
+    if (!ObjectUtil.collectionIsEmptyOrNull(response.getInfo())) {
+      LOGGER.error(
+          "Failed get roleCode information, the error :" + response.getInfo().get(0).getMsg());
+      throw new BatchProcessException(
+          "Failed get roleCode information, the error :" + response.getInfo().get(0).getMsg());
     }
-    String[] items = str.split(delimiter);
-    if (str.endsWith(delimiter)) {
-      String[] newItmes = new String[items.length + 1];
-      System.arraycopy(items, 0, newItmes, 0, items.length);
-      newItmes[newItmes.length - 1] = "";
-      items = newItmes;
+    Map<String, Integer> map = Maps.newHashMap();
+    if (ObjectUtil.collectionIsEmptyOrNull(response.getData())) {
+      LOGGER.warn("Get a empty roleCode information!");
+      return map;
     }
-    return items;
+    for (RoleCodeDto dto : response.getData()) {
+      map.put(dto.getCode().trim().toUpperCase(), dto.getId());
+    }
+    return map;
   }
 
   /**
-   * 从数组中获取对应index的数据,不报数组越界错误.
+   * 获取权限类型编码与权限类型Id的映射信息.其中权限类型转化为大写.
    */
-  private <T> T getItem(T[] items, int index) {
-    int length = items.length;
-    if (index >= length) {
-      return null;
+  private Map<String, Integer> getPermissionMap() {
+    Response<List<PermTypeDto>> response =
+        uarwFacade.getPermissionRWResource().getAllPermTypeCodes();
+    if (!ObjectUtil.collectionIsEmptyOrNull(response.getInfo())) {
+      LOGGER.error("Failed get permission type information, the error :"
+          + response.getInfo().get(0).getMsg());
+      throw new BatchProcessException("Failed get permission type information, the error :"
+          + response.getInfo().get(0).getMsg());
     }
-    return items[index];
-  }
-
-  /**
-   * 根据Id禁用用户.
-   */
-  private Response<UserDto> disableUser(Long userId) {
-    UserParam param = new UserParam();
-    param.setId(userId);
-    param.setStatus(AppConstants.STATUS_DISABLED);
-    param.setUserActionEnum(UserActionEnum.STATUS_CHANGE);
-    return uarwFacade.getUserRWResource().updateUser(param);
+    Map<String, Integer> map = Maps.newHashMap();
+    if (ObjectUtil.collectionIsEmptyOrNull(response.getData())) {
+      LOGGER.warn("Get a empty permission type information!");
+      return map;
+    }
+    for (PermTypeDto dto : response.getData()) {
+      map.put(dto.getType().trim().toUpperCase(), dto.getId());
+    }
+    return map;
   }
 
   /**
@@ -428,19 +508,6 @@ public class BatchService {
       return Collections.emptyList();
     }
     return users;
-  }
-
-  /**
-   * 从inputStream读取上传文件的内容.
-   */
-  private List<String> readContentFromInputStream(InputStream inputStream) throws IOException {
-    List<String> content = Lists.newArrayList();
-    BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-    String line = null;
-    while ((line = in.readLine()) != null) {
-      content.add(line);
-    }
-    return content;
   }
 
   /**

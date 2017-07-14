@@ -155,6 +155,12 @@ public class IpaService implements UserAuthentication {
       throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT,
           UniBundle.getMsg("user.login.account.lock"));
     }
+    // 用户如果被禁用,则报错
+    if (user.getStatus() != AppConstants.STATUS_ENABLED) {
+      throw new AppException(InfoName.LOGIN_ERROR_STATUS_1,
+          UniBundle.getMsg("user.login.status.lock"));
+    }
+    
     return user;
   }
 

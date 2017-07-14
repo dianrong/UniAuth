@@ -12,6 +12,6 @@ public class SystemDefineUserAttributeVal extends ExtendVal {
   }
 
   public void setGrpId(Integer grpId) {
-      this.grpId = grpId;
+    this.grpId = grpId;
   }
 }
