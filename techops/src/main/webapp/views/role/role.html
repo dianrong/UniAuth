@@ -25,7 +25,7 @@
 
 <div class="panel-body pull-right">
     <a class="btn btn-info" ng-click="launch('add')" role="button">{{ 'roleMgr.addRole' | translate}}</a>
-    <button class="btn btn-info" ng-click="queryRole()">{{ 'dialog.query' | translate}}</button>
+    <button class="btn btn-info" ng-click="queryRole(0)">{{ 'dialog.query' | translate}}</button>
 </div>
 
 <div>
@@ -64,5 +64,5 @@
         </tr>
         </tbody>
     </table>
-    <uib-pagination ng-if="roles && roles.length" boundary-links="true" ng-change="queryRole()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+    <uib-pagination ng-if="roles && roles.length" boundary-links="true" ng-change="queryRole()" items-per-page="pagination.pageSize" total-items="pagination.totalCount" max-size="pagination.showPageNum" ng-model="pagination.curPage" class="pagination-sm float-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
 </div>
