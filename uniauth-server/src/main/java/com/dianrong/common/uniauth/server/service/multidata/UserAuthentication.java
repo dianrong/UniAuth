@@ -24,7 +24,6 @@ public interface UserAuthentication extends Ordered {
    */
   UserDetailDto getUserDetailInfo(LoginParam loginParam);
 
-
   /**
    * 根据用户的Email或者Phone获取用户信息. 定义该接口，主要是为了兼容以前的实现.
    */

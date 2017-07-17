@@ -19,6 +19,12 @@ public class SimpleNotifyTemplate implements NotifyTemplate {
     this(NOTIFICATION_TITLE, emailTemplate, smsTemaplate);
   }
   
+  /**
+   * 构造一个通知模板对象.
+   * @param emailTitle 邮件的标题.
+   * @param emailTemplate 邮件的模板字符.
+   * @param smsTemaplate 短信的模板字符.
+   */
   public SimpleNotifyTemplate(String emailTitle, String emailTemplate, String smsTemaplate) {
     Assert.notNull(emailTitle);
     Assert.notNull(emailTemplate);

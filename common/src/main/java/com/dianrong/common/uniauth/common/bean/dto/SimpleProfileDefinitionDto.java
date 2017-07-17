@@ -48,23 +48,30 @@ public class SimpleProfileDefinitionDto extends TenancyBaseDto {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (!super.equals(obj))
+    }
+    if (!super.equals(obj)) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     SimpleProfileDefinitionDto other = (SimpleProfileDefinitionDto) obj;
     if (id == null) {
-      if (other.id != null)
+      if (other.id != null) {
         return false;
-    } else if (!id.equals(other.id))
+      }
+    } else if (!id.equals(other.id)) {
       return false;
+    }
     if (subProfiles == null) {
-      if (other.subProfiles != null)
+      if (other.subProfiles != null) {
         return false;
-    } else if (!subProfiles.equals(other.subProfiles))
+      }
+    } else if (!subProfiles.equals(other.subProfiles)) {
       return false;
+    }
     return true;
   }
 }

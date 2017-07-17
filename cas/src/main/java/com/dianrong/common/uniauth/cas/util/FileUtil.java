@@ -9,21 +9,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.util.Assert;
 
 /**
- * . 文件处理相关util.主要用于cas的子系统
+ * 文件处理相关util.主要用于cas的子系统.
  *
  * @author wanglin
  */
+@Slf4j
 public final class FileUtil {
 
-  private static Logger log = LoggerFactory.getLogger(FileUtil.class);
-
   /**
-   * . 返回webApp文件夹所在路径
+   * 返回webApp文件夹所在路径.
    */
   public static String getWebAppLocation() {
     String classesLocation = FileUtil.class.getClassLoader().getResource("").getPath();
@@ -34,8 +34,7 @@ public final class FileUtil {
   }
 
   /**
-   * .
-   *
+   *读取文件内容.
    * @param relativePathForWebApp 相对于webapp的相对路径
    * @return 读取到的文件流数据
    * @throws IOException 文件读取io异常

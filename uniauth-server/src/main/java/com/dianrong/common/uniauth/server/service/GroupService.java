@@ -399,11 +399,9 @@ public class GroupService extends TenancyBasedService {
     }
 
     // 父group需要存在
-    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
-        targetGroupId);
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, targetGroupId);
     // 子group不能存在
-    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
-        groupCode);
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, groupCode);
 
     Grp grp = BeanConverter.convert(groupParam);
     Date now = new Date();
@@ -416,8 +414,8 @@ public class GroupService extends TenancyBasedService {
     Map<String, String> attributes = Maps.newHashMap();
     attributes.put(AtrributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
     attributes.put(AtrributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
-    attributes
-        .put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(), groupParam.getDescription());
+    attributes.put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(),
+        groupParam.getDescription());
     groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
     GrpPath grpPath = new GrpPath();
@@ -728,7 +726,7 @@ public class GroupService extends TenancyBasedService {
   }
 
   /**
-   * 根据组Id或者组code获取组信息
+   * 根据组Id或者组code获取组信息.
    */
   public List<GroupDto> getGroupTreeByIdOrCode(Integer groupId, String groupCode,
       Byte userGroupType, Byte userStatus) {
@@ -751,9 +749,8 @@ public class GroupService extends TenancyBasedService {
       }
       rootGrp = grps.get(0);
     } else if (groupCode == null && groupId == null) {
-      throw new AppException(InfoName.VALIDATE_FAIL,
-          UniBundle
-              .getMsg("common.entity.not found", groupId, groupCode, Grp.class.getSimpleName()));
+      throw new AppException(InfoName.VALIDATE_FAIL, UniBundle.getMsg("common.entity.not found",
+          groupId, groupCode, Grp.class.getSimpleName()));
     }
 
     List<Grp> grps = grpMapper.getGroupTree(rootGrp.getId());
@@ -797,8 +794,7 @@ public class GroupService extends TenancyBasedService {
       }
       // 查询组里所有的用户
       UserExample userExample = new UserExample();
-      userExample.createCriteria().andIdIn(userIdList)
-          .andStatusEqualTo(userStatus);
+      userExample.createCriteria().andIdIn(userIdList).andStatusEqualTo(userStatus);
       List<User> users = userMapper.selectByExample(userExample);
 
       Map<Long, UserDto> userDtoMap = new HashMap<>();
@@ -813,7 +809,7 @@ public class GroupService extends TenancyBasedService {
       for (GroupDto groupDto : groupDtos) {
         List<Long> userIds = userGrpIdsPair.get(groupDto.getId());
         List<UserDto> userDtoList = groupDto.getUsers();
-        if(!CollectionUtils.isEmpty(userIds)) {
+        if (!CollectionUtils.isEmpty(userIds)) {
           for (Long userId : userIds) {
             UserDto userDto = userDtoMap.get(userId);
             if (userDtoList == null) {

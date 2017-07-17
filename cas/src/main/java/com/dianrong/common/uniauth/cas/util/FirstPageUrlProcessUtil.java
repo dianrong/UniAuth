@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * . 登陆主页参数记录的工具方法
+ * 登陆主页参数记录的工具方法.
  *
  * @author wanglin
  */
@@ -17,9 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 public final class FirstPageUrlProcessUtil {
 
   /**
-   * . 刷新session中保存的主页会跳地址的参数
-   *
-   * @param request HttpServletRequest
+   * 刷新session中保存的主页会跳地址的参数.
    */
   public static void refreshLoginContextInsession(HttpServletRequest request) {
     if (request == null) {
@@ -42,9 +40,7 @@ public final class FirstPageUrlProcessUtil {
   }
 
   /**
-   * . 刷新最近用户使用的service值
-   *
-   * @param request HttpServletRequest
+   * 刷新最近用户使用的service值.
    * @param service service值
    */
   public static void refreshServiceInSession(HttpServletRequest request, String service) {
@@ -70,7 +66,7 @@ public final class FirstPageUrlProcessUtil {
   }
 
   /**
-   * . set object to session
+   * Set object to session.
    */
   private static boolean putValToSession(HttpSession session, String key, Object val) {
     if (session == null) {

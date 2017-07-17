@@ -87,7 +87,8 @@ public class GroupProfileInnerService extends TenancyBasedService {
             extendValInnerService.addOrUpdateSystemDefineAttribute(grpId,
                 sysGrpAtrributeDefine.getDefineTable().getIdentityFieldName(),
                 sysGrpAtrributeDefine.getDefineTable().getTableName(),
-                sysGrpAtrributeDefine.getFieldName(), value,
+                sysGrpAtrributeDefine.getFieldName(),
+                sysGrpAtrributeDefine.getTypeTranslater().toRealType(value),
                 sysGrpAtrributeDefine.getDefineTable().isUpdateAttributeCheck());
             // 同时更新在扩展属性表中的属性
             addOrUpdate(grpId, attributeExtend.getId(), value);

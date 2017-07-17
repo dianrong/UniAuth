@@ -43,6 +43,11 @@ public class DynamicConfigCacheCacheManager extends SimpleCacheManager {
     this(expireSeconds, true);
   }
 
+  /**
+   * 构造函数.
+   * @param expireSeconds 过期的秒数.
+   * @param allowNullValues 是否允许空值.
+   */
   public DynamicConfigCacheCacheManager(int expireSeconds, boolean allowNullValues) {
     this.setExpireSeconds(expireSeconds);
     this.setAllowNullValues(allowNullValues);
@@ -101,7 +106,8 @@ public class DynamicConfigCacheCacheManager extends SimpleCacheManager {
   }
 
   private void setExpireSeconds(int expireSeconds) {
-    Asserts.check(expireSeconds >= 0, "expire seconds need a positive integer, not " + expireSeconds);
+    Asserts.check(expireSeconds >= 0,
+        "expire seconds need a positive integer, not " + expireSeconds);
     log.debug("set expire seconds {}", expireSeconds);
     this.expireSeconds = expireSeconds;
   }

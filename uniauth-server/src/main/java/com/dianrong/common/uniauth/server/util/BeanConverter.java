@@ -18,8 +18,10 @@ import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailInfoDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserWorkRelationshipDto;
 import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
@@ -48,6 +50,8 @@ import com.dianrong.common.uniauth.server.data.entity.Tag;
 import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserDetail;
+import com.dianrong.common.uniauth.server.data.entity.UserWorkRelationship;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
@@ -524,11 +528,11 @@ public class BeanConverter {
     }
     return results;
   }
-  
+
   /**
    * 从AttributeExtendParam转换为AttributeValModel.
    */
-  public static AttributeValModel convert(AttributeExtendParam attributeExtendParam){
+  public static AttributeValModel convert(AttributeExtendParam attributeExtendParam) {
     if (attributeExtendParam == null) {
       return null;
     }
@@ -541,19 +545,11 @@ public class BeanConverter {
     model.setId(attributeExtendParam.getId());
     return model;
   }
-  
-  public static Map<String, AttributeValModel> convertToModel(Map<String, AttributeExtendParam> attributes){
-    if (attributes == null) {
-      return null;
-    }
-    Map<String, AttributeValModel> resultMap = Maps.newHashMap();
-    for(Entry<String, AttributeExtendParam> entry: attributes.entrySet()) {
-      resultMap.put(entry.getKey(), convert(entry.getValue()));
-    }
-    return resultMap;
-  }
-  
-  public static AttributeValModel convert(AttributeExtend attributeExtend){
+
+  /**
+   * 对象转换.
+   */
+  public static AttributeValModel convert(AttributeExtend attributeExtend) {
     if (attributeExtend == null) {
       return null;
     }
@@ -565,11 +561,11 @@ public class BeanConverter {
     model.setId(attributeExtend.getId());
     return model;
   }
-  
+
   /**
    * 从AttributeValModel转换为AttributeExtendDto.
    */
-  public static AttributeExtendDto convert(AttributeValModel attributeValModel){
+  public static AttributeExtendDto convert(AttributeValModel attributeValModel) {
     if (attributeValModel == null) {
       return null;
     }
@@ -582,13 +578,118 @@ public class BeanConverter {
     attributeExtendDto.setId(attributeValModel.getId());
     return attributeExtendDto;
   }
+
+  /**
+   * 对象转换.
+   */
+  public static UserDetailInfoDto convert(UserDetail userDetail) {
+    if (userDetail == null) {
+      return null;
+    }
+    UserDetailInfoDto userDetailDto = new UserDetailInfoDto();
+    userDetailDto.setAddress(userDetail.getAddress()).setAid(userDetail.getAid())
+        .setBirthday(userDetail.getBirthday()).setCreateDate(userDetail.getCreateDate())
+        .setDepartment(userDetail.getDepartment()).setDisplayName(userDetail.getDisplayName())
+        .setEntryDate(userDetail.getEntryDate()).setFirstName(userDetail.getFirstName())
+        .setGender(userDetail.getGender()).setId(userDetail.getId())
+        .setIdentityNo(userDetail.getIdentityNo()).setImage(userDetail.getImage())
+        .setLastName(userDetail.getLastName())
+        .setLastPositionModifyDate(userDetail.getLastPositionModifyDate())
+        .setLastUpdate(userDetail.getLastUpdate()).setLeaveDate(userDetail.getLeaveDate())
+        .setMotto(userDetail.getMotto()).setNickName(userDetail.getNickName())
+        .setPosition(userDetail.getPosition()).setRemark(userDetail.getRemark())
+        .setSsn(userDetail.getSsn()).setTitle(userDetail.getTitle())
+        .setUserId(userDetail.getUserId()).setWechatNo(userDetail.getWechatNo())
+        .setWeibo(userDetail.getWeibo())
+        .setTenancyId(StringUtil.translateLongToInteger(userDetail.getTenancyId()));
+    return userDetailDto;
+  }
+
+  /**
+   * 对象转换.
+   */
+  public static UserDetail convert(UserDetailInfoDto userDetailDto) {
+    if (userDetailDto == null) {
+      return null;
+    }
+    UserDetail userDetail = new UserDetail();
+    userDetail.setAddress(userDetailDto.getAddress());
+    userDetail.setAid(userDetailDto.getAid());
+    userDetail.setBirthday(userDetailDto.getBirthday());
+    userDetail.setDepartment(userDetailDto.getDepartment());
+    userDetail.setDisplayName(userDetailDto.getDisplayName());
+    userDetail.setEntryDate(userDetailDto.getEntryDate());
+    userDetail.setFirstName(userDetailDto.getFirstName());
+    userDetail.setGender(userDetailDto.getGender());
+    userDetail.setIdentityNo(userDetailDto.getIdentityNo());
+    userDetail.setImage(userDetailDto.getImage());
+    userDetail.setLastName(userDetailDto.getLastName());
+    userDetail.setLastPositionModifyDate(userDetailDto.getLastPositionModifyDate());
+    userDetail.setLeaveDate(userDetailDto.getLeaveDate());
+    userDetail.setMotto(userDetailDto.getMotto());
+    userDetail.setNickName(userDetailDto.getNickName());
+    userDetail.setPosition(userDetailDto.getPosition());
+    userDetail.setRemark(userDetailDto.getRemark());
+    userDetail.setSsn(userDetailDto.getSsn());
+    userDetail.setTitle(userDetailDto.getTitle());
+    userDetail.setUserId(userDetailDto.getUserId());
+    userDetail.setWechatNo(userDetailDto.getWechatNo());
+    userDetail.setWeibo(userDetailDto.getWeibo());
+    userDetail.setTenancyId(StringUtil.translateIntegerToLong(userDetailDto.getTenancyId()));
+    return userDetail;
+  }
+
+  /**
+   * 对象转换.
+   */
+  public static UserWorkRelationshipDto convert(UserWorkRelationship userWorkRelationship) {
+    if (userWorkRelationship == null) {
+      return null;
+    }
+    UserWorkRelationshipDto userWorkRelationshipDto = new UserWorkRelationshipDto();
+    userWorkRelationshipDto.setAssignmentDate(userWorkRelationship.getAssignmentDate())
+        .setBusinessUnitName(userWorkRelationship.getBusinessUnitName())
+        .setCreateDate(userWorkRelationship.getCreateDate())
+        .setDepartmentName(userWorkRelationship.getDepartmentName())
+        .setHireDate(userWorkRelationship.getHireDate()).setId(userWorkRelationship.getId())
+        .setLastUpdate(userWorkRelationship.getLastUpdate())
+        .setLegalEntityName(userWorkRelationship.getLegalEntityName())
+        .setManagerId(userWorkRelationship.getManagerId())
+        .setSupervisorId(userWorkRelationship.getSupervisorId())
+        .setType(userWorkRelationship.getType()).setUserId(userWorkRelationship.getUserId())
+        .setWorkAddress(userWorkRelationship.getWorkAddress())
+        .setWorkLocation(userWorkRelationship.getWorkLocation())
+        .setWorkPhone(userWorkRelationship.getWorkPhone())
+        .setTenancyId(StringUtil.translateLongToInteger(userWorkRelationship.getTenancyId()));
+    return userWorkRelationshipDto;
+  }
   
-  public static Map<String, AttributeExtendDto> convertToDto(Map<String, AttributeValModel> attributes){
+
+  /**
+   * 对象转换.
+   */
+  public static Map<String, AttributeExtendDto> convertToDto(
+      Map<String, AttributeValModel> attributes) {
     if (attributes == null) {
       return null;
     }
     Map<String, AttributeExtendDto> resultMap = Maps.newHashMap();
-    for(Entry<String, AttributeValModel> entry: attributes.entrySet()) {
+    for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
+      resultMap.put(entry.getKey(), convert(entry.getValue()));
+    }
+    return resultMap;
+  }
+  
+  /**
+   * 对象转换.
+   */
+  public static Map<String, AttributeValModel> convertToModel(
+      Map<String, AttributeExtendParam> attributes) {
+    if (attributes == null) {
+      return null;
+    }
+    Map<String, AttributeValModel> resultMap = Maps.newHashMap();
+    for (Entry<String, AttributeExtendParam> entry : attributes.entrySet()) {
       resultMap.put(entry.getKey(), convert(entry.getValue()));
     }
     return resultMap;

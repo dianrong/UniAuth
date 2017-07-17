@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- * . spring 初始化完全的listener
+ * Spring 初始化完全的listener
  *
  * @author wanglin
  */

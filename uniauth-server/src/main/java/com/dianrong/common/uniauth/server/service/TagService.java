@@ -492,7 +492,10 @@ public class TagService extends TenancyBasedService {
       }
     }
   }
-  
+
+  /**
+   * 关联用户和标签.
+   */
   @Transactional
   public void relateUsersAndTag(Integer tagId, List<Long> userIds) {
     CheckEmpty.checkEmpty(tagId, "tagId");
@@ -510,7 +513,7 @@ public class TagService extends TenancyBasedService {
     }
     List<Long> insertUserIds = userIds;
     insertUserIds.removeAll(existUserIds);
-    for (Long userId:insertUserIds) {
+    for (Long userId : insertUserIds) {
       UserTagKey record = new UserTagKey();
       record.setTagId(tagId);
       record.setUserId(userId);

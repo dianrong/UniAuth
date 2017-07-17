@@ -71,10 +71,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * . process step 2
-   *
-   * @param request request
-   * @param response response
+   * Process step1.
    */
   private ModelAndView toStep1(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -86,10 +83,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * . process step 2
-   *
-   * @param request request
-   * @param response response
+   * Process step2.
    */
   private ModelAndView toStep2(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -103,10 +97,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * . process step 3
-   *
-   * @param request request
-   * @param response response
+   * Process step3.
    */
   private ModelAndView toStep3(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -127,10 +118,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * . process step 4
-   *
-   * @param request request
-   * @param response response
+   * Process step4.
    */
   private ModelAndView toStep4(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -147,10 +135,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * . process step 1
-   *
-   * @param request request
-   * @param response response
+   * Handler step1.
    */
   private void handleStep1(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -204,11 +189,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * Step3 process, update password.
-   *
-   * @param request request
-   * @param response response
-   * @throws Exception Exception
+   * Handler step3.
    */
   private void handleStep3(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -245,9 +226,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * . get pwdforget step 1 page
-   *
-   * @return step 1 page
+   * Get Pwdforget step1 page.
    */
   private ModelAndView getPwdForgetStep1Page() {
     ModelAndView step1Page = new ModelAndView("dianrong/forgetpwd/inputEmailView");
@@ -255,36 +234,28 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * . get pwdforget step 2 page
-   *
-   * @return step 2 page
+   * Get Pwdforget step2 page.
    */
   private ModelAndView getPwdForgetStep2Page() {
     return new ModelAndView("dianrong/forgetpwd/getEmailVerifyCodeView");
   }
 
   /**
-   * . get pwdforget step 3 page
-   *
-   * @return step 3 page
+   * Get pwdforget step3 page.
    */
   private ModelAndView getPwdForgetStep3Page() {
     return new ModelAndView("dianrong/forgetpwd/resetPasswordView");
   }
 
   /**
-   * . get pwdforget step 4 page
-   *
-   * @return step 4 page
+   * Get pwdforget step4 page.
    */
   private ModelAndView getPwdForgetStep4Page() {
     return new ModelAndView("dianrong/forgetpwd/resetPwdSuccess");
   }
 
   /**
-   * . clear all session parameter about password forget
-   *
-   * @param session httpSession
+   * Clear all session parameter about password forget.
    */
   private void clearAllSessionVal(HttpSession session) {
     if (session != null) {

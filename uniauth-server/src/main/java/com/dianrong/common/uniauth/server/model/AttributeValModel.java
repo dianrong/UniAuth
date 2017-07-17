@@ -14,10 +14,10 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-public class AttributeValModel implements Serializable{
+public class AttributeValModel implements Serializable {
 
   private static final long serialVersionUID = 6726014542153028741L;
-  
+
   private Long id;
 
   private String code;

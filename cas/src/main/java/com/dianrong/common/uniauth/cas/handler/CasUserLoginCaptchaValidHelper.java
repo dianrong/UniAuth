@@ -18,14 +18,14 @@ import org.springframework.binding.message.MessageContext;
 import org.springframework.webflow.execution.Event;
 
 /**
- * . cas用户登陆的验证码验证帮助类.
+ * CAS用户登陆的验证码验证帮助类.
  *
  * @author wanglin
  */
 public class CasUserLoginCaptchaValidHelper {
 
   /**
-   * . 处理失败的id列表
+   * 处理失败的id列表.
    */
   private static final List<String> FAILAURE_EVENT_ID_LSIT = new ArrayList<String>();
 
@@ -42,12 +42,12 @@ public class CasUserLoginCaptchaValidHelper {
       new ArrayList<Class<? extends Exception>>();
 
   /**
-   * . 处理成功的id的列表
+   * 处理成功的id的列表.
    */
   private static final List<String> SUCCESS_EVENT_ID_LSIT = new ArrayList<String>();
 
   /**
-   * . 静态数据初始化
+   * 静态数据初始化.
    */
   static {
     // 处理失败
@@ -69,12 +69,11 @@ public class CasUserLoginCaptchaValidHelper {
   }
 
   /**
-   * . 进行登陆处理前的验证处理.
+   * 进行登陆处理前的验证处理.
    *
-   * @param session httpSession
    * @param messageContext 国际化上下文
    * @param captcha 前端传入的验证码(可能为空,不需要验证码的情况)
-   * @return 是否继续进行登陆处理
+   * @return True或者False, 是否继续进行登陆处理
    */
   public boolean captchaValidProcessBefore(HttpSession session, final MessageContext messageContext,
       String captcha) {
@@ -113,9 +112,7 @@ public class CasUserLoginCaptchaValidHelper {
   }
 
   /**
-   * . 登陆处理结束之后,根据登陆结果设置验证码判断相关的数据
-   *
-   * @param session httpSession
+   * 登陆处理结束之后,根据登陆结果设置验证码判断相关的数据.
    * @param resultEvent 登陆结果session
    */
   public void captchaValidAfterSubmit(HttpSession session, Event resultEvent) {
@@ -155,7 +152,6 @@ public class CasUserLoginCaptchaValidHelper {
             }
           }
         }
-
         if (SUCCESS_EVENT_ID_LSIT.contains(eventId)) {
           // 登陆成功 清空异常记录
           casLoginCaptcha.reInit();

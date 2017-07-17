@@ -27,12 +27,13 @@ public abstract class UserBaseHanlder extends AbstractAttributeRecordHandler {
     }
     if (valIdentity.getPrimaryId() == null) {
       if (StringUtil.translateObjectToLong(valIdentity.getIdentity()) == null) {
-        throw new InvalidParameterTypeException(valIdentity.getIdentity() + " can not translate to a Long!");
+        throw new InvalidParameterTypeException(
+            valIdentity.getIdentity() + " can not translate to a Long!");
       }
     }
     return null;
   }
-  
+
   /**
    * 查找记录.
    */

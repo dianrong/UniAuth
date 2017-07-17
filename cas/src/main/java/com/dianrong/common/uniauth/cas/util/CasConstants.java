@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.cas.util;
 
 /**
- * Cas 用到的常量.
+ * CAS 用到的常量.
  *
  * @author wanglin
  */

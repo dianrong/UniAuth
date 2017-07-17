@@ -52,7 +52,7 @@ public class DomainService extends TenancyBasedService {
   @Autowired
   private StakeholderMapper stakeholderMapper;
   @Autowired
-  private TagTypeMapper  tagTypeMapper;
+  private TagTypeMapper tagTypeMapper;
 
   @Resource(name = "domainDataFilter")
   private DataFilter dataFilter;
@@ -66,8 +66,7 @@ public class DomainService extends TenancyBasedService {
     CheckEmpty.checkEmpty(domainCode, "域编码");
 
     // 检查code
-    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE,
-        domainCode);
+    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, domainCode);
 
     DomainExample example = new DomainExample();
     example.createCriteria().andCodeEqualTo(domainCode)
@@ -186,31 +185,31 @@ public class DomainService extends TenancyBasedService {
     if (ObjectUtil.collectionIsEmptyOrNull(tagTypeIds)) {
       return map;
     }
-    
+
     TagTypeExample tagTypeExample = new TagTypeExample();
-    TagTypeExample.Criteria tagTypeCriteria =  tagTypeExample.createCriteria();
+    TagTypeExample.Criteria tagTypeCriteria = tagTypeExample.createCriteria();
     tagTypeCriteria.andIdIn(tagTypeIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     List<TagType> tagTypes = tagTypeMapper.selectByExample(tagTypeExample);
     if (ObjectUtil.collectionIsEmptyOrNull(tagTypes)) {
       return map;
     }
-    List<Integer>  domainIds = Lists.newArrayList();
-    for (TagType tt: tagTypes) {
+    List<Integer> domainIds = Lists.newArrayList();
+    for (TagType tt : tagTypes) {
       domainIds.add(tt.getDomainId());
     }
-    
+
     DomainExample domainExample = new DomainExample();
     DomainExample.Criteria domainCriteria = domainExample.createCriteria();
     domainCriteria.andIdIn(domainIds);
-    List<Domain>domains = domainMapper.selectByExample(domainExample);
+    List<Domain> domains = domainMapper.selectByExample(domainExample);
     if (ObjectUtil.collectionIsEmptyOrNull(domains)) {
       return map;
     }
     Map<Integer, Domain> domainMap = Maps.newHashMap();
-    for (Domain domain: domains) {
+    for (Domain domain : domains) {
       domainMap.put(domain.getId(), domain);
     }
-    for (TagType tagType:tagTypes) {
+    for (TagType tagType : tagTypes) {
       Domain domain = domainMap.get(tagType.getDomainId());
       if (domain != null) {
         map.put(tagType.getId(), BeanConverter.convert(domain));
@@ -218,7 +217,7 @@ public class DomainService extends TenancyBasedService {
     }
     return map;
   }
-  
+
   /**
    * 根据DomainId集合获取域Id与域信息的Map.
    */
@@ -230,16 +229,16 @@ public class DomainService extends TenancyBasedService {
     DomainExample domainExample = new DomainExample();
     DomainExample.Criteria domainCriteria = domainExample.createCriteria();
     domainCriteria.andIdIn(domainIds);
-    List<Domain>domains = domainMapper.selectByExample(domainExample);
+    List<Domain> domains = domainMapper.selectByExample(domainExample);
     if (ObjectUtil.collectionIsEmptyOrNull(domains)) {
       return map;
     }
-    for (Domain domain: domains) {
+    for (Domain domain : domains) {
       map.put(domain.getId(), BeanConverter.convert(domain));
     }
     return map;
   }
-  
+
   /**
    * 根据主键获取域详细信息.
    */

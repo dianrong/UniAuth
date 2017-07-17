@@ -33,9 +33,9 @@ public class NotificationService {
       Executors.newFixedThreadPool(2);
 
   /**
-   * cas server的地址.
+   * CAS server的地址.
    */
-   @Value("#{uniauthConfig['cas_server']}")
+  @Value("#{uniauthConfig['cas_server']}")
   private String casServerUrl;
 
   @Value("#{uniauthConfig['domains.techops.email_switch']}")
@@ -46,7 +46,7 @@ public class NotificationService {
    */
   @Autowired
   private EmailNotification emailNotify;
-  
+
   /**
    * 短信发送.
    */
@@ -65,8 +65,10 @@ public class NotificationService {
     param.setEmail(userInfo.getEmail());
     param.setPhone(userInfo.getPhone());
     param.setEmailTitle(NotifyTemplates.getEmailTitle(type));
-    param.setEmailContent(NotifyTemplates.getEmailMsg(type, userInfo.getEmail(), purePassword, this.casServerUrl));
-    param.setSmsContent(NotifyTemplates.getSmsMsg(type, userInfo.getPhone(), purePassword, this.casServerUrl));
+    param.setEmailContent(
+        NotifyTemplates.getEmailMsg(type, userInfo.getEmail(), purePassword, this.casServerUrl));
+    param.setSmsContent(
+        NotifyTemplates.getSmsMsg(type, userInfo.getPhone(), purePassword, this.casServerUrl));
     notification(param);
   }
 

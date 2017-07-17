@@ -8,13 +8,15 @@ import java.util.Set;
  * 定义扩展属性相关的Table.
  */
 public enum AtrributeTable {
-  USER("user", "id", false), USER_DETAIL("user_detail", "user_id", true), GRP("grp", "id", false);
+  USER("user", "id", false), USER_DETAIL("user_detail", "user_id", true), USER_WORK_RELATIONSHIP(
+      "user_work_relationship", "user_id", true), GRP("grp", "id", false);
   private static final Set<AtrributeTable> USER_TABLE = Sets.newHashSet();
   private static final Set<AtrributeTable> GROUP_TABLE = Sets.newHashSet();
 
   static {
     USER_TABLE.add(USER);
     USER_TABLE.add(USER_DETAIL);
+    USER_TABLE.add(USER_WORK_RELATIONSHIP);
     GROUP_TABLE.add(GRP);
   }
 
@@ -29,7 +31,7 @@ public enum AtrributeTable {
   private final String tableName;
 
   private final String identityFieldName;
-  
+
   /**
    * 在进行扩展属性更新的时候是否需要在更新前检查一下记录是否存在.
    */

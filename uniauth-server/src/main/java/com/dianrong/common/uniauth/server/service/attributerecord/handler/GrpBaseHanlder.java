@@ -27,12 +27,13 @@ public abstract class GrpBaseHanlder extends AbstractAttributeRecordHandler {
     }
     if (valIdentity.getPrimaryId() == null) {
       if (StringUtil.translateObjectToInteger(valIdentity.getIdentity()) == null) {
-        throw new InvalidParameterTypeException(valIdentity.getIdentity() + " can not translate to a Integer!");
+        throw new InvalidParameterTypeException(
+            valIdentity.getIdentity() + " can not translate to a Integer!");
       }
     }
     return null;
   }
-  
+
   /**
    * 查找记录.
    */

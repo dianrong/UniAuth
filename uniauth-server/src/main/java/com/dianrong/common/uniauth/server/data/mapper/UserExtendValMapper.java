@@ -106,6 +106,7 @@ public interface UserExtendValMapper {
   int countByCode(Map<String, String> params);
 
   int countByUserExtend(Map<String, String> params);
-  
-  int updateValue(@Param("userId")Long userId, @Param("extendId")Long extendId, @Param("value")String value);
+
+  int updateValue(@Param("userId") Long userId, @Param("extendId") Long extendId,
+      @Param("value") String value);
 }

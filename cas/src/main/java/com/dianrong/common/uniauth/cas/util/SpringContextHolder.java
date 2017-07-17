@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
 /**
- * . 用于管理spring context对象
+ * 用于管理Spring context对象.
  *
  * @author wanglin
  */
@@ -12,12 +12,12 @@ import org.springframework.context.ApplicationContext;
 public class SpringContextHolder {
 
   /**
-   * . spring 容器上下文
+   * Spring 容器上下文.
    */
   private static ApplicationContext context = null;
 
   /**
-   * . 注入spring容器的上下文到当前对象中
+   * 注入spring容器的上下文到当前对象中.
    */
   public static void injectApplicationContext(ApplicationContext tcontext) {
     if (tcontext == null) {
@@ -30,7 +30,7 @@ public class SpringContextHolder {
   }
 
   /**
-   * . 获取spring bean
+   * 获取spring bean.
    *
    * @param beanName bean的名称
    * @return 获取的bean对象

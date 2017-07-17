@@ -1,7 +1,10 @@
 package com.dianrong.common.uniauth.server.service.support;
 
+import com.dianrong.common.uniauth.server.service.attribute.transalate.AttributeTypeTranslater;
+import com.dianrong.common.uniauth.server.service.attribute.transalate.AttributeTypeTranslaterFactory;
 import com.google.common.collect.Maps;
 
+import java.sql.Date;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,24 +26,28 @@ public enum AtrributeDefine {
   FIRST_NAME(AtrributeTable.USER_DETAIL, "first_name"), 
   LAST_NAME(AtrributeTable.USER_DETAIL, "last_name"), 
   DISPLAY_NAME(AtrributeTable.USER_DETAIL, "display_name"), 
-  NICK_NAME( AtrributeTable.USER_DETAIL, "nick_name"), 
-  IDENTITY_CARD(AtrributeTable.USER_DETAIL, "identity_card"), 
+  NICK_NAME(AtrributeTable.USER_DETAIL, "nick_name"), 
+  IDENTITY_NO(AtrributeTable.USER_DETAIL, "identity_no"), 
   MOTTO(AtrributeTable.USER_DETAIL, "motto"), 
   IMAGE(AtrributeTable.USER_DETAIL, "image"), 
   SSN(AtrributeTable.USER_DETAIL, "ssn"), 
   WEIBO(AtrributeTable.USER_DETAIL, "weibo"), 
-  WECHAT_NO( AtrributeTable.USER_DETAIL, "wechat_no"), 
+  WECHAT_NO(AtrributeTable.USER_DETAIL, "wechat_no"), 
   ADDRESS(AtrributeTable.USER_DETAIL, "address"), 
-  BIRTHDAY(AtrributeTable.USER_DETAIL, "birthday"), 
+  BIRTHDAY(AtrributeTable.USER_DETAIL, "birthday", Date.class), 
   GENDER(AtrributeTable.USER_DETAIL, "gender"), 
   POSITION(AtrributeTable.USER_DETAIL, "position"), 
-  LAST_POSITION_MODIFY_DATE(AtrributeTable.USER_DETAIL, "last_position_modify_date"), 
+  LAST_POSITION_MODIFY_DATE(AtrributeTable.USER_DETAIL, "last_position_modify_date", Date.class), 
   DEPARTMENT(AtrributeTable.USER_DETAIL, "department"), 
   TITLE(AtrributeTable.USER_DETAIL, "title"), 
-  AID(AtrributeTable.USER_DETAIL, "aid"), 
-  ENTRY_DATE(AtrributeTable.USER_DETAIL, "entry_date"), 
-  LEAVE_DATE( AtrributeTable.USER_DETAIL, "leave_date"),
+  AID(AtrributeTable.USER_DETAIL, "aid", Long.class), 
+  ENTRY_DATE(AtrributeTable.USER_DETAIL, "entry_date", Date.class), 
+  LEAVE_DATE(AtrributeTable.USER_DETAIL, "leave_date", Date.class),
 
+  // Table user_work_relationship
+  MANAGER_ID(AtrributeTable.USER_WORK_RELATIONSHIP, "manager_id", false, Long.class),
+  SUPERVISOR_ID(AtrributeTable.USER_WORK_RELATIONSHIP, "supervisor_id", false, Long.class),
+  
   // Table group
   GROUP_NAME(AtrributeTable.GRP, "name"), 
   GROUP_CODE(AtrributeTable.GRP, "code", false), 
@@ -51,12 +58,14 @@ public enum AtrributeDefine {
   /**
    * 系统定义表中的User的属性编码与定义的Map.
    */
-  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_USE_ATTRIBUTES_MAP = Maps.newHashMap();
+  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_USE_ATTRIBUTES_MAP =
+      Maps.newHashMap();
 
   /**
    * 系统定义表中的Group的属性编码与定义的Map.
    */
-  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP = Maps.newHashMap();
+  private static final Map<String, AtrributeDefine> SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP = 
+      Maps.newHashMap();
   
 
   static {
@@ -91,21 +100,31 @@ public enum AtrributeDefine {
     return SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP.get(attributeCode);
   }
 
+  private AtrributeDefine(AtrributeTable defineTable, String fieldName, Class<?> clz) {
+    this(defineTable, fieldName, fieldName, true, true, clz);
+  }
+
+  private AtrributeDefine(AtrributeTable defineTable, 
+      String fieldName, boolean writable, Class<?> clz) {
+    this(defineTable, fieldName, fieldName, true, writable, clz);
+  }
+  
   private AtrributeDefine(AtrributeTable defineTable, String fieldName) {
-    this(defineTable, fieldName, fieldName, true, true);
+    this(defineTable, fieldName, fieldName, true, true, String.class);
   }
 
   private AtrributeDefine(AtrributeTable defineTable, String fieldName, boolean writable) {
-    this(defineTable, fieldName, fieldName, true, writable);
+    this(defineTable, fieldName, fieldName, true, writable, String.class);
   }
 
   private AtrributeDefine(AtrributeTable defineTable, String attributeCode, String fieldName,
-      boolean readable, boolean writable) {
+      boolean readable, boolean writable, Class<?> fieldType) {
     this.defineTable = defineTable;
     this.attributeCode = attributeCode;
     this.fieldName = fieldName;
     this.readable = readable;
     this.writable = writable;
+    this.fieldType = fieldType;
   }
 
   /**
@@ -132,6 +151,15 @@ public enum AtrributeDefine {
    * 该属性是否可通过profile修改.某些属性是不允许通过profile修改的,需要通过其他接口,以便进行相应的校验处理.
    */
   private final boolean writable;
+  
+  /**
+   * 属性的java类型.
+   */
+  private final Class<?> fieldType;
+
+  public Class<?> getFieldType() {
+    return fieldType;
+  }
 
   public AtrributeTable getDefineTable() {
     return defineTable;
@@ -151,5 +179,9 @@ public enum AtrributeDefine {
 
   public boolean isWritable() {
     return writable;
+  }
+
+  public AttributeTypeTranslater getTypeTranslater() {
+    return AttributeTypeTranslaterFactory.getTranslator(this.fieldType);
   }
 }
