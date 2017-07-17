@@ -167,7 +167,7 @@
                     <sapn ng-bind="process_result.errors.length"></sapn>
                 </div>
                 <div ng-repeat="item in process_result.errors">
-                    {{item.identity}} : {{item.msg}}</div>
+                   <b> {{item.identity}}</b> : {{item.msg}}</div>
             </div>
         </div>
 		<div class="row" ng-show="process_result.successes"

@@ -1,7 +1,6 @@
 apply plugin: 'war'
 
 dependencies {
-	// compile(group: 'com.dianrong.common.uniauth', name: 'common', version:'1.0.82-SNAPSHOT')
     compile project(":common")
 
     providedCompile 'javax.servlet:javax.servlet-api'
@@ -16,8 +15,12 @@ dependencies {
     compile 'org.apache.httpcomponents:fluent-hc:4.5.2'
     compile 'org.apache.httpcomponents:httpmime'
     
-    //Log
-     compile 'ch.qos.logback:logback-classic'
+     //Log
+    compile 'ch.qos.logback:logback-classic'
+     
+    // swagger
+    compile 'io.springfox:springfox-swagger2:2.2.2'
+    compile 'io.springfox:springfox-swagger-ui:2.2.2'
 }
 
 war {
