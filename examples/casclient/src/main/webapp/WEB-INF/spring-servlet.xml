@@ -17,7 +17,7 @@
 	<!-- 配置注解驱动的Spring MVC Controller 的编程模型.注:次标签只在 Servlet MVC工作! -->
 	<mvc:annotation-driven />
 	
-	<context:component-scan base-package="com.dianrong" />
+	<context:component-scan base-package="com.dianrong.loanbusiness.subsystem.controller" />
 	
 	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />

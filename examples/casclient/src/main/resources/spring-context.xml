@@ -15,37 +15,37 @@
                         http://www.springframework.org/schema/tx/spring-tx.xsd
                         ">
 
-	<context:component-scan base-package="com.dianrong" />
+    <context:component-scan base-package="com.dianrong" />
 
-	<context:property-placeholder ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
-	
-	<bean id="uniauthConfig" class="com.dianrong.platform.open.cfg.CfgGroup">
-		<property name="cfgRootNodeName" value="#{systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] == null? '/com/dianrong/cfg/1.0.0/uniauth' : systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] + '/uniauth'}" />
-		<property name="needKeepAlive" value="false" />
-	</bean>
-	
- 	<bean 
-		name="authenticationFilter" 
-		class="org.jasig.cas.client.authentication.AuthenticationFilter"
-    	p:casServerLoginUrl="#{uniauthConfig['cas_server']}/login" 
-    	p:renew="false" 
-    	p:gateway="false" 
-    	p:service="#{uniauthConfig['domains.casclient']}/login/cas" />
+    <context:property-placeholder ignore-unresolvable="true" system-properties-mode="OVERRIDE" />
+    
+    <bean id="uniauthConfig" class="com.dianrong.platform.open.cfg.CfgGroup">
+        <property name="cfgRootNodeName" value="#{systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] == null? '/com/dianrong/cfg/1.0.0/uniauth' : systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] + '/uniauth'}" />
+        <property name="needKeepAlive" value="false" />
+    </bean>
+    
+    <bean 
+        name="authenticationFilter" 
+        class="org.jasig.cas.client.authentication.AuthenticationFilter"
+        p:casServerLoginUrl="#{uniauthConfig['cas_server']}/login" 
+        p:renew="false" 
+        p:gateway="false" 
+        p:service="#{uniauthConfig['domains.casclient']}/login/cas" />
 
-	<bean
-	    name="ticketValidationFilter"
-	    class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter"
-	    p:service="#{uniauthConfig['domains.casclient']}/login/cas">
-	    <property name="ticketValidator">
-	        <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
-	            <constructor-arg index="0" value="#{uniauthConfig['cas_server']}" />
-	        </bean>
-	    </property>
-	</bean>
-	
- 	<bean 
-		name="singleSignOutFilter" 
-		class="org.jasig.cas.client.session.SingleSignOutFilter"
-    	p:casServerUrlPrefix="#{uniauthConfig['cas_server']}" 
-    	/>
+    <bean
+        name="ticketValidationFilter"
+        class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter"
+        p:service="#{uniauthConfig['domains.casclient']}/login/cas">
+        <property name="ticketValidator">
+            <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+                <constructor-arg index="0" value="#{uniauthConfig['cas_server']}" />
+            </bean>
+        </property>
+    </bean>
+    
+    <bean 
+        name="singleSignOutFilter" 
+        class="org.jasig.cas.client.session.SingleSignOutFilter"
+        p:casServerUrlPrefix="#{uniauthConfig['cas_server']}" 
+        />
 </beans>
