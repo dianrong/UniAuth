@@ -53,7 +53,7 @@ insert into grp_role(grp_id, role_id)  values(100003, 2);
 insert into grp_role(grp_id, role_id)  values(100004, 3);
 
 /**stakeholder*/
-insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '研发人员1', 'developer1@xxx.com', '18190805518', '开发人员', 1);
+insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '研发人员1', 'developer1@xxx.com', '159xxxxxxxx', '开发人员', 1);
 
 /**tagType*/
 INSERT INTO `tag_type` (`id`, `code`, `domain_id`) VALUES ('1', 'testTagType1', '1');
