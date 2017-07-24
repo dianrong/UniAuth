@@ -12,7 +12,7 @@ public class MyPermissionEvaluator implements UniauthPermissionEvaluator {
   public boolean hasPermission(Authentication authentication, Object targetDomainObject,
       Object permission) {
     System.out.println(targetDomainObject);
-    if (authentication.getName().equals("admin@163.com")) {
+    if (authentication.getName().equals("first.admin@dianrong.com")) {
       return true;
     }
 
