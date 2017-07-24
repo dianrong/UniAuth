@@ -20,7 +20,7 @@ public class CuratorListenerTest {
     try {
       RetryPolicy retryPolicy = new ExponentialBackoffRetry(6000, 10);
       curatorFramework = CuratorFrameworkFactory.builder()
-          .connectString("192.168.71.136:2181")
+          .connectString("127.0.0.1:2181")
           .retryPolicy(retryPolicy)
           .connectionTimeoutMs(5000)
           .build();

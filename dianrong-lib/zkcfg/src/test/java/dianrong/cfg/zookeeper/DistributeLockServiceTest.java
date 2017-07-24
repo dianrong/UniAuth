@@ -33,7 +33,7 @@ public class DistributeLockServiceTest {
   @Test
   public void find() throws ExecutionException, InterruptedException {
     logger.info("find begin...");
-    Object result = distributeLockService.tryAcquiredLockAndExcute("/com/dianrong/cfg/1.0.0/test",
+    Object result = distributeLockService.tryAcquiredLockAndExcute("/com/xxx/cfg",
         new Callable<Object>() {
           @Override
           public Object call() throws Exception {
