@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * notification system config properties
  *
- * @author xiaofeng.chen@dianrong.com
+ * @author xiaofeng
  * @date 2017年1月9日
  * @since jdk1.7
  */
