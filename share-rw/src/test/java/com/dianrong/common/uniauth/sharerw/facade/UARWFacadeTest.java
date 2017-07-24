@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author wenlongchen.
  * @since May 16, 2016
  */
+@SuppressWarnings("deprecation")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:ss-uniauth-common.xml"})
 public class UARWFacadeTest {

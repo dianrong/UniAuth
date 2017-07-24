@@ -1130,7 +1130,7 @@ public class AuditExample extends PageParam {
     }
 
     /**
-     * 将wanfei.wang@dianrong 这种字符串处理为 wanfei.wang +(dianrong.com)
+     * 将someone.xx@dianrong 这种字符串处理为 someone.xx +(dianrong.com)
      *
      * @param val 待处理字符串
      * @return 处理结果

@@ -6,14 +6,13 @@ import org.springframework.security.core.Authentication;
 
 public class MyPermissionEvaluator implements UniauthPermissionEvaluator {
 
-  public MyPermissionEvaluator() {
-  }
+  public MyPermissionEvaluator() {}
 
   @Override
   public boolean hasPermission(Authentication authentication, Object targetDomainObject,
       Object permission) {
     System.out.println(targetDomainObject);
-    if (authentication.getName().equals("zengwei.xu@dianrong.com")) {
+    if (authentication.getName().equals("admin@163.com")) {
       return true;
     }
 
