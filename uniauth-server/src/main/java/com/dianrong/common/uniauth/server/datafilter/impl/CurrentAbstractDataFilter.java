@@ -9,14 +9,12 @@ import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import java.lang.reflect.Field;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * . 目前阶段需要处理的一个比较固定的流程
- *
+ * 目前阶段需要处理的一个比较固定的流程.
  * @author wanglin
  */
 @Slf4j
@@ -36,7 +34,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
       for (FilterData fd : equalsField) {
         Object v1 = getObjectValue(record, fd.getType());
         Object v2 = fd.getValue();
-        if (!ObjectUtil.objectEqual(v1, v2)) {
+        if (!ObjectUtil.objectEqualIgnoreCase(v1, v2)) {
           isEqual = false;
           break;
         }
@@ -46,7 +44,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
       }
     }
     // 查看是否存在其他的记录是该信息
-    this.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA, equalsField);
+    this.addFieldsCheck(FilterType.EXSIT_DATA, equalsField);
   }
 
   @Override
@@ -57,14 +55,14 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
     }
     Assert.notNull(ftype);
     switch (ftype) {
-      case FILTER_TYPE_EXSIT_DATA:
+      case EXSIT_DATA:
         if (multiFieldsDuplicateCheck(equalsField)) {
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", getProcessTableName(),
                   getFieldTypeKeyAndValue(equalsField)));
         }
         break;
-      case FILTER_TYPE_NO_DATA:
+      case NO_DATA:
         if (!multiFieldsDuplicateCheck(equalsField)) {
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error",
@@ -78,9 +76,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
 
   /**
    * 获取描述符.
-   *
    * @param equalsField equalsField处理的字段
-   * @return 描述符string
    */
   private String getFieldTypeKeyAndValue(FilterData... equalsField) {
     if (equalsField == null || equalsField.length == 0) {
@@ -102,10 +98,6 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
 
   /**
    * 从Role中获取数据.
-   *
-   * @param obj Role
-   * @param type 结果
-   * @return 结果
    */
   protected Object getObjectValue(Object obj, FieldType type) {
     if (obj == null) {
@@ -127,25 +119,21 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
     }
     return null;
   }
-
+  
   /**
    * 处理查询数据中是否存在对应的字段相等的情况.
-   *
-   * @param equalsField 字段列表,一定不为空
-   * @return 结果
+   * @param equalsField 字段列表,一定不为空.
    */
   protected abstract boolean multiFieldsDuplicateCheck(FilterData... equalsField);
 
   /**
    * 获取描述的表的名字.
-   *
    * @return 表名
    */
   protected abstract String getProcessTableName();
 
   /**
    * 根据主键id获取一个启用状态的数据.
-   *
    * @param id primary key
    * @return record
    */

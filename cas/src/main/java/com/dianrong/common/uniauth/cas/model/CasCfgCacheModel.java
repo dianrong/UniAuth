@@ -27,12 +27,12 @@ public class CasCfgCacheModel implements Serializable {
   private final ConfigDto backgroundColorText;
 
   /**
-   * . 登陆首页的图片滚动定制化
+   * 登陆首页的图片滚动定制化.
    */
   private final List<CasLoginAdConfigModel> loginPageAd;
 
   /**
-   * . 该资源对象生成的时间戳
+   * 该资源对象生成的时间戳.
    */
   private long getResourceMilles;
 
@@ -58,7 +58,7 @@ public class CasCfgCacheModel implements Serializable {
 
 
   /**
-   * 根据cfg key 获取对应的dto list.
+   * 根据Cfg key 获取对应的dto list.
    * @param cfgKey cfg key
    */
   public List<CasLoginAdConfigModel> getDtoListByCfgKey(String cfgKey) {

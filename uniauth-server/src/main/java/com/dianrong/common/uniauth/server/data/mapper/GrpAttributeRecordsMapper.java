@@ -2,7 +2,10 @@ package com.dianrong.common.uniauth.server.data.mapper;
 
 import com.dianrong.common.uniauth.server.data.entity.GrpAttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.GrpAttributeRecordsExample;
+
+import java.util.Date;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface GrpAttributeRecordsMapper {
@@ -96,4 +99,7 @@ public interface GrpAttributeRecordsMapper {
    * @mbggenerated Thu Jun 01 18:13:03 CST 2017
    */
   int updateByPrimaryKey(GrpAttributeRecords record);
+
+  List<GrpAttributeRecords> queryGrpHisotryProfileVal(@Param("grpId") Integer grpId,
+      @Param("optDate") Date optDate, @Param("extendIds") List<Long> extendIds);
 }

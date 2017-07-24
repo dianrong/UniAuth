@@ -5,14 +5,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.util.Assert;
 
 /**
- * . 国际化处理的bundle util
+ * 国际化处理的bundle工具类.
  *
  * @author wanglin
  */
 public final class UniBundleUtil {
 
   /**
-   * 无参数的获取i8n value.
+   * 无参数的获取i18n value.
    */
   public static String getMsg(MessageSource messageSource, String key) {
     Assert.notNull(messageSource, "get i18n msg, messageSource can not be null");
@@ -21,7 +21,7 @@ public final class UniBundleUtil {
 
 
   /**
-   * 有参数的获取i8n value.
+   * 有参数的获取i18n value.
    */
   public static String getMsg(MessageSource messageSource, String key, Object... arguments) {
     Assert.notNull(messageSource, "get i18n msg, messageSource can not be null");

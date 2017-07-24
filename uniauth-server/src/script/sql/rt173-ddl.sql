@@ -17,4 +17,4 @@ CREATE TABLE IF NOT EXISTS `user_third_account` (
   INDEX index_user_third_account_third_account_type_tenancy_id(`third_account`, `type`, `tenancy_id`) COMMENT '加快根据根据第三方账号和类型反查用户id',
   CONSTRAINT `fk_user_third_account_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_third_account_tenancy_id` FOREIGN KEY (`tenancy_id`) REFERENCES `tenancy` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  )ENGINE = InnoDB DEFAULT CHARSET=utf8;
+  )ENGINE = InnoDB DEFAULT CHARSET=utf8 COMMENT '三方账号与Uniauth账号的关联关系';

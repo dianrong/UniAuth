@@ -16,12 +16,12 @@ public class BatchProcessResult {
    * 处理成功的结果.
    */
   private Set<String> successes;
-  
+
   /**
    * 处理失败的结果.
    */
   private Set<Failure> errors;
-  
+
   /**
    * 构造函数.
    */
@@ -29,7 +29,7 @@ public class BatchProcessResult {
     this.successes = Sets.newHashSet();
     this.errors = Sets.newHashSet();
   }
-  
+
   public Set<String> getSuccesses() {
     return successes;
   }
@@ -45,7 +45,7 @@ public class BatchProcessResult {
   public void setErrors(Set<Failure> errors) {
     this.errors = errors;
   }
-  
+
   @Override
   public String toString() {
     return "BatchProcessResult [successes=" + successes + ", errors=" + errors + "]";
@@ -55,11 +55,14 @@ public class BatchProcessResult {
    * 处理失败的结果对象.
    */
   public static class Failure {
-    
+
     private String identity;
-    
+
     private String msg;
-    
+
+    /**
+     * 构造批量操作失败结果.
+     */
     public static Failure build(String identity, String msg) {
       Failure failure = new Failure();
       failure.setIdentity(identity);
@@ -87,5 +90,5 @@ public class BatchProcessResult {
     public String toString() {
       return "Failure [identity=" + identity + ", msg=" + msg + "]";
     }
-  } 
+  }
 }

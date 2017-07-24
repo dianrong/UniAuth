@@ -96,4 +96,9 @@ public interface AttributeExtendMapper {
    * @mbggenerated Thu Jun 01 18:13:03 CST 2017
    */
   int updateByPrimaryKey(AttributeExtend record);
+  
+  /**
+   * 根据ProfileId获取关联的扩展属性.
+   */
+  List<AttributeExtend> getAttributesByProfileId(Long profileId);
 }

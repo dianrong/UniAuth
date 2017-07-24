@@ -3,10 +3,13 @@ package com.dianrong.common.uniauth.common.bean.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import lombok.ToString;
+
 /**
  * @author wenlongchen.
  * @since May 16, 2016
  */
+@ToString
 @ApiModel("扩展属性")
 public class AttributeExtendDto extends TenancyBaseDto {
 
@@ -22,6 +25,8 @@ public class AttributeExtendDto extends TenancyBaseDto {
   private String subcategory;
   @ApiModelProperty("属性描述信息")
   private String description;
+  @ApiModelProperty("对应属性的扩展值,可能为空")
+  private String value;
 
   public Long getId() {
     return id;
@@ -65,6 +70,15 @@ public class AttributeExtendDto extends TenancyBaseDto {
 
   public AttributeExtendDto setSubcategory(String subcategory) {
     this.subcategory = subcategory;
+    return this;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public AttributeExtendDto setValue(String value) {
+    this.value = value;
     return this;
   }
 }

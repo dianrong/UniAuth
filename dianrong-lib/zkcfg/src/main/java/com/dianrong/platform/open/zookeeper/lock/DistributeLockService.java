@@ -24,14 +24,14 @@ public class DistributeLockService {
   private ExecutorService executorService = Executors.newFixedThreadPool(3);
 
   /**
-   * tryAcquiredLockAndExcute.
+   * TryAcquiredLockAndExcute.
    */
-  public Object tryAcquiredLockAndExcute(String path, Callable callable) {
+  public Object tryAcquiredLockAndExcute(String path, Callable<Object> callable) {
     InterProcessMutex lock = new InterProcessMutex(client, path);
     try {
       if (lock.acquire(5, TimeUnit.SECONDS)) {
         logger.info(Thread.currentThread().getName() + " acquired and hold Lock,path:{}", path);
-        Future future = executorService.submit(callable);
+        Future<Object> future = executorService.submit(callable);
         return future.get();
       } else {
         logger.info(Thread.currentThread().getName() + " can't acquired lock,path:{}", path);

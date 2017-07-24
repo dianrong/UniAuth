@@ -23,7 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * @author wenlongchen
+ * @author wenlongchen.
  * @since May 16, 2016
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -72,8 +72,8 @@ public class UARWFacadeTest {
     userExtendParam.setCode("a");
     userExtendParam.setPageNumber(1);
     userExtendParam.setPageSize(3);
-    Response<PageDto<UserExtendDto>> response1 = userExtendResource
-        .searchUserExtend(userExtendParam);
+    Response<PageDto<UserExtendDto>> response1 =
+        userExtendResource.searchUserExtend(userExtendParam);
     System.out.println(mapper.writeValueAsString(response1));
   }
 
@@ -123,8 +123,8 @@ public class UARWFacadeTest {
     UserExtendValParam userExtendValParam = new UserExtendValParam();
     userExtendValParam.setUserId(300000001l);
 
-    Response<List<UserExtendValDto>> response1 = userExtendResource
-        .searchByUserId(userExtendValParam);
+    Response<List<UserExtendValDto>> response1 =
+        userExtendResource.searchByUserId(userExtendValParam);
     System.out.println(mapper.writeValueAsString(response1));
 
     userExtendValParam.setStatus((byte) 0);
@@ -144,8 +144,8 @@ public class UARWFacadeTest {
     userExtendValParam.setExtendCode("aa");
     userExtendValParam.setPageSize(5);
     userExtendValParam.setQueryOnlyUsed(false);
-    Response<PageDto<UserExtendValDto>> response1 = userExtendResource
-        .searchByUserIdAndCode(userExtendValParam);
+    Response<PageDto<UserExtendValDto>> response1 =
+        userExtendResource.searchByUserIdAndCode(userExtendValParam);
     System.out.println(mapper.writeValueAsString(response1));
 
     userExtendValParam.setExtendCode("b");

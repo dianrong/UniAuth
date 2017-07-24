@@ -1,11 +1,13 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.io.Serializable;
-import java.util.Arrays;
+
+import lombok.ToString;
 
 /**
  * Created by Arc on 25/3/2016.
  */
+@ToString
 public class ConfigDto implements Serializable {
 
   private static final long serialVersionUID = -5735868920727388059L;
@@ -68,11 +70,5 @@ public class ConfigDto implements Serializable {
   public ConfigDto setFile(byte[] file) {
     this.file = file;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "ConfigDto [id=" + id + ", cfgKey=" + cfgKey + ", cfgTypeId=" + cfgTypeId + ", cfgType="
-        + cfgType + ", value=" + value + ", file=" + Arrays.toString(file) + "]";
   }
 }

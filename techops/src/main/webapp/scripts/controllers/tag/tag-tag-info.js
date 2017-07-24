@@ -41,17 +41,18 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
 
         $scope.pagination = {
             pageSize: constant.pageSize,
+            showPageNum: constant.showPageNum,
             curPage: 1,
             totalCount: 0
         };
         $scope.tagQuery = {};
-        $scope.queryTag = function () {
+        $scope.queryTag = function (curPage) {
             if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
                 $scope.tagsLoading = constant.loadEmpty;
                 return;
             }
             var params = {};
-            params.pageNumber = $scope.pagination.curPage - 1;
+            params.pageNumber = curPage === undefined ? $scope.pagination.curPage - 1 : curPage;
             params.pageSize = $scope.pagination.pageSize;
 
             $scope.tags = [];

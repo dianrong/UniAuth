@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import com.google.common.collect.Maps;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -24,7 +25,8 @@ public class UniBundle {
 
   private static class ResourceBundlueHolder {
 
-    private static final ConcurrentMap<Locale, ResourceBundle> RESOURCEBUNDLES = Maps.newConcurrentMap();
+    private static final ConcurrentMap<Locale, ResourceBundle> RESOURCEBUNDLES =
+        Maps.newConcurrentMap();
 
     public static ResourceBundle getResource() {
       Locale locale = UniauthLocaleInfoHolder.getLocale();
@@ -32,7 +34,6 @@ public class UniBundle {
       if (resourceBundle == null) {
         RESOURCEBUNDLES.putIfAbsent(locale, ResourceBundle.getBundle("UniauthResource", locale));
       }
-
       return RESOURCEBUNDLES.get(locale);
     }
   }

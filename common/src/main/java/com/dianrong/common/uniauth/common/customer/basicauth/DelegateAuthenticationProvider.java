@@ -11,16 +11,21 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.customer.basicauth.cache.CacheMapBO;
 import com.dianrong.common.uniauth.common.customer.basicauth.cache.service.CacheMapServiceImpl;
 import com.dianrong.common.uniauth.common.customer.basicauth.cache.service.CacheService;
 import com.dianrong.common.uniauth.common.customer.basicauth.factory.ModeFactory;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType;
+import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.common.util.StringUtil;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -40,17 +45,33 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 public class DelegateAuthenticationProvider implements AuthenticationProvider {
 
   private UniClientFacade uniClientFacade;
+
+  /**
+   * 默认的租户编码:Dianrong.
+   */
   private String tenancyCode = AppConstants.DEFAULT_TANANCY_CODE;
+
+  /**
+   * 默认的权限模型:Role_Code.
+   */
   private Mode mode = ROLE_CODE;
+
+  /**
+   * 默认的权限类型:Domain.
+   */
   private PermissionType permissionType = DOMAIN;
+
+  /**
+   * 默认处理的域编码:Techops.
+   */
   private String domainCode = AppConstants.DOMAIN_CODE_TECHOPS;
-  private String USER_DETAIL_DTO_KEY = "UserDetailDto";
-  private String RESPONSE_USER_KEY = "ResponseUser";
+
+  // 缓存的默认实现.
   private CacheService cacheService = new CacheMapServiceImpl();
 
-  public void setCacheService(
-      @NonNull CacheService cacheService) {
+  public DelegateAuthenticationProvider setCacheService(@NonNull CacheService cacheService) {
     this.cacheService = cacheService;
+    return this;
   }
 
   public DelegateAuthenticationProvider(@NonNull UniClientFacade uniClientFacade) {
@@ -81,27 +102,29 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     String userName = authentication.getName();
     String password = (String) authentication.getCredentials();
-
-    //get remote ip address
+    Assert.notNull(userName);
+    Assert.notNull(password);
+    String identity = getIdentityMd5Key(userName, password);
+    Object token = cacheService.getDataFromCache(identity);
+    if (token instanceof UsernamePasswordAuthenticationToken) {
+      log.debug("get cache of userName:{}", userName);
+      return (UsernamePasswordAuthenticationToken) token;
+    }
+    // 重新走登陆流程.
+    // Get remote ip address
     String remoteAddress = null;
     Object details = authentication.getDetails();
     if (details instanceof WebAuthenticationDetails) {
       WebAuthenticationDetails webDetails = (WebAuthenticationDetails) details;
       remoteAddress = webDetails.getRemoteAddress();
     }
-
     LoginParam loginParam = new LoginParam();
     loginParam.setAccount(userName);
     loginParam.setPassword(password);
     loginParam.setTenancyCode(tenancyCode);
     loginParam.setIp(remoteAddress);
-    List<Info> infoList = (List<Info>) cacheService.getDataFromCache(RESPONSE_USER_KEY);
-    if (infoList == null) {
-      Response<UserDto> response = uniClientFacade.getUserResource().login(loginParam);
-      infoList = response.getInfo();
-      cacheService.setDataToCache(new CacheMapBO(infoList), RESPONSE_USER_KEY);
-    }
-
+    Response<UserDto> response = uniClientFacade.getUserResource().login(loginParam);
+    List<Info> infoList = response.getInfo();
     if (infoList != null && !infoList.isEmpty()) {
       Info info = infoList.get(0);
       InfoName infoName = info.getName();
@@ -144,26 +167,37 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
     }
 
     // 首先从缓存中拿数据
-    UserDetailDto userDetailDto = (UserDetailDto) cacheService
-        .getDataFromCache(USER_DETAIL_DTO_KEY);
-    // 缓存中不存在，再从数据库拿数据，并且把拿到的数据更新到缓存
-    if (userDetailDto == null) {
-      Response<UserDetailDto> responseDetail = uniClientFacade.getUserResource()
-          .getUserDetailInfo(loginParam);
-      userDetailDto = responseDetail.getData();
-      cacheService.setDataToCache(new CacheMapBO(userDetailDto), USER_DETAIL_DTO_KEY);
-    }
-
+    Response<UserDetailDto> responseDetail =
+        uniClientFacade.getUserResource().getUserDetailInfo(loginParam);
+    UserDetailDto userDetailDto = responseDetail.getData();
     ModeFactory modeFactory = new ModeFactory();
-    ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorityArrayList = modeFactory
-        .getHandlerBean(mode).handle(userDetailDto, domainCode, permissionType);
+    ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorityArrayList =
+        modeFactory.getHandlerBean(mode).handle(userDetailDto, domainCode, permissionType);
 
-    return new UsernamePasswordAuthenticationToken(userName, password,
-        simpleGrantedAuthorityArrayList);
+    // login success, cache login result
+    UsernamePasswordAuthenticationToken loginToken = new UsernamePasswordAuthenticationToken(
+        userName, password, simpleGrantedAuthorityArrayList);
+    cacheService.setDataToCache(identity, loginToken);
+    return loginToken;
   }
 
   @Override
   public boolean supports(Class<?> authentication) {
     return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+  }
+
+  /**
+   * 将用户名和密码通过Md5生成一个标识Key.<br>
+   * 
+   * @return Md5(UserName + Password).
+   */
+  private String getIdentityMd5Key(String userName, String password) {
+    String originStr = userName.trim() + password.trim();
+    try {
+      return StringUtil.md5(originStr);
+    } catch (UnsupportedEncodingException e) {
+      log.error("not supported encoding type!", e);
+      return null;
+    }
   }
 }

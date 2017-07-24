@@ -8,30 +8,41 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
+import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionPathDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.SimpleProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailInfoDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserWorkRelationshipDto;
 import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
+import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.ApiPermission;
+import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
 import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionPath;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleCode;
 import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
@@ -39,9 +50,21 @@ import com.dianrong.common.uniauth.server.data.entity.Tag;
 import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserDetail;
+import com.dianrong.common.uniauth.server.data.entity.UserWorkRelationship;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
+import com.dianrong.common.uniauth.server.model.AttributeValModel;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -432,5 +455,243 @@ public class BeanConverter {
           .setTenancyId(attributeExtend.getTenancyId());
       return userExtendDto;
     }
+  }
+
+  /**
+   * 从ProfileDefinition转换为UserExtendDto.
+   */
+  public static ProfileDefinitionDto convert(ProfileDefinition profileDefinition) {
+    return convert(profileDefinition, null, null, null);
+  }
+
+  /**
+   * 转换为ProfileDefinitionDto.
+   */
+  public static ProfileDefinitionDto convert(ProfileDefinition profileDefinition,
+      Map<String, AttributeExtendDto> attributes, Set<Long> descendantProfileIds,
+      Set<SimpleProfileDefinitionDto> subProfiles) {
+    ProfileDefinitionDto profileDefinitionDto = new ProfileDefinitionDto();
+    if (profileDefinition != null) {
+      profileDefinitionDto.setCode(profileDefinition.getCode())
+          .setDescription(profileDefinition.getDescription()).setId(profileDefinition.getId())
+          .setName(profileDefinition.getName())
+          .setTenancyId(StringUtil.translateLongToInteger(profileDefinition.getTenancyId()));
+    }
+    profileDefinitionDto.setAttributes(attributes).setDescendantProfileIds(descendantProfileIds)
+        .setSubProfiles(subProfiles);
+    return profileDefinitionDto;
+  }
+
+  /**
+   * 从ProfileDefinitionPath转换为ProfileDefinitionPathDto.
+   */
+  public static ProfileDefinitionPathDto convert(ProfileDefinitionPath profileDefinitionPath) {
+    if (profileDefinitionPath == null) {
+      return null;
+    }
+    ProfileDefinitionPathDto profileDefinitionPathDto = new ProfileDefinitionPathDto();
+    profileDefinitionPathDto.setAncestor(profileDefinitionPath.getAncestor())
+        .setCreateDate(profileDefinitionPath.getCreateDate())
+        .setDescendant(profileDefinitionPath.getDescendant())
+        .setLastUpdate(profileDefinitionPath.getLastUpdate());
+    return profileDefinitionPathDto;
+  }
+
+  /**
+   * 从AttributeExtend转换为ProfileDefinitionAttribute.
+   */
+  public static ProfileDefinitionAttribute convert(Long profileId,
+      AttributeExtend attributeExtend) {
+    if (attributeExtend == null) {
+      return null;
+    }
+    Assert.notNull(profileId);
+    ProfileDefinitionAttribute item = new ProfileDefinitionAttribute();
+    item.setExtendId(attributeExtend.getId());
+    item.setProfileId(profileId);
+    item.setCreateDate(new Date());
+    item.setLastUpdate(new Date());
+    return item;
+  }
+
+  /**
+   * 从ProfileDefinitionPath转换为ProfileDefinitionPathDto.
+   */
+  public static List<ProfileDefinitionAttribute> convert(Long profileId,
+      List<AttributeExtend> attributeExtends) {
+    if (attributeExtends == null) {
+      return null;
+    }
+    List<ProfileDefinitionAttribute> results = Lists.newArrayList();
+    for (AttributeExtend ae : attributeExtends) {
+      results.add(convert(profileId, ae));
+    }
+    return results;
+  }
+
+  /**
+   * 从AttributeExtendParam转换为AttributeValModel.
+   */
+  public static AttributeValModel convert(AttributeExtendParam attributeExtendParam) {
+    if (attributeExtendParam == null) {
+      return null;
+    }
+    AttributeValModel model = new AttributeValModel();
+    model.setCategory(attributeExtendParam.getCategory());
+    model.setCode(attributeExtendParam.getCode());
+    model.setDescription(attributeExtendParam.getDescription());
+    model.setValue(attributeExtendParam.getValue());
+    model.setSubcategory(attributeExtendParam.getSubcategory());
+    model.setId(attributeExtendParam.getId());
+    return model;
+  }
+
+  /**
+   * 对象转换.
+   */
+  public static AttributeValModel convert(AttributeExtend attributeExtend) {
+    if (attributeExtend == null) {
+      return null;
+    }
+    AttributeValModel model = new AttributeValModel();
+    model.setCategory(attributeExtend.getCategory());
+    model.setCode(attributeExtend.getCode());
+    model.setDescription(attributeExtend.getDescription());
+    model.setSubcategory(attributeExtend.getSubcategory());
+    model.setId(attributeExtend.getId());
+    return model;
+  }
+
+  /**
+   * 从AttributeValModel转换为AttributeExtendDto.
+   */
+  public static AttributeExtendDto convert(AttributeValModel attributeValModel) {
+    if (attributeValModel == null) {
+      return null;
+    }
+    AttributeExtendDto attributeExtendDto = new AttributeExtendDto();
+    attributeExtendDto.setCategory(attributeValModel.getCategory());
+    attributeExtendDto.setCode(attributeValModel.getCode());
+    attributeExtendDto.setDescription(attributeValModel.getDescription());
+    attributeExtendDto.setValue(attributeValModel.getValue());
+    attributeExtendDto.setSubcategory(attributeValModel.getSubcategory());
+    attributeExtendDto.setId(attributeValModel.getId());
+    return attributeExtendDto;
+  }
+
+  /**
+   * 对象转换.
+   */
+  public static UserDetailInfoDto convert(UserDetail userDetail) {
+    if (userDetail == null) {
+      return null;
+    }
+    UserDetailInfoDto userDetailDto = new UserDetailInfoDto();
+    userDetailDto.setAddress(userDetail.getAddress()).setAid(userDetail.getAid())
+        .setBirthday(userDetail.getBirthday()).setCreateDate(userDetail.getCreateDate())
+        .setDepartment(userDetail.getDepartment()).setDisplayName(userDetail.getDisplayName())
+        .setEntryDate(userDetail.getEntryDate()).setFirstName(userDetail.getFirstName())
+        .setGender(userDetail.getGender()).setId(userDetail.getId())
+        .setIdentityNo(userDetail.getIdentityNo()).setImage(userDetail.getImage())
+        .setLastName(userDetail.getLastName())
+        .setLastPositionModifyDate(userDetail.getLastPositionModifyDate())
+        .setLastUpdate(userDetail.getLastUpdate()).setLeaveDate(userDetail.getLeaveDate())
+        .setMotto(userDetail.getMotto()).setNickName(userDetail.getNickName())
+        .setPosition(userDetail.getPosition()).setRemark(userDetail.getRemark())
+        .setSsn(userDetail.getSsn()).setTitle(userDetail.getTitle())
+        .setUserId(userDetail.getUserId()).setWechatNo(userDetail.getWechatNo())
+        .setWeibo(userDetail.getWeibo())
+        .setTenancyId(StringUtil.translateLongToInteger(userDetail.getTenancyId()));
+    return userDetailDto;
+  }
+
+  /**
+   * 对象转换.
+   */
+  public static UserDetail convert(UserDetailInfoDto userDetailDto) {
+    if (userDetailDto == null) {
+      return null;
+    }
+    UserDetail userDetail = new UserDetail();
+    userDetail.setAddress(userDetailDto.getAddress());
+    userDetail.setAid(userDetailDto.getAid());
+    userDetail.setBirthday(userDetailDto.getBirthday());
+    userDetail.setDepartment(userDetailDto.getDepartment());
+    userDetail.setDisplayName(userDetailDto.getDisplayName());
+    userDetail.setEntryDate(userDetailDto.getEntryDate());
+    userDetail.setFirstName(userDetailDto.getFirstName());
+    userDetail.setGender(userDetailDto.getGender());
+    userDetail.setIdentityNo(userDetailDto.getIdentityNo());
+    userDetail.setImage(userDetailDto.getImage());
+    userDetail.setLastName(userDetailDto.getLastName());
+    userDetail.setLastPositionModifyDate(userDetailDto.getLastPositionModifyDate());
+    userDetail.setLeaveDate(userDetailDto.getLeaveDate());
+    userDetail.setMotto(userDetailDto.getMotto());
+    userDetail.setNickName(userDetailDto.getNickName());
+    userDetail.setPosition(userDetailDto.getPosition());
+    userDetail.setRemark(userDetailDto.getRemark());
+    userDetail.setSsn(userDetailDto.getSsn());
+    userDetail.setTitle(userDetailDto.getTitle());
+    userDetail.setUserId(userDetailDto.getUserId());
+    userDetail.setWechatNo(userDetailDto.getWechatNo());
+    userDetail.setWeibo(userDetailDto.getWeibo());
+    userDetail.setTenancyId(StringUtil.translateIntegerToLong(userDetailDto.getTenancyId()));
+    return userDetail;
+  }
+
+  /**
+   * 对象转换.
+   */
+  public static UserWorkRelationshipDto convert(UserWorkRelationship userWorkRelationship) {
+    if (userWorkRelationship == null) {
+      return null;
+    }
+    UserWorkRelationshipDto userWorkRelationshipDto = new UserWorkRelationshipDto();
+    userWorkRelationshipDto.setAssignmentDate(userWorkRelationship.getAssignmentDate())
+        .setBusinessUnitName(userWorkRelationship.getBusinessUnitName())
+        .setCreateDate(userWorkRelationship.getCreateDate())
+        .setDepartmentName(userWorkRelationship.getDepartmentName())
+        .setHireDate(userWorkRelationship.getHireDate()).setId(userWorkRelationship.getId())
+        .setLastUpdate(userWorkRelationship.getLastUpdate())
+        .setLegalEntityName(userWorkRelationship.getLegalEntityName())
+        .setManagerId(userWorkRelationship.getManagerId())
+        .setSupervisorId(userWorkRelationship.getSupervisorId())
+        .setType(userWorkRelationship.getType()).setUserId(userWorkRelationship.getUserId())
+        .setWorkAddress(userWorkRelationship.getWorkAddress())
+        .setWorkLocation(userWorkRelationship.getWorkLocation())
+        .setWorkPhone(userWorkRelationship.getWorkPhone())
+        .setTenancyId(StringUtil.translateLongToInteger(userWorkRelationship.getTenancyId()));
+    return userWorkRelationshipDto;
+  }
+  
+
+  /**
+   * 对象转换.
+   */
+  public static Map<String, AttributeExtendDto> convertToDto(
+      Map<String, AttributeValModel> attributes) {
+    if (attributes == null) {
+      return null;
+    }
+    Map<String, AttributeExtendDto> resultMap = Maps.newHashMap();
+    for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
+      resultMap.put(entry.getKey(), convert(entry.getValue()));
+    }
+    return resultMap;
+  }
+  
+  /**
+   * 对象转换.
+   */
+  public static Map<String, AttributeValModel> convertToModel(
+      Map<String, AttributeExtendParam> attributes) {
+    if (attributes == null) {
+      return null;
+    }
+    Map<String, AttributeValModel> resultMap = Maps.newHashMap();
+    for (Entry<String, AttributeExtendParam> entry : attributes.entrySet()) {
+      resultMap.put(entry.getKey(), convert(entry.getValue()));
+    }
+    return resultMap;
   }
 }

@@ -1,0 +1,35 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:metrics="http://www.ryantenney.com/schema/metrics"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.ryantenney.com/schema/metrics
+           http://www.ryantenney.com/schema/metrics/metrics.xsd">
+
+    <!-- Creates a MetricRegistry bean -->
+    <metrics:metric-registry id="metricRegistry" />
+
+    <!-- Creates a HealthCheckRegistry bean (Optional) -->
+    <metrics:health-check-registry id="healthCheckRegistry" />
+
+    <!-- Registers BeanPostProcessors with Spring which proxy beans and capture metrics -->
+    <!-- Include this once per context (once in the parent context and in any subcontexts) -->
+    <metrics:annotation-driven metric-registry="metricRegistry" health-check-registry="healthCheckRegistry" />
+
+    <!-- Example reporter definiton. Supported reporters include jmx, slf4j, graphite, and others. -->
+    <!-- Reporters should be defined only once, preferably in the parent context -->
+    <metrics:reporter type="console" metric-registry="metricRegistry" period="1m" />
+
+    <!-- Register metric beans (Optional) -->
+    <!-- The metrics in this example require metrics-jvm -->
+    <metrics:register metric-registry="metricRegistry">
+        <bean metrics:name="jvm.gc" class="com.codahale.metrics.jvm.GarbageCollectorMetricSet" />
+        <bean metrics:name="jvm.memory" class="com.codahale.metrics.jvm.MemoryUsageGaugeSet" />
+        <bean metrics:name="jvm.thread-states" class="com.codahale.metrics.jvm.ThreadStatesGaugeSet" />
+        <bean metrics:name="jvm.fd.usage" class="com.codahale.metrics.jvm.FileDescriptorRatioGauge" />
+    </metrics:register>
+
+    <!-- Beans and other Spring config -->
+
+</beans>

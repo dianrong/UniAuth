@@ -21,15 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * 处理cas的个性化定制的controller ps : 普通spring mvc controller 不走web flow.
+ * 处理Cas的个性化定制的controller <br>
  */
+@Slf4j
 @Controller
 @RequestMapping("/cascfg")
-@Slf4j
 public class CasCfgController {
 
   /**
-   * . 根据cfg类型从缓存中获取img的数据流
+   * 根据cfg类型从缓存中获取img的数据流.
    */
   @RequestMapping(value = "/imges/{cfgType}", method = RequestMethod.GET)
   public void getCascfgImgStream(HttpServletRequest request, HttpServletResponse response,
@@ -64,14 +64,14 @@ public class CasCfgController {
         try {
           response.getOutputStream().write(file);
         } catch (IOException e) {
-          log.warn("reponse write image outputstream exception:" + e.getMessage());
+          log.warn("reponse write image outputstream exception!", e);
         }
       }
     }
   }
 
   /**
-   * . 获取登陆页的滚动图片的图片列表
+   * 获取登陆页的滚动图片的图片列表.
    */
   @RequestMapping(value = "/imges/login/scrolling", method = RequestMethod.GET)
   public ModelAndView getLoginScrollImges(HttpServletRequest request,

@@ -51,9 +51,9 @@
 
 
 	<!-- do not change: start -->
-   <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-			<property name="errorPage" value="/errors/403.jsp" />
-	</bean>
+<!-- 	   <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl"> -->
+<!--             <property name="errorPage" value="/errors/403.jsp" /> -->
+<!--     </bean> -->
 <!-- 	<bean id="exceptionTranslationFilter" -->
 <!-- 		class="com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter"> -->
 <!-- 		<constructor-arg name="authenticationEntryPoint" ref="casAuthEntryPoint"></constructor-arg> -->

@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 
 /**
- * . cas的配置资源刷新辅助类
+ * CAS的配置资源刷新辅助类.
  *
  * @author wanglin
  */
@@ -31,12 +31,12 @@ import org.springframework.context.MessageSource;
 public final class CasCfgResourceRefreshHelper {
 
   /**
-   * . singleton
+   *Singleton.
    */
   public static final CasCfgResourceRefreshHelper INSTANCE = new CasCfgResourceRefreshHelper();
 
   /**
-   * . 缓存的图片cfg key 列表
+   * 缓存的图片Cfg key 列表.
    */
   private static List<String> imgCacheCfgKeyList = new ArrayList<String>() {
     private static final long serialVersionUID = -2609958017102569295L;
@@ -50,7 +50,7 @@ public final class CasCfgResourceRefreshHelper {
 
 
   /**
-   * . 国际化的key与code的map
+   * 国际化的key与code的map.
    */
   private static Map<String, String> i18nCacheCfgKeyCodeMap = new HashMap<String, String>() {
     private static final long serialVersionUID = -8558828787817302839L;
@@ -62,7 +62,7 @@ public final class CasCfgResourceRefreshHelper {
   };
 
   /**
-   * . 缓存的文字的cfg key 列表
+   * 缓存的文字的Cfg key 列表.
    */
   private static List<String> textCacheCfgKeyList = new ArrayList<String>() {
     private static final long serialVersionUID = -8558828787817302839L;
@@ -75,7 +75,7 @@ public final class CasCfgResourceRefreshHelper {
   };
 
   /**
-   * . 所有的缓存的cfg key 列表
+   * 所有的缓存的Cfg key 列表.
    */
   private static List<String> allCacheCfgKeyList = new ArrayList<String>() {
     private static final long serialVersionUID = 1824871250479641994L;
@@ -87,27 +87,27 @@ public final class CasCfgResourceRefreshHelper {
   };
 
   /**
-   * . 整个jvm唯一的一份缓存数据对象
+   * 整个内存唯一的一份缓存数据对象.
    */
   private volatile CasCfgCacheModel casCfgCache;
 
   /**
-   * . cas配置的默认实现
+   * CAS配置的默认实现.
    */
   private CasCfgCacheModel defaultCasCfg;
 
   /**
-   * . 调用远程服务的service
+   * 调用远程服务的service.
    */
   private CfgService cfgService;
 
   /**
-   * . 用于国际化的一个bean
+   * 用于国际化的一个bean.
    */
   private MessageSource messageSource;
 
   /**
-   * . 私有构造函数
+   * 私有构造函数.
    */
   private CasCfgResourceRefreshHelper() {
     this.cfgService = SpringContextHolder.getBean("cfgService");
@@ -137,7 +137,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 刷新缓存//从远端获取最新的数据
+   * 刷新缓存//从远端获取最新的数据.
    */
   public void refreshCache() throws Exception {
     final List<String> tempAllImgList = new ArrayList<>(allCacheCfgKeyList);
@@ -155,7 +155,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 组装缓存对象model
+   * 组装缓存对象model.
    *
    * @param standardCaches 标准的属性
    * @param loginImages 首页滚动的图表列表
@@ -194,7 +194,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 过滤掉不合法的file类型的数据
+   * 过滤掉不合法的file类型的数据.
    */
   private void filterInvalidFileData(List<ConfigDto> filterList) {
     if (filterList == null || filterList.isEmpty()) {
@@ -216,7 +216,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 获取首页滚动图片的列表
+   * 获取首页滚动图片的列表.
    *
    * @param loginImages 调服务查询到的数据
    * @return 滚动图片列表
@@ -249,7 +249,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 获取字符串类型的配置对象
+   * 获取字符串类型的配置对象.
    *
    * @param cfgType 配置的类型
    * @param textValue 配置的属性
@@ -260,7 +260,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 获取字符串类型的配置对象
+   * 获取字符串类型的配置对象.
    *
    * @param cfgType 配置的类型
    * @param textValue 配置的属性
@@ -271,7 +271,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 获取一个与操作系统无关的文件路径
+   * 获取一个与操作系统无关的文件路径.
    *
    * @param filenames 路径上的文件夹名
    * @return 结果
@@ -291,12 +291,12 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 从数据列表中获取缓存的对象
+   * 从数据列表中获取缓存的对象.
    *
    * @param infoList 数据数组
    * @param cfgKey 对应的cfgKey
    * @param defaultDto 默认结果
-   * @param cfgType 增加一个类型判断条件 can not be null
+   * @param cfgType 增加一个类型判断条件, can not be null.
    * @return 结果
    */
   private ConfigDto getCfgModelFromList(List<ConfigDto> infoList, String cfgKey,
@@ -320,7 +320,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 从数据列表中获取缓存的对象
+   * 从数据列表中获取缓存的对象.
    *
    * @param addConfigList 广告数据的配置信息数组
    * @param defaultDtos 默认返回结果
@@ -357,16 +357,14 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 获取缓存
-   *
-   * @return 结果
+   * 获取缓存.
    */
   public CasCfgCacheModel getCache() {
     return this.casCfgCache;
   }
 
   /**
-   * . 从缓存中获取图片的dto
+   * 从缓存中获取图片的Dto.
    *
    * @param cacheDtoType 缓存图片的类型
    * @return 缓存的model
@@ -399,9 +397,7 @@ public final class CasCfgResourceRefreshHelper {
   }
 
   /**
-   * . 刷新缓存并返回缓存对象
-   *
-   * @return 缓存对象
+   * 刷新缓存并返回缓存对象.
    */
   public CasCfgCacheModel refreshCacheAndGet() throws Exception {
     refreshCache();

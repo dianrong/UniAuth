@@ -1,12 +1,12 @@
 buildscript {
-	repositories {
-	     maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
+    repositories {
+         maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
          maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-   		 mavenCentral()
-	}
-	dependencies {
-		classpath ("org.springframework.boot:spring-boot-gradle-plugin:1.3.6.RELEASE")
-	}
+         mavenCentral()
+    }
+    dependencies {
+        classpath ("org.springframework.boot:spring-boot-gradle-plugin:1.3.6.RELEASE")
+    }
 }
 
 apply plugin: 'java'
@@ -20,25 +20,25 @@ repositories {
 }
 
 dependencies {
-	compile ("org.springframework.boot:spring-boot-starter-web")
-	
-	// jsp 
-	compile ("org.apache.tomcat.embed:tomcat-embed-jasper")
-	compile 'org.springframework.security:spring-security-web:4.1.0.RELEASE'
-	compile ("javax.servlet:jstl")
+    compile ("org.springframework.boot:spring-boot-starter-web")
+    
+    // jsp 
+    compile ("org.apache.tomcat.embed:tomcat-embed-jasper")
+    compile 'org.springframework.security:spring-security-web:4.1.0.RELEASE'
+    compile ("javax.servlet:jstl")
 
      compile project(":ss-client")
     
     //Log
      compile 'ch.qos.logback:logback-classic:1.1.7'
     
-	compile('org.springframework.boot:spring-boot-starter-actuator'){
-    	 exclude  module:'spring-boot-starter-logging'
+    compile('org.springframework.boot:spring-boot-starter-actuator'){
+         exclude  module:'spring-boot-starter-logging'
     }
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.6'
+    gradleVersion = '2.6'
     archiveBase = 'PROJECT'
     archivePath = 'gradle/dists'
 }

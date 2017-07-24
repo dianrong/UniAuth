@@ -1,11 +1,13 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
@@ -33,10 +35,13 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.cache.CommonCache;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +49,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,14 +78,17 @@ public class RoleService extends TenancyBasedService {
   @Autowired
   private GrpRoleMapper grpRoleMapper;
 
+  @Autowired
+  private DomainService domainService;
+
   /**
-   * . 进行角色数据过滤的filter
+   * 进行角色数据过滤的filter.
    */
   @Resource(name = "roleDataFilter")
   private DataFilter dataFilter;
 
   /**
-   * . 进行域名数据过滤的filter
+   * 进行域名数据过滤的filter.
    */
   @Resource(name = "domainDataFilter")
   private DataFilter domainDataFilter;
@@ -102,10 +112,9 @@ public class RoleService extends TenancyBasedService {
     CheckEmpty.checkEmpty(name, "name");
 
     // domainid必须是有效的
-    domainDataFilter.addFieldCheck(FilterType.FILTER_TYPE_NO_DATA, FieldType.FIELD_TYPE_ID,
-        domainId);
+    domainDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, domainId);
     // 不能存在domainid，roleCodeId，name完全一致的 role
-    dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, roleCodeId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_NAME, name));
@@ -368,7 +377,8 @@ public class RoleService extends TenancyBasedService {
    * 根据条件查询角色列表.
    */
   public PageDto<RoleDto> searchRole(List<Integer> roleIds, Integer roleId, Integer domainId,
-      String roleName, Integer roleCodeId, Byte status, Integer pageNumber, Integer pageSize) {
+      String roleName, Integer roleCodeId, Byte status, Boolean needDomainInfo, Integer pageNumber,
+      Integer pageSize) {
     CheckEmpty.checkEmpty(pageNumber, "pageNumber");
     CheckEmpty.checkEmpty(pageSize, "pageSize");
     RoleExample roleExample = new RoleExample();
@@ -408,14 +418,56 @@ public class RoleService extends TenancyBasedService {
       for (RoleCode roleCode : roleCodes) {
         roleCodeIdNamePairs.put(roleCode.getId(), roleCode.getCode());
       }
+
       for (Role role : roles) {
         RoleDto roleDto =
             BeanConverter.convert(role).setRoleCode(roleCodeIdNamePairs.get(role.getRoleCodeId()));
         roleDtos.add(roleDto);
       }
+
+      if (needDomainInfo != null && needDomainInfo) {
+        List<Integer> domainIds = Lists.newArrayList();
+        for (RoleDto roleDto : roleDtos) {
+          domainIds.add(roleDto.getDomainId());
+        }
+        Map<Integer, DomainDto> domainMap = domainService.getDomainMapByDomainIds(domainIds);
+        for (RoleDto roleDto : roleDtos) {
+          roleDto.setDomain(domainMap.get(roleDto.getDomainId()));
+        }
+      }
       return new PageDto<>(pageNumber, pageSize, count, roleDtos);
     } else {
       return null;
+    }
+  }
+
+  /**
+   * 替换用户与角色的关联关系.
+   * @param roleId 角色Id.
+   * @param userIds 用户Id集合.
+   */
+  @Transactional
+  public void relateUsersAndRole(Integer roleId, List<Long> userIds) {
+    CheckEmpty.checkEmpty(roleId, "roleId");
+    // roleId 必须要存在
+    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, roleId);
+    UserRoleExample userRoleExample = new UserRoleExample();
+    UserRoleExample.Criteria criteria = userRoleExample.createCriteria();
+    criteria.andRoleIdEqualTo(roleId);
+    List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
+    List<Long> existUserIds = Lists.newArrayList();
+    if (!ObjectUtil.collectionIsEmptyOrNull(userRoleKeys)) {
+      for (UserRoleKey urk : userRoleKeys) {
+        existUserIds.add(urk.getUserId());
+      }
+    }
+    List<Long> insertUserIds = userIds;
+    insertUserIds.removeAll(existUserIds);
+    for (Long userId : insertUserIds) {
+      UserRoleKey record = new UserRoleKey();
+      record.setRoleId(roleId);
+      record.setUserId(userId);
+      userRoleMapper.insert(record);
     }
   }
 

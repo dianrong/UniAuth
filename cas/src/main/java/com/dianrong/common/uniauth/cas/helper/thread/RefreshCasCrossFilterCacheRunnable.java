@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.cas.helper.CasCrossFilterCacheHelper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * . 用于异步刷新cas的cross filter的cache
+ * 用于异步刷新CAS的cross filter的cache.
  *
  * @author wanglin
  */
@@ -12,15 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 public final class RefreshCasCrossFilterCacheRunnable implements Runnable {
 
   /**
-   * . 缓存刷新的heloer
+   * 缓存刷新的helper.
    */
   private CasCrossFilterCacheHelper helper;
 
-  /**
-   * . 构造函数
-   *
-   * @param helper CasCrossFilterCacheHelper
-   */
   public RefreshCasCrossFilterCacheRunnable(CasCrossFilterCacheHelper helper) {
     if (helper == null) {
       throw new NullPointerException();

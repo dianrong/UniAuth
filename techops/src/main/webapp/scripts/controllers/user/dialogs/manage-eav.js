@@ -3,9 +3,10 @@ define(['../../../utils/constant'], function (constant) {
     	// 查询条件
     	$scope.eavQuery={};
     	 $scope.pagination = {
-    	            pageSize: constant.smallPageSize,
-    	            curPage: 1,
-    	            totalCount: 0
+    			 pageSize: constant.smallPageSize,
+    			 showPageNum: constant.showPageNum,
+    			 curPage: 1,
+    			 totalCount: 0
     	};
     	 
     	// 用户角色列表
@@ -14,14 +15,14 @@ define(['../../../utils/constant'], function (constant) {
      	$scope.userDomainCodes =[];
     	 
     	// 分页查询
-    	$scope.queryEavCodes = function () {
+    	$scope.queryEavCodes = function (curPage) {
             var params = {};
             $scope.eavCodes = [];
             $scope.eavCodesLoading = constant.loading;
             
             params.code = $scope.eavQuery.code;
             // 分页查询参数
-            params.pageNumber = $scope.pagination.curPage - 1;
+            params.pageNumber = curPage === undefined ? $scope.pagination.curPage - 1 : curPage;
             params.pageSize = $scope.pagination.pageSize;
             
             EvaService.queryEavCodes(params, function (res) {

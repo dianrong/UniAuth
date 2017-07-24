@@ -20,45 +20,61 @@ public class AttributeExtendParam extends Operator {
   private String subcategory;
   @ApiModelProperty("用户扩展属性描述信息")
   private String description;
+  @ApiModelProperty("该扩展属性对应的值,可为空")
+  private String value;
 
   public Long getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public AttributeExtendParam setId(Long id) {
     this.id = id;
+    return this;
   }
 
   public String getCode() {
     return code;
   }
 
-  public void setCode(String code) {
+  public AttributeExtendParam setCode(String code) {
     this.code = code;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
+    return this;
   }
 
   public String getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
+  public AttributeExtendParam setCategory(String category) {
     this.category = category;
+    return this;
   }
 
   public String getSubcategory() {
     return subcategory;
   }
 
-  public void setSubcategory(String subcategory) {
+  public AttributeExtendParam setSubcategory(String subcategory) {
     this.subcategory = subcategory;
+    return this;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public AttributeExtendParam setDescription(String description) {
+    this.description = description;
+    return this;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public AttributeExtendParam setValue(String value) {
+    this.value = value;
+    return this;
   }
 }
 

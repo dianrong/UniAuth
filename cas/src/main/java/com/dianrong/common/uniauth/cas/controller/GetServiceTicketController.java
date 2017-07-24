@@ -54,9 +54,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/serviceticket")
 public class GetServiceTicketController {
 
-  /**
-   * Extractors for finding the service.
-   */
   @Autowired
   private List<ArgumentExtractor> argumentExtractors;
 
@@ -80,12 +77,12 @@ public class GetServiceTicketController {
   private CfgService cfgService;
 
   /**
-   * . 初始化cookie的位置
+   * 初始化cookie的位置.
    */
   private boolean pathPopulated = false;
 
   /**
-   * . 登陆成功的获取st的接口
+   * 登陆成功的获取ST的接口.
    */
   @RequestMapping(value = "/query", method = RequestMethod.GET)
   public void queryServiceTicket(HttpServletRequest request, HttpServletResponse response) {
@@ -123,7 +120,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * .获取登陆的ticket，前端处理访问为iframe+window.name
+   * 获取登陆的Ticket,前端处理访问为iframe+window.name.
    */
   @RequestMapping(value = "/customlogin", method = RequestMethod.POST)
   public void iframeLogin(HttpServletRequest request, HttpServletResponse response)
@@ -132,7 +129,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 普通的api方式返回json字符串
+   * 普通的API方式返回JSON字符串.
    */
   @RequestMapping(value = "/api/login", method = RequestMethod.POST)
   public void apilogin(HttpServletRequest request, HttpServletResponse response)
@@ -141,7 +138,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 登陆业务逻辑处理
+   * 登陆业务逻辑处理.
    */
   private CasGetServiceTicketModel loginProcess(HttpServletRequest request,
       HttpServletResponse response) {
@@ -192,11 +189,9 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 登陆之前的校验处理
-   *
-   * @param request HttpServletRequest
-   * @param response HttpServletResponse
-   * @return null:validation success;non null:validation failed
+   * 登陆之前的校验处理.
+   * @return null:validation success,
+   *                     non null:validation failed
    */
   private CasGetServiceTicketModel beforeLoginValidation(HttpServletRequest request,
       HttpServletResponse response) {
@@ -227,7 +222,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 定义异常与异常编码的关联关系
+   * 定义异常与异常编码的关联关系.
    */
   private static final Map<Class<? extends Exception>, String> exceptionCodeMap =
       new HashMap<Class<? extends Exception>, String>() {
@@ -250,11 +245,6 @@ public class GetServiceTicketController {
         }
       };
 
-  /**
-   * .
-   *
-   * @param e 抛出的异常
-   */
   private CasGetServiceTicketModel getExceptionInner(Exception e) {
     if (e instanceof AuthenticationException) {
       AuthenticationException aexception = (AuthenticationException) e;
@@ -280,7 +270,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 获取登陆对象
+   * 获取登陆对象.
    */
   private CasRememberMeUsernamePasswordCredential createCredential(HttpServletRequest request) {
     String username = request.getParameter("identity");
@@ -298,7 +288,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 获取业务系统自定义登陆的的
+   * 获取业务系统自定义登陆的的.
    */
   private String getCustomLoginLoginTicketAndRemove(HttpServletRequest request) {
     HttpSession session = request.getSession(false);
@@ -311,7 +301,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 替换session中的login Ticket
+   * 替换Session中的Login Ticket.
    *
    * @param newLt new login ticket
    */
@@ -323,7 +313,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 对发送结果进行处理
+   * 对发送结果进行处理.
    */
   private CasGetServiceTicketModel captchaValidationProcess(HttpServletRequest request,
       HttpServletResponse response, CasGetServiceTicketModel obj) {
@@ -356,7 +346,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 将返回的值放到js的window对象中，主要是为处理iframe跨域传值的问题
+   * 将返回的值放到js的window对象中，主要是为处理iframe跨域传值的问题.
    */
   private void setValueToJsWindowNameResponse(HttpServletResponse response,
       CasGetServiceTicketModel info) throws IOException {
@@ -366,9 +356,7 @@ public class GetServiceTicketController {
   }
 
   /**
-   * . 发送结果到response输出流
-   *
-   * @throws IOException 异常
+   * 发送结果到response输出流.
    */
   private void sendResponse(HttpServletResponse response, Object obj) throws IOException {
     if (obj == null) {

@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 public abstract class AbstractBaseController extends AbstractController {
 
   /**
-   * . get parameter from request
+   * Get parameter from request.
    *
    * @param request httpRequest
    * @param key parameterKey
@@ -28,7 +28,7 @@ public abstract class AbstractBaseController extends AbstractController {
   }
 
   /**
-   * . get object from session
+   * Get object from session.
    *
    * @param session HttpSession
    * @param key key
@@ -44,7 +44,7 @@ public abstract class AbstractBaseController extends AbstractController {
   }
 
   /**
-   * . get object from session
+   * Get object from session.
    *
    * @param session HttpSession
    * @param key key
@@ -59,7 +59,7 @@ public abstract class AbstractBaseController extends AbstractController {
   }
 
   /**
-   * . set object to session
+   * Set object to session.
    */
   protected boolean putValToSession(HttpSession session, String key, Object val) {
     if (session == null) {
@@ -70,7 +70,7 @@ public abstract class AbstractBaseController extends AbstractController {
   }
 
   /**
-   * . set ajax result json to response
+   * Set AJAX result JSON to response.
    */
   protected void setResponseResultJson(HttpServletResponse response, String code) {
     try {
@@ -81,7 +81,7 @@ public abstract class AbstractBaseController extends AbstractController {
   }
 
   /**
-   * . set ajax result json to response
+   * Set AJAX result JSON to response.
    */
   protected void setResponseResultJson(HttpServletResponse response, String code, String msg) {
     try {
@@ -92,7 +92,7 @@ public abstract class AbstractBaseController extends AbstractController {
   }
 
   /**
-   * . manual package a json str
+   * Manual package a JSON string.
    *
    * @param code code
    */
@@ -101,7 +101,7 @@ public abstract class AbstractBaseController extends AbstractController {
   }
 
   /**
-   * . manual package a json str
+   * Manual package a JSON string.
    *
    * @param code code
    */

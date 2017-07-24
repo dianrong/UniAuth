@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.ExtendValMapper">
+
+	<select id="queryExistRecordNum" parameterType="map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM ${tableName} where ${idFieldName} =
+		#{identityId}
+	</select>
+
+	<update id="updateSystemDefineAttribute" parameterType="map">
+		UPDATE ${tableName} SET ${fieldName} = #{value, jdbcType=VARCHAR}
+		where ${idFieldName} = #{identityId}
+	</update>
+
+	<insert id="insertSystemDefineAttribute" parameterType="map">
+		INSERT
+		INTO ${tableName} (${idFieldName}, ${fieldName}, tenancy_id)
+		values(#{identityId}, #{value, jdbcType=VARCHAR}, #{tenancyId,
+		jdbcType=BIGINT})
+	</insert>
+</mapper>

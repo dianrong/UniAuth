@@ -2,107 +2,127 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.UserMapper">
 
-    <resultMap id="GroupUsersResultMap" type="com.dianrong.common.uniauth.server.data.entity.ext.UserExt" >
-        <id column="id" property="id" jdbcType="BIGINT" />
-        <result column="email" property="email" jdbcType="VARCHAR" />
-        <result column="name" property="name" jdbcType="VARCHAR" />
-        <result column="groupId" property="groupId" jdbcType="INTEGER" />
-        <result column="type" property="userGroupType" jdbcType="TINYINT" />
-        <result column="tenancy_id" property="tenancyId" jdbcType="BIGINT" />
-        <result column="phone" property="phone" jdbcType="VARCHAR" />
-        <result column="create_date" property="createDate" jdbcType="DATE" />
-        <result column="status" property="status" jdbcType="TINYINT" />
-    </resultMap>
+	<resultMap id="GroupUsersResultMap"
+		type="com.dianrong.common.uniauth.server.data.entity.ext.UserExt">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="groupId" property="groupId" jdbcType="INTEGER" />
+		<result column="type" property="userGroupType" jdbcType="TINYINT" />
+		<result column="tenancy_id" property="tenancyId" jdbcType="BIGINT" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="DATE" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+	</resultMap>
 
-    <select id="getGroupOwners" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from user join user_grp on user.id = user_grp.user_id
-        where user_grp.grp_id=#{id,jdbcType=INTEGER} and user_grp.type=1 and user.status=0
-    </select>
+	<select id="getGroupOwners" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user join user_grp on user.id = user_grp.user_id
+		where user_grp.grp_id=#{id,jdbcType=INTEGER} and user_grp.type=1 and
+		user.status=0
+	</select>
 
-    <select id="getUsersByParentGrpIdByUserType" resultMap="GroupUsersResultMap" parameterType="map">
-        select t1.id, t1.email, t1.name, t2.id as groupId, t2.type, t1.phone, t1.create_date, t1.status  from user t1 join
-          (select ug.user_id, gid.id, ug.type from user_grp ug
-          join (select grp.id from grp
-          join grp_path on (grp.id = grp_path.descendant)
-          where grp_path.ancestor = #{id,jdbcType=INTEGER}) gid on ug.grp_id = gid.id where ug.type = #{userGroupType,jdbcType=TINYINT})
-          t2 on t1.id=t2.user_id
-          <if test="includeDisableUser == null || !includeDisableUser">
-               where t1.status=0
-          </if>
-    </select>
-    
-  <select id="selectByEmailOrPhone" resultMap="BaseResultMap" parameterType="java.util.Map">
-    select
-    <include refid="Base_Column_List" />
-    from user
-    where 1=1
-    <if test="status != null">
-     and status = #{status,jdbcType=TINYINT}
-    </if>
-    <if test="phone == null" >
-     and email = #{email, jdbcType=VARCHAR}
-    </if>
-    <if test="phone != null" >
-      and (email = #{email, jdbcType=VARCHAR} or phone = #{phone, jdbcType=VARCHAR})
-    </if>
-    <if test="tenancyId != null" >
-      and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
-    </if>
-    <if test="tenancyId == null" >
-       and tenancy_id in (select id from tenancy where code = #{tenancyCode, jdbcType=VARCHAR} and status = 0 )
-    </if>
-  </select>
-  
-  <!-- get user by group info and role info -->
-  <select id="getUsersByGroupCodeRoleIds" resultMap="BaseResultMap" parameterType="java.util.Map">
-  		 	select
-		    <include refid="Base_Column_List" />
-		    from user where 
-		    <!--  filter group -->
-		    id in (
-		    		select user_id from user_grp where  grp_id in (
-			    		 <choose>
-			                <when test="includeSubGrp != null and includeSubGrp">
-				                select id from grp  where id in (
-										select descendant from grp_path where ancestor in (
-												select id from grp where code = #{groupCode, jdbcType=VARCHAR}  
-											     and status = 0  and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
-										)								    			
-					    			)
-						     	and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
-			                </when>
-			                <otherwise>
-			                      select id from grp where  code = #{groupCode, jdbcType=VARCHAR}  
-							      and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
-			                 </otherwise>
-			         </choose>
-		         )
-		        and  type = 0 
-		) 
-		<!--  filter role -->
-		<if test="roleIds != null" >
-			and id in (
-				select user_id from user_role where role_id in 
-				<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
-		            	#{item}  
-	        	 </foreach>
-	        	 union
-	        	 select user_id from user_grp where grp_id in (
-					select id from grp  where id in (
-							select descendant from grp_path where ancestor in (
-									select grp_id from grp_role where role_id in 
-									<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
-						            		#{item}  
-					        	 	</foreach>
-							)								    			
-					)
-					and status =  0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}   
+	<select id="getUsersByParentGrpIdByUserType" resultMap="GroupUsersResultMap"
+		parameterType="map">
+		select t1.id, t1.email, t1.name, t2.id as groupId, t2.type, t1.phone,
+		t1.create_date, t1.status from user t1 join
+		(select ug.user_id, gid.id, ug.type from user_grp ug
+		join (select grp.id from grp
+		join grp_path on (grp.id = grp_path.descendant)
+		where grp_path.ancestor = #{id,jdbcType=INTEGER}) gid on ug.grp_id = gid.id
+		where ug.type = #{userGroupType,jdbcType=TINYINT})
+		t2 on t1.id=t2.user_id
+		<if test="includeDisableUser == null || !includeDisableUser">
+			where t1.status=0
+		</if>
+	</select>
+
+	<select id="selectByEmailOrPhone" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where 1=1
+		<if test="status != null">
+			and status = #{status,jdbcType=TINYINT}
+		</if>
+		<if test="phone == null">
+			and email = #{email, jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null">
+			and (email = #{email, jdbcType=VARCHAR} or phone = #{phone,
+			jdbcType=VARCHAR})
+		</if>
+		<if test="tenancyId != null">
+			and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+		</if>
+		<if test="tenancyId == null">
+			and tenancy_id in (select id from tenancy where code = #{tenancyCode,
+			jdbcType=VARCHAR} and status = 0 )
+		</if>
+	</select>
+
+	<!-- get user by group info and role info -->
+	<select id="getUsersByGroupCodeRoleIds" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from user where
+		<!-- filter group -->
+		id in (
+		select user_id from user_grp where grp_id in (
+		<choose>
+			<when test="includeSubGrp != null and includeSubGrp">
+				select id from grp where id in (
+				select descendant from grp_path where ancestor in (
+				select id from grp where code = #{groupCode, jdbcType=VARCHAR}
+				and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
 				)
-			   and type = 0  
-	      	)
-      	</if>
-		and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT} 
-  </select>
+				)
+				and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+			</when>
+			<otherwise>
+				select id from grp where code = #{groupCode, jdbcType=VARCHAR}
+				and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+			</otherwise>
+		</choose>
+		)
+		and type = 0
+		)
+		<!-- filter role -->
+		<if test="roleIds != null">
+			and id in (
+			select user_id from user_role where role_id in
+			<foreach item="item" index="index" collection="roleIds" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			union
+			select user_id from user_grp where grp_id in (
+			select id from grp where id in (
+			select descendant from grp_path where ancestor in (
+			select grp_id from grp_role where role_id in
+			<foreach item="item" index="index" collection="roleIds" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			)
+			)
+			and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+			)
+			and type = 0
+			)
+		</if>
+		and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+	</select>
+
+	<select id="getUserByIdentity" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+	   	select
+        <include refid="Base_Column_List" />
+        from user
+        where status = 0 and ${identityType} = #{identity, jdbcType=VARCHAR}
+        and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+	</select>
 </mapper>

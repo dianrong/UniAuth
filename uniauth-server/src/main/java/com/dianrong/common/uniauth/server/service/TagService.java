@@ -1,10 +1,12 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
@@ -26,15 +28,21 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +65,8 @@ public class TagService extends TenancyBasedService {
   private GrpTagMapper grpTagMapper;
   @Autowired
   private DomainMapper domainMapper;
+  @Autowired
+  private DomainService domainService;
 
   @Resource(name = "tagTypeDataFilter")
   private DataFilter dataFilter;
@@ -69,8 +79,8 @@ public class TagService extends TenancyBasedService {
    */
   public PageDto<TagDto> searchTags(Integer tagId, List<Integer> tagIds, String tagCode,
       String fuzzyTagCode, Byte tagStatus, Integer tagTypeId, Long userId, Integer domainId,
-      String domainCode, List<Integer> domainIds, Integer grpId, Integer pageNumber,
-      Integer pageSize) {
+      String domainCode, List<Integer> domainIds, Integer grpId, Boolean needDomainInfo,
+      Integer pageNumber, Integer pageSize) {
     CheckEmpty.checkEmpty(pageNumber, "pageNumber");
     CheckEmpty.checkEmpty(pageSize, "pageSize");
     TagExample tagExample = new TagExample();
@@ -171,6 +181,16 @@ public class TagService extends TenancyBasedService {
       for (Tag tag : tags) {
         tagDtos.add(BeanConverter.convert(tag));
       }
+      if (needDomainInfo != null && needDomainInfo) {
+        List<Integer> tagTypeIds = Lists.newArrayList();
+        for (TagDto tagDto : tagDtos) {
+          tagTypeIds.add(tagDto.getTagTypeId());
+        }
+        Map<Integer, DomainDto> domainMap = domainService.getDomainMapByTagTypeIds(tagTypeIds);
+        for (TagDto tagDto : tagDtos) {
+          tagDto.setDomain(domainMap.get(tagDto.getTagTypeId()));
+        }
+      }
       return new PageDto<>(pageNumber, pageSize, count, tagDtos);
     } else {
       return null;
@@ -185,7 +205,7 @@ public class TagService extends TenancyBasedService {
     CheckEmpty.checkEmpty(tagTypeId, "tagTypeId");
 
     // 不能存在重复的数据
-    tagDataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    tagDataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         new FilterData(FieldType.FIELD_TYPE_TAG_TYPE_ID, tagTypeId),
         new FilterData(FieldType.FIELD_TYPE_CODE, code));
 
@@ -271,7 +291,7 @@ public class TagService extends TenancyBasedService {
   public TagTypeDto addNewTagType(String code, Integer domainId) {
     CheckEmpty.checkEmpty(domainId, "domainId");
     CheckEmpty.checkEmpty(code, "code");
-    dataFilter.addFieldsCheck(FilterType.FILTER_TYPE_EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_CODE, code),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId));
     TagType tagType = new TagType();
@@ -470,6 +490,34 @@ public class TagService extends TenancyBasedService {
           }
         }
       }
+    }
+  }
+
+  /**
+   * 关联用户和标签.
+   */
+  @Transactional
+  public void relateUsersAndTag(Integer tagId, List<Long> userIds) {
+    CheckEmpty.checkEmpty(tagId, "tagId");
+    // roleId 必须要存在
+    tagDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, tagId);
+    UserTagExample userTagExample = new UserTagExample();
+    UserTagExample.Criteria criteria = userTagExample.createCriteria();
+    criteria.andTagIdEqualTo(tagId);
+    List<UserTagKey> userTagKeys = userTagMapper.selectByExample(userTagExample);
+    List<Long> existUserIds = Lists.newArrayList();
+    if (!ObjectUtil.collectionIsEmptyOrNull(userTagKeys)) {
+      for (UserTagKey utk : userTagKeys) {
+        existUserIds.add(utk.getUserId());
+      }
+    }
+    List<Long> insertUserIds = userIds;
+    insertUserIds.removeAll(existUserIds);
+    for (Long userId : insertUserIds) {
+      UserTagKey record = new UserTagKey();
+      record.setTagId(tagId);
+      record.setUserId(userId);
+      userTagMapper.insert(record);
     }
   }
 }

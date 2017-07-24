@@ -2,6 +2,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import java.util.Date;
 
+import lombok.ToString;
+
+@ToString
 public class BehaviorLog extends TenancyBaseDto {
 
   private Long id;
@@ -74,11 +77,5 @@ public class BehaviorLog extends TenancyBaseDto {
 
   public void setResult(Short result) {
     this.result = result;
-  }
-
-  @Override
-  public String toString() {
-    return "BehaviorLog [id=" + id + ", aid=" + aid + ", type=" + type + ", target=" + target
-        + ", ipAddr=" + ipAddr + ", createD=" + createD + ", result=" + result + "]";
   }
 }

@@ -20,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * 用于辅助cas的cross filter获取缓存数据<br>.
- * PS: 目前只缓存orgin数据.
+ * 用于辅助CAS的Cross filter获取缓存数据<br>.
+ * PS: 目前只缓存Orgin数据.
  *
  * @author wanglin
  */
@@ -29,24 +29,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 public final class CasCrossFilterCacheHelper {
 
   /**
-   * . 调用远程服务的service
+   * 调用远程服务的service.
    */
   @Autowired
   private CfgService cfgService;
 
   /**
-   * . 缓存对象(保证该对象是否默认值的)
+   * 缓存对象.
    */
   private volatile CasCrossFilterCacheModel cacheModel;
 
   /**
-   * . 缓存orgin的正则表达式
+   * 缓存Orgin的正则表达式.
    */
   private volatile Set<Pattern> patternCache;
 
 
   /**
-   * origins from {@link FilterConfig}.
+   * Origins from {@link FilterConfig}.
    */
   private String defualtCrosAllowedOrigins;
 
@@ -59,9 +59,7 @@ public final class CasCrossFilterCacheHelper {
   }
 
   /**
-   * . 获取origin列表的接口方法
-   *
-   * @return orgin 正则表达式列表
+   * 获取Origin列表的接口方法.
    */
   public Set<String> getOriginCacheSet() {
     if (this.cacheModel == null) {
@@ -71,9 +69,7 @@ public final class CasCrossFilterCacheHelper {
   }
 
   /**
-   * 获取origin列表的接口方法.
-   *
-   * @return orgin 正则表达式列表
+   * 获取Origin列表的接口方法.
    */
   public Set<Pattern> getOriginRegularCacheSet() {
     return this.patternCache;
@@ -94,7 +90,7 @@ public final class CasCrossFilterCacheHelper {
   }
 
   /**
-   * . 刷新缓存
+   * 刷新缓存.
    */
   public void refreshCache() {
     try {

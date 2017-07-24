@@ -1,5 +1,7 @@
 package com.dianrong.uniauth.ssclient.controller;
 
+import com.dianrong.uniauth.ssclient.bean.TestUser;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.dianrong.uniauth.ssclient.bean.TestUser;
 
 @Controller
 public class MainController {
@@ -59,5 +59,23 @@ public class MainController {
     @ResponseBody
     public String homePagePermissionType() {
         return "This my permissionType page";
+    }
+    
+    @RequestMapping(value = "/put-request", method = RequestMethod.PUT)
+    @ResponseBody
+    public String putRequest() {
+        return "this is put request";
+    }
+    
+    @RequestMapping(value = "/del-request", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteRequest() {
+        return "this is delete request";
+    }
+    
+    @RequestMapping(value = "/ajax/audit", method = RequestMethod.GET)
+    @ResponseBody
+    public String ajaxAudit() {
+        return "Hello ajax audit!";
     }
 }

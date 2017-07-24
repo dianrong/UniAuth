@@ -392,7 +392,7 @@ public class GrpExample extends PageParam {
       addCriterion("code not between", value1, value2, "code");
       return (Criteria) this;
     }
-
+    
     public Criteria andDescriptionIsNull() {
       addCriterion("description is null");
       return (Criteria) this;
@@ -736,7 +736,7 @@ public class GrpExample extends PageParam {
     private boolean betweenValue;
 
     private boolean listValue;
-
+    
     private String typeHandler;
 
     public String getCondition() {

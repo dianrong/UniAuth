@@ -26,6 +26,7 @@ define({
         // 35 seconds Time out
         reqTimeout: 35000,
         pageSize: 20,
+        showPageNum: 20,
         smallPageSize: 5,
         maxPageSize: 4999,
         hackMaxPageSize: 5e7,

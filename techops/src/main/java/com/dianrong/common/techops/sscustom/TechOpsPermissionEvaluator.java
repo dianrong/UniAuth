@@ -24,12 +24,14 @@ import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.CollectionUtils;
@@ -39,8 +41,7 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
   @Autowired
   private UniClientFacade uniClientFacade;
 
-  public TechOpsPermissionEvaluator() {
-  }
+  public TechOpsPermissionEvaluator() {}
 
   @Override
   public boolean hasPermission(Authentication authentication, Object targetObject,
@@ -100,6 +101,10 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
           groupParam = new GroupParam().setTargetGroupId(userListParam.getGroupId())
               .setTargetGroupIds(targetGroupIds);
         }
+        if (targetObject instanceof Integer) {
+          groupParam = new GroupParam().setTargetGroupId((Integer)targetObject);
+        }
+        
         if (groupParam != null) {
           Response<Void> response = uniClientFacade.getGroupResource().checkOwner(groupParam);
           infoList = response.getInfo();
@@ -109,12 +114,21 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
         }
         break;
       case AppConstants.PERM_ROLEID_CHECK:
-        roleParam = (RoleParam) targetObject;
+        Integer roleId = null;
+        if (targetObject instanceof Integer) {
+          roleId = (Integer) targetObject;
+        }
+        if (targetObject instanceof RoleParam) {
+          roleId = ((RoleParam) targetObject).getId();
+        }
+
+        if (roleId == null) {
+          return true;
+        }
         roleQuery = new RoleQuery();
         roleQuery.setPageNumber(0);
         roleQuery.setPageSize(AppConstants.MAX_PAGE_SIZE);
-        roleQuery.setId(roleParam.getId());
-        roleQuery.setDomainId(roleParam.getDomainId());
+        roleQuery.setId(roleId);
         Response<PageDto<RoleDto>> pageDtoResponse =
             uniClientFacade.getRoleResource().searchRole(roleQuery);
         infoList = pageDtoResponse.getInfo();
@@ -142,25 +156,24 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
         }
         if (CollectionUtils.isEmpty(roleIds)) {
           return true;
-        } else {
-          roleQuery = new RoleQuery();
-          roleQuery.setPageNumber(0);
-          roleQuery.setPageSize(AppConstants.MAX_PAGE_SIZE);
-          roleQuery.setRoleIds(roleIds);
-          Response<PageDto<RoleDto>> pageRoleDtoResponse =
-              uniClientFacade.getRoleResource().searchRole(roleQuery);
-          infoList = pageRoleDtoResponse.getInfo();
-          if (CollectionUtils.isEmpty(infoList)) {
-            PageDto<RoleDto> roleDtoPageDto = pageRoleDtoResponse.getData();
-            if (roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
-              List<RoleDto> roleDtos = roleDtoPageDto.getData();
-              for (RoleDto roleDto : roleDtos) {
-                if (!domainIdSet.contains(roleDto.getDomainId())) {
-                  return false;
-                }
+        }
+        roleQuery = new RoleQuery();
+        roleQuery.setPageNumber(0);
+        roleQuery.setPageSize(AppConstants.MAX_PAGE_SIZE);
+        roleQuery.setRoleIds(roleIds);
+        Response<PageDto<RoleDto>> pageRoleDtoResponse =
+            uniClientFacade.getRoleResource().searchRole(roleQuery);
+        infoList = pageRoleDtoResponse.getInfo();
+        if (CollectionUtils.isEmpty(infoList)) {
+          PageDto<RoleDto> roleDtoPageDto = pageRoleDtoResponse.getData();
+          if (roleDtoPageDto != null && !CollectionUtils.isEmpty(roleDtoPageDto.getData())) {
+            List<RoleDto> roleDtos = roleDtoPageDto.getData();
+            for (RoleDto roleDto : roleDtos) {
+              if (!domainIdSet.contains(roleDto.getDomainId())) {
+                return false;
               }
-              return true;
             }
+            return true;
           }
         }
         break;
@@ -230,9 +243,19 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
         }
         break;
       case AppConstants.PERM_TAGID_CHECK:
-        TagParam tagParam = (TagParam) targetObject;
+        Integer tagId = null;
+        if (targetObject instanceof Integer) {
+          tagId = (Integer) targetObject;
+        }
+        if (targetObject instanceof TagParam) {
+          tagId = ((TagParam) targetObject).getId();
+        }
+
+        if (tagId == null) {
+          return true;
+        }
         TagQuery tagQuery = new TagQuery();
-        tagQuery.setId(tagParam.getId()).setPageSize(AppConstants.MAX_PAGE_SIZE)
+        tagQuery.setId(tagId).setPageSize(AppConstants.MAX_PAGE_SIZE)
             .setPageNumber(AppConstants.MIN_PAGE_NUMBER);
         List<TagDto> tagDtos =
             uniClientFacade.getTagResource().searchTags(tagQuery).getData().getData();
@@ -252,7 +275,6 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       default:
         break;
     }
-
     return super.hasPermission(authentication, targetObject, permission);
   }
 

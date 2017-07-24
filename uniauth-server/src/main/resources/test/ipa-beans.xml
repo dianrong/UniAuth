@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/ldap http://www.springframework.org/schema/ldap/spring-ldap.xsd">
+
+    <!--  定义ldap数据源IPA -->
+   <ldap:context-source
+          url="#{uniauthConfig['ipa.url']?:'ldap://haipa5.dc.dianrong.com'}"
+          base="#{uniauthConfig['ipa.base']?:'cn=accounts,dc=ipa,dc=dianrong,dc=com'}"
+          username="#{uniauthConfig['ipa.username']?:'uid=svc-uniauth,cn=users,cn=accounts,dc=ipa,dc=dianrong,dc=com'}"
+          password="#{uniauthConfig['ipa.password']}" />
+   <ldap:ldap-template id="ldapTemplate" />
+</beans>

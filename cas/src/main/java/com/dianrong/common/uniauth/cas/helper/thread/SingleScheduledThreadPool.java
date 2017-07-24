@@ -14,19 +14,19 @@ public final class SingleScheduledThreadPool {
   public static final SingleScheduledThreadPool INSTANCE = new SingleScheduledThreadPool();
 
   /**
-   * . java提供的线程池
+   * 线程池.
    */
   private final ScheduledExecutorService scheduler;
 
   /**
-   * . 私有构造函数
+   * 私有构造函数.
    */
   private SingleScheduledThreadPool() {
     scheduler = Executors.newSingleThreadScheduledExecutor();
   }
 
   /**
-   * . 加载一个定期执行的任务
+   * 加载一个定期执行的任务.
    *
    * @param runnable 任务执行的runnable
    * @param delayMilles 延迟执行
@@ -37,14 +37,14 @@ public final class SingleScheduledThreadPool {
   }
 
   /**
-   * . 停止接受任务
+   * 停止接受任务.
    */
   public void shutDown() {
     this.scheduler.shutdown();
   }
 
   /**
-   * . 尝试停止线程的执行
+   * 尝试停止线程的执行.
    */
   public void shutDownNow() {
     this.scheduler.shutdownNow();

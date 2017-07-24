@@ -31,12 +31,12 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         }
         $scope.pagination = {
             pageSize: constant.pageSize,
+            showPageNum: constant.showPageNum,
             curPage: 1,
             totalCount: 0
         };
 
-        $scope.queryPerm = function () {
-
+        $scope.queryPerm = function (curPage) {
             if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
                 $scope.permsLoading = constant.loadEmpty;
                 return;
@@ -45,7 +45,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             if (!params) {
                 params = {};
             }
-            params.pageNumber = $scope.pagination.curPage - 1;
+            params.pageNumber = curPage === undefined ? $scope.pagination.curPage - 1:curPage;
             params.pageSize = $scope.pagination.pageSize;
 
             $scope.perms = [];
@@ -145,7 +145,6 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
                     break;
             }
         };
-        $scope.$watch('permTypesDropdown.option', $scope.queryPerm, true)
         $scope.$on('selected-domain-changed', $scope.queryPerm);
         $scope.$on('selected-language-changed', $scope.queryPerm);
     };
