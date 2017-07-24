@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
  * Cas生成st(service ticket)跳转到业务系统,业务系统拿到st去cas做验证的时候验证失败的处理.<br/>
  * 如：1.返回json告知失败;2.跳转到业务系统的认证失败页面；
  *
- * @author xiaofeng.chen@dianrong.com
+ * @author xiaofeng
  * @date 2016年12月15日
  * @see CasAuthenticationFilter#setAuthenticationFailureHandler(AuthenticationFailureHandler)
  * CasAuthenticationFilter#setAuthenticationFailureHandler
