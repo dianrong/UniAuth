@@ -31,10 +31,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = {"classpath*:ss-uniauth-common.xml"})
 public class UARWFacadeTest {
 
-  static {
-    System.setProperty("DR_CFG_ZOOKEEPER_ENV_URL", "10.18.19.64:12181");
-  }
-
   @Autowired
   private UniClientFacade facade;
 

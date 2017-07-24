@@ -10,7 +10,7 @@ import com.rabbitmq.client.Envelope;
 import java.io.IOException;
 
 /**
- * 消费mq消息.
+ * 消费MQ消息.
  *
  * @author wanglin
  */
@@ -24,10 +24,10 @@ public class TestMqConsumer {
   public static void main(String[] argv) throws Exception {
     ConnectionFactory factory = new ConnectionFactory();
     factory.setVirtualHost("/msgbus");
-    factory.setHost("10.18.19.126");
+    factory.setHost("127.0.0.1");
     factory.setPort(5672);
-    factory.setUsername("admin");
-    factory.setPassword("123456");
+    factory.setUsername("administrator");
+    factory.setPassword("password");
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.queueDeclare(QUEUE_NAME, false, false, false, null);
