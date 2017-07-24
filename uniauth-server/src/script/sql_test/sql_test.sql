@@ -1,22 +1,10 @@
 /**user表**/
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
-<<<<<<< HEAD
 values('300000002', '管理员1', 'admin1@xxx.com', '18190805518', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
-=======
-values('300000002', '第二', 'second.admin@dianrong.com', '18190805518', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
->>>>>>> refs/remotes/origin/develop
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
-<<<<<<< HEAD
 values('300000003', '管理员2', 'admin2@xxx.com', '17091956416', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
-=======
-values('300000003', '第三', 'third.admin@dianrong.com', '17091956416', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
->>>>>>> refs/remotes/origin/develop
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
-<<<<<<< HEAD
 values('300000004', '管理员3', 'admin3@xxx.com', '15026682113', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
-=======
-values('300000004', '第四', 'forth.admin@dianrong.com', '15026682113', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
->>>>>>> refs/remotes/origin/develop
 
 
 /**grp表**/
@@ -65,11 +53,7 @@ insert into grp_role(grp_id, role_id)  values(100003, 2);
 insert into grp_role(grp_id, role_id)  values(100004, 3);
 
 /**stakeholder*/
-<<<<<<< HEAD
 insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '研发人员1', 'developer1@xxx.com', '18190805518', '开发人员', 1);
-=======
-insert into stakeholder(id, name, email, phone, jobtitle, domain_id) values(1, '第二', 'second.admin@dianrong.com', '15645213265', '开发人员', 1);
->>>>>>> refs/remotes/origin/develop
 
 /**tagType*/
 INSERT INTO `tag_type` (`id`, `code`, `domain_id`) VALUES ('1', 'testTagType1', '1');
@@ -89,14 +73,3 @@ INSERT INTO `user_tag` (`tag_id`, `user_id`) VALUES ('3', '300000001');
 INSERT INTO `grp_tag` (`tag_id`, `grp_id`) VALUES ('1', '100003');
 INSERT INTO `grp_tag` (`tag_id`, `grp_id`) VALUES ('2', '100004');
 INSERT INTO `grp_tag` (`tag_id`, `grp_id`) VALUES ('3', '100003');
-
-
-
-
-
-
-
-
-
-
-
