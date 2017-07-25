@@ -7,9 +7,9 @@
 
     <!--  定义ldap数据源IPA -->
    <ldap:context-source
-          url="#{uniauthConfig['ipa.url']?:'ldap://haipa5.dc.dianrong.com'}"
-          base="#{uniauthConfig['ipa.base']?:'cn=accounts,dc=ipa,dc=dianrong,dc=com'}"
-          username="#{uniauthConfig['ipa.username']?:'uid=svc-uniauth,cn=users,cn=accounts,dc=ipa,dc=dianrong,dc=com'}"
+          url="#{uniauthConfig['ipa.url']?:'ldap://127.0.0.1:789'}"
+          base="#{uniauthConfig['ipa.base']?:'/base'}"
+          username="#{uniauthConfig['ipa.username']?:'cn=admin'}"
           password="#{uniauthConfig['ipa.password']}" />
    <ldap:ldap-template id="ldapTemplate" />
 </beans>

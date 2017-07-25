@@ -6,8 +6,7 @@ import org.springframework.security.core.Authentication;
 
 public class MyPermissionEvaluator implements UniauthPermissionEvaluator {
 
-  public MyPermissionEvaluator() {
-  }
+  public MyPermissionEvaluator() {}
 
   @Override
   public boolean hasPermission(Authentication authentication, Object targetDomainObject,
