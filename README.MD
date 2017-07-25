@@ -7,6 +7,7 @@
 * [七. 系统说明](#attention)
 
 Uniauth项目的开源QQ交流群号: 463056564  欢迎您的加入
+Uniauth项目github地址: https://github.com/dianrong/UniAuth.
 
 <a id='about'/>
 
