@@ -5,6 +5,9 @@ import com.dianrong.common.uniauth.cas.handler.CasUserLoginCaptchaValidHelper;
 import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
 import com.dianrong.common.uniauth.common.util.Assert;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpSession;
 
 import org.jasig.cas.authentication.Credential;
@@ -26,6 +29,12 @@ public class UniauthAuthenticationViaFormSubmit {
    */
   public static final String CAPTCHA_VALIDATION_FAILED = "captchaValidFailed";
 
+
+  /**
+   * JWT生成失败的事件.
+   */
+  public static final String ERROR = "error";
+
   /**
    * 进行用户登陆的action.
    */
@@ -40,6 +49,18 @@ public class UniauthAuthenticationViaFormSubmit {
    * 用户登陆验证码处理帮助类.
    */
   private CasUserLoginCaptchaValidHelper captchaValidHelper;
+
+  /**
+   * 所有authenticationAction返回需要生成JWT的结果集合.
+   */
+  private Set<String> successEventId = new HashSet<String>() {
+    private static final long serialVersionUID = 2085189866451204729L;
+    {
+      add(AuthenticationViaFormAction.SUCCESS);
+      add(AuthenticationViaFormAction.SUCCESS_WITH_WARNINGS);
+      add(AuthenticationViaFormAction.WARN);
+    }
+  };
 
   public UniauthAuthenticationViaFormSubmit(AuthenticationViaFormAction authenticationAction,
       JWTCreateAction jwtCreateAction, CasUserLoginCaptchaValidHelper captchaValidHelper) {
@@ -71,8 +92,10 @@ public class UniauthAuthenticationViaFormSubmit {
     Event event = authenticationAction.submit(context, credential, messageContext);
 
     // 登陆成功
-    if (AuthenticationViaFormAction.SUCCESS.equals(event.getId())) {
-      event = jwtCreateAction.doExecute(context);
+    if (successEventId.contains(event.getId())) {
+      if (!jwtCreateAction.doExecute(context)) {
+        return new Event(this, ERROR);
+      }
     }
 
     // 进行处理结果的验证处理
@@ -81,4 +104,4 @@ public class UniauthAuthenticationViaFormSubmit {
     // 返回结果
     return event;
   }
-  }
+}

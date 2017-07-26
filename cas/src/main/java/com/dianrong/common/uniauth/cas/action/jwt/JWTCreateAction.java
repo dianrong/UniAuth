@@ -15,7 +15,6 @@ import org.jasig.cas.ticket.Ticket;
 import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.TicketRegistry;
 import org.jasig.cas.web.support.WebUtils;
-import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -23,10 +22,6 @@ import org.springframework.webflow.execution.RequestContext;
  */
 @Slf4j
 public class JWTCreateAction {
-
-  public static final String SUCCESS = "success";
-
-  public static final String ERROR = "error";
 
   private final UniauthJWTSecurity uniauthJWTSecurity;
 
@@ -51,15 +46,16 @@ public class JWTCreateAction {
 
   /**
    * 生成JWT.
+   * @return 是否正常生成JWT.
    */
-  public Event doExecute(final RequestContext context) {
+  public boolean doExecute(final RequestContext context) {
     final String ticketGrantingTicketId = WebUtils.getTicketGrantingTicketId(context);
     final String ticketGrantingTicketValueFromCookie =
         (String) context.getFlowScope().get("ticketGrantingTicketId");
     String tgtId = ticketGrantingTicketId == null ? ticketGrantingTicketValueFromCookie
         : ticketGrantingTicketId;
     if (tgtId == null) {
-      return new Event(this, ERROR);
+      return false;
     }
     Ticket ticket = ticketRegistry.getTicket(tgtId);
     if (ticket instanceof TicketGrantingTicket) {
@@ -75,13 +71,13 @@ public class JWTCreateAction {
               .createJwt(new UniauthUserJWTInfo(identity, tenancyId, jwtExpireSeconds * 1000L));
           // 设置cookie
           jwtCookieGenerator.addCookie(WebUtils.getHttpServletResponse(context), jwt);
-          return new Event(this, SUCCESS);
+          return true;
         } catch (Exception ex) {
           log.error("Failed get identity and tenancyId from principle!", ex);
         }
       }
     }
-    return new Event(this, ERROR);
+    return false;
   }
 
   public void setJwtExpireSeconds(int jwtExpireSeconds) {
