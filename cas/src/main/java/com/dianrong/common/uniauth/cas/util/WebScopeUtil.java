@@ -17,11 +17,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.http.entity.ContentType;
 import org.springframework.util.StringUtils;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Request, Response, Session等的一些统一操作的工具方法.
@@ -68,6 +70,7 @@ public final class WebScopeUtil {
   // SMS
   /**
    * Set SMS Verification Code to session.
+   * 
    * @return true or false
    */
   public static boolean putSmsVerificationToSession(HttpSession session,
@@ -78,7 +81,8 @@ public final class WebScopeUtil {
   /**
    * Get SMS Verification Code from session.
    */
-  public static IdentityExpiredSessionObj<String> getSmsVerificationFromSession(HttpSession session) {
+  public static IdentityExpiredSessionObj<String> getSmsVerificationFromSession(
+      HttpSession session) {
     return getValFromSession(session, CasConstants.SMS_VERIFICATION_SESSION_KEY);
   }
 
@@ -105,7 +109,8 @@ public final class WebScopeUtil {
    *
    * @return verification
    */
-  public static IdentityExpiredSessionObj<String> getEmailVerificationFromSession(HttpSession session) {
+  public static IdentityExpiredSessionObj<String> getEmailVerificationFromSession(
+      HttpSession session) {
     return getValFromSession(session, CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
   }
 
@@ -202,6 +207,7 @@ public final class WebScopeUtil {
 
   /**
    * Write JSON to response stream.
+   * 
    * @param jsonContent JSON to be write to response stream
    */
   public static void writeJsonContentToResponse(ServletResponse response, String jsonContent) {
@@ -258,5 +264,11 @@ public final class WebScopeUtil {
    */
   public static void setAttribute(HttpServletRequest request, String key, Object value) {
     request.setAttribute(key, value);
+  }
+  
+  public static String getStringFromScope(@NotNull final RequestContext context, @NotNull final String key) {
+    final String jwtFromRequest = (String) context.getRequestScope().get(key);
+    final String jwtFromFlow = (String) context.getFlowScope().get(key);
+    return jwtFromRequest != null ? jwtFromRequest : jwtFromFlow;
   }
 }

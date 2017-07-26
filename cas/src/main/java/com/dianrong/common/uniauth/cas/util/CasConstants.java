@@ -26,5 +26,5 @@ public interface CasConstants {
   /**
    * 用于指定登陆成功之后,跳转的目标地址.
    */
-  public static final String TARGET_URL_PARAMETER = "targetUrl";
+  String TARGET_URL_PARAMETER = "targetUrl";
 }
