@@ -1,11 +1,14 @@
-package com.dianrong.common.uniauth.client.custom.model;
+package com.dianrong.common.uniauth.client.custom.sharedomain;
 
+import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.google.common.collect.Sets;
+
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.util.Assert;
 
 /**

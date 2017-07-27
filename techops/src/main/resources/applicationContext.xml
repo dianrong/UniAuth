@@ -12,8 +12,8 @@
                         http://www.springframework.org/schema/aop/spring-aop.xsd
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd
-						http://www.springframework.org/schema/security
-						http://www.springframework.org/schema/security/spring-security-4.0.xsd
+                        http://www.springframework.org/schema/security
+                        http://www.springframework.org/schema/security/spring-security-4.0.xsd
 						http://www.springframework.org/schema/util 
 						http://www.springframework.org/schema/util/spring-util.xsd
                         ">
@@ -28,6 +28,8 @@
 		<property name="userInfoClass"
 			value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
 		<property name="rejectPublicInvocations" value="false"></property>
+		<property name="authenticationType"
+			value="com.dianrong.common.uniauth.common.client.enums.AuthenticationType.JWT"></property>
 	</bean>
 
 	<sec:http pattern="/views/**" security="none" />
@@ -52,8 +54,7 @@
 			ref="exceptionTranslationFilter" />
 		<sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
 		<sec:custom-filter ref="requestSingleLogoutFilter"
-			position="LOGOUT_FILTER" />
-		<!-- <sec:access-denied-handler error-page="/errors/403.jsp"/> -->
+			before="LOGOUT_FILTER" />
 		<sec:csrf disabled="true" />
 		<sec:custom-filter position="CONCURRENT_SESSION_FILTER"
 			ref="concurrencyFilter" />
@@ -104,9 +105,32 @@
 			</list>
 		</constructor-arg>
 	</bean>
-    <bean id="ssAuthenticationFailHandler" class="com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler"/>
+	<bean id="ssAuthenticationFailHandler"
+		class="com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler" />
+
+	<!--AuthenticationFilter -->
+	<bean id="authenticationFilter"
+		class="com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter">
+		<property name="authenticationType" value="#{domainDefine.authenticationType}" />
+		<property name="authenticationFilters">
+			<list>
+				<ref bean="casAuthenticationFilter" />
+				<ref bean="jwtAuthenticationFilter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="jwtAuthenticationFilter"
+		class="com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter">
+		<constructor-arg ref="uniauthJWTSecurity" />
+		<property name="jwtQuery" ref="jwtQuery" />
+		<property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
+		<property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"></property>
+		<property name="sessionAuthenticationStrategy" ref="sas" />
+	</bean>
+
 	<bean id="casAuthenticationFilter"
-		class="org.springframework.security.cas.web.CasAuthenticationFilter">
+		class="com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="filterProcessesUrl" value="/login/cas"></property>
 		<property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
@@ -118,7 +142,8 @@
 	<!-- trick: must be same id or name, not more than one PermissionEvaluators 
 		allowed, see AccessControlListTag.java -->
 	<bean id="uniauthPermissionEvaluator"
-		class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"></bean>
+		class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator"
+		primary="true"></bean>
 
 
 	<bean id="handlerMappingC"
@@ -131,21 +156,24 @@
 		</property>
 	</bean>
 
-	<bean id="i18nController" class="com.dianrong.common.uniauth.common.server.UniauthI18NController" />
+	<bean id="i18nController"
+		class="com.dianrong.common.uniauth.common.server.UniauthI18NController" />
 
 	<bean id="techopsResourceService"
-		class="com.dianrong.common.uniauth.common.server.UniauthResourceService" >
-			<property name="path" value="techops"/>
-			<property name="menuPath" value="menus.properties"></property>
-		</bean>
-		
-		<bean id="i18nHolder" class="com.dianrong.common.uniauth.common.server.UniauthI18NHolder">
-				<property name="techOpsResource" ref="techopsResourceService"/>
-		</bean>
-		
+		class="com.dianrong.common.uniauth.common.server.UniauthResourceService">
+		<property name="path" value="techops" />
+		<property name="menuPath" value="menus.properties"></property>
+	</bean>
+
+	<bean id="i18nHolder"
+		class="com.dianrong.common.uniauth.common.server.UniauthI18NHolder">
+		<property name="techOpsResource" ref="techopsResourceService" />
+	</bean>
+
 	<!-- set api control account -->
-    <bean class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
-    	<property name="account" value="techops"/>
-    	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']?:''}"/>
-    </bean>
+	<bean
+		class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
+		<property name="account" value="techops" />
+		<property name="password" value="#{uniauthConfig['apicall.techops.pwd']?:''}" />
+	</bean>
 </beans>
