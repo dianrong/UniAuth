@@ -35,7 +35,7 @@ public class SSExceptionTranslationFilterConfigure
   private CustomizedRedirectFormat customizedRedirectFormat;
 
   @Override
-  public SSExceptionTranslationFilter create() {
+  public SSExceptionTranslationFilter create(Object... args) {
     if (accessDeniedHandlerImpl == null) {
       log.debug("Do not special AccessDeniedHandler, so use default AccessDeniedHandler: {}",
           UniauthSimpleAccessDeniedHandler.class.getName());

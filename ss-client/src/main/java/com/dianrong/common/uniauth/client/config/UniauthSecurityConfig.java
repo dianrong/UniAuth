@@ -1,11 +1,17 @@
 package com.dianrong.common.uniauth.client.config;
 
 import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.SwitchableSingleSignOutFilter;
+import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
+
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import lombok.extern.slf4j.Slf4j;
-import org.jasig.cas.client.session.SingleSignOutFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
@@ -14,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
 
@@ -61,12 +68,20 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
     http.logout().deleteCookies("JSESSIONID").and().csrf().disable();
 
     // filter configure
+    CasAuthenticationFilter casAuthenticationFilter =
+        beanCreator.create(CasAuthenticationFilter.class);
+    UniauthJWTAuthenticationFilter jwtAuthenticationFilter =
+        beanCreator.create(UniauthJWTAuthenticationFilter.class);
+    DelegateAuthenticationFilter authenticationFilter = beanCreator.create(
+        DelegateAuthenticationFilter.class, casAuthenticationFilter, jwtAuthenticationFilter);
+
     http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
-    http.addFilter(beanCreator.create(CasAuthenticationFilter.class));
+    http.addFilter(authenticationFilter);
+    http.addFilterAfter(authenticationFilter, CsrfFilter.class);
     http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
     http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class),
         ExceptionTranslationFilter.class);
-    http.addFilterBefore(beanCreator.create(SingleSignOutFilter.class),
+    http.addFilterBefore(beanCreator.create(SwitchableSingleSignOutFilter.class),
         CasAuthenticationFilter.class);
 
     // entry-point configure

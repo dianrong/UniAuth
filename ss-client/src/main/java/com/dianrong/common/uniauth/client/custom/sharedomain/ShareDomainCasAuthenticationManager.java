@@ -6,13 +6,15 @@ import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.ProviderNotFoundException;
+import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,18 +27,39 @@ import org.springframework.util.Assert;
  * @author wanglin
  */
 @Slf4j
-public final class ShareDomainCasAuthenticationProvider extends ProviderManager {
+public final class ShareDomainCasAuthenticationManager implements AuthenticationProvider {
 
-  public ShareDomainCasAuthenticationProvider(List<AuthenticationProvider> providers) {
-    super(providers);
+  private List<AuthenticationProvider> providers = Collections.emptyList();
+
+  public ShareDomainCasAuthenticationManager(List<AuthenticationProvider> providers) {
+    Assert.notNull(providers);
+    setProviders(providers);
+  }
+
+  public List<AuthenticationProvider> getProviders() {
+    return Collections.unmodifiableList(providers);
+  }
+
+  public void setProviders(List<AuthenticationProvider> providers) {
+    Assert.notNull(providers);
+    this.providers = providers;
   }
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-    Authentication authenticate = super.authenticate(authentication);
-    grantAuthoritesMapperProcess(authenticate.getPrincipal());
-    return new ShareDomainAuthentication(authenticate,
-        authenticate.getPrincipal());
+    for (AuthenticationProvider provider : getProviders()) {
+      if (!provider.supports(authentication.getClass())) {
+        continue;
+      }
+      log.debug("Authentication attempt using " + provider.getClass().getName());
+      Authentication authenticate = provider.authenticate(authentication);
+      // 针对CasAuthenticationProvider做一下特殊处理.
+      if (provider instanceof CasAuthenticationProvider) {
+        grantAuthoritesMapperProcess(authenticate.getPrincipal());
+      }
+      return new ShareDomainAuthentication(authenticate, authenticate.getPrincipal());
+    }
+    throw new ProviderNotFoundException(authentication.getClass().getName() + " not supported!");
   }
 
   /**
@@ -83,5 +106,15 @@ public final class ShareDomainCasAuthenticationProvider extends ProviderManager 
         orginalOne.isCredentialsNonExpired(), orginalOne.isAccountNonLocked(), tempNewAuthorities,
         orginalOne.getId(), orginalOne.getUserDto(), orginalOne.getDomainDto(),
         orginalOne.getPermMap(), orginalOne.getPermDtoMap());
+  }
+
+  @Override
+  public boolean supports(Class<?> authentication) {
+    for (AuthenticationProvider provider : this.providers) {
+      if (provider.supports(authentication)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

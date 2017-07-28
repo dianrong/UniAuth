@@ -31,10 +31,10 @@ public class DomainDefine implements Serializable {
   // 自定义登陆成功的跳转url
   private String customizedLoginRedirecUrl;
   private boolean useAllDomainUserInfoShareMode;
-  
+
   // 采用的身份认证方式
   private AuthenticationType authenticationType = AuthenticationType.CAS;
-  
+
   private static Integer domainId;
   // 每一个服务就只有一个的域名code定义
   private static String staticDomainCode;
@@ -219,9 +219,8 @@ public class DomainDefine implements Serializable {
     return authenticationType;
   }
 
-  public void setAuthenticationType(AuthenticationType authenticationType) {
-    Assert.notNull(authenticationType);
-      this.authenticationType = authenticationType;
+  public void setAuthenticationType(String authenticationType) {
+    this.authenticationType = AuthenticationType.valueOf(authenticationType);
   }
 
   /**

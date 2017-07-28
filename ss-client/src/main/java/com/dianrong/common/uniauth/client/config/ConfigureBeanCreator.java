@@ -14,9 +14,9 @@ import org.springframework.util.Assert;
  *
  * @author wanglin
  */
+@Slf4j
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)
-@Slf4j
 public class ConfigureBeanCreator implements ApplicationContextAware {
 
   private volatile ApplicationContext applicationContext;
@@ -32,7 +32,7 @@ public class ConfigureBeanCreator implements ApplicationContextAware {
    * @param cls the class 
    * @return new bean 
    */
-  public <T> T create(Class<T> cls) {
+  public <T> T create(Class<T> cls, Object... args) {
     Assert.notNull(cls, "cls can not be null");
     Assert.notNull(applicationContext,
         "need set applicationContext before calling create(Class<T> cls)");
@@ -45,7 +45,7 @@ public class ConfigureBeanCreator implements ApplicationContextAware {
       if (tempConfigure.isSupport(cls)) {
         @SuppressWarnings("unchecked")
         Configure<T> configure = (Configure<T>) tempConfigure;
-        return configure.create();
+        return configure.create(args);
       }
     }
     throw new NoSuchConfigureException("no configure for class " + cls);

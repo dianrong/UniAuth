@@ -3,8 +3,10 @@ package com.dianrong.common.uniauth.client.config.configurations;
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.SSAuthenticationFailureHandler;
-import com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
+import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 
 import java.util.Map;
 
@@ -14,7 +16,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -22,10 +23,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)
-public class CasAuthenticationFilterConfigure implements Configure<CasAuthenticationFilter> {
+public class JWTAuthenticationFilterConfigure implements Configure<UniauthJWTAuthenticationFilter> {
 
-  private static final String DEFAULT_FILTER_PROCESS_URL = "/login/cas";
-
+  @Autowired
+  private UniauthJWTSecurity uniauthJWTSecurity;
+  
+  @Autowired
+  private JWTQuery jwtQuery;
+  
   @Autowired
   private AuthenticationSuccessHandler ssAuthenticationSuccessHandler;
 
@@ -56,20 +61,20 @@ public class CasAuthenticationFilterConfigure implements Configure<CasAuthentica
   }
 
   @Override
-  public CasAuthenticationFilter create(Object... args) {
-    CasAuthenticationFilter casAuthenticationFilter = new UniauthCasAuthenticationFilter();
-    casAuthenticationFilter.setAuthenticationManager(authenticationManager);
-    casAuthenticationFilter.setFilterProcessesUrl(DEFAULT_FILTER_PROCESS_URL);
-    casAuthenticationFilter.setAuthenticationSuccessHandler(ssAuthenticationSuccessHandler);
+  public UniauthJWTAuthenticationFilter create(Object... args) {
+    UniauthJWTAuthenticationFilter jwtAuthenticationFilter = new UniauthJWTAuthenticationFilter(uniauthJWTSecurity);
+    jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
+    jwtAuthenticationFilter.setJwtQuery(jwtQuery);
+    jwtAuthenticationFilter.setAuthenticationSuccessHandler(ssAuthenticationSuccessHandler);
     if (this.authenticationFailureHandler != null) {
-      casAuthenticationFilter.setAuthenticationFailureHandler(this.authenticationFailureHandler);
+      jwtAuthenticationFilter.setAuthenticationFailureHandler(this.authenticationFailureHandler);
     }
-    casAuthenticationFilter.setSessionAuthenticationStrategy(sas);
-    return casAuthenticationFilter;
+    jwtAuthenticationFilter.setSessionAuthenticationStrategy(sas);
+    return jwtAuthenticationFilter;
   }
 
   @Override
   public boolean isSupport(Class<?> cls) {
-    return UniauthCasAuthenticationFilter.class.equals(cls);
+    return UniauthJWTAuthenticationFilter.class.equals(cls);
   }
 }

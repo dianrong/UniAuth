@@ -38,7 +38,7 @@ public class UniauthJWTLogoutFilter extends LogoutFilter {
   private JWTQuery jwtQuery = new SimpleJWTQuery();
 
   public UniauthJWTLogoutFilter(UniauthJWTSecurity uniauthJWTSecurity,
-      LogoutSuccessHandler logoutSuccessHandler, LogoutHandler[] handlers) {
+      LogoutSuccessHandler logoutSuccessHandler, LogoutHandler... handlers) {
     super(logoutSuccessHandler, handlers);
     Assert.notNull(uniauthJWTSecurity);
     this.uniauthJWTSecurity = uniauthJWTSecurity;

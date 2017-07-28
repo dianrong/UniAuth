@@ -20,7 +20,6 @@ public class UniauthFilterBeanCreateCondition extends UniauthEnvCondition {
   @Override
   boolean doMatchesProcess(ConditionContext context, AnnotatedTypeMetadata metadata) {
     ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
-    // 使用比较笨的方式来增加一种判断机制
     String[] names = BeanFactoryUtils
         .beanNamesForTypeIncludingAncestors(beanFactory, UniauthFilterBeanCreateAutoSign.class,
             true, false);

@@ -27,6 +27,7 @@ public class JWTAuthenticationToken extends AbstractAuthenticationToken {
     Assert.notNull(userDetails);
     this.userDetails = userDetails;
     this.credentials = credentials;
+    super.setAuthenticated(true);
   }
   @Override
   public Object getCredentials() {
