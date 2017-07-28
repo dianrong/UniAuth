@@ -24,6 +24,10 @@ public class SimpleJWTQuery implements JWTQuery {
     if (this.jwtCookieNameSuffix != null) {
       cookieName += this.jwtCookieNameSuffix;
     }
+    Cookie[] cookies = request.getCookies();
+    if (cookies == null) {
+      return null;
+    }
     for (Cookie cookie : request.getCookies()) {
       if (cookieName.equals(cookie.getName())) {
         return cookie.getValue();

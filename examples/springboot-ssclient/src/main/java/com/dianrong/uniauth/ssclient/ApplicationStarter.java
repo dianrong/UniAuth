@@ -1,10 +1,10 @@
 package com.dianrong.uniauth.ssclient;
 
 import com.dianrong.common.uniauth.common.client.DomainDefine;
-
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
 import com.dianrong.uniauth.ssclient.config.MyAuthenticationProvider;
+
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +44,7 @@ public class ApplicationStarter {
     domainDefine.setUserInfoClass("com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo");
     domainDefine.setRejectPublicInvocations(false);
     domainDefine.setCustomizedLoginRedirecUrl("/content");
+    domainDefine.setAuthenticationType("JWT");
     return domainDefine;
   }
 

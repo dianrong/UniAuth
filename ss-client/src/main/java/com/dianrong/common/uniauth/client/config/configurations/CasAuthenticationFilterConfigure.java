@@ -14,7 +14,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)
-public class CasAuthenticationFilterConfigure implements Configure<CasAuthenticationFilter> {
+public class CasAuthenticationFilterConfigure implements Configure<UniauthCasAuthenticationFilter> {
 
   private static final String DEFAULT_FILTER_PROCESS_URL = "/login/cas";
 
@@ -56,8 +55,8 @@ public class CasAuthenticationFilterConfigure implements Configure<CasAuthentica
   }
 
   @Override
-  public CasAuthenticationFilter create(Object... args) {
-    CasAuthenticationFilter casAuthenticationFilter = new UniauthCasAuthenticationFilter();
+  public UniauthCasAuthenticationFilter create(Object... args) {
+    UniauthCasAuthenticationFilter casAuthenticationFilter = new UniauthCasAuthenticationFilter();
     casAuthenticationFilter.setAuthenticationManager(authenticationManager);
     casAuthenticationFilter.setFilterProcessesUrl(DEFAULT_FILTER_PROCESS_URL);
     casAuthenticationFilter.setAuthenticationSuccessHandler(ssAuthenticationSuccessHandler);

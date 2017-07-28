@@ -48,7 +48,7 @@
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">
 		<sec:custom-filter ref="authenticationFilter"
-			position="CAS_FILTER" />
+			before="CAS_FILTER" />
 		<sec:custom-filter ref="jwtLogoutFilter"
 			after="CSRF_FILTER" />
 		<sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER"
