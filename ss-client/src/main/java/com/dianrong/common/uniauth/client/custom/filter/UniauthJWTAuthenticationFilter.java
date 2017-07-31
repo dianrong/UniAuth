@@ -26,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
@@ -49,6 +51,28 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   private JWTQuery jwtQuery = new SimpleJWTQuery();
   
   /**
+   * 拦截登陆的请求.
+   */
+  private RequestMatcher loginRequestMatcher = new AntPathRequestMatcher("/login/cas");
+  
+  /**
+   * 覆盖父类中的AuthenticationSuccessHandler.
+   */
+  private AuthenticationSuccessHandler localSuccessHandler;
+  
+  /**
+   * 定义一个什么都不做的AuthenticationSuccessHandler来替换父类中的AuthenticationSuccessHandler.
+   * 
+   */
+  private static final class EmptyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+        Authentication authentication) throws IOException, ServletException {
+      // do nothing
+    }
+  }
+  
+  /**
    * 用于缓存解析的JWT信息.
    */
   private static final ThreadLocal<JWTUserTagInfo> TAG_INFO_CACHE = new ThreadLocal<JWTUserTagInfo>();
@@ -62,6 +86,8 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
     super(requiresAuthenticationRequestMatcher);
     Assert.notNull(uniauthJWTSecurity);
     this.uniauthJWTSecurity = uniauthJWTSecurity;
+    this.localSuccessHandler = super.getSuccessHandler();
+    super.setAuthenticationSuccessHandler(new EmptyAuthenticationSuccessHandler());
   }
 
   @Override
@@ -78,7 +104,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
       String identity = info.getIdentity();
       Long tenancyId = info.getTenancyId();
       
-      // cache
+      // Cache
       JWTUserTagInfo tagCache = new JWTUserTagInfo();
       tagCache.setIdentity(identity);
       tagCache.setTenancyId(tenancyId);
@@ -99,9 +125,19 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   protected void successfulAuthentication(HttpServletRequest request,
       HttpServletResponse response, FilterChain chain, Authentication authResult)
       throws IOException, ServletException {
+    // 完成登陆成功的处理流程
     super.successfulAuthentication(request, response, chain, authResult);
     JWTUserTagInfo tagInfo = TAG_INFO_CACHE.get();
     JWTWebScopeUtil.refreshJWTUserInfoTag(tagInfo, request);
+    
+    // 判断是否继续访问,还是跳转到首页
+    if (loginRequestMatcher.matches(request)) {
+      // 登陆操作,需要跳转到首页去
+      this.localSuccessHandler.onAuthenticationSuccess(request, response, authResult);
+    } else {
+      // 普通访问, 继续执行Filter链
+      chain.doFilter(request, response);
+    }
 }
 
   public JWTQuery getJwtQuery() {
@@ -110,5 +146,31 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
 
   public void setJwtQuery(JWTQuery jwtQuery) {
     this.jwtQuery = jwtQuery;
+  }
+
+  /**
+   * 重写覆盖父类的setAuthenticationSuccessHandler方法.
+   */
+  @Override
+  public void setAuthenticationSuccessHandler(
+          AuthenticationSuccessHandler successHandler) {
+      Assert.notNull(successHandler, "successHandler cannot be null");
+      this.localSuccessHandler = successHandler;
+  }
+  
+  /**
+   * 设置登陆的请求匹配的Matcher.
+   * @param requestMatcher
+   */
+  public final void setLoginReuqestRequestMatcher(RequestMatcher requestMatcher) {
+    Assert.notNull(requestMatcher, "requestMatcher cannot be null");
+    this.loginRequestMatcher = requestMatcher;
+  }
+
+  /**
+   * 设置登陆的请求的URL.
+   */
+  public void setLoginRequestUrl(String loginRequestUrl) {
+    setLoginReuqestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
   }
 }

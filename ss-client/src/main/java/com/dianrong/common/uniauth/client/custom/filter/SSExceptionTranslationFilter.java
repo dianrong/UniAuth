@@ -1,13 +1,21 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.filter;
 
+import com.dianrong.common.uniauth.client.custom.AjaxResponseProcessor;
+import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.SimpleRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
+
 import java.io.IOException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +32,7 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 
   /**
    * 如果不注入则使用默认的实现SimpleRedirectFormat.
-   */
+   */   
   @Autowired(required = false)
   private CustomizedRedirectFormat customizedRedirectFormat = new SimpleRedirectFormat();
 

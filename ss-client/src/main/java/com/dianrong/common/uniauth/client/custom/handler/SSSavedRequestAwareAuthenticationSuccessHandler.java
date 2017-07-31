@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.handler;
 
 import com.dianrong.common.uniauth.client.custom.redirect.CompatibleAjaxRedirect;
 import com.dianrong.common.uniauth.common.client.DomainDefine;

@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.handler;
 
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;

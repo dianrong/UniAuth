@@ -25,8 +25,7 @@ public final class JWTWebScopeUtil {
    */
   public static final String JWT_AUTHENTICATED_TAG = "_UNIAUTH_JWT_AUTHTICATED_USER_INFO_";
 
-  public static void refreshJWTUserInfoTag(JWTUserTagInfo tagInfo,
-      HttpServletRequest request) {
+  public static void refreshJWTUserInfoTag(JWTUserTagInfo tagInfo, HttpServletRequest request) {
     Assert.notNull(tagInfo);
     refreshJWTUserInfoTag(tagInfo.getIdentity(), tagInfo.getTenancyId(), request);
   }
@@ -37,6 +36,16 @@ public final class JWTWebScopeUtil {
     tag.setIdentity(identity);
     tag.setTenancyId(tenancyId);
     request.getSession().setAttribute(JWT_AUTHENTICATED_TAG, tag);
+  }
+
+  /**
+   * 清除登陆成功标识信息.
+   */
+  public static void removeJWTUserInfoTag(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+      session.removeAttribute(JWT_AUTHENTICATED_TAG);
+    }
   }
 
   /**

@@ -2,8 +2,8 @@ package com.dianrong.common.uniauth.client.config.configurations;
 
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
-import com.dianrong.common.uniauth.client.custom.CompatibleAjaxLoginSuccessHandler;
 import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTLogoutFilter;
+import com.dianrong.common.uniauth.client.custom.handler.CompatibleAjaxLoginSuccessHandler;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 
@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Component;
 
 /**
- * Configure new LogoutFilter.
+ * 配置一个JWT的登出处理Filter.
  *
  * @author wanglin
  */

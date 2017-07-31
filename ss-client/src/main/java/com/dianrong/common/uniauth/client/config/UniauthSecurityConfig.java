@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.client.config;
 
-import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
 import com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter;
 import com.dianrong.common.uniauth.client.custom.filter.SwitchableSingleSignOutFilter;
 import com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter;
 import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
@@ -78,7 +78,7 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
         DelegateAuthenticationFilter.class, casAuthenticationFilter, jwtAuthenticationFilter);
 
     http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
-    http.addFilterBefore(authenticationFilter, CasAuthenticationFilter.class);
+    http.addFilterAfter(authenticationFilter, CasAuthenticationFilter.class);
     http.addFilterAfter(beanCreator.create(UniauthJWTLogoutFilter.class), CsrfFilter.class);
     http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
     http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class),

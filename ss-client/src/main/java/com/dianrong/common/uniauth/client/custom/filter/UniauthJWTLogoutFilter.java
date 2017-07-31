@@ -79,9 +79,13 @@ public class UniauthJWTLogoutFilter extends LogoutFilter {
         log.error("JWT:" + jwt + "is a invalid JWT string!", e);
         return true;
       }
-      // 如果当前Session中的标识信息与JWT中指定的信息不一致,则登出.
       if (tagInfo != null) {
-        return !tagInfo.isEquals(identity, tenancyId);
+        // 如果当前Session中的标识信息与JWT中指定的信息不一致.
+        // 清空登陆成功标识,重新验证用户信息.
+        if (!tagInfo.isEquals(identity, tenancyId)) {
+          JWTWebScopeUtil.removeJWTUserInfoTag(request);
+        }
+        return false;
       }
     }
     return false;

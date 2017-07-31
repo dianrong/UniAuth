@@ -21,7 +21,7 @@
     	<expression-handler ref="methodSecurityExpressionHandler"/>
     </global-method-security>
     
-	<b:bean id="methodSecurityExpressionHandler" class="com.dianrong.common.uniauth.client.custom.SSMethodSecurityExpressionHandler">
+	<b:bean id="methodSecurityExpressionHandler" class="com.dianrong.common.uniauth.client.custom.handler.SSMethodSecurityExpressionHandler">
 	</b:bean>
     
     <!--
@@ -29,25 +29,30 @@
 	<http pattern="/index.jsp" security="none"/> 
 	 -->
 	
-	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
-		<b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
-		<b:property name="serviceProperties" ref="casService"/>    
+	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+		<b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>
+		<b:property name="serviceProperties" ref="casService"/>
 	</b:bean>  
 	
-	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
-		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>   
+	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">
+		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>
 		<b:property name="authenticateAllArtifacts" value="true"/>
 		<b:property name="sendRenew" value="false" />
 	</b:bean>
 		
-	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler">
+	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.handler.SSSavedRequestAwareAuthenticationSuccessHandler">
 	</b:bean>
 	
-	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">    
-        <b:property name="ticketValidator" ref="casTicketValidator"/>    
-        <b:property name="serviceProperties" ref="casService"/>    
-        <b:property name="key" value="dianrong-ss-uniauth-cas"/>    
-        <b:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>    
+	<!-- JWT身份识别失败的处理Handler -->
+	<b:bean id="jwtAuthenticationFailureHandler" class="com.dianrong.common.uniauth.client.custom.handler.JWTAuthenticationFailureHandler">
+	   <b:property name="failedAuthenticationRedirectUrl" value="#{uniauthConfig['cas_server']}/logout"/>
+    </b:bean>
+	
+	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <b:property name="ticketValidator" ref="casTicketValidator"/>
+        <b:property name="serviceProperties" ref="casService"/>
+        <b:property name="key" value="dianrong-ss-uniauth-cas"/>
+        <b:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>
     </b:bean>
     
     <b:bean id="jwtAuthenticationProvider" class="com.dianrong.common.uniauth.client.custom.jwt.JWTAuthenticationProvider">
@@ -63,13 +68,13 @@
 	   </b:constructor-arg>
 	</b:bean>
 	
-	<b:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
-		<b:constructor-arg value="#{domainDefine.serviceTicketValidateWithInnerAddress?uniauthConfig['cas_server.internal_address']:uniauthConfig['cas_server']}"/>    
+	<b:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+		<b:constructor-arg value="#{domainDefine.serviceTicketValidateWithInnerAddress?uniauthConfig['cas_server.internal_address']:uniauthConfig['cas_server']}"/>
 	</b:bean>
 	
-	<b:bean id="authenticationUserDetailsService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsWrapper">    
-		<b:property name="userDetailsService" ref="ssUserDetailService"/>    
-	</b:bean>  
+	<b:bean id="authenticationUserDetailsService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsWrapper">
+		<b:property name="userDetailsService" ref="ssUserDetailService"/>
+	</b:bean>
 	
 	<!-- for JWT -->
 	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.SimpleJWTQuery">
