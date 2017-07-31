@@ -20,7 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(value = {"classpath:applicationContext-test.xml"})
-@SuppressWarnings("rawtypes")
 public class DistributeLockServiceTest {
 
   private static final Logger logger = LoggerFactory.getLogger(DistributeLockServiceTest.class);
@@ -35,7 +34,7 @@ public class DistributeLockServiceTest {
   public void find() throws ExecutionException, InterruptedException {
     logger.info("find begin...");
     Object result = distributeLockService.tryAcquiredLockAndExcute("/com/dianrong/cfg/1.0.0/test",
-        new Callable() {
+        new Callable<Object>() {
           @Override
           public Object call() throws Exception {
             logger.info("work done");

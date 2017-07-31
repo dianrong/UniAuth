@@ -1,17 +1,26 @@
 package com.dianrong.common.uniauth.cas.controller.support;
 
 import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
+import com.dianrong.common.uniauth.cas.service.jwt.JWTCookieGenerator;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
+import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
+import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
+import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.IOException;
 import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.CentralAuthenticationService;
+import org.jasig.cas.authentication.Authentication;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.Credential;
 import org.jasig.cas.authentication.principal.Principal;
@@ -46,6 +55,12 @@ public class CasLoginSupport {
 
   @Autowired
   private CookieRetrievingCookieGenerator ticketGrantingTicketCookieGenerator;
+  
+  @Autowired
+  private UniauthJWTSecurity uniauthJWTSecurity;
+
+  @Autowired
+  private JWTCookieGenerator jwtCookieGenerator;
 
   @Resource(name = "argumentExtractors")
   private List<ArgumentExtractor> argumentExtractors;
@@ -55,6 +70,8 @@ public class CasLoginSupport {
    */
   @Autowired
   private TicketRegistry ticketRegistry;
+  
+  private int jwtExpireSeconds = 7200;
 
   /**
    * 标志位, 用于判断是否已经初始化过cookie path.
@@ -159,13 +176,33 @@ public class CasLoginSupport {
         this.centralAuthenticationService.createTicketGrantingTicket(credential);
     String ticketGrantingTicketId = ticketGrantingTicket.getId();
 
-    // remove tgt
+    // remove TGT
     this.ticketGrantingTicketCookieGenerator.removeCookie(response);
-    // set new tgt cookie
+    // set new TGT cookie
     this.ticketGrantingTicketCookieGenerator.addCookie(request, response, ticketGrantingTicketId);
     // set warn cookie
     this.warnCookieGenerator.addCookie(request, response, String.valueOf(warnCookie));
-
+    // set JWT cookie
+    Ticket ticket = ticketRegistry.getTicket(ticketGrantingTicketId);
+    if (ticket instanceof TicketGrantingTicket) {
+      TicketGrantingTicket tgticket = (TicketGrantingTicket) ticket;
+      Authentication authentication = tgticket.getAuthentication();
+      Principal principal = authentication.getPrincipal();
+      if (principal != null) {
+        try {
+          String identity = principal.getId();
+          Long tenancyId = StringUtil.translateObjectToLong(
+              principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName()));
+          String jwt = uniauthJWTSecurity
+              .createJwt(new UniauthUserJWTInfo(identity, tenancyId, jwtExpireSeconds * 1000L));
+          // 设置cookie
+          jwtCookieGenerator.addCookie(response, jwt);
+        } catch (Exception ex) {
+          log.error("Failed get identity and tenancyId from principle!", ex);
+        }
+      }
+    }
+    
     return ticketGrantingTicketId;
   }
 
