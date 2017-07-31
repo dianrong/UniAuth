@@ -13,23 +13,6 @@
     <context:property-placeholder location="classpath:application-test.properties" ignore-unresolvable="true" system-properties-mode="OVERRIDE"/>
     <context:property-placeholder ignore-unresolvable="true" system-properties-mode="OVERRIDE"/>
 
-    <!--
-        <bean id="listener1" class="dianrong.cfg.zookeeper.MyCfgEventListener"/>
-
-        <util:set id="listeners">
-            <ref bean="listener1"/>
-        </util:set>
-
-
-    <bean id="mainappGroupWithListener" class="com.dianrong.platform.open.cfg.CfgGroup">
-        <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/mainapp"/>
-        <property name="needKeepAlive" value="true"/>
-        <property name="listeners" ref="listeners"/>
-    </bean>
-
-    -->
-
-
     <bean id="mainappGroup" class="com.dianrong.platform.open.cfg.CfgGroup">
         <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/mainapp"/>
         <property name="needKeepAlive" value="true"/>

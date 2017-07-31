@@ -6,7 +6,6 @@ import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
 
-import java.util.List;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 

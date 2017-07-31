@@ -24,7 +24,7 @@ public class ZookeeperTest {
         System.out.println(event.toString());
       }
     };
-    ZooKeeper zooKeeper = new ZooKeeper("192.168.71.136:2181", 3000, watcher);
+    ZooKeeper zooKeeper = new ZooKeeper("127.0.0.1:2181", 3000, watcher);
     zooKeeper.create("/temp", "hahaha".getBytes(), 
         ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 

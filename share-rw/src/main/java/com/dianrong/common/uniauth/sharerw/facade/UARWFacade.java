@@ -20,14 +20,15 @@ import com.dianrong.common.uniauth.sharerw.interfaces.ITenancyRWResource;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ws.rs.client.ClientRequestFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

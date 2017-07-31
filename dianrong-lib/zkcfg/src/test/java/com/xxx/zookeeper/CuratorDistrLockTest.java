@@ -16,7 +16,7 @@ public class CuratorDistrLockTest {
   /**
    * Zookeeper info.
    */
-  private static final String ZK_ADDRESS = "10.18.19.64:12181";
+  private static final String ZK_ADDRESS = "127.0.0.1:12181";
   private static final String ZK_LOCK_PATH = "/temp/lock";
 
   /**

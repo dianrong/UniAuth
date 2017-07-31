@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(value = {"classpath:applicationContext-cfg-group-test.xml",})
 public class CfgGroupDynamicTest {
 
-  private static final String PREX = "/com/dianrong/cfg/1.0.0/mainapp";
+  private static final String PREX = "/com/xxx/cfg";
 
   private static final String KEY = "SL_TENPAY_NEW_OPEN";
 
@@ -37,7 +37,7 @@ public class CfgGroupDynamicTest {
   @Test
   public void crudCfgTest() throws Exception {
     String key = "keyXie";
-    String value = "xiexingxing";
+    String value = "xiexxxxx";
     try {
       mainappGroup.addCfg(PREX + "/" + KEY, value);
     } catch (Exception e) {
@@ -102,9 +102,9 @@ public class CfgGroupDynamicTest {
     // test with 2 bad IP address start with 10.20
     // and one good address 10.18.19.28
     // the cfg grop will be initialized synchronously
-    CfgGroup group = new CfgGroup("10.20.19.17:22181,10.20.19.18:22181,10.18.19.28:22181",
+    CfgGroup group = new CfgGroup("127.0.0.1:22181,127.0.0.2:22181,127.0.0.3:22181",
         // CfgGroup group = new CfgGroup("10.18.19.28:22181",
-        "/com/dianrong/cfg/1.0.0/mainapp", true);
+        "/com/xxxx/cfg", true);
     System.out.println("group is " + group.toString());
   }
 
