@@ -35,6 +35,7 @@ import org.jasig.cas.web.support.ArgumentExtractor;
 import org.jasig.cas.web.support.CookieRetrievingCookieGenerator;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -71,6 +72,7 @@ public class CasLoginSupport {
   @Autowired
   private TicketRegistry ticketRegistry;
   
+  @Value("${tgt.timeToKillInSeconds:7200}")
   private int jwtExpireSeconds = 7200;
 
   /**
