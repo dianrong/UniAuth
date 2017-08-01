@@ -30,7 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:ss-uniauth-common.xml"})
 public class UARWFacadeTest {
-
+  
   @Autowired
   private UniClientFacade facade;
 
