@@ -47,10 +47,16 @@
         </tr>
 
         <tr ng-repeat="d in perms">
-            <td ng-bind="d.value"></td>
-            <td ng-bind="d.valueExt"></td>
+            <td>
+                <p title="{{d.value}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 120px">{{d.value}}</p>
+            </td>
+            <td>
+                <p title="{{d.valueExt}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 120px">{{d.valueExt}}</p>
+            </td>
             <td ng-bind="d.permType"></td>
-            <td ng-bind="d.description"></td>
+            <td>
+                <p title="{{d.description}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 280px">{{d.description}}</p>
+            </td>
             <td ng-bind="!d.status?'{{ 'userMgr.enable'| translate}}':'{{ 'userMgr.disable'| translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">

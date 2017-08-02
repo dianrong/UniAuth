@@ -46,9 +46,13 @@
         </tr>
 
         <tr ng-repeat="d in tags">
-            <td ng-bind="d.code"></td>
+            <td>
+                <p title="{{d.code}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 120px">{{d.code}}</p>
+            </td>
             <td ng-bind="getTagTypeCode(d)"></td>
-            <td ng-bind="d.description"></td>
+            <td>
+                <p title="{{d.description}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 200px">{{d.description}}</p>
+            </td>
             <td ng-bind="!d.status?'{{'userMgr.enable' | translate}}':'{{ 'userMgr.disable' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
