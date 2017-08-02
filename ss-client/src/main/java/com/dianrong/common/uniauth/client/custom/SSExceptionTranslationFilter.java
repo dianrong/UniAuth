@@ -1,21 +1,13 @@
-package com.dianrong.common.uniauth.client.custom.filter;
+package com.dianrong.common.uniauth.client.custom;
 
-import com.dianrong.common.uniauth.client.custom.AjaxResponseProcessor;
-import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
-import com.dianrong.common.uniauth.client.custom.SimpleRedirectFormat;
-import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
-
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,8 +17,11 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.util.Assert;
 
 /**
- * Uniauth中对访问过程中出现异常的处理Filter.
+ * 该类已经废弃,已修改为:com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter
+ * 
+ *  @see com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter
  */
+@Deprecated
 @Slf4j
 public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 
@@ -35,7 +30,7 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 
   /**
    * 如果不注入则使用默认的实现SimpleRedirectFormat.
-   */   
+   */
   @Autowired(required = false)
   private CustomizedRedirectFormat customizedRedirectFormat = new SimpleRedirectFormat();
 
