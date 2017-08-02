@@ -5,7 +5,6 @@ var context_path = $('#hidden_path_input').val();
 function i18nset(localestr) {
 	if (!localestr) {
 		return
-
 	}
 	;
 	var url = context_path + "/uniauth/i18n/setLanguage?locale=" + localestr;

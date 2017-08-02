@@ -4,14 +4,16 @@ import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
-import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.servlet.http.HttpSession;
+
 import org.jasig.cas.authentication.AuthenticationException;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
@@ -90,18 +92,8 @@ public class CasUserLoginCaptchaValidHelper {
         return true;
       }
 
-      // 验证码不能为空
-      if (StringUtil.strIsNullOrEmpty(captcha)) {
-        // 设置提示语
-        messageContext.addMessage(new MessageBuilder().error()
-            .code("screen.cas.userlogin.captcha.validation.empty").build());
-        return false;
-      }
-
-      // 从session中获取后台生成的验证码
-      String serverCaptcha = WebScopeUtil.getCaptchaFromSession(session);
       // 比较验证码
-      if (!captcha.equals(serverCaptcha)) {
+      if (!WebScopeUtil.checkCaptchaFromSession(session, captcha)) {
         messageContext.addMessage(new MessageBuilder().error()
             .code("screen.cas.userlogin.captcha.validation.wrong").build());
         return false;

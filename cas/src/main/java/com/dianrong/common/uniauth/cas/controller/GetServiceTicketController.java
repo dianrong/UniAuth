@@ -10,10 +10,12 @@ import com.dianrong.common.uniauth.cas.service.CfgService;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
@@ -21,7 +23,9 @@ import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.AuthenticationException;
@@ -203,9 +207,8 @@ public class GetServiceTicketController {
     } else {
       if (!captchaInfo.canLoginWithoutCaptcha()) {
         // 校验验证码
-        String serverCaptcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
         String clientCaptha = request.getParameter("captcha");
-        if (serverCaptcha == null || !serverCaptcha.equals(clientCaptha)) {
+        if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), clientCaptha)) {
           return new CasGetServiceTicketModel(false,
               CasGetServiceTicketModel.LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED,
               "valid parameter captcha failed");

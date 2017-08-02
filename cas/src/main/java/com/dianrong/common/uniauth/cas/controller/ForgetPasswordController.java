@@ -5,9 +5,11 @@ import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,8 +32,8 @@ public class ForgetPasswordController extends AbstractBaseController {
     // will affect cas server, they are sharing a same jsessionid.
     String step = getParamFromRequest(request, AppConstants.PSWDFORGET_DISPATCHER_STEP_KEY);
     String method = request.getMethod();
-    if (StringUtil.strIsNullOrEmpty(step) || (!"post".equalsIgnoreCase(method) && !("get")
-        .equalsIgnoreCase(method))) {
+    if (StringUtil.strIsNullOrEmpty(step)
+        || (!"post".equalsIgnoreCase(method) && !("get").equalsIgnoreCase(method))) {
       return null;
     }
 
@@ -103,8 +105,8 @@ public class ForgetPasswordController extends AbstractBaseController {
       throws Exception {
     HttpSession session = request.getSession(false);
     // 必须要有账号
-    String identity = getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY,
-        String.class);
+    String identity =
+        getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY, String.class);
     if (StringUtil.strIsNullOrEmpty(identity)) {
       return getPwdForgetStep1Page();
     }
@@ -141,21 +143,18 @@ public class ForgetPasswordController extends AbstractBaseController {
       throws Exception {
     HttpSession session = request.getSession(false);
     // 验证验证码
-    String verifyCode = getParamFromRequest(request,
-        AppConstants.PSWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY);
+    String verifyCode =
+        getParamFromRequest(request, AppConstants.PSWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY);
     if (StringUtil.strIsNullOrEmpty(verifyCode)) {
       // 验证码为空了
       setResponseResultJson(response, "1");
       return;
-    } else {
-      // 判断验证码
-      String captcha = getValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY,
-          String.class);
-      if (!verifyCode.equals(captcha)) {
-        // 验证码不对
-        setResponseResultJson(response, "2");
-        return;
-      }
+    }
+    // 判断验证码
+    if (!WebScopeUtil.checkCaptchaFromSession(session, verifyCode)) {
+      // 验证码不对
+      setResponseResultJson(response, "2");
+      return;
     }
 
     // 从request中获取邮箱或者手机号
@@ -166,8 +165,8 @@ public class ForgetPasswordController extends AbstractBaseController {
       setResponseResultJson(response, "3");
       return;
     }
-    String tenancyCode = getParamFromRequest(request,
-        AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
+    String tenancyCode =
+        getParamFromRequest(request, AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
     UserDto user = null;
     try {
       // 验证邮箱是否存在
@@ -195,8 +194,8 @@ public class ForgetPasswordController extends AbstractBaseController {
       throws Exception {
     HttpSession session = request.getSession(false);
     // 必须要有邮箱or phone number
-    String identity = getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY,
-        String.class);
+    String identity =
+        getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY, String.class);
     Long tenancyId = getValFromSession(session, AppConstants.PSWDFORGET_TENAYC_ID_KEY, Long.class);
     if (StringUtil.strIsNullOrEmpty(identity)) {
       setResponseResultJson(response, "1");

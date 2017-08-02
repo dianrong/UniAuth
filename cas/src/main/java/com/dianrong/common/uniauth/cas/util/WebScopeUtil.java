@@ -52,6 +52,37 @@ public final class WebScopeUtil {
   }
 
   /**
+   * Remove captcha from session.
+   */
+  public static void removeCaptchaFromSession(HttpSession session) {
+    removeValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY);
+  }
+  
+  /**
+   * 验证验证码是否正确.
+   */
+  public static boolean checkCaptchaFromSession(HttpSession session, String inputCapcha) {
+    return checkCaptchaFromSession(session, inputCapcha, true);
+  }
+  
+  /**
+   * 验证验证码是否正确.
+   */
+  public static boolean checkCaptchaFromSession(HttpSession session, String inputCapcha, boolean ignoreCase) {
+    String realCaptcha = getCaptchaFromSession(session);
+    // remove captcha
+    removeCaptchaFromSession(session);
+    if (!StringUtils.hasText(realCaptcha)) {
+      return false;
+    }
+    if (ignoreCase) {
+      return realCaptcha.equalsIgnoreCase(inputCapcha);
+    } else {
+      return realCaptcha.equals(inputCapcha);
+    }
+  }
+  
+  /**
    * Set captchaInfo to session.
    */
   public static boolean putCaptchaInfoToSession(HttpSession session,
@@ -59,7 +90,7 @@ public final class WebScopeUtil {
     return putValToSession(session, AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY,
         captchaInfo);
   }
-
+  
   /**
    * Get captchaInfo from session.
    */
@@ -187,6 +218,16 @@ public final class WebScopeUtil {
       return null;
     }
     return (T) session.getAttribute(key);
+  }
+  
+  /**
+   * Remove object from session.
+   */
+  public static <T> void removeValFromSession(HttpSession session, String key) {
+    if (session == null) {
+      return;
+    }
+    session.removeAttribute(key);
   }
 
 

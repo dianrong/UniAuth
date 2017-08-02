@@ -7,11 +7,15 @@ import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.IOException;
 import java.io.Serializable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -74,15 +78,7 @@ public class InitPasswordController {
     try {
       // 验证验证码
       String reqVerifycode = WebScopeUtil.getParamFromRequest(request, "verify_code");
-      if (StringUtil.strIsNullOrEmpty(reqVerifycode)) {
-        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
-            "inipassword.controller.initpassword.captcha.empty"));
-        return;
-      }
-      
-      // 判断验证码
-      String captcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
-      if (!reqVerifycode.equals(captcha)) {
+      if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), reqVerifycode)) {
         // 验证码不对
         responseVal(response, false, UniBundleUtil.getMsg(messageSource,
             "inipassword.controller.initpassword.captcha.wrong"));

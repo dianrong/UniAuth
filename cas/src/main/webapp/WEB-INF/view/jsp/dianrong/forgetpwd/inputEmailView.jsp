@@ -46,7 +46,7 @@
 					  </div>
 					  <div class="form-group">
 					  	<div class="col-sm-offset-4 col-sm-2">
-					    	<input type="text" class="form-control" id="tverfynotice" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
+					    	<input type="text" class="form-control" id="tverfynotice" placeholder="<spring:message code="screen.password.reset.step1.verify.notice"/>">
 					  	</div>
 					  	<div class="col-sm-2">
 					  		<div class="captcha-img">
