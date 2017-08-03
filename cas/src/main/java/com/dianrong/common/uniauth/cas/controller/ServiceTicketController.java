@@ -57,7 +57,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Slf4j
 @Controller
 @RequestMapping("/serviceticket")
-public class GetServiceTicketController {
+public class ServiceTicketController {
 
   @Autowired
   private List<ArgumentExtractor> argumentExtractors;
