@@ -20,11 +20,12 @@ import org.jasig.cas.authentication.principal.Principal;
 import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 用户信息管理的controller.
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wanglin
  */
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/userinfo")
 public class UserInfoManageController {
 
@@ -49,10 +50,19 @@ public class UserInfoManageController {
   private MessageSource messageSource;
 
   /**
+   * 跳转到个人修改密码的页面.
+   */
+  @RequestMapping(value = "/update/password", method = RequestMethod.GET)
+  public String toInitPwdPage(HttpServletRequest request, HttpServletResponse response) {
+    return "/dianrong/personalinfo/updatePassword";
+  }
+  
+  /**
    * 根据原始密码和身份信息更新密码. <b>不需要处于登陆状态. 通过每次请求Check验证码来控制频繁访问</b>
    *
    * @return 更新结果
    */
+  @ResponseBody
   @RequestMapping(value = "/password/check", method = RequestMethod.PUT)
   public Response<?> updatePasswordWithCheck(HttpServletRequest request,
       HttpServletResponse response,
@@ -81,6 +91,7 @@ public class UserInfoManageController {
    *
    * @return 更新结果
    */
+  @ResponseBody
   @RequestMapping(value = "update", method = RequestMethod.POST)
   public Response<?> updateInfo(HttpServletRequest request, HttpServletResponse response,
       UserDto user) {
@@ -102,6 +113,7 @@ public class UserInfoManageController {
   /**
    * 更新 email 信息.
    */
+  @ResponseBody
   @RequestMapping(value = "email", method = RequestMethod.POST)
   public Response<?> updateEmail(HttpServletRequest request, HttpServletResponse response,
       UserDto user) {
@@ -130,6 +142,7 @@ public class UserInfoManageController {
   /**
    * 更新phone信息.
    */
+  @ResponseBody
   @RequestMapping(value = "phone", method = RequestMethod.POST)
   public Response<?> updatePhone(HttpServletRequest request, HttpServletResponse response,
       UserDto user) {
@@ -158,6 +171,7 @@ public class UserInfoManageController {
   /**
    * 更新密码.
    */
+  @ResponseBody
   @RequestMapping(value = "password", method = RequestMethod.POST)
   public Response<?> updatePassword(HttpServletRequest request, HttpServletResponse response,
       UserDto user,

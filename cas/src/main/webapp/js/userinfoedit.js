@@ -1,3 +1,4 @@
+// 个人信息修改页面
 $(function() {
 	var updateInfoUrl = context_path+"/uniauth/userinfo";
 	var verifyProcessUrl = context_path+"/uniauth/verification";

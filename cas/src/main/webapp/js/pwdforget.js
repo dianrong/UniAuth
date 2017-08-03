@@ -1,3 +1,4 @@
+// 忘记密码,找回密码的处理函数.
 $(function() {
 	var processUrl = context_path+"/uniauth/forgetPassword";
 	var captchaUrl = context_path+"/uniauth/verification";

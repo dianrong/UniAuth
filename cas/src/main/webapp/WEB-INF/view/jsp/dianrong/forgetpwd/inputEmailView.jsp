@@ -46,11 +46,7 @@
 					  </div>
 					  <div class="form-group">
 					  	<div class="col-sm-offset-4 col-sm-2">
-<<<<<<< HEAD
 					    	<input type="text" class="form-control" id="input_captcha" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
-=======
-					    	<input type="text" class="form-control" id="tverfynotice" placeholder="<spring:message code="screen.password.reset.step1.verify.notice"/>">
->>>>>>> refs/remotes/origin/feature/UNIAZ-388-uniauthjwtsso
 					  	</div>
 					  	<div class="col-sm-2">
 					  		<div class="captcha-img">
@@ -76,3 +72,4 @@
 </div>
 
 <jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/bottom.jsp" />
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/forgetpwd/js.jsp" />

@@ -1,3 +1,4 @@
+// 登陆相关的处理js
 $(function() {
 	function areCookiesEnabled() {
 		cookieOperation.setCookieEnable('true');

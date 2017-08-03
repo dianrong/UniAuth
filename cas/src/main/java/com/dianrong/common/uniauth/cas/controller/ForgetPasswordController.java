@@ -46,7 +46,7 @@ public class ForgetPasswordController extends AbstractController {
   private static final String STEP_0 = "0";
 
   /**
-   * 与Step0一致,都为需要输入验证码.
+   * 与Step0一致,但需要输入验证码.
    */
   private static final String STEP_1 = "1";
 

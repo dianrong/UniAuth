@@ -1,5 +1,5 @@
 <!-- include some java object -->
-<%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
+<%@ page import="com.dianrong.common.uniauth.cas.util.CasConstants" %>
 <%@ page import="com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel"%>
 <jsp:directive.include file="top.jsp" />
 <div id="cookiesDisabled" class="errors" style="display:none;">
@@ -83,7 +83,7 @@
 
 		<!-- captcha box -->
 		<%
-			Object casCaptchaObj = session.getAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+			Object casCaptchaObj = session.getAttribute(CasConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
 			if(casCaptchaObj != null){
 				CasLoginCaptchaInfoModel  tcasCaptchaObj = (CasLoginCaptchaInfoModel)casCaptchaObj;
 				if(!tcasCaptchaObj.canLoginWithoutCaptcha()){
@@ -127,6 +127,5 @@
     </div>
 </div>
 <jsp:directive.include file="bottom.jsp" />
+<script type="text/javascript" src="<%=path %>/js/cas.js?v=<%=version %>" ></script>
 <script type="text/javascript" src="<%=path %>/js/loginpage.js?v=<%=version %>" ></script>
-<script type="text/javascript" src="<%=path %>/js/pwdforget.js?v=<%=version %>" ></script>
-<script type="text/javascript" src="<%=path %>/js/userinfoedit.js?v=<%=version %>" ></script>

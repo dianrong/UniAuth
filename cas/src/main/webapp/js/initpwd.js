@@ -1,3 +1,4 @@
+// 初始化密码的处理js
 $(function() {
 	var processUrl = context_path+"/uniauth/initPassword/process";
 	var successUrl = context_path+"/uniauth/initPassword/initSuccess";

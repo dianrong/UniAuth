@@ -1,3 +1,4 @@
+// 提供IFrame跨域登陆的前端函数库.
 define(function() {
 	// name id
 	var div_id = 'uniauth_custom_login_div';

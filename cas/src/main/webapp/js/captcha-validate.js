@@ -1,4 +1,4 @@
-// 定义captcha验证处理模块
+// 定义Captcha验证处理模块
 var captcha_validate_modal = (function(){
 	// 获取验证码
 	var get_captcha_val = function() {
