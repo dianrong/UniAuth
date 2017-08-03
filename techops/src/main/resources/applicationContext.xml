@@ -32,6 +32,7 @@
     </bean>
 
     <sec:http pattern="/views/**" security="none" />
+    <sec:http pattern="/views/**" security="none" />
     <sec:http pattern="/scripts/**" security="none" />
     <sec:http pattern="/styles/**" security="none" />
     <sec:http pattern="/i18n/**" security="none" />

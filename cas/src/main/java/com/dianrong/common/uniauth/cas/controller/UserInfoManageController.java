@@ -63,7 +63,7 @@ public class UserInfoManageController {
    * @return 更新结果
    */
   @ResponseBody
-  @RequestMapping(value = "/password/check", method = RequestMethod.PUT)
+  @RequestMapping(value = "/update/password", method = RequestMethod.POST)
   public Response<?> updatePasswordWithCheck(HttpServletRequest request,
       HttpServletResponse response,
       @RequestParam(value = "captcha", required = true) String captcha,

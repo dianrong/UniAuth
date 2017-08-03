@@ -60,11 +60,10 @@ var captcha_validate_modal = (function(){
 		// show modal
 		$('#captcha_validate_modal').modal('show');
 	};
-	return {
-						process: process_function,
-						dismiss: function() {
-							$('#captcha_validate_modal').modal('hide');
-						}
+	return { process: process_function,
+					  dismiss: function() {
+						$('#captcha_validate_modal').modal('hide');
+					  }
 					};
 }
 )();

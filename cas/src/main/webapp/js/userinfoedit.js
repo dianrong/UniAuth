@@ -64,6 +64,13 @@ $(function() {
 		$('#update_email_captcha').keyup(update_email_verify_btn_process);
 		// update phone
 		$('#update_phone_captcha').keyup(update_phone_verify_btn_process);
+		
+		// 更新密码
+		$('#captcha_pic').click(function(){
+			refresh_verfypic($('#captcha_pic'));
+		});
+		$('.update-password-text-check').keyup(update_password_confirm_check);
+		$('#update_password_confirm_btn').click(update_password_confirm);
 	}
 	// 显示和隐藏修改姓名框
 	var update_user_name_show = function(show) {
@@ -513,6 +520,74 @@ $(function() {
             }, complete : function(){
             	//关闭模态框
             	$('#modal-new-password').modal('hide');
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	
+	// 更新密码
+	var update_password_confirm_check = function(refresh_html_ele) {
+		var check_pass = true;
+		$('.update-password-text-check').each(function(){
+			var val = $(this).val();
+			if (!val) {
+				check_pass = false;
+			}
+		});
+		if(check_pass) {
+			// check identity
+			var identity = $('#update_password_identity').val();
+			if (!isPhoneNumber(identity) && !isEmail(identity)) {
+				check_pass = false;
+			}
+		}
+		
+		if(check_pass) {
+			// check password
+			var new_password = $('#update_password_new_password').val();
+			var confirm_password = $('#update_password_confirm_password').val();
+			if (new_password !== confirm_password) {
+				check_pass = false;
+			}
+		}
+		
+		if(refresh_html_ele == undefined || refresh_html_ele) {
+			if (check_pass) {
+				$('#update_password_confirm_btn').removeAttr("disabled");
+			} else {
+				$('#update_password_confirm_btn').attr("disabled", "disabled");
+			}
+		}
+		return check_pass;
+	}
+	
+	var update_password_confirm = function() {
+		var check_pass = update_password_confirm_check(false);
+		if (!check_pass) {
+			return;
+		}
+		var data = {
+			captcha: $('#input_captcha').val(),
+			identity: $('#update_password_identity').val(),
+			tenancyCode: cookieOperation.getTenancyCode(),
+			originalPassword: $('#update_password_original_password').val(),
+			password: $('#update_password_new_password').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : updateInfoUrl+'/update/password',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+               if(data.info) {
+          		  infonotice(showFailTag, data.info[0].msg);
+          	   } else {
+          		   $('#update_password_content_div').addClass('hidden-element');
+          		   $('#password_update_success_div').removeClass('hidden-element');
+          	   }
+            }, complete : function(){
+            	refresh_verfypic($('#captcha_pic'));
             },error: function(jqXHR, textStatus, errorMsg){
             	logOperation.error(errorMsg);
             }

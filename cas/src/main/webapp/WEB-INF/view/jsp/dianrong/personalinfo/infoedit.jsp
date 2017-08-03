@@ -77,13 +77,6 @@
 		</div>
 </div>
 
-<div class="hidden-element" role="alert" id="window_notice_div">
-  <div id="top_show_info" class="showinfo"></div>
-</div>
-
-<!-- show logout modal -->
-
-
 <!-- update email -->
 <div class="modal fade text-left" id="modal-new-email" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
