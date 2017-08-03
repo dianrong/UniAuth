@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
 @Slf4j
@@ -23,7 +24,16 @@ public class StringUtil {
    */
   public static final Pattern EMAIL_NUMBER = Pattern.compile(
       "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
-
+  
+  /**
+   * 验证码用到的字符数组.
+   */
+  public static final char[] CAPTCHA_CHARACTORS = {
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+  };
+  
   /**
    * Judge string is null or empty.
    *
@@ -145,14 +155,30 @@ public class StringUtil {
   }
 
   /**
+   * 生成目标长度的验证码字符串.
+   */
+  public static String generateCaptchaStr(int length) {
+    if (length <= 0) {
+      return StringUtils.EMPTY;
+    }
+    StringBuilder sb = new StringBuilder();
+    Random r = new Random();
+    int charNum = CAPTCHA_CHARACTORS.length;
+    for (int i = 0; i < length; i++) {
+      sb.append(CAPTCHA_CHARACTORS[r.nextInt(charNum)]);
+    }
+    return sb.toString();
+  }
+  
+  /**
    * 生成目标长度的数字字符串.
    */
   public static String generateNumberStr(int length) {
     if (length <= 0) {
-      return "";
+      return StringUtils.EMPTY;
     }
     StringBuilder sb = new StringBuilder();
-    Random r = new Random(System.currentTimeMillis());
+    Random r = new Random();
     for (int i = 0; i < length; i++) {
       sb.append(r.nextInt(10));
     }

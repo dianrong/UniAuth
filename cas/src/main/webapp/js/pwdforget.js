@@ -18,7 +18,7 @@ $(function() {
 		
 		// 发邮箱验证码
 		$('.find-pwd-container .steps #input1').keyup(process_step2_btn);
-		$('.find-pwd-container .steps #input2').click(sendEmailVerifyCode);
+		$('.find-pwd-container .steps #input2').click(sendDynamicVerifyCode);
 		
 		// 最后一步修改密码
 		$('.find-pwd-container .steps #newpwd').keyup(process_step3_btn);
@@ -58,9 +58,9 @@ $(function() {
 	
 	// step2 btn show
 	var process_step2_btn = function(){
-		var emailcode = $('.find-pwd-container .steps #input1').val();
+		var dynamic_code = $('.find-pwd-container .steps #input1').val();
 		var stepbtn = $('#btn_step2');
-		if(emailcode) {
+		if(dynamic_code) {
 			stepbtn.removeAttr("disabled","disabled");
 			stepbtn.removeClass('cursordefault');
 		} else {
@@ -135,36 +135,55 @@ $(function() {
 		obj.html(newHtml);
 	}
 	
-	var sendEmailVerifyCode = function(){
-		$.ajax({  
-            type : "GET", 
-            url : captchaUrl + '/send/session',
-            dataType : 'json',
-            success : function(data) {
-            	if(data.info) {
-         		   if('IDENTITY_REQUIRED' === data.info[0].name) {
-         			   // 重新跳转到首页登录
-         			  window.location = processUrl;
-         		   } else {
-         			  setWarnLabel($('#emailverfywarn'), data.info[0].msg);
-         		   }
-         	   } else {
-         		 	var count_btn = $('.find-pwd-container .steps #input2');
-         		 	// show verify code
-         		 	if (data.data) {
-         		 		$('#verify_code_div').html(data.data);
-         		 	}
-                	countBtn(count_btn, function(new_label){
-                		count_btn.html(new_label)
-                	},function(){
-                		return count_btn.html();
-                	}, 120);
-         	   }
-            },
-            error: function(jqXHR, textStatus, errorMsg){
-            	logOperation.error(errorMsg);
-            }
-        });  
+	var sendDynamicVerifyCode = function(){
+		// 展示验证码
+		captcha_validate_modal.process(
+			function(captcha_val, error_callback, refresh_captcha) {
+				if (!captcha_val) {
+					return;
+				}
+				$.ajax({  
+		            type : "POST", 
+		            url : captchaUrl + '/send/session',
+		            dataType : 'json',
+		            data: {captcha: captcha_val}, 
+		            success : function(data) {
+		            	if(data.info) {
+		         		   if('IDENTITY_REQUIRED' === data.info[0].name) {
+		         			   // 重新跳转到首页登录
+		         			  window.location = processUrl;
+		         		   } else {
+		         			   // 处理异常信息
+		         			  error_callback(data.info[0].msg);
+		         		   }
+		         	   } else {
+		         		   // success
+		         		  captcha_validate_modal.dismiss();
+		         		 	var count_btn = $('.find-pwd-container .steps #input2');
+		         		 	// show verify code
+		         		 	if (data.data) {
+		         		 		$('#verify_code_div').html(data.data);
+		         		 	}
+		                	countBtn(count_btn, function(new_label){
+		                		count_btn.html(new_label)
+		                	},function(){
+		                		return count_btn.html();
+		                	}, 120);
+		         	   }
+		            },
+		            error: function(jqXHR, textStatus, errorMsg){
+		            	logOperation.error(errorMsg);
+		            },
+		            complete: function(XMLHttpRequest, textStatus) {
+		            	refresh_captcha();
+		            }
+		        });  
+			},
+			// 点击取消按钮函数
+			function(captcha_val, refresh_captcha) {
+				refresh_captcha();
+			}
+		);
 	};
 
 	var processStep1 = function(){
@@ -263,6 +282,9 @@ $(function() {
             },
             error: function(jqXHR, textStatus, errorMsg){
             	logOperation.error(errorMsg);
+            },
+            complete: function(XMLHttpRequest, textStatus) {
+            	refresh_verfypic($('#verfypic'));
             }
         });  
 	};

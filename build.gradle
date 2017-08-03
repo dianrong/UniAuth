@@ -48,7 +48,7 @@ task checkDianrongRepoStatus()  {
 
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '2.0.06.RELEASE'
+    version = '2.0.07-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
     }
@@ -196,6 +196,8 @@ project(':ss-client') {
             compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
         }
         compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
+        
+        compile 'com.auth0:java-jwt:3.0.2'
 	}
 
 	sourceSets {
@@ -318,6 +320,8 @@ project(':cas') {
     		  'javax.servlet:jstl:1.2',
 		)
         compile "com.github.penggle:kaptcha:2.3.2"
+        
+        compile 'com.auth0:java-jwt:3.0.2'
 
         // notification 
 		compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")

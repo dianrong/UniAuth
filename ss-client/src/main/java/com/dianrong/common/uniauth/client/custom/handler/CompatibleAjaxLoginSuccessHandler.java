@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.handler;
 
 import com.dianrong.common.uniauth.client.custom.redirect.CompatibleAjaxRedirect;
 
@@ -14,7 +14,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationTar
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
- * 处理登出成功的handler.兼容ajax请求的登陆操作.
+ * 处理登出成功的handler.<br>
+ * 兼容AJAX请求的登陆操作.
  */
 public class CompatibleAjaxLoginSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler
     implements LogoutSuccessHandler {

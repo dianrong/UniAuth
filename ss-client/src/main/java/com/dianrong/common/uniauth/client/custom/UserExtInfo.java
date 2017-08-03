@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.client.custom;
 
-import com.dianrong.common.uniauth.client.custom.model.AllDomainUserExtInfo;
 import com.dianrong.common.uniauth.client.custom.model.SingleDomainUserExtInfo;
 import com.dianrong.common.uniauth.client.custom.model.UserExtInfoParam;
+import com.dianrong.common.uniauth.client.custom.sharedomain.AllDomainUserExtInfo;
 import com.dianrong.common.uniauth.common.bean.dto.AllDomainPermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;

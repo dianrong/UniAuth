@@ -99,7 +99,7 @@ public class UniClientFacade {
     CheckSdkCfg.checkSdkCfg(uniWsEndpoint);
     JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider();
     jacksonJsonProvider.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
+    UUIDHeaderClientRequestFilter uuIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
     ClientRequestFilter cxfHeaderFilter = ClientFilterSingleton.getInstance();
     // set api control account
     if (apiCtrlAccountHolder != null) {
@@ -118,7 +118,7 @@ public class UniClientFacade {
           });
     }
     List<?> providers = Arrays
-        .asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
+        .asList(jacksonJsonProvider, uuIDHeaderClientRequestFilter, cxfHeaderFilter);
     userExtendResource = UniauthRSClientFactory
         .create(uniWsEndpoint, IUserExtendResource.class, providers);
     userExtendValResource = UniauthRSClientFactory
@@ -187,7 +187,7 @@ public class UniClientFacade {
   }
 
   /**
-   * @see getAttributeExtendResource
+   * @see getAttributeExtendResource.
    */
   @Deprecated
   public IUserExtendResource getUserExtendResource() {

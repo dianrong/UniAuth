@@ -74,15 +74,7 @@ public class InitPasswordController {
       throws IOException {
       // 验证验证码
       String reqVerifycode = WebScopeUtil.getParamFromRequest(request, "verify_code");
-      if (StringUtil.strIsNullOrEmpty(reqVerifycode)) {
-        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
-            "inipassword.controller.initpassword.captcha.empty"));
-        return;
-      }
-      
-      // 判断验证码
-      String captcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
-      if (!reqVerifycode.equals(captcha)) {
+      if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), reqVerifycode)) {
         // 验证码不对
         responseVal(response, false, UniBundleUtil.getMsg(messageSource,
             "inipassword.controller.initpassword.captcha.wrong"));

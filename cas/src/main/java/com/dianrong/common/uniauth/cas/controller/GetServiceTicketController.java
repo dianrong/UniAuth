@@ -208,9 +208,8 @@ public class GetServiceTicketController {
     } else {
       if (!captchaInfo.canLoginWithoutCaptcha()) {
         // 校验验证码
-        String serverCaptcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
         String clientCaptha = request.getParameter("captcha");
-        if (serverCaptcha == null || !serverCaptcha.equals(clientCaptha)) {
+        if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), clientCaptha)) {
           return new CasGetServiceTicketModel(false,
               CasGetServiceTicketModel.LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED,
               "valid parameter captcha failed");

@@ -21,7 +21,7 @@
     	<expression-handler ref="methodSecurityExpressionHandler"/>
     </global-method-security>
     
-	<b:bean id="methodSecurityExpressionHandler" class="com.dianrong.common.uniauth.client.custom.SSMethodSecurityExpressionHandler">
+	<b:bean id="methodSecurityExpressionHandler" class="com.dianrong.common.uniauth.client.custom.handler.SSMethodSecurityExpressionHandler">
 	</b:bean>
     
     <!--
@@ -29,55 +29,69 @@
 	<http pattern="/index.jsp" security="none"/> 
 	 -->
 	
-	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">    
-		<b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>    
-		<b:property name="serviceProperties" ref="casService"/>    
+	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+		<b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>
+		<b:property name="serviceProperties" ref="casService"/>
 	</b:bean>  
 	
-	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">    
-		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>   
+	<b:bean id="casService" class="org.springframework.security.cas.ServiceProperties">
+		<b:property name="service" value="#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>
 		<b:property name="authenticateAllArtifacts" value="true"/>
 		<b:property name="sendRenew" value="false" />
 	</b:bean>
 		
-	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.SSSavedRequestAwareAuthenticationSuccessHandler">
+	<b:bean id="ssAuthenticationSuccessHandler" class="com.dianrong.common.uniauth.client.custom.handler.SSSavedRequestAwareAuthenticationSuccessHandler">
 	</b:bean>
 	
-	<b:bean id="casAuthenticationProvider" class="com.dianrong.common.uniauth.client.custom.ShareDomainCasAuthenticationProvider">    
-		<b:property name="ticketValidator" ref="casTicketValidator"/>    
-		<b:property name="serviceProperties" ref="casService"/>    
-		<b:property name="key" value="dianrong-ss-uniauth-cas"/>    
-		<b:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>    
+	<!-- JWT身份识别失败的处理Handler -->
+	<b:bean id="jwtAuthenticationFailureHandler" class="com.dianrong.common.uniauth.client.custom.handler.JWTAuthenticationFailureHandler">
+	   <b:property name="failedAuthenticationRedirectUrl" value="#{uniauthConfig['cas_server']}/logout"/>
+    </b:bean>
+	
+	<b:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <b:property name="ticketValidator" ref="casTicketValidator"/>
+        <b:property name="serviceProperties" ref="casService"/>
+        <b:property name="key" value="dianrong-ss-uniauth-cas"/>
+        <b:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>
+    </b:bean>
+    
+    <b:bean id="jwtAuthenticationProvider" class="com.dianrong.common.uniauth.client.custom.jwt.JWTAuthenticationProvider">
+        <b:constructor-arg ref="ssUserDetailService"/>
+    </b:bean>
+	
+	<b:bean id="authenticationProviders" class="com.dianrong.common.uniauth.client.custom.sharedomain.ShareDomainCasAuthenticationManager">
+	   <b:constructor-arg>
+	       <b:list>
+	           <b:ref bean= "casAuthenticationProvider"/>
+	           <b:ref bean= "jwtAuthenticationProvider"/>
+	       </b:list>
+	   </b:constructor-arg>
 	</b:bean>
 	
-	<b:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">    
-		<b:constructor-arg value="#{domainDefine.serviceTicketValidateWithInnerAddress?uniauthConfig['cas_server.internal_address']:uniauthConfig['cas_server']}"/>    
+	<b:bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+		<b:constructor-arg value="#{domainDefine.serviceTicketValidateWithInnerAddress?uniauthConfig['cas_server.internal_address']:uniauthConfig['cas_server']}"/>
 	</b:bean>
 	
-	<b:bean id="authenticationUserDetailsService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsWrapper">    
-		<b:property name="userDetailsService" ref="ssUserDetailService"/>    
-	</b:bean>  
+	<b:bean id="authenticationUserDetailsService" class="com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsWrapper">
+		<b:property name="userDetailsService" ref="ssUserDetailService"/>
+	</b:bean>
 	
-<!-- 	<b:bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" > -->
-<!-- 		<b:property name="ignoreInitConfiguration" value="true"/> -->
-<!-- 	</b:bean> -->
+	<!-- for JWT -->
+	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.SimpleJWTQuery">
+	   <b:property name="jwtCookieNameSuffix"  value="#{uniauthConfig['authentication.jwt.cookie.suffix']}"/>
+	</b:bean>
 	
-<!-- 	<b:bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter"> -->
-<!-- 		<b:property name="filterProcessesUrl" value="/logout/cas"></b:property> -->
-<!-- 		<b:constructor-arg value="#{uniauthConfig['cas_server']}/logout" /> -->
-<!-- 		<b:constructor-arg> -->
-<!-- 			<b:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" /> -->
-<!-- 		</b:constructor-arg> -->
-<!-- 	</b:bean> -->
-	
-	<b:bean id="securityContextLogoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
-	
+	<b:bean id="uniauthJWTSecurity" class="com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity">
+        <b:constructor-arg index="0" value="#{uniauthConfig['authentication.jwt.private.key']}"/>
+        <b:constructor-arg index="1" value="#{uniauthConfig['authentication.jwt.public.key']}"/>
+    </b:bean>
+
 	<authentication-manager alias="authenticationManager">
-		<authentication-provider ref="casAuthenticationProvider"/>
+	   <authentication-provider ref="authenticationProviders"/>
 	</authentication-manager>
 	
+	<b:bean id="securityContextLogoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
 	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.multitenancy.SSMultiTenancyUserDetailService" />
-	
     <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor"/>
     <b:bean id="ssRegularBeanPostProcessor" class="org.springframework.security.web.access.regular.SSRegularFilterBeanPostProcessor"/>
     <b:bean id="sessionManageBeanPostProcessor" class="org.springframework.security.web.access.sessionmanage.SessionManageBeanPostProcessor">

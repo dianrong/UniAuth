@@ -56,18 +56,19 @@ public final class WebScopeUtil {
   public static void removeCaptchaFromSession(HttpSession session) {
     removeValFromSession(session, CasConstants.CAS_CAPTCHA_SESSION_KEY);
   }
-  
+
   /**
    * 验证验证码是否正确.
    */
   public static boolean checkCaptchaFromSession(HttpSession session, String inputCapcha) {
     return checkCaptchaFromSession(session, inputCapcha, true);
   }
-  
+
   /**
    * 验证验证码是否正确.
    */
-  public static boolean checkCaptchaFromSession(HttpSession session, String inputCapcha, boolean ignoreCase) {
+  public static boolean checkCaptchaFromSession(HttpSession session, String inputCapcha,
+      boolean ignoreCase) {
     String realCaptcha = getCaptchaFromSession(session);
     // remove captcha
     removeCaptchaFromSession(session);
@@ -80,7 +81,7 @@ public final class WebScopeUtil {
       return realCaptcha.equals(inputCapcha);
     }
   }
-  
+
   /**
    * Set captchaInfo to session.
    */
@@ -89,7 +90,7 @@ public final class WebScopeUtil {
     return putValToSession(session, CasConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY,
         captchaInfo);
   }
-  
+
   /**
    * Get captchaInfo from session.
    */
@@ -150,49 +151,49 @@ public final class WebScopeUtil {
   public static void removeEmailVerification(HttpSession session) {
     session.removeAttribute(CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
   }
-  
+
   /**
    * Get identity from session.
    */
   public static String getIdentity(HttpSession session) {
     return getValFromSession(session, CasConstants.CAS_USER_IDENTITY);
   }
-  
+
   /**
    * Set identity into session.
    */
   public static void putIndentity(HttpSession session, String identity) {
     putValToSession(session, CasConstants.CAS_USER_IDENTITY, identity);
   }
-  
+
   /**
    * Remove identity into session.
    */
   public static void removeIdentity(HttpSession session) {
     removeValFromSession(session, CasConstants.CAS_USER_IDENTITY);
   }
-  
+
   /**
    * Get tenancyId from session.
    */
   public static Long getTenancyId(HttpSession session) {
     return getValFromSession(session, CasConstants.CAS_USER_TENANCY_ID);
   }
-  
+
   /**
    * Set tenancyId into session.
    */
   public static void putTenancyId(HttpSession session, Long tenancyId) {
     putValToSession(session, CasConstants.CAS_USER_TENANCY_ID, tenancyId);
   }
-  
+
   /**
    * Remove tenancyId from session.
    */
   public static void removeTenancyId(HttpSession session) {
     removeValFromSession(session, CasConstants.CAS_USER_TENANCY_ID);
   }
-  
+
   /**
    * Set a flag to session, represent the identity is verified.
    *
@@ -258,9 +259,9 @@ public final class WebScopeUtil {
     if (session == null) {
       return null;
     }
-    return (T)session.getAttribute(key);
+    return (T) session.getAttribute(key);
   }
-  
+
   /**
    * Get object from session.
    *
@@ -274,7 +275,7 @@ public final class WebScopeUtil {
     }
     return (T) session.getAttribute(key);
   }
-  
+
   /**
    * Remove object from session.
    */
@@ -284,7 +285,6 @@ public final class WebScopeUtil {
     }
     session.removeAttribute(key);
   }
-
 
   /**
    * 以JSON格式返回结果.
@@ -360,8 +360,9 @@ public final class WebScopeUtil {
   public static void setAttribute(HttpServletRequest request, String key, Object value) {
     request.setAttribute(key, value);
   }
-  
-  public static String getStringFromScope(@NotNull final RequestContext context, @NotNull final String key) {
+
+  public static String getStringFromScope(@NotNull final RequestContext context,
+      @NotNull final String key) {
     final String jwtFromRequest = (String) context.getRequestScope().get(key);
     final String jwtFromFlow = (String) context.getFlowScope().get(key);
     return jwtFromRequest != null ? jwtFromRequest : jwtFromFlow;

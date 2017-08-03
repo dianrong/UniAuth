@@ -231,7 +231,7 @@ public class ForgetPasswordController extends AbstractController {
     // 必须要有邮箱or phone number
     String identity = WebScopeUtil.getIdentity(session);
     Long tenancyId = WebScopeUtil.getTenancyId(session);
-    if (StringUtil.strIsNullOrEmpty(identity)) {
+    if (StringUtil.strIsNullOrEmpty(identity) || tenancyId == null) {
       responseJson(response, AjaxResult.CODE_1);
       return;
     }

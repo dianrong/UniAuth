@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.client.config;
 
-import org.jasig.cas.client.session.SingleSignOutFilter;
+import com.dianrong.common.uniauth.client.custom.filter.SwitchableSingleSignOutFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -20,8 +21,8 @@ public class UniauthFilterBeanConfig {
   private ConfigureBeanCreator configureBeanCreator;
 
   @Bean(name = "singleLogoutFilter")
-  public SingleSignOutFilter getSingleLogoutFilter() {
-    return configureBeanCreator.create(SingleSignOutFilter.class);
+  public SwitchableSingleSignOutFilter getSingleLogoutFilter() {
+    return configureBeanCreator.create(SwitchableSingleSignOutFilter.class);
   }
 
   @Bean(name = "requestSingleLogoutFilter")
