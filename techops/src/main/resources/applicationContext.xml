@@ -47,7 +47,7 @@
 
 	<sec:http>
 		<sec:headers>
-			<sec:frame-options disabled="true" />
+			<sec:frame-options policy="ALLOW-FROM"/>
 		</sec:headers>
 	</sec:http>
 
