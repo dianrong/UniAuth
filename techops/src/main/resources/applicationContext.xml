@@ -47,7 +47,7 @@
 
 	<sec:http>
 		<sec:headers>
-			<sec:frame-options policy="ALLOW-FROM"/>
+			<sec:frame-options policy="SAMEORIGIN"/>
 		</sec:headers>
 	</sec:http>
 
