@@ -1,11 +1,15 @@
 package com.dianrong.common.uniauth.cas.action;
 
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
+
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.util.StringUtils;
@@ -56,7 +60,7 @@ public class LoginTypeDecisionAction extends AbstractAction {
             if (StringUtils.hasText(allZkNodeMap.get(loginPageNodeName))) {
               // 将跳转url放到flowscope备用
               context.getFlowScope()
-                  .put(AppConstants.CAS_CUSTOM_LOGIN_PAGE_KEY, allZkNodeMap.get(loginPageNodeName));
+                  .put(CasConstants.CAS_CUSTOM_LOGIN_PAGE_KEY, allZkNodeMap.get(loginPageNodeName));
               log.debug("custom login url:" + allZkNodeMap.get(loginPageNodeName));
               return result(LOGIN_FROM_CUSTOM);
             }

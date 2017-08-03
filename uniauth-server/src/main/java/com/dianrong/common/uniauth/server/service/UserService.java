@@ -223,8 +223,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   @Transactional
   public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId,
-      String name, String phone, String email, String password, String orginPassword,
-      Boolean ignorePwdStrategyCheck, Byte status) {
+      String tenancyCode, String name, String phone, String email, String password,
+      String orginPassword, Boolean ignorePwdStrategyCheck, Byte status) {
     if (userActionEnum == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
@@ -233,11 +233,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     String userIdentity;
     // 通过账号的查找当前的用户信息
     if (UserActionEnum.isUpdateByAccount(userActionEnum)) {
-      if (account == null || tenancyId == null) {
+      if (account == null || (tenancyId == null && !StringUtils.hasText(account))) {
         throw new AppException(InfoName.VALIDATE_FAIL,
-            UniBundle.getMsg("common.parameter.empty", "account, tenancyId"));
+            UniBundle.getMsg("common.parameter.empty", "account, tenancyId, tenancyCode"));
       }
-      user = getUserByAccount(account, null, tenancyId, true, AppConstants.STATUS_ENABLED);
+      user = getUserByAccount(account, tenancyCode, tenancyId, true, AppConstants.STATUS_ENABLED);
       userIdentity = account;
     } else {
       if (id == null) {
@@ -1349,7 +1349,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   public User getUserByAccount(String account, String tenancyCode, Long tenancyId,
       boolean withPhoneChecked, Byte status) {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, Object> map = Maps.newHashMap();
     map.put("email", account);
 
     if (withPhoneChecked) {
@@ -1362,11 +1362,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         CheckEmpty.checkEmpty(tenancyCode, "租户code");
         map.put("tenancyCode", tenancyCode);
       } else {
-        map.put("tenancyId", tenancyId.toString());
+        map.put("tenancyId", tenancyId);
       }
     }
     if (status != null) {
-      map.put("status", Integer.toString(status));
+      map.put("status", status);
     }
     List<User> userList = userMapper.selectByEmailOrPhone(map);
     if (userList == null || userList.isEmpty()) {

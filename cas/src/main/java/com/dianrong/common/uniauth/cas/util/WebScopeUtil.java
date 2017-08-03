@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.cas.util;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
 import com.dianrong.common.uniauth.cas.model.HttpResponseModel;
 import com.dianrong.common.uniauth.cas.model.IdentityExpiredSessionObj;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
@@ -17,11 +16,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.http.entity.ContentType;
 import org.springframework.util.StringUtils;
+import org.springframework.webflow.execution.RequestContext;
 
 /**
  * Request, Response, Session等的一些统一操作的工具方法.
@@ -39,35 +40,67 @@ public final class WebScopeUtil {
    * Set captcha to session.
    */
   public static boolean putCaptchaToSession(HttpSession session, String captcha) {
-    return putValToSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY, captcha);
+    return putValToSession(session, CasConstants.CAS_CAPTCHA_SESSION_KEY, captcha);
   }
 
   /**
    * Get captcha from session.
    */
   public static String getCaptchaFromSession(HttpSession session) {
-    return getValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY);
+    return getValFromSession(session, CasConstants.CAS_CAPTCHA_SESSION_KEY);
   }
 
+  /**
+   * Remove captcha from session.
+   */
+  public static void removeCaptchaFromSession(HttpSession session) {
+    removeValFromSession(session, CasConstants.CAS_CAPTCHA_SESSION_KEY);
+  }
+  
+  /**
+   * 验证验证码是否正确.
+   */
+  public static boolean checkCaptchaFromSession(HttpSession session, String inputCapcha) {
+    return checkCaptchaFromSession(session, inputCapcha, true);
+  }
+  
+  /**
+   * 验证验证码是否正确.
+   */
+  public static boolean checkCaptchaFromSession(HttpSession session, String inputCapcha, boolean ignoreCase) {
+    String realCaptcha = getCaptchaFromSession(session);
+    // remove captcha
+    removeCaptchaFromSession(session);
+    if (!StringUtils.hasText(realCaptcha)) {
+      return false;
+    }
+    if (ignoreCase) {
+      return realCaptcha.equalsIgnoreCase(inputCapcha);
+    } else {
+      return realCaptcha.equals(inputCapcha);
+    }
+  }
+  
   /**
    * Set captchaInfo to session.
    */
   public static boolean putCaptchaInfoToSession(HttpSession session,
       CasLoginCaptchaInfoModel captchaInfo) {
-    return putValToSession(session, AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY,
+    return putValToSession(session, CasConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY,
         captchaInfo);
   }
-
+  
   /**
    * Get captchaInfo from session.
    */
   public static CasLoginCaptchaInfoModel getCaptchaInfoFromSession(HttpSession session) {
-    return getValFromSession(session, AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+    return getValFromSession(session, CasConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
   }
 
   // SMS
   /**
    * Set SMS Verification Code to session.
+   * 
    * @return true or false
    */
   public static boolean putSmsVerificationToSession(HttpSession session,
@@ -78,7 +111,8 @@ public final class WebScopeUtil {
   /**
    * Get SMS Verification Code from session.
    */
-  public static IdentityExpiredSessionObj<String> getSmsVerificationFromSession(HttpSession session) {
+  public static IdentityExpiredSessionObj<String> getSmsVerificationFromSession(
+      HttpSession session) {
     return getValFromSession(session, CasConstants.SMS_VERIFICATION_SESSION_KEY);
   }
 
@@ -105,7 +139,8 @@ public final class WebScopeUtil {
    *
    * @return verification
    */
-  public static IdentityExpiredSessionObj<String> getEmailVerificationFromSession(HttpSession session) {
+  public static IdentityExpiredSessionObj<String> getEmailVerificationFromSession(
+      HttpSession session) {
     return getValFromSession(session, CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
   }
 
@@ -115,7 +150,49 @@ public final class WebScopeUtil {
   public static void removeEmailVerification(HttpSession session) {
     session.removeAttribute(CasConstants.EMAIL_VERIFICATION_SESSION_KEY);
   }
-
+  
+  /**
+   * Get identity from session.
+   */
+  public static String getIdentity(HttpSession session) {
+    return getValFromSession(session, CasConstants.CAS_USER_IDENTITY);
+  }
+  
+  /**
+   * Set identity into session.
+   */
+  public static void putIndentity(HttpSession session, String identity) {
+    putValToSession(session, CasConstants.CAS_USER_IDENTITY, identity);
+  }
+  
+  /**
+   * Remove identity into session.
+   */
+  public static void removeIdentity(HttpSession session) {
+    removeValFromSession(session, CasConstants.CAS_USER_IDENTITY);
+  }
+  
+  /**
+   * Get tenancyId from session.
+   */
+  public static Long getTenancyId(HttpSession session) {
+    return getValFromSession(session, CasConstants.CAS_USER_TENANCY_ID);
+  }
+  
+  /**
+   * Set tenancyId into session.
+   */
+  public static void putTenancyId(HttpSession session, Long tenancyId) {
+    putValToSession(session, CasConstants.CAS_USER_TENANCY_ID, tenancyId);
+  }
+  
+  /**
+   * Remove tenancyId from session.
+   */
+  public static void removeTenancyId(HttpSession session) {
+    removeValFromSession(session, CasConstants.CAS_USER_TENANCY_ID);
+  }
+  
   /**
    * Set a flag to session, represent the identity is verified.
    *
@@ -177,11 +254,35 @@ public final class WebScopeUtil {
    * @return Object
    */
   @SuppressWarnings("unchecked")
+  public static <T> T getValFromSession(HttpSession session, String key, Class<T> clz) {
+    if (session == null) {
+      return null;
+    }
+    return (T)session.getAttribute(key);
+  }
+  
+  /**
+   * Get object from session.
+   *
+   * @param key key
+   * @return Object
+   */
+  @SuppressWarnings("unchecked")
   public static <T> T getValFromSession(HttpSession session, String key) {
     if (session == null) {
       return null;
     }
     return (T) session.getAttribute(key);
+  }
+  
+  /**
+   * Remove object from session.
+   */
+  public static <T> void removeValFromSession(HttpSession session, String key) {
+    if (session == null) {
+      return;
+    }
+    session.removeAttribute(key);
   }
 
 
@@ -192,7 +293,6 @@ public final class WebScopeUtil {
    */
   public static void sendJsonToResponse(HttpServletResponse response, HttpResponseModel<?> obj)
       throws IOException {
-
     if (obj == null) {
       response.getWriter().write("");
     } else {
@@ -202,6 +302,7 @@ public final class WebScopeUtil {
 
   /**
    * Write JSON to response stream.
+   * 
    * @param jsonContent JSON to be write to response stream
    */
   public static void writeJsonContentToResponse(ServletResponse response, String jsonContent) {
@@ -258,5 +359,11 @@ public final class WebScopeUtil {
    */
   public static void setAttribute(HttpServletRequest request, String key, Object value) {
     request.setAttribute(key, value);
+  }
+  
+  public static String getStringFromScope(@NotNull final RequestContext context, @NotNull final String key) {
+    final String jwtFromRequest = (String) context.getRequestScope().get(key);
+    final String jwtFromFlow = (String) context.getFlowScope().get(key);
+    return jwtFromRequest != null ? jwtFromRequest : jwtFromFlow;
   }
 }

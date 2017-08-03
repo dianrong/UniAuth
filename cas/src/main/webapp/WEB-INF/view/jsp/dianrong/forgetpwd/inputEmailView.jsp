@@ -41,12 +41,12 @@
 					<form action="<%=path %>/uniauth/forgetPassword" id="step1Post" class="form-horizontal">
 					  <div class="form-group">
 					  	<div class="col-sm-offset-4 col-sm-4">
-					    	<input type="text" class="form-control" placeholder="Email Or Phone Number" id="temail">
+					    	<input type="text" class="form-control" placeholder="Email Or Phone Number"  id="identity">
 					    </div>
 					  </div>
 					  <div class="form-group">
 					  	<div class="col-sm-offset-4 col-sm-2">
-					    	<input type="text" class="form-control" id="tverfynotice" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
+					    	<input type="text" class="form-control" id="input_captcha" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
 					  	</div>
 					  	<div class="col-sm-2">
 					  		<div class="captcha-img">

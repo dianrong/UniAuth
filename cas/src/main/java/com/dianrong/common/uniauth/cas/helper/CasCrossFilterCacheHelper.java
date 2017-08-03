@@ -4,9 +4,10 @@ import com.dianrong.common.uniauth.cas.helper.thread.RefreshCasCrossFilterCacheR
 import com.dianrong.common.uniauth.cas.helper.thread.SingleScheduledThreadPool;
 import com.dianrong.common.uniauth.cas.model.CasCrossFilterCacheModel;
 import com.dianrong.common.uniauth.cas.service.CfgService;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,9 +15,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.FilterConfig;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -85,8 +89,8 @@ public final class CasCrossFilterCacheHelper {
     // 开启异步刷新线程
     SingleScheduledThreadPool.INSTANCE
         .loadScheduledTask(new RefreshCasCrossFilterCacheRunnable(this),
-            AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES,
-            AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES);
+            CasConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES,
+            CasConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES);
   }
 
   /**
@@ -95,12 +99,12 @@ public final class CasCrossFilterCacheHelper {
   public void refreshCache() {
     try {
       List<ConfigDto> cfges = cfgService
-          .queryConfigDtoByLikeCfgKeys(AppConstants.CAS_CFG_KEY_CROSS_FILTER_ORIGIN_PREFIX);
+          .queryConfigDtoByLikeCfgKeys(CasConstants.CAS_CFG_KEY_CROSS_FILTER_ORIGIN_PREFIX);
       if (cfges != null && !cfges.isEmpty()) {
         // 刷新缓存
         List<String> regulars = new ArrayList<String>();
         for (ConfigDto cto : cfges) {
-          if (AppConstants.CAS_CFG_TYPE_TEXT.equalsIgnoreCase(cto.getCfgType()) && !StringUtil
+          if (CasConstants.CAS_CFG_TYPE_TEXT.equalsIgnoreCase(cto.getCfgType()) && !StringUtil
               .strIsNullOrEmpty(cto.getValue())) {
             regulars.add(cto.getValue());
           }

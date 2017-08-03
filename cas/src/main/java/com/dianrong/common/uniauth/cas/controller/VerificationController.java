@@ -92,8 +92,7 @@ public class VerificationController {
   @ResponseBody
   @RequestMapping(value = "send/session", method = RequestMethod.GET)
   public Response<String> sendVerification(HttpServletRequest request, HttpServletResponse response) {
-    String identity = WebScopeUtil
-        .getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
+    String identity = WebScopeUtil.getIdentity(request.getSession());
     if (!StringUtils.hasText(identity)) {
       return Response.failure(Info.build(InfoName.IDENTITY_REQUIRED, "lack of identity"));
     } else {
@@ -167,8 +166,7 @@ public class VerificationController {
   @RequestMapping(value = "verify/session", method = RequestMethod.POST)
   public Response<Void> checkVerification(HttpServletRequest request, HttpServletResponse response,
       @RequestParam(value = "verifyCode", required = true) String verifyCode) {
-    String identity = WebScopeUtil
-        .getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
+    String identity = WebScopeUtil.getIdentity(request.getSession());
     if (!StringUtils.hasText(identity)) {
       return Response.failure(Info.build(InfoName.IDENTITY_REQUIRED, "lack of identity"));
     } else {

@@ -50,22 +50,24 @@ public class UserDto extends TenancyBaseDto {
   private List<UserExtendValDto> userExtendValDtos;
   @ApiModelProperty("辅助字段,与userExtendValDtos内容一致")
   private Map<String, String> userExtendValMap;
-
-  public List<UserExtendValDto> getUserExtendValDtos() {
-    return userExtendValDtos;
-  }
-
-  public void setUserExtendValDtos(List<UserExtendValDto> userExtendValDtos) {
-    this.userExtendValDtos = userExtendValDtos;
-  }
-
   // whether this user directly connected with a role
   @ApiModelProperty("辅助字段,判断是否与某个角色有关联关系")
   private Boolean roleChecked;
   // whether this user directly connected with a tag
   @ApiModelProperty("辅助字段,判断是否与某个标签有关联关系")
   private Boolean tagChecked;
+  @ApiModelProperty("辅助字段,原始密码")
+  private String originalPassword;
 
+  public List<UserExtendValDto> getUserExtendValDtos() {
+    return userExtendValDtos;
+  }
+
+  public UserDto setUserExtendValDtos(List<UserExtendValDto> userExtendValDtos) {
+    this.userExtendValDtos = userExtendValDtos;
+    return this;
+  }
+  
   public Boolean getTagChecked() {
     return tagChecked;
   }
@@ -258,6 +260,15 @@ public class UserDto extends TenancyBaseDto {
 
   public UserDto setFailCount(Byte failCount) {
     this.failCount = failCount;
+    return this;
+  }
+
+  public String getOriginalPassword() {
+    return originalPassword;
+  }
+
+  public UserDto setOriginalPassword(String originalPassword) {
+    this.originalPassword = originalPassword;
     return this;
   }
 }

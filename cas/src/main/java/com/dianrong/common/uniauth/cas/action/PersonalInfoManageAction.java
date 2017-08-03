@@ -1,10 +1,11 @@
 package com.dianrong.common.uniauth.cas.action;
 
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import org.jasig.cas.authentication.principal.Principal;
 import org.jasig.cas.web.flow.GenericSuccessViewAction;
 import org.jasig.cas.web.support.WebUtils;
@@ -77,12 +78,12 @@ public class PersonalInfoManageAction extends AbstractAction {
     } catch (Exception ex) {
       // 将异常信息仍到前端去
       context.getFlowScope()
-          .put(AppConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, ex.getMessage());
+          .put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, CasConstants.SERVER_PROCESS_ERROR);
       return result(NOTFOUND_USER_INFO);
     }
     if (userInfo == null) {
       context.getFlowScope()
-          .put(AppConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, "当前登录用户信息没找到");
+          .put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, "Current login user not found");
       return result(NOTFOUND_USER_INFO);
     }
 

@@ -2,16 +2,18 @@ package com.dianrong.common.uniauth.cas.controller;
 
 import com.dianrong.common.uniauth.cas.model.HttpResponseModel;
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.IOException;
 import java.io.Serializable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * @author wanglin
  */
-@Slf4j
 @Controller
 @RequestMapping("/initPassword")
 public class InitPasswordController {
@@ -71,7 +72,6 @@ public class InitPasswordController {
   @RequestMapping(value = "/process", method = RequestMethod.POST)
   protected void processInit(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    try {
       // 验证验证码
       String reqVerifycode = WebScopeUtil.getParamFromRequest(request, "verify_code");
       if (StringUtil.strIsNullOrEmpty(reqVerifycode)) {
@@ -91,11 +91,11 @@ public class InitPasswordController {
 
       // 获取请求的参数信息
       String reqAccount =
-          WebScopeUtil.getParamFromRequest(request, AppConstants.REQUEST_PARAMETER_KEY_EMAIL);
+          WebScopeUtil.getParamFromRequest(request, CasConstants.REQUEST_PARAMETER_KEY_EMAIL);
       String reqOriginpwd = WebScopeUtil.getParamFromRequest(request, "originpwd");
       String reqNewpwd = WebScopeUtil.getParamFromRequest(request, "newpwd");
       String reqTenancyCode = WebScopeUtil.getParamFromRequest(request,
-          AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
+          CasConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
 
       // 后端验证
       if (StringUtil.strIsNullOrEmpty(reqAccount)) {
@@ -119,7 +119,7 @@ public class InitPasswordController {
       try {
         userinfo = userInfoManageService.getUserDetailInfo(reqAccount, reqTenancyCode);
       } catch (Exception ex) {
-        responseVal(response, false, StringUtil.getExceptionSimpleMessage(ex.getMessage()));
+        responseVal(response, false, CasConstants.SERVER_PROCESS_ERROR);
         return;
       }
 
@@ -134,20 +134,11 @@ public class InitPasswordController {
       try {
         userInfoManageService.updateUserPassword(userinfo.getId(), reqNewpwd, reqOriginpwd);
       } catch (Exception ex) {
-        responseVal(response, false, StringUtil.getExceptionSimpleMessage(ex.getMessage()));
+        responseVal(response, false, CasConstants.SERVER_PROCESS_ERROR);
         return;
       }
       // 返回修改密码成功
       responseVal(response, true, "");
-    } catch (IOException ex) {
-      log.error("failed to process user password init", ex);
-      try {
-        responseVal(response, false, StringUtil.getExceptionSimpleMessage(ex.getMessage()));
-      } catch (IOException e) {
-        log.warn("failed to process user password init", e);
-        throw e;
-      }
-    }
   }
 
   /**

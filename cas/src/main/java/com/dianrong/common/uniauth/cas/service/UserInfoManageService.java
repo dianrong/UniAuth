@@ -11,7 +11,9 @@ import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +64,7 @@ public class UserInfoManageService extends BaseService {
 
   /**
    * 根据账号信息更新用户name.
+   * 
    * @param account 账号
    * @param tenancyId 租户id
    * @param newName 新的姓名
@@ -81,6 +84,7 @@ public class UserInfoManageService extends BaseService {
 
   /**
    * 根据账号信息更新Email.
+   * 
    * @param account 账号
    * @param tenancyId 租户id
    * @param email 新的邮箱
@@ -133,6 +137,29 @@ public class UserInfoManageService extends BaseService {
     UserParam userParam = new UserParam();
     userParam.setAccount(StringUtil.trimCompatibleNull(account));
     userParam.setTenancyId(tenancyId);
+    userParam.setPassword(newPassword);
+    userParam.setOriginPassword(originPassword);
+    userParam.setUserActionEnum(UserActionEnum.UPDATE_PASSWORD_BY_ACCOUNT);
+    Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
+    List<Info> infoList = response.getInfo();
+    checkInfoList(infoList);
+  }
+
+  /**
+   * 根据账号更新密码.
+   *
+   * @param account 账号
+   * @param tenancyCode 租户编码
+   * @param newPassword 新密码
+   * @param originPassword 原始密码
+   * @throws Exception 异常
+   */
+  @TenancyIdentity(index = 1, type = Type.CODE)
+  public void updatePassword(String account, String tenancyCode, String newPassword,
+      String originPassword) throws Exception {
+    UserParam userParam = new UserParam();
+    userParam.setAccount(StringUtil.trimCompatibleNull(account));
+    userParam.setTenancyCode(tenancyCode);
     userParam.setPassword(newPassword);
     userParam.setOriginPassword(originPassword);
     userParam.setUserActionEnum(UserActionEnum.UPDATE_PASSWORD_BY_ACCOUNT);

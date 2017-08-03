@@ -168,21 +168,21 @@ $(function() {
 	};
 
 	var processStep1 = function(){
-		var temalval = $('#temail').val();
-		var tverifycode =$('#tverfynotice').val();
-		if(!temalval || !tverifycode){
+		var identity = $('#identity').val();
+		var input_captcha =$('#input_captcha').val();
+		if(!identity || !input_captcha){
 			return;
 		}
 		
 		// filter email
-		if (!isEmailOrPhoneNumber(temalval)) {
+		if (!isEmailOrPhoneNumber(identity)) {
 			return;
 		}
 		
 		var turl = $('#step1Post').attr('action');
 		var data = {
-				'email' : temalval,
-				'pageVerifyCode' : tverifycode,
+				'identity' : identity,
+				'captcha' : input_captcha,
 				'step' : '1',
 				'tenancyCode': cookieOperation.getTenancyCode(),
 		};
@@ -196,28 +196,28 @@ $(function() {
             	setWarnLabel($('#temailwarn'), '');
             },
             success : function(result) {// 返回数据根据结果进行相应的处理
-                if (result.issuccess == 'true') {  
-                    if(result.code == '0'){
+                if (result.success) {  
+                    if(result.code === '0'){
                     	// 跳转到第二步
                     	window.location = processUrl + '?step=2';
                     	return;
                     }
-                    if(result.code == '1') {
+                    if(result.code === '1') {
                     	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.captcha'));
                     	return;
                     }
                     
-                    if(result.code == '2') {
+                    if(result.code === '2') {
                     	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.wrong.captcha'));
                     	return;
                     }
                     
-                    if(result.code == '3') {
+                    if(result.code === '3') {
                     	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.email'));
                     	return;
                     }
                     
-                    if(result.code == '4') {
+                    if(result.code === '4') {
                     	setWarnLabel($('#temailwarn'), result.msg);
                     	return;
                     }
@@ -289,30 +289,30 @@ $(function() {
             	setWarnLabel($('#newpwdwarn'), '');
             },
             success : function(result) {// 返回数据根据结果进行相应的处理
-                if (result.issuccess == 'true') {  
-                    if(result.code == '0'){
+                if (result.success) {  
+                    if(result.code === '0'){
                     	// 跳转到第四步
                     	window.location = processUrl + '?step=4';
                     	return;
                     }
                     // 重新跳转到首页登录
-                    if(result.code == '1') {
+                    if(result.code === '1') {
                     	// 跳转到第一步
                     	window.location = processUrl + '?step=1';
                     	return;
                     }
                     
-                    if(result.code == '2') {
+                    if(result.code === '2') {
                     	setWarnLabel($('#newpwdwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.newpwd'));
                     	return;
                     }
                     
-                    if(result.code == '3') {
+                    if(result.code === '3') {
                     	setWarnLabel($('#newpwdwarn'), result.msg);
                     	return;
                     }
                     
-                    if(result.code == '4') {
+                    if(result.code === '4') {
                     	// 跳转到第一步
                     	window.location = processUrl + '?step=2';
                     	return;
