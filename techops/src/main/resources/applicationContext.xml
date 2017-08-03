@@ -47,6 +47,10 @@
 
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">
+		<sec:headers>
+			<sec:frame-options disabled="true"/>
+		</sec:headers>
+
 		<sec:custom-filter ref="casAuthenticationFilter"
 			position="CAS_FILTER" />
 		<sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER"
