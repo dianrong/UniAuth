@@ -45,14 +45,12 @@
 	<sec:http pattern="/beans" security="none" />
 	<sec:http pattern="/dump" security="none" />
 
-	<sec:http>
-		<sec:headers>
-			<sec:frame-options policy="SAMEORIGIN"/>
-		</sec:headers>
-	</sec:http>
-
 	<sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
 		request-matcher="ant">
+		<sec:headers>
+			<sec:frame-options disabled="true"/>
+		</sec:headers>
+
 		<sec:custom-filter ref="casAuthenticationFilter"
 			position="CAS_FILTER" />
 		<sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER"
