@@ -22,7 +22,7 @@ dependencies {
 	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
 	
 	compile 'javax.servlet:javax.servlet-api'
-
+	
     // spring security
     compileOnly "org.springframework.security:spring-security-web:4.2.1.RELEASE"
     compileOnly "org.springframework.security:spring-security-config:4.2.1.RELEASE"
@@ -34,6 +34,9 @@ dependencies {
 	
 	// swagger
 	compileOnly 'io.swagger:swagger-annotations:1.5.12'
+	
+	// Jwt
+    compileOnly 'com.auth0:java-jwt:3.0.2'
 	
 	// jackson
 	compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"

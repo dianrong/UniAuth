@@ -1,4 +1,6 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.handler;
+
+import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;

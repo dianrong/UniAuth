@@ -45,7 +45,7 @@ public class XssUrlPathHelper extends UrlPathHelper {
   }
 
   /**
-   * 处理xss攻击的问题.
+   * 处理XSS攻击的问题.
    */
   protected String cleanXss(String value) {
     return StringEscapeUtils.escapeXml11(value);

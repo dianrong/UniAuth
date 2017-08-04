@@ -27,7 +27,7 @@ public class ConcurrentSessionFilterConfigure implements Configure<ConcurrentSes
   private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
   @Override
-  public ConcurrentSessionFilter create() {
+  public ConcurrentSessionFilter create(Object... args) {
     ConcurrentSessionFilter concurrentSessionFilter = new ConcurrentSessionFilter(sessionRegistry,
         getExpiredUrl());
     concurrentSessionFilter.setRedirectStrategy(redirectStrategy);

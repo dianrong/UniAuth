@@ -48,9 +48,10 @@ public class UserResource implements IUserRWResource {
   @Override
   public Response<UserDto> updateUser(UserParam userParam) {
     UserDto userDto = userService.updateUser(userParam.getUserActionEnum(), userParam.getId(),
-        userParam.getAccount(), userParam.getTenancyId(), userParam.getName(), userParam.getPhone(),
-        userParam.getEmail(), userParam.getPassword(), userParam.getOriginPassword(),
-        userParam.getIgnorePwdStrategyCheck(), userParam.getStatus());
+        userParam.getAccount(), userParam.getTenancyId(), userParam.getTenancyCode(),
+        userParam.getName(), userParam.getPhone(), userParam.getEmail(), userParam.getPassword(),
+        userParam.getOriginPassword(), userParam.getIgnorePwdStrategyCheck(),
+        userParam.getStatus());
     return Response.success(userDto);
   }
 

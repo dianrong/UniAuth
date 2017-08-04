@@ -1,8 +1,11 @@
 package com.dianrong.common.uniauth.cas.action;
 
-import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
+
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.util.UniqueTicketIdGenerator;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +32,11 @@ public class CustomLoginGenerateLoginTicketAction {
    */
   public final String generate(final RequestContext context) {
     final String loginTicket = this.ticketIdGenerator
-        .getNewTicketId(AppConstants.CAS_LOGIN_TICKET_PREFIX);
+        .getNewTicketId(CasConstants.CAS_LOGIN_TICKET_PREFIX);
     log.debug("Generated login ticket {}", loginTicket);
     // 放session中
     final HttpServletRequest request = WebUtils.getHttpServletRequest(context);
-    request.getSession().setAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY, loginTicket);
+    request.getSession().setAttribute(CasConstants.CAS_CUSTOM_LOGIN_LT_KEY, loginTicket);
     return "generated";
   }
 }

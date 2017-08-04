@@ -1,60 +1,104 @@
 package com.dianrong.common.uniauth.cas.controller;
 
 import com.dianrong.common.uniauth.cas.service.ForgetPasswordService;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
-public class ForgetPasswordController extends AbstractBaseController {
-
-  private ForgetPasswordService forgetPasswordService;
+@Slf4j
+public class ForgetPasswordController extends AbstractController {
 
   /**
-   * 进入第一页开始验证 清空所有的验证缓存.
+   * 定义在找回密码操作中的一些请求参数的KEY.
    */
+  private static final String PARAMETER_STEP_KEY = "step";
+  private static final String REQUEST_CAPTCHA_KEY = "captcha";
+  private static final String IDENTITY_KEY = "identity";
+  private static final String NEW_PSWD_KEY = "newPassword";
+
+  /**
+   * 操作失败的信息.
+   */
+  private static final String PROCESS_FAILED_MSG = "Process failed";
+
+  // 定义找回密码的每一个步骤
+  /**
+   * 输入身份标识信息.邮箱或者电话号码.
+   */
+  private static final String STEP_0 = "0";
+
+  /**
+   * 与Step0一致,但需要输入验证码.
+   */
+  private static final String STEP_1 = "1";
+
+  /**
+   * 根据邮件或短信来验证身份.
+   */
+  private static final String STEP_2 = "2";
+
+  /**
+   * 设置新密码.
+   */
+  private static final String STEP_3 = "3";
+
+  /**
+   * 密码设置成功.
+   */
+  private static final String STEP_4 = "4";
+
+  /**
+   * 处理找回密码的Service.
+   */
+  private ForgetPasswordService forgetPasswordService;
+
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
       HttpServletResponse response) throws Exception {
-    // judge by step parameter
-    // it's this controller which guarantees the security of reseting
-    // password, so need store the status of each step, in session
-    // in other words, you yourself maintain the status, and need check
-    // previous step when performing next step
-    // cannot invalidate session at the end of this process, because this
-    // will affect cas server, they are sharing a same jsessionid.
-    String step = getParamFromRequest(request, AppConstants.PSWDFORGET_DISPATCHER_STEP_KEY);
-    String method = request.getMethod();
-    if (StringUtil.strIsNullOrEmpty(step) || (!"post".equalsIgnoreCase(method) && !("get")
-        .equalsIgnoreCase(method))) {
+    String step = WebScopeUtil.getParamFromRequest(request, PARAMETER_STEP_KEY);
+    if (StringUtil.strIsNullOrEmpty(step)
+        || (!isHandleRequest(request) && !isQueryPageRequest(request))) {
       return null;
     }
 
     // step0
-    if ("0".equals(step)) {
+    if (STEP_0.equals(step)) {
       return toStep1(request, response);
     }
 
     // step1
-    if ("1".equals(step)) {
+    if (STEP_1.equals(step)) {
       handleStep1(request, response);
     }
 
     // step2
-    if ("2".equals(step)) {
-      if ("get".equalsIgnoreCase(method)) {
+    if (STEP_2.equals(step)) {
+      if (isQueryPageRequest(request)) {
         return toStep2(request, response);
       }
     }
 
     // step3
-    if ("3".equals(step)) {
-      if ("get".equalsIgnoreCase(method)) {
+    if (STEP_3.equals(step)) {
+      if (isQueryPageRequest(request)) {
         return toStep3(request, response);
       } else {
         handleStep3(request, response);
@@ -62,8 +106,7 @@ public class ForgetPasswordController extends AbstractBaseController {
     }
 
     // step4
-    if ("4".equals(step)) {
-      // 所有method全部提供一样实现
+    if (STEP_4.equals(step)) {
       return toStep4(request, response);
     }
 
@@ -71,7 +114,7 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * Process step1.
+   * To step1 page.
    */
   private ModelAndView toStep1(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -88,9 +131,9 @@ public class ForgetPasswordController extends AbstractBaseController {
   private ModelAndView toStep2(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
     HttpSession session = request.getSession(false);
-    // 必须要有邮箱
-    String email = getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY, String.class);
-    if (StringUtil.strIsNullOrEmpty(email)) {
+    // 必须要有身份标识信息.
+    String identity = WebScopeUtil.getIdentity(session);
+    if (StringUtil.strIsNullOrEmpty(identity)) {
       return getPwdForgetStep1Page();
     }
     return getPwdForgetStep2Page();
@@ -103,8 +146,7 @@ public class ForgetPasswordController extends AbstractBaseController {
       throws Exception {
     HttpSession session = request.getSession(false);
     // 必须要有账号
-    String identity = getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY,
-        String.class);
+    String identity = WebScopeUtil.getIdentity(session);
     if (StringUtil.strIsNullOrEmpty(identity)) {
       return getPwdForgetStep1Page();
     }
@@ -124,68 +166,60 @@ public class ForgetPasswordController extends AbstractBaseController {
       throws Exception {
     HttpSession session = request.getSession(false);
 
-    String email = getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY, String.class);
+    String identity = WebScopeUtil.getIdentity(session);
     // clear session
     clearAllSessionVal(session);
 
-    // 保存一下当前修改完成密码的邮箱地址到session中
-    putValToSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY,
-        StringUtil.strIsNullOrEmpty(email) ? "" : email);
+    WebScopeUtil.putIndentity(session, StringUtils.hasText(identity) ? identity : "");
     return getPwdForgetStep4Page();
   }
 
   /**
-   * Handler step1.
+   * Handle step1.
    */
   private void handleStep1(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
     HttpSession session = request.getSession(false);
     // 验证验证码
-    String verifyCode = getParamFromRequest(request,
-        AppConstants.PSWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY);
-    if (StringUtil.strIsNullOrEmpty(verifyCode)) {
+    String inputCaptcha = WebScopeUtil.getParamFromRequest(request, REQUEST_CAPTCHA_KEY);
+    if (StringUtil.strIsNullOrEmpty(inputCaptcha)) {
       // 验证码为空了
-      setResponseResultJson(response, "1");
+      responseJson(response, AjaxResult.CODE_1);
       return;
     } else {
       // 判断验证码
-      String captcha = getValFromSession(session, AppConstants.CAS_CAPTCHA_SESSION_KEY,
-          String.class);
-      if (!verifyCode.equals(captcha)) {
-        // 验证码不对
-        setResponseResultJson(response, "2");
+      if (!WebScopeUtil.checkCaptchaFromSession(session, inputCaptcha)) {
+        responseJson(response, AjaxResult.CODE_2);
         return;
       }
     }
 
     // 从request中获取邮箱或者手机号
-    String identity = getParamFromRequest(request, AppConstants.PSWDFORGET_MAIL_VAL_CLIENT_KEY);
+    String identity = WebScopeUtil.getParamFromRequest(request, IDENTITY_KEY);
     // 返回step 1
     if (StringUtil.strIsNullOrEmpty(identity)) {
       // email 为空了
-      setResponseResultJson(response, "3");
+      responseJson(response, AjaxResult.CODE_3);
       return;
     }
-    String tenancyCode = getParamFromRequest(request,
-        AppConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
+    String tenancyCode =
+        WebScopeUtil.getParamFromRequest(request, CasConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
     UserDto user = null;
     try {
-      // 验证邮箱是否存在
       user = forgetPasswordService.checkUser(identity, tenancyCode);
       Assert.notNull(user,
           "can not find user, email or phone :" + identity + ", tenancyCode:" + tenancyCode);
     } catch (Exception ex) {
       // 验证用户失败了
-      setResponseResultJson(response, "4", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
+      responseJson(response, AjaxResult.CODE_4, PROCESS_FAILED_MSG);
       return;
     }
 
     // 往session里面放email
-    putValToSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY, identity);
-    putValToSession(session, AppConstants.PSWDFORGET_TENAYC_ID_KEY,
-        StringUtil.translateIntegerToLong(user.getTenancyId()));
+    WebScopeUtil.putIndentity(session, identity);
+    WebScopeUtil.putTenancyId(session, StringUtil.translateIntegerToLong(user.getTenancyId()));
     // 成功进入第二步
-    setResponseResultJson(response, "0");
+    responseJson(response, AjaxResult.CODE_0);
   }
 
   /**
@@ -195,38 +229,37 @@ public class ForgetPasswordController extends AbstractBaseController {
       throws Exception {
     HttpSession session = request.getSession(false);
     // 必须要有邮箱or phone number
-    String identity = getValFromSession(session, AppConstants.PSWDFORGET_MAIL_VAL_KEY,
-        String.class);
-    Long tenancyId = getValFromSession(session, AppConstants.PSWDFORGET_TENAYC_ID_KEY, Long.class);
-    if (StringUtil.strIsNullOrEmpty(identity)) {
-      setResponseResultJson(response, "1");
+    String identity = WebScopeUtil.getIdentity(session);
+    Long tenancyId = WebScopeUtil.getTenancyId(session);
+    if (StringUtil.strIsNullOrEmpty(identity) || tenancyId == null) {
+      responseJson(response, AjaxResult.CODE_1);
       return;
     }
 
     // 新密码
-    String newPwd = getParamFromRequest(request, AppConstants.PSWDFORGET_NEW_PSWD_KEY);
+    String newPwd = WebScopeUtil.getParamFromRequest(request, NEW_PSWD_KEY);
     if (StringUtil.strIsNullOrEmpty(newPwd) || tenancyId == null) {
-      setResponseResultJson(response, "2");
+      responseJson(response, AjaxResult.CODE_2);
       return;
     }
 
     // 必须要邮箱验证码通过
     if (!WebScopeUtil.getVerificationIsChecked(session, identity)) {
-      setResponseResultJson(response, "4");
+      responseJson(response, AjaxResult.CODE_4);
     }
     // 后端修改密码
     try {
       forgetPasswordService.resetPasswordByIdentity(identity, tenancyId, newPwd);
     } catch (Exception ex) {
-      setResponseResultJson(response, "3", StringUtil.getExceptionSimpleMessage(ex.getMessage()));
+      responseJson(response, AjaxResult.CODE_4, PROCESS_FAILED_MSG);
       return;
     }
     // 修改成功
-    setResponseResultJson(response, "0");
+    responseJson(response, AjaxResult.CODE_0);
   }
 
   /**
-   * Get Pwdforget step1 page.
+   * To step3 page.
    */
   private ModelAndView getPwdForgetStep1Page() {
     ModelAndView step1Page = new ModelAndView("dianrong/forgetpwd/inputEmailView");
@@ -234,21 +267,21 @@ public class ForgetPasswordController extends AbstractBaseController {
   }
 
   /**
-   * Get Pwdforget step2 page.
+   * To step2 page.
    */
   private ModelAndView getPwdForgetStep2Page() {
     return new ModelAndView("dianrong/forgetpwd/getEmailVerifyCodeView");
   }
 
   /**
-   * Get pwdforget step3 page.
+   * To step3 page.
    */
   private ModelAndView getPwdForgetStep3Page() {
     return new ModelAndView("dianrong/forgetpwd/resetPasswordView");
   }
 
   /**
-   * Get pwdforget step4 page.
+   * To step4 page.
    */
   private ModelAndView getPwdForgetStep4Page() {
     return new ModelAndView("dianrong/forgetpwd/resetPwdSuccess");
@@ -259,15 +292,83 @@ public class ForgetPasswordController extends AbstractBaseController {
    */
   private void clearAllSessionVal(HttpSession session) {
     if (session != null) {
-      session.removeAttribute(AppConstants.PSWDFORGET_MAIL_VAL_KEY);
-
-      session.removeAttribute(AppConstants.CAS_CAPTCHA_SESSION_KEY);
-
-      session.removeAttribute(AppConstants.PSWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY);
+      WebScopeUtil.removeCaptchaFromSession(session);
+      WebScopeUtil.removeIdentity(session);
+      WebScopeUtil.removeTenancyId(session);
     }
   }
 
-  // 服务对象
+  /**
+   * 发送JSON格式信息到输出流.
+   */
+  private void responseJson(HttpServletResponse response, String code) {
+    try {
+      response.getWriter().write(getJson(code));
+    } catch (IOException e) {
+      log.error("send ajax json exception:" + e.getMessage());
+    }
+  }
+
+  /**
+   * 发送JSON格式信息到输出流.
+   */
+  private void responseJson(HttpServletResponse response, String code, String msg) {
+    try {
+      response.getWriter().write(getJson(code, true, msg));
+    } catch (IOException e) {
+      log.error("send ajax json exception:" + e.getMessage());
+    }
+  }
+
+  private String getJson(String code) {
+    return getJson(code, true, "");
+  }
+
+  private String getJson(String code, boolean success, String msg) {
+    AjaxResult result = new AjaxResult();
+    result.setCode(code);
+    result.setMsg(msg);
+    result.setSuccess(success);
+    return JsonUtil.object2Jason(result);
+  }
+
+  @Getter
+  @Setter
+  @ToString
+  private static final class AjaxResult {
+    /**
+     * 结果编码0. 标识操作成功.
+     */
+    private static final String CODE_0 = "0";
+    private static final String CODE_1 = "1";
+    private static final String CODE_2 = "2";
+    private static final String CODE_3 = "3";
+    private static final String CODE_4 = "4";
+    private String code;
+    private boolean success;
+    private String msg;
+  }
+
+  /**
+   * GET请求?
+   */
+  private boolean isQueryPageRequest(HttpServletRequest request) {
+    if ("GET".equalsIgnoreCase(request.getMethod())) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * POST请求?
+   */
+  private boolean isHandleRequest(HttpServletRequest request) {
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+      return true;
+    }
+    return false;
+  }
+
   public ForgetPasswordService getForgetPasswordService() {
     return forgetPasswordService;
   }

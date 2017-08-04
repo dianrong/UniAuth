@@ -16,6 +16,12 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.util.Assert;
 
+/**
+ * 该类已经废弃,已修改为:com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter
+ * 
+ *  @see com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter
+ */
+@Deprecated
 @Slf4j
 public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
 

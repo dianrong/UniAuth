@@ -32,7 +32,6 @@ String bversion = (String)application.getAttribute("cas_v");
 
 <script type="text/javascript" src="<%=bpath %>/js/common.js?v=<%=bversion %>" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/head.min.js?v=<%=bversion %>" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/cas.js?v=<%=bversion %>" ></script>
 </body>
 </html>
 

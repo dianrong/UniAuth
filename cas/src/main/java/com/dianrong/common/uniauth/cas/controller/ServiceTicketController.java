@@ -7,13 +7,16 @@ import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
 import com.dianrong.common.uniauth.cas.model.CasRememberMeUsernamePasswordCredential;
 import com.dianrong.common.uniauth.cas.service.CfgService;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
@@ -21,7 +24,9 @@ import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.AuthenticationException;
@@ -52,7 +57,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Slf4j
 @Controller
 @RequestMapping("/serviceticket")
-public class GetServiceTicketController {
+public class ServiceTicketController {
 
   @Autowired
   private List<ArgumentExtractor> argumentExtractors;
@@ -197,15 +202,14 @@ public class GetServiceTicketController {
       HttpServletResponse response) {
     // 校验验证码
     CasLoginCaptchaInfoModel captchaInfo = WebScopeUtil.getValFromSession(request.getSession(),
-        AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+        CasConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
     if (captchaInfo == null) {
       WebScopeUtil.putCaptchaInfoToSession(request.getSession(), new CasLoginCaptchaInfoModel());
     } else {
       if (!captchaInfo.canLoginWithoutCaptcha()) {
         // 校验验证码
-        String serverCaptcha = WebScopeUtil.getCaptchaFromSession(request.getSession());
         String clientCaptha = request.getParameter("captcha");
-        if (serverCaptcha == null || !serverCaptcha.equals(clientCaptha)) {
+        if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), clientCaptha)) {
           return new CasGetServiceTicketModel(false,
               CasGetServiceTicketModel.LOGIN_EXCEPTION_CAPTCHA_VALID_FAILED,
               "valid parameter captcha failed");
@@ -293,8 +297,8 @@ public class GetServiceTicketController {
   private String getCustomLoginLoginTicketAndRemove(HttpServletRequest request) {
     HttpSession session = request.getSession(false);
     if (session != null) {
-      String lt = (String) (session.getAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY));
-      session.removeAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY);
+      String lt = (String) (session.getAttribute(CasConstants.CAS_CUSTOM_LOGIN_LT_KEY));
+      session.removeAttribute(CasConstants.CAS_CUSTOM_LOGIN_LT_KEY);
       return lt;
     }
     return null;
@@ -308,7 +312,7 @@ public class GetServiceTicketController {
   private void replaceLoginTicket(HttpServletRequest request, String newLt) {
     HttpSession session = request.getSession(false);
     if (session != null) {
-      session.setAttribute(AppConstants.CAS_CUSTOM_LOGIN_LT_KEY, newLt);
+      session.setAttribute(CasConstants.CAS_CUSTOM_LOGIN_LT_KEY, newLt);
     }
   }
 
@@ -328,7 +332,7 @@ public class GetServiceTicketController {
     if (!obj.getResultSuccess()) {
       // 重新生成lt
       final String loginTicket =
-          this.ticketIdGenerator.getNewTicketId(AppConstants.CAS_LOGIN_TICKET_PREFIX);
+          this.ticketIdGenerator.getNewTicketId(CasConstants.CAS_LOGIN_TICKET_PREFIX);
       replaceLoginTicket(request, loginTicket);
       obj.setLt(loginTicket);
 

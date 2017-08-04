@@ -1,10 +1,12 @@
 package com.dianrong.common.uniauth.cas.model;
 
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.Serializable;
 import java.util.List;
+
 import org.springframework.util.Assert;
 
 /**
@@ -66,7 +68,7 @@ public class CasCfgCacheModel implements Serializable {
       throw new NullPointerException();
     }
     switch (cfgKey.trim()) {
-      case AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG:
+      case CasConstants.CAS_CFG_KEY_LOGIN_AD_IMG:
         return this.loginPageAd;
       default:
         return null;
@@ -82,15 +84,15 @@ public class CasCfgCacheModel implements Serializable {
       throw new NullPointerException();
     }
     switch (cfgKey.trim()) {
-      case AppConstants.CAS_CFG_KEY_LOGO:
+      case CasConstants.CAS_CFG_KEY_LOGO:
         return this.logo;
-      case AppConstants.CAS_CFG_KEY_ICON:
+      case CasConstants.CAS_CFG_KEY_ICON:
         return this.pageIcon;
-      case AppConstants.CAS_CFG_KEY_TITLE:
+      case CasConstants.CAS_CFG_KEY_TITLE:
         return this.pageTitle;
-      case AppConstants.CAS_CFG_KEY_ALL_RIGHT:
+      case CasConstants.CAS_CFG_KEY_ALL_RIGHT:
         return this.bottomAllRightText;
-      case AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR:
+      case CasConstants.CAS_CFG_KEY_BACKGROUND_COLOR:
         return this.backgroundColorText;
       default:
         return null;

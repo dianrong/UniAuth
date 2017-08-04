@@ -203,7 +203,7 @@ public class UserLoginController {
   }
 
   /**
-   * 便利的class, 用于包装结果和结果对应的消息码.
+   * 便利的类, 用于包装结果和结果对应的消息码.
    */
   static class CodeMessage {
 

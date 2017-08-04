@@ -28,8 +28,5 @@ String bversion = (String)application.getAttribute("cas_v");
 <script type="text/javascript" src="<%=bpath %>/jquery/jquery.i18n.properties-min-1.0.9.js?v=<%=bversion %>" ></script>
 <script type="text/javascript" src="<%=bpath %>/bootstrap-3.3.5/js/bootstrap.min.js?v=<%=bversion %>" ></script>
 <script type="text/javascript" src="<%=bpath %>/js/common.js?v=<%=bversion %>" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/pwdforget.js?v=<%=bversion %>" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/userinfoedit.js?v=<%=bversion %>" ></script>
-<script type="text/javascript" src="<%=bpath %>/js/initpwd.js?v=<%=bversion %>" ></script>
 </html>
 

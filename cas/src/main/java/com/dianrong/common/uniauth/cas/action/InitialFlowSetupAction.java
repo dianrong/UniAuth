@@ -1,13 +1,17 @@
 package com.dianrong.common.uniauth.cas.action;
 
 import com.dianrong.common.uniauth.cas.service.DomainService;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.services.RegisteredService;
 import org.jasig.cas.services.ServicesManager;
@@ -64,11 +68,11 @@ public final class InitialFlowSetupAction extends AbstractAction {
   @Override
   protected Event doExecute(final RequestContext context) throws Exception {
     final HttpServletRequest request = WebUtils.getHttpServletRequest(context);
-    // 添加分之处理用户编辑管理
-    String requestType = request.getParameter(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY);
+    // 添加分支处理用户编辑管理
+    String requestType = request.getParameter(CasConstants.CAS_USERINFO_MANAGE_EDIT_KEY);
     if (!StringUtil.strIsNullOrEmpty(requestType)) {
       // 往flowscope中放入一个标识符用于区分不同的流程
-      context.getFlowScope().put(AppConstants.CAS_USERINFO_MANAGE_EDIT_KEY, "go");
+      context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_EDIT_KEY, "go");
     }
     if (!this.pathPopulated) {
       final String contextPath = context.getExternalContext().getContextPath();

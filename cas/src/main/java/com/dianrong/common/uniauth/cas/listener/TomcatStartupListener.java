@@ -2,9 +2,11 @@ package com.dianrong.common.uniauth.cas.listener;
 
 import com.dianrong.common.uniauth.cas.helper.thread.RfreshCasCfgCacheRunnable;
 import com.dianrong.common.uniauth.cas.helper.thread.SingleScheduledThreadPool;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,7 +23,7 @@ public class TomcatStartupListener implements ServletContextListener {
     // Tomcat启动, 启动起线程开始慢慢刷新缓存
     SingleScheduledThreadPool.INSTANCE
         .loadScheduledTask(new RfreshCasCfgCacheRunnable(sce.getServletContext()), 0L,
-            AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES);
+            CasConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES);
   }
 
   @Override

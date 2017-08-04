@@ -1,3 +1,4 @@
+// 个人信息修改页面
 $(function() {
 	var updateInfoUrl = context_path+"/uniauth/userinfo";
 	var verifyProcessUrl = context_path+"/uniauth/verification";
@@ -63,6 +64,13 @@ $(function() {
 		$('#update_email_captcha').keyup(update_email_verify_btn_process);
 		// update phone
 		$('#update_phone_captcha').keyup(update_phone_verify_btn_process);
+		
+		// 更新密码
+		$('#captcha_pic').click(function(){
+			refresh_verfypic($('#captcha_pic'));
+		});
+		$('.update-password-text-check').keyup(update_password_confirm_check);
+		$('#update_password_confirm_btn').click(update_password_confirm);
 	}
 	// 显示和隐藏修改姓名框
 	var update_user_name_show = function(show) {
@@ -153,33 +161,59 @@ $(function() {
 			$('#update_email_warninfo').html($.i18n.prop('frontpage.userinfo.edit.update.invalid.email'));
 			return;
 		}
-		var data = {
-				identity : $('#update_email_new_email').val()
-		};
-		$.ajax({  
-            type : "POST", 
-            url : verifyProcessUrl+'/send',
-            data : data,
-            dataType : 'json',
-            success : function(data) {
-            	   if(data.info) {
-            		   $('#update_email_warninfo').html(data.info[0].msg);
-            	   } else {
-            		   if (data.data) {
-            			   $('#email_verify_code_div').html(data.data);
-            		   }
-            		   // success
-            		   var count_btn = $('#get_email_captcha');
-	                   	countBtn(count_btn, function(new_label){
-	                   		count_btn.html(new_label)
-	                   	},function(){
-	                   		return count_btn.html();
-	                   	}, 120);
-            	   }
-            },error: function(jqXHR, textStatus, errorMsg){
-            	logOperation.error(errorMsg);
-            }
-        });  
+		
+		// 隐藏自身
+		$('#modal-new-email').modal('hide');
+		
+		// 展示验证码
+		captcha_validate_modal.process(
+			function(captcha_val, error_callback, refresh_captcha) {
+				if (!captcha_val) {
+					return;
+				}
+				var data = {
+						identity : $('#update_email_new_email').val(),
+						captcha : captcha_val
+				};
+				$.ajax({  
+		            type : "POST", 
+		            url : verifyProcessUrl+'/send',
+		            data : data,
+		            dataType : 'json',
+		            success : function(data) {
+		            	   if(data.info) {
+		            		// 处理异常信息
+		            		error_callback(data.info[0].msg);
+		            	   } else {
+		            		   if (data.data) {
+		            			   $('#email_verify_code_div').html(data.data);
+		            		   }
+		            		   // success
+		            		   var count_btn = $('#get_email_captcha');
+			                   	countBtn(count_btn, function(new_label){
+			                   		count_btn.html(new_label)
+			                   	},function(){
+			                   		return count_btn.html();
+			                   	}, 120);
+			                   	
+			                   	// 处理成功显示modal
+			                   	captcha_validate_modal.dismiss();
+			                   	$('#modal-new-email').modal('show');
+		            	   }
+		            },error: function(jqXHR, textStatus, errorMsg){
+		            	logOperation.error(errorMsg);
+		            },
+		            complete: function(XMLHttpRequest, textStatus) {
+		            	refresh_captcha();
+		            }
+		        });  
+			},
+			// 点击取消按钮函数
+			function(captcha_val, refresh_captcha) {
+				refresh_captcha();
+				$('#modal-new-email').modal('show');
+			}
+		);
 	}
 	// confirm
 	var update_email_to_check_verifycode = function () {
@@ -269,33 +303,58 @@ $(function() {
 			$('#update_phone_warninfo').html($.i18n.prop('frontpage.userinfo.edit.update.invalid.phone'));
 			return;
 		}
-		var data = {
-				identity : $('#update_phone_new_phone').val()
-		};
-		$.ajax({  
-            type : "POST", 
-            url : verifyProcessUrl+'/send',
-            data : data,
-            dataType : 'json',
-            success : function(data) {
-            	   if(data.info) {
-            		   $('#update_phone_warninfo').html(data.info[0].msg);
-            	   } else {
-            		   if (data.data) {
-            			   $('#phone_verify_code_div').html(data.data);
-            		   }
-            		   // success
-            		   var count_btn = $('#get_phone_captcha');
-	                   	countBtn(count_btn, function(new_label){
-	                   		count_btn.html(new_label)
-	                   	},function(){
-	                   		return count_btn.html();
-	                   	}, 120);
-            	   }
-            },error: function(jqXHR, textStatus, errorMsg){
-            	logOperation.error(errorMsg);
-            }
-        });  
+		
+		// 隐藏自己
+		$('#modal-new-phone').modal('hide');
+		
+		// 展示验证码
+		captcha_validate_modal.process(
+			function(captcha_val, error_callback, refresh_captcha) {
+				if (!captcha_val) {
+					return;
+				}
+				var data = {
+					identity : $('#update_phone_new_phone').val(),
+					captcha : captcha_val
+				};
+				$.ajax({  
+		            type : "POST", 
+		            url : verifyProcessUrl+'/send',
+		            data : data,
+		            dataType : 'json',
+		            success : function(data) {
+		            	   if(data.info) {
+		            		   error_callback(data.info[0].msg);
+		            	   } else {
+		            		   if (data.data) {
+		            			   $('#phone_verify_code_div').html(data.data);
+		            		   }
+		            		   // success
+		            		   var count_btn = $('#get_phone_captcha');
+			                   	countBtn(count_btn, function(new_label){
+			                   		count_btn.html(new_label)
+			                   	},function(){
+			                   		return count_btn.html();
+			                   	}, 120);
+			                 
+			                   	captcha_validate_modal.dismiss();
+			                   	// 处理成功显示modal
+			                   	$('#modal-new-phone').modal('show');
+		            	   }
+		            },error: function(jqXHR, textStatus, errorMsg){
+		            	logOperation.error(errorMsg);
+		            },
+		            complete: function(XMLHttpRequest, textStatus) {
+		            	refresh_captcha();
+		            }
+		        });  
+			},
+			// 点击取消按钮函数
+			function(captcha_val, refresh_captcha) {
+				refresh_captcha();
+				$('#modal-new-phone').modal('show');
+			}
+		);
 	}
 	// check verification 
 	var update_phone_to_check_verifycode = function () {
@@ -334,7 +393,7 @@ $(function() {
             dataType : 'json',
             success : function(data) {
             	   if(data.info) {
-            		   $('#update_email_warninfo').html(data.info[0].msg);
+            		   $('#update_phone_warninfo').html(data.info[0].msg);
             	   } else {
             		   // success
             		   $('#modal-new-phone').modal('hide');
@@ -461,6 +520,74 @@ $(function() {
             }, complete : function(){
             	//关闭模态框
             	$('#modal-new-password').modal('hide');
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	}
+	
+	// 更新密码
+	var update_password_confirm_check = function(refresh_html_ele) {
+		var check_pass = true;
+		$('.update-password-text-check').each(function(){
+			var val = $(this).val();
+			if (!val) {
+				check_pass = false;
+			}
+		});
+		if(check_pass) {
+			// check identity
+			var identity = $('#update_password_identity').val();
+			if (!isPhoneNumber(identity) && !isEmail(identity)) {
+				check_pass = false;
+			}
+		}
+		
+		if(check_pass) {
+			// check password
+			var new_password = $('#update_password_new_password').val();
+			var confirm_password = $('#update_password_confirm_password').val();
+			if (new_password !== confirm_password) {
+				check_pass = false;
+			}
+		}
+		
+		if(refresh_html_ele == undefined || refresh_html_ele) {
+			if (check_pass) {
+				$('#update_password_confirm_btn').removeAttr("disabled");
+			} else {
+				$('#update_password_confirm_btn').attr("disabled", "disabled");
+			}
+		}
+		return check_pass;
+	}
+	
+	var update_password_confirm = function() {
+		var check_pass = update_password_confirm_check(false);
+		if (!check_pass) {
+			return;
+		}
+		var data = {
+			captcha: $('#input_captcha').val(),
+			identity: $('#update_password_identity').val(),
+			tenancyCode: cookieOperation.getTenancyCode(),
+			originalPassword: $('#update_password_original_password').val(),
+			password: $('#update_password_new_password').val()
+		};
+		$.ajax({  
+            type : "POST", 
+            url : updateInfoUrl+'/update/password',
+            data : data,
+            dataType : 'json',
+            success : function(data) {
+               if(data.info) {
+          		  infonotice(showFailTag, data.info[0].msg);
+          	   } else {
+          		   $('#update_password_content_div').addClass('hidden-element');
+          		   $('#password_update_success_div').removeClass('hidden-element');
+          	   }
+            }, complete : function(){
+            	refresh_verfypic($('#captcha_pic'));
             },error: function(jqXHR, textStatus, errorMsg){
             	logOperation.error(errorMsg);
             }

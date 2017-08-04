@@ -3,17 +3,21 @@ package com.dianrong.common.uniauth.cas.controller;
 import com.dianrong.common.uniauth.cas.helper.CasCfgResourceRefreshHelper;
 import com.dianrong.common.uniauth.cas.model.CasCfgCacheModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginAdConfigModel;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,9 +59,9 @@ public class CasCfgController {
         Date now = new Date();
         response.setDateHeader("Last-Modified", now.getTime()); // Last-Modified:页面的最后生成时间
         response.setDateHeader("Expires",
-            now.getTime() + AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES / 2);
+            now.getTime() + CasConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES / 2);
         response.setHeader("Cache-Control",
-            "max-age=" + AppConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES / 2);
+            "max-age=" + CasConstants.CAS_CFG_CACHE_REFRESH_PERIOD_MILLES / 2);
         response.setHeader("Pragma", "Pragma");
 
         response.setContentLength(file.length);
@@ -80,7 +84,7 @@ public class CasCfgController {
     ModelAndView modelAndView = new ModelAndView("dianrong/login/scrollImges");
     List<CasLoginAdConfigModel> loginAd =
         loginAdCaches == null ? null : loginAdCaches.getLoginPageAd();
-    modelAndView.addObject(AppConstants.LOGIN_SCROLL_IMAGES_MODEL_KEY,
+    modelAndView.addObject(CasConstants.LOGIN_SCROLL_IMAGES_MODEL_KEY,
         loginAd == null ? new ArrayList<ConfigDto>() : loginAd);
     return modelAndView;
   }

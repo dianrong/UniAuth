@@ -1,8 +1,9 @@
 package com.dianrong.common.uniauth.cas.action;
 
-import com.dianrong.common.uniauth.cas.util.FirstPageUrlProcessUtil;
 import javax.validation.constraints.NotNull;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.Credential;
@@ -37,9 +38,6 @@ public final class GenerateServiceTicketAction extends AbstractAction {
       final ServiceTicket serviceTicketId = this.centralAuthenticationService
           .grantServiceTicket(ticketGrantingTicket, service, credential);
       WebUtils.putServiceTicketInRequestScope(context, serviceTicketId);
-      // cache service
-      FirstPageUrlProcessUtil
-          .refreshServiceInSession(WebUtils.getHttpServletRequest(context), service.getId());
       return success();
     } catch (final AuthenticationException e) {
       log.error("Could not verify credentials to grant service ticket", e);

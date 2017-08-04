@@ -1,3 +1,4 @@
+// 忘记密码,找回密码的处理函数.
 $(function() {
 	var processUrl = context_path+"/uniauth/forgetPassword";
 	var captchaUrl = context_path+"/uniauth/verification";
@@ -13,12 +14,12 @@ $(function() {
 		});
 		
 		//显示step1的按钮
-		$('#temail').keyup(process_step1_btn);
-		$('#tverfynotice').keyup(process_step1_btn);
+		$('#input_captcha').keyup(process_step1_btn);
+		$('#identity').keyup(process_step1_btn);
 		
 		// 发邮箱验证码
 		$('.find-pwd-container .steps #input1').keyup(process_step2_btn);
-		$('.find-pwd-container .steps #input2').click(sendEmailVerifyCode);
+		$('.find-pwd-container .steps #input2').click(sendDynamicVerifyCode);
 		
 		// 最后一步修改密码
 		$('.find-pwd-container .steps #newpwd').keyup(process_step3_btn);
@@ -43,11 +44,11 @@ $(function() {
 	}
 	// step1 btn show
 	var process_step1_btn = function(){
-		var mailval = $('#temail').val();
-		var input_verifycode = $('#tverfynotice').val();
+		var identity = $('#identity').val();
+		var input_captcha = $('#input_captcha').val();
 		// filter email 
 		var stepbtn = $('#btn_step1');
-		if(input_verifycode && mailval && isEmailOrPhoneNumber(mailval)) {
+		if(input_captcha && identity && isEmailOrPhoneNumber(identity)) {
 			stepbtn.removeAttr("disabled","disabled");
 			stepbtn.removeClass('cursordefault');
 		} else {
@@ -58,9 +59,9 @@ $(function() {
 	
 	// step2 btn show
 	var process_step2_btn = function(){
-		var emailcode = $('.find-pwd-container .steps #input1').val();
+		var dynamic_code = $('.find-pwd-container .steps #input1').val();
 		var stepbtn = $('#btn_step2');
-		if(emailcode) {
+		if(dynamic_code) {
 			stepbtn.removeAttr("disabled","disabled");
 			stepbtn.removeClass('cursordefault');
 		} else {
@@ -135,54 +136,73 @@ $(function() {
 		obj.html(newHtml);
 	}
 	
-	var sendEmailVerifyCode = function(){
-		$.ajax({  
-            type : "GET", 
-            url : captchaUrl + '/send/session',
-            dataType : 'json',
-            success : function(data) {
-            	if(data.info) {
-         		   if('IDENTITY_REQUIRED' === data.info[0].name) {
-         			   // 重新跳转到首页登录
-         			  window.location = processUrl;
-         		   } else {
-         			  setWarnLabel($('#emailverfywarn'), data.info[0].msg);
-         		   }
-         	   } else {
-         		 	var count_btn = $('.find-pwd-container .steps #input2');
-         		 	// show verify code
-         		 	if (data.data) {
-         		 		$('#verify_code_div').html(data.data);
-         		 	}
-                	countBtn(count_btn, function(new_label){
-                		count_btn.html(new_label)
-                	},function(){
-                		return count_btn.html();
-                	}, 120);
-         	   }
-            },
-            error: function(jqXHR, textStatus, errorMsg){
-            	logOperation.error(errorMsg);
-            }
-        });  
+	var sendDynamicVerifyCode = function(){
+		// 展示验证码
+		captcha_validate_modal.process(
+			function(captcha_val, error_callback, refresh_captcha) {
+				if (!captcha_val) {
+					return;
+				}
+				$.ajax({  
+		            type : "POST", 
+		            url : captchaUrl + '/send/session',
+		            dataType : 'json',
+		            data: {captcha: captcha_val}, 
+		            success : function(data) {
+		            	if(data.info) {
+		         		   if('IDENTITY_REQUIRED' === data.info[0].name) {
+		         			   // 重新跳转到首页登录
+		         			  window.location = processUrl;
+		         		   } else {
+		         			   // 处理异常信息
+		         			  error_callback(data.info[0].msg);
+		         		   }
+		         	   } else {
+		         		   // success
+		         		  captcha_validate_modal.dismiss();
+		         		 	var count_btn = $('.find-pwd-container .steps #input2');
+		         		 	// show verify code
+		         		 	if (data.data) {
+		         		 		$('#verify_code_div').html(data.data);
+		         		 	}
+		                	countBtn(count_btn, function(new_label){
+		                		count_btn.html(new_label)
+		                	},function(){
+		                		return count_btn.html();
+		                	}, 120);
+		         	   }
+		            },
+		            error: function(jqXHR, textStatus, errorMsg){
+		            	logOperation.error(errorMsg);
+		            },
+		            complete: function(XMLHttpRequest, textStatus) {
+		            	refresh_captcha();
+		            }
+		        });  
+			},
+			// 点击取消按钮函数
+			function(captcha_val, refresh_captcha) {
+				refresh_captcha();
+			}
+		);
 	};
 
 	var processStep1 = function(){
-		var temalval = $('#temail').val();
-		var tverifycode =$('#tverfynotice').val();
-		if(!temalval || !tverifycode){
+		var identity = $('#identity').val();
+		var input_captcha =$('#input_captcha').val();
+		if(!identity || !input_captcha){
 			return;
 		}
 		
 		// filter email
-		if (!isEmailOrPhoneNumber(temalval)) {
+		if (!isEmailOrPhoneNumber(identity)) {
 			return;
 		}
 		
 		var turl = $('#step1Post').attr('action');
 		var data = {
-				'email' : temalval,
-				'pageVerifyCode' : tverifycode,
+				'identity' : identity,
+				'captcha' : input_captcha,
 				'step' : '1',
 				'tenancyCode': cookieOperation.getTenancyCode(),
 		};
@@ -196,28 +216,28 @@ $(function() {
             	setWarnLabel($('#temailwarn'), '');
             },
             success : function(result) {// 返回数据根据结果进行相应的处理
-                if (result.issuccess == 'true') {  
-                    if(result.code == '0'){
+                if (result.success) {  
+                    if(result.code === '0'){
                     	// 跳转到第二步
                     	window.location = processUrl + '?step=2';
                     	return;
                     }
-                    if(result.code == '1') {
+                    if(result.code === '1') {
                     	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.captcha'));
                     	return;
                     }
                     
-                    if(result.code == '2') {
+                    if(result.code === '2') {
                     	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.wrong.captcha'));
                     	return;
                     }
                     
-                    if(result.code == '3') {
+                    if(result.code === '3') {
                     	setWarnLabel($('#temailwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.email'));
                     	return;
                     }
                     
-                    if(result.code == '4') {
+                    if(result.code === '4') {
                     	setWarnLabel($('#temailwarn'), result.msg);
                     	return;
                     }
@@ -263,6 +283,9 @@ $(function() {
             },
             error: function(jqXHR, textStatus, errorMsg){
             	logOperation.error(errorMsg);
+            },
+            complete: function(XMLHttpRequest, textStatus) {
+            	refresh_verfypic($('#verfypic'));
             }
         });  
 	};
@@ -289,30 +312,30 @@ $(function() {
             	setWarnLabel($('#newpwdwarn'), '');
             },
             success : function(result) {// 返回数据根据结果进行相应的处理
-                if (result.issuccess == 'true') {  
-                    if(result.code == '0'){
+                if (result.success) {  
+                    if(result.code === '0'){
                     	// 跳转到第四步
                     	window.location = processUrl + '?step=4';
                     	return;
                     }
                     // 重新跳转到首页登录
-                    if(result.code == '1') {
+                    if(result.code === '1') {
                     	// 跳转到第一步
                     	window.location = processUrl + '?step=1';
                     	return;
                     }
                     
-                    if(result.code == '2') {
+                    if(result.code === '2') {
                     	setWarnLabel($('#newpwdwarn'), $.i18n.prop('frontpage.pwdforget.edit.need.newpwd'));
                     	return;
                     }
                     
-                    if(result.code == '3') {
+                    if(result.code === '3') {
                     	setWarnLabel($('#newpwdwarn'), result.msg);
                     	return;
                     }
                     
-                    if(result.code == '4') {
+                    if(result.code === '4') {
                     	// 跳转到第一步
                     	window.location = processUrl + '?step=2';
                     	return;

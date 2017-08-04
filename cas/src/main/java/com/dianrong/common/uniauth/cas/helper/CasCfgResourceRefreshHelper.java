@@ -3,13 +3,14 @@ package com.dianrong.common.uniauth.cas.helper;
 import com.dianrong.common.uniauth.cas.model.CasCfgCacheModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginAdConfigModel;
 import com.dianrong.common.uniauth.cas.service.CfgService;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.FileUtil;
 import com.dianrong.common.uniauth.cas.util.SpringContextHolder;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +20,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.context.MessageSource;
 
 /**
@@ -42,9 +45,9 @@ public final class CasCfgResourceRefreshHelper {
     private static final long serialVersionUID = -2609958017102569295L;
 
     {
-      add(AppConstants.CAS_CFG_KEY_LOGO);
-      add(AppConstants.CAS_CFG_KEY_ICON);
-      add(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG);
+      add(CasConstants.CAS_CFG_KEY_LOGO);
+      add(CasConstants.CAS_CFG_KEY_ICON);
+      add(CasConstants.CAS_CFG_KEY_LOGIN_AD_IMG);
     }
   };
 
@@ -56,8 +59,8 @@ public final class CasCfgResourceRefreshHelper {
     private static final long serialVersionUID = -8558828787817302839L;
 
     {
-      put(AppConstants.CAS_CFG_KEY_TITLE, "cas.cfg.cache.default.pagetitle");
-      put(AppConstants.CAS_CFG_KEY_ALL_RIGHT, "cas.cfg.cache.default.allright");
+      put(CasConstants.CAS_CFG_KEY_TITLE, "cas.cfg.cache.default.pagetitle");
+      put(CasConstants.CAS_CFG_KEY_ALL_RIGHT, "cas.cfg.cache.default.allright");
     }
   };
 
@@ -68,9 +71,9 @@ public final class CasCfgResourceRefreshHelper {
     private static final long serialVersionUID = -8558828787817302839L;
 
     {
-      add(AppConstants.CAS_CFG_KEY_TITLE);
-      add(AppConstants.CAS_CFG_KEY_ALL_RIGHT);
-      add(AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR);
+      add(CasConstants.CAS_CFG_KEY_TITLE);
+      add(CasConstants.CAS_CFG_KEY_ALL_RIGHT);
+      add(CasConstants.CAS_CFG_KEY_BACKGROUND_COLOR);
     }
   };
 
@@ -115,15 +118,15 @@ public final class CasCfgResourceRefreshHelper {
     // 设置默认缓存 国际化的数据不用缓存
     try {
       this.defaultCasCfg = new CasCfgCacheModel(null,
-          getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON,
+          getConfigDto(CasConstants.CAS_CFG_KEY_ICON, CasConstants.CAS_CFG_KEY_ICON,
               FileUtil.readFiles(getRelativePath("favicon.ico"))),
-          getConfigDto(AppConstants.CAS_CFG_KEY_ICON, AppConstants.CAS_CFG_KEY_ICON,
+          getConfigDto(CasConstants.CAS_CFG_KEY_ICON, CasConstants.CAS_CFG_KEY_ICON,
               FileUtil.readFiles(getRelativePath("images", "logo.png"))), null,
-          getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, "#153e50"), Arrays.asList(
-          new CasLoginAdConfigModel(getConfigDto(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG + "_1",
-              AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG,
+          getConfigDto(CasConstants.CAS_CFG_KEY_TITLE, "#153e50"), Arrays.asList(
+          new CasLoginAdConfigModel(getConfigDto(CasConstants.CAS_CFG_KEY_LOGIN_AD_IMG + "_1",
+              CasConstants.CAS_CFG_KEY_LOGIN_AD_IMG,
               FileUtil.readFiles(getRelativePath("images", "spring_festival.jpg"))),
-              AppConstants.CAS_CFG_HREF_DEFALT_VAL)));
+              CasConstants.CAS_CFG_HREF_DEFALT_VAL)));
     } catch (Exception ex) {
       log.error("init default cas cfg error:" + ex.getMessage(), ex);
     }
@@ -142,10 +145,10 @@ public final class CasCfgResourceRefreshHelper {
   public void refreshCache() throws Exception {
     final List<String> tempAllImgList = new ArrayList<>(allCacheCfgKeyList);
     // 去掉登陆首页的滚动img
-    tempAllImgList.remove(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG);
+    tempAllImgList.remove(CasConstants.CAS_CFG_KEY_LOGIN_AD_IMG);
     List<ConfigDto> standardCaches = cfgService.queryConfigDtoByCfgKeys(tempAllImgList);
     List<ConfigDto> loginImages = cfgService
-        .queryConfigDtoByLikeCfgKeys(AppConstants.CAS_CFG_KEY_LOGIN_AD_IMG);
+        .queryConfigDtoByLikeCfgKeys(CasConstants.CAS_CFG_KEY_LOGIN_AD_IMG);
     CasCfgCacheModel cacheObj = constructCacheModel(standardCaches, loginImages);
 
     if (cacheObj != null) {
@@ -176,16 +179,16 @@ public final class CasCfgResourceRefreshHelper {
 
     try {
       return new CasCfgCacheModel(
-          getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_TITLE,
-              this.defaultCasCfg.getPageTitle(), AppConstants.CAS_CFG_TYPE_TEXT),
-          getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ICON,
-              this.defaultCasCfg.getPageIcon(), AppConstants.CAS_CFG_TYPE_FILE),
-          getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_LOGO,
-              this.defaultCasCfg.getLogo(), AppConstants.CAS_CFG_TYPE_FILE),
-          getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_ALL_RIGHT,
-              this.defaultCasCfg.getBottomAllRightText(), AppConstants.CAS_CFG_TYPE_TEXT),
-          getCfgModelFromList(standardCaches, AppConstants.CAS_CFG_KEY_BACKGROUND_COLOR,
-              this.defaultCasCfg.getBackgroundColorText(), AppConstants.CAS_CFG_TYPE_TEXT),
+          getCfgModelFromList(standardCaches, CasConstants.CAS_CFG_KEY_TITLE,
+              this.defaultCasCfg.getPageTitle(), CasConstants.CAS_CFG_TYPE_TEXT),
+          getCfgModelFromList(standardCaches, CasConstants.CAS_CFG_KEY_ICON,
+              this.defaultCasCfg.getPageIcon(), CasConstants.CAS_CFG_TYPE_FILE),
+          getCfgModelFromList(standardCaches, CasConstants.CAS_CFG_KEY_LOGO,
+              this.defaultCasCfg.getLogo(), CasConstants.CAS_CFG_TYPE_FILE),
+          getCfgModelFromList(standardCaches, CasConstants.CAS_CFG_KEY_ALL_RIGHT,
+              this.defaultCasCfg.getBottomAllRightText(), CasConstants.CAS_CFG_TYPE_TEXT),
+          getCfgModelFromList(standardCaches, CasConstants.CAS_CFG_KEY_BACKGROUND_COLOR,
+              this.defaultCasCfg.getBackgroundColorText(), CasConstants.CAS_CFG_TYPE_TEXT),
           getLoginImges(loginImages));
     } catch (Exception ex) {
       log.error("构造cas定制化数据缓存异常:" + ex.getMessage(), ex);
@@ -203,7 +206,7 @@ public final class CasCfgResourceRefreshHelper {
     List<ConfigDto> tempList = new ArrayList<>();
     for (ConfigDto cto : filterList) {
       // 过滤文件类型但是文件内容为空的脏数据
-      if (cto.getCfgTypeId() != null && AppConstants.CAS_CFG_TYPE_FILE
+      if (cto.getCfgTypeId() != null && CasConstants.CAS_CFG_TYPE_FILE
           .equalsIgnoreCase(cto.getCfgType())) {
         if (cto.getFile() == null || cto.getFile().length == 0) {
           tempList.add(cto);
@@ -336,7 +339,7 @@ public final class CasCfgResourceRefreshHelper {
     // 存储广告跳转url的map
     Map<String, ConfigDto> adHrefUrlConfigMap = new HashMap<String, ConfigDto>();
     for (ConfigDto cfd : adConfigList) {
-      if (AppConstants.CAS_CFG_TYPE_TEXT.equalsIgnoreCase(cfd.getCfgType())) {
+      if (CasConstants.CAS_CFG_TYPE_TEXT.equalsIgnoreCase(cfd.getCfgType())) {
         adHrefUrlConfigMap.put(cfd.getCfgKey().trim(), cfd);
       }
     }
@@ -344,11 +347,11 @@ public final class CasCfgResourceRefreshHelper {
     // 从列表中获取所有的轮询广告的图片
     List<CasLoginAdConfigModel> newAdCfgList = new ArrayList<CasLoginAdConfigModel>();
     for (ConfigDto cfd : adConfigList) {
-      if (AppConstants.CAS_CFG_TYPE_FILE.equalsIgnoreCase(cfd.getCfgType())) {
+      if (CasConstants.CAS_CFG_TYPE_FILE.equalsIgnoreCase(cfd.getCfgType())) {
         // 获取对应的正常跳转href url
-        String hrefCfgKey = cfd.getCfgKey().trim() + AppConstants.CAS_CFG_LOGIN_AD_HREF_SUFFIX;
+        String hrefCfgKey = cfd.getCfgKey().trim() + CasConstants.CAS_CFG_LOGIN_AD_HREF_SUFFIX;
         String hrefUrl =
-            adHrefUrlConfigMap.get(hrefCfgKey) == null ? AppConstants.CAS_CFG_HREF_DEFALT_VAL
+            adHrefUrlConfigMap.get(hrefCfgKey) == null ? CasConstants.CAS_CFG_HREF_DEFALT_VAL
                 : adHrefUrlConfigMap.get(hrefCfgKey).getValue();
         newAdCfgList.add(new CasLoginAdConfigModel(cfd, hrefUrl));
       }
@@ -403,11 +406,11 @@ public final class CasCfgResourceRefreshHelper {
     refreshCache();
     CasCfgCacheModel model = this.getCache();
     // 刷新两个key 不用缓存
-    return new CasCfgCacheModel(getConfigDto(AppConstants.CAS_CFG_KEY_TITLE, UniBundleUtil
-        .getMsg(messageSource, i18nCacheCfgKeyCodeMap.get(AppConstants.CAS_CFG_KEY_TITLE))),
+    return new CasCfgCacheModel(getConfigDto(CasConstants.CAS_CFG_KEY_TITLE, UniBundleUtil
+        .getMsg(messageSource, i18nCacheCfgKeyCodeMap.get(CasConstants.CAS_CFG_KEY_TITLE))),
         model == null ? null : model.getPageIcon(), model == null ? null : model.getLogo(),
-        getConfigDto(AppConstants.CAS_CFG_KEY_ALL_RIGHT, UniBundleUtil
-            .getMsg(messageSource, i18nCacheCfgKeyCodeMap.get(AppConstants.CAS_CFG_KEY_ALL_RIGHT))),
+        getConfigDto(CasConstants.CAS_CFG_KEY_ALL_RIGHT, UniBundleUtil
+            .getMsg(messageSource, i18nCacheCfgKeyCodeMap.get(CasConstants.CAS_CFG_KEY_ALL_RIGHT))),
         model == null ? null : model.getBackgroundColorText(),
         model == null ? new ArrayList<CasLoginAdConfigModel>() : model.getLoginPageAd());
   }

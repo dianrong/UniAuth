@@ -1,5 +1,4 @@
 <jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/top.jsp" />
-
 <div class="container find-pwd-container">
 		<div class="find-pwd-content ng-scope">
 			<header class="find-pwd">
@@ -41,12 +40,12 @@
 					<form action="<%=path %>/uniauth/forgetPassword" id="step2Post" class="form-horizontal">
 					 	<div class="form-group">
 							<div class="col-sm-offset-4 col-sm-4">
-						    <label for="emailValue" class="h6">${fn:escapeXml(sessionScope.pwdg_emailVal)}</label>
+						      <label for="emailValue" class="h6">${fn:escapeXml(sessionScope.pwdg_emailVal)}</label>
 						    </div>
 					  	</div>
 					  	<div class="form-group">
 						  	<div class="col-sm-offset-4 col-sm-2">
-						    	<input type="text" class="form-control" id="input1" placeholder="<spring:message code="screen.password.reset.step1.verfy.notice"/>">
+						    	<input type="text" class="form-control" id="input1" placeholder="<spring:message code="screen.password.reset.step2.identity.verify.notice"/>">
 						  	</div>
 						  	<div class="col-sm-2">
 						    		<button type="button" class="btn btn-primary btn-sendemail" id="input2"><spring:message code="screen.password.reset.get.verfycode"/></button>
@@ -68,4 +67,6 @@
 			</div>
 		</div>
 </div>
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/captcha.jsp" />
 <jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/bottom.jsp" />
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/forgetpwd/js.jsp" />

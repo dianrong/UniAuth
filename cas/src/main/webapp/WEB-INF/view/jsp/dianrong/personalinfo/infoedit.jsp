@@ -77,13 +77,6 @@
 		</div>
 </div>
 
-<div class="hidden-element" role="alert" id="window_notice_div">
-  <div id="top_show_info" class="showinfo"></div>
-</div>
-
-<!-- show logout modal -->
-
-
 <!-- update email -->
 <div class="modal fade text-left" id="modal-new-email" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -231,6 +224,6 @@
     </div>
   </div>
 </div>
-
-<jsp:directive.include
-	file="/WEB-INF/view/jsp/dianrong/common/bottom.jsp" />
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/captcha.jsp" />
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/common/bottom.jsp" />
+<jsp:directive.include file="/WEB-INF/view/jsp/dianrong/personalinfo/js.jsp" />

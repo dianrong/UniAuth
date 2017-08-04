@@ -46,9 +46,13 @@
         </tr>
 
         <tr ng-repeat="d in roles">
-            <td ng-bind="d.name"></td>
+            <td>
+                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.name}}</p>
+            </td>
             <td ng-bind="d.roleCode"></td>
-            <td ng-bind="d.description"></td>
+            <td>
+                <p title="{{d.description}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 250px">{{d.description}}</p>
+            </td>
             <td ng-bind="!d.status?'{{ 'userMgr.enable' | translate}}':'{{ 'userMgr.disable' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">

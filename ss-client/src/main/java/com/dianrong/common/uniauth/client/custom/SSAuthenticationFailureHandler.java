@@ -6,32 +6,30 @@ import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.common.util.ZkNodeUtils;
+
 import java.io.IOException;
 import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.util.StringUtils;
 
 /**
- * Cas生成st(service ticket)跳转到业务系统,业务系统拿到st去cas做验证的时候验证失败的处理.<br/>
- * 如：1.返回json告知失败;2.跳转到业务系统的认证失败页面；
- *
- * @author xiaofeng
- * @date 2016年12月15日
- * @see CasAuthenticationFilter#setAuthenticationFailureHandler(AuthenticationFailureHandler)
- * CasAuthenticationFilter#setAuthenticationFailureHandler
- * @since jdk1.7
+ * 该类已经废弃,已修改为:com.dianrong.common.uniauth.client.custom.handler.SSAuthenticationFailureHandler
+ * 
+ *  @see com.dianrong.common.uniauth.client.custom.handler.SSAuthenticationFailureHandler
  */
-
+@Deprecated
 @Slf4j
 public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
