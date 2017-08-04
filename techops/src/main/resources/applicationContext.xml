@@ -32,7 +32,6 @@
     </bean>
 
     <sec:http pattern="/views/**" security="none" />
-    <sec:http pattern="/views/**" security="none" />
     <sec:http pattern="/scripts/**" security="none" />
     <sec:http pattern="/styles/**" security="none" />
     <sec:http pattern="/i18n/**" security="none" />
@@ -48,6 +47,9 @@
 
     <sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
         request-matcher="ant">
+        <sec:headers>
+            <sec:frame-options disabled="true"/>
+        </sec:headers>
         <sec:custom-filter ref="authenticationFilter"
             position="CAS_FILTER" />
         <sec:custom-filter ref="jwtLogoutFilter"
