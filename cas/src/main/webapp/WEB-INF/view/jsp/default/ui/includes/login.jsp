@@ -2,13 +2,17 @@
 <%@ page import="com.dianrong.common.uniauth.cas.util.CasConstants" %>
 <%@ page import="com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel"%>
 <jsp:directive.include file="top.jsp" />
+<div id="relate_links" style="position: absolute;top: 0;right: 0;" class="text_decoration_none">
+    <span>
+        <a href="<%=path %>/uniauth/userinfo/update/password"><spring:message code="screen.login.page.link.update.password" /></a>
+    </span>
+</div>
 <div id="cookiesDisabled" class="errors" style="display:none;">
     <h2><spring:message code="screen.cookies.disabled.title" /></h2>
     <p><spring:message code="screen.cookies.disabled.message" /></p>
 </div>
 
 <p><spring:message code="screen.welcome.security"/></p>
-
 <div class="box" id="login">
     <form:form method="post" id="fm1" commandName="${commandName}" htmlEscape="true">
         <form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false" />
