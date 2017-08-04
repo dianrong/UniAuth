@@ -14,8 +14,8 @@ $(function() {
 		});
 		
 		//显示step1的按钮
-		$('#temail').keyup(process_step1_btn);
-		$('#tverfynotice').keyup(process_step1_btn);
+		$('#input_captcha').keyup(process_step1_btn);
+		$('#identity').keyup(process_step1_btn);
 		
 		// 发邮箱验证码
 		$('.find-pwd-container .steps #input1').keyup(process_step2_btn);
@@ -44,11 +44,11 @@ $(function() {
 	}
 	// step1 btn show
 	var process_step1_btn = function(){
-		var mailval = $('#temail').val();
-		var input_verifycode = $('#tverfynotice').val();
+		var identity = $('#identity').val();
+		var input_captcha = $('#input_captcha').val();
 		// filter email 
 		var stepbtn = $('#btn_step1');
-		if(input_verifycode && mailval && isEmailOrPhoneNumber(mailval)) {
+		if(input_captcha && identity && isEmailOrPhoneNumber(identity)) {
 			stepbtn.removeAttr("disabled","disabled");
 			stepbtn.removeClass('cursordefault');
 		} else {

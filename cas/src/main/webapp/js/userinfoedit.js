@@ -393,7 +393,7 @@ $(function() {
             dataType : 'json',
             success : function(data) {
             	   if(data.info) {
-            		   $('#update_email_warninfo').html(data.info[0].msg);
+            		   $('#update_phone_warninfo').html(data.info[0].msg);
             	   } else {
             		   // success
             		   $('#modal-new-phone').modal('hide');
