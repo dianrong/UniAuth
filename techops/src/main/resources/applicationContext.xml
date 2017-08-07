@@ -28,7 +28,7 @@
         <property name="userInfoClass"
             value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
         <property name="rejectPublicInvocations" value="false"></property>
-        <property name="authenticationType" value="CAS"></property>
+        <property name="authenticationType" value="JWT"></property>
     </bean>
 
     <sec:http pattern="/views/**" security="none" />
