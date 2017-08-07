@@ -45,9 +45,8 @@ public class JWTAuthenticationFilterConfigure implements Configure<UniauthJWTAut
 
   @Override
   public UniauthJWTAuthenticationFilter create(Object... args) {
-    UniauthJWTAuthenticationFilter jwtAuthenticationFilter = new UniauthJWTAuthenticationFilter(uniauthJWTSecurity);
+    UniauthJWTAuthenticationFilter jwtAuthenticationFilter = new UniauthJWTAuthenticationFilter(uniauthJWTSecurity, jwtQuery);
     jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
-    jwtAuthenticationFilter.setJwtQuery(jwtQuery);
     jwtAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
     if (this.authenticationFailureHandler != null) {
       jwtAuthenticationFilter.setAuthenticationFailureHandler(this.authenticationFailureHandler);

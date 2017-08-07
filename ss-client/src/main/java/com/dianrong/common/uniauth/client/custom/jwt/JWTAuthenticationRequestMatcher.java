@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.client.custom.jwt;
 
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil.JWTUserTagInfo;
+import com.dianrong.common.uniauth.common.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,12 +18,19 @@ public class JWTAuthenticationRequestMatcher implements RequestMatcher {
    * 获取JWT工具类.
    */
   private JWTQuery jwtQuery = new SimpleJWTQuery();
-  
+
   public JWTQuery getJwtQuery() {
     return jwtQuery;
   }
 
   public void setJwtQuery(JWTQuery jwtQuery) {
+    this.jwtQuery = jwtQuery;
+  }
+
+  public JWTAuthenticationRequestMatcher() {}
+
+  public JWTAuthenticationRequestMatcher(JWTQuery jwtQuery) {
+    Assert.notNull(jwtQuery);
     this.jwtQuery = jwtQuery;
   }
 
