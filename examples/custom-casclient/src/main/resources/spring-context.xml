@@ -31,7 +31,7 @@
     	p:casServerLoginUrl="#{uniauthConfig['cas_server']}/login" 
     	p:renew="false" 
     	p:gateway="false" 
-    	p:service="#{uniauthConfig['domains.custom-casclient']}">
+    	p:service="#{uniauthConfig['domains.custom-casclient']}/login/cas">
     	 <property name="ignoreUrlPatternMatcherStrategyClass">
 	        <bean class="com.dianrong.common.uniauth.common.client.RegexUrlPatternListMatcherStrategy">
 	        	<property name="pattern" value="^(http|https)://.*/main/login\?lt=.*$;^(http|https)://.*\.js"/>
@@ -42,7 +42,7 @@
 	<bean
 	    name="ticketValidationFilter"
 	    class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter"
-	    p:service="#{uniauthConfig['domains.custom-casclient']}">
+	    p:service="#{uniauthConfig['domains.custom-casclient']}/login/cas">
 	    <property name="ticketValidator">
 	        <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
 	            <constructor-arg index="0" value="#{uniauthConfig['cas_server']}" />
