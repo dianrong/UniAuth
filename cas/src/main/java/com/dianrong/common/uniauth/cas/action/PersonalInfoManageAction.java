@@ -58,16 +58,13 @@ public class PersonalInfoManageAction extends AbstractAction {
 
     // 获取用户账号
     String account = principal.getId();
-    Long tenancyId = (Long) principal.getAttributes()
-        .get(CasProtocal.DianRongCas.getTenancyIdName());
+    Long tenancyId =
+        (Long) principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName());
     return queryUserInfo(context, account, tenancyId);
   }
 
   /**
-   * . query user info
-   *
-   * @param context context
-   * @return result
+   * Query current login user info.
    */
   private Event queryUserInfo(final RequestContext context, String account, Long tenancyId)
       throws Exception {
@@ -77,13 +74,13 @@ public class PersonalInfoManageAction extends AbstractAction {
       userInfo = userInfoManageService.getUserDetailInfo(account, tenancyId);
     } catch (Exception ex) {
       // 将异常信息仍到前端去
-      context.getFlowScope()
-          .put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, CasConstants.SERVER_PROCESS_ERROR);
+      context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG,
+          StringUtil.getExceptionSimpleMessage(ex.getMessage()));
       return result(NOTFOUND_USER_INFO);
     }
     if (userInfo == null) {
-      context.getFlowScope()
-          .put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG, "Current login user not found");
+      context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG,
+          "Current login user not found");
       return result(NOTFOUND_USER_INFO);
     }
 
