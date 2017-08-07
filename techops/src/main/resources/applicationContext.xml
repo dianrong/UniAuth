@@ -140,9 +140,9 @@
         
     <bean id="jwtAuthenticationFilter"
         class="com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter">
-        <constructor-arg ref="uniauthJWTSecurity" />
+        <constructor-arg index="0" ref="uniauthJWTSecurity" />
+        <constructor-arg index="1" ref="jwtQuery" />
         <property name="authenticationManager" ref="authenticationManager" />
-        <property name="jwtQuery" ref="jwtQuery" />
         <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
         <property name="authenticationFailureHandler" ref="jwtAuthenticationFailureHandler"></property>
         <property name="sessionAuthenticationStrategy" ref="sas" />
