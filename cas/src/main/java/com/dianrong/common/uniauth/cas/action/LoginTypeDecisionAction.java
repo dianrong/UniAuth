@@ -106,8 +106,6 @@ public class LoginTypeDecisionAction extends AbstractAction {
       }
     }
     // 不处理
-    return
-
-    result(LOGIN_FROM_CAS);
+    return result(LOGIN_FROM_CAS);
   }
 }
