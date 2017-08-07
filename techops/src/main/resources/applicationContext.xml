@@ -156,6 +156,10 @@
         <property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"></property>
         <property name="sessionAuthenticationStrategy" ref="sas" />
     </bean>
+    
+    <!-- 提供两个jwt获取的方式,可配置header和parameter名来自定义参数名 -->
+    <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestHeaderJWTQuery"/>
+    <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestParameterJWTQuery"/>
     <!-- do not change: end -->
 
     <!-- trick: must be same id or name, not more than one PermissionEvaluators 

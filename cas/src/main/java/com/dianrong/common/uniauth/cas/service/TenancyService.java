@@ -11,18 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 /**
- * . 租户处理相关的service
+ * 租户处理相关的service.
  *
  * @author wanglin
  */
-@Service("tenancyService")
+@Service
 public class TenancyService extends BaseService {
 
   @Autowired
   private UniClientFacade uniClientFacade;
 
   /**
-   * . 默认使用的tenancy
+   * 默认使用的tenancy.
    */
   private volatile TenancyDto defaultTenancy;
 
@@ -38,7 +38,7 @@ public class TenancyService extends BaseService {
   }
 
   /**
-   * . 通过tenancyCode 获取对应的tenancy(可用的)
+   * 通过tenancyCode 获取对应的tenancy(可用的).
    *
    * @param tenancyCode 查询的tenancyCode
    * @return tenancy or null

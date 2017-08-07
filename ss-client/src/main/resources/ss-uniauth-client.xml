@@ -77,7 +77,10 @@
 	</b:bean>
 	
 	<!-- for JWT -->
-	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.SimpleJWTQuery">
+	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery"/>
+	
+	<!-- 提供一个默认实现 -->
+	<b:bean id="cookieJWTQuery" class="com.dianrong.common.uniauth.client.custom.jwt.CookieJWTQuery">
 	   <b:property name="jwtCookieNameSuffix"  value="#{uniauthConfig['authentication.jwt.cookie.suffix']}"/>
 	</b:bean>
 	

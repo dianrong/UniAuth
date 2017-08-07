@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.client.custom.filter;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil.JWTUserTagInfo;
-import com.dianrong.common.uniauth.client.custom.jwt.SimpleJWTQuery;
+import com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
 import com.dianrong.common.uniauth.common.jwt.exp.InvalidJWTExpiredException;
@@ -35,7 +35,7 @@ public class UniauthJWTLogoutFilter extends LogoutFilter {
   /**
    * 获取JWT工具类.
    */
-  private JWTQuery jwtQuery = new SimpleJWTQuery();
+  private JWTQuery jwtQuery = new ComposedJWTQuery();
 
   public UniauthJWTLogoutFilter(UniauthJWTSecurity uniauthJWTSecurity,
       LogoutSuccessHandler logoutSuccessHandler, LogoutHandler... handlers) {

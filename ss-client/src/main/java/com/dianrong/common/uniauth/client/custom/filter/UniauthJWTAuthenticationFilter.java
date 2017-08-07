@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.client.custom.jwt.JWTAuthenticationRequestMat
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil.JWTUserTagInfo;
-import com.dianrong.common.uniauth.client.custom.jwt.SimpleJWTQuery;
+import com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.exp.JWTInvalidAuthenticationException;
 import com.dianrong.common.uniauth.client.custom.model.UniauthIdentityToken;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
@@ -48,7 +48,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   /**
    * 获取JWT工具类, 默认值.
    */
-  private JWTQuery jwtQuery = new SimpleJWTQuery();
+  private JWTQuery jwtQuery = new ComposedJWTQuery();
 
   /**
    * 拦截登陆的请求.

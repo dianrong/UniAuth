@@ -21,13 +21,13 @@ public class JWTCookieGenerator extends CookieGenerator {
 
   public JWTCookieGenerator() {
     super();
-    super.setCookieName(JWTConstant.JWT_COOKIE_NAME);
+    super.setCookieName(JWTConstant.JWT_NAME);
   }
 
   public JWTCookieGenerator(String cookieNameSuffix) {
     super();
     String cookieName = StringUtils.hasText(cookieNameSuffix)
-        ? JWTConstant.JWT_COOKIE_NAME + cookieNameSuffix : JWTConstant.JWT_COOKIE_NAME;
+        ? JWTConstant.JWT_NAME + cookieNameSuffix : JWTConstant.JWT_NAME;
     super.setCookieName(cookieName);
   }
   

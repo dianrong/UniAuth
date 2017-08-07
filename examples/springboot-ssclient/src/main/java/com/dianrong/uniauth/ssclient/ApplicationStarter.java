@@ -1,5 +1,7 @@
 package com.dianrong.uniauth.ssclient;
 
+import com.dianrong.common.uniauth.client.custom.jwt.RequestHeaderJWTQuery;
+import com.dianrong.common.uniauth.client.custom.jwt.RequestParameterJWTQuery;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
@@ -70,5 +72,24 @@ public class ApplicationStarter {
     return (MyAuthenticationProvider) new MyAuthenticationProvider(uniClientFacade)
         .setMode(Mode.PERMISSION)
     /* .setDomainDefine(domainCode) */;
+  }
+
+  /**
+   * 配置两个获取JWT的途径.
+   */
+  @Bean
+  public RequestHeaderJWTQuery requestHeaderJWTQuery() {
+    RequestHeaderJWTQuery requestHeaderJWTQuery = new RequestHeaderJWTQuery();
+    // 可以自定义header名
+    // requestHeaderJWTQuery.setJwtHeaderName("custom_uniauth_jwt");
+    return requestHeaderJWTQuery;
+  }
+
+  @Bean
+  public RequestParameterJWTQuery requestParameterJWTQuery() {
+    RequestParameterJWTQuery requestParameterJWTQuery = new RequestParameterJWTQuery();
+    // 可以自定义请求参数名
+    // requestParameterJWTQuery.setJwtParameterName(jwtParameterName);
+    return requestParameterJWTQuery;
   }
 }

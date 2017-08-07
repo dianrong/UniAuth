@@ -17,7 +17,7 @@ public class JWTAuthenticationRequestMatcher implements RequestMatcher {
   /**
    * 获取JWT工具类.
    */
-  private JWTQuery jwtQuery = new SimpleJWTQuery();
+  private JWTQuery jwtQuery = new ComposedJWTQuery();
 
   public JWTQuery getJwtQuery() {
     return jwtQuery;
