@@ -3,25 +3,29 @@ package com.dianrong.common.uniauth.cas.service;
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.OtherException;
-import com.dianrong.common.uniauth.cas.exp.ResetPasswordException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.authentication.AccountDisabledException;
 
 /**
- * . 基础类,提供远程调用的公用方法
+ * 基础类,提供远程调用的公用方法.
  *
  * @author wanglin
  */
@@ -54,7 +58,7 @@ public abstract class BaseService {
       };
 
   /**
-   * . 根据infoname获取异常的class
+   * 根据infoname获取异常的class.
    */
   private Exception getExceptionClassByInfoName(InfoName infoName, String errorMsg) {
     Class<? extends Exception> exceptionClass = infoExceptionClass.get(infoName);
@@ -94,13 +98,13 @@ public abstract class BaseService {
   }
 
   /**
-   * . 处理异常信息
+   * 处理异常信息.
    *
-   * @param infoList infoList
-   * @throws ResetPasswordException 异常
+   * @param infoList 服务端返回的异常信息.
+   * @throws 如果有异常信息,则将该异常信息抛出.
    */
   protected void checkInfoList(List<Info> infoList) throws Exception {
-    if (infoList != null && !infoList.isEmpty()) {
+    if (!ObjectUtil.collectionIsEmptyOrNull(infoList)) {
       for (Info info : infoList) {
         throw getExceptionClassByInfoName(info.getName(), info.getMsg());
       }
