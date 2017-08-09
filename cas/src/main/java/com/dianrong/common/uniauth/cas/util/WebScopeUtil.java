@@ -194,9 +194,9 @@ public final class WebScopeUtil {
       throws IOException {
 
     if (obj == null) {
-      response.getWriter().write("");
+      writeJsonContentToResponse(response, "");
     } else {
-      response.getWriter().write(JsonUtil.object2Jason(obj));
+      writeJsonContentToResponse(response, JsonUtil.object2Jason(obj));
     }
   }
 
@@ -209,6 +209,7 @@ public final class WebScopeUtil {
       // 设置header Content-Type:application/json;charset=UTF-8
       response.setContentType(ContentType.APPLICATION_JSON.toString());
       response.getWriter().write(jsonContent);
+      response.flushBuffer();
     } catch (IOException e) {
       log.warn("response json to client failed", e);
     }
