@@ -109,7 +109,6 @@
             <!--
             <evaluate expression="samlMetadataUIParserAction" />
             -->
-            <evaluate expression="tenancyService.getAllTenancies()" result="viewScope.tenancies"/>
             <evaluate expression="domainService.getAllLoginPageDomains()" result="viewScope.domains"/>
         </on-entry>
         <transition on="submit" bind="true" validate="true" to="realSubmit"/>
