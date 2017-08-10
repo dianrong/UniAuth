@@ -7,10 +7,15 @@ import com.dianrong.common.uniauth.cas.model.CasGetServiceTicketModel;
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
 import com.dianrong.common.uniauth.cas.model.CasRememberMeUsernamePasswordCredential;
 import com.dianrong.common.uniauth.cas.service.CfgService;
+import com.dianrong.common.uniauth.cas.service.jwt.JWTCookieGenerator;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
+import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +34,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.jasig.cas.CentralAuthenticationService;
 import org.jasig.cas.authentication.AccountDisabledException;
+import org.jasig.cas.authentication.Authentication;
 import org.jasig.cas.authentication.AuthenticationException;
+import org.jasig.cas.authentication.principal.Principal;
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.ServiceTicket;
 import org.jasig.cas.ticket.Ticket;
@@ -42,6 +49,7 @@ import org.jasig.cas.web.support.CookieRetrievingCookieGenerator;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,6 +85,15 @@ public class ServiceTicketController {
   @Autowired
   @Qualifier("loginTicketUniqueIdGenerator")
   private UniqueTicketIdGenerator ticketIdGenerator;
+  
+  @Autowired
+  private UniauthJWTSecurity uniauthJWTSecurity;
+
+  @Autowired
+  private JWTCookieGenerator jwtCookieGenerator;
+  
+  @Value("${tgt.timeToKillInSeconds:7200}")
+  private int jwtExpireSeconds = 7200;
 
   @Autowired
   private CfgService cfgService;
@@ -183,7 +200,28 @@ public class ServiceTicketController {
       // 写入tgt
       this.ticketGrantingTicketCookieGenerator.addCookie(request, response,
           ticketGrantingTicketId.getId());
-      // this.warnCookieGenerator.addCookie(request, response, "true");
+      
+      // Set JWT cookie
+      Ticket ticket = ticketRegistry.getTicket(ticketGrantingTicketId.getId());
+      if (ticket instanceof TicketGrantingTicket) {
+        TicketGrantingTicket tgticket = (TicketGrantingTicket) ticket;
+        Authentication authentication = tgticket.getAuthentication();
+        Principal principal = authentication.getPrincipal();
+        if (principal != null) {
+          try {
+            String identity = principal.getId();
+            Long tenancyId = StringUtil.translateObjectToLong(
+                principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName()));
+            String jwt = uniauthJWTSecurity
+                .createJwt(new UniauthUserJWTInfo(identity, tenancyId, jwtExpireSeconds * 1000L));
+            // 设置cookie
+            jwtCookieGenerator.addCookie(response, jwt);
+          } catch (Exception ex) {
+            log.error("Failed get identity and tenancyId from principle!", ex);
+          }
+        }
+      }
+      
       // 返回处理结果
       return captchaValidationProcess(request, response,
           new CasGetServiceTicketModel(true, serviceTicket.getId()));
@@ -355,7 +393,6 @@ public class ServiceTicketController {
   private void setValueToJsWindowNameResponse(HttpServletResponse response,
       CasGetServiceTicketModel info) throws IOException {
     // 设置返回的mime类型
-    response.setContentType("text/html;charset=utf-8");
     sendResponse(response, "<script>window.name='" + JsonUtil.object2Jason(info) + "';</script>");
   }
 
@@ -363,6 +400,7 @@ public class ServiceTicketController {
    * 发送结果到response输出流.
    */
   private void sendResponse(HttpServletResponse response, Object obj) throws IOException {
+    response.setContentType("text/html;charset=utf-8");
     if (obj == null) {
       response.getWriter().write("");
     } else if (obj instanceof String) {
