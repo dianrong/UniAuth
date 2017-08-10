@@ -26,15 +26,15 @@ public enum AuthenticationType {
   /**
    * 支持所有的验证的验证方式.
    */
-  ALL(AuthenticationType.SUPPORTED_ALL_AUTHENTICATION_TYPE);
-
-  private Set<String> supportedTypes = Sets.newHashSet();
+  ALL( AuthenticationType.class.getName() + "_ALL");
 
   /**
    * 支持所有的验证方式.
    */
   public static final String SUPPORTED_ALL_AUTHENTICATION_TYPE =
       AuthenticationType.class.getName() + "_ALL";
+
+  private Set<String> supportedTypes = Sets.newHashSet();
 
   private AuthenticationType(String... types) {
     supportedTypes.addAll(Arrays.asList(types));
