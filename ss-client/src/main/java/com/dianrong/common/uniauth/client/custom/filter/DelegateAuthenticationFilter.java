@@ -84,13 +84,20 @@ public class DelegateAuthenticationFilter extends GenericFilterBean {
     this.authenticationFilters = authenticationFilters;
   }
   
-  @Override
-  public void afterPropertiesSet() throws ServletException {
-    super.afterPropertiesSet();
+  /**
+   * 初始化代码.
+   */
+  public void init() {
     Comparator<Object> comparator = OrderComparator.INSTANCE;
     List<UniauthAuthenticationFilter> allAuthenticationFilters = new ArrayList<>(this.authenticationFilters);
     // 按照Ordered排序.
     Collections.sort(allAuthenticationFilters, comparator);
     this.authenticationFilters = new LinkedHashSet<>(allAuthenticationFilters);
+  }
+  
+  @Override
+  public void afterPropertiesSet() throws ServletException {
+    super.afterPropertiesSet();
+    init();
   }
 }

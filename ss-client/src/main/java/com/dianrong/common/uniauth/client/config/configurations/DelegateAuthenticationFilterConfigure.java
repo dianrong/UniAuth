@@ -3,10 +3,10 @@ package com.dianrong.common.uniauth.client.config.configurations;
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.UniauthAuthenticationFilter;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.exp.UniauthInvalidParamterException;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
@@ -22,17 +22,34 @@ public class DelegateAuthenticationFilterConfigure
 
   @Override
   public DelegateAuthenticationFilter create(Object... args) {
-    if (args.length != 2 || !(args[0] instanceof UniauthCasAuthenticationFilter)
-        || !(args[1] instanceof UniauthJWTAuthenticationFilter)) {
+    if (!checkParameters(args)) {
       throw new UniauthInvalidParamterException(
-          "Create a DelegateAuthenticationFilterConfigure, but the create parameter is invalid!, the args is :"
-              + args);
+          "Create a DelegateAuthenticationFilterConfigure, but the create parameter is invalid! The args is :"
+              + JsonUtil.object2Jason(args));
     }
+
     DelegateAuthenticationFilter authenticationFilter = new DelegateAuthenticationFilter();
-    authenticationFilter.addAuthenticationFilter((UniauthCasAuthenticationFilter) args[0]);
-    authenticationFilter.addAuthenticationFilter((UniauthJWTAuthenticationFilter) args[1]);
+    for (int i = 0; i < args.length; i++) {
+      authenticationFilter.addAuthenticationFilter((UniauthAuthenticationFilter) args[i]);
+    }
     authenticationFilter.setAuthenticationType(authenticationType);
+    authenticationFilter.init();
     return authenticationFilter;
+  }
+
+  /**
+   * Check传入的参数.
+   */
+  private boolean checkParameters(Object... args) {
+    if (args.length < 1) {
+      return false;
+    }
+    for (int i = 1; i < args.length; i++) {
+      if (!(args[i] instanceof UniauthAuthenticationFilter)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override

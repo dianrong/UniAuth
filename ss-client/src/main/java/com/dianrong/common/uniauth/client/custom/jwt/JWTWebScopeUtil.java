@@ -58,7 +58,9 @@ public final class JWTWebScopeUtil {
       if (info instanceof JWTUserTagInfo) {
         return (JWTUserTagInfo) info;
       }
-      log.warn("Current request's session, the tag info is not type: JWTUserTagInfo");
+      if (info != null) {
+        log.warn("Current request's session, the tag info is not type: JWTUserTagInfo");
+      }
     } else {
       log.debug("Current request do not create a session!");
     }
