@@ -10,9 +10,9 @@ public interface JWTConstant {
 
   
   /**
-   * Uniauth的JWT的默认的cookie的名字.
+   * Uniauth的JWT的名字.
    */
-  String JWT_COOKIE_NAME = "uniauth_jwt";
+  String JWT_NAME = "uniauth_jwt";
   
   /**
    * 定义JWT中的一些常量信息.

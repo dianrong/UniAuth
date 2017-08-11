@@ -77,13 +77,17 @@
 	</b:bean>
 	
 	<!-- for JWT -->
-	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.SimpleJWTQuery">
+	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery"/>
+	
+	<!-- 提供一个默认实现 -->
+	<b:bean id="cookieJWTQuery" class="com.dianrong.common.uniauth.client.custom.jwt.CookieJWTQuery">
 	   <b:property name="jwtCookieNameSuffix"  value="#{uniauthConfig['authentication.jwt.cookie.suffix']}"/>
 	</b:bean>
 	
 	<b:bean id="uniauthJWTSecurity" class="com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity">
         <b:constructor-arg index="0" value="#{uniauthConfig['authentication.jwt.private.key']}"/>
         <b:constructor-arg index="1" value="#{uniauthConfig['authentication.jwt.public.key']}"/>
+        <b:property name="issuedSecondsAheadOffset" value="10"/>
     </b:bean>
 
 	<authentication-manager alias="authenticationManager">

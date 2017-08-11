@@ -5,13 +5,16 @@ import com.dianrong.common.uniauth.common.jwt.JWTConstant;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.core.annotation.Order;
+
 /**
- * 简单的逻辑获取JWT.
+ * 获取Cookie中的JWT.
  * 
  * @author wanglin
  *
  */
-public class SimpleJWTQuery implements JWTQuery {
+@Order(-100)
+public class CookieJWTQuery implements JWTQuery {
 
   /**
    * JWTCookie名称的后缀
@@ -20,7 +23,7 @@ public class SimpleJWTQuery implements JWTQuery {
 
   @Override
   public String getJWT(HttpServletRequest request) {
-    String cookieName = JWTConstant.JWT_COOKIE_NAME;
+    String cookieName = JWTConstant.JWT_NAME;
     if (this.jwtCookieNameSuffix != null) {
       cookieName += this.jwtCookieNameSuffix;
     }

@@ -58,7 +58,7 @@ public class ReflectionUtils {
       field.setAccessible(true);
       object = field.get(targetObj);
     } catch (Exception e) {
-      log.warn("exception", e);
+      log.debug("exception: {}", e.getMessage());
     }
     return object;
   }
@@ -72,7 +72,7 @@ public class ReflectionUtils {
       Method method = clazz.getMethod(methodName, new Class[0]);
       object = method.invoke(null, new Object[0]);
     } catch (Exception e) {
-      log.warn("exception", e);
+      log.debug("exception: {}", e.getMessage());
     }
     return object;
   }

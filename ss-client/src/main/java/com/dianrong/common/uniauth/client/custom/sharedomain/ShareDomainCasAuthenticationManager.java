@@ -55,7 +55,7 @@ public final class ShareDomainCasAuthenticationManager implements Authentication
       Authentication authenticate = provider.authenticate(authentication);
       // 针对CasAuthenticationProvider做一下特殊处理.
       if (provider instanceof CasAuthenticationProvider) {
-        grantAuthoritesMapperProcess(authenticate.getPrincipal());
+        grantAuthoritesMapperProcess(provider, authenticate.getPrincipal());
       }
       return new ShareDomainAuthentication(authenticate, authenticate.getPrincipal());
     }
@@ -65,12 +65,12 @@ public final class ShareDomainCasAuthenticationManager implements Authentication
   /**
    * GrantAuthoritesMapperProcess.
    */
-  private void grantAuthoritesMapperProcess(Object principal) {
+  private void grantAuthoritesMapperProcess(AuthenticationProvider provider, Object principal) {
     if (!(principal instanceof UserExtInfo)) {
       return;
     }
     GrantedAuthoritiesMapper authoritiesMapper =
-        (GrantedAuthoritiesMapper) ReflectionUtils.getField(this, "authoritiesMapper");
+        (GrantedAuthoritiesMapper) ReflectionUtils.getField(provider, "authoritiesMapper");
     if (authoritiesMapper == null) {
       log.warn(
           "please check AuthenticationProvider implementation, whether there is a fied type of  "

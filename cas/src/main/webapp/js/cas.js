@@ -64,6 +64,7 @@ $(function() {
 
 	if(!($('#login_domain_select').hasClass('hiddenbtn')) && $("#domain").length>0) {
 		var service_url = getUrlParam("service");
+		var domainCode = undefined;
 		if(service_url) {
 			$("#domain").val(uriEncodeOnce(service_url));
 			logOperation.log("current selected domain:" + getUrlParam("service"));
@@ -74,6 +75,7 @@ $(function() {
 			if (!cookie_service) {
 				// get default one
 				_service_url = $("#domain option:first").val();
+				domainCode =  $("#domain option:first").attr("domainCode");
 				cookieOperation.setService($("#domain option:first").text());
 			} else {
 				var cookie_option;
@@ -87,12 +89,16 @@ $(function() {
 				} else {
 					// default value: domainCode = techops
 					_service_url = $("#domain option:first").val();
+					domainCode =  $("#domain option:first").attr("domainCode");
 					cookieOperation.setService($("#domain option:first").text());
 				}
 			}
 			// redirect
-			var redirect = getBaseUrl() + "?service=" + _service_url;
-			top.window.location = redirect;
+			var redirect_url = getBaseUrl() + "?service=" + _service_url;
+			if (domainCode) {
+				redirect_url = redirect_url + "&code=" + domainCode;
+			}
+			top.window.location = redirect_url;
 		}
 	}
 	
@@ -119,12 +125,15 @@ $(function() {
 	// domain change
 	$("#domain").change(function() {
 		// write cookie
-		var selectedDomainCode = $("#domain option:selected").text();
+		var selectedDomainCode = $("#domain").find("option:selected").attr("domainCode");
 		cookieOperation.setService(selectedDomainCode);
 		// redirect
 		var selectedDomain = $("#domain").val();
-		var redirect = getBaseUrl() + "?service=" + selectedDomain;
-		top.window.location = redirect;
+		var redirect_url = getBaseUrl() + "?service=" + selectedDomain;
+		if (selectedDomainCode) {
+			redirect_url = redirect_url + "&code="+selectedDomainCode;
+		}
+		top.window.location = redirect_url;
 	});
 	
 	// login submit

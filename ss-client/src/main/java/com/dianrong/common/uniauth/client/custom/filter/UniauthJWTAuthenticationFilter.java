@@ -1,10 +1,10 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
+import com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTAuthenticationRequestMatcher;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil.JWTUserTagInfo;
-import com.dianrong.common.uniauth.client.custom.jwt.SimpleJWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.exp.JWTInvalidAuthenticationException;
 import com.dianrong.common.uniauth.client.custom.model.UniauthIdentityToken;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
@@ -48,7 +48,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   /**
    * 获取JWT工具类, 默认值.
    */
-  private JWTQuery jwtQuery = new SimpleJWTQuery();
+  private JWTQuery jwtQuery = new ComposedJWTQuery();
 
   /**
    * 拦截登陆的请求.
@@ -59,6 +59,11 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
    * 覆盖父类中的AuthenticationSuccessHandler.
    */
   private AuthenticationSuccessHandler localSuccessHandler;
+
+  /**
+   * 请求身份拦截匹配.
+   */
+  private RequestMatcher requiresAuthenticationRequestMatcher;
 
   /**
    * 定义一个什么都不做的AuthenticationSuccessHandler来替换父类中的AuthenticationSuccessHandler.
@@ -88,7 +93,9 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   public UniauthJWTAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher,
       UniauthJWTSecurity uniauthJWTSecurity) {
     super(requiresAuthenticationRequestMatcher);
+    Assert.notNull(requiresAuthenticationRequestMatcher);
     Assert.notNull(uniauthJWTSecurity);
+    this.requiresAuthenticationRequestMatcher = requiresAuthenticationRequestMatcher;
     this.uniauthJWTSecurity = uniauthJWTSecurity;
     this.localSuccessHandler = super.getSuccessHandler();
     super.setAuthenticationSuccessHandler(new EmptyAuthenticationSuccessHandler());
@@ -150,6 +157,10 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   public void setJwtQuery(JWTQuery jwtQuery) {
     Assert.notNull(jwtQuery);
     this.jwtQuery = jwtQuery;
+    if (this.requiresAuthenticationRequestMatcher instanceof JWTAuthenticationRequestMatcher) {
+      ((JWTAuthenticationRequestMatcher) this.requiresAuthenticationRequestMatcher)
+          .setJwtQuery(jwtQuery);
+    }
   }
 
   /**
@@ -171,10 +182,20 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
     this.loginRequestMatcher = requestMatcher;
   }
 
+  @Override
+  public boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    return this.requiresAuthenticationRequestMatcher.matches(request);
+  }
+
   /**
    * 设置登陆的请求的URL.
    */
   public void setLoginRequestUrl(String loginRequestUrl) {
     setLoginReuqestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
+  }
+
+  @Override
+  public int getOrder() {
+    return -100;
   }
 }
