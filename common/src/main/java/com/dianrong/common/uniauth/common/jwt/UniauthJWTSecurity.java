@@ -45,6 +45,11 @@ public class UniauthJWTSecurity {
   private final JWTVerifier verifier;
 
   /**
+   * 兼容服务器时间.JWT的issued时间的提前秒偏移..
+   */
+  private int issuedSecondsAheadOffset = 0;
+
+  /**
    * 构造一个UniauthJWTSecurity.
    * 
    * @param rsaPrivateKey 私钥,不能为空.
@@ -86,7 +91,7 @@ public class UniauthJWTSecurity {
   public String createJwt(UniauthUserJWTInfo jwtInfo) throws LoginJWTCreateFailedException {
     Assert.notNull(jwtInfo);
     try {
-      Date issuedAt = new Date(jwtInfo.getCreateTime());
+      Date issuedAt = new Date(getIssuedTime(jwtInfo.getCreateTime(), true));
       Date expiresAt = new Date(jwtInfo.getExpireTime());
       Integer tenancyId = jwtInfo.getTenancyId() == null ? null : jwtInfo.getTenancyId().intValue();
       return JWT.create().withIssuer(jwtInfo.getIssuer()).withIssuedAt(issuedAt)
@@ -113,7 +118,7 @@ public class UniauthJWTSecurity {
       DecodedJWT decodedJwt = this.verifier.verify(jwt);
       String audience = decodedJwt.getAudience() == null ? null
           : decodedJwt.getAudience().isEmpty() ? null : decodedJwt.getAudience().get(0);
-      long createTime = decodedJwt.getIssuedAt().getTime();
+      long createTime = getIssuedTime(decodedJwt.getIssuedAt().getTime(), false);
       long expireTIme = decodedJwt.getExpiresAt().getTime();
       Integer tenancyId = decodedJwt.getClaim(JWTConstant.TENANCY_ID_KEY).asInt();
       return new UniauthUserJWTInfo(decodedJwt.getIssuer(), audience, decodedJwt.getSubject(),
@@ -130,5 +135,31 @@ public class UniauthJWTSecurity {
       log.error(jwt + " is a invalid jwt token ", t);
       throw new InvalidJWTExpiredException(jwt + " is a invalid jwt token ", t);
     }
+  }
+
+  /**
+   * 处理JWT的Issued时间的偏移量.
+   * 
+   * @param jwtIssuedTime JWT的真实时间数据.
+   * @param create true:生成JWT的issued时间处理. false: 或者验证JWT的时间处理.
+   * @return 偏移量处理过后的issued的毫秒数.
+   */
+  private long getIssuedTime(long jwtIssuedTime, boolean create) {
+    if (create) {
+      return jwtIssuedTime - this.issuedSecondsAheadOffset * 1000L;
+    } else {
+      return jwtIssuedTime + this.issuedSecondsAheadOffset * 1000L;
+    }
+  }
+
+  public int getIssuedSecondsAheadOffset() {
+    return issuedSecondsAheadOffset;
+  }
+
+  /**
+   * 可为正,也可为负.
+   */
+  public void setIssuedSecondsAheadOffset(int issuedSecondsAheadOffset) {
+    this.issuedSecondsAheadOffset = issuedSecondsAheadOffset;
   }
 }

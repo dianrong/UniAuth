@@ -87,6 +87,7 @@
 	<b:bean id="uniauthJWTSecurity" class="com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity">
         <b:constructor-arg index="0" value="#{uniauthConfig['authentication.jwt.private.key']}"/>
         <b:constructor-arg index="1" value="#{uniauthConfig['authentication.jwt.public.key']}"/>
+        <b:property name="issuedSecondsAheadOffset" value="10"/>
     </b:bean>
 
 	<authentication-manager alias="authenticationManager">

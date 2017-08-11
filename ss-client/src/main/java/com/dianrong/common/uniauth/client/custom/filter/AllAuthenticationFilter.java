@@ -21,6 +21,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -33,6 +35,7 @@ import org.springframework.core.OrderComparator;
  * @author wanglin
  */
 
+@Slf4j
 public class AllAuthenticationFilter
     implements UniauthAuthenticationFilter, ApplicationContextAware, InitializingBean {
 
@@ -57,6 +60,8 @@ public class AllAuthenticationFilter
     HttpServletResponse response = (HttpServletResponse) res;
     for (UniauthAuthenticationFilter authenticationFilter : authenticationFilters) {
       if (authenticationFilter.requiresAuthentication(request, response)) {
+        log.debug("Current request used authentication filter is : {}",
+            authenticationFilter.getClass().getName());
         authenticationFilter.doFilter(request, response, chain);
         return;
       }
