@@ -19,7 +19,7 @@ public class CasUsernamePasswordCredential extends UsernamePasswordCredential {
   private String tenancyCode;
 
   /**
-   * . 验证码
+   * 验证码.
    */
   private String captcha;
 

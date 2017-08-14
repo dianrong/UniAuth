@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.client.custom.jwt;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 
+import java.io.Serializable;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -58,7 +60,9 @@ public final class JWTWebScopeUtil {
       if (info instanceof JWTUserTagInfo) {
         return (JWTUserTagInfo) info;
       }
-      log.warn("Current request's session, the tag info is not type: JWTUserTagInfo");
+      if (info != null) {
+        log.warn("Current request's session, the tag info is not type: JWTUserTagInfo");
+      }
     } else {
       log.debug("Current request do not create a session!");
     }
@@ -80,7 +84,9 @@ public final class JWTWebScopeUtil {
   @ToString
   @Getter
   @Setter
-  public static final class JWTUserTagInfo {
+  public static final class JWTUserTagInfo implements Serializable {
+    private static final long serialVersionUID = -7472148199406840133L;
+
     private String identity;
 
     private Long tenancyId;

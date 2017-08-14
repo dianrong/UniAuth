@@ -33,7 +33,7 @@ public class DomainDefine implements Serializable {
   private boolean useAllDomainUserInfoShareMode;
 
   // 采用的身份认证方式
-  private AuthenticationType authenticationType = AuthenticationType.CAS;
+  private AuthenticationType authenticationType = AuthenticationType.ALL;
 
   private static Integer domainId;
   // 每一个服务就只有一个的域名code定义

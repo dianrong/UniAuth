@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionContr
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -145,8 +146,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
         domainParam.setIncludeTenancyIds(includeTenancyIds);
         Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource()
             .getUrlRoleMapping(domainParam);
-        // query error
-        if (response.getInfo() != null && !response.getInfo().isEmpty()) {
+        // Query error
+        if (!ObjectUtil.collectionIsEmptyOrNull(response.getInfo())) {
           throw new UniauthCommonException("failed to getUrlRoleMapping");
         }
         List<UrlRoleMappingDto> urlRoleMappings = response.getData();

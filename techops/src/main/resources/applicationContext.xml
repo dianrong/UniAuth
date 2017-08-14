@@ -28,7 +28,6 @@
         <property name="userInfoClass"
             value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
         <property name="rejectPublicInvocations" value="false"></property>
-        <property name="authenticationType" value="JWT"></property>
     </bean>
 
     <sec:http pattern="/views/**" security="none" />
@@ -130,9 +129,13 @@
             <list>
                 <ref bean="casAuthenticationFilter" />
                 <ref bean="jwtAuthenticationFilter" />
+                <ref bean="allAuthenticationFilter"/>
             </list>
         </property>
     </bean>
+
+    <!-- 支持所有的身份认证方式的一种验证实现 -->
+    <bean id="allAuthenticationFilter" class="com.dianrong.common.uniauth.client.custom.filter.AllAuthenticationFilter"/>
 
     <!-- CAS方式登陆成功之后,验证ST失败的处理Handler -->
     <bean id="ssAuthenticationFailHandler"
@@ -156,6 +159,10 @@
         <property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"></property>
         <property name="sessionAuthenticationStrategy" ref="sas" />
     </bean>
+    
+    <!-- 提供两个jwt获取的方式,可配置header和parameter名来自定义参数名 -->
+    <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestHeaderJWTQuery"/>
+    <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestParameterJWTQuery"/>
     <!-- do not change: end -->
 
     <!-- trick: must be same id or name, not more than one PermissionEvaluators 

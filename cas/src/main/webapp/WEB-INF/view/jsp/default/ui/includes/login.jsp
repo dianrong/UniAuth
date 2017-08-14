@@ -46,7 +46,7 @@
 		            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
 		            	<c:if test="${not empty domains}">
 		            		<c:forEach items="${domains}" var="domain">
-	  							<form:option value="${domain.zkDomainUrlEncoded}"  customLoginPage="${domain.isCustomizedLoginPage}">${domain.code}</form:option>
+	  							<form:option value="${domain.zkDomainUrlEncoded}"  customLoginPage="${domain.isCustomizedLoginPage}" domainCode="${domain.code}" >${domain.code}</form:option>
 							</c:forEach>
 		            	</c:if>
 		            </form:select>

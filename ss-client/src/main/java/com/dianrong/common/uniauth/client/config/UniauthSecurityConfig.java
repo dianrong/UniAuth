@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.client.config;
 
+import com.dianrong.common.uniauth.client.custom.filter.AllAuthenticationFilter;
 import com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter;
 import com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.SwitchableSingleSignOutFilter;
 import com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter;
 import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
 import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTLogoutFilter;
@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
@@ -74,8 +75,12 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
         beanCreator.create(UniauthCasAuthenticationFilter.class);
     UniauthJWTAuthenticationFilter jwtAuthenticationFilter =
         beanCreator.create(UniauthJWTAuthenticationFilter.class);
-    DelegateAuthenticationFilter authenticationFilter = beanCreator.create(
-        DelegateAuthenticationFilter.class, casAuthenticationFilter, jwtAuthenticationFilter);
+    AllAuthenticationFilter allAuthenticationFilter = beanCreator
+        .create(AllAuthenticationFilter.class, casAuthenticationFilter, jwtAuthenticationFilter);
+    
+    DelegateAuthenticationFilter authenticationFilter =
+        beanCreator.create(DelegateAuthenticationFilter.class, casAuthenticationFilter,
+            jwtAuthenticationFilter, allAuthenticationFilter);
 
     http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
     http.addFilterAfter(authenticationFilter, CasAuthenticationFilter.class);
@@ -83,7 +88,7 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
     http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
     http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class),
         ExceptionTranslationFilter.class);
-    http.addFilterBefore(beanCreator.create(SwitchableSingleSignOutFilter.class),
+    http.addFilterBefore(beanCreator.create(SingleSignOutFilter.class),
         CasAuthenticationFilter.class);
 
     // entry-point configure

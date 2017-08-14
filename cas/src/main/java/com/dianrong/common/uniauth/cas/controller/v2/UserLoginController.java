@@ -2,27 +2,37 @@ package com.dianrong.common.uniauth.cas.controller.v2;
 
 import com.dianrong.common.uniauth.cas.controller.support.CasLoginSupport;
 import com.dianrong.common.uniauth.cas.exp.FreshUserException;
+import com.dianrong.common.uniauth.cas.exp.IpaAccountLoginFailedTooManyTimesException;
 import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
 import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
 import com.dianrong.common.uniauth.cas.model.vo.ApiResponse;
 import com.dianrong.common.uniauth.cas.model.vo.ResponseCode;
+import com.dianrong.common.uniauth.cas.service.UserLoginService;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
+import com.dianrong.common.uniauth.common.jwt.exp.LoginJWTCreateFailedException;
+import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
 import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
@@ -37,7 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 该controller用于通过纯API的方式进行登陆操作.
+ * 该Controller用于通过纯API的方式进行登陆操作.
  *
  * @author wanglin
  */
@@ -60,27 +70,43 @@ public class UserLoginController {
   private MessageSource messageSource;
 
   /**
+   * 登陆处理服务.
+   */
+  @Autowired
+  private UserLoginService userLoginService;
+
+  /**
    * 定义异常与异常信息的关联关系.
    */
   private static final Map<Class<? extends Exception>, CodeMessage> EXCEPTION_CODE_MAP =
       new HashMap<Class<? extends Exception>, CodeMessage>() {
         private static final long serialVersionUID = 296454014783954623L;
-
         {
           put(AccountNotFoundException.class,
               new CodeMessage(ResponseCode.USER_NOT_FOUND, "api.v2.login.user.not.found"));
+
           put(UserPasswordNotMatchException.class, new CodeMessage(
               ResponseCode.USER_NAME_PSWD_NOT_MATCH, "api.v2.login.account.pssword.not.match"));
+
           put(MultiUsersFoundException.class, new CodeMessage(ResponseCode.MULTIPLE_USERS_FOUND,
               "api.v2.login.multiple.user.found"));
+
           put(AccountDisabledException.class,
               new CodeMessage(ResponseCode.ACCOUNT_DISABLED, "api.v2.login.account.disabled"));
+
           put(AccountLockedException.class,
               new CodeMessage(ResponseCode.ACCOUNT_LOCKED, "api.v2.login.account.locked"));
+
+          put(IpaAccountLoginFailedTooManyTimesException.class,
+              new CodeMessage(ResponseCode.IPA_ACCOUNT_LOGIN_FAILED_TOO_MANAY_TIMES,
+                  "api.v2.login.ipa.account.failed.too.manay.times"));
+
           put(FreshUserException.class, new CodeMessage(ResponseCode.ACCOUNT_NEED_INIT_PSWD,
               "api.v2.login.account.need.init"));
+
           put(CredentialExpiredException.class,
               new CodeMessage(ResponseCode.ACCOUNT_PSWD_RESET, "api.v2.login.account.pawd.reset"));
+
           put(FailedLoginException.class,
               new CodeMessage(ResponseCode.LOGIN_FAILURE, "api.v2.login.login.failure"));
         }
@@ -182,6 +208,64 @@ public class UserLoginController {
   }
 
   /**
+   * 传入账号，密码，租户编码生成对应身份的JWT.<br>
+   * 但是不会影响当前的登陆状态.(不会修改当前设置生成的TGT，JWT等).
+   * 
+   * @param identity 身份信息. 比如邮箱,电话号码等.
+   * @param password 密码
+   * @param tenancyCode 租户编码
+   * @return 生成的JWT.
+   */
+  @RequestMapping(value = "jwt", method = RequestMethod.POST)
+  public ApiResponse<String> getJWT(
+      @RequestParam(value = "identity", required = true) String identity,
+      @RequestParam(value = "password", required = true) String password,
+      @RequestParam(value = "tenancyCode", required = true) String tenancyCode,
+      HttpServletRequest request, HttpServletResponse response) {
+    try {
+      UserDto userInfo = userLoginService.login(identity, password, tenancyCode);
+      log.info("{}:{} login successfully!", identity, userInfo.getId());
+      String jwt = loginSupport.createJWT(identity,
+          StringUtil.translateObjectToLong(userInfo.getTenancyId()));
+      return ApiResponse.success(jwt);
+    } catch (LoginJWTCreateFailedException lce) {
+      log.error("Create jwt failed!", lce);
+      return ApiResponse.failure(ResponseCode.CREATE_JWT_FAILURE,
+          UniBundleUtil.getMsg(messageSource, "api.v2.login.jwt.create.failure"));
+    } catch (LoginException le) {
+      log.warn("Login failed", le);
+      CodeMessage codeMessage = queryExceptionCodeMessage(le);
+      return ApiResponse.failure(codeMessage.code,
+          UniBundleUtil.getMsg(messageSource, codeMessage.messageCode));
+    }
+  }
+
+  /**
+   * 根据当前登陆用户的信息生成JWT.(该API需要在登陆成功的情况下调用)
+   *
+   * @return 生成的JWT.
+   */
+  @RequestMapping(value = "jwt", method = RequestMethod.GET)
+  public ApiResponse<String> getJWT(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      TicketGrantingTicket tgtTicket = loginSupport.queryTgtWithLogined(request, response);
+      String jwt = loginSupport.createJWTByTgt(tgtTicket.getId());
+      if (log.isDebugEnabled()) {
+        log.debug("Create jwt successfully, tgt:" + tgtTicket.getId());
+      }
+      return ApiResponse.success(jwt);
+    } catch (NotLoginException e) {
+      log.info("user not login, but try to query service ticket", e);
+      return ApiResponse.failure(ResponseCode.USER_NOT_LOGIN,
+          UniBundleUtil.getMsg(messageSource, "api.v2.login.user.not.login"));
+    } catch (LoginJWTCreateFailedException lce) {
+      log.error("Create jwt failed!", lce);
+      return ApiResponse.failure(ResponseCode.CREATE_JWT_FAILURE,
+          UniBundleUtil.getMsg(messageSource, "api.v2.login.jwt.create.failure"));
+    }
+  }
+
+  /**
    * 根据异常获取具体的异常信息.
    *
    * @param ae AuthenticationException 抛出的异常信息, 不能为空
@@ -203,10 +287,24 @@ public class UserLoginController {
   }
 
   /**
+   * 根据异常获取具体的异常信息.
+   *
+   * @param le LoginException 登陆的异常.
+   * @return CodeMessage 异常信息, 不会为空
+   */
+  private CodeMessage queryExceptionCodeMessage(LoginException le) {
+    CodeMessage codeMessage = EXCEPTION_CODE_MAP.get(le.getClass());
+    if (codeMessage != null) {
+      return codeMessage;
+    }
+    log.info("can not find code message {}", le);
+    return new CodeMessage(ResponseCode.LOGIN_FAILURE, "api.v2.login.login.failure");
+  }
+
+  /**
    * 便利的类, 用于包装结果和结果对应的消息码.
    */
   static class CodeMessage {
-
     private final Integer code;
     private final String messageCode;
 

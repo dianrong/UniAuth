@@ -410,7 +410,6 @@
 
 	<bean id="jwtCreateAction"
 		class="com.dianrong.common.uniauth.cas.action.jwt.JWTCreateAction"
-		c:uniauthJWTSecurity-ref="uniauthJWTSecurity" c:ticketRegistry-ref="ticketRegistry"
-		c:jwtCookieGenerator-ref="jwtCookieGenerator" />
+		c:casLoginSupport-ref="casLoginSupport" c:jwtCookieGenerator-ref="jwtCookieGenerator" />
 	<!-- JWT相关的action -->
 </beans>

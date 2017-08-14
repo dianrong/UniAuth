@@ -291,8 +291,8 @@ public final class WebScopeUtil {
    *
    * @param obj 返回结果对象
    */
-  public static void sendJsonToResponse(HttpServletResponse response, HttpResponseModel<?> obj)
-      throws IOException {
+  public static void sendJsonToResponse(HttpServletResponse response, HttpResponseModel<?> obj) {
+    response.setContentType(ContentType.APPLICATION_JSON.toString());
     if (obj == null) {
       writeJsonContentToResponse(response, "");
     } else {
