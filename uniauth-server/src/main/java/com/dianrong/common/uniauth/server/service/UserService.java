@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
@@ -18,6 +19,7 @@ import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
@@ -49,6 +51,8 @@ import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
 import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
+import com.dianrong.common.uniauth.server.data.entity.UserThirdAccount;
+import com.dianrong.common.uniauth.server.data.entity.UserThirdAccountExample;
 import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
@@ -63,11 +67,13 @@ import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserPwdLogMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserThirdAccountMapper;
 import com.dianrong.common.uniauth.server.data.query.UserPwdLogQueryParam;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.ldap.ipa.dao.UserDao;
 import com.dianrong.common.uniauth.server.mq.UniauthSender;
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
@@ -108,6 +114,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.OperationNotSupportedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -150,6 +159,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   @Autowired
   private RolePermissionMapper rolePermissionMapper;
   @Autowired
+  private UserThirdAccountMapper userThirdAccountMapper;
+  @Autowired
+  private UserPwdLogMapper userPwdLogMapper;
+
+  @Autowired
   private UniauthSender uniauthSender;
   @Autowired
   private UniauthNotify uniauthNotify;
@@ -158,13 +172,13 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   private UserExtendValService userExtendValService;
 
   @Autowired
-  private UserPwdLogMapper userPwdLogMapper;
-
-  @Autowired
   private GroupInnerService groupInnerService;
 
   @Autowired
   private UserProfileInnerService userProfileInnerService;
+
+  @Autowired
+  private UserDao userDao;
 
   @Resource(name = "userDataFilter")
   private DataFilter dataFilter;
@@ -752,7 +766,13 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
                 String.valueOf(AppConstants.MAX_PASSWORD_VALID_MONTH)));
       }
     }
-    return BeanConverter.convert(user);
+    UserDto userDto = BeanConverter.convert(user);
+
+    // set IPA information
+    userDto
+        .setThirdAccountInfo(thirdAccountInfo(user.getId(), loginParam.getIncludeThirdAccount()));
+
+    return userDto;
   }
 
   /**
@@ -781,6 +801,48 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     result.setGroupCodes(grpCodes);
     return result;
+  }
+
+  /**
+   * 更新用户关联的IPA账号.
+   */
+  @Transactional
+  public void updateUserIPAAccount(String account, Long tenancyId, String tenancyCode, String ipa,
+      String ipaPassword) {
+    CheckEmpty.checkEmpty(ipa, "ipa account");
+    CheckEmpty.checkEmpty(ipaPassword, "ipa password");
+
+    User user =
+        getUserByAccount(account, tenancyCode, tenancyId, false, AppConstants.STATUS_ENABLED);
+    if (user == null) {
+      throw new AppException(InfoName.BAD_REQUEST,
+          UniBundle.getMsg("common.parameter.wrong", "userId"));
+    }
+
+    // Check IPA account
+    try {
+      userDao.authenticate(ipa, ipaPassword);
+    } catch (AuthenticationException | EmptyResultDataAccessException aee) {
+      throw new AppException(InfoName.VALIDATE_FAIL,
+          UniBundle.getMsg("user.info.ipa.update.error"));
+    } catch (OperationNotSupportedException ope) {
+      throw new AppException(InfoName.VALIDATE_FAIL,
+          UniBundle.getMsg("user.info.ipa.update.lock.error"));
+    }
+
+    // 删除已经存在的IPA账号关联信息
+    UserThirdAccountExample deleteExample = new UserThirdAccountExample();
+    UserThirdAccountExample.Criteria criteria = deleteExample.createCriteria();
+    criteria.andUserIdEqualTo(user.getId()).andTypeEqualTo(ThirdAccountType.IPA.toString());
+    userThirdAccountMapper.deleteByExample(deleteExample);
+
+    // 添加新的IPA账号信息
+    UserThirdAccount record = new UserThirdAccount();
+    record.setUserId(user.getId());
+    record.setTenancyId(user.getTenancyId());
+    record.setThirdAccount(ipa);
+    record.setType(ThirdAccountType.IPA.toString());
+    userThirdAccountMapper.insert(record);
   }
 
   /**
@@ -961,6 +1023,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       }
     }
     UserDetailDto userDetailDto = getUserDetailDto(user);
+
+    // set IPA information
+    userDetailDto.getUserDto()
+        .setThirdAccountInfo(thirdAccountInfo(user.getId(), loginParam.getIncludeThirdAccount()));
+
     return userDetailDto;
   }
 
@@ -1411,7 +1478,36 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         loginParam.getTenancyId(), true, AppConstants.STATUS_ENABLED);
     UserDto userDto = BeanConverter.convert(user);
     setUserExtendVal(userDto);
+
+    // set IPA information
+    userDto.setThirdAccountInfo(
+        thirdAccountInfo(userDto.getId(), loginParam.getIncludeThirdAccount()));
     return userDto;
+  }
+
+  /**
+   * 获取对应用户的三方账号信息.
+   * 
+   * @param userId 用户id,不能为空.
+   * @param includeThirdAccount 是否需要包含三方账号信息.
+   * @return 有值或者为空的Map.
+   */
+  public Map<ThirdAccountType, String> thirdAccountInfo(Long userId, Boolean includeThirdAccount) {
+    Assert.notNull(userId, "Query third account info, the userId can not be null!");
+    Map<ThirdAccountType, String> thirdAccountInfo = Maps.newHashMap();
+    if (includeThirdAccount != null && includeThirdAccount) {
+      UserThirdAccountExample example = new UserThirdAccountExample();
+      UserThirdAccountExample.Criteria criteria = example.createCriteria();
+      criteria.andUserIdEqualTo(userId);
+      List<UserThirdAccount> userThirdAccountList = userThirdAccountMapper.selectByExample(example);
+      if (ObjectUtil.collectionIsEmptyOrNull(userThirdAccountList)) {
+        return thirdAccountInfo;
+      }
+      for (UserThirdAccount uta : userThirdAccountList) {
+        thirdAccountInfo.put(ThirdAccountType.getType(uta.getType()), uta.getThirdAccount());
+      }
+    }
+    return thirdAccountInfo;
   }
 
   /**

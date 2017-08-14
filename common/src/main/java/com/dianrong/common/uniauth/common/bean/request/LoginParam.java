@@ -22,6 +22,11 @@ public class LoginParam extends Operator {
 
   private String tenancyCode;
 
+  /**
+   * 返回的用户信息是否包含三方账号信息.
+   */
+  private Boolean includeThirdAccount;
+
   public Long getTenancyId() {
     return tenancyId;
   }
@@ -63,6 +68,15 @@ public class LoginParam extends Operator {
 
   public LoginParam setTenancyCode(String tenancyCode) {
     this.tenancyCode = tenancyCode;
+    return this;
+  }
+
+  public Boolean getIncludeThirdAccount() {
+    return includeThirdAccount;
+  }
+
+  public LoginParam setIncludeThirdAccount(Boolean includeThirdAccount) {
+    this.includeThirdAccount = includeThirdAccount;
     return this;
   }
 }

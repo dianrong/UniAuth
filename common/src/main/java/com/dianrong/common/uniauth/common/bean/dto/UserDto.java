@@ -1,12 +1,17 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import lombok.ToString;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -58,6 +63,8 @@ public class UserDto extends TenancyBaseDto {
   private Boolean tagChecked;
   @ApiModelProperty("辅助字段,原始密码")
   private String originalPassword;
+  @ApiModelProperty("用户关联的三方账号信息")
+  private Map<ThirdAccountType, String> thirdAccountInfo;
 
   public List<UserExtendValDto> getUserExtendValDtos() {
     return userExtendValDtos;
@@ -270,5 +277,21 @@ public class UserDto extends TenancyBaseDto {
   public UserDto setOriginalPassword(String originalPassword) {
     this.originalPassword = originalPassword;
     return this;
+  }
+
+  public Map<ThirdAccountType, String> getThirdAccountInfo() {
+    return thirdAccountInfo;
+  }
+
+  public UserDto setThirdAccountInfo(Map<ThirdAccountType, String> thirdAccountInfo) {
+    this.thirdAccountInfo = thirdAccountInfo;
+    return this;
+  }
+  
+  public String getIpaAccount() {
+    if (this.thirdAccountInfo == null) {
+      return null;
+    }
+    return this.thirdAccountInfo.get(ThirdAccountType.IPA);
   }
 }

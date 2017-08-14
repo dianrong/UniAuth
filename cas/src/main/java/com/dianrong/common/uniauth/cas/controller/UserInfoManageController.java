@@ -56,7 +56,7 @@ public class UserInfoManageController {
   public String toInitPwdPage(HttpServletRequest request, HttpServletResponse response) {
     return "/dianrong/personalinfo/updatePassword";
   }
-  
+
   /**
    * 根据原始密码和身份信息更新密码. <b>不需要处于登陆状态. 通过每次请求Check验证码来控制频繁访问</b>
    *
@@ -187,6 +187,34 @@ public class UserInfoManageController {
       log.error("failed update user password ", e);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
           "userinfo.update.process.failure", "Update password")));
+    }
+    return Response.success();
+  }
+
+  /**
+   * 更新IPA账号信息.
+   */
+  @ResponseBody
+  @RequestMapping(value = "ipa", method = RequestMethod.POST)
+  public Response<?> updateIPA(HttpServletRequest request, HttpServletResponse response,
+      @RequestParam(value = "ipa", required = true) String ipa,
+      @RequestParam(value = "ipaPassword", required = true) String ipaPassword,
+      @RequestParam(value = "captcha", required = true) String captcha) {
+    if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), captcha)) {
+      // 验证码不对.
+      return Response.failure(Info.build(InfoName.VALIDATE_FAIL, UniBundleUtil.getMsg(messageSource,
+          "verification.controller.verification.captcha.failed")));
+    }
+    if (!checkIsLogin(request, response)) {
+      return getNotLoginResult();
+    }
+    UserIdentity userIdentity = getCurrentLoginUserId(request, response);
+    try {
+      userInfoManageService.updateUserIPA(userIdentity.getAccount(), userIdentity.getTenancyId(),
+          ipa, ipaPassword);
+    } catch (Exception e) {
+      log.error("failed update user IPA ", e);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, e.getMessage()));
     }
     return Response.success();
   }

@@ -56,6 +56,7 @@ public class UserInfoManageService extends BaseService {
     LoginParam loginParam = new LoginParam();
     loginParam.setAccount(StringUtil.trimCompatibleNull(account));
     loginParam.setTenancyId(tenancyId);
+    loginParam.setIncludeThirdAccount(true);
     Response<UserDto> response = uniClientFacade.getUserResource().getUserInfoByUserTag(loginParam);
     List<Info> infoList = response.getInfo();
     checkInfoList(infoList);
@@ -179,6 +180,21 @@ public class UserInfoManageService extends BaseService {
     userParam.setPassword(newPassword);
     userParam.setUserActionEnum(UserActionEnum.RESET_PASSWORD_AND_CHECK);
     Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
+    List<Info> infoList = response.getInfo();
+    checkInfoList(infoList);
+  }
+
+  /**
+   * 根据用户id,验证IPA,更新用户关联的IPA账号.
+   */
+  @TenancyIdentity(index = 1)
+  public void updateUserIPA(String account, Long tenancyId, String ipa, String ipaPassword) throws Exception {
+    UserParam userParam = new UserParam();
+    userParam.setAccount(StringUtil.trimCompatibleNull(account));
+    userParam.setTenancyId(tenancyId);
+    userParam.setIpaAccount(ipa);
+    userParam.setIpaPassword(ipaPassword);
+    Response<Void> response = uarwFacade.getUserRWResource().updateUserIPAAccount(userParam);
     List<Info> infoList = response.getInfo();
     checkInfoList(infoList);
   }
