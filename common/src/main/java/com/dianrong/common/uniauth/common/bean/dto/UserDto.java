@@ -48,13 +48,17 @@ public class UserDto extends TenancyBaseDto {
   private Byte status;
   @ApiModelProperty("连续登陆失败次数")
   private Byte failCount;
+  @ApiModelProperty("用户与组的关联关系(普通关联,OWNER关系)")
   private Byte userGroupType;
   @ApiModelProperty("用户对应的标签")
   private List<TagDto> tagDtos;
+  @ApiModelProperty("用户对应的角色信息")
+  private List<RoleDto> roles;
   @ApiModelProperty("用户对应的扩展属性值")
   private List<UserExtendValDto> userExtendValDtos;
   @ApiModelProperty("辅助字段,与userExtendValDtos内容一致")
   private Map<String, String> userExtendValMap;
+  
   // whether this user directly connected with a role
   @ApiModelProperty("辅助字段,判断是否与某个角色有关联关系")
   private Boolean roleChecked;

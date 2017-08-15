@@ -1,10 +1,14 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 import io.swagger.annotations.ApiModel;
+
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 @ApiModel("组操作请求参数")
-public class GroupParam extends Operator {
+public class GroupParam extends PageParam {
 
   private static final long serialVersionUID = -4261321484001881493L;
 
@@ -40,10 +44,92 @@ public class GroupParam extends Operator {
 
   private Boolean onlyNeedGrpInfo;
 
-  /**
-   * 在返回的user信息列表中是否包含禁用的用户信息.
-   */
+  // 是否包含组的角色信息
+  private Boolean needGrpRole;
+
+  // 是否包含组的扩展属性信息
+  private Boolean needGrpExtendVal;
+
+  // 是否包含组的标签信息
+  private Boolean needGrpTag;
+
+  // 是否包含组关联的用户信息
+  private Boolean needGrpUser;
+
+  // 在返回的user信息列表中是否包含禁用的用户信息.
   private Boolean includeDisableUser;
+
+  // 是否包含组关联用户的角色信息
+  private Boolean needGrpUserRole;
+
+  // 是否包含组关联用户的标签信息
+  private Boolean needGrpUserTag;
+
+  // 是否包含组关联用户的扩展信息
+  private Boolean needGrpUserExtendVal;
+
+  public Boolean getNeedGrpRole() {
+    return needGrpRole;
+  }
+
+  public GroupParam setNeedGrpRole(Boolean needGrpRole) {
+    this.needGrpRole = needGrpRole;
+    return this;
+  }
+
+  public Boolean getNeedGrpExtendVal() {
+    return needGrpExtendVal;
+  }
+
+  public GroupParam setNeedGrpExtendVal(Boolean needGrpExtendVal) {
+    this.needGrpExtendVal = needGrpExtendVal;
+    return this;
+  }
+
+  public Boolean getNeedGrpTag() {
+    return needGrpTag;
+  }
+
+  public GroupParam setNeedGrpTag(Boolean needGrpTag) {
+    this.needGrpTag = needGrpTag;
+    return this;
+  }
+
+  public Boolean getNeedGrpUser() {
+    return needGrpUser;
+  }
+
+  public GroupParam setNeedGrpUser(Boolean needGrpUser) {
+    this.needGrpUser = needGrpUser;
+    return this;
+  }
+
+  public Boolean getNeedGrpUserRole() {
+    return needGrpUserRole;
+  }
+
+  public GroupParam setNeedGrpUserRole(Boolean needGrpUserRole) {
+    this.needGrpUserRole = needGrpUserRole;
+    return this;
+  }
+
+  public Boolean getNeedGrpUserTag() {
+    return needGrpUserTag;
+  }
+
+  public GroupParam setNeedGrpUserTag(Boolean needGrpUserTag) {
+    this.needGrpUserTag = needGrpUserTag;
+    return this;
+  }
+
+  public Boolean getNeedGrpUserExtendVal() {
+    return needGrpUserExtendVal;
+  }
+
+  public GroupParam setNeedGrpUserExtendVal(Boolean needGrpUserExtendVal) {
+    this.needGrpUserExtendVal = needGrpUserExtendVal;
+    return this;
+  }
 
   public Integer getId() {
     return id;
@@ -204,16 +290,5 @@ public class GroupParam extends Operator {
 
   public void setUserStatus(Byte userStatus) {
     this.userStatus = userStatus;
-  }
-
-  @Override
-  public String toString() {
-    return "GroupParam [id=" + id + ", code=" + code + ", name=" + name + ", description="
-        + description + ", status=" + status + ", targetGroupId=" + targetGroupId
-        + ", targetGroupIds=" + targetGroupIds + ", onlyShowGroup=" + onlyShowGroup
-        + ", userGroupType=" + userGroupType + ", needOwnerMarkup=" + needOwnerMarkup
-        + ", roleId=" + roleId + ", tagId=" + tagId + ", domainId=" + domainId + ", roleIds="
-        + roleIds + ", tagIds=" + tagIds + ", onlyNeedGrpInfo=" + onlyNeedGrpInfo
-        + ", includeDisableUser=" + includeDisableUser + "]";
   }
 }

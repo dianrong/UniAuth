@@ -91,4 +91,17 @@
         )
         and status = 0
     </select>
+    
+    <!-- 组分页查询实现 -->
+    <select id="queryPageGroup" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select id
+    from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{ancestor,jdbcType=INTEGER} and grp.status=0
+    limit 
+</select>
+    
+        <select id="getGroupTree" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{ancestor,jdbcType=INTEGER} and grp.status=0
+    </select>
 </mapper>

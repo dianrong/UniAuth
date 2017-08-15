@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 @ApiModel("分页查询返回结果")
 public class PageDto<T extends Serializable> implements Serializable {
 
@@ -96,10 +99,18 @@ public class PageDto<T extends Serializable> implements Serializable {
     this.data = data;
     return this;
   }
-
-  @Override
-  public String toString() {
-    return "PageDto [currentPage=" + currentPage + ", pageSize=" + pageSize + ", totalCount="
-        + totalCount + ", data=" + data + "]";
+  
+  /**
+   * 空数据pageDto对象.
+   */
+  private static PageDto<? extends Serializable> emptyPageDto = new PageDto<>();
+  
+  /**
+   * 获取空数据的PageDto.
+   * @param clz 分页数据的类型.
+   */
+  @SuppressWarnings("unchecked")
+  public  static <T extends Serializable> PageDto<T> emptyPageDto(Class<T> clz) {
+    return (PageDto<T>)emptyPageDto;
   }
 }

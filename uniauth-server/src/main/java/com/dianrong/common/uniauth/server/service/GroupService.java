@@ -66,6 +66,7 @@ import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Maps;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -76,7 +77,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1277,5 +1280,34 @@ public class GroupService extends TenancyBasedService {
    */
   public List<Grp> listUserLastGrpPath(Long userId) {
     return groupInnerService.listUserLastGrpPath(userId);
+  }
+
+  /**
+   * 获取组的各种关联信息.
+   */
+  public PageDto<GroupDto> queryTotalInfo(Integer id, String code, Integer domainId,
+      Boolean needGrpRole, Boolean needGrpExtendVal, Boolean needGrpTag, Boolean needGrpUser,
+      Boolean includeDisableUser, Boolean needGrpUserRole, Boolean needGrpUserTag,
+      Boolean needGrpUserExtendVal, Integer pageNumber, Integer pageSize) {
+    CheckEmpty.checkEmpty(pageNumber, "pageNumber");
+    CheckEmpty.checkEmpty(pageSize, "pageSize");
+
+    Integer grpId = id;
+    if (grpId == null) {
+      CheckEmpty.checkEmpty(code, "code");
+      // 根据编码Code来确定查询的根组id
+      GrpExample selectExample = new GrpExample();
+      GrpExample.Criteria criteria = selectExample.createCriteria();
+      criteria.andCodeEqualTo(code).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+          .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+      List<Grp> grps = grpMapper.selectByExample(selectExample);
+      if (ObjectUtil.collectionIsEmptyOrNull(grps)) {
+        return PageDto.emptyPageDto(GroupDto.class);
+      }
+      grpId = grps.get(0).getId();
+    }
+    
+    
+    return null;
   }
 }

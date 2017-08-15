@@ -26,13 +26,18 @@ public class GroupDto extends TenancyBaseDto {
   private Byte status;
   @ApiModelProperty("组描述")
   private String description;
-  @ApiModelProperty("组对应的标签信息")
-  private List<TagDto> tags;
   @ApiModelProperty("父组id")
   private Integer parentId;
+  @ApiModelProperty("组对应的标签信息")
+  private List<TagDto> tags;
   @ApiModelProperty("与组关联的用户")
   private List<UserDto> users;
+  @ApiModelProperty("子组列表")
   private List<GroupDto> groups;
+  @ApiModelProperty("组对应的角色信息")
+  private List<RoleDto> roles;
+  @ApiModelProperty("组的扩展属性值列表")
+  private List<GrpExtendValDto> grpExtendVals;
 
   // whether this group connected with a role
   @ApiModelProperty("辅助字段,判断组是否与某个角色有关联关系")
@@ -177,6 +182,15 @@ public class GroupDto extends TenancyBaseDto {
 
   public GroupDto setIsRootGrp(Boolean isRootGrp) {
     this.isRootGrp = isRootGrp;
+    return this;
+  }
+
+  public List<RoleDto> getRoles() {
+    return roles;
+  }
+
+  public GroupDto setRoles(List<RoleDto> roles) {
+    this.roles = roles;
     return this;
   }
 }
