@@ -1306,6 +1306,18 @@ public class GroupService extends TenancyBasedService {
       }
       grpId = grps.get(0).getId();
     }
+    // 查询所有的组的基本信息
+    Map<String, Object> paramMap = Maps.newHashMap();
+    List<GroupDto> groupDtos = grpMapper.queryPageGroup(paramMap);
+    if (ObjectUtil.collectionIsEmptyOrNull(groupDtos)) {
+      return PageDto.emptyPageDto(GroupDto.class);
+    }
+    // 查询组与组的关联关系
+    
+    
+    // 总数
+    int totalCount = grpMapper.queryPageGroupCount(grpId);
+    
     
     
     return null;

@@ -93,15 +93,24 @@
     </select>
     
     <!-- 组分页查询实现 -->
-    <select id="queryPageGroup" resultType="java.lang.Integer" parameterType="java.util.Map">
-    select id
-    from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{ancestor,jdbcType=INTEGER} and grp.status=0
-    limit 
-</select>
+    <select id="queryPageGroup" resultMap="BaseResultMap" parameterType="java.util.Map">
+	    select
+	       <include refid="Base_Column_List" />
+	    from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{grpId,jdbcType=INTEGER} and grp.status=0
+	    limit #{pageOffSet},#{pageSize}
+    </select>
     
-        <select id="getGroupTree" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-        select
-        <include refid="Base_Column_List" />
-        from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{ancestor,jdbcType=INTEGER} and grp.status=0
+    <select id="queryPageGroupCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(id) from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{grpId,jdbcType=INTEGER} and grp.status=0
+    </select>
+    
+    <select id="queryPageGroupCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select t1.descendant, t1.ancestor from grp_path t1 join
+        (select
+        grp.id
+        from grp join grp_path on
+        (grp.id = grp_path.descendant)
+        where grp_path.ancestor = #{ancestor,jdbcType=INTEGER} and grp.status=0) as t2 on t1.descendant = t2.id
+        where t1.deepth=1 and t1.descendant &lt;&gt; #{ancestor,jdbcType=INTEGER}
     </select>
 </mapper>

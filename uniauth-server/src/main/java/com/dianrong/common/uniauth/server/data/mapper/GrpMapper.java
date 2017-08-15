@@ -117,4 +117,10 @@ public interface GrpMapper {
 
   @Timed
   List<GroupDto> listGroupsRelateToUser(Map<String, Object> paramMap);
+  
+  List<GroupDto> queryPageGroup(Map<String, Object> paramMap);
+  
+  List<HashMap<Integer, Integer>> queryPageGroupTreeLinks(Map<String, Object> paramMap);
+  
+  Integer queryPageGroupCount(@Param("grpId")Integer grpId);
 }
