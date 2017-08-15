@@ -5,7 +5,7 @@ package com.dianrong.common.uniauth.common.exp;
  *
  * @author wanglin
  */
-public class UniauthCommonException extends RuntimeException {
+public class UniauthCommonException extends UniauthException {
 
   private static final long serialVersionUID = -6995860431603669132L;
 

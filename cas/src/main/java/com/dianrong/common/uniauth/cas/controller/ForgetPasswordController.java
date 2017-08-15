@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.cas.service.ForgetPasswordService;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.exp.UniauthException;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
@@ -33,11 +34,6 @@ public class ForgetPasswordController extends AbstractController {
   private static final String REQUEST_CAPTCHA_KEY = "captcha";
   private static final String IDENTITY_KEY = "identity";
   private static final String NEW_PSWD_KEY = "newPassword";
-
-  /**
-   * 操作失败的信息.
-   */
-  private static final String PROCESS_FAILED_MSG = "Process failed";
 
   // 定义找回密码的每一个步骤
   /**
@@ -209,9 +205,13 @@ public class ForgetPasswordController extends AbstractController {
       user = forgetPasswordService.checkUser(identity, tenancyCode);
       Assert.notNull(user,
           "can not find user, email or phone :" + identity + ", tenancyCode:" + tenancyCode);
+    } catch (UniauthException ex) {
+      log.debug("Failed to check user", ex);
+      responseJson(response, AjaxResult.CODE_4, ex.getMessage());
+      return;
     } catch (Exception ex) {
-      // 验证用户失败了
-      responseJson(response, AjaxResult.CODE_4, PROCESS_FAILED_MSG);
+      log.error("Failed to check user", ex);
+      responseJson(response, AjaxResult.CODE_4, CasConstants.SERVER_PROCESS_ERROR);
       return;
     }
 
@@ -250,8 +250,13 @@ public class ForgetPasswordController extends AbstractController {
     // 后端修改密码
     try {
       forgetPasswordService.resetPasswordByIdentity(identity, tenancyId, newPwd);
+    } catch (UniauthException ex) {
+      log.debug("Failed to update user password", ex);
+      responseJson(response, AjaxResult.CODE_4, ex.getMessage());
+      return;
     } catch (Exception ex) {
-      responseJson(response, AjaxResult.CODE_4, PROCESS_FAILED_MSG);
+      log.error("Failed to update user password", ex);
+      responseJson(response, AjaxResult.CODE_4, CasConstants.SERVER_PROCESS_ERROR);
       return;
     }
     // 修改成功
