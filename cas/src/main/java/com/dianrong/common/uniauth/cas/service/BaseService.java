@@ -58,7 +58,7 @@ public abstract class BaseService {
       };
 
   /**
-   * 根据infoname获取异常的class.
+   * 根据Infoname获取异常的class.
    */
   private Exception getExceptionClassByInfoName(InfoName infoName, String errorMsg) {
     Class<? extends Exception> exceptionClass = infoExceptionClass.get(infoName);
@@ -76,7 +76,7 @@ public abstract class BaseService {
     } catch (NoSuchMethodException e) {
       log.info(exceptionClass + " has no constructor with 1 String parameter");
     } catch (SecurityException e) {
-      log.info(e.getMessage());
+      log.info(e.getMessage(), e);
     }
 
     try {
@@ -94,7 +94,7 @@ public abstract class BaseService {
       log.info(e.getMessage());
     }
     // 默认值
-    return new Exception(errorMsg);
+    return new OtherException(errorMsg);
   }
 
   /**

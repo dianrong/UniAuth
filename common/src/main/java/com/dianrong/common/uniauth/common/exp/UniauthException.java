@@ -1,18 +1,19 @@
 package com.dianrong.common.uniauth.common.exp;
 
 /**
- * 入参类型不对的异常.
- *
+ * Uniauth里面的异常类型.
+ * 
  * @author wanglin
+ *
  */
-public class UniauthInvalidParamterException extends UniauthException {
+public class UniauthException extends RuntimeException {
 
   private static final long serialVersionUID = -6995860431603669132L;
 
   /**
    * Define a empty method.
    */
-  public UniauthInvalidParamterException() {
+  public UniauthException() {
     super();
   }
 
@@ -21,7 +22,7 @@ public class UniauthInvalidParamterException extends UniauthException {
    *
    * @param msg msg
    */
-  public UniauthInvalidParamterException(String msg) {
+  public UniauthException(String msg) {
     super(msg);
   }
 
@@ -30,7 +31,7 @@ public class UniauthInvalidParamterException extends UniauthException {
    *
    * @param msg msg
    */
-  public UniauthInvalidParamterException(String msg, Throwable t) {
+  public UniauthException(String msg, Throwable t) {
     super(msg, t);
   }
 }

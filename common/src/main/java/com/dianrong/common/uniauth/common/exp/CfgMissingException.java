@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.common.exp;
 
-public class CfgMissingException extends RuntimeException {
+public class CfgMissingException extends UniauthException {
 
   private static final long serialVersionUID = 7079137980287512689L;
 

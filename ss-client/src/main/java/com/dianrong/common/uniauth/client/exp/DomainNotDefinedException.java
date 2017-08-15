@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.client.exp;
 
-public class DomainNotDefinedException extends RuntimeException {
+import com.dianrong.common.uniauth.common.exp.UniauthException;
+
+public class DomainNotDefinedException extends UniauthException {
 
   private static final long serialVersionUID = -850695620176807010L;
 

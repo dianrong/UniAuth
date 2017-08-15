@@ -4,7 +4,10 @@ import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.exp.UniauthException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.jasig.cas.authentication.principal.Principal;
 import org.jasig.cas.web.flow.GenericSuccessViewAction;
@@ -16,6 +19,8 @@ import org.springframework.webflow.execution.RequestContext;
 /**
  * 处理用户信息的管理分之处理.
  */
+
+@Slf4j
 public class PersonalInfoManageAction extends AbstractAction {
 
   /**
@@ -72,13 +77,19 @@ public class PersonalInfoManageAction extends AbstractAction {
     try {
       // 调服务获取用户信息
       userInfo = userInfoManageService.getUserDetailInfo(account, tenancyId);
-    } catch (Exception ex) {
-      // 将异常信息仍到前端去
+    } catch (UniauthException ex) {
+      log.debug("Failed to get user detail info", ex);
       context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG,
-          StringUtil.getExceptionSimpleMessage(ex.getMessage()));
+          ex.getMessage());
+      return result(NOTFOUND_USER_INFO);
+    } catch (Exception ex) {
+      log.error("Failed to get user detail info", ex);
+      context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG,
+          CasConstants.SERVER_PROCESS_ERROR);
       return result(NOTFOUND_USER_INFO);
     }
     if (userInfo == null) {
+      log.warn("Current login user not found!");
       context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG,
           "Current login user not found");
       return result(NOTFOUND_USER_INFO);
