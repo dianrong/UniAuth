@@ -302,12 +302,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         // 原始密码验证通过
         if (orginPassword == null) {
           throw new AppException(InfoName.VALIDATE_FAIL,
-              UniBundle.getMsg("common.parameter.origin.password.wrong"));
+              UniBundle.getMsg("common.parameter.empty", "Original password"));
         }
         if (!UniPasswordEncoder.isPasswordValid(user.getPassword(), orginPassword,
             user.getPasswordSalt())) {
           throw new AppException(InfoName.VALIDATE_FAIL,
-              UniBundle.getMsg("common.parameter.wrong", "origin password"));
+              UniBundle.getMsg("common.parameter.origin.password.wrong"));
         }
         // 验证新密码
         checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);

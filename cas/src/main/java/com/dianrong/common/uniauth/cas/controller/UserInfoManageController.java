@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.cas.controller;
 
 import com.dianrong.common.uniauth.cas.controller.support.CasLoginSupport;
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.Info;
@@ -10,6 +11,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
+import com.dianrong.common.uniauth.common.exp.UniauthException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +58,7 @@ public class UserInfoManageController {
   public String toInitPwdPage(HttpServletRequest request, HttpServletResponse response) {
     return "/dianrong/personalinfo/updatePassword";
   }
-  
+
   /**
    * 根据原始密码和身份信息更新密码. <b>不需要处于登陆状态. 通过每次请求Check验证码来控制频繁访问</b>
    *
@@ -78,10 +80,12 @@ public class UserInfoManageController {
     }
     try {
       userInfoManageService.updatePassword(identity, tenancyCode, password, originalPassword);
+    } catch (UniauthException ex) {
+      log.debug("failed update user password with original password failure ", ex);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
       log.error("failed update user password with original password failure ", e);
-      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
-          "userinfo.update.process.failure", "Update password")));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, CasConstants.SERVER_PROCESS_ERROR));
     }
     return Response.success();
   }
@@ -102,10 +106,12 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updateUserInfo(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getName());
+    } catch (UniauthException ex) {
+      log.debug("failed update user information ", ex);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
       log.error("failed update user information ", e);
-      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
-          "userinfo.update.process.failure", "Update userInfo")));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, CasConstants.SERVER_PROCESS_ERROR));
     }
     return Response.success();
   }
@@ -131,10 +137,12 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updateEmail(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getEmail());
+    } catch (UniauthException ex) {
+      log.debug("failed update user email ", ex);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
       log.error("failed update user email ", e);
-      return Response.failure(Info.build(InfoName.BAD_REQUEST,
-          UniBundleUtil.getMsg(messageSource, "userinfo.update.process.failure", "Update email")));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, CasConstants.SERVER_PROCESS_ERROR));
     }
     return Response.success();
   }
@@ -160,10 +168,12 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updatePhone(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getPhone());
+    } catch (UniauthException ex) {
+      log.debug("failed update user phone ", ex);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
       log.error("failed update user phone ", e);
-      return Response.failure(Info.build(InfoName.BAD_REQUEST,
-          UniBundleUtil.getMsg(messageSource, "userinfo.update.process.failure", "Update phone")));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, CasConstants.SERVER_PROCESS_ERROR));
     }
     return Response.success();
   }
@@ -183,10 +193,12 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updatePassword(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getPassword(), originPassword);
+    } catch (UniauthException ex) {
+      log.debug("failed update user password ", ex);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
       log.error("failed update user password ", e);
-      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
-          "userinfo.update.process.failure", "Update password")));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, CasConstants.SERVER_PROCESS_ERROR));
     }
     return Response.success();
   }

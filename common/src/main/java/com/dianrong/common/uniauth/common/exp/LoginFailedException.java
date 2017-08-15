@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.common.exp;
 
-public class LoginFailedException extends RuntimeException {
+public class LoginFailedException extends UniauthException {
 
   private static final long serialVersionUID = 874400685387636837L;
 

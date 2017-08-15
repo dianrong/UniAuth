@@ -1,8 +1,9 @@
 package com.dianrong.common.uniauth.server.exp;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
+import com.dianrong.common.uniauth.common.exp.UniauthException;
 
-public class AppException extends RuntimeException {
+public class AppException extends UniauthException {
 
   private static final long serialVersionUID = -8540649906647227589L;
 

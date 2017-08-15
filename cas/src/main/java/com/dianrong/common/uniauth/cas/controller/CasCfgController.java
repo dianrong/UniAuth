@@ -33,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class CasCfgController {
 
   /**
-   * 根据cfg类型从缓存中获取img的数据流.
+   * 根据Cfg类型从缓存中获取Img的数据流.
    */
   @RequestMapping(value = "/imges/{cfgType}", method = RequestMethod.GET)
   public void getCascfgImgStream(HttpServletRequest request, HttpServletResponse response,
@@ -55,7 +55,7 @@ public class CasCfgController {
         response.setHeader("Content-Disposition",
             String.format("attachment; filename=\"" + fileName + "\""));
 
-        // 图片一般不会修改 对浏览器设置图片缓存
+        // 对浏览器设置图片缓存
         Date now = new Date();
         response.setDateHeader("Last-Modified", now.getTime()); // Last-Modified:页面的最后生成时间
         response.setDateHeader("Expires",
