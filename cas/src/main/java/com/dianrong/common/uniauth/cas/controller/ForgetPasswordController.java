@@ -252,11 +252,11 @@ public class ForgetPasswordController extends AbstractController {
       forgetPasswordService.resetPasswordByIdentity(identity, tenancyId, newPwd);
     } catch (UniauthException ex) {
       log.debug("Failed to update user password", ex);
-      responseJson(response, AjaxResult.CODE_4, ex.getMessage());
+      responseJson(response, AjaxResult.CODE_3, ex.getMessage());
       return;
     } catch (Exception ex) {
       log.error("Failed to update user password", ex);
-      responseJson(response, AjaxResult.CODE_4, CasConstants.SERVER_PROCESS_ERROR);
+      responseJson(response, AjaxResult.CODE_3, CasConstants.SERVER_PROCESS_ERROR);
       return;
     }
     // 修改成功
