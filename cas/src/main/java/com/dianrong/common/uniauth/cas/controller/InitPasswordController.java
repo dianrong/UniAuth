@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.exp.UniauthException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * @author wanglin
  */
+
+@Slf4j
 @Controller
 @RequestMapping("/initPassword")
 public class InitPasswordController {
@@ -72,69 +77,81 @@ public class InitPasswordController {
   @RequestMapping(value = "/process", method = RequestMethod.POST)
   protected void processInit(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-      // 验证验证码
-      String reqVerifycode = WebScopeUtil.getParamFromRequest(request, "verify_code");
-      if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), reqVerifycode)) {
-        // 验证码不对
-        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
-            "inipassword.controller.initpassword.captcha.wrong"));
-        return;
-      }
+    // 验证验证码
+    String reqVerifycode = WebScopeUtil.getParamFromRequest(request, "verify_code");
+    if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), reqVerifycode)) {
+      // 验证码不对
+      responseVal(response, false,
+          UniBundleUtil.getMsg(messageSource, "inipassword.controller.initpassword.captcha.wrong"));
+      return;
+    }
 
-      // 获取请求的参数信息
-      String reqAccount =
-          WebScopeUtil.getParamFromRequest(request, CasConstants.REQUEST_PARAMETER_KEY_EMAIL);
-      String reqOriginpwd = WebScopeUtil.getParamFromRequest(request, "originpwd");
-      String reqNewpwd = WebScopeUtil.getParamFromRequest(request, "newpwd");
-      String reqTenancyCode = WebScopeUtil.getParamFromRequest(request,
-          CasConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
+    // 获取请求的参数信息
+    String reqAccount =
+        WebScopeUtil.getParamFromRequest(request, CasConstants.REQUEST_PARAMETER_KEY_EMAIL);
+    String reqOriginpwd = WebScopeUtil.getParamFromRequest(request, "originpwd");
+    String reqNewpwd = WebScopeUtil.getParamFromRequest(request, "newpwd");
+    String reqTenancyCode =
+        WebScopeUtil.getParamFromRequest(request, CasConstants.REQUEST_PARAMETER_KEY_TENANCY_CODE);
 
-      // 后端验证
-      if (StringUtil.strIsNullOrEmpty(reqAccount)) {
-        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
-            "inipassword.controller.initpassword.userpassword.empty"));
-        return;
-      }
-      if (StringUtil.strIsNullOrEmpty(reqOriginpwd)) {
-        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
-            "inipassword.controller.initpassword.originpassword.empty"));
-        return;
-      }
-      if (StringUtil.strIsNullOrEmpty(reqNewpwd)) {
-        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
-            "inipassword.controller.initpassword.newpassword.notempty"));
-        return;
-      }
+    // 后端验证
+    if (StringUtil.strIsNullOrEmpty(reqAccount)) {
+      responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+          "inipassword.controller.initpassword.userpassword.empty"));
+      return;
+    }
+    if (StringUtil.strIsNullOrEmpty(reqOriginpwd)) {
+      responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+          "inipassword.controller.initpassword.originpassword.empty"));
+      return;
+    }
+    if (StringUtil.strIsNullOrEmpty(reqNewpwd)) {
+      responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+          "inipassword.controller.initpassword.newpassword.notempty"));
+      return;
+    }
 
-      // 根据邮箱获取用户原始信息
-      UserDto userinfo = null;
-      try {
-        userinfo = userInfoManageService.getUserDetailInfo(reqAccount, reqTenancyCode);
-      } catch (Exception ex) {
-        responseVal(response, false, CasConstants.SERVER_PROCESS_ERROR);
-        return;
-      }
+    // 根据邮箱获取用户原始信息
+    UserDto userinfo = null;
+    try {
+      userinfo = userInfoManageService.getUserDetailInfo(reqAccount, reqTenancyCode);
+    } catch (UniauthException ex) {
+      log.debug("Failed to get user detail info", ex);
+      responseVal(response, false, ex.getMessage());
+      return;
+    } catch (Exception ex) {
+      log.error("Failed to get user detail info", ex);
+      responseVal(response, false, CasConstants.SERVER_PROCESS_ERROR);
+      return;
+    }
 
-      // 用户不存在
-      if (userinfo == null) {
-        responseVal(response, false, UniBundleUtil.getMsg(messageSource,
-            "inipassword.controller.initpassword.user.not.exsist", reqAccount));
-        return;
-      }
+    // 用户不存在
+    if (userinfo == null) {
+      responseVal(response, false, UniBundleUtil.getMsg(messageSource,
+          "inipassword.controller.initpassword.user.not.exsist", reqAccount));
+      return;
+    }
 
-      // 修改密码
-      try {
-        userInfoManageService.updateUserPassword(userinfo.getId(), reqNewpwd, reqOriginpwd);
-      } catch (Exception ex) {
-        responseVal(response, false, CasConstants.SERVER_PROCESS_ERROR);
-        return;
-      }
-      // 返回修改密码成功
-      responseVal(response, true, "");
+    // 修改密码
+    try {
+      userInfoManageService.updateUserPassword(userinfo.getId(), reqNewpwd, reqOriginpwd);
+    } catch (UniauthException ex) {
+      log.debug("Failed to update user password", ex);
+      responseVal(response, false, ex.getMessage());
+      return;
+    } catch (Exception ex) {
+      log.error("Failed to update user password", ex);
+      responseVal(response, false, CasConstants.SERVER_PROCESS_ERROR);
+      return;
+    }
+
+    // 返回修改密码成功
+    responseVal(response, true, "");
   }
 
   /**
    * Easy way for formated response value.
+   * 
    * @param processSuccess Init password success or failed.
    * @param msg process result message
    * @throws IOException HttpServletResponse IOException
