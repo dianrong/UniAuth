@@ -45,7 +45,7 @@
 		class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
 
      <bean id="connectionFactory" class="com.dianrong.common.uniauth.server.service.cache.factory.UniauthJedisConnectionFactory"
-        p:password="#{uniauthConfig['redis.password']}" p:database="#{uniauthConfig['redis.database']?:'0'}">
+        p:password="#{uniauthConfig['redis.password']}" p:database="#{uniauthConfig['redis.uniauth.database']?:'0'}">
          <property name="configSwitch" ref="redisSwitch"/>
         <constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration"></constructor-arg>
         <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
