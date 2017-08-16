@@ -91,4 +91,33 @@
         )
         and status = 0
     </select>
+    
+    <!-- 组分页查询实现 -->
+    <select id="queryPageGroup" resultMap="BaseResultMap" parameterType="java.util.Map">
+	    select
+	       <include refid="Base_Column_List" />
+	    from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{grpId,jdbcType=INTEGER} and grp.status=0 order by id 
+	    limit #{pageOffSet},#{pageSize}
+    </select>
+    
+    <select id="queryPageGroupCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(id) from grp join grp_path on(grp.id = grp_path.descendant) where grp_path.ancestor = #{grpId,jdbcType=INTEGER} and grp.status=0
+    </select>
+    
+    <!-- 获取指定组下所有组的层级关系 -->
+    <select id="queryPageGroupTreeLinks" resultType="hashmap" parameterType="java.util.Map">
+        select t1.ancestor, t1.descendant from 
+        (select
+        ancestor, descendant, deepth
+        from grp join grp_path on
+        (grp.id = grp_path.descendant) where grp.status = 0) as t1 
+         join
+        (select
+        grp.id
+        from grp join grp_path on
+        (grp.id = grp_path.descendant)
+        where grp_path.ancestor = #{grpId,jdbcType=INTEGER} and grp.status=0 order by id 
+        limit #{pageOffSet},#{pageSize}) as t2 on t1.ancestor = t2.id
+        where t1.deepth=1
+    </select>
 </mapper>

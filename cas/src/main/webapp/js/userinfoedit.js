@@ -33,6 +33,13 @@ $(function() {
 		// 确认修改电话
 		$('#update_phone_btn_confirm').click(update_phone_to_check_verifycode);
 		
+		// 去更新IPA账号
+		$('#go_update_ipa_btn').click(to_update_ipa);
+		// 确认修改IPA
+		$('#update_ipa_btn_confirm').click(update_ipa_confirm);
+		// 确认按钮显示
+		$('.update-ipa-txt-check').keyup(update_ipa_confirm_btn_show)
+		
 		//给与电话输入框进行输入事件处理
 		$('#update_phone_new_phone').keyup(phone_input_keyup_event);
 		
@@ -65,10 +72,14 @@ $(function() {
 		// update phone
 		$('#update_phone_captcha').keyup(update_phone_verify_btn_process);
 		
-		// 更新密码
+		// 更新验证码
 		$('#captcha_pic').click(function(){
 			refresh_verfypic($('#captcha_pic'));
 		});
+		$('#update_ipa_captcha_pic').click(function(){
+			refresh_verfypic($('#update_ipa_captcha_pic'));
+		});
+		
 		$('.update-password-text-check').keyup(update_password_confirm_check);
 		$('#update_password_confirm_btn').click(update_password_confirm);
 	}
@@ -592,6 +603,65 @@ $(function() {
             	logOperation.error(errorMsg);
             }
         });  
+	}
+	
+	// 去更新IPA账号
+	var to_update_ipa = function() {
+		$('#update_ipa_new_ipa').val('');
+		$('#update_ipa_new_ipa_pwd').val('');
+		$('#update_ipa_input_captcha').val('');
+		$('#update_ipa_warninfo').html('');
+		$('#modal-update-ipa').modal('show');
+	}
+	// 确认修改IPA
+	var update_ipa_confirm = function() {
+		var request_data = {
+				ipa: $('#update_ipa_new_ipa').val(),
+				ipaPassword: $('#update_ipa_new_ipa_pwd').val(),
+				captcha: $('#update_ipa_input_captcha').val()
+		}
+		$.ajax({  
+            type : "POST", 
+            url : updateInfoUrl+'/ipa',
+            data : request_data,
+            dataType : 'json',
+            success : function(data) {
+               if(data.info) {
+            	   $('#update_ipa_warninfo').html(data.info[0].msg);
+          	   } else {
+	          		// success
+	       			$('#modal-update-ipa').modal('hide');
+	       		    infonotice(showSuccessTag, $.i18n.prop('frontpage.userinfo.edit.update.ipa.success'));
+	       		   
+	       		   // set new IPA
+	       		   $('#modal-update-ipa-label').html(request_data.ipa);
+	       		   $('#update_user_ipa_label').html(request_data.ipa);
+          	   }
+            }, complete : function(){
+            	refresh_verfypic($('#update_ipa_captcha_pic'));
+            },error: function(jqXHR, textStatus, errorMsg){
+            	logOperation.error(errorMsg);
+            }
+        });  
+	} 
+	// 确认按钮显示
+	var update_ipa_confirm_btn_show = function() {
+		if (update_ipa_content_check()) {
+			$('#update_ipa_btn_confirm').removeAttr("disabled");
+		} else {
+			$('#update_ipa_btn_confirm').attr('disabled', 'disabled');
+		}
+	} 
+	// IPA更新页面的输入内容check
+	var update_ipa_content_check = function() {
+		var check_pass = true;
+		$('.update-ipa-txt-check').each(function(){
+			var val = $(this).val();
+			if (!val) {
+				check_pass = false;
+			}
+		});
+		return check_pass;
 	}
 	
 	//帮window实现一个自动提示的功能

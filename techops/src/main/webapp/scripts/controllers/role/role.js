@@ -45,7 +45,7 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
             if (!params) {
                 params = {};
             }
-            params.pageNumber = curPage === undefined ? $scope.pagination.curPage - 1 : curPage;
+            params.pageNumber = typeof curPage === "number" ? curPage : $scope.pagination.curPage - 1;
             params.pageSize = $scope.pagination.pageSize;
 
             $scope.roles = [];

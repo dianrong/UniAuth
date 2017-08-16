@@ -1,12 +1,17 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import lombok.ToString;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -43,13 +48,17 @@ public class UserDto extends TenancyBaseDto {
   private Byte status;
   @ApiModelProperty("连续登陆失败次数")
   private Byte failCount;
+  @ApiModelProperty("用户与组的关联关系(普通关联,OWNER关系)")
   private Byte userGroupType;
   @ApiModelProperty("用户对应的标签")
   private List<TagDto> tagDtos;
+  @ApiModelProperty("用户对应的角色信息")
+  private List<RoleDto> roles;
   @ApiModelProperty("用户对应的扩展属性值")
   private List<UserExtendValDto> userExtendValDtos;
   @ApiModelProperty("辅助字段,与userExtendValDtos内容一致")
   private Map<String, String> userExtendValMap;
+  
   // whether this user directly connected with a role
   @ApiModelProperty("辅助字段,判断是否与某个角色有关联关系")
   private Boolean roleChecked;
@@ -58,6 +67,8 @@ public class UserDto extends TenancyBaseDto {
   private Boolean tagChecked;
   @ApiModelProperty("辅助字段,原始密码")
   private String originalPassword;
+  @ApiModelProperty("用户关联的三方账号信息")
+  private Map<ThirdAccountType, String> thirdAccountInfo;
 
   public List<UserExtendValDto> getUserExtendValDtos() {
     return userExtendValDtos;
@@ -269,6 +280,40 @@ public class UserDto extends TenancyBaseDto {
 
   public UserDto setOriginalPassword(String originalPassword) {
     this.originalPassword = originalPassword;
+    return this;
+  }
+
+  public Map<ThirdAccountType, String> getThirdAccountInfo() {
+    return thirdAccountInfo;
+  }
+
+  public UserDto setThirdAccountInfo(Map<ThirdAccountType, String> thirdAccountInfo) {
+    this.thirdAccountInfo = thirdAccountInfo;
+    return this;
+  }
+  
+  public String getIpaAccount() {
+    if (this.thirdAccountInfo == null) {
+      return null;
+    }
+    return this.thirdAccountInfo.get(ThirdAccountType.IPA);
+  }
+
+  public List<RoleDto> getRoles() {
+    return roles;
+  }
+
+  public UserDto setRoles(List<RoleDto> roles) {
+    this.roles = roles;
+    return this;
+  }
+
+  public Map<String, String> getUserExtendValMap() {
+    return userExtendValMap;
+  }
+
+  public UserDto setUserExtendValMap(Map<String, String> userExtendValMap) {
+    this.userExtendValMap = userExtendValMap;
     return this;
   }
 }

@@ -119,6 +119,7 @@
            <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
        </constructor-arg>
         <property name="jwtQuery" ref="jwtQuery" />
+        <property name="authenticationType" value="#{domainDefine.authenticationType}" />
     </bean>
 
     <!--AuthenticationFilter -->

@@ -204,6 +204,34 @@ public class UserInfoManageController {
   }
 
   /**
+   * 更新IPA账号信息.
+   */
+  @ResponseBody
+  @RequestMapping(value = "ipa", method = RequestMethod.POST)
+  public Response<?> updateIPA(HttpServletRequest request, HttpServletResponse response,
+      @RequestParam(value = "ipa", required = true) String ipa,
+      @RequestParam(value = "ipaPassword", required = true) String ipaPassword,
+      @RequestParam(value = "captcha", required = true) String captcha) {
+    if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), captcha)) {
+      // 验证码不对.
+      return Response.failure(Info.build(InfoName.VALIDATE_FAIL, UniBundleUtil.getMsg(messageSource,
+          "verification.controller.verification.captcha.failed")));
+    }
+    if (!checkIsLogin(request, response)) {
+      return getNotLoginResult();
+    }
+    UserIdentity userIdentity = getCurrentLoginUserId(request, response);
+    try {
+      userInfoManageService.updateUserIPA(userIdentity.getAccount(), userIdentity.getTenancyId(),
+          ipa, ipaPassword);
+    } catch (Exception e) {
+      log.error("failed update user IPA ", e);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, e.getMessage()));
+    }
+    return Response.success();
+  }
+
+  /**
    * 判断当前的请求是否处于登陆状态.
    */
   private boolean checkIsLogin(HttpServletRequest request, HttpServletResponse response) {

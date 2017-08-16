@@ -22,7 +22,7 @@ define(['../../../utils/constant'], function (constant) {
             
             params.code = $scope.eavQuery.code;
             // 分页查询参数
-            params.pageNumber = curPage === undefined ? $scope.pagination.curPage - 1 : curPage;
+            params.pageNumber = typeof curPage === "number" ? curPage : $scope.pagination.curPage - 1;
             params.pageSize = $scope.pagination.pageSize;
             
             EvaService.queryEavCodes(params, function (res) {
