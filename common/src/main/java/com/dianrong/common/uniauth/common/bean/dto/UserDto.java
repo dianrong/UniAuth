@@ -298,4 +298,22 @@ public class UserDto extends TenancyBaseDto {
     }
     return this.thirdAccountInfo.get(ThirdAccountType.IPA);
   }
+
+  public List<RoleDto> getRoles() {
+    return roles;
+  }
+
+  public UserDto setRoles(List<RoleDto> roles) {
+    this.roles = roles;
+    return this;
+  }
+
+  public Map<String, String> getUserExtendValMap() {
+    return userExtendValMap;
+  }
+
+  public UserDto setUserExtendValMap(Map<String, String> userExtendValMap) {
+    this.userExtendValMap = userExtendValMap;
+    return this;
+  }
 }

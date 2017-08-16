@@ -193,4 +193,13 @@ public class GroupDto extends TenancyBaseDto {
     this.roles = roles;
     return this;
   }
+
+  public List<GrpExtendValDto> getGrpExtendVals() {
+    return grpExtendVals;
+  }
+
+  public GroupDto setGrpExtendVals(List<GrpExtendValDto> grpExtendVals) {
+    this.grpExtendVals = grpExtendVals;
+    return this;
+  }
 }

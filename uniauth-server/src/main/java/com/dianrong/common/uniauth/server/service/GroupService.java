@@ -2,16 +2,21 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Linkage;
+import com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpPath;
 import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
@@ -27,6 +32,8 @@ import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.entity.UserGrp;
 import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
 import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
@@ -35,6 +42,7 @@ import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
 import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
+import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
@@ -42,6 +50,7 @@ import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
 import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
@@ -57,24 +66,31 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupAddNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupMoveNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotifyInfo;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
+import com.dianrong.common.uniauth.server.service.cache.AttributeExtendCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
 import com.dianrong.common.uniauth.server.service.inner.GroupProfileInnerService;
+import com.dianrong.common.uniauth.server.service.inner.RoleInnerService;
+import com.dianrong.common.uniauth.server.service.inner.TagInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserInnerService;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -114,14 +130,31 @@ public class GroupService extends TenancyBasedService {
   private TagMapper tagMapper;
   @Autowired
   private TagTypeMapper tagTypeMapper;
+  @Autowired
+  private GrpExtendValMapper grpExtendValMapper;
+  @Autowired
+  private UserExtendValMapper userExtendValMapper;
 
   // Notification
   @Autowired
   private UniauthNotify uniauthNotify;
 
+  // Cache
+  @Autowired
+  private AttributeExtendCache attributeExtendCache;
+
   // Another service
   @Autowired
   private GroupInnerService groupInnerService;
+
+  @Autowired
+  private RoleInnerService roleInnerService;
+
+  @Autowired
+  private TagInnerService tagInnerService;
+
+  @Autowired
+  private UserInnerService userInnerService;
 
   @Autowired
   private GroupProfileInnerService groupProfileInnerService;
@@ -1265,11 +1298,14 @@ public class GroupService extends TenancyBasedService {
     paramMap.put("userId", userId);
     paramMap.put("includeOwner", includeOwner);
     paramMap.put("includeIndirectAncestors", includeIndirectAncestors);
-    List<GroupDto> groupList = grpMapper.listGroupsRelateToUser(paramMap);
-    if (groupList != null) {
-      return groupList;
+    List<Grp> grps = grpMapper.listGroupsRelateToUser(paramMap);
+    List<GroupDto> groupDtos = Lists.newArrayList();
+    if (grps != null) {
+      for (Grp grp : grps) {
+        groupDtos.add(BeanConverter.convert(grp));
+      }
     }
-    return Collections.emptyList();
+    return groupDtos;
   }
 
   /**
@@ -1308,18 +1344,192 @@ public class GroupService extends TenancyBasedService {
     }
     // 查询所有的组的基本信息
     Map<String, Object> paramMap = Maps.newHashMap();
-    List<GroupDto> groupDtos = grpMapper.queryPageGroup(paramMap);
-    if (ObjectUtil.collectionIsEmptyOrNull(groupDtos)) {
+    paramMap.put("grpId", grpId);
+    paramMap.put("pageSize", pageSize);
+    paramMap.put("pageOffSet", pageNumber * pageSize);
+    List<Grp> grps = grpMapper.queryPageGroup(paramMap);
+    if (ObjectUtil.collectionIsEmptyOrNull(grps)) {
       return PageDto.emptyPageDto(GroupDto.class);
     }
+
+    // 获取组id和组信息的映射
+    Map<Integer, GroupDto> grpMap = Maps.newHashMap();
+    for (Grp grp : grps) {
+      grpMap.put(grp.getId(), BeanConverter.convert(grp));
+    }
+
+    // 构造树关系
+    GroupDto rootGrp = grpMap.get(grpId);
+    if (rootGrp == null) {
+      return PageDto.emptyPageDto(GroupDto.class);
+    }
+
     // 查询组与组的关联关系
-    
-    
+    List<HashMap<String, Integer>> groupMaps = grpMapper.queryPageGroupTreeLinks(paramMap);
+    Map<Integer, Set<Integer>> groupMapList = Maps.newHashMap();
+
+    // 组织父组和子组的关联关系
+    if (groupMaps != null) {
+      for (HashMap<String, Integer> hm : groupMaps) {
+        Integer ancestor = hm.get("ancestor");
+        Integer descendant = hm.get("descendant");
+        Set<Integer> descendants = groupMapList.get(ancestor);
+        if (descendants == null) {
+          descendants = Sets.newHashSet();
+          groupMapList.put(ancestor, descendants);
+        }
+        descendants.add(descendant);
+      }
+    }
+    // 构造树形结构
+    constructGrpTree(rootGrp, groupMapList, grpMap);
+
+    if (needGrpRole != null && needGrpRole) {
+      CheckEmpty.checkEmpty(domainId, "domainId");
+      Map<Integer, List<RoleDto>> grpRoleMap =
+          roleInnerService.queryGrpRole(new ArrayList<>(grpMap.keySet()), domainId);
+      for (GroupDto grp : grpMap.values()) {
+        grp.setRoles(grpRoleMap.get(grp.getId()));
+      }
+    }
+
+    if (needGrpExtendVal != null && needGrpExtendVal) {
+      GrpExtendValExample example = new GrpExtendValExample();
+      GrpExtendValExample.Criteria criteria = example.createCriteria();
+      criteria.andGrpIdIn(new ArrayList<>(grpMap.keySet()));
+      List<GrpExtendVal> grpExtendValList = grpExtendValMapper.selectByExample(example);
+      if (!ObjectUtil.collectionIsEmptyOrNull(grpExtendValList)) {
+        for (GrpExtendVal gev : grpExtendValList) {
+          Integer gevgid = gev.getGrpId();
+          GroupDto grpDto = grpMap.get(gevgid);
+          if (grpDto == null) {
+            continue;
+          }
+          List<GrpExtendValDto> grpExtendValDtoList = grpDto.getGrpExtendVals();
+          if (grpExtendValDtoList == null) {
+            grpExtendValDtoList = Lists.newArrayList();
+            grpDto.setGrpExtendVals(grpExtendValDtoList);
+          }
+
+          GrpExtendValDto gevDto = BeanConverter.convert(gev);
+          AttributeExtendDto attributeExtendDto =
+              attributeExtendCache.getById(gevDto.getExtendId());
+          if (attributeExtendDto != null) {
+            gevDto.setExtendCode(attributeExtendDto.getCode());
+            gevDto.setExtendDescription(attributeExtendDto.getDescription());
+          }
+          grpExtendValDtoList.add(gevDto);
+        }
+      }
+    }
+
+    if (needGrpTag != null && needGrpTag) {
+      CheckEmpty.checkEmpty(domainId, "domainId");
+      Map<Integer, List<TagDto>> grpTagMap =
+          tagInnerService.queryGrpTag(new ArrayList<>(grpMap.keySet()), domainId);
+      for (GroupDto grp : grpMap.values()) {
+        grp.setTags(grpTagMap.get(grp.getId()));
+      }
+    }
+
+    if (needGrpUser != null && needGrpUser) {
+      Map<Integer, List<UserDto>> grpUserMap = userInnerService.queryGrpUser(
+          new ArrayList<>(grpMap.keySet()), includeDisableUser, AppConstants.ZERO_TYPE);
+      for (GroupDto grp : grpMap.values()) {
+        grp.setUsers(grpUserMap.get(grp.getId()));
+      }
+
+      // 收集所有需要关心的用户的id
+      Map<Long, UserDto> userMap = Maps.newHashMap();
+      for (Entry<Integer, List<UserDto>> entry : grpUserMap.entrySet()) {
+        List<UserDto> userDtos = entry.getValue();
+        if (!ObjectUtil.collectionIsEmptyOrNull(userDtos)) {
+          for (UserDto udto : userDtos) {
+            userMap.put(udto.getId(), udto);
+          }
+        }
+      }
+
+      // 获取关联用户的角色信息
+      if (needGrpUserRole != null && needGrpUserRole) {
+        CheckEmpty.checkEmpty(domainId, "domainId");
+        Map<Long, List<RoleDto>> userRoleMap =
+            roleInnerService.queryUserRole(new ArrayList<>(userMap.keySet()), domainId);
+        for (UserDto user : userMap.values()) {
+          user.setRoles(userRoleMap.get(user.getId()));
+        }
+      }
+
+      // 获取关联用户的标签信息
+      if (needGrpUserTag != null && needGrpUserTag) {
+        CheckEmpty.checkEmpty(domainId, "domainId");
+        Map<Long, List<TagDto>> userTagMap =
+            tagInnerService.queryUserTag(new ArrayList<>(userMap.keySet()), domainId);
+        for (UserDto user : userMap.values()) {
+          user.setTagDtos(userTagMap.get(user.getId()));
+        }
+      }
+
+      // 获取关联用户的扩展信息
+      if (needGrpUserExtendVal != null && needGrpUserExtendVal) {
+        UserExtendValExample example = new UserExtendValExample();
+        UserExtendValExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdIn(new ArrayList<>(userMap.keySet()));
+        List<UserExtendVal> userExtendValList = userExtendValMapper.selectByExample(example);
+        if (!ObjectUtil.collectionIsEmptyOrNull(userExtendValList)) {
+          for (UserExtendVal uev : userExtendValList) {
+            Long uevuid = uev.getUserId();
+            UserDto userDto = userMap.get(uevuid);
+            if (userDto == null) {
+              continue;
+            }
+            List<UserExtendValDto> userExtendValDtoList = userDto.getUserExtendValDtos();
+            if (userExtendValDtoList == null) {
+              userExtendValDtoList = Lists.newArrayList();
+              userDto.setUserExtendValDtos(userExtendValDtoList);
+            }
+
+            UserExtendValDto uevDto = BeanConverter.convert(uev);
+            AttributeExtendDto attributeExtendDto =
+                attributeExtendCache.getById(uevDto.getExtendId());
+            if (attributeExtendDto != null) {
+              uevDto.setExtendCode(attributeExtendDto.getCode());
+              uevDto.setExtendDescription(attributeExtendDto.getDescription());
+            }
+            userExtendValDtoList.add(uevDto);
+          }
+        }
+      }
+    }
+
     // 总数
     int totalCount = grpMapper.queryPageGroupCount(grpId);
-    
-    
-    
-    return null;
+    return new PageDto<>(pageNumber, pageSize, totalCount, Arrays.asList(rootGrp));
+  }
+
+  /**
+   * 构造树形结构.
+   */
+  private void constructGrpTree(GroupDto rootGrp, Map<Integer, Set<Integer>> groupMapList,
+      Map<Integer, GroupDto> grpMap) {
+    if (rootGrp == null) {
+      return;
+    }
+    Set<Integer> descendantIds = groupMapList.get(rootGrp.getId());
+    if (!ObjectUtil.collectionIsEmptyOrNull(descendantIds)) {
+      for (Integer did : descendantIds) {
+        GroupDto gdto = grpMap.get(did);
+        if (gdto == null) {
+          continue;
+        }
+        constructGrpTree(gdto, groupMapList, grpMap);
+        List<GroupDto> descendantDtos = rootGrp.getGroups();
+        if (descendantDtos == null) {
+          descendantDtos = Lists.newArrayList();
+          rootGrp.setGroups(descendantDtos);
+        }
+        descendantDtos.add(gdto);
+      }
+    }
   }
 }

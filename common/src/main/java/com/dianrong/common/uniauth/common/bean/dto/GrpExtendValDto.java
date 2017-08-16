@@ -16,7 +16,7 @@ public class GrpExtendValDto extends TenancyBaseDto {
   @ApiModelProperty("主键id")
   private Long id;
 
-  @ApiModelProperty("用户id")
+  @ApiModelProperty("组id")
   private Integer grpId;
 
   @ApiModelProperty("扩展值")

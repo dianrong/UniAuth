@@ -1,13 +1,14 @@
 package com.dianrong.common.uniauth.server.data.mapper;
 
 import com.codahale.metrics.annotation.Timed;
-import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface GrpMapper {
@@ -116,11 +117,11 @@ public interface GrpMapper {
   Integer getUserIdInGroupOrSub(Map<String, Object> paramMap);
 
   @Timed
-  List<GroupDto> listGroupsRelateToUser(Map<String, Object> paramMap);
-  
-  List<GroupDto> queryPageGroup(Map<String, Object> paramMap);
-  
-  List<HashMap<Integer, Integer>> queryPageGroupTreeLinks(Map<String, Object> paramMap);
-  
-  Integer queryPageGroupCount(@Param("grpId")Integer grpId);
+  List<Grp> listGroupsRelateToUser(Map<String, Object> paramMap);
+
+  List<Grp> queryPageGroup(Map<String, Object> paramMap);
+
+  List<HashMap<String, Integer>> queryPageGroupTreeLinks(Map<String, Object> paramMap);
+
+  Integer queryPageGroupCount(@Param("grpId") Integer grpId);
 }
