@@ -37,6 +37,7 @@
 
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
 		<constructor-arg ref="connectionFactory" />
+		<property name="keySerializer" ref="jacksonSerializer" />
 		<property name="valueSerializer" ref="jacksonSerializer" />
 		<property name="hashKeySerializer" ref="jacksonSerializer" />
 		<property name="hashValueSerializer" ref="jacksonSerializer" />

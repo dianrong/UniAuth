@@ -1422,7 +1422,7 @@ public class GroupService extends TenancyBasedService {
         }
       }
     }
-
+    
     if (needGrpTag != null && needGrpTag) {
       CheckEmpty.checkEmpty(domainId, "domainId");
       Map<Integer, List<TagDto>> grpTagMap =
