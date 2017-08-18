@@ -55,4 +55,9 @@
 		class="org.jasig.cas.client.session.SingleSignOutFilter"
     	p:casServerUrlPrefix="#{uniauthConfig['cas_server']}" 
     	/>
+    	
+    	<bean 
+        name="casLogoutFilter" 
+        class="com.dianrong.common.uniauth.common.client.CasSimpleLogoutFilter"
+        p:logoutRedirectUrl="#{uniauthConfig['cas_server']}/logout" />
 </beans>
