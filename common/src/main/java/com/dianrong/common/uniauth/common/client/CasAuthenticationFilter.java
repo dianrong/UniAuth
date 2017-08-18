@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.common.client;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -11,7 +12,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.client.Protocol;
 import org.jasig.cas.client.authentication.AuthenticationRedirectStrategy;
 import org.jasig.cas.client.authentication.ContainsPatternUrlPatternMatcherStrategy;
@@ -29,11 +32,6 @@ import org.jasig.cas.client.validation.Assertion;
 
 @Slf4j
 public class CasAuthenticationFilter extends AbstractCasFilter {
-
-  /**
-   * . header 中的referer头的name
-   */
-  private static final String HEADER_REFERER = "Referer";
 
   /**
    * The URL to the CAS Server login.
@@ -219,10 +217,6 @@ public class CasAuthenticationFilter extends AbstractCasFilter {
     final String requestUri = urlBuffer.toString();
     if (this.ignoreUrlPatternMatcherStrategyClass.matches(requestUri)) {
       return true;
-    }
-    String refererUrl = request.getHeader(HEADER_REFERER);
-    if (refererUrl != null) {
-      return this.ignoreUrlPatternMatcherStrategyClass.matches(refererUrl);
     }
     return false;
   }

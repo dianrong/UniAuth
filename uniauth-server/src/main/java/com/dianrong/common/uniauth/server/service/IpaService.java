@@ -186,7 +186,7 @@ public class IpaService implements UserAuthentication {
   private Long tenancyIdentityCheck(String tenancyCode, Long tenancyId, String account) {
     TenancyDto defaultTenancy =
         tenancyCache.getEnableTenancyByCode(AppConstants.DEFAULT_TANANCY_CODE);
-    if (!defaultTenancy.getCode().equals(tenancyCode)
+    if (!defaultTenancy.getCode().equalsIgnoreCase(tenancyCode)
         && !defaultTenancy.getId().equals(tenancyId)) {
       throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND,
           UniBundle.getMsg("user.login.notfound", account));

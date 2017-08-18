@@ -34,7 +34,7 @@
     	p:service="#{uniauthConfig['domains.custom-casclient']}/login/cas">
     	 <property name="ignoreUrlPatternMatcherStrategyClass">
 	        <bean class="com.dianrong.common.uniauth.common.client.RegexUrlPatternListMatcherStrategy">
-	        	<property name="pattern" value="^(http|https)://.*/main/login\?lt=.*$;^(http|https)://.*\.js"/>
+	        	<property name="pattern" value="^(http|https)://.*/main/login\?lt=.*$;^(http|https)://.*\.js$"/>
 	        </bean>
 	    </property>
     	</bean>
