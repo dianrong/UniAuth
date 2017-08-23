@@ -57,7 +57,7 @@ public final class FileUtil {
         bufferedInputStream = new BufferedInputStream(fileInputStream);
         int r = bufferedInputStream.read(bytes);
         if (r != file.length()) {
-          throw new IOException("读取文件不正确");
+          throw new IOException("Read file " + realFilePath + " error!");
         }
       } catch (IOException ex) {
         throw ex;
