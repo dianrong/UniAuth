@@ -10,28 +10,19 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleton;
 import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
-import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.ITenancyRWResource;
-import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ws.rs.client.ClientRequestFilter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Arc on 14/2/16.
@@ -62,6 +53,7 @@ public class UARWFacade {
   private IConfigRWResource configRWResource;
   private ITagRWResource tagRWResource;
   private ITenancyRWResource tenancyRWResource;
+  private ISynchronousDateRWResource synchronousDateRWResource;
 
   @Autowired(required = false)
   private ApiCtrlAccountHolder apiCtrlAccountHolder;
@@ -107,10 +99,12 @@ public class UARWFacade {
     tagRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
     tenancyRWResource =
         UniauthRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
+    synchronousDateRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, ISynchronousDateRWResource.class, providers);
 
     ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource,
         permissionRWResource, userRWResource, roleRWResource, auditResource, configRWResource,
-        tagRWResource, tenancyRWResource);
+        tagRWResource, tenancyRWResource, synchronousDateRWResource);
   }
 
   /**
@@ -167,6 +161,10 @@ public class UARWFacade {
 
   public ITenancyRWResource getTenancyRWResource() {
     return tenancyRWResource;
+  }
+
+  public ISynchronousDateRWResource getSynchronousDateRWResource() {
+    return synchronousDateRWResource;
   }
 
   public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {

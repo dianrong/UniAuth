@@ -1,11 +1,12 @@
 package com.dianrong.common.uniauth.common.client.cxf;
 
 import com.dianrong.common.uniauth.common.client.cxf.ApiControlHeaderHolder.HeaderHolder;
-import java.io.IOException;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 public final class ApiCtlRequestFilter implements ClientRequestFilter {

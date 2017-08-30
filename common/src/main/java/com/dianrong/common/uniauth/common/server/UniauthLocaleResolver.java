@@ -1,9 +1,10 @@
 package com.dianrong.common.uniauth.common.server;
 
-import java.util.Locale;
+import org.springframework.web.servlet.LocaleResolver;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.servlet.LocaleResolver;
+import java.util.Locale;
 
 /**
  * . uniauth local resolver.

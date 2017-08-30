@@ -42,7 +42,8 @@
 	<bean
 	    name="ticketValidationFilter"
 	    class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter"
-	    p:service="#{uniauthConfig['domains.custom-casclient']}/login/cas">
+	    p:service="#{uniauthConfig['domains.custom-casclient']}/login/cas"
+		p:encodeServiceUrl="false">
 	    <property name="ticketValidator">
 	        <bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
 	            <constructor-arg index="0" value="#{uniauthConfig['cas_server']}" />

@@ -12,6 +12,7 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
 import java.io.IOException;
 import java.io.Serializable;
 
+import javax.security.auth.login.AccountException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -115,7 +116,7 @@ public class InitPasswordController {
     UserDto userinfo = null;
     try {
       userinfo = userInfoManageService.getUserDetailInfo(reqAccount, reqTenancyCode);
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("Failed to get user detail info", ex);
       responseVal(response, false, ex.getMessage());
       return;
@@ -135,7 +136,7 @@ public class InitPasswordController {
     // 修改密码
     try {
       userInfoManageService.updateUserPassword(userinfo.getId(), reqNewpwd, reqOriginpwd);
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("Failed to update user password", ex);
       responseVal(response, false, ex.getMessage());
       return;

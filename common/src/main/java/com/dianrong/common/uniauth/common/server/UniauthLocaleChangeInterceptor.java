@@ -1,15 +1,16 @@
 package com.dianrong.common.uniauth.common.server;
 
-import java.util.Locale;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.support.RequestContextUtils;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.springframework.web.servlet.support.RequestContextUtils;
+import java.util.Locale;
 
 /**
  * . uniauth locale change interceptor get locale: session --> cookie --> request.getLocal() -->

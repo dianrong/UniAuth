@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.util.Date;
-
 import lombok.ToString;
+
+import java.util.Date;
 
 /**
  * Created by Arc on 24/3/2016.

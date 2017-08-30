@@ -1,15 +1,14 @@
 package com.dianrong.common.uniauth.common.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.DigestUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.regex.Pattern;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.DigestUtils;
 
 @Slf4j
 public class StringUtil {

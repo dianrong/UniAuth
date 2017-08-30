@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 

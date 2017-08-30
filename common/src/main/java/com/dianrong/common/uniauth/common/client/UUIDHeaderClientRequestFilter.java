@@ -1,17 +1,18 @@
 package com.dianrong.common.uniauth.common.client;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.annotation.Priority;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.ext.Provider;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Arc on 12/7/2016.

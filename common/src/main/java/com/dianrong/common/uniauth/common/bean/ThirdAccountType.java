@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.common.bean;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.util.StringUtils;
 
 /**

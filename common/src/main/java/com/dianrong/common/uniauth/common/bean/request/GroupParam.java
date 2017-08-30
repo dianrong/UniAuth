@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 import io.swagger.annotations.ApiModel;
+import lombok.ToString;
 
 import java.util.List;
-
-import lombok.ToString;
 
 @ToString
 @ApiModel("组操作请求参数")

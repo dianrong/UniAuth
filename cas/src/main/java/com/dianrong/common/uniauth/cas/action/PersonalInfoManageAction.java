@@ -16,6 +16,8 @@ import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
+import javax.security.auth.login.AccountException;
+
 /**
  * 处理用户信息的管理分之处理.
  */
@@ -77,7 +79,7 @@ public class PersonalInfoManageAction extends AbstractAction {
     try {
       // 调服务获取用户信息
       userInfo = userInfoManageService.getUserDetailInfo(account, tenancyId);
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("Failed to get user detail info", ex);
       context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG,
           ex.getMessage());

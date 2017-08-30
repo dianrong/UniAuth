@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.util.Date;
-
 import lombok.ToString;
+
+import java.util.Date;
 
 /**
  * 用户属性集合请求参数.

@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
-
 import lombok.ToString;
+
+import java.io.Serializable;
 
 /**
  * Created by Arc on 25/3/2016.

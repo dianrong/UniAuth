@@ -68,7 +68,7 @@ dependencies {
     testCompile "org.springframework:spring-test"
     testCompile "org.springframework:spring-web"
     
-        // Jwt
+    // Jwt
     compile 'com.auth0:java-jwt:3.0.2'
     
     // swagger
@@ -97,6 +97,9 @@ dependencies {
         'joda-time:joda-time',
         'commons-io:commons-io',
     )
+
+    // ftp
+    compile 'commons-net:commons-net:3.5'
 }
 
 sonarqube {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.HrJobMapper" >
+  <delete id="clearTable">
+    DELETE FROM hr_job;
+  </delete>
+
+  <insert id="insertBatch" parameterType="com.dianrong.common.uniauth.server.data.entity.HrJob">
+    insert into hr_job (job_id, job_code, job_name, effective_start_date, effective_end_date, sales, active_status)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.jobId,jdbcType=BIGINT}, #{item.jobCode,jdbcType=VARCHAR}, #{item.jobName,jdbcType=VARCHAR},
+      #{item.effectiveStartDate,jdbcType=DATE}, #{item.sales,jdbcType=VARCHAR}, #{item.activeStatus,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+</mapper>

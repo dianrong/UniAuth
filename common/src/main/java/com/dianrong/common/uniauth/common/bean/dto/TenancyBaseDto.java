@@ -2,8 +2,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 @ApiModel("租户信息")
 @Data

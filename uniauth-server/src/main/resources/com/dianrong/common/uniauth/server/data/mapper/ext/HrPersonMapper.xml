@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.HrPersonMapper" >
+  <delete id="clearTable">
+    DELETE FROM hr_person;
+  </delete>
+
+  <insert id="insertBatch" parameterType="com.dianrong.common.uniauth.server.data.entity.HrPerson">
+    insert into hr_person (person_id, persom_number, last_name_cn,
+    first_name_cn, last_name_en, first_name_en,
+    middle_name_en, english_name, gender,
+    email_address, person_type_id, seeded_person_type_key,
+    user_person_type, location_id, location_code,
+    location_name, mob_phone_number, bank_name,
+    bank_branch_name, bank_sub_branch_name, bank_account,
+    effective_start_date, assignment_status_type,
+    action_code, travel_subsidies, department_id,
+    department_code, department_name, job_id,
+    job_code, job_name, manager_id,
+    manager_num, manager, legal_entities_id,
+    legal_entities_code, legal_entities_name, company_name, actual_termination_date)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{personId,jdbcType=BIGINT}, #{persomNumber,jdbcType=VARCHAR}, #{lastNameCn,jdbcType=VARCHAR},
+      #{firstNameCn,jdbcType=VARCHAR}, #{lastNameEn,jdbcType=VARCHAR}, #{firstNameEn,jdbcType=VARCHAR},
+      #{middleNameEn,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR},
+      #{emailAddress,jdbcType=VARCHAR}, #{personTypeId,jdbcType=BIGINT}, #{seededPersonTypeKey,jdbcType=VARCHAR},
+      #{userPersonType,jdbcType=VARCHAR}, #{locationId,jdbcType=BIGINT}, #{locationCode,jdbcType=VARCHAR},
+      #{locationName,jdbcType=VARCHAR}, #{mobPhoneNumber,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR},
+      #{bankBranchName,jdbcType=VARCHAR}, #{bankSubBranchName,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR},
+      #{effectiveStartDate,jdbcType=DATE}, #{assignmentStatusType,jdbcType=VARCHAR},
+      #{actionCode,jdbcType=VARCHAR}, #{travelSubsidies,jdbcType=VARCHAR}, #{departmentId,jdbcType=BIGINT},
+      #{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{jobId,jdbcType=BIGINT},
+      #{jobCode,jdbcType=VARCHAR}, #{jobName,jdbcType=VARCHAR}, #{managerId,jdbcType=BIGINT},
+      #{managerNum,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{legalEntitiesId,jdbcType=BIGINT},
+      #{legalEntitiesCode,jdbcType=VARCHAR}, #{legalEntitiesName,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR},
+      #{actualTerminationDate,jdbcType=DATE}
+      )
+    </foreach>
+  </insert>
+</mapper>

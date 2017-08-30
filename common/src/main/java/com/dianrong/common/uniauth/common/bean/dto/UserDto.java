@@ -1,18 +1,15 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
 import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import lombok.ToString;
-
-import org.springframework.util.StringUtils;
 
 /**
  * Created by Arc on 13/1/16.

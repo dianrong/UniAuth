@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.jwt;
 
 import com.dianrong.common.uniauth.common.util.Assert;
+import org.springframework.util.Base64Utils;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -9,8 +10,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-
-import org.springframework.util.Base64Utils;
 
 /**
  * RSA的秘钥处理的帮助类.

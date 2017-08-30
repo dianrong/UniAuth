@@ -3,15 +3,16 @@ package com.dianrong.common.uniauth.sharerw.notification.impl.email;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.sharerw.notification.EmailNotification;
-import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 简单的邮件发送实现.

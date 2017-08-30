@@ -2,10 +2,10 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.List;
-
-import lombok.ToString;
 
 @ToString
 @ApiModel("分页查询返回结果")

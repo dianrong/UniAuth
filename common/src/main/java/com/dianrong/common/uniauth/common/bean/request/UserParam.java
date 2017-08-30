@@ -1,8 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
-import java.util.List;
 import lombok.ToString;
+
+import java.util.List;
 
 @ToString
 public class UserParam extends Operator {

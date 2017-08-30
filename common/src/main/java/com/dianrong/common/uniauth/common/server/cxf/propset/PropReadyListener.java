@@ -4,8 +4,6 @@ import com.dianrong.common.uniauth.common.server.cxf.client.ClientFilterSingleto
 import com.dianrong.common.uniauth.common.server.cxf.client.HeaderProducer;
 import com.dianrong.common.uniauth.common.server.cxf.server.HeaderConsumer;
 import com.dianrong.common.uniauth.common.server.cxf.server.ServerFilterSingletion;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -14,6 +12,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * . 在spring 初始化完成之后执行

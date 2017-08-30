@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import java.io.IOException;
 
+import javax.security.auth.login.AccountException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -205,7 +206,7 @@ public class ForgetPasswordController extends AbstractController {
       user = forgetPasswordService.checkUser(identity, tenancyCode);
       Assert.notNull(user,
           "can not find user, email or phone :" + identity + ", tenancyCode:" + tenancyCode);
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("Failed to check user", ex);
       responseJson(response, AjaxResult.CODE_4, ex.getMessage());
       return;
@@ -250,7 +251,7 @@ public class ForgetPasswordController extends AbstractController {
     // 后端修改密码
     try {
       forgetPasswordService.resetPasswordByIdentity(identity, tenancyId, newPwd);
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("Failed to update user password", ex);
       responseJson(response, AjaxResult.CODE_3, ex.getMessage());
       return;

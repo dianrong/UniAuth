@@ -13,6 +13,7 @@ import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.exp.UniauthException;
 
+import javax.security.auth.login.AccountException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -80,7 +81,7 @@ public class UserInfoManageController {
     }
     try {
       userInfoManageService.updatePassword(identity, tenancyCode, password, originalPassword);
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("failed update user password with original password failure ", ex);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
@@ -106,7 +107,7 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updateUserInfo(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getName());
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("failed update user information ", ex);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
@@ -137,7 +138,7 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updateEmail(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getEmail());
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("failed update user email ", ex);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
@@ -168,7 +169,7 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updatePhone(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getPhone());
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("failed update user phone ", ex);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {
@@ -193,7 +194,7 @@ public class UserInfoManageController {
     try {
       userInfoManageService.updatePassword(userIdentity.getAccount(), userIdentity.getTenancyId(),
           user.getPassword(), originPassword);
-    } catch (UniauthException ex) {
+    } catch (UniauthException | AccountException ex) {
       log.debug("failed update user password ", ex);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, ex.getMessage()));
     } catch (Exception e) {

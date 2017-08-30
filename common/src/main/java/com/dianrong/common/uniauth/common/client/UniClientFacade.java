@@ -4,17 +4,7 @@ import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlManager;
 import com.dianrong.common.uniauth.common.client.cxf.ApiCallCtlSwitch;
 import com.dianrong.common.uniauth.common.client.cxf.UniauthRSClientFactory;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.interfaces.read.IAttributeExtendResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IConfigResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IDomainResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IGroupResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IPermissionResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IRoleResource;
-import com.dianrong.common.uniauth.common.interfaces.read.ITagResource;
-import com.dianrong.common.uniauth.common.interfaces.read.ITenancyResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendValResource;
-import com.dianrong.common.uniauth.common.interfaces.read.IUserResource;
+import com.dianrong.common.uniauth.common.interfaces.read.*;
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IAttributeExtendRWResource;
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWResource;
@@ -23,15 +13,16 @@ import com.dianrong.common.uniauth.common.util.CheckSdkCfg;
 import com.dianrong.common.uniauth.common.util.ClientFacadeUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ws.rs.client.ClientRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.ws.rs.client.ClientRequestFilter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 @Component
@@ -85,6 +76,7 @@ public class UniClientFacade {
   private IUserExtendValResource userExtendValResource;
   private ITenancyResource tenancyResource;
   private IAttributeExtendResource attributeExtendResource;
+  private ISynchronousDataResource synchronousDataResource;
 
   // read and write
   private IUserExtendRWResource userExtendRWResource;
@@ -135,6 +127,8 @@ public class UniClientFacade {
         .create(uniWsEndpoint, ITenancyResource.class, providers);
     attributeExtendResource = UniauthRSClientFactory
         .create(uniWsEndpoint, IAttributeExtendResource.class, providers);
+    synchronousDataResource = UniauthRSClientFactory
+        .create(uniWsEndpoint, ISynchronousDataResource.class, providers);
 
     // write
     userExtendRWResource = UniauthRSClientFactory
@@ -145,7 +139,7 @@ public class UniClientFacade {
         .create(uniWsEndpoint, IAttributeExtendRWResource.class, providers);
     ClientFacadeUtil
         .addApiKey(apiName, apiKey, domainResource, groupResource, permissionResource, userResource,
-            roleResource, tagResource, configResource, tenancyResource,
+            roleResource, tagResource, configResource, tenancyResource, synchronousDataResource,
             userExtendResource, userExtendValResource, userExtendRWResource,
             userExtendValRWResource, attributeExtendResource, attributeExtendRWResource);
   }
@@ -184,6 +178,10 @@ public class UniClientFacade {
 
   public IConfigResource getConfigResource() {
     return configResource;
+  }
+
+  public ISynchronousDataResource getSynchronousDataResource() {
+    return synchronousDataResource;
   }
 
   /**

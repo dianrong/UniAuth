@@ -1,10 +1,11 @@
 package com.dianrong.common.uniauth.common.client.cxf;
 
-import java.util.Arrays;
-import java.util.List;
 import org.apache.cxf.common.util.ProxyHelper;
 import org.apache.cxf.jaxrs.client.Client;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 用于创建接口的代理对象.

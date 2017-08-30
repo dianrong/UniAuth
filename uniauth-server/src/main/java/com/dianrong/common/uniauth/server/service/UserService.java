@@ -3,71 +3,17 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
-import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.TagDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
-import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
-import com.dianrong.common.uniauth.common.util.AuthUtils;
+import com.dianrong.common.uniauth.common.util.*;
 import com.dianrong.common.uniauth.common.util.Base64;
-import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.common.util.StringUtil;
-import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
-import com.dianrong.common.uniauth.server.data.entity.Domain;
-import com.dianrong.common.uniauth.server.data.entity.DomainExample;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.GrpExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpPath;
-import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
-import com.dianrong.common.uniauth.server.data.entity.PermType;
-import com.dianrong.common.uniauth.server.data.entity.Permission;
-import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RoleCode;
-import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
-import com.dianrong.common.uniauth.server.data.entity.RoleExample;
-import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
-import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
-import com.dianrong.common.uniauth.server.data.entity.Tag;
-import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
-import com.dianrong.common.uniauth.server.data.entity.TagType;
-import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
-import com.dianrong.common.uniauth.server.data.entity.UserPwdLog;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
-import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
-import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
-import com.dianrong.common.uniauth.server.data.entity.UserThirdAccount;
-import com.dianrong.common.uniauth.server.data.entity.UserThirdAccountExample;
-import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
-import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserPwdLogMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserThirdAccountMapper;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.data.query.UserPwdLogQueryParam;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
@@ -92,26 +38,7 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -122,6 +49,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -1513,7 +1445,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   /**
    * 获取所有的tags,并且根据用户id打上对应的checked标签.
    *
-   * @param userId 用户id
+   * @param userId 用户idmi
    * @param domainId 域名id
    */
   public List<TagDto> searchTagsWithUserChecked(Long userId, Integer domainId) {
