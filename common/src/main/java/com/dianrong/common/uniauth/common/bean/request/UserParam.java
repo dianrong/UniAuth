@@ -38,6 +38,10 @@ public class UserParam extends Operator {
    * 是否忽略密码策略检查.
    */
   private Boolean ignorePwdStrategyCheck;
+  
+  // IPA account update
+  private String ipaAccount;
+  private String ipaPassword;
 
   public List<Integer> getTagIds() {
     return tagIds;
@@ -198,6 +202,24 @@ public class UserParam extends Operator {
 
   public UserParam setIgnorePwdStrategyCheck(Boolean ignorePwdStrategyCheck) {
     this.ignorePwdStrategyCheck = ignorePwdStrategyCheck;
+    return this;
+  }
+
+  public String getIpaAccount() {
+    return ipaAccount;
+  }
+
+  public UserParam setIpaAccount(String ipaAccount) {
+    this.ipaAccount = ipaAccount;
+    return this;
+  }
+
+  public String getIpaPassword() {
+    return ipaPassword;
+  }
+
+  public UserParam setIpaPassword(String ipaPassword) {
+    this.ipaPassword = ipaPassword;
     return this;
   }
 }

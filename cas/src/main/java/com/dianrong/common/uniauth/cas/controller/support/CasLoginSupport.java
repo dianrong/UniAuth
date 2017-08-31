@@ -1,17 +1,27 @@
 package com.dianrong.common.uniauth.cas.controller.support;
 
 import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
+import com.dianrong.common.uniauth.cas.service.jwt.JWTCookieGenerator;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
+import com.dianrong.common.uniauth.common.enm.CasProtocal;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
+import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
+import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
+import com.dianrong.common.uniauth.common.jwt.exp.LoginJWTCreateFailedException;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.io.IOException;
 import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.jasig.cas.CentralAuthenticationService;
+import org.jasig.cas.authentication.Authentication;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.Credential;
 import org.jasig.cas.authentication.principal.Principal;
@@ -26,10 +36,12 @@ import org.jasig.cas.web.support.ArgumentExtractor;
 import org.jasig.cas.web.support.CookieRetrievingCookieGenerator;
 import org.jasig.cas.web.support.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
- * 抽取CAS登陆相关操作的公用代码，其他模块采用 组合方式使用.
+ * 抽取CAS登陆相关操作的公用代码，其他模块采用组合方式使用.
  *
  * @author wanglin
  */
@@ -47,6 +59,12 @@ public class CasLoginSupport {
   @Autowired
   private CookieRetrievingCookieGenerator ticketGrantingTicketCookieGenerator;
 
+  @Autowired
+  private UniauthJWTSecurity uniauthJWTSecurity;
+
+  @Autowired
+  private JWTCookieGenerator jwtCookieGenerator;
+
   @Resource(name = "argumentExtractors")
   private List<ArgumentExtractor> argumentExtractors;
 
@@ -55,6 +73,9 @@ public class CasLoginSupport {
    */
   @Autowired
   private TicketRegistry ticketRegistry;
+
+  @Value("${tgt.timeToKillInSeconds:7200}")
+  private int jwtExpireSeconds = 7200;
 
   /**
    * 标志位, 用于判断是否已经初始化过cookie path.
@@ -159,14 +180,62 @@ public class CasLoginSupport {
         this.centralAuthenticationService.createTicketGrantingTicket(credential);
     String ticketGrantingTicketId = ticketGrantingTicket.getId();
 
-    // remove tgt
+    // remove TGT
     this.ticketGrantingTicketCookieGenerator.removeCookie(response);
-    // set new tgt cookie
+    // set new TGT cookie
     this.ticketGrantingTicketCookieGenerator.addCookie(request, response, ticketGrantingTicketId);
     // set warn cookie
     this.warnCookieGenerator.addCookie(request, response, String.valueOf(warnCookie));
-
+    // set JWT cookie
+    try {
+      String jwt = createJWTByTgt(ticketGrantingTicketId);
+      // 设置cookie
+      jwtCookieGenerator.addCookie(response, jwt);
+    } catch (LoginJWTCreateFailedException ex) {
+      log.error("Failed to create JWT!", ex);
+    }
     return ticketGrantingTicketId;
+  }
+
+  /**
+   * 根据传入的TGT生成JWT.
+   * 
+   * @param tgt 需要生成JWT对应用户的TGT.
+   * @return 如果信息都符合(tgt存在并合规),则生成对应的JWT.
+   * @throws LoginJWTCreateFailedException 创建JWT失败的异常
+   */
+  public String createJWTByTgt(String tgt) throws LoginJWTCreateFailedException {
+    if (!StringUtils.hasText(tgt)) {
+      throw new LoginJWTCreateFailedException("Create a JWT, tgt can not be empty!");
+    }
+    Ticket ticket = ticketRegistry.getTicket(tgt);
+    if (ticket instanceof TicketGrantingTicket) {
+      TicketGrantingTicket tgticket = (TicketGrantingTicket) ticket;
+      Authentication authentication = tgticket.getAuthentication();
+      Principal principal = authentication.getPrincipal();
+      if (principal != null) {
+        String identity = principal.getId();
+        Long tenancyId = StringUtil.translateObjectToLong(
+            principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName()));
+        return createJWT(identity, tenancyId);
+      }
+    }
+    throw new LoginJWTCreateFailedException("Failed to create a JWT, the tgt is:" + tgt);
+  }
+
+  /**
+   * 根据账号信息生成JWT.
+   * 
+   * @param identity 账号信息.
+   * @param tenancyId 租户id.
+   * @return 生成的JWT.
+   * @throws LoginJWTCreateFailedException 创建JWT失败.
+   */
+  public String createJWT(String identity, Long tenancyId) throws LoginJWTCreateFailedException {
+    Assert.notNull(identity);
+    Assert.notNull(tenancyId);
+    return uniauthJWTSecurity
+        .createJwt(new UniauthUserJWTInfo(identity, tenancyId, jwtExpireSeconds * 1000L));
   }
 
   /**
@@ -178,10 +247,13 @@ public class CasLoginSupport {
     if (!StringUtil.strIsNullOrEmpty(tgtId)) {
       centralAuthenticationService.destroyTicketGrantingTicket(tgtId);
     }
-    // remove tgt
+    // remove tgt cookie
     this.ticketGrantingTicketCookieGenerator.removeCookie(response);
     // remove warn cookie
     this.warnCookieGenerator.removeCookie(response);
+
+    // remove jwt cookie
+    this.jwtCookieGenerator.removeCookie(response);
   }
 
   /**
@@ -230,20 +302,17 @@ public class CasLoginSupport {
       if (service != null) {
         return true;
       }
-      log.warn(
-          "request's parameter {} value is {}, but parameter service is null, "
-          + "please check request parameter",
-          SERVICE_REDIRECT_PARAMETER, NEED_REDIRECT_VALUE);
+      log.warn("request's parameter {} value is {}, but parameter service is null, "
+          + "please check request parameter", SERVICE_REDIRECT_PARAMETER, NEED_REDIRECT_VALUE);
     }
     return false;
   }
 
   /**
-   * 判断当前登陆是否需要跳转,并且主动跳转
+   * 判断当前登陆是否需要跳转,并且主动跳转.
    *
    * @param serviceTicket 登陆成功生成的service ticket. 如果该参数为空,则不进行跳转
    * @return 是否成功进行跳转
-   * @throws IOException 跳转失败
    */
   public boolean loginRedirect(HttpServletRequest request, HttpServletResponse response,
       String serviceTicket) throws IOException {

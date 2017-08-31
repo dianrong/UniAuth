@@ -62,7 +62,7 @@ public class VerificationController {
 
   @Autowired
   private MessageSource messageSource;
-  
+
   @Resource(name = "uniauthConfig")
   private Map<String, String> allZkNodeMap;
 
@@ -86,38 +86,48 @@ public class VerificationController {
 
   /**
    * 根据session中的identity来发送邮件.
-   *
-   * @return 结果
+   * 
+   * @param captcha 验证码.
    */
   @ResponseBody
-  @RequestMapping(value = "send/session", method = RequestMethod.GET)
-  public Response<String> sendVerification(HttpServletRequest request, HttpServletResponse response) {
-    String identity = WebScopeUtil
-        .getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
+  @RequestMapping(value = "send/session", method = RequestMethod.POST)
+  public Response<String> sendVerification(HttpServletRequest request, HttpServletResponse response,
+      @RequestParam(value = "captcha", required = true) String captcha) {
+  String identity = WebScopeUtil.getIdentity(request.getSession());
     if (!StringUtils.hasText(identity)) {
       return Response.failure(Info.build(InfoName.IDENTITY_REQUIRED, "lack of identity"));
     } else {
-      return sendVerification(request, response, identity);
+      return sendVerification(request, response, identity, captcha);
     }
   }
 
   /**
    * 发送短信或邮件验证码.
+   * 
+   * @param identity 身份标识信息.
+   * @param captcha 验证码.
    */
   @ResponseBody
   @RequestMapping(value = "send", method = RequestMethod.POST)
   public Response<String> sendVerification(HttpServletRequest request, HttpServletResponse response,
-      @RequestParam(value = "identity", required = true) String identity) {
+      @RequestParam(value = "identity", required = true) String identity,
+      @RequestParam(value = "captcha", required = true) String captcha) {
+    if (!WebScopeUtil.checkCaptchaFromSession(request.getSession(), captcha)) {
+      // 验证码不对.
+      return Response.failure(Info.build(InfoName.VALIDATE_FAIL, UniBundleUtil.getMsg(messageSource,
+          "verification.controller.verification.captcha.failed")));
+    }
+
     String verification = getVerificationNumber();
-    String verificationMsg = UniBundleUtil
-        .getMsg(messageSource, "verification.controller.verification.content", verification,
-            CasConstants.VERIFICATION_EXPIRED_MINUTES);
+    String verificationMsg =
+        UniBundleUtil.getMsg(messageSource, "verification.controller.verification.content",
+            verification, CasConstants.VERIFICATION_EXPIRED_MINUTES);
 
     // send email
     if (StringUtil.isEmailAddress(identity)) {
       try {
-        String subject = UniBundleUtil
-            .getMsg(messageSource, "verification.controller.verification.title");
+        String subject =
+            UniBundleUtil.getMsg(messageSource, "verification.controller.verification.title");
         emailNotify.send(subject, identity, verificationMsg);
       } catch (NotificationNotAvailableException e1) {
         log.warn("send email is not available", e1);
@@ -129,9 +139,9 @@ public class VerificationController {
             .getMsg(messageSource, "verification.controller.verification.send.failed", "Email")));
       }
       // after sending successfully, set flag to session
-      WebScopeUtil.putEmailVerificationToSession(request.getSession(),
-          IdentityExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
-      return Response.success(showVerifyCode()?verification:"");
+      WebScopeUtil.putEmailVerificationToSession(request.getSession(), IdentityExpiredSessionObj
+          .build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
+      return Response.success(showVerifyCode() ? verification : "");
     }
 
     // send short message
@@ -148,15 +158,15 @@ public class VerificationController {
             .getMsg(messageSource, "verification.controller.verification.send.failed", "SMS")));
       }
       // after sending successfully, set flag to session
-      WebScopeUtil.putSmsVerificationToSession(request.getSession(),
-          IdentityExpiredSessionObj.build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
-      return Response.success(showVerifyCode()?verification:"");
+      WebScopeUtil.putSmsVerificationToSession(request.getSession(), IdentityExpiredSessionObj
+          .build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
+      return Response.success(showVerifyCode() ? verification : "");
     }
 
     // error
     log.error(String.format("%s is not a valid email address or phone number", identity));
-    return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil
-        .getMsg(messageSource, "verification.controller.verification.invalid.indentiy", identity)));
+    return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
+        "verification.controller.verification.invalid.indentiy", identity)));
   }
 
 
@@ -167,8 +177,7 @@ public class VerificationController {
   @RequestMapping(value = "verify/session", method = RequestMethod.POST)
   public Response<Void> checkVerification(HttpServletRequest request, HttpServletResponse response,
       @RequestParam(value = "verifyCode", required = true) String verifyCode) {
-    String identity = WebScopeUtil
-        .getValFromSession(request.getSession(), CasConstants.PSWDFORGET_MAIL_VAL_KEY);
+    String identity = WebScopeUtil.getIdentity(request.getSession());
     if (!StringUtils.hasText(identity)) {
       return Response.failure(Info.build(InfoName.IDENTITY_REQUIRED, "lack of identity"));
     } else {
@@ -176,7 +185,7 @@ public class VerificationController {
     }
   }
 
-  
+
   /**
    * 验证短信或邮件验证码.
    */
@@ -187,8 +196,8 @@ public class VerificationController {
       @RequestParam(value = "verifyCode", required = true) String verifyCode) {
     // email
     if (StringUtil.isEmailAddress(identity)) {
-      IdentityExpiredSessionObj<String> obj = WebScopeUtil
-          .getEmailVerificationFromSession(request.getSession());
+      IdentityExpiredSessionObj<String> obj =
+          WebScopeUtil.getEmailVerificationFromSession(request.getSession());
       if (obj != null && !obj.isExpired()) {
         if (verifyCode.equals(obj.getContent()) && obj.getIdentity().equals(identity)) {
           // validation successfully
@@ -202,14 +211,14 @@ public class VerificationController {
         }
       }
       // validation failed
-      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil
-          .getMsg(messageSource, "verification.controller.verification.validate.failed")));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
+          "verification.controller.verification.validate.failed")));
     }
 
     // short message
     if (StringUtil.isPhoneNumber(identity)) {
-      IdentityExpiredSessionObj<String> obj = WebScopeUtil
-          .getSmsVerificationFromSession(request.getSession());
+      IdentityExpiredSessionObj<String> obj =
+          WebScopeUtil.getSmsVerificationFromSession(request.getSession());
       if (obj != null && !obj.isExpired()) {
         if (verifyCode.equals(obj.getContent()) && obj.getIdentity().equals(identity)) {
           // validation successfully
@@ -223,14 +232,14 @@ public class VerificationController {
         }
       }
       // validation failed
-      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil
-          .getMsg(messageSource, "verification.controller.verification.validate.failed")));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
+          "verification.controller.verification.validate.failed")));
     }
 
     // error
     log.error(String.format("%s is not a valid email address or phone number", identity));
-    return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil
-        .getMsg(messageSource, "verification.controller.verification.invalid.indentiy", identity)));
+    return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
+        "verification.controller.verification.invalid.indentiy", identity)));
   }
 
 
@@ -239,7 +248,7 @@ public class VerificationController {
    */
   @RequestMapping("captcha")
   public void captcha(HttpServletRequest request, HttpServletResponse response) {
-    String capText = captchaProducer.createText();
+    String capText = StringUtil.generateCaptchaStr(4);
     WebScopeUtil.putCaptchaToSession(request.getSession(), capText);
     response.setHeader("Pragma", "no-cache");
     response.setHeader("Cache-Control", "no-cache");
@@ -257,15 +266,16 @@ public class VerificationController {
     }
   }
 
-  // 生成数字验
+  // 生成数字验证码.
   private String getVerificationNumber() {
     return StringUtil.generateNumberStr(VERIFICATION_LENGTH);
   }
-  
+
   /**
    * 判断是否将短信或者邮箱验证码返回到前端.
    */
   private boolean showVerifyCode() {
-    return Boolean.TRUE.toString().equalsIgnoreCase(allZkNodeMap.get(AppConstants.ZK_CAS_VERIFY_CODE_SHOW));
+    return Boolean.TRUE.toString()
+        .equalsIgnoreCase(allZkNodeMap.get(AppConstants.ZK_CAS_VERIFY_CODE_SHOW));
   }
 }

@@ -3,9 +3,9 @@ package com.dianrong.common.uniauth.client.config.configurations;
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
-import com.dianrong.common.uniauth.client.custom.SSExceptionTranslationFilter;
 import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
-import com.dianrong.common.uniauth.client.custom.UniauthSimpleAccessDeniedHandler;
+import com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter;
+import com.dianrong.common.uniauth.client.custom.handler.UniauthSimpleAccessDeniedHandler;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class SSExceptionTranslationFilterConfigure
   private CustomizedRedirectFormat customizedRedirectFormat;
 
   @Override
-  public SSExceptionTranslationFilter create() {
+  public SSExceptionTranslationFilter create(Object... args) {
     if (accessDeniedHandlerImpl == null) {
       log.debug("Do not special AccessDeniedHandler, so use default AccessDeniedHandler: {}",
           UniauthSimpleAccessDeniedHandler.class.getName());

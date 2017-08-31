@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.client.config.configurations;
 
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
-import com.dianrong.common.uniauth.client.custom.CompatibleAjaxLoginSuccessHandler;
+import com.dianrong.common.uniauth.client.custom.handler.CompatibleAjaxLoginSuccessHandler;
 
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class LogoutFilterConfigure implements Configure<LogoutFilter> {
   private LogoutSuccessHandler logoutSuccessHandler;
 
   @Override
-  public LogoutFilter create() {
+  public LogoutFilter create(Object... args) {
     if (logoutSuccessHandler == null) {
       CompatibleAjaxLoginSuccessHandler logoutSuccessHandler = new CompatibleAjaxLoginSuccessHandler();
       logoutSuccessHandler.setDefaultTargetUrl(getCasLogoutUrl());

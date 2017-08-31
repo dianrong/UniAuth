@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service("domainService")
+@Service
 public class DomainService extends BaseService {
 
   @Resource(name = "uniauthConfig")

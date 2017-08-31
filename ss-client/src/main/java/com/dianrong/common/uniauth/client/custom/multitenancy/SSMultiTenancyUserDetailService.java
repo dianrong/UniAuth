@@ -45,6 +45,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 public class SSMultiTenancyUserDetailService
@@ -156,23 +157,44 @@ public class SSMultiTenancyUserDetailService
 
           UserExtInfo userExtInfo;
 
-          if (userInfoClass == null || "".equals(userInfoClass.trim())) {
+          if (!StringUtils.hasText(userInfoClass)) {
+            // 采用默认实现
             userExtInfo = UserExtInfo.build(currentDomainUserInfo, userExtInfos, ipaPermissionDto);
           } else {
             try {
               Class<?> clazz = Class.forName(userInfoClass);
-              Constructor<?> construct = clazz.getConstructor(String.class, String.class,
-                  Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Collection.class,
-                  Long.class, UserDto.class, DomainDto.class, Map.class, Map.class);
-              UserExtInfo customeDefineUserExtInfo =
-                  (UserExtInfo) construct.newInstance(currentDomainUserInfo.getUsername(),
-                      currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(),
-                      currentDomainUserInfo.isAccountNonExpired(),
-                      currentDomainUserInfo.isCredentialsNonExpired(),
-                      currentDomainUserInfo.isAccountNonLocked(),
-                      currentDomainUserInfo.getAuthorities(), currentDomainUserInfo.getId(),
-                      currentDomainUserInfo.getUserDto(), currentDomainUserInfo.getDomainDto(),
-                      currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap());
+              UserExtInfo customeDefineUserExtInfo = null;
+              // 尝试访问带有全所有参数的构造函数
+              try {
+                Constructor<?> construct = clazz.getConstructor(String.class, String.class,
+                    Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Collection.class,
+                    Long.class, UserDto.class, DomainDto.class, Map.class, Map.class, Map.class);
+                customeDefineUserExtInfo =
+                    (UserExtInfo) construct.newInstance(currentDomainUserInfo.getUsername(),
+                        currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(),
+                        currentDomainUserInfo.isAccountNonExpired(),
+                        currentDomainUserInfo.isCredentialsNonExpired(),
+                        currentDomainUserInfo.isAccountNonLocked(),
+                        currentDomainUserInfo.getAuthorities(), currentDomainUserInfo.getId(),
+                        currentDomainUserInfo.getUserDto(), currentDomainUserInfo.getDomainDto(),
+                        currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap(),
+                        userExtInfos);
+              } catch (NoSuchMethodException ex) {
+                log.debug("Current system do not have full parameters constructor!");
+                log.debug("Try normal parameters constructor!");
+                Constructor<?> construct = clazz.getConstructor(String.class, String.class,
+                    Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Collection.class,
+                    Long.class, UserDto.class, DomainDto.class, Map.class, Map.class);
+                customeDefineUserExtInfo =
+                    (UserExtInfo) construct.newInstance(currentDomainUserInfo.getUsername(),
+                        currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(),
+                        currentDomainUserInfo.isAccountNonExpired(),
+                        currentDomainUserInfo.isCredentialsNonExpired(),
+                        currentDomainUserInfo.isAccountNonLocked(),
+                        currentDomainUserInfo.getAuthorities(), currentDomainUserInfo.getId(),
+                        currentDomainUserInfo.getUserDto(), currentDomainUserInfo.getDomainDto(),
+                        currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap());
+              }
               // 增加对IPA权限的支持
               customeDefineUserExtInfo.setIpaPermissionDto(ipaPermissionDto);
               if (userInfoCallBack != null) {

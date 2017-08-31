@@ -48,9 +48,10 @@ public class UserResource implements IUserRWResource {
   @Override
   public Response<UserDto> updateUser(UserParam userParam) {
     UserDto userDto = userService.updateUser(userParam.getUserActionEnum(), userParam.getId(),
-        userParam.getAccount(), userParam.getTenancyId(), userParam.getName(), userParam.getPhone(),
-        userParam.getEmail(), userParam.getPassword(), userParam.getOriginPassword(),
-        userParam.getIgnorePwdStrategyCheck(), userParam.getStatus());
+        userParam.getAccount(), userParam.getTenancyId(), userParam.getTenancyCode(),
+        userParam.getName(), userParam.getPhone(), userParam.getEmail(), userParam.getPassword(),
+        userParam.getOriginPassword(), userParam.getIgnorePwdStrategyCheck(),
+        userParam.getStatus());
     return Response.success(userDto);
   }
 
@@ -205,5 +206,22 @@ public class UserResource implements IUserRWResource {
   @Timed
   public Response<VPNLoginResult> vpnLogin(LoginParam loginParam) {
     return Response.success(userService.vpnLogin(loginParam));
+  }
+
+  @ApiOperation("更新用户关联的IPA账号.在更新之前需要验证IPA账号和密码是否正确.")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
+          dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "account", value = "用户账号", required = true, dataType = "long",
+          paramType = "query"),
+      @ApiImplicitParam(name = "ipa", value = "新的IPA账号", required = true, dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "ipaPassword", value = "IPA密码", required = true, dataType = "string",
+          paramType = "query")})
+  @Override
+  public Response<Void> updateUserIPAAccount(UserParam userParam) {
+    userService.updateUserIPAAccount(userParam.getAccount(), userParam.getTenancyId(),
+        userParam.getTenancyCode(), userParam.getIpaAccount(), userParam.getIpaPassword());
+    return Response.success();
   }
 }

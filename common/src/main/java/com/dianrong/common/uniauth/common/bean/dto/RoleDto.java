@@ -39,6 +39,8 @@ public class RoleDto extends TenancyBaseDto {
 
   @ApiModelProperty("对应的域信息")
   private DomainDto domain;
+  
+  @ApiModelProperty("角色编码")
   private String roleCode;
 
   private List<GroupDto> groupList;

@@ -12,13 +12,11 @@
 		<br>
 		<input type="password" name="password" id="password_input_id">
 		<br>
-		<input type="hidden" name="lt" value="<%=request.getAttribute("ltval") %>"  id="lt_input_id">
-		<input type="hidden" name="service" value="<%=request.getAttribute("service") %>"  id="service_input_id">
+		<input type="hidden" name="tenancyCode" value="dianrong"  id="tenancy_code_input_id">
 		<input type="hidden" name="casUrl" value="<%=request.getAttribute("casUrl") %>"  id="casurl_input_id">
-		<input type="hidden" name="customUrl" value="<%=request.getAttribute("customUrl") %>"  id="customurl_input_id">
-		<input type="button" value="login" id="login_btn_id" onclick="javascript:myApi.login();">
+		<input type="button" value="login" id="login_btn_id">
 	</form>
 </body>
-<script src="../js/require.js"  data-main="../js/client"></script>
-<script src="../js/client.js"></script>
+<script src="../js/jquery-1.12.1.min.js"></script>
+<script src="../js/login.js"></script>
 </html>

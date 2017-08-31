@@ -1,3 +1,4 @@
+// 登陆页面的广告轮播处理js
 $(function() {
 	var bannerSlider = new Slider($('#banner_tabs'), {
 		time: 5000,

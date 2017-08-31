@@ -1,3 +1,4 @@
+// 广告轮播的处理js
 $(function() {
 	//初始化函数
 	var init = function() {

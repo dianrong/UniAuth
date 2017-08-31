@@ -113,20 +113,17 @@ public class GroupResource implements IGroupRWResource {
 
   @ApiOperation(value = "根据组Id或者Code查询组信息")
   @ApiImplicitParams(value = {
-      @ApiImplicitParam(name = "id", value = "根组id", dataType = "long",
-          paramType = "query"),
+      @ApiImplicitParam(name = "id", value = "根组id", dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "code", value = "根组code(如果组id不传，则根据code查询)", dataType = "string",
           paramType = "query"),
-      @ApiImplicitParam(name = "userGroupType", value = "用户与组的关联关系(0,1)",
-          dataType = "integer", paramType = "query", allowableValues = "0,1"),
-      @ApiImplicitParam(name = "userStatus", value = "用户是否启用(0,1)",
-          dataType = "integer", paramType = "query", allowableValues = "0,1"),
-  })
+      @ApiImplicitParam(name = "userGroupType", value = "用户与组的关联关系(0,1)", dataType = "integer",
+          paramType = "query", allowableValues = "0,1"),
+      @ApiImplicitParam(name = "userStatus", value = "用户是否启用(0,1)", dataType = "integer",
+          paramType = "query", allowableValues = "0,1"),})
   @Override
   public Response<List<GroupDto>> getGroupTreeByIdOrCode(GroupParam groupParam) {
-    List<GroupDto> groupDtos = groupService
-        .getGroupTreeByIdOrCode(groupParam.getId(), groupParam.getCode(),
-            groupParam.getUserGroupType(), groupParam.getUserStatus());
+    List<GroupDto> groupDtos = groupService.getGroupTreeByIdOrCode(groupParam.getId(),
+        groupParam.getCode(), groupParam.getUserGroupType(), groupParam.getUserStatus());
     return Response.success(groupDtos);
   }
 
@@ -377,11 +374,46 @@ public class GroupResource implements IGroupRWResource {
       @ApiImplicitParam(name = "includeOwner", value = "关系关系是否包含own关系", dataType = "boolean",
           paramType = "query", defaultValue = "false"),
       @ApiImplicitParam(name = "includeIndirectAncestors", value = "是否包含用户关联组的父组信息",
-          dataType = "boolean", paramType = "query", defaultValue = "false"),})
+          dataType = "boolean", paramType = "query", defaultValue = "false")})
   @Override
   public Response<List<GroupDto>> listGroupsRelateToUser(GroupQuery query) {
     List<GroupDto> groupList = groupService.listGroupsRelateToUser(query.getUserId(),
         query.getIncludeOwner(), query.getIncludeIndirectAncestors());
     return Response.success(groupList);
+  }
+
+  @ApiOperation(value = "根据条件查询组的信息(关联的角色,标签,扩展信息,用户等.侧重点在用户的各种信息,而不是根据条件筛选组)")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
+          dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "id", value = "组id", dataType = "integer", paramType = "query"),
+      @ApiImplicitParam(name = "code", value = "组编码(如果有id,则以id为准)", dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "domainId", value = "域id(查询信息中有域区分的信息,则必传)", dataType = "integer",
+          paramType = "query"),
+      @ApiImplicitParam(name = "needGrpRole", value = "查询关联的角色信息", dataType = "boolean",
+          paramType = "query", defaultValue = "false"),
+      @ApiImplicitParam(name = "needGrpExtendVal", value = "查询关联的扩展信息", dataType = "boolean",
+          paramType = "query", defaultValue = "false"),
+      @ApiImplicitParam(name = "needGrpTag", value = "查询关联的标签信息", dataType = "boolean",
+          paramType = "query", defaultValue = "false"),
+      @ApiImplicitParam(name = "needGrpUser", value = "查询关联的用户信息信息", dataType = "boolean",
+          paramType = "query", defaultValue = "false"),
+      @ApiImplicitParam(name = "includeDisableUser", value = "关联的用户信息是否包含被禁用用户",
+          dataType = "boolean", paramType = "query", defaultValue = "false"),
+      @ApiImplicitParam(name = "needGrpUserRole", value = "关联用户的角色信息", dataType = "boolean",
+          paramType = "query", defaultValue = "false"),
+      @ApiImplicitParam(name = "needGrpUserTag", value = "关联用户的标签信息", dataType = "boolean",
+          paramType = "query", defaultValue = "false"),
+      @ApiImplicitParam(name = "needGrpUserExtendVal", value = "关联用户的扩展属性信息", dataType = "boolean",
+          paramType = "query", defaultValue = "false")})
+  @Override
+  public Response<PageDto<GroupDto>> queryTotalInfo(GroupParam groupParam) {
+    return Response.success(groupService.queryTotalInfo(groupParam.getId(), groupParam.getCode(),
+        groupParam.getDomainId(), groupParam.getNeedGrpRole(), groupParam.getNeedGrpExtendVal(),
+        groupParam.getNeedGrpTag(), groupParam.getNeedGrpUser(), groupParam.getIncludeDisableUser(),
+        groupParam.getNeedGrpUserRole(), groupParam.getNeedGrpUserTag(),
+        groupParam.getNeedGrpUserExtendVal(), groupParam.getPageNumber(),
+        groupParam.getPageSize()));
   }
 }

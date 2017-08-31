@@ -1,14 +1,18 @@
 <!-- include some java object -->
-<%@ page import="com.dianrong.common.uniauth.common.cons.AppConstants" %>
+<%@ page import="com.dianrong.common.uniauth.cas.util.CasConstants" %>
 <%@ page import="com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel"%>
 <jsp:directive.include file="top.jsp" />
+<div id="relate_links" style="position: absolute;top: 0;right: 0;" class="text_decoration_none">
+    <span>
+        <a href="<%=path %>/uniauth/userinfo/update/password"><spring:message code="screen.login.page.link.update.password" /></a>
+    </span>
+</div>
 <div id="cookiesDisabled" class="errors" style="display:none;">
     <h2><spring:message code="screen.cookies.disabled.title" /></h2>
     <p><spring:message code="screen.cookies.disabled.message" /></p>
 </div>
 
 <p><spring:message code="screen.welcome.security"/></p>
-
 <div class="box" id="login">
     <form:form method="post" id="fm1" commandName="${commandName}" htmlEscape="true">
         <form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false" />
@@ -42,7 +46,7 @@
 		            <form:select id="domain" tabindex="0" accesskey="${domainAccessKey}" path="domain">
 		            	<c:if test="${not empty domains}">
 		            		<c:forEach items="${domains}" var="domain">
-	  							<form:option value="${domain.zkDomainUrlEncoded}"  customLoginPage="${domain.isCustomizedLoginPage}">${domain.code}</form:option>
+	  							<form:option value="${domain.zkDomainUrlEncoded}"  customLoginPage="${domain.isCustomizedLoginPage}" domainCode="${domain.code}" >${domain.code}</form:option>
 							</c:forEach>
 		            	</c:if>
 		            </form:select>
@@ -83,7 +87,7 @@
 
 		<!-- captcha box -->
 		<%
-			Object casCaptchaObj = session.getAttribute(AppConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
+			Object casCaptchaObj = session.getAttribute(CasConstants.CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY);
 			if(casCaptchaObj != null){
 				CasLoginCaptchaInfoModel  tcasCaptchaObj = (CasLoginCaptchaInfoModel)casCaptchaObj;
 				if(!tcasCaptchaObj.canLoginWithoutCaptcha()){
@@ -127,6 +131,5 @@
     </div>
 </div>
 <jsp:directive.include file="bottom.jsp" />
+<script type="text/javascript" src="<%=path %>/js/cas.js?v=<%=version %>" ></script>
 <script type="text/javascript" src="<%=path %>/js/loginpage.js?v=<%=version %>" ></script>
-<script type="text/javascript" src="<%=path %>/js/pwdforget.js?v=<%=version %>" ></script>
-<script type="text/javascript" src="<%=path %>/js/userinfoedit.js?v=<%=version %>" ></script>

@@ -9,7 +9,9 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
+
 import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -52,7 +54,7 @@ public interface IGroupResource {
   Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam);
 
   /**
-   * check whether the user with the specified userId is in the group or the sub group
+   * Check whether the user with the specified userId is in the group or the sub group
    *
    * @param query &nbsp;&nbsp; parameter model. <br>
    *        query.code &nbsp;&nbsp; group code; <br>
@@ -82,4 +84,19 @@ public interface IGroupResource {
   @POST
   @Path("get-group-by-id-or-code")
   Response<List<GroupDto>> getGroupTreeByIdOrCode(GroupParam groupParam);
+  
+  /**
+   * 查询组的全量信息.<br>
+   * 1. 组的树形结构<br>
+   * 2. 组关联的标签<br>
+   * 3. 组关联的扩展信息<br>
+   * 4. 组关联的角色<br>
+   * 5. 组关联的用户信息<br>
+   * 6. 组关联的用户的角色<br>
+   * 7. 组关联的用户的标签<br>
+   * 8. 组关联的用户的扩展信息<br>
+   */
+  @POST
+  @Path("query-total-info")
+  Response<PageDto<GroupDto>> queryTotalInfo(GroupParam groupParam);
 }

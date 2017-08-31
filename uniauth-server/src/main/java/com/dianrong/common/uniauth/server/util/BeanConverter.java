@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
@@ -21,6 +22,7 @@ import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailInfoDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserWorkRelationshipDto;
 import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
@@ -38,6 +40,7 @@ import com.dianrong.common.uniauth.server.data.entity.Audit;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
 import com.dianrong.common.uniauth.server.data.entity.Permission;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
@@ -51,6 +54,7 @@ import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserDetail;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserWorkRelationship;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
@@ -80,10 +84,37 @@ public class BeanConverter {
     if (tag == null) {
       return null;
     } else {
-      return new TagDto().setCode(tag.getCode()).setCreateDate(tag.getCreateDate())
+      return (TagDto) new TagDto().setCode(tag.getCode()).setCreateDate(tag.getCreateDate())
           .setId(tag.getId()).setLastUpdate(tag.getLastUpdate()).setStatus(tag.getStatus())
-          .setTagTypeId(tag.getTagTypeId()).setDescription(tag.getDescription());
+          .setTagTypeId(tag.getTagTypeId()).setDescription(tag.getDescription())
+          .setTenancyId(StringUtil.translateLongToInteger(tag.getTenancyId()));
     }
+  }
+
+  /**
+   * 将Entity转化为Dto.
+   */
+  public static GrpExtendValDto convert(GrpExtendVal gev) {
+    if (gev == null) {
+      return null;
+    }
+    return (GrpExtendValDto) new GrpExtendValDto().setCreateDate(gev.getCreateDate())
+        .setExtendId(gev.getExtendId()).setGrpId(gev.getGrpId()).setLastUpdate(gev.getLastUpdate())
+        .setValue(gev.getValue())
+        .setTenancyId(StringUtil.translateLongToInteger(gev.getTenancyId()));
+  }
+  
+  /**
+   * 将Entity转化为Dto.
+   */
+  public static UserExtendValDto convert(UserExtendVal uev) {
+    if (uev == null) {
+      return null;
+    }
+    return (UserExtendValDto) new UserExtendValDto().setCreateDate(uev.getCreateDate())
+        .setExtendId(uev.getExtendId()).setUserId(uev.getUserId()).setLastUpdate(uev.getLastUpdate())
+        .setValue(uev.getValue())
+        .setTenancyId(StringUtil.translateLongToInteger(uev.getTenancyId()));
   }
 
   /**
@@ -663,7 +694,7 @@ public class BeanConverter {
         .setTenancyId(StringUtil.translateLongToInteger(userWorkRelationship.getTenancyId()));
     return userWorkRelationshipDto;
   }
-  
+
 
   /**
    * 对象转换.
@@ -679,7 +710,7 @@ public class BeanConverter {
     }
     return resultMap;
   }
-  
+
   /**
    * 对象转换.
    */

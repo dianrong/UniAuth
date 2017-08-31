@@ -97,6 +97,10 @@ public class IpaService implements UserAuthentication {
     // 没有关联的Uniauth账号
     UserDto ipaDto = BeanConverter.convert(user);
     ipaDto.setTenancyId(StringUtil.translateLongToInteger(defaultTenancyId));
+
+    // Third Account info
+    ipaDto.setThirdAccountInfo(
+        userService.thirdAccountInfo(ipaDto.getId(), loginParam.getIncludeThirdAccount()));
     return ipaDto;
   }
 
@@ -124,11 +128,18 @@ public class IpaService implements UserAuthentication {
     if (uniauthUserDto == null) {
       UserDto dto = BeanConverter.convert(user);
       dto.setTenancyId(StringUtil.translateLongToInteger(defaultTenancyId));
+
+      // Third Account info
+      dto.setThirdAccountInfo(
+          userService.thirdAccountInfo(dto.getId(), loginParam.getIncludeThirdAccount()));
+
       userDetailDto = new UserDetailDto();
       userDetailDto.setUserDto(dto);
     } else {
       userDetailDto = userService.getUserDetailInfo(
-          new LoginParam().setAccount(user.getEmail()).setTenancyId(defaultTenancyId), true);
+          new LoginParam().setAccount(user.getEmail()).setTenancyId(defaultTenancyId)
+              .setIncludeThirdAccount(loginParam.getIncludeThirdAccount()),
+          true);
     }
     userDetailDto.setAllDomainPermissionDto(constructIpaPermission(user.getGroups()));
     return userDetailDto;
@@ -160,7 +171,7 @@ public class IpaService implements UserAuthentication {
       throw new AppException(InfoName.LOGIN_ERROR_STATUS_1,
           UniBundle.getMsg("user.login.status.lock"));
     }
-    
+
     return user;
   }
 
@@ -175,7 +186,7 @@ public class IpaService implements UserAuthentication {
   private Long tenancyIdentityCheck(String tenancyCode, Long tenancyId, String account) {
     TenancyDto defaultTenancy =
         tenancyCache.getEnableTenancyByCode(AppConstants.DEFAULT_TANANCY_CODE);
-    if (!defaultTenancy.getCode().equals(tenancyCode)
+    if (!defaultTenancy.getCode().equalsIgnoreCase(tenancyCode)
         && !defaultTenancy.getId().equals(tenancyId)) {
       throw new AppException(InfoName.LOGIN_ERROR_USER_NOT_FOUND,
           UniBundle.getMsg("user.login.notfound", account));

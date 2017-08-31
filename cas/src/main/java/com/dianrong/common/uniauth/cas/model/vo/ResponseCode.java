@@ -47,6 +47,11 @@ public interface ResponseCode {
    * 登陆失败, 但是不知道原因.
   */
   int LOGIN_FAILURE = 108;
+  
+  /**
+   *IPA账号登陆连续失败多次.
+  */
+  int IPA_ACCOUNT_LOGIN_FAILED_TOO_MANAY_TIMES = 109;
 
   /** 状态类. **/
   /**
@@ -64,6 +69,11 @@ public interface ResponseCode {
    * 创建ticket 失败了, service ticket.
    */
   int CREATE_SERVICE_TICKET_FAILURE = 301;
+  
+  /**
+   * 创建JWT失败了.
+   */
+  int CREATE_JWT_FAILURE = 311;
 
   /** 参数校验类. **/
   /**

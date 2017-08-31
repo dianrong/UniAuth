@@ -1,8 +1,9 @@
 package com.dianrong.common.uniauth.cas.model;
 
+import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import java.security.InvalidParameterException;
 
 /**
@@ -39,7 +40,7 @@ public class CasLoginAdConfigModel extends ConfigDto {
     this.hrefUrl = hrefUrl;
 
     if (!StringUtil.strIsNullOrEmpty(hrefUrl) && !hrefUrl.trim()
-        .equals(AppConstants.CAS_CFG_HREF_DEFALT_VAL)) {
+        .equals(CasConstants.CAS_CFG_HREF_DEFALT_VAL)) {
       this.hasValidHref = true;
     }
   }

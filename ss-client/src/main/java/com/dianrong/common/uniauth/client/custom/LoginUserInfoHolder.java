@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public final class LoginUserInfoHolder {
 
   /**
-   * . 获取当前登陆用户的信息
+   * 获取当前登陆用户的信息
    *
    * @return 当前登陆用户对象
    * @throws UserNotLoginException if not login
@@ -30,7 +30,7 @@ public final class LoginUserInfoHolder {
   }
 
   /**
-   * . 获取当前登陆用户的租户id
+   * 获取当前登陆用户的租户id
    *
    * @return current login user tenancyId
    * @throws UserNotLoginException if not login

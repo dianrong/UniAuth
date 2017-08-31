@@ -1,11 +1,10 @@
-// common function for cas
+//CAS前端处理的一些公用的js
 var context_path = $('#hidden_path_input').val();
 
 // i18n lang set
 function i18nset(localestr) {
 	if (!localestr) {
 		return
-
 	}
 	;
 	var url = context_path + "/uniauth/i18n/setLanguage?locale=" + localestr;

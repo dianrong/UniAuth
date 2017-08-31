@@ -33,8 +33,8 @@ public interface AppConstants {
   String TECHOPS_SUPER_ADMIN_GRP = "GRP_TECHOPS_SUPER_ADMIN";
 
   byte MAX_AUTH_FAIL_COUNT = 10;
-  int MAX_PASSWORD_VALID_MONTH = 6;
-  int DUPLICATE_PWD_VALID_MONTH = 8;
+  int MAX_PASSWORD_VALID_MONTH = 12;
+  int DUPLICATE_PWD_VALID_MONTH = 12;
   // this value can avoid the "data.query.result.number.exceed" exception when you need query as
   // much as more.
   Integer MAX_PAGE_SIZE_MINUS_ONE = 4999;
@@ -110,65 +110,10 @@ public interface AppConstants {
   String CFG_TYPE_TEXT = "TEXT";
   String CFG_TYPE_FILE = "FILE";
 
-
-  // constants for password forget
-
-  // dispatcher parameter
-  String PSWDFORGET_DISPATCHER_STEP_KEY = "step";
-  String PSWDFORGET_DISPATCHER_CONTEXTURL_KEY = "savedLoginContext";
-  String CAS_CAPTCHA_SESSION_TYPE_KEY = "captchaType";
-
-  // request
-  String REQUEST_PARAMETER_KEY_TENANCY_CODE = "tenancyCode";
-  String REQUEST_PARAMETER_KEY_TENANCY_ID = "tenancyId";
-  String REQUEST_PARAMETER_KEY_EMAIL = "email";
-  String REQUEST_ATTRIBUTE_KEY_CREDENTIAL = "credential";
-  String REQUEST_ATTRIBUTE_KEY_INITMSG = "initMsg";
-
-  String PSWDFORGET_PAGE_VERIFY_CODE_CLIENT_KEY = "pageVerifyCode";
-  String PSWDFORGET_MAIL_VAL_CLIENT_KEY = "email";
-  String PSWDFORGET_MAIL_VERIFY_CODE_CLIENT_KEY = "verifyCode";
-  String PSWDFORGET_NEW_PSWD_KEY = "newPassword";
-  String LOGIN_SCROLL_IMAGES_MODEL_KEY = "loginImges";
-
-  // session
-  String CAS_CAPTCHA_SESSION_KEY = "CAS_CAPTCHA_SESSION_KEY";
-  String PSWDFORGET_MAIL_VAL_KEY = "pwdg_emailVal";
-  String PSWDFORGET_TENAYC_ID_KEY = "pwdg_tenancyId";
-  /**
-   * useless after integrate notification and challenge.
-   */
-  @Deprecated
-  String PSWDFORGET_MAIL_VERIFY_CODE_KEY = "pwdg_verifyCode";
-  String PSWDFORGET_DISPATCHER_CONTEXTURL_SESSION_KEY = "pwdg_savedLoginContext";
-  String PSWDFORGET_MAIL_VERIFY_EXPIRDATE_KEY = "pwdg_verifyExpirDate";
-  String PSWDEXPIRE_SESSION_KEY = "pwdg_passwrod_expire";
-
   // 60 minutes
   long PSWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
   // 5 minutes
   long PSWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
-
-  // tag for UserInfo edit in request
-  String CAS_USERINFO_MANAGE_EDIT_KEY = "edituserinfo";
-  String CAS_USERINFO_MANAGE_REQUEST_METHOD_KEY = "form_method";
-  @Deprecated
-  String CAS_USERINFO_MANAGE_FLOW_REQUEST_METHOD_TYPE_KEY = "user_mangage_flow_request_type";
-  String CAS_USERINFO_MANAGE_OPERATE_ERRORMSG_TAG = "user_manage_errormsg";
-
-  // 更新类型
-  String CAS_USERINFO_MANAGE_UPDATE_METHOD_TYPE_TAG = "updatetype";
-
-  // 用户信息获取
-  String CAS_USERINFO_MANAGE_USER_ID_TAG = "id";
-  String CAS_USERINFO_MANAGE_UPDATE_EMAIL_TAG = "email";
-  String CAS_USERINFO_MANAGE_UPDATE_PHONE_TAG = "phone";
-  String CAS_USERINFO_MANAGE_UPDATE_NAME_TAG = "name";
-  String CAS_USERINFO_MANGE_UPDATE_PSWD_TAG = "password";
-  String CAS_USERINFO_MANGE_UPDATE_ORIGINPSWD_TAG = "orign_password";
-
-  // cas登陆Captcha的session值的key
-  String CAS_USER_LOGIN_CAPTCHA_VALIDATION_SESSION_KEY = "cas_login_captcha_validation_session_key";
 
   String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
 
@@ -188,42 +133,7 @@ public interface AppConstants {
   int AUDIT_INSERT_EXP_LENGTH = 3072;
   int AUDIT_INSET_PARAM_LENGTH = 256;
 
-  // cas cfg refresh
-  // default 120 minutes
-  long CAS_CFG_CACHE_REFRESH_PERIOD_MILLES = 120L * 60L * 1000L;
-
-  // cascfg cache model in application's key
-  String CAS_CFG_CACHE_MODEL_APPLICATION_KEY = "cascfg_cache_key";
-
-  // cas cfg cfg_key list
-  String CAS_CFG_KEY_LOGO = "CAS_LOGO";
-  String CAS_CFG_KEY_ICON = "CAS_ICON";
-  String CAS_CFG_KEY_TITLE = "CAS_TITLE";
-  String CAS_CFG_KEY_ALL_RIGHT = "CAS_ALL_RIGHT";
-  String CAS_CFG_KEY_LOGIN_AD_IMG = "CAS_LOGIN_AD_IMG";
-  // cfg cas original cfg key prefix
-  String CAS_CFG_KEY_CROSS_FILTER_ORIGIN_PREFIX = "CAS_CROSS_FILTER_ORGIN";
-
-  // define the cfg type id
-  String CAS_CFG_TYPE_FILE = "FILE";
-  String CAS_CFG_TYPE_TEXT = "TEXT";
-
-  // 首页广告对应herf的cfg key的后缀
-  String CAS_CFG_LOGIN_AD_HREF_SUFFIX = "_HREF";
-  // 默认定义的跳转url
-  String CAS_CFG_HREF_DEFALT_VAL = "#";
-
-  String CAS_CFG_KEY_BACKGROUND_COLOR = "CAS_BACKGROUND_COLOR";
-
   String HTTP_METHOD_ALL = "ALL";
-
-  // login ticket prefix
-  String CAS_LOGIN_TICKET_PREFIX = "LT";
-
-  // 用户跳转的url路径
-  String CAS_CUSTOM_LOGIN_PAGE_KEY = "custom_login_page_key";
-  String CAS_CUSTOM_LOGIN_LT_KEY = "custom_login_lt_key";
-  String CAS_CUSTOM_LOGIN_URL_KEY = "custom_login_url_key";
 
   // cxf 传递的locale的key
   @Deprecated

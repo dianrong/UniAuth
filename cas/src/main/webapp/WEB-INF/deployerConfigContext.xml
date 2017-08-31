@@ -170,4 +170,18 @@
     	<property name="account" value="techops"/>
     	<property name="password" value="#{uniauthConfig['apicall.techops.pwd']?:''}"/>
     </bean>
+    
+    <!-- JWT -->
+    <bean id="uniauthJWTSecurity" class="com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity">
+        <constructor-arg index="0" value="#{uniauthConfig['authentication.jwt.private.key']}"/>
+        <constructor-arg index="1" value="#{uniauthConfig['authentication.jwt.public.key']}"/>
+    </bean>
+    
+    <bean id="jwtCookieGenerator" class="com.dianrong.common.uniauth.cas.service.jwt.JWTCookieGenerator">
+        <constructor-arg value="#{uniauthConfig['authentication.jwt.cookie.suffix']}"/>
+        <property name="cookieSecure"  value="#{uniauthConfig['authentication.jwt.cookie.secure']?:'false'}"/>
+        <property name="cookieMaxAge"  value="-1"/>
+        <property name="cookieHttpOnly" value="true"/>
+        <property name="cookieDomain" value="#{uniauthConfig['authentication.jwt.cookie.domain']}"></property>
+    </bean>
 </beans>

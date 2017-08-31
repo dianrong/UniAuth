@@ -50,8 +50,12 @@
             </tr>
 
             <tr ng-repeat="d in cfgs">
-                <td ng-bind="d.cfgKey"></td>
-                <td ng-bind="d.value"></td>
+                <td>
+                    <p title="{{d.cfgKey}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 150px">{{d.cfgKey}}</p>
+                </td>
+                <td>
+                    <p title="{{d.value}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 280px">{{d.value}}</p>
+                </td>
                 <td ng-bind="d.cfgType"></td>
                 <td class="text-color-c9" style="text-align: center">
                     <div class="btn-group">

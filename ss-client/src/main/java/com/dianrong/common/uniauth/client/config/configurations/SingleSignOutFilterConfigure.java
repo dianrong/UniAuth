@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.client.config.configurations;
 
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
+
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
@@ -16,10 +17,10 @@ import org.springframework.stereotype.Component;
 public final class SingleSignOutFilterConfigure implements Configure<SingleSignOutFilter> {
 
   @Override
-  public SingleSignOutFilter create() {
-    SingleSignOutFilter singleLogoutFilter = new SingleSignOutFilter();
-    singleLogoutFilter.setIgnoreInitConfiguration(true);
-    return singleLogoutFilter;
+  public SingleSignOutFilter create(Object... args) {
+    SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
+    singleSignOutFilter.setIgnoreInitConfiguration(true);
+    return singleSignOutFilter;
   }
 
   @Override

@@ -33,9 +33,17 @@
         <evaluate expression="ticketGrantingTicketCheckAction"/> 
         <transition on="notExists" to="gatewayRequestCheck"/>
         <transition on="invalid" to="terminateSession"/>
+        <transition on="valid" to="jwtCheck"/>
+    </action-state>
+    
+    <!-- 继续检查JWT -->
+    <action-state id="jwtCheck"> 
+        <evaluate expression="jwtCheckAction"/> 
+        <transition on="notExists" to="gatewayRequestCheck"/>
+        <transition on="invalid" to="terminateSession"/>
         <transition on="valid" to="hasServiceCheck"/>
     </action-state>
-
+    
     <action-state id="terminateSession">
         <evaluate expression="terminateSessionAction.terminate(flowRequestContext)"/>
         <transition to="gatewayRequestCheck"/>
@@ -101,7 +109,6 @@
             <!--
             <evaluate expression="samlMetadataUIParserAction" />
             -->
-            <evaluate expression="tenancyService.getAllTenancies()" result="viewScope.tenancies"/>
             <evaluate expression="domainService.getAllLoginPageDomains()" result="viewScope.domains"/>
         </on-entry>
         <transition on="submit" bind="true" validate="true" to="realSubmit"/>
@@ -109,9 +116,8 @@
 
     <action-state id="realSubmit">
     
-    <!-- ps：这里将原始的action给替换代理了一下 -->
         <evaluate
-                expression="authenticationActionInterceptor.submit(flowRequestContext, flowScope.credential, messageContext)"/>
+                expression="uniauthAuthenticationViaFormSubmit.submit(flowRequestContext, flowScope.credential, messageContext)"/>
         <transition on="warn" to="warn"/>
         <!--
         To enable AUP workflows, replace the 'success' transition with the following:

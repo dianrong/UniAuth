@@ -27,7 +27,7 @@ public @interface TenancyIdentity {
   public Type type() default Type.ID;
 
   /**
-   * . 参数在第几个 start from 0
+   * 参数在第几个, 从0开始算.
    */
   public int index();
 

@@ -3,15 +3,20 @@ package com.dianrong.common.uniauth.common.client;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.annotation.PostConstruct;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -26,6 +31,10 @@ public class DomainDefine implements Serializable {
   // 自定义登陆成功的跳转url
   private String customizedLoginRedirecUrl;
   private boolean useAllDomainUserInfoShareMode;
+
+  // 采用的身份认证方式
+  private AuthenticationType authenticationType = AuthenticationType.ALL;
+
   private static Integer domainId;
   // 每一个服务就只有一个的域名code定义
   private static String staticDomainCode;
@@ -204,6 +213,14 @@ public class DomainDefine implements Serializable {
   public void setServiceTicketValidateWithInnerAddress(
       boolean serviceTicketValidateWithInnerAddress) {
     this.serviceTicketValidateWithInnerAddress = serviceTicketValidateWithInnerAddress;
+  }
+
+  public AuthenticationType getAuthenticationType() {
+    return authenticationType;
+  }
+
+  public void setAuthenticationType(String authenticationType) {
+    this.authenticationType = AuthenticationType.valueOf(authenticationType);
   }
 
   /**

@@ -46,8 +46,12 @@
         </tr>
 
         <tr ng-repeat="d in users">
-            <td ng-bind="d.name"></td>
-            <td ng-bind="d.email"></td>
+            <td>
+                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.name}}</p>
+            </td>
+            <td>
+                <p title="{{d.email}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 200px">{{d.email}}</p>
+            </td>
             <td ng-bind="d.phone"></td>
             <td>{{d.lastUpdate | date:'yyyy-MM-dd HH:mm'}}</td>
             <td ng-bind="!d.status?'{{'userMgr.enable' | translate}}':'{{'userMgr.disable' | translate}}'"></td>

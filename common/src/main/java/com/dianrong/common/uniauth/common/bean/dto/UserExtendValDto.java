@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -53,72 +54,81 @@ public class UserExtendValDto extends TenancyBaseDto {
     return id;
   }
 
-  public void setId(Long id) {
+  public UserExtendValDto setId(Long id) {
     this.id = id;
+    return this;
   }
 
   public Long getUserId() {
     return userId;
   }
 
-  public void setUserId(Long userId) {
+  public UserExtendValDto setUserId(Long userId) {
     this.userId = userId;
+    return this;
   }
 
   public Long getExtendId() {
     return extendId;
   }
 
-  public void setExtendId(Long extendId) {
+  public UserExtendValDto setExtendId(Long extendId) {
     this.extendId = extendId;
+    return this;
   }
 
   public String getValue() {
     return value;
   }
 
-  public void setValue(String value) {
+  public UserExtendValDto setValue(String value) {
     this.value = value;
+    return this;
   }
 
   public Byte getStatus() {
     return status;
   }
 
-  public void setStatus(Byte status) {
+  public UserExtendValDto setStatus(Byte status) {
     this.status = status;
+    return this;
   }
 
   public String getExtendCode() {
     return extendCode;
   }
 
-  public void setExtendCode(String extendCode) {
+  public UserExtendValDto setExtendCode(String extendCode) {
     this.extendCode = extendCode;
+    return this;
   }
 
   public String getExtendDescription() {
     return extendDescription;
   }
 
-  public void setExtendDescription(String extendDescription) {
+  public UserExtendValDto setExtendDescription(String extendDescription) {
     this.extendDescription = extendDescription;
+    return this;
   }
 
   public Date getCreateDate() {
     return createDate;
   }
 
-  public void setCreateDate(Date createDate) {
+  public UserExtendValDto setCreateDate(Date createDate) {
     this.createDate = createDate;
+    return this;
   }
 
   public Date getLastUpdate() {
     return lastUpdate;
   }
 
-  public void setLastUpdate(Date lastUpdate) {
+  public UserExtendValDto setLastUpdate(Date lastUpdate) {
     this.lastUpdate = lastUpdate;
+    return this;
   }
 }
 
