@@ -27,6 +27,8 @@ public class PureHttpRequestUtil {
       URL realUrl;
       realUrl = new URL(urlName);
       URLConnection conn = realUrl.openConnection();
+      conn.setConnectTimeout(1000);
+      conn.setReadTimeout(50 * 1000);
 
       if (requestHeaders != null && !requestHeaders.isEmpty()) {
         Set<String> keys = requestHeaders.keySet();
