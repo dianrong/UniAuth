@@ -13,6 +13,6 @@
                         cron="#{uniauthConfig['synchronization.hr.cron']?:'0 0 11 * * ?'}"/>
         <!--定时删除过期文件-->
         <task:scheduled ref="synchronous" method="deleteExpiredFtpFile"
-                        cron="#{uniauthConfig['synchronization.hr.cron']?:'0 0 11 * * ?'}"/>
+                        cron="#{uniauthConfig['synchronization.hr.cron']?:'0 10 11 * * ?'}"/>
     </task:scheduled-tasks>
 </beans>

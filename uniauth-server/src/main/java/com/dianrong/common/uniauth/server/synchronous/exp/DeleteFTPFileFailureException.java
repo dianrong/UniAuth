@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 删除FTP服务器的文件失败.
  */
-public class DeleteFTPFileFailureException extends FTPServerProcessException{
+public class DeleteFTPFileFailureException extends SFTPServerProcessException {
 
   private static final long serialVersionUID = -2790987801666164932L;
 

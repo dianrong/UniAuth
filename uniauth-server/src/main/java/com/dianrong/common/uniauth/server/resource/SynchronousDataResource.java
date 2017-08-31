@@ -36,8 +36,16 @@ import org.springframework.web.bind.annotation.RestController;
             param.getComputerIp(), param.getResult(), param.getPageNumber(), param.getPageSize()));
   }
 
-  @ApiOperation("触发一次同步HR系统数据的操作") @Override public Response<Void> synchronousHrData() {
-    synchronous.startSynchronize();
+  @ApiOperation("触发一次同步HR系统数据的操作") @Override
+  public Response<Void> synchronousHrData(HrSynchronousLogParam param) {
+    synchronous.startSynchronize(param.getAsynchronous() != null ? param.getAsynchronous() : false);
+    return Response.success();
+  }
+
+  @ApiOperation("触发一次删除过期文件的操作") @Override
+  public Response<Void> deleteExpiredFile(HrSynchronousLogParam param) {
+    synchronous
+        .deleteExpiredFtpFile(param.getAsynchronous() != null ? param.getAsynchronous() : false);
     return Response.success();
   }
 }

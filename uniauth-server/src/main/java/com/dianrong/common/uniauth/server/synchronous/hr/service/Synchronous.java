@@ -29,11 +29,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 处理批量的更新的逻辑.
  */
 @Slf4j @Service public class Synchronous {
+
+  private static final int THREAD_POOL_SIZE = 5;
+
+  /**
+   * 异步线程池.
+   */
+  private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
   /**
    * 文件内容分析器.
@@ -56,12 +65,13 @@ import java.util.Set;
   /**
    * 开关.
    */
-  @Value("#{uniauthConfig['synchronization.hr.switch']}") private String switchFlag;
+  @Autowired
+  private HrDataSynchronousSwitch switchControl;
 
   /**
    * 在过期多少天之后删除.
    */
-  @Value("#{uniauthConfig['synchronization.hr.delete.expired.days']}") private int
+  @Value("#{uniauthConfig['synchronization.hr.delete.expired.days']?:'7'}") private int
       deleteAfterExpiredDays = 7;
 
   /**
@@ -72,15 +82,24 @@ import java.util.Set;
   /**
    * 同步日志记录Mapper.
    */
+  @Autowired
   private HrSynchronousLogMapper hrSynchronousLogMapper;
 
-  @Autowired private FTPFileDeleter ftpFileDeleter;
+  @Autowired private SFTPFileDeleter ftpFileDeleter;
 
   /**
-   * 同步处理逻辑.
+   * 异步执行同步数据处理逻辑.
    */
   public void startSynchronize() {
-    if (!switchOn()) {
+    startSynchronize(false);
+  }
+
+  /**
+   * 同步数据处理逻辑.
+   * @param asynchronous 是否异步执行.
+   */
+  public void startSynchronize(boolean asynchronous) {
+    if (!switchControl.isOn()) {
       log.info("HR data synchronous switch is off, so just ignore startSynchronize call.");
       return;
     }
@@ -92,6 +111,22 @@ import java.util.Set;
       throw new AppException(InfoName.ACQUIRE_LOCK_FAILED,
           UniBundle.getMsg("hr.data.synchronous.lock.acquire.failed", ale.getHoldLockServerIp()));
     }
+
+    if (asynchronous) {
+      EXECUTOR_SERVICE.submit(new Runnable() {
+        @Override public void run() {
+          synchronousDataProcess();
+        }
+      });
+    } else {
+      synchronousDataProcess();
+    }
+  }
+
+  /**
+   * 同步数据处理方法.
+   */
+  private void synchronousDataProcess(){
     // 同步日志对象.
     HrSynchronousLog hrSynchronousLog = new HrSynchronousLog();
     hrSynchronousLog.setSynchronousStartTime(new Date());
@@ -123,7 +158,7 @@ import java.util.Set;
 
       // 同步成功
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.SUCCESS.toString());
-    } catch (FileLoadFailureException | FTPServerProcessException flfe) {
+    } catch (FileLoadFailureException | SFTPServerProcessException flfe) {
       // 加载FTP文件失败
       log.error("Synchronous HR system data failed, load ftp file failed.", flfe);
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.FAILURE.toString());
@@ -211,7 +246,15 @@ import java.util.Set;
    * 删除过期的FTP同步文件.
    */
   public void deleteExpiredFtpFile() {
-    if (!switchOn()) {
+    deleteExpiredFtpFile(false);
+
+  }
+
+  /**
+   * 删除过期的FTP同步文件.
+   */
+  public void deleteExpiredFtpFile(boolean asynchronous) {
+    if (!switchControl.isOn()) {
       log.info("HR data synchronous switch is off, so just ignore delete expired FTP file call.");
       return;
     }
@@ -223,6 +266,21 @@ import java.util.Set;
       throw new AppException(InfoName.ACQUIRE_LOCK_FAILED,
           UniBundle.getMsg("hr.data.synchronous.lock.acquire.failed", ale.getHoldLockServerIp()));
     }
+    if (asynchronous) {
+      EXECUTOR_SERVICE.submit(new Runnable() {
+        @Override public void run() {
+          deleteExpiredFileProcess();
+        }
+      });
+    } else {
+      deleteExpiredFileProcess();
+    }
+  }
+
+  /**
+   * 删除过期文件的实际执行逻辑.
+   */
+  private void deleteExpiredFileProcess(){
     // 同步日志对象.
     HrSynchronousLog hrSynchronousLog = new HrSynchronousLog();
     hrSynchronousLog.setSynchronousStartTime(new Date());
@@ -363,16 +421,5 @@ import java.util.Set;
     fkc.setLinkedTableName(linkedTableName);
     fkc.setLinkedFieldName(linkedFieldName);
     throw fkc;
-  }
-
-
-  /**
-   * 同步任务需要一个控制开关.
-   */
-  private boolean switchOn() {
-    if (Boolean.TRUE.toString().equalsIgnoreCase(this.switchFlag)) {
-      return true;
-    }
-    return false;
   }
 }

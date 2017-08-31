@@ -38,10 +38,10 @@ import java.util.List;
     StringBuilder sb = new StringBuilder();
     try {
       String line = "";
-      reader = new InputStreamReader(inputStream);
+      reader = new InputStreamReader(inputStream, "UTF-8");
       in = new BufferedReader(reader);
       while ((line = in.readLine()) != null) {
-        sb.append(line);
+        sb.append(line).append("\r\n");
       }
     } catch (IOException e) {
       throw new InvalidContentException("Failed read content from InputStream", e);

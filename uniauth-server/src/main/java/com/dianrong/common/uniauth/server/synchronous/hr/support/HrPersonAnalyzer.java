@@ -4,16 +4,19 @@ import com.dianrong.common.uniauth.server.data.entity.HrPerson;
 import com.dianrong.common.uniauth.server.synchronous.exp.InvalidContentException;
 import com.dianrong.common.uniauth.server.synchronous.hr.bean.PersonList;
 import com.dianrong.common.uniauth.server.synchronous.support.AbstractFileContentAnalyzer;
+import com.google.common.collect.Lists;
+import com.jcraft.jsch.*;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
 
 public class HrPersonAnalyzer extends AbstractFileContentAnalyzer<PersonList> {
 
   public static final int ITEM_LENGTH = 39;
 
-  @Override
-  public PersonList analyze(String content) throws InvalidContentException {
+  @Override public PersonList analyze(String content) throws InvalidContentException {
     PersonList result = new PersonList();
     if (!StringUtils.hasText(content)) {
       return result;
@@ -21,7 +24,7 @@ public class HrPersonAnalyzer extends AbstractFileContentAnalyzer<PersonList> {
 
     // 实际解析过程
     List<String> strList = anaToList(content);
-    for(int i =1; i < strList.size(); i++) {
+    for (int i = 1; i < strList.size(); i++) {
       String recordStr = strList.get(i);
       String[] items = recordStr.split(rowDelimiter);
       itemLengthCheck(items, ITEM_LENGTH);

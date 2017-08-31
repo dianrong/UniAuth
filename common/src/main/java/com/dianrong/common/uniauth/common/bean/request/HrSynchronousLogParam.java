@@ -17,6 +17,10 @@ public class HrSynchronousLogParam extends PageParam {
   private String type;
   private String computerIp;
   private String result;
+  /**
+   * 是否异步执行.
+   */
+  private Boolean asynchronous;
 
   public Long getId() {
     return id;
@@ -69,6 +73,15 @@ public class HrSynchronousLogParam extends PageParam {
 
   public HrSynchronousLogParam setResult(String result) {
     this.result = result;
+    return this;
+  }
+
+  public Boolean getAsynchronous() {
+    return asynchronous;
+  }
+
+  public HrSynchronousLogParam setAsynchronous(Boolean asynchronous) {
+    this.asynchronous = asynchronous;
     return this;
   }
 }

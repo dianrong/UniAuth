@@ -98,8 +98,8 @@ dependencies {
         'commons-io:commons-io',
     )
 
-    // ftp
-    compile 'commons-net:commons-net:3.5'
+    // sftp
+    compile 'com.jcraft:jsch:0.1.54'
 }
 
 sonarqube {

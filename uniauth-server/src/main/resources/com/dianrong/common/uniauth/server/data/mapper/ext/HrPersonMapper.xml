@@ -21,20 +21,20 @@
     legal_entities_code, legal_entities_name, company_name, actual_termination_date)
     values
     <foreach collection="list" item="item" index="index" separator="," >
-      (#{personId,jdbcType=BIGINT}, #{persomNumber,jdbcType=VARCHAR}, #{lastNameCn,jdbcType=VARCHAR},
-      #{firstNameCn,jdbcType=VARCHAR}, #{lastNameEn,jdbcType=VARCHAR}, #{firstNameEn,jdbcType=VARCHAR},
-      #{middleNameEn,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR},
-      #{emailAddress,jdbcType=VARCHAR}, #{personTypeId,jdbcType=BIGINT}, #{seededPersonTypeKey,jdbcType=VARCHAR},
-      #{userPersonType,jdbcType=VARCHAR}, #{locationId,jdbcType=BIGINT}, #{locationCode,jdbcType=VARCHAR},
-      #{locationName,jdbcType=VARCHAR}, #{mobPhoneNumber,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR},
-      #{bankBranchName,jdbcType=VARCHAR}, #{bankSubBranchName,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR},
-      #{effectiveStartDate,jdbcType=DATE}, #{assignmentStatusType,jdbcType=VARCHAR},
-      #{actionCode,jdbcType=VARCHAR}, #{travelSubsidies,jdbcType=VARCHAR}, #{departmentId,jdbcType=BIGINT},
-      #{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{jobId,jdbcType=BIGINT},
-      #{jobCode,jdbcType=VARCHAR}, #{jobName,jdbcType=VARCHAR}, #{managerId,jdbcType=BIGINT},
-      #{managerNum,jdbcType=VARCHAR}, #{manager,jdbcType=VARCHAR}, #{legalEntitiesId,jdbcType=BIGINT},
-      #{legalEntitiesCode,jdbcType=VARCHAR}, #{legalEntitiesName,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR},
-      #{actualTerminationDate,jdbcType=DATE}
+      (#{item.personId,jdbcType=BIGINT}, #{item.persomNumber,jdbcType=VARCHAR}, #{item.lastNameCn,jdbcType=VARCHAR},
+      #{item.firstNameCn,jdbcType=VARCHAR}, #{item.lastNameEn,jdbcType=VARCHAR}, #{item.firstNameEn,jdbcType=VARCHAR},
+      #{item.middleNameEn,jdbcType=VARCHAR}, #{item.englishName,jdbcType=VARCHAR}, #{item.gender,jdbcType=VARCHAR},
+      #{item.emailAddress,jdbcType=VARCHAR}, #{item.personTypeId,jdbcType=BIGINT}, #{item.seededPersonTypeKey,jdbcType=VARCHAR},
+      #{item.userPersonType,jdbcType=VARCHAR}, #{item.locationId,jdbcType=BIGINT}, #{item.locationCode,jdbcType=VARCHAR},
+      #{item.locationName,jdbcType=VARCHAR}, #{item.mobPhoneNumber,jdbcType=VARCHAR}, #{item.bankName,jdbcType=VARCHAR},
+      #{item.bankBranchName,jdbcType=VARCHAR}, #{item.bankSubBranchName,jdbcType=VARCHAR}, #{item.bankAccount,jdbcType=VARCHAR},
+      #{item.effectiveStartDate,jdbcType=DATE}, #{item.assignmentStatusType,jdbcType=VARCHAR},
+      #{item.actionCode,jdbcType=VARCHAR}, #{item.travelSubsidies,jdbcType=VARCHAR}, #{item.departmentId,jdbcType=BIGINT},
+      #{item.departmentCode,jdbcType=VARCHAR}, #{item.departmentName,jdbcType=VARCHAR}, #{item.jobId,jdbcType=BIGINT},
+      #{item.jobCode,jdbcType=VARCHAR}, #{item.jobName,jdbcType=VARCHAR}, #{item.managerId,jdbcType=BIGINT},
+      #{item.managerNum,jdbcType=VARCHAR}, #{item.manager,jdbcType=VARCHAR}, #{item.legalEntitiesId,jdbcType=BIGINT},
+      #{item.legalEntitiesCode,jdbcType=VARCHAR}, #{item.legalEntitiesName,jdbcType=VARCHAR}, #{item.companyName,jdbcType=VARCHAR},
+      #{item.actualTerminationDate,jdbcType=DATE}
       )
     </foreach>
   </insert>

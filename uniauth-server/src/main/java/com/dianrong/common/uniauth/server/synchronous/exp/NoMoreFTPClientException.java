@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.server.synchronous.exp;
 /**
  * FTPClient池中没有更多的连接可用.
  */
-public class NoMoreFTPClientException extends FTPServerProcessException{
+public class NoMoreFTPClientException extends SFTPServerProcessException {
 
   private static final long serialVersionUID = -2790987801666164932L;
 

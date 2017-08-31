@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.util.SystemUtil;
 import com.dianrong.common.uniauth.server.synchronous.exp.AcquireLockFailureException;
 import com.dianrong.common.uniauth.server.synchronous.support.ProcessLocker;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -18,6 +19,7 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -37,6 +39,11 @@ import org.springframework.util.StringUtils;
    * 默认的基础节点名称.
    */
   public static final String DEFAULT_BASE_NODE_NAME = "/com/dianrong/cfg/1.0.0/uniauth";
+
+  /**
+   * 开关.
+   */
+  @Autowired private HrDataSynchronousSwitch switchControl;
 
   /**
    * Zookeeper的连接字符串.
@@ -70,13 +77,18 @@ import org.springframework.util.StringUtils;
    * 初始化操作.
    */
   public void init() {
+    if (!switchControl.isOn()) {
+      log.info("Synchronous switcher is off, so don't init HR data synchronous zookeeper locker."
+          + "If want set up, please config zk[synchronization.hr.switch=true].");
+      return;
+    }
+
     Assert.notNull(zkConnectionString, "Missing zookeeper connection string");
     log.debug("ConnectionString: {}", zkConnectionString);
     log.debug("sessionTimeout: {}", sessionTimeOut);
     initZkNode();
     this.zkClient = CuratorFrameworkFactory.builder().connectString(this.zkConnectionString)
-        .sessionTimeoutMs(this.sessionTimeOut).retryPolicy(this.retryPolicy)
-        .namespace(this.baseNodePath).build();
+        .sessionTimeoutMs(this.sessionTimeOut).retryPolicy(this.retryPolicy).build();
     // 添加断线监听
     this.zkClient.getConnectionStateListenable().addListener(new LockNodeConnectionStateListener());
     this.zkClient.start();
@@ -101,7 +113,7 @@ import org.springframework.util.StringUtils;
       this.lockFlag = true;
       this.lockNodeContent = localIP;
     } catch (KeeperException.NodeExistsException e) {
-      log.info("Acquire lock failed.", e);
+      log.info("Acquire lock failed:" + ExceptionUtils.getStackTrace(e));
       this.lockFlag = false;
       // 获取最新的LockNode信息.
       try {
@@ -121,7 +133,8 @@ import org.springframework.util.StringUtils;
       cache.getListenable().addListener(new PathChildrenCacheListener() {
         @Override public void childEvent(CuratorFramework client, PathChildrenCacheEvent event)
             throws Exception {
-          if (event.getData().getPath().equals(getLockNodePath())) {
+          if (event != null && event.getData() != null && getLockNodePath()
+              .equals(event.getData().getPath())) {
             switch (event.getType()) {
               case CHILD_UPDATED:
                 // Update 最新的节点值.

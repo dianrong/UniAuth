@@ -10,7 +10,8 @@
     values
     <foreach collection="list" item="item" index="index" separator="," >
       (#{item.jobId,jdbcType=BIGINT}, #{item.jobCode,jdbcType=VARCHAR}, #{item.jobName,jdbcType=VARCHAR},
-      #{item.effectiveStartDate,jdbcType=DATE}, #{item.sales,jdbcType=VARCHAR}, #{item.activeStatus,jdbcType=VARCHAR}
+      #{item.effectiveStartDate,jdbcType=DATE},#{item.effectiveEndDate,jdbcType=DATE},
+      #{item.sales,jdbcType=VARCHAR}, #{item.activeStatus,jdbcType=VARCHAR}
       )
     </foreach>
   </insert>

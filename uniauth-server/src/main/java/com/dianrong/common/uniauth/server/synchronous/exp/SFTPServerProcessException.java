@@ -3,16 +3,16 @@ package com.dianrong.common.uniauth.server.synchronous.exp;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 
 /**
- * FTP服务器相关操作失败.
+ * SFTP服务器相关操作失败.
  */
-public class FTPServerProcessException extends UniauthCommonException{
+public class SFTPServerProcessException extends UniauthCommonException{
 
   private static final long serialVersionUID = -2790987801666164932L;
 
   /**
    * Define a empty method.
    */
-  public FTPServerProcessException() {
+  public SFTPServerProcessException() {
     super();
   }
 
@@ -21,7 +21,7 @@ public class FTPServerProcessException extends UniauthCommonException{
    *
    * @param msg msg
    */
-  public FTPServerProcessException(String msg) {
+  public SFTPServerProcessException(String msg) {
     super(msg);
   }
 
@@ -30,7 +30,7 @@ public class FTPServerProcessException extends UniauthCommonException{
    *
    * @param msg msg
    */
-  public FTPServerProcessException(String msg, Throwable t) {
+  public SFTPServerProcessException(String msg, Throwable t) {
     super(msg, t);
   }
 }
