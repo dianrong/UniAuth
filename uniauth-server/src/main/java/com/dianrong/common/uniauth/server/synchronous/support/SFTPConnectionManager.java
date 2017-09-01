@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.server.synchronous.support;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.synchronous.exp.NoMoreFTPClientException;
 import com.dianrong.common.uniauth.server.synchronous.exp.SFTPServerProcessException;
-import com.dianrong.common.uniauth.server.synchronous.hr.support.HrDataSynchronousSwitch;
+import com.dianrong.common.uniauth.server.synchronous.hr.support.HrDataSynchronousSwitcher;
 import com.jcraft.jsch.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -59,7 +59,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
   /**
    * 开关.
    */
-  @Autowired private HrDataSynchronousSwitch hrDataSynchronousSwitch;
+  @Autowired private HrDataSynchronousSwitcher switchControl;
 
   /**
    * 创建SFTP连接的管理类.
@@ -80,7 +80,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
    * 初始化方法.
    */
   public void init() {
-    if (!hrDataSynchronousSwitch.isOn()) {
+    if (!switchControl.isOn()) {
       log.debug("Synchronous switch if off, init ignored.");
       return;
     }
@@ -303,8 +303,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
     this.baseDirectory = baseDirectory.trim();
   }
 
-  public void setHrDataSynchronousSwitch(HrDataSynchronousSwitch hrDataSynchronousSwitch) {
-    Assert.notNull(hrDataSynchronousSwitch);
-    this.hrDataSynchronousSwitch = hrDataSynchronousSwitch;
+  public void setSwitchControl(HrDataSynchronousSwitcher switchControl) {
+    Assert.notNull(switchControl);
+    this.switchControl = switchControl;
   }
 }

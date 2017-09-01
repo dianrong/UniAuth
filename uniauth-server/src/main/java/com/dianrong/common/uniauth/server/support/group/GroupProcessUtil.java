@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.server.util.UniauthServerConstant;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,7 +48,7 @@ import java.util.List;
     }
 
     // 分组处理
-    List<T> eachGroup = Lists.newArrayList();
+    List<T> eachGroup = new ArrayList<>(collectionSize);
     for (T t : contentCollection) {
       eachGroup.add(t);
       if (eachGroup.size() >= collectionSize) {

@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
   /**
    * 开关.
    */
-  @Autowired private HrDataSynchronousSwitch switchControl;
+  @Autowired private HrDataSynchronousSwitcher switchControl;
 
   /**
    * Zookeeper的连接字符串.
@@ -104,60 +104,66 @@ import org.springframework.util.StringUtils;
   }
 
   private void tryAcquireLock() {
-    // 尝试获取锁
-    try {
-      String localIP = SystemUtil.getLocalIp();
-      this.zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
-          .forPath(this.lockNodePath, localIP.getBytes());
-      // 获取锁成功
-      this.lockFlag = true;
-      this.lockNodeContent = localIP;
-    } catch (KeeperException.NodeExistsException e) {
-      log.info("Acquire lock failed:" + ExceptionUtils.getStackTrace(e));
-      this.lockFlag = false;
-      // 获取最新的LockNode信息.
+    // 是否重复尝试获取锁
+    boolean continueTry = true;
+    while (continueTry) {
+      continueTry = false;
+      // 尝试获取锁
       try {
-        this.lockNodeContent =
-            new String(this.zkClient.getData().forPath(this.lockNodePath), "UTF-8");
-      } catch (Exception e1) {
-        log.error("Failed to get lock node name");
-        this.lockNodeContent = SystemUtil.UNKOWN_IP;
-      }
-      // 开启监视
-      PathChildrenCache cache = new PathChildrenCache(this.zkClient, this.baseNodePath, true);
-      try {
-        cache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
-      } catch (Exception e1) {
-        log.info("Listen zookeeper error.", e);
-      }
-      cache.getListenable().addListener(new PathChildrenCacheListener() {
-        @Override public void childEvent(CuratorFramework client, PathChildrenCacheEvent event)
-            throws Exception {
-          if (event != null && event.getData() != null && getLockNodePath()
-              .equals(event.getData().getPath())) {
-            switch (event.getType()) {
-              case CHILD_UPDATED:
-                // Update 最新的节点值.
-                setLockNodeContent(event.getData().toString());
-                break;
-              case CHILD_REMOVED:
-                // 尝试获取锁
-                tryAcquireLock();
-                break;
-              default:
-                break;
+        String localIP = SystemUtil.getLocalIp();
+        this.zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
+            .forPath(this.lockNodePath, localIP.getBytes());
+        // 获取锁成功
+        this.lockFlag = true;
+        this.lockNodeContent = localIP;
+      } catch (KeeperException.NodeExistsException e) {
+        log.info("Acquire lock failed:" + ExceptionUtils.getStackTrace(e));
+        this.lockFlag = false;
+        // 获取最新的LockNode信息.
+        try {
+          this.lockNodeContent =
+              new String(this.zkClient.getData().forPath(this.lockNodePath), "UTF-8");
+        } catch (Exception e1) {
+          log.error("Failed to get lock node name");
+          this.lockNodeContent = SystemUtil.UNKOWN_IP;
+        }
+        // 开启监视
+        PathChildrenCache cache = new PathChildrenCache(this.zkClient, this.baseNodePath, true);
+        try {
+          cache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
+        } catch (Exception e1) {
+          log.info("Listen zookeeper error.", e);
+        }
+        cache.getListenable().addListener(new PathChildrenCacheListener() {
+          @Override public void childEvent(CuratorFramework client, PathChildrenCacheEvent event)
+              throws Exception {
+            if (event != null && event.getData() != null && getLockNodePath()
+                .equals(event.getData().getPath())) {
+              switch (event.getType()) {
+                case CHILD_UPDATED:
+                  // Update 最新的节点值.
+                  setLockNodeContent(event.getData().toString());
+                  break;
+                case CHILD_REMOVED:
+                  // 尝试获取锁
+                  tryAcquireLock();
+                  break;
+                default:
+                  break;
+              }
             }
           }
+        });
+      } catch (Exception e) {
+        log.info("Failed acquire lock,sleep 5 seconds and retry.", e);
+        try {
+          Thread.sleep(5000L);
+        } catch (InterruptedException e1) {
+          log.debug("Thread sleep interrupted", e1);
         }
-      });
-    } catch (Exception e) {
-      log.info("Failed acquire lock,sleep 5 seconds and retry.", e);
-      try {
-        Thread.sleep(5000L);
-      } catch (InterruptedException e1) {
-        log.debug("Thread sleep interrupted", e1);
+        // 重新尝试获取锁. 如果直接调用自己的话,无限的重试会造成栈溢出.
+        continueTry = true;
       }
-      tryAcquireLock();
     }
   }
 

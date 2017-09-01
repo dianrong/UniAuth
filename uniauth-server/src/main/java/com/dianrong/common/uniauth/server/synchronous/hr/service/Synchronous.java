@@ -16,8 +16,6 @@ import com.dianrong.common.uniauth.server.synchronous.support.ProcessLocker;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -66,7 +61,7 @@ import java.util.concurrent.Executors;
    * 开关.
    */
   @Autowired
-  private HrDataSynchronousSwitch switchControl;
+  private HrDataSynchronousSwitcher switchControl;
 
   /**
    * 在过期多少天之后删除.
@@ -235,7 +230,7 @@ import java.util.concurrent.Executors;
     if (hrSynchronousLogs == null) {
       return null;
     }
-    List<HrSynchronousLogDto> hrSynchronousLogDtos = Lists.newArrayList();
+    List<HrSynchronousLogDto> hrSynchronousLogDtos = new ArrayList<>(hrSynchronousLogs.size());
     for (HrSynchronousLog hrSynchronousLog : hrSynchronousLogs) {
       hrSynchronousLogDtos.add(BeanConverter.convert(hrSynchronousLog));
     }
@@ -327,10 +322,10 @@ import java.util.concurrent.Executors;
       LegalEntityList legalEntityList, PersonList personList)
       throws ForeignKeyCheckFailureException {
     // 收集外键id集合
-    Set<Long> leIds = Sets.newHashSet();
-    Set<Long> jobIds = Sets.newHashSet();
-    Set<Long> deptIds = Sets.newHashSet();
-    Set<Long> personIds = Sets.newHashSet();
+    Set<Long> leIds = new HashSet<>(legalEntityList.content().size());
+    Set<Long> jobIds = new HashSet<>(jobList.content().size());
+    Set<Long> deptIds = new HashSet<>(departmentList.content().size());
+    Set<Long> personIds = new HashSet<>(personList.content().size());
     for (HrLe hrLe : legalEntityList.content()) {
       leIds.add(hrLe.getLeId());
     }
