@@ -7,6 +7,8 @@ import java.util.Map;
  */
 public class SuperAdminParam extends Operator {
 
+  private static final long serialVersionUID = 2506508045350827766L;
+
   private String url;
   private String params;
   private String httpMethod;
