@@ -50,7 +50,7 @@ public class TenancyService extends BaseService {
   }
 
   /**
-   * 获取Uniauth默认的租户的信息, 即点融网.
+   * 获取Uniauth默认的租户的信息, 即点融.
    *
    * @return 默认的TenancyDto
    */
