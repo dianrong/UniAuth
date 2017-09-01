@@ -10,6 +10,7 @@ import javax.naming.Name;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.OperationNotSupportedException;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +29,7 @@ public class UserDao {
    * @throws EmptyResultDataAccessException 账号不存在
    * @throws OperationNotSupportedException 连续登陆失败次数过多
    */
-  public void authenticate(String account, String password) {
+  public void authenticate(String account, String password) throws OperationNotSupportedException {
     ldapTemplate.authenticate(query().base(IpaConstants.USER_BASE).where("uid").is(account),
         password);
   }

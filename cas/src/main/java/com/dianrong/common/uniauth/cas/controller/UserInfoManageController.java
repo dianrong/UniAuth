@@ -224,11 +224,11 @@ public class UserInfoManageController {
     }
     UserIdentity userIdentity = getCurrentLoginUserId(request, response);
     try {
-      userInfoManageService.updateUserIPA(userIdentity.getAccount(), userIdentity.getTenancyId(),
-          ipa, ipaPassword);
+      userInfoManageService
+          .updateUserIPA(userIdentity.getAccount(), userIdentity.getTenancyId(), ipa, ipaPassword);
     } catch (Exception e) {
       log.error("failed update user IPA ", e);
-      return Response.failure(Info.build(InfoName.BAD_REQUEST, e.getMessage()));
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, CasConstants.SERVER_PROCESS_ERROR));
     }
     return Response.success();
   }
