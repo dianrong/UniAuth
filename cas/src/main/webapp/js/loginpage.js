@@ -46,7 +46,7 @@ $(function() {
 	
 	//获取登陆首页的滚动图片并显示
 	var login_scroll_img_show = function(){
-		var getUrl = context_path + "/uniauth/cascfg/imges/login/scrolling";
+		var getUrl = context_path + "/uniauth/cfg/images/login/scrolling";
 		$.ajax({  
             type : "GET", 
             url : getUrl,

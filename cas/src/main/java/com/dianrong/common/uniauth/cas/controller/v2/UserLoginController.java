@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 该Controller用于通过纯API的方式进行登陆操作.
+ * 该Controller用于通过纯API的方式提供登陆功能.
  *
  * @author wanglin
  */

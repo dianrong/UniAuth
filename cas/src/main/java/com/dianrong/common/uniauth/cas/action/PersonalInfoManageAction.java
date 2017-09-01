@@ -26,17 +26,17 @@ import javax.security.auth.login.AccountException;
 public class PersonalInfoManageAction extends AbstractAction {
 
   /**
-   * . 用户信息管理服务
+   * 用户信息管理服务.
    */
   private UserInfoManageService userInfoManageService;
 
   /**
-   * . 获取用户邮箱信息的服务
+   * 获取用户邮箱信息的服务.
    */
   private GenericSuccessViewAction genericSuccessViewAction;
 
   /**
-   * . 查询处理结果
+   * 查询处理结果.
    */
   private static final String QUERY_USER_INFO = "query";
 

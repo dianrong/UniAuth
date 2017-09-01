@@ -20,7 +20,7 @@ String version = (String)application.getAttribute("cas_v");
   
   <spring:theme code="standard.custom.css.file" var="customCssFile" />
   <link rel="stylesheet" href="<c:url value="${customCssFile}" />" />
-  <link rel="icon" href="<%=path %>/uniauth/cascfg/imges/CAS_ICON"  type="image/x-icon" />
+  <link rel="icon" href="<%=path %>/uniauth/cfg/images/CAS_ICON"  type="image/x-icon" />
 	<!-- for ad scroll -->
 	<link href="<%=path %>/imgscroll/css/scroll.css?v=<%=version %>" rel="stylesheet">
 	<link href="<%=path %>/css/main.css?v=<%=version %>" rel="stylesheet">
@@ -57,7 +57,7 @@ String version = (String)application.getAttribute("cas_v");
    </div>	   		
   <div id="container">
       <header>
-      	<img alt="cas-login-logo" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>
+      	<img alt="cas-login-logo" src="<%=path %>/uniauth/cfg/images/CAS_LOGO"><br>
       	<c:if test="${not empty principal}">
       		<font color="white"><spring:message code="screen.welcome.label.current.loginuser" />${principal}</font>
       	</c:if>

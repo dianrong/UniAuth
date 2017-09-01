@@ -18,7 +18,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * . 用于判断当前的登陆请求的处理方式
+ * 用于判断当前的登陆请求的处理方式.
  *
  * @author wanglin
  */
@@ -36,7 +36,7 @@ public class LoginTypeDecisionAction extends AbstractAction {
   private static final String LOGIN_FROM_CUSTOM = "custom";
 
   /**
-   * . zk 配置属性
+   * ZK配置属性.
    */
   @Resource(name = "uniauthConfig")
   private Map<String, String> allZkNodeMap;

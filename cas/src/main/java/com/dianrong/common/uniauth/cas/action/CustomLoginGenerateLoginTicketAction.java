@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * . 用于生成客户自定义的登陆页面的登陆ticket的生成
+ * 用于生成客户自定义的登陆页面的登陆ticket的生成.
  *
  * @author wanglin
  */

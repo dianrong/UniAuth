@@ -70,7 +70,7 @@ public interface CasConstants {
   // default 120 minutes
   long CAS_CFG_CACHE_REFRESH_PERIOD_MILLES = 120L * 60L * 1000L;
 
-  // cascfg cache model in application's key
+  // Cas cfg cache model in application's key
   String CAS_CFG_CACHE_MODEL_APPLICATION_KEY = "cascfg_cache_key";
 
   // cas cfg cfg_key list
