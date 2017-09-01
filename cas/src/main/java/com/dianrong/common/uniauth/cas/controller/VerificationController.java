@@ -157,7 +157,7 @@ public class VerificationController {
         return Response.failure(Info.build(InfoName.INTERNAL_ERROR, UniBundleUtil
             .getMsg(messageSource, "verification.controller.verification.send.failed", "SMS")));
       }
-      // after sending successfully, set flag to session
+      // After sending successfully, set flag to session
       WebScopeUtil.putSmsVerificationToSession(request.getSession(), IdentityExpiredSessionObj
           .build(verification, CasConstants.VERIFICATION_EXPIRED_MILLES, identity));
       return Response.success(showVerifyCode() ? verification : "");

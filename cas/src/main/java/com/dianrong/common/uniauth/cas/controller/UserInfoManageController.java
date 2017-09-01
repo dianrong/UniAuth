@@ -61,7 +61,8 @@ public class UserInfoManageController {
   }
 
   /**
-   * 根据原始密码和身份信息更新密码. <b>不需要处于登陆状态. 通过每次请求Check验证码来控制频繁访问</b>
+   * 根据原始密码和身份信息更新密码.
+   * <b>不需要处于登陆状态. 通过每次请求Check验证码来控制频繁访问</b>
    *
    * @return 更新结果
    */
@@ -118,7 +119,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 更新 email 信息.
+   * 更新Email信息.
    */
   @ResponseBody
   @RequestMapping(value = "email", method = RequestMethod.POST)
@@ -149,7 +150,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 更新phone信息.
+   * 更新Phone信息.
    */
   @ResponseBody
   @RequestMapping(value = "phone", method = RequestMethod.POST)

@@ -21,7 +21,7 @@
 								target="_blank"
 			    		</c:if>
 					href="${item.hrefUrl}">
-						<img alt="${item.cfgKey}" src="<%=path %>/uniauth/cascfg/imges/${item.cfgKey}">
+						<img alt="${item.cfgKey}" src="<%=path %>/uniauth/cfg/images/${item.cfgKey}">
 					</a>
 				</li>
 		</c:forEach> 

@@ -17,8 +17,8 @@ import org.springframework.webflow.action.AbstractAction;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
-@SuppressWarnings("deprecation")
 @Slf4j
+@SuppressWarnings("deprecation")
 public final class GenerateServiceTicketAction extends AbstractAction {
 
   /**
@@ -69,3 +69,4 @@ public final class GenerateServiceTicketAction extends AbstractAction {
         .hasText(context.getExternalContext().getRequestParameterMap().get("gateway"));
   }
 }
+

@@ -19,7 +19,7 @@ String version = (String)application.getAttribute("cas_v");
 <%=CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_TITLE")==null?"":CasCfgResourceRefreshHelper.INSTANCE.getImageCacheDto("CAS_TITLE").getValue()%>
 </title>
 
-<link rel="icon" href="<%=path %>/uniauth/cascfg/imges/CAS_ICON"  type="image/x-icon" />
+<link rel="icon" href="<%=path %>/uniauth/cfg/images/CAS_ICON"  type="image/x-icon" />
 <!-- 	type="image/x-icon" /> -->
 <!-- Bootstrap -->
 <link href="<%=path %>/bootstrap-3.3.5/css/bootstrap.min.css?v=<%=version %>" rel="stylesheet">
@@ -61,7 +61,7 @@ String version = (String)application.getAttribute("cas_v");
 			</div>
    </div>	   		
 	<header class="header">
-		<img alt="cas-login-logo" src="<%=path %>/uniauth/cascfg/imges/CAS_LOGO"><br>
+		<img alt="cas-login-logo" src="<%=path %>/uniauth/cfg/images/CAS_LOGO"><br>
 		<c:if test="${not empty principal}">
 			<font color="white"><spring:message code="screen.welcome.label.current.loginuser" />${principal}</font>
 		</c:if>

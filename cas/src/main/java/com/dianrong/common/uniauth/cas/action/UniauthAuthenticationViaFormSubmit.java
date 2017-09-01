@@ -18,7 +18,7 @@ import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * 配置Cas登陆的身份识别以及Tgt, JWT等的生成实现.
+ * 配置Cas登陆的身份识别以及TGT, JWT等的生成实现.
  *
  * @author wanglin
  */

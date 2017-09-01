@@ -94,7 +94,7 @@ public class CasLoginSupport {
   private static final String NEED_REDIRECT_VALUE = "true";
 
   /**
-   * 在登陆的状态下获取tgt对象.
+   * 在登陆的状态下获取TGT对象.
    *
    * @return TicketGrantingTicket 对象
    * @throws NotLoginException if not login

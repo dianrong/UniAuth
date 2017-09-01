@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
- * . 用于生成用户的登陆页面的url 存放到flowscope中
+ * 用于生成用户的登陆页面的url 存放到flowScope中.
  *
  * @author wanglin
  */

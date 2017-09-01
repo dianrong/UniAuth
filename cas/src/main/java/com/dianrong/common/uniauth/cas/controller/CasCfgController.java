@@ -29,14 +29,14 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Slf4j
 @Controller
-@RequestMapping("/cascfg")
+@RequestMapping("/cfg")
 public class CasCfgController {
 
   /**
    * 根据Cfg类型从缓存中获取Img的数据流.
    */
-  @RequestMapping(value = "/imges/{cfgType}", method = RequestMethod.GET)
-  public void getCascfgImgStream(HttpServletRequest request, HttpServletResponse response,
+  @RequestMapping(value = "/images/{cfgType}", method = RequestMethod.GET)
+  public void getCasCfgImgStream(HttpServletRequest request, HttpServletResponse response,
       @PathVariable("cfgType") String cfgType) {
     if (StringUtil.strIsNullOrEmpty(cfgType)) {
       return;
@@ -68,7 +68,7 @@ public class CasCfgController {
         try {
           response.getOutputStream().write(file);
         } catch (IOException e) {
-          log.warn("reponse write image outputstream exception!", e);
+          log.warn("Write image:response outputStream exception occured:" + e.getMessage(), e);
         }
       }
     }
@@ -77,7 +77,7 @@ public class CasCfgController {
   /**
    * 获取登陆页的滚动图片的图片列表.
    */
-  @RequestMapping(value = "/imges/login/scrolling", method = RequestMethod.GET)
+  @RequestMapping(value = "/images/login/scrolling", method = RequestMethod.GET)
   public ModelAndView getLoginScrollImges(HttpServletRequest request,
       HttpServletResponse response) {
     CasCfgCacheModel loginAdCaches = CasCfgResourceRefreshHelper.INSTANCE.getCache();

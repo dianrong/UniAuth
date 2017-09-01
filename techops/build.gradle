@@ -75,10 +75,10 @@ dependencies {
     // so if there is a version upgrade, we should make sure the release version is work for techops system first then ask other teams to upgrade.
         
     if (rootProject.dianrongRepoEnable) {
-        compile "com.dianrong.common.uniauth:share-rw:2.0.12-SNAPSHOT"
-        compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.12-SNAPSHOT"
-        // compile project(":ss-client")
-        // compile project(":share-rw")
+        //compile "com.dianrong.common.uniauth:share-rw:2.0.12-SNAPSHOT"
+        //compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.12-SNAPSHOT"
+         compile project(":ss-client")
+         compile project(":share-rw")
     } else {
         compile project(":ss-client")
         compile project(":share-rw")

@@ -56,7 +56,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * 用于获取登陆使用的service ticket处理的controller.
+ * 登录操作接口,包括service ticket的获取接口.
+ * <p>目前已被com.dianrong.common.uniauth.cas.controller.v2.UserLoginController替换</p>
  * 
  * @author wanglin
  */
@@ -142,10 +143,10 @@ public class ServiceTicketController {
   }
 
   /**
-   * 获取登陆的Ticket,前端处理访问为iframe+window.name.
+   * 获取登陆的Ticket,前端处理访问为iFrame+window.name.
    */
   @RequestMapping(value = "/customlogin", method = RequestMethod.POST)
-  public void iframeLogin(HttpServletRequest request, HttpServletResponse response)
+  public void iFrameLogin(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     setValueToJsWindowNameResponse(response, loginProcess(request, response));
   }
@@ -154,7 +155,7 @@ public class ServiceTicketController {
    * 普通的API方式返回JSON字符串.
    */
   @RequestMapping(value = "/api/login", method = RequestMethod.POST)
-  public void apilogin(HttpServletRequest request, HttpServletResponse response)
+  public void apiLogin(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     sendResponse(response, loginProcess(request, response));
   }
@@ -232,9 +233,9 @@ public class ServiceTicketController {
   }
 
   /**
-   * 登陆之前的校验处理.
-   * @return null:validation success,
-   *                     non null:validation failed
+   * 登陆之前的校验处理.<br>
+   * @return null:validation success <br>
+   *          non null:validation failed
    */
   private CasGetServiceTicketModel beforeLoginValidation(HttpServletRequest request,
       HttpServletResponse response) {
@@ -305,7 +306,7 @@ public class ServiceTicketController {
       return new CasGetServiceTicketModel(false,
           CasGetServiceTicketModel.LOGIN_EXCEPTION_CREATE_SERVICE_FAILED, e.getMessage());
     } else {
-      // unknow exception
+      // unknown exception
       return new CasGetServiceTicketModel(false, CasGetServiceTicketModel.LOGIN_EXCEPTION_UNKNOW,
           e.getMessage());
     }
@@ -388,7 +389,7 @@ public class ServiceTicketController {
   }
 
   /**
-   * 将返回的值放到js的window对象中，主要是为处理iframe跨域传值的问题.
+   * 将返回的值放到js的window对象中，主要是为处理iFrame跨域传值的问题.
    */
   private void setValueToJsWindowNameResponse(HttpServletResponse response,
       CasGetServiceTicketModel info) throws IOException {

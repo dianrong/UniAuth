@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.server.synchronous.support.Switcher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Component
 public class HrDataSynchronousSwitcher implements Switcher {
 
   /**

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * . tenancy处理相关
+ * Tenancy处理相关.
  *
  * @author wanglin
  */

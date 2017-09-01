@@ -102,8 +102,8 @@ allprojects {
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
     
     dependencyManagement {
 	    imports {
@@ -360,12 +360,7 @@ project(':cas') {
             compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
         }
         compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
-        
-		//compile('org.jasig.cas:cas-server-support-jdbc:3.5.2.1') {
-			//transitive = true
-			//exclude group: 'javax.xml', module: 'xmldsig'
-		//}
-		
+
 		// spring-web-flow
 		compile "org.springframework.webflow:spring-binding:${webflow_version}"
         compile "org.springframework.webflow:spring-js:${webflow_version}"
