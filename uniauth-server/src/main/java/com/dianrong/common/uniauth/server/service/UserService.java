@@ -765,7 +765,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     // 删除已经存在的IPA账号关联信息
     UserThirdAccountExample deleteExample = new UserThirdAccountExample();
     UserThirdAccountExample.Criteria criteria = deleteExample.createCriteria();
-    criteria.andUserIdEqualTo(user.getId()).andTypeEqualTo(ThirdAccountType.IPA.toString());
+    criteria.andTenancyIdEqualTo(user.getTenancyId()).andTypeEqualTo(ThirdAccountType.IPA.toString());
     userThirdAccountMapper.deleteByExample(deleteExample);
 
     // 添加新的IPA账号信息
