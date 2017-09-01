@@ -35,7 +35,7 @@ public class TenancyCache {
    * 
    * @param tenancyCode tenancyCode, not null
    */
-  @Cacheable(key = "#tenancyCode.toUpperCase()")
+  @Cacheable(key = "#tenancyCode.toUpperCase()", unless = "#result==null")
   public TenancyDto getEnableTenancyByCode(String tenancyCode) {
     TenancyExample example = new TenancyExample();
     TenancyExample.Criteria criteria = example.createCriteria();

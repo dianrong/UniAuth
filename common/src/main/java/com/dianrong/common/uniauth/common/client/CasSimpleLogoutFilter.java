@@ -1,22 +1,14 @@
 package com.dianrong.common.uniauth.common.client;
 
 import com.dianrong.common.uniauth.common.util.Assert;
+import lombok.extern.slf4j.Slf4j;
+import org.jasig.cas.client.authentication.UrlPatternMatcherStrategy;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.jasig.cas.client.authentication.UrlPatternMatcherStrategy;
+import java.io.IOException;
 
 /**
  * 用于处理登出操作.

@@ -2,10 +2,9 @@ package com.dianrong.common.uniauth.common.customer.basicauth.handler;
 
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;
-
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  * Created by denghb on 6/21/17.

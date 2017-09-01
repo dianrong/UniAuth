@@ -161,6 +161,10 @@ public class GlobalVarQueueV2 {
         // ignore current audit info
         log.error("ignore current audit info {}", audit);
       } else {
+        // 放入插入列表
+        totalCacheNum.incrementAndGet();
+        this.auditList.add(audit);
+
         setUpDbInsertRunnable();
       }
     } else {

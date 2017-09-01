@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.HrLeMapper" >
+  <delete id="clearTable">
+    DELETE FROM hr_le;
+  </delete>
+
+  <insert id="insertBatch" parameterType="com.dianrong.common.uniauth.server.data.entity.HrLe">
+    insert into hr_le (le_id, le_code, le_name, effective_start_date, active_status)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.leId,jdbcType=BIGINT}, #{item.leCode,jdbcType=VARCHAR}, #{item.leName,jdbcType=VARCHAR},
+      #{item.effectiveStartDate,jdbcType=DATE}, #{item.activeStatus,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+</mapper>

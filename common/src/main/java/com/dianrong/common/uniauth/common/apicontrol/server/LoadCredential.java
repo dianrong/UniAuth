@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.server;
 
 import com.dianrong.common.uniauth.common.apicontrol.exp.LoadCredentialFailedException;
+
 import java.io.Serializable;
 
 /**

@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IUserExtendResource;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 

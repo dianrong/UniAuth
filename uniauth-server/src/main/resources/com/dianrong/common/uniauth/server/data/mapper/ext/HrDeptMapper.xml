@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dianrong.common.uniauth.server.data.mapper.HrDeptMapper" >
+  <delete id="clearTable">
+    DELETE FROM hr_dept;
+  </delete>
+
+  <insert id="insertBatch" parameterType="com.dianrong.common.uniauth.server.data.entity.HrDept">
+    insert into hr_dept (department_id, department_code, department_name, date_from, active_status, dept_level,
+    parents_dept_id, parents_dept_code, parents_dept_name, location_id, location_code,
+    location_name, manager_id, manager_num, cost_center)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.departmentId,jdbcType=BIGINT}, #{item.departmentCode,jdbcType=VARCHAR}, #{item.departmentName,jdbcType=VARCHAR},
+      #{item.dateFrom,jdbcType=DATE}, #{item.activeStatus,jdbcType=VARCHAR}, #{item.deptLevel,jdbcType=VARCHAR},
+      #{item.parentsDeptId,jdbcType=BIGINT}, #{item.parentsDeptCode,jdbcType=VARCHAR}, #{item.parentsDeptName,jdbcType=VARCHAR},
+      #{item.locationId,jdbcType=BIGINT}, #{item.locationCode,jdbcType=VARCHAR}, #{item.locationName,jdbcType=VARCHAR},
+      #{item.managerId,jdbcType=BIGINT}, #{item.managerNum,jdbcType=VARCHAR}, #{item.costCenter,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+</mapper>

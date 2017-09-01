@@ -2,11 +2,10 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
-
-import lombok.ToString;
 
 @ToString
 @ApiModel("Profile的父子关联关系信息")

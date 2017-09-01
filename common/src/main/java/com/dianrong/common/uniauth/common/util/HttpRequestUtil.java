@@ -1,10 +1,11 @@
 package com.dianrong.common.uniauth.common.util;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import javax.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by Arc on 20/6/2016.

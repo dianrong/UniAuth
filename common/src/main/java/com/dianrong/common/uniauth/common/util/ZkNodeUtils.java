@@ -1,10 +1,11 @@
 package com.dianrong.common.uniauth.common.util;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+
 import java.util.Map;
 
 /**
- * . 用于处理zk的节点相关工具方法
+ * 用于处理zk的节点相关工具方法.
  *
  * @author wanglin
  */
@@ -14,7 +15,7 @@ public class ZkNodeUtils {
   private static final String DEFAULT_TRUE = "true";
 
   /**
-   * . 判断nodeName是否属于域的node
+   * 判断nodeName是否属于域的node.
    *
    * @param nodeName node名称
    */
@@ -31,7 +32,7 @@ public class ZkNodeUtils {
   }
 
   /**
-   * . 从zkNode中解析出业务系统域的名称
+   * 从zkNode中解析出业务系统域的名称.
    *
    * @param nodeName node名称
    */
@@ -71,7 +72,7 @@ public class ZkNodeUtils {
   }
 
   /**
-   * 按照配置规则计算出对应domain的登出地址的节点
+   * 按照配置规则计算出对应domain的登出地址的节点.
    *
    * @param domainName 域名,比如techops, crm等. 不能为空
    * @return 返回在zk配置中对应domain的登出路径的节点. 比如: domains.techops.logout_address

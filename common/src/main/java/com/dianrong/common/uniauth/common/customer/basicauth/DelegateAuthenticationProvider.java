@@ -1,8 +1,5 @@
 package com.dianrong.common.uniauth.common.customer.basicauth;
 
-import static com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode.ROLE_CODE;
-import static com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType.DOMAIN;
-
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -18,25 +15,21 @@ import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode.ROLE_CODE;
+import static com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType.DOMAIN;
 
 /**
  * Created by denghb on 6/13/17.

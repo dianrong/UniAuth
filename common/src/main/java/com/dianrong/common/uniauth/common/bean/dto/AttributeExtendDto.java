@@ -2,7 +2,6 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import lombok.ToString;
 
 /**

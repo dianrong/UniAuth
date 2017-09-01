@@ -1,13 +1,11 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 import java.util.Date;
-
-import lombok.ToString;
 
 /**
  * @author wenlongchen.

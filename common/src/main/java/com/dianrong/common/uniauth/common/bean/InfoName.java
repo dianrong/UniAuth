@@ -43,5 +43,7 @@ public enum InfoName {
   IDENTITY_REQUIRED,
   @ApiModelProperty("没有权限访问")
   NO_PRIVILEGE,
+  @ApiModelProperty("操作获取锁失败")
+  ACQUIRE_LOCK_FAILED,
   ;
 }

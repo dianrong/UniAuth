@@ -1,34 +1,21 @@
 package com.dianrong.common.uniauth.common.client;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.jasig.cas.client.Protocol;
-import org.jasig.cas.client.authentication.AuthenticationRedirectStrategy;
-import org.jasig.cas.client.authentication.ContainsPatternUrlPatternMatcherStrategy;
-import org.jasig.cas.client.authentication.DefaultAuthenticationRedirectStrategy;
-import org.jasig.cas.client.authentication.DefaultGatewayResolverImpl;
-import org.jasig.cas.client.authentication.ExactUrlPatternMatcherStrategy;
-import org.jasig.cas.client.authentication.GatewayResolver;
-import org.jasig.cas.client.authentication.RegexUrlPatternMatcherStrategy;
-import org.jasig.cas.client.authentication.UrlPatternMatcherStrategy;
+import org.jasig.cas.client.authentication.*;
 import org.jasig.cas.client.configuration.ConfigurationKeys;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.util.CommonUtils;
 import org.jasig.cas.client.util.ReflectUtils;
 import org.jasig.cas.client.validation.Assertion;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class CasAuthenticationFilter extends AbstractCasFilter {

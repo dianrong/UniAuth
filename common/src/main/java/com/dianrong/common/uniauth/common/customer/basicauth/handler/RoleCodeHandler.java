@@ -6,11 +6,12 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType;
 import com.dianrong.common.uniauth.common.customer.basicauth.util.AuthorityStringUtil;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by denghb on 6/20/17.

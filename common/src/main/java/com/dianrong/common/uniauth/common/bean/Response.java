@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.common.bean;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;

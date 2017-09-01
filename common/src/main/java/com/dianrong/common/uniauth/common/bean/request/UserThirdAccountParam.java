@@ -1,10 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
 import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
+import lombok.ToString;
 
 import java.util.Date;
-
-import lombok.ToString;
 
 @ToString
 public class UserThirdAccountParam extends Operator {

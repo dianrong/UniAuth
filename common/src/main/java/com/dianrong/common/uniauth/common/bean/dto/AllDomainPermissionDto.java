@@ -1,10 +1,10 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 /**
  * Uniauth中每个域通用的权限类型.

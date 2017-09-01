@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.apicontrol.model;
 
 import com.dianrong.common.uniauth.common.util.Assert;
+
 import java.io.Serializable;
 
 /**

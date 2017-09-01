@@ -2,10 +2,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 import java.util.Date;
-
-import lombok.ToString;
 
 /**
  * 区别于UserDetailDto,该DTO是用户的一组属性的集合.

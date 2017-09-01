@@ -1,9 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import lombok.ToString;
 
 @ToString
 public class ApiCallerInfoDto implements Serializable {

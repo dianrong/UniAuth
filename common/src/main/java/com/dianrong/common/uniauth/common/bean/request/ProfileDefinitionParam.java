@@ -1,9 +1,9 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import lombok.ToString;
+
 import java.util.Map;
 import java.util.Set;
-
-import lombok.ToString;
 
 /**
  * Profile定义相关接口的请求参数.

@@ -2,11 +2,11 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import lombok.ToString;
 
 /**
  * Created by Arc on 14/1/16.

@@ -68,7 +68,7 @@ dependencies {
     testCompile "org.springframework:spring-test"
     testCompile "org.springframework:spring-web"
     
-        // Jwt
+    // Jwt
     compile 'com.auth0:java-jwt:3.0.2'
     
     // swagger
@@ -97,6 +97,9 @@ dependencies {
         'joda-time:joda-time',
         'commons-io:commons-io',
     )
+
+    // sftp
+    compile 'com.jcraft:jsch:0.1.54'
 }
 
 sonarqube {

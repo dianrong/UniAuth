@@ -1,11 +1,12 @@
 package com.dianrong.common.uniauth.common.server;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import java.io.IOException;
+import org.springframework.util.StringUtils;
+
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.ext.Provider;
-import org.springframework.util.StringUtils;
+import java.io.IOException;
 
 /**
  * . uniauth的cxf的locale的filter实现

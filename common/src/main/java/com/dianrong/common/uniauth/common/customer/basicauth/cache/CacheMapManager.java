@@ -2,11 +2,10 @@ package com.dianrong.common.uniauth.common.customer.basicauth.cache;
 
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by denghb on 6/22/17.

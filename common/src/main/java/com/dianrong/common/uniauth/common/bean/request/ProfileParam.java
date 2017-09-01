@@ -1,10 +1,10 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.Map;
 
 /**
  * Profile值更新使用的参数Model.

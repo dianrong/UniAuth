@@ -1,10 +1,11 @@
 package com.dianrong.common.uniauth.common.server;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import java.io.IOException;
+
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.ext.Provider;
+import java.io.IOException;
 
 @Provider
 @Deprecated

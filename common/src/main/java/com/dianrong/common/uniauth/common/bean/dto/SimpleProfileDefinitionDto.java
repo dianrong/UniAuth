@@ -2,10 +2,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 import java.util.Set;
-
-import lombok.ToString;
 
 @ToString
 @ApiModel("简单的Profile的结构定义Dto,为了表述父子关系")

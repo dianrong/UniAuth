@@ -1,13 +1,11 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
 import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 import java.util.Date;
-
-import lombok.ToString;
 
 @ApiModel("用户和第三方账号的关联")
 @ToString

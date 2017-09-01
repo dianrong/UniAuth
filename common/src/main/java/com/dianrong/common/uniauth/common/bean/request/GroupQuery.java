@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.List;
 
 /**

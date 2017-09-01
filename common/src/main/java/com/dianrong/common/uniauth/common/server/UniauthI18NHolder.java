@@ -1,14 +1,15 @@
 package com.dianrong.common.uniauth.common.server;
 
-import java.util.Locale;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+import java.util.Map;
 
 public class UniauthI18NHolder implements ApplicationContextAware, InitializingBean {
 

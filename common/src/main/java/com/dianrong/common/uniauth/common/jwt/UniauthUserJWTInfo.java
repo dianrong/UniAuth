@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.common.jwt;
 
 import lombok.ToString;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 

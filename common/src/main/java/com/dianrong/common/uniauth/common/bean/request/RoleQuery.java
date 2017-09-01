@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
-import java.util.List;
-
 import lombok.ToString;
+
+import java.util.List;
 
 @ToString
 public class RoleQuery extends PageParam {

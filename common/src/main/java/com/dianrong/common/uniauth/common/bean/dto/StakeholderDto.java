@@ -1,8 +1,8 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
-import java.io.Serializable;
-
 import lombok.ToString;
+
+import java.io.Serializable;
 
 @ToString
 public class StakeholderDto implements Serializable {
