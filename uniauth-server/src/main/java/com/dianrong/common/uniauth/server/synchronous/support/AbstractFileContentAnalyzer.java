@@ -29,7 +29,7 @@ import java.util.List;
   /**
    * 列分割符.
    */
-  protected String rowDelimiter = ",";
+  protected String rowDelimiter = ",\"";
 
   @Override public T analyze(InputStream inputStream) throws InvalidContentException {
     Assert.notNull(inputStream, "inputStream can not be null!");
@@ -73,7 +73,7 @@ import java.util.List;
     String[] strs = content.split("\r\n");
     List<String> strList = Lists.newArrayList();
     for (String str : strs) {
-      strList.add(str.trim());
+      strList.add(clearItem(str.trim()));
     }
     return strList;
   }

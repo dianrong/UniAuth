@@ -26,11 +26,11 @@ public class HrLeAnalyzer extends AbstractFileContentAnalyzer<LegalEntityList> {
       String[] items = recordStr.split(rowDelimiter);
       itemLengthCheck(items, ITEM_LENGTH);
       HrLe hrLe = new HrLe();
-      hrLe.setLeId(strToLong(clearItem(items[0])));
-      hrLe.setLeCode(clearItem(items[1]));
-      hrLe.setLeName(clearItem(items[2]));
-      hrLe.setEffectiveStartDate(strToDate(clearItem(items[3])));
-      hrLe.setActiveStatus(clearItem(items[4]));
+      hrLe.setLeId(strToLong(items[0]));
+      hrLe.setLeCode(items[1]);
+      hrLe.setLeName(items[2]);
+      hrLe.setEffectiveStartDate(strToDate(items[3]));
+      hrLe.setActiveStatus(items[4]);
       result.add(hrLe);
     }
     return result;
