@@ -23,7 +23,7 @@ public class HrDeptAnalyzer extends AbstractFileContentAnalyzer<DepartmentList> 
     // 抛弃第一行
     for(int i =1; i < strList.size(); i++) {
       String recordStr = strList.get(i);
-      String[] items = recordStr.split(rowDelimiter);
+      String[] items = splitContentRow(recordStr);
       itemLengthCheck(items, ITEM_LENGTH);
       HrDept hrDept = new HrDept();
       hrDept.setDepartmentId(strToLong(items[0]));

@@ -23,7 +23,7 @@ public class HrJobAnalyzer extends AbstractFileContentAnalyzer<JobList> {
     List<String> strList = anaToList(content);
     for(int i =1; i < strList.size(); i++) {
       String recordStr = strList.get(i);
-      String[] items = recordStr.split(rowDelimiter);
+      String[] items = splitContentRow(recordStr);
       itemLengthCheck(items, ITEM_LENGTH);
       HrJob hrJob = new HrJob();
       hrJob.setJobId(strToLong(items[0]));
