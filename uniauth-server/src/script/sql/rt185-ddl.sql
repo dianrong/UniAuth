@@ -43,9 +43,9 @@ CREATE TABLE IF NOT EXISTS `hr_job` (
 -- Table `hr_le`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hr_le` (
-  `le_id` BIGINT(20) NOT NULL COMMENT '法律实体id',
-  `le_code` VARCHAR(60) COMMENT '法律实体编码',
-  `le_name` VARCHAR(120) COMMENT '法律实体名称',
+  `company_id` BIGINT(20) NOT NULL COMMENT '公司id',
+  `company_code` VARCHAR(30) COMMENT '公司编码',
+  `company_name` VARCHAR(120) COMMENT '公司名称',
   `effective_start_date` DATE COMMENT '生效开始日期',
   `active_status` VARCHAR(20) COMMENT 'A有效，I无效',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `hr_le` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hr_person` (
   `person_id` BIGINT(20) NOT NULL COMMENT '员工id',
+  `old_number` VARCHAR(10) COMMENT '老员工编号',
   `persom_number` VARCHAR(10) COMMENT '员工编号',
   `last_name_cn` VARCHAR(10) COMMENT '中文姓',
   `first_name_cn` VARCHAR(10) COMMENT '中文名',
@@ -82,6 +83,10 @@ CREATE TABLE IF NOT EXISTS `hr_person` (
   `assignment_status_type` VARCHAR(20) COMMENT '分配状态类型',
   `action_code` VARCHAR(20) COMMENT '操作编码',
   `travel_subsidies` VARCHAR(20) COMMENT '差标(根据业务规则按职级转换)',
+  `buId` BIGINT(20) COMMENT '业务单位(关联部门表部门id)',
+  `buShortCode` VARCHAR(20) COMMENT '业务单位短码',
+  `buCode` VARCHAR(20) COMMENT '业务单位编码',
+  `buName` VARCHAR(100) COMMENT '业务单位名称',
   `department_id` BIGINT(20) COMMENT '部门id',
   `department_code` VARCHAR(20) COMMENT '部门编码',
   `department_name` VARCHAR(50) COMMENT '部门名称',
@@ -91,10 +96,12 @@ CREATE TABLE IF NOT EXISTS `hr_person` (
   `manager_id` BIGINT(20) COMMENT '经理id',
   `manager_num` VARCHAR(30) COMMENT '经理编号',
   `manager` VARCHAR(30) COMMENT '经理',
-  `legal_entities_id` BIGINT(20) COMMENT '所属公司id',
-  `legal_entities_code` VARCHAR(30) COMMENT '所属公司编码',
-  `legal_entities_name` VARCHAR(120) COMMENT '所属公司名称',
-  `company_name` VARCHAR(120) COMMENT '公司名称',
+  `legal_entities_id` BIGINT(20) COMMENT '法人id',
+  `legal_entities_code` VARCHAR(20) COMMENT '法人编码',
+  `legal_entities_name` VARCHAR(60) COMMENT '所属法人',
+  `company_id` BIGINT(20) COMMENT '所属公司id',
+  `company_code` VARCHAR(30) COMMENT '所属公司编码',
+  `company_name` VARCHAR(120) COMMENT '所属公司名称',
   `actual_termination_date` DATE COMMENT '最后工作日',
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `last_update` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最近更新时间',
