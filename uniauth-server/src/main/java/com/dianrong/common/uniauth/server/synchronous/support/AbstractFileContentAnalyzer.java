@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
   /**
    * 列分割符.
    */
-  protected String rowDelimiter = ",\"";
+  private String rowDelimiter = "\",\"";
 
   @Override public T analyze(InputStream inputStream) throws InvalidContentException {
     Assert.notNull(inputStream, "inputStream can not be null!");
@@ -70,12 +71,29 @@ import java.util.List;
     if (!StringUtils.hasText(content)) {
       return Collections.emptyList();
     }
-    String[] strs = content.split("\r\n");
+    String[] rows = content.split("\r\n");
     List<String> strList = Lists.newArrayList();
-    for (String str : strs) {
-      strList.add(clearItem(str.trim()));
+    for (String row : rows) {
+      strList.add(row.trim());
     }
     return strList;
+  }
+
+  /**
+   * 将每一行的内容按照分割符解.
+   *
+   * @param contentRow 每一行的内容.
+   * @return 解析结果.
+   */
+  protected String[] splitContentRow(String contentRow) {
+    if (!StringUtils.hasText(contentRow)) {
+      return new String[]{};
+    }
+    String[] items = contentRow.split(rowDelimiter);
+    for(int i =0; i< items.length;i++) {
+      items[i] = cleanItem(items[i].trim());
+    }
+    return items;
   }
 
   /**
@@ -141,7 +159,7 @@ import java.util.List;
   /**
    * 将字符串的前后的"去掉.
    */
-  protected String clearItem(String item) {
+  protected String cleanItem(String item) {
     if (!StringUtils.hasText(item)) {
       return item;
     }
