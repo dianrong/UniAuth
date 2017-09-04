@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.sharerw.interfaces;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.request.HrSynchronousLogParam;
+import com.dianrong.common.uniauth.common.bean.request.HrSynchronousProcessParam;
 import com.dianrong.common.uniauth.common.bean.request.TagParam;
 import com.dianrong.common.uniauth.common.interfaces.read.ISynchronousDataResource;
 
@@ -18,11 +19,11 @@ public interface ISynchronousDateRWResource extends ISynchronousDataResource {
    * 同步HR系统的数据.
    */
   @POST
-  @Path("synchronous-hr-data") Response<Void> synchronousHrData(HrSynchronousLogParam param);
+  @Path("synchronous-hr-data") Response<Void> synchronousHrData(HrSynchronousProcessParam param);
 
   /**
    * 删除过期文件.
    */
   @POST
-  @Path("delete-expired-file") Response<Void> deleteExpiredFile(HrSynchronousLogParam param);
+  @Path("delete-expired-file") Response<Void> deleteExpiredFile(HrSynchronousProcessParam param);
 }

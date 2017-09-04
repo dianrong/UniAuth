@@ -116,6 +116,6 @@
     <div ng-repeat="audit in audits | filter:predicate:comparator">
         uuid:{{audit.reqUuid}} | userId:{{audit.userId}} | url:{{audit.reqUrl}} | class:{{audit.reqClass}} | param:{{audit.reqParam}} |
         date: {{audit.requestDate | date:'yyyy-MM-dd HH:mm'}} | exception:{{audit.reqException}} | elapse:{{audit.reqElapse}} | success:{{audit.reqSuccess}} |
-        method: {{audit.reqMethod}} | ip: {{audit.reqIp}} | seq: {{audit.reqSequence}}
+        method: {{audit.reqMethod}} | ip: {{audit.reqIp}} | seq: {{audit.reqSequence}} | requestDomainCode: {{audit.requestDomainCode}}
     </div>
 </div>

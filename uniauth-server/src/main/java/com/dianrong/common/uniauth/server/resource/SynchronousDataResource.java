@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.HrSynchronousLogDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.request.HrSynchronousLogParam;
+import com.dianrong.common.uniauth.common.bean.request.HrSynchronousProcessParam;
 import com.dianrong.common.uniauth.server.synchronous.hr.service.Synchronous;
 import com.dianrong.common.uniauth.sharerw.interfaces.ISynchronousDateRWResource;
 import io.swagger.annotations.Api;
@@ -37,13 +38,13 @@ import org.springframework.web.bind.annotation.RestController;
   }
 
   @ApiOperation("触发一次同步HR系统数据的操作") @Override
-  public Response<Void> synchronousHrData(HrSynchronousLogParam param) {
+  public Response<Void> synchronousHrData(HrSynchronousProcessParam param) {
     synchronous.startSynchronize(param.getAsynchronous() != null ? param.getAsynchronous() : false);
     return Response.success();
   }
 
   @ApiOperation("触发一次删除过期文件的操作") @Override
-  public Response<Void> deleteExpiredFile(HrSynchronousLogParam param) {
+  public Response<Void> deleteExpiredFile(HrSynchronousProcessParam param) {
     synchronous
         .deleteExpiredFtpFile(param.getAsynchronous() != null ? param.getAsynchronous() : false);
     return Response.success();
