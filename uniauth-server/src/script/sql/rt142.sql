@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS `tenancy` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT comment '租户主键id',
    `code` VARCHAR(30) NOT NULL comment '每一个租户的唯一标识code',
-  `name` VARCHAR(64) NULL comment '租户名称，比如点融网',
+  `name` VARCHAR(64) NULL comment '租户名称，比如点融',
   `contact_name` VARCHAR(30) NULL comment '租户联系人姓名',
   `phone` VARCHAR(30) NULL comment '租户联系电话',
   `description` VARCHAR(200) NULL comment '租户描述',
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `tenancy` (
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `tenancy` (`code`, `name`, `contact_name`, `phone`,`description`, `create_date`, `last_update` ) 
-VALUES('DIANRONG-WEBSITE' , '点融网', '点融网', '400-921-9218', '点融网', now(), now());
+VALUES('DIANRONG-WEBSITE' , '点融', '点融', '400-921-9218', '点融', now(), now());
 
 -- update table structure
 alter table cfg add tenancy_id BIGINT(20) NOT NULL DEFAULT 0 comment '租户id' after cfg_type_id ;

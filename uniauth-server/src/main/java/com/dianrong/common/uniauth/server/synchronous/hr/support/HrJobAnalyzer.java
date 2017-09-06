@@ -23,16 +23,16 @@ public class HrJobAnalyzer extends AbstractFileContentAnalyzer<JobList> {
     List<String> strList = anaToList(content);
     for(int i =1; i < strList.size(); i++) {
       String recordStr = strList.get(i);
-      String[] items = recordStr.split(rowDelimiter);
+      String[] items = splitContentRow(recordStr);
       itemLengthCheck(items, ITEM_LENGTH);
       HrJob hrJob = new HrJob();
-      hrJob.setJobId(strToLong(clearItem(items[0])));
-      hrJob.setJobCode(clearItem(items[1]));
-      hrJob.setJobName(clearItem(items[2]));
-      hrJob.setEffectiveStartDate(strToDate(clearItem(items[3])));
-      hrJob.setEffectiveEndDate(strToDate(clearItem(items[4])));
-      hrJob.setSales(clearItem(items[5]));
-      hrJob.setActiveStatus(clearItem(items[6]));
+      hrJob.setJobId(strToLong(items[0]));
+      hrJob.setJobCode(items[1]);
+      hrJob.setJobName(items[2]);
+      hrJob.setEffectiveStartDate(strToDate(items[3]));
+      hrJob.setEffectiveEndDate(strToDate(items[4]));
+      hrJob.setSales(items[5]);
+      hrJob.setActiveStatus(items[6]);
       result.add(hrJob);
     }
     return result;

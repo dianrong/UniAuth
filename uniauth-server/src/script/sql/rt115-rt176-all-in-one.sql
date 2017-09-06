@@ -319,7 +319,7 @@ insert into `perm_type`(`id`, `type`) values (2, 'URI_PATTERN');
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
 values('200000001', 'guige', 'first.admin@test.com', '13011111111', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
 
-insert into grp(id, name, code, description,status, create_date, last_update) values(1, '点融网', 'GRP_ROOT','点融网根组', 0, now(), now());
+insert into grp(id, name, code, description,status, create_date, last_update) values(1, '点融', 'GRP_ROOT','点融根组', 0, now(), now());
 insert into grp(id, name, code, description,status, create_date, last_update) values(2, 'techops超级管理员组', 'GRP_TECHOPS_SUPER_ADMIN','techops超级管理员组，组内的人期拥有techops顶级权限', 0, now(), now());
 insert into grp_path(ancestor, descendant, deepth) values(1, 1, 0);
 insert into grp_path(ancestor, descendant, deepth) values(1, 2, 1);
@@ -452,7 +452,7 @@ select @cfg_file_id := (select id from `cfg_type` where code='FILE');
 select @cfg_text_id := (select id from `cfg_type` where code='TEXT');
 insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_LOGO', 'logo.png', null, @cfg_file_id);
 insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_ICON', 'favicon.png', null, @cfg_file_id);
-insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_TITLE', '点融网-权限运维系统', null, @cfg_text_id);
+insert into `cfg`(`cfg_key`,`value`,`file`,`cfg_type_id`) values ('TECHOPS_TITLE', '点融-权限运维系统', null, @cfg_text_id);
 insert into `perm_type`(`id`, `type`) values (3, 'PRIVILEGE');
 COMMIT;
 
@@ -713,7 +713,7 @@ CHANGE COLUMN `req_result` `req_result` VARCHAR(1024) NULL DEFAULT NULL COMMENT 
 CREATE TABLE IF NOT EXISTS `tenancy` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT comment '租户主键id',
    `code` VARCHAR(30) NOT NULL comment '每一个租户的唯一标识code',
-  `name` VARCHAR(64) NULL comment '租户名称，比如点融网',
+  `name` VARCHAR(64) NULL comment '租户名称，比如点融',
   `contact_name` VARCHAR(30) NULL comment '租户联系人姓名',
   `phone` VARCHAR(30) NULL comment '租户联系电话',
   `description` VARCHAR(200) NULL comment '租户描述',
@@ -724,7 +724,7 @@ CREATE TABLE IF NOT EXISTS `tenancy` (
   )ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `tenancy` (`code`, `name`, `contact_name`, `phone`,`description`, `create_date`, `last_update` )
-VALUES('DIANRONG-WEBSITE' , '点融网', '点融网', '400-921-9218', '点融网', now(), now());
+VALUES('DIANRONG-WEBSITE' , '点融', '点融', '400-921-9218', '点融', now(), now());
 
 -- update table structure
 alter table cfg add tenancy_id BIGINT(20) NOT NULL DEFAULT 0 comment '租户id' after cfg_type_id ;

@@ -327,7 +327,7 @@ import java.util.concurrent.Executors;
     Set<Long> deptIds = new HashSet<>(departmentList.content().size());
     Set<Long> personIds = new HashSet<>(personList.content().size());
     for (HrLe hrLe : legalEntityList.content()) {
-      leIds.add(hrLe.getLeId());
+      leIds.add(hrLe.getCompanyId());
     }
     for (HrJob hrJob : jobList.content()) {
       jobIds.add(hrJob.getJobId());
@@ -368,6 +368,13 @@ import java.util.concurrent.Executors;
     * 4 legal_entities_id 需要是leId.
     * */
     for (HrPerson hrPerson : personList.content()) {
+      // buId check.
+      Long buId = hrPerson.getBuId();
+      if (buId != null && !deptIds.contains(buId)) {
+        throwForeignKeyCheckFailureException(personList.synchronousFile().getTableName(),
+            "buId", buId, departmentList.synchronousFile().getTableName(),
+            "departmentId");
+      }
       // 部门id check.
       Long deptId = hrPerson.getDepartmentId();
       if (deptId != null && !deptIds.contains(deptId)) {
@@ -392,6 +399,12 @@ import java.util.concurrent.Executors;
       if (leId != null && !leIds.contains(leId)) {
         throwForeignKeyCheckFailureException(personList.synchronousFile().getTableName(),
             "legalEntitiesId", leId, legalEntityList.synchronousFile().getTableName(), "leId");
+      }
+      // companyId check.
+      Long companyId = hrPerson.getLegalEntitiesId();
+      if (companyId != null && !leIds.contains(companyId)) {
+        throwForeignKeyCheckFailureException(personList.synchronousFile().getTableName(),
+            "companyId", leId, legalEntityList.synchronousFile().getTableName(), "leId");
       }
     }
   }

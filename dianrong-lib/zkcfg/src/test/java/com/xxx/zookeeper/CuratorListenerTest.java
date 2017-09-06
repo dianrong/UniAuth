@@ -32,7 +32,6 @@ public class CuratorListenerTest {
           System.out.println(newState.toString());
         }
       });
-
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -43,6 +42,4 @@ public class CuratorListenerTest {
       Thread.sleep(5000);
     }
   }
-
-
 }

@@ -24,7 +24,7 @@ final class JwtSecurity {
   // 默认的秘钥
   public static final String DEFAULT_SECURITY_KEY =
       "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCud_DotADycQRhsiMSViewAxUJ"
-          + "x3buJZLqd-VF0fO1N5dfZUJljxhgn7XU8itVV5dyTY-9nKgY6X0GLy2kB8K0yoszmaEhpp"
+          + "x3buJZLqd-VF1f11N5dfZkJlIxhgn7XU8itVV5dyTY-9nKgY6X0GLy2kB8K0yoszmaEhpp"
           + "AxumOkTNZnoyRHNstr4Osau-LZwRd2tzOmiVFB2hocmST3ewsmEVWOhS26ST-Mw"
           + "AVex7KzCroSYwIDAQAB";
 

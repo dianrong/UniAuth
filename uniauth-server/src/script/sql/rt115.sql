@@ -319,7 +319,7 @@ insert into `perm_type`(`id`, `type`) values (2, 'URI_PATTERN');
 insert into user(id, name, email, phone, password, password_salt, last_login_time, last_login_ip, fail_count, status, create_date, last_update, password_date)
 values('200000001', 'guige', 'first.admin@dianrong.com', '13011111111', 'GRodddDAZjK2tGZ6kT7ImP8ILwU=', 'I9JTzG2zzBAW3Q5NvP8lRg==', now(), '192.168.18.5', '0', '0', now(), now(), now());
 
-insert into grp(id, name, code, description,status, create_date, last_update) values(1, '点融网', 'GRP_ROOT','点融网根组', 0, now(), now());
+insert into grp(id, name, code, description,status, create_date, last_update) values(1, '点融', 'GRP_ROOT','点融根组', 0, now(), now());
 insert into grp(id, name, code, description,status, create_date, last_update) values(2, 'techops超级管理员组', 'GRP_TECHOPS_SUPER_ADMIN','techops超级管理员组，组内的人期拥有techops顶级权限', 0, now(), now());
 insert into grp_path(ancestor, descendant, deepth) values(1, 1, 0);
 insert into grp_path(ancestor, descendant, deepth) values(1, 2, 1);

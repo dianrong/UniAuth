@@ -20,16 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 @SuppressWarnings("deprecation")
 public class UniauthServerApiInvoke {
 
-  public static final String URI = "http://10.8.12.218:8200/uniauth/ws/rs/user/searchusers";
-
-  /**
-   * Main方法.
-   */
-  public static void main(String[] args) throws Exception {
-    for (int i = 0; i < 1000000; i++) {
-      request("dianrong", 300002193L);
-    }
-  }
+  public static final String URI = "http://localhost:8200/uniauth/ws/rs/user/searchusers";
 
   /**
    * 请求.
