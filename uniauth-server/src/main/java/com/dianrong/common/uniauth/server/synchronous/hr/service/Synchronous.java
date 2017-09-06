@@ -394,17 +394,11 @@ import java.util.concurrent.Executors;
         throwForeignKeyCheckFailureException(personList.synchronousFile().getTableName(),
             "managerId", managerId, personList.synchronousFile().getTableName(), "personId");
       }
-      // 公司id check.
-      Long leId = hrPerson.getLegalEntitiesId();
-      if (leId != null && !leIds.contains(leId)) {
-        throwForeignKeyCheckFailureException(personList.synchronousFile().getTableName(),
-            "legalEntitiesId", leId, legalEntityList.synchronousFile().getTableName(), "leId");
-      }
       // companyId check.
-      Long companyId = hrPerson.getLegalEntitiesId();
+      Long companyId = hrPerson.getCompanyId();
       if (companyId != null && !leIds.contains(companyId)) {
         throwForeignKeyCheckFailureException(personList.synchronousFile().getTableName(),
-            "companyId", leId, legalEntityList.synchronousFile().getTableName(), "leId");
+            "companyId", companyId, legalEntityList.synchronousFile().getTableName(), "companyId");
       }
     }
   }
