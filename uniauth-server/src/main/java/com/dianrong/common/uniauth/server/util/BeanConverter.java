@@ -1,12 +1,7 @@
 package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
-import com.dianrong.common.uniauth.common.bean.request.DomainParam;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
-import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -17,14 +12,13 @@ import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.springframework.util.StringUtils;
 
 /**
  * Created by Arc on 15/1/16.
@@ -398,7 +392,8 @@ public class BeanConverter {
           .setReqResult(audit.getReqResult()).setReqIp(audit.getReqIp())
           .setReqUrl(audit.getReqUrl()).setReqParam(audit.getReqParam())
           .setRequestDate(audit.getReqDate()).setReqClass(audit.getReqClass())
-          .setUserId(audit.getUserId()).setId(audit.getId()).setReqSequence(audit.getReqSeq());
+          .setUserId(audit.getUserId()).setId(audit.getId()).setReqSequence(audit.getReqSeq())
+          .setRequestDomainCode(audit.getRequestDomainCode());
       return auditDto;
     }
   }

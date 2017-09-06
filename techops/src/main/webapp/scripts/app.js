@@ -307,6 +307,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             controller: "AuditController",
             templateUrl: "views/audit/audit.html"
         }).
+        state('synchronous', {
+            url: "/synchronous",
+            controller: "SynchronousController",
+            templateUrl: "views/synchronous/synchronous.html"
+        }).
         state('sys-cfg', {
             url: "/sys-cfg",
             controller: "CfgController",

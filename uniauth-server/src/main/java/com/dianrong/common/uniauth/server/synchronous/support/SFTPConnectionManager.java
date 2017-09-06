@@ -194,25 +194,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
    * 确保当前session可用.
    */
   private void ensureSessionAvailable() {
-    if (this.session == null) {
-      synchronized (lock) {
-        if (this.session == null) {
-          try {
-            this.session = this.jsch.getSession(this.sftpAccount, this.serverHost, this.serverPort);
-          } catch (JSchException e) {
-            log.error("Failed create sftp session." + getConnectionDescription(), e);
-            throw new SFTPServerProcessException(
-                "Failed to create sftp session." + getConnectionDescription(), e);
-          }
-          log.debug("Session created." + getConnectionDescription());
-          session.setPassword(this.sftpPassword);
-          Properties sshConfig = new Properties();
-          sshConfig.put("StrictHostKeyChecking", "no");
-          session.setConfig(sshConfig);
-        }
+    // 正常情况,直接返回.
+    if (this.session != null) {
+      if (this.session.isConnected()) {
+        return;
       }
     }
-    if (!this.session.isConnected()) {
+    // 重新创建一个新的session
+    synchronized (lock) {
+      try {
+        this.session = this.jsch.getSession(this.sftpAccount, this.serverHost, this.serverPort);
+      } catch (JSchException e) {
+        log.error("Failed create sftp session." + getConnectionDescription(), e);
+        throw new SFTPServerProcessException(
+            "Failed to create sftp session." + getConnectionDescription(), e);
+      }
+      log.debug("Session created." + getConnectionDescription());
+      session.setPassword(this.sftpPassword);
+      Properties sshConfig = new Properties();
+      sshConfig.put("StrictHostKeyChecking", "no");
+      session.setConfig(sshConfig);
       try {
         this.session.connect();
       } catch (JSchException e) {
