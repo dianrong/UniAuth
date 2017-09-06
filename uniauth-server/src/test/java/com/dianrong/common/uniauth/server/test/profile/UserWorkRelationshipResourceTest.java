@@ -1,10 +1,7 @@
 package com.dianrong.common.uniauth.server.test.profile;
 
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.UserWorkRelationshipDto;
-import com.dianrong.common.uniauth.common.bean.request.UserWorkRelationshipParam;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
-import com.dianrong.common.uniauth.server.resource.UserWorkRelationshipResource;
 import com.dianrong.common.uniauth.server.test.BaseTest;
 
 import java.util.Date;

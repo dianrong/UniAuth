@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.server.support;
 
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
+import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
+
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -23,6 +25,7 @@ public class HolderClearFilter implements Filter {
     } finally {
       // clear
       CxfHeaderHolder.clearAllHolder();
+      TreeTypeHolder.clear();
     }
   }
 

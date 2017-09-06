@@ -1,12 +1,7 @@
 package com.dianrong.common.uniauth.server.util;
 
 import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
-import com.dianrong.common.uniauth.common.bean.request.DomainParam;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
-import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
@@ -17,14 +12,13 @@ import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.springframework.util.StringUtils;
 
 /**
  * Created by Arc on 15/1/16.
@@ -44,6 +38,16 @@ public class BeanConverter {
           .setTagTypeId(tag.getTagTypeId()).setDescription(tag.getDescription())
           .setTenancyId(StringUtil.translateLongToInteger(tag.getTenancyId()));
     }
+  }
+
+  /**
+   * 将GroupDto转化成groupDto;
+   */
+  public static OrganizationDto convert(GroupDto groupDto) {
+    if (groupDto == null) {
+      return null;
+    }
+    return new OrganizationDto(groupDto);
   }
 
   /**
@@ -645,32 +649,6 @@ public class BeanConverter {
     userDetail.setTenancyId(StringUtil.translateIntegerToLong(userDetailDto.getTenancyId()));
     return userDetail;
   }
-
-  /**
-   * 对象转换.
-   */
-  public static UserWorkRelationshipDto convert(UserWorkRelationship userWorkRelationship) {
-    if (userWorkRelationship == null) {
-      return null;
-    }
-    UserWorkRelationshipDto userWorkRelationshipDto = new UserWorkRelationshipDto();
-    userWorkRelationshipDto.setAssignmentDate(userWorkRelationship.getAssignmentDate())
-        .setBusinessUnitName(userWorkRelationship.getBusinessUnitName())
-        .setCreateDate(userWorkRelationship.getCreateDate())
-        .setDepartmentName(userWorkRelationship.getDepartmentName())
-        .setHireDate(userWorkRelationship.getHireDate()).setId(userWorkRelationship.getId())
-        .setLastUpdate(userWorkRelationship.getLastUpdate())
-        .setLegalEntityName(userWorkRelationship.getLegalEntityName())
-        .setManagerId(userWorkRelationship.getManagerId())
-        .setSupervisorId(userWorkRelationship.getSupervisorId())
-        .setType(userWorkRelationship.getType()).setUserId(userWorkRelationship.getUserId())
-        .setWorkAddress(userWorkRelationship.getWorkAddress())
-        .setWorkLocation(userWorkRelationship.getWorkLocation())
-        .setWorkPhone(userWorkRelationship.getWorkPhone())
-        .setTenancyId(StringUtil.translateLongToInteger(userWorkRelationship.getTenancyId()));
-    return userWorkRelationshipDto;
-  }
-
 
   /**
    * 对象转换.

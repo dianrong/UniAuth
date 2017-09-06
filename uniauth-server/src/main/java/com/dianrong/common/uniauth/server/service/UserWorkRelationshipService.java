@@ -1,8 +1,6 @@
 package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
-import com.dianrong.common.uniauth.common.bean.dto.UserWorkRelationshipDto;
-import com.dianrong.common.uniauth.common.bean.request.UserWorkRelationshipParam;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserWorkRelationship;

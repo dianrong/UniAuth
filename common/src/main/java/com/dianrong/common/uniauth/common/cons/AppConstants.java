@@ -29,6 +29,8 @@ public interface AppConstants {
   String NODE_TYPE_MEMBER_USER = "mUser";
   String NODE_TYPE_OWNER_USER = "oUser";
 
+  // 组织关系的根组Code
+  String ORGANIZATION_ROOT = "ORGANIZATION_ROOT";
   String GRP_ROOT = "GRP_ROOT";
   String TECHOPS_SUPER_ADMIN_GRP = "GRP_TECHOPS_SUPER_ADMIN";
 

@@ -2,105 +2,38 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Linkage;
-import com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto;
-import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
-import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.TagDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.GrpExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
-import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpPath;
-import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
-import com.dianrong.common.uniauth.server.data.entity.GrpTagExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpTagKey;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RoleExample;
-import com.dianrong.common.uniauth.server.data.entity.Tag;
-import com.dianrong.common.uniauth.server.data.entity.TagExample;
+import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
-import com.dianrong.common.uniauth.server.data.entity.TagType;
-import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserExample;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrp;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
-import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
-import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
-import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
-import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
-import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseGroupNotifyInfo;
-import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupAddNotifyInfo;
-import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupMoveNotifyInfo;
-import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotifyInfo;
-import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.*;
 import com.dianrong.common.uniauth.server.service.cache.AttributeExtendCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
-import com.dianrong.common.uniauth.server.service.inner.GroupProfileInnerService;
-import com.dianrong.common.uniauth.server.service.inner.RoleInnerService;
-import com.dianrong.common.uniauth.server.service.inner.TagInnerService;
-import com.dianrong.common.uniauth.server.service.inner.UserInnerService;
+import com.dianrong.common.uniauth.server.service.inner.*;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
-import com.dianrong.common.uniauth.server.util.BeanConverter;
-import com.dianrong.common.uniauth.server.util.CheckEmpty;
-import com.dianrong.common.uniauth.server.util.ParamCheck;
-import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.dianrong.common.uniauth.server.util.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Created by Arc on 14/1/16.
@@ -473,6 +406,42 @@ public class GroupService extends TenancyBasedService {
   }
 
   /**
+   * 删除组.
+   */
+  @Transactional
+  public GroupDto deleteGroup(Integer groupId) {
+    CheckEmpty.checkEmpty(groupId, "groupId");
+    Grp grp = grpMapper.selectByPrimaryKey(groupId);
+    // 根组不能进行修改
+    if (UniauthServerConstant.isRootGrp(grp.getCode())) {
+      throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.rootgrp.unmodifiable"));
+    }
+
+    // 找出子节点，然后设置为失效
+    List<Grp> children = queryGroupByAncestor(groupId);
+    List<Integer> disableGrpIds = new ArrayList<>(children.size());
+    if (!ObjectUtil.collectionIsEmptyOrNull(children)) {
+      for (Grp childrenGrp : children) {
+        disableGrpIds.add(childrenGrp.getId());
+      }
+    }
+    if (!disableGrpIds.isEmpty()) {
+      Grp record = new Grp();
+      record.setStatus(AppConstants.STATUS_DISABLED);
+      GrpExample deleteExample = new GrpExample();
+      GrpExample.Criteria criteria = deleteExample.createCriteria();
+      criteria.andIdIn(disableGrpIds);
+      grpMapper.updateByExample(record, deleteExample);
+    }
+    // 发送通知
+    uniauthNotify.notify(new BaseGroupNotifyInfo().setGroupId(grp.getId()).setType(NotifyInfoType.GROUP_DISABLE));
+
+    grp.setStatus(AppConstants.STATUS_DISABLED);
+    return BeanConverter.convert(grp);
+  }
+
+
+  /**
    * 更新组.
    */
   @Transactional
@@ -490,7 +459,7 @@ public class GroupService extends TenancyBasedService {
     }
 
     // 根组不能进行修改，修改只能走数据库修改
-    if (AppConstants.GRP_ROOT.equals(grp.getCode())) {
+    if (UniauthServerConstant.isRootGrp(grp.getCode())) {
       throw new AppException(InfoName.BAD_REQUEST, UniBundle.getMsg("group.rootgrp.unmodifiable"));
     }
 
@@ -522,9 +491,9 @@ public class GroupService extends TenancyBasedService {
     }
 
     // cache original status
-    Byte originlaStaus = grp.getStatus();
+    Byte originalStatus = grp.getStatus();
     // 发送通知
-    if (status != null && !status.equals(originlaStaus)) {
+    if (status != null && !status.equals(originalStatus)) {
       NotifyInfoType type = NotifyInfoType.GROUP_DISABLE;
       if (status.equals(AppConstants.STATUS_ENABLED)) {
         // 启用
@@ -927,7 +896,7 @@ public class GroupService extends TenancyBasedService {
         GroupDto groupDto = new GroupDto().setId(grp.getId()).setCode(grp.getCode())
             .setName(grp.getName()).setDescription(grp.getDescription());
         // mark root group unmodifiable
-        if (AppConstants.GRP_ROOT.equals(groupDto.getCode())) {
+        if (UniauthServerConstant.isRootGrp(groupDto.getCode())) {
           groupDto.setIsRootGrp(Boolean.TRUE);
         }
         if (!CollectionUtils.isEmpty(ownGrpIds)) {
