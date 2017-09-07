@@ -113,7 +113,7 @@ import java.util.*;
    */
   private String computeFileName(ChannelSftp channelSftp, String file) {
     final String fileDateStr = getFileDateStr(file);
-    final SingleValueHolder<List<String>> holder = new SingleValueHolder<>(new ArrayList<String>());
+    final SingleValueHolder<List<String>> holder = new SingleValueHolder<>(new ArrayList<String>(1));
     try {
       channelSftp.ls(".", new ChannelSftp.LsEntrySelector() {
         @Override public int select(ChannelSftp.LsEntry entry) {
