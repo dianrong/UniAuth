@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
@@ -8,9 +9,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * . 用户的数据过滤处理实现.
@@ -63,9 +65,9 @@ public class UserDataFilter extends CurrentAbstractDataFilter<User> {
     UserExample condition = new UserExample();
     condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id))
         .andStatusEqualTo(AppConstants.STATUS_ENABLED);
-    List<User> selectByExample = userMapper.selectByExample(condition);
-    if (selectByExample != null && !selectByExample.isEmpty()) {
-      return selectByExample.get(0);
+    List<User> userList = userMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(userList)) {
+      return userList.get(0);
     }
     return null;
   }

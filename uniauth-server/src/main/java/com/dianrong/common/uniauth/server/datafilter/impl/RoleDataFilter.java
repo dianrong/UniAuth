@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
@@ -8,9 +9,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * . 角色的数据过滤处理实现.
@@ -62,9 +64,9 @@ public class RoleDataFilter extends CurrentAbstractDataFilter<Role> {
     CheckEmpty.checkEmpty(id, "roleId");
     RoleExample condition = new RoleExample();
     condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED);
-    List<Role> selectByExample = roleMapper.selectByExample(condition);
-    if (selectByExample != null && !selectByExample.isEmpty()) {
-      return selectByExample.get(0);
+    List<Role> roles = roleMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(roles)) {
+      return roles.get(0);
     }
     return null;
   }

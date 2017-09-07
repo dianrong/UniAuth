@@ -8,8 +8,6 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.OrganizationParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.service.GroupService;
 import com.dianrong.common.uniauth.server.support.tree.TreeType;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeTag;
@@ -21,10 +19,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @TreeTypeTag(TreeType.ORGANIZATION) @Api("组织关系操作相关接口") @RestController @Slf4j
@@ -35,7 +31,7 @@ public class OrganizationResource implements IOrganizationRWResource {
   @ApiOperation(value = "添加用户与组织的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "组织id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "userIds", value = "用户列表", required = true, dataType = "java.util.List", paramType = "query"),
-      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true"),})
+      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true")})
   @Override public Response<Void> addUsersIntoOrganization(UserListParam userListParam) {
     groupService.addUsersIntoGroup(userListParam.getGroupId(), userListParam.getUserIds(),
         userListParam.getNormalMember());
@@ -44,7 +40,7 @@ public class OrganizationResource implements IOrganizationRWResource {
 
   @ApiOperation(value = "删除用户与组织的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "userIdGrpIdPairs", value = "组织和用户的映射列表", required = true, dataType = "java.util.List", paramType = "query"),
-      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true"),})
+      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true")})
   @Override public Response<Void> removeUsersFromOrganization(UserListParam userListParam) {
     groupService.removeUsersFromGroup(userListParam.getUserIdGroupIdPairs(),
         userListParam.getNormalMember());
@@ -53,8 +49,8 @@ public class OrganizationResource implements IOrganizationRWResource {
 
   @ApiOperation(value = "移动用户到指定组织中") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "目标组织id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "userIds", value = "用户列表", required = true, dataType = "java.util.List", paramType = "query"),
-      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true"),})
+      @ApiImplicitParam(name = "userIdGroupIdPairs", value = "用户和组的原始关系", required = true, paramType = "query"),
+      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true")})
   @Override public Response<Void> moveOrganizationUser(UserListParam userListParam) {
     groupService.moveUser(userListParam.getGroupId(), userListParam.getUserIdGroupIdPairs(),
         userListParam.getNormalMember());
@@ -94,7 +90,7 @@ public class OrganizationResource implements IOrganizationRWResource {
   @Override
   public Response<OrganizationDto> deleteOrganization(OrganizationParam organizationParam) {
     GroupDto grpDto = groupService.deleteGroup(organizationParam.getId());
-    return Response.success(  BeanConverter.convert(grpDto));
+    return Response.success(BeanConverter.convert(grpDto));
   }
 
   @ApiOperation(value = "移动组织") @ApiImplicitParams(value = {
@@ -117,7 +113,7 @@ public class OrganizationResource implements IOrganizationRWResource {
   @Timed @Override public Response<OrganizationDto> getOrganizationTree(OrganizationParam param) {
     GroupDto grpDto = groupService
         .getGroupTree(param.getId(), param.getCode(), param.getOnlyShowGroup(),
-            param.getUserGroupType(), param.getRoleId(), param.getTagId(),
+            param.getUserGroupType(), null, null,
             param.getNeedOwnerMarkup(), param.getOpUserId(), param.getIncludeDisableUser());
     return Response.success(BeanConverter.convert(grpDto));
   }
@@ -134,17 +130,8 @@ public class OrganizationResource implements IOrganizationRWResource {
       @ApiImplicitParam(name = "targetOrganizationIds", value = "组织id列表", dataType = "java.util.List", paramType = "query"),
       @ApiImplicitParam(name = "targetOrganizationId", value = "组织id(与targetOrganizationIds至少存在一个)", dataType = "long", paramType = "query"),})
   @Override public Response<Void> checkOwner(OrganizationParam organizationParam) {
-    Long opUserId = organizationParam.getOpUserId();
-    List<Integer> organizationIds = organizationParam.getTargetGroupIds();
-    if (CollectionUtils.isEmpty(organizationIds) && organizationParam.getTargetGroupId() != null) {
-      organizationIds = new ArrayList<>();
-      organizationIds.add(organizationParam.getTargetGroupId());
-    } else if (!CollectionUtils.isEmpty(organizationIds)
-        && organizationParam.getTargetGroupId() != null) {
-      organizationIds.add(organizationParam.getTargetGroupId());
-    }
-    groupService.checkOwner(opUserId, organizationIds);
+    groupService.checkOwner(organizationParam.getOpUserId(), organizationParam.getTargetGroupIds(),
+        organizationParam.getTargetGroupId());
     return Response.success();
   }
 }
-

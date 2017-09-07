@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
@@ -7,11 +8,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 用户扩展值数据过滤.
@@ -57,11 +57,11 @@ public class UserExtendValDataFilter extends CurrentAbstractDataFilter<UserExten
   @Override
   protected UserExtendVal getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "UserExtendValId");
-    UserExtendValExample condtion = new UserExtendValExample();
-    condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
-    List<UserExtendVal> infoes = userExtendValMapper.selectByExample(condtion);
-    if (infoes != null && infoes.size() > 0) {
-      return infoes.get(0);
+    UserExtendValExample condition = new UserExtendValExample();
+    condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
+    List<UserExtendVal> userExtendValList = userExtendValMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(userExtendValList)) {
+      return userExtendValList.get(0);
     }
     return null;
   }

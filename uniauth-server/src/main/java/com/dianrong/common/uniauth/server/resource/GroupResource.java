@@ -17,10 +17,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @TreeTypeTag(TreeType.NORMAL)
@@ -101,8 +99,8 @@ public class GroupResource implements IGroupRWResource {
 
   @ApiOperation(value = "移动用户到指定组") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "目标组id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "userIds", value = "用户列表", required = true, dataType = "java.util.List", paramType = "query"),
-      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true"),})
+      @ApiImplicitParam(name = "userIdGroupIdPairs", value = "用户和组的原始关系", required = true, paramType = "query"),
+      @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true")})
   @Override public Response<Void> moveGroupUser(UserListParam userListParam) {
     groupService.moveUser(userListParam.getGroupId(), userListParam.getUserIdGroupIdPairs(),
         userListParam.getNormalMember());
@@ -115,7 +113,7 @@ public class GroupResource implements IGroupRWResource {
       @ApiImplicitParam(name = "code", value = "子组code", required = true, dataType = "string", paramType = "query"),
       @ApiImplicitParam(name = "name", value = "子组名称", dataType = "string", paramType = "query"),
       @ApiImplicitParam(name = "description", value = "子组描述", dataType = "string", paramType = "query"),
-      @ApiImplicitParam(name = "status", value = "子组状态(0,1)", dataType = "integer", paramType = "query", allowableValues = "0,1"),})
+      @ApiImplicitParam(name = "status", value = "子组状态(0,1)", dataType = "integer", paramType = "query", allowableValues = "0,1")})
   @Override public Response<GroupDto> addNewGroupIntoGroup(GroupParam groupParam) {
     GroupDto groupDto = groupService.createDescendantGroup(groupParam);
     return Response.success(groupDto);
@@ -126,7 +124,7 @@ public class GroupResource implements IGroupRWResource {
       @ApiImplicitParam(name = "code", value = "组code(不能为空)", required = true, dataType = "string", paramType = "query"),
       @ApiImplicitParam(name = "name", value = "组名称", dataType = "string", paramType = "query"),
       @ApiImplicitParam(name = "description", value = "组描述", dataType = "string", paramType = "query"),
-      @ApiImplicitParam(name = "status", value = "组状态(0,1)", dataType = "integer", paramType = "query", allowableValues = "0,1"),})
+      @ApiImplicitParam(name = "status", value = "组状态(0,1)", dataType = "integer", paramType = "query", allowableValues = "0,1")})
   @Override public Response<GroupDto> updateGroup(GroupParam groupParam) {
     GroupDto groupDto = groupService.updateGroup(groupParam.getId(), groupParam.getCode(),
         groupParam.getName(), groupParam.getStatus(), groupParam.getDescription());
@@ -140,7 +138,7 @@ public class GroupResource implements IGroupRWResource {
   }
 
   @ApiOperation(value = "根据组id查询所有与其有owner关系的用户列表")
-  @ApiImplicitParams(value = {@ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),})
+  @ApiImplicitParams(value = {@ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query")})
   @Override @Timed public Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam) {
     List<UserDto> userDtos = groupService.getGroupOwners(primaryKeyParam.getId());
     return Response.success(userDtos);
@@ -148,7 +146,7 @@ public class GroupResource implements IGroupRWResource {
 
   @ApiOperation(value = "根据组id查询该组在某个域下的所有角色") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "domainId", value = "域id", required = true, dataType = "long", paramType = "query"),})
+      @ApiImplicitParam(name = "domainId", value = "域id", required = true, dataType = "long", paramType = "query")})
   @Override public Response<List<RoleDto>> getAllRolesToGroupAndDomain(GroupParam groupParam) {
     List<RoleDto> roleDtos = groupService.getAllRolesToGroupAndDomain(groupParam.getId(), groupParam.getDomainId());
     return Response.success(roleDtos);
@@ -156,7 +154,7 @@ public class GroupResource implements IGroupRWResource {
 
   @ApiOperation(value = "关联组和角色") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "roleIds", value = "角色id列表", required = true, dataType = "java.util.List", paramType = "query"),})
+      @ApiImplicitParam(name = "roleIds", value = "角色id列表", required = true, dataType = "java.util.List", paramType = "query")})
   @Override public Response<Void> saveRolesToGroup(GroupParam groupParam) {
     groupService.saveRolesToGroup(groupParam.getId(), groupParam.getRoleIds());
     return Response.success();
@@ -165,24 +163,16 @@ public class GroupResource implements IGroupRWResource {
   @ApiOperation(value = "判断某个用户与某(些)组是否存在owner关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "opUserId", value = "用户id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "targetGroupIds", value = "组id列表", dataType = "java.util.List", paramType = "query"),
-      @ApiImplicitParam(name = "targetGroupId", value = "组id(与targetGroupIds至少存在一个)", dataType = "long", paramType = "query"),})
+      @ApiImplicitParam(name = "targetGroupId", value = "组id(与targetGroupIds至少存在一个)", dataType = "long", paramType = "query")})
   @Override public Response<Void> checkOwner(GroupParam groupParam) {
-    Long opUserId = groupParam.getOpUserId();
-    List<Integer> grpIds = groupParam.getTargetGroupIds();
-    if (CollectionUtils.isEmpty(grpIds) && groupParam.getTargetGroupId() != null) {
-      grpIds = new ArrayList<>();
-      grpIds.add(groupParam.getTargetGroupId());
-    } else if (!CollectionUtils.isEmpty(grpIds) && groupParam.getTargetGroupId() != null) {
-      grpIds.add(groupParam.getTargetGroupId());
-    }
-    groupService.checkOwner(opUserId, grpIds);
+    groupService.checkOwner(groupParam.getOpUserId(), groupParam.getTargetGroupIds(), groupParam.getTargetGroupId());
     return Response.success();
   }
 
   @ApiOperation(value = "替换组与角色的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "domainId", value = "域id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "roleIds", value = "组新的角色列表(可为空)", dataType = "java.util.List", paramType = "query"),})
+      @ApiImplicitParam(name = "roleIds", value = "组新的角色列表(可为空)", dataType = "java.util.List", paramType = "query")})
   @Override public Response<Void> replaceRolesToGroup(GroupParam groupParam) {
     groupService.replaceRolesToGroupUnderDomain(groupParam.getId(), groupParam.getRoleIds(),
         groupParam.getDomainId());
@@ -191,7 +181,7 @@ public class GroupResource implements IGroupRWResource {
 
   @ApiOperation(value = "查询与组关联的所有的标签信息的列表") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "domainId", value = "域id", required = true, dataType = "long", paramType = "query"),})
+      @ApiImplicitParam(name = "domainId", value = "域id", required = true, dataType = "long", paramType = "query")})
   @Override public Response<List<TagDto>> queryTagsWithChecked(GroupParam groupParam) {
     List<TagDto> tagDtos = groupService.searchTagsWithrChecked(groupParam.getId(), groupParam.getDomainId());
     return Response.success(tagDtos);
@@ -199,7 +189,7 @@ public class GroupResource implements IGroupRWResource {
 
   @ApiOperation(value = "替换组关联的标签") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "tagIds", value = "新的标签列表id", required = true, dataType = "java.util.List", paramType = "query"),})
+      @ApiImplicitParam(name = "tagIds", value = "新的标签列表id", required = true, dataType = "java.util.List", paramType = "query")})
   @Override public Response<Void> replaceTagsToGrp(GroupParam groupParam) {
     groupService.replaceTagsToGroup(groupParam.getId(), groupParam.getTagIds());
     return Response.success();
@@ -207,7 +197,7 @@ public class GroupResource implements IGroupRWResource {
 
   @ApiOperation(value = "移动组") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "目标组id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "targetGroupId", value = "目标组新的父组id", required = true, dataType = "long", paramType = "query"),})
+      @ApiImplicitParam(name = "targetGroupId", value = "目标组新的父组id", required = true, dataType = "long", paramType = "query")})
   @Override public Response<Void> moveGroup(GroupParam groupParam) {
     groupService.moveGroup(groupParam.getId(), groupParam.getTargetGroupId());
     return Response.success();
@@ -217,7 +207,7 @@ public class GroupResource implements IGroupRWResource {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "code", value = "组的code", required = true, dataType = "string", paramType = "query"),
-      @ApiImplicitParam(name = "includeOwner", value = "目标组新的父组id", dataType = "long", paramType = "query", defaultValue = "false"),})
+      @ApiImplicitParam(name = "includeOwner", value = "目标组新的父组id", dataType = "long", paramType = "query", defaultValue = "false")})
   @Override public Response<Boolean> isUserInGroupOrSub(GroupQuery query) {
     Boolean result = groupService.isUserInGroupOrSub(query.getUserId(), query.getCode(), query.getIncludeOwner());
     return Response.success(result);

@@ -107,6 +107,9 @@ public class GroupService extends TenancyBasedService {
   public void moveGroup(Integer sourceGroup, Integer targetGroup) {
     CheckEmpty.checkEmpty(sourceGroup, "sourceGroupId");
     CheckEmpty.checkEmpty(targetGroup, "targetGroupId");
+
+    checkTreeType(Arrays.asList(sourceGroup, targetGroup));
+
     if (sourceGroup.equals(targetGroup)) {
       throw new AppException(InfoName.BAD_REQUEST,
           UniBundle.getMsg("group.parameter.targetid.equals.sourceid"));
@@ -366,10 +369,9 @@ public class GroupService extends TenancyBasedService {
   public GroupDto createDescendantGroup(GroupParam groupParam) {
     Integer targetGroupId = groupParam.getTargetGroupId();
     String groupCode = groupParam.getCode();
-    if (targetGroupId == null || groupCode == null) {
-      throw new AppException(InfoName.VALIDATE_FAIL,
-          UniBundle.getMsg("common.parameter.empty", "targetGroupId, groupCode"));
-    }
+    CheckEmpty.checkEmpty(targetGroupId, "targetGroupId");
+    CheckEmpty.checkEmpty(groupCode, "groupCode");
+    checkTreeType(targetGroupId);
 
     // 父group需要存在
     dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, targetGroupId);
@@ -415,6 +417,9 @@ public class GroupService extends TenancyBasedService {
   @Transactional
   public GroupDto deleteGroup(Integer groupId) {
     CheckEmpty.checkEmpty(groupId, "groupId");
+
+    checkTreeType(groupId);
+
     Grp grp = grpMapper.selectByPrimaryKey(groupId);
     // 根组不能进行修改
     if (UniauthServerConstant.isRootGrp(grp.getCode())) {
@@ -452,6 +457,9 @@ public class GroupService extends TenancyBasedService {
   public GroupDto updateGroup(Integer groupId, String groupCode, String groupName, Byte status,
       String description) {
     CheckEmpty.checkEmpty(groupId, "groupId");
+
+    checkTreeType(groupId);
+
     Grp grp = grpMapper.selectByPrimaryKey(groupId);
     CheckEmpty.checkEmpty(groupCode, "groupCode");
     if (status != null) {
@@ -514,23 +522,16 @@ public class GroupService extends TenancyBasedService {
    */
   @Transactional
   public void addUsersIntoGroup(Integer groupId, List<Long> userIds, Boolean normalMember) {
-    if (groupId == null || CollectionUtils.isEmpty(userIds)) {
-      throw new AppException(InfoName.VALIDATE_FAIL,
-          UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
-    }
+    CheckEmpty.checkEmpty(groupId, "groupId");
+    CheckEmpty.checkEmpty(userIds, "userIds");
     checkTreeType(groupId);
+
     UserGrpExample userGrpExample = new UserGrpExample();
-    List<UserGrpKey> userGrpKeys;
-    if (normalMember == null || normalMember) {
-      userGrpExample.createCriteria().andGrpIdEqualTo(groupId)
-          .andTypeEqualTo(AppConstants.ZERO_BYTE);
-      userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
-    } else {
-      userGrpExample.createCriteria().andGrpIdEqualTo(groupId)
-          .andTypeEqualTo(AppConstants.ONE_BYTE);
-      userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
-    }
-    Set<Long> userIdSet = new HashSet<>();
+    Byte type =
+        (normalMember == null || normalMember) ? AppConstants.ZERO_BYTE : AppConstants.ONE_BYTE;
+    userGrpExample.createCriteria().andGrpIdEqualTo(groupId).andTypeEqualTo(type);
+    List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+    Set<Long> userIdSet = new HashSet<>(userGrpKeys.size());
     if (!CollectionUtils.isEmpty(userGrpKeys)) {
       for (UserGrpKey userGrpKey : userGrpKeys) {
         userIdSet.add(userGrpKey.getUserId());
@@ -541,11 +542,7 @@ public class GroupService extends TenancyBasedService {
         UserGrp userGrp = new UserGrp();
         userGrp.setGrpId(groupId);
         userGrp.setUserId(userId);
-        if (normalMember == null || normalMember) {
-          userGrp.setType((byte) 0);
-        } else {
-          userGrp.setType((byte) 1);
-        }
+        userGrp.setType(type);
         userGrpMapper.insert(userGrp);
         // 只处理普通的关系
         if (normalMember == null || normalMember) {
@@ -562,28 +559,21 @@ public class GroupService extends TenancyBasedService {
   @Transactional
   public void removeUsersFromGroup(List<Linkage<Long, Integer>> userIdGrpIdPairs,
       Boolean normalMember) {
-    if (CollectionUtils.isEmpty(userIdGrpIdPairs)) {
-      throw new AppException(InfoName.VALIDATE_FAIL,
-          UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
-    }
-
-    // Check
+    CheckEmpty.checkEmpty(userIdGrpIdPairs, "groupId and userId pair");
     Set<Integer> grpIds = new HashSet<>(userIdGrpIdPairs.size());
     for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
       grpIds.add(linkage.getEntry2());
     }
     checkTreeType(new ArrayList<Integer>(grpIds));
 
+    Byte type =
+        (normalMember == null || normalMember) ? AppConstants.ZERO_TYPE : AppConstants.ONE_TYPE;
     for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
       Long userId = linkage.getEntry1();
       Integer grpId = linkage.getEntry2();
       UserGrpExample userGrpExample = new UserGrpExample();
-      userGrpExample.createCriteria().andGrpIdEqualTo(grpId).andUserIdEqualTo(userId);
-      if (normalMember == null || normalMember) {
-        userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ZERO_BYTE_PRIMITIVE);
-      } else {
-        userGrpExample.createCriteria().andTypeEqualTo(AppConstants.ONE_BYTE_PRIMITIVE);
-      }
+      userGrpExample.createCriteria().andGrpIdEqualTo(grpId).andUserIdEqualTo(userId)
+          .andTypeEqualTo(type);
       userGrpMapper.deleteByExample(userGrpExample);
 
       // 通知 处理普通关系进行通知
@@ -600,50 +590,52 @@ public class GroupService extends TenancyBasedService {
   @Transactional
   public void moveUser(Integer targetGroupId, List<Linkage<Long, Integer>> userIdGrpIdPairs,
       Boolean normalMember) {
-    if (targetGroupId == null || CollectionUtils.isEmpty(userIdGrpIdPairs)) {
-      throw new AppException(InfoName.VALIDATE_FAIL,
-          UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
+    CheckEmpty.checkEmpty(targetGroupId,"groupId");
+    CheckEmpty.checkEmpty(userIdGrpIdPairs,"groupId and userId pair");
+    // Check tree type
+    checkTreeType(targetGroupId);
+
+    Set<Integer> grpIds = new HashSet<>(userIdGrpIdPairs.size());
+    for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
+      grpIds.add(linkage.getEntry2());
     }
+    checkTreeType(new ArrayList<Integer>(grpIds));
+
     UserGrpExample userGrpExample = new UserGrpExample();
-    List<UserGrpKey> userGrpKeys;
     Byte type =
         normalMember == null || normalMember ? AppConstants.ZERO_BYTE : AppConstants.ONE_BYTE;
     userGrpExample.createCriteria().andGrpIdEqualTo(targetGroupId).andTypeEqualTo(type);
-
     // 查询目标分组的用户，用以后面检测用户是否已经存在该组下
-    userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
+    List<UserGrpKey> userGrpKeys = userGrpMapper.selectByExample(userGrpExample);
     Set<Long> userIdSet = new HashSet<>();
     if (!CollectionUtils.isEmpty(userGrpKeys)) {
       for (UserGrpKey userGrpKey : userGrpKeys) {
         userIdSet.add(userGrpKey.getUserId());
       }
     }
-
     // 移动用户到新组
     for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
       Long userId = linkage.getEntry1();
       Integer grpId = linkage.getEntry2();
 
+      // 删除原来的组关系
+      UserGrpExample deleteExample = new UserGrpExample();
+      deleteExample.createCriteria().andGrpIdEqualTo(grpId).andTypeEqualTo(type)
+          .andUserIdEqualTo(userId);
+      userGrpMapper.deleteByExample(deleteExample);
+
+      // 如果没有在指定的组里面,则将其加入到指定组中
       if (!userIdSet.contains(userId)) {
-        UserGrpExample deleteExample = new UserGrpExample();
-        deleteExample.createCriteria().andGrpIdEqualTo(grpId).andTypeEqualTo(type)
-            .andUserIdEqualTo(userId);
-
-        // 删除原组里的该用户
-        userGrpMapper.deleteByExample(deleteExample);
-
         UserGrp userGrp = new UserGrp();
         userGrp.setGrpId(targetGroupId);
         userGrp.setUserId(userId);
         userGrp.setType(type);
-        // 将该用户加入到新组
         userGrpMapper.insert(userGrp);
-
-        // 通知 处理普通关系进行通知
-        if (normalMember == null || normalMember) {
-          uniauthNotify.notify(new UsersToGroupExchangeNotifyInfo().setTargetGroupId(targetGroupId)
-              .setGroupId(grpId).setUserId(userId));
-        }
+      }
+      // 通知 处理普通关系进行通知
+      if (type == AppConstants.ZERO_TYPE) {
+        uniauthNotify.notify(new UsersToGroupExchangeNotifyInfo().setTargetGroupId(targetGroupId)
+            .setGroupId(grpId).setUserId(userId));
       }
     }
   }
@@ -725,6 +717,12 @@ public class GroupService extends TenancyBasedService {
    * 根据组Id获取组的Owners.
    */
   public List<UserDto> getGroupOwners(Integer groupId) {
+    if (groupId == null) {
+      throw new AppException(InfoName.VALIDATE_FAIL,
+          UniBundle.getMsg("common.parameter.empty", "groupId"));
+    }
+    checkTreeType(groupId);
+
     List<User> users = userMapper.getGroupOwners(groupId);
     if (!CollectionUtils.isEmpty(users)) {
       List<UserDto> userDtos = new ArrayList<>();
@@ -848,32 +846,31 @@ public class GroupService extends TenancyBasedService {
       Byte userGroupType, Integer roleId, Integer tagId, Boolean needOwnerMarkup, Long ownerId,
       Boolean includeDisableUser) {
     Grp rootGrp;
+
+    // 标识符,用于优化进行TreeType检查的次数
+    boolean treeTypeChecked = false;
+    if (groupId != null && !Integer.valueOf(-1).equals(groupId)) {
+      checkTreeType(groupId);
+      treeTypeChecked = true;
+    }
     if (groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
       GrpExample grpExample = new GrpExample();
-      grpExample.createCriteria().andCodeEqualTo(AppConstants.GRP_ROOT)
+      grpExample.createCriteria().andCodeEqualTo(TreeTypeHolder.getWithCheck().getRootCode())
           .andStatusEqualTo(AppConstants.STATUS_ENABLED)
           .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
       rootGrp = grpMapper.selectByExample(grpExample).get(0);
+      treeTypeChecked = true;
     } else if (groupCode != null && groupId != null) {
       GrpExample grpExample = new GrpExample();
       grpExample.createCriteria().andCodeEqualTo(groupCode)
           .andStatusEqualTo(AppConstants.STATUS_ENABLED)
-          .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+          .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck()).andIdEqualTo(groupId);
       List<Grp> grps = grpMapper.selectByExample(grpExample);
-      Grp grp = grpMapper.selectByPrimaryKey(groupId);
-      if (grp == null) {
-        throw new AppException(InfoName.VALIDATE_FAIL,
-            UniBundle.getMsg("common.entity.notfound", groupId, Grp.class.getSimpleName()));
-      }
       if (CollectionUtils.isEmpty(grps)) {
         throw new AppException(InfoName.VALIDATE_FAIL,
             UniBundle.getMsg("common.entity.code.notfound", groupCode, Grp.class.getSimpleName()));
       }
-      if (!grp.getId().equals(grps.get(0).getId())) {
-        throw new AppException(InfoName.VALIDATE_FAIL,
-            UniBundle.getMsg("group.parameter.code.id.dif", groupCode, groupId));
-      }
-      rootGrp = grp;
+      rootGrp = grps.get(0);
     } else if (groupCode != null && groupId == null) {
       GrpExample grpExample = new GrpExample();
       grpExample.createCriteria().andCodeEqualTo(groupCode)
@@ -886,7 +883,6 @@ public class GroupService extends TenancyBasedService {
       }
       rootGrp = grps.get(0);
     } else {
-      // else if(groupCode == null && groupId != null)
       rootGrp = grpMapper.selectByPrimaryKey(groupId);
       if (rootGrp == null || !AppConstants.ZERO_BYTE.equals(rootGrp.getStatus())) {
         throw new AppException(InfoName.VALIDATE_FAIL,
@@ -894,6 +890,11 @@ public class GroupService extends TenancyBasedService {
       }
     }
     Integer realGroupId = rootGrp.getId();
+    if (!treeTypeChecked) {
+      // check root code
+      checkTreeType(realGroupId);
+    }
+
     List<Grp> grps = grpMapper.getGroupTree(realGroupId);
     if (!CollectionUtils.isEmpty(grps)) {
       Set<Integer> ownGrpIds = null;
@@ -1032,15 +1033,27 @@ public class GroupService extends TenancyBasedService {
   /**
    * 判断用户是否是某个组的Owner.
    */
+  public void checkOwner(Long opUserId, List<Integer> targetGroupIds, Integer targetGroupId) {
+    if (targetGroupIds == null) {
+      targetGroupIds = new ArrayList<>();
+    }
+    if (targetGroupId != null) {
+      targetGroupIds.add(targetGroupId);
+    }
+    checkOwner(opUserId, targetGroupIds);
+  }
+
+  /**
+   * 判断用户是否是某个组的Owner.
+   */
   public void checkOwner(Long opUserId, List<Integer> targetGroupIds) {
     CheckEmpty.checkEmpty(opUserId, "当前用户");
     CheckEmpty.checkEmpty(targetGroupIds, "添加的目标组(s)");
-
+    checkTreeType(targetGroupIds);
     for (Integer targetGroupId : targetGroupIds) {
       Map<String, Object> paramMap = new HashMap<String, Object>();
       paramMap.put("userId", opUserId);
       paramMap.put("targetGroupId", targetGroupId);
-
       Integer ownerGroupCount = grpMapper.checkOwner(paramMap);
       if (ownerGroupCount == 0) {
         throw new AppException(InfoName.GRP_NOT_OWNER,
@@ -1524,7 +1537,7 @@ public class GroupService extends TenancyBasedService {
    * @throws TreeTypeMisMatchException 不匹配抛出异常.
    */
   private void checkTreeType(List<Integer> grpIds) throws TreeTypeMisMatchException {
-    if (grpIds == null || grpIds.isEmpty()) {
+    if (ObjectUtil.collectionIsEmptyOrNull(grpIds)) {
       return;
     }
     String rootCode = TreeTypeHolder.getWithCheck().getRootCode();

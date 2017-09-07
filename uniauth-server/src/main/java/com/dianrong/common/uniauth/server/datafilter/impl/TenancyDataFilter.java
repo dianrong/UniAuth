@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.Tenancy;
 import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
 import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
@@ -8,9 +9,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * tenancy数据过滤的接口.
@@ -58,9 +60,9 @@ public class TenancyDataFilter extends CurrentAbstractDataFilter<Tenancy> {
     TenancyExample condition = new TenancyExample();
     condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id))
         .andStatusEqualTo(AppConstants.STATUS_ENABLED);
-    List<Tenancy> selectByExample = tenancyMapper.selectByExample(condition);
-    if (selectByExample != null && !selectByExample.isEmpty()) {
-      return selectByExample.get(0);
+    List<Tenancy> tenancyList = tenancyMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(tenancyList)) {
+      return tenancyList.get(0);
     }
     return null;
   }
