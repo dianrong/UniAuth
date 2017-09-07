@@ -15,7 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
+import java.util.*;
 
 /**
  * 模糊匹配FTP文件的名称的加载器.
@@ -113,7 +113,7 @@ import java.util.Calendar;
    */
   private String computeFileName(ChannelSftp channelSftp, String file) {
     final String fileDateStr = getFileDateStr(file);
-    final SingleValueHolder<String> holder = new SingleValueHolder<>();
+    final SingleValueHolder<List<String>> holder = new SingleValueHolder<>(new ArrayList<String>());
     try {
       channelSftp.ls(".", new ChannelSftp.LsEntrySelector() {
         @Override public int select(ChannelSftp.LsEntry entry) {
@@ -125,7 +125,7 @@ import java.util.Calendar;
               fileNamePrefix = fileNamePrefix.toLowerCase();
             }
             if (fileName.startsWith(fileNamePrefix)) {
-              holder.value = entry.getFilename();
+              holder.value.add(entry.getFilename());
               return ChannelSftp.LsEntrySelector.BREAK;
             }
           }
@@ -135,7 +135,20 @@ import java.util.Calendar;
     } catch (SftpException e) {
       log.error("Failed ls", e);
     }
-    return holder.value;
+    List<String> value = holder.value;
+    if (value.isEmpty()) {
+      return null;
+    }
+
+    if (value.size() > 1) {
+      // 选取更近的数据
+      Collections.sort(value, new Comparator<String>() {
+        @Override public int compare(String o1, String o2) {
+          return o2.compareTo(o1);
+        }
+      });
+    }
+    return holder.value.get(0);
   }
 
   /**
@@ -143,6 +156,11 @@ import java.util.Calendar;
    */
   private static final class SingleValueHolder<T> {
     private T value;
+
+    public SingleValueHolder(){}
+    public <E extends T>SingleValueHolder(E value){
+      this.value = value;
+    }
   }
 
   /**
