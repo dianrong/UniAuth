@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
 public interface GrpMapper {
@@ -124,4 +125,11 @@ public interface GrpMapper {
   List<HashMap<String, Integer>> queryPageGroupTreeLinks(Map<String, Object> paramMap);
 
   Integer queryPageGroupCount(@Param("grpId") Integer grpId);
+
+  Integer querySubGrpNum(@Param("grpCode")String grpCode, @Param("grpId") Integer grpId, @Param("tenancyId") Long tenancyId);
+
+  /**
+   * 查询子组.
+   */
+  List<Integer> querySubGrpIds(@Param("rootCode")String rootCode, @Param("tenancyId") Long tenancyId);
 }

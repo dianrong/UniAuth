@@ -120,4 +120,16 @@
         limit #{pageOffSet},#{pageSize}) as t2 on t1.ancestor = t2.id
         where t1.deepth=1
     </select>
+
+    <select id="querySubGrpNum" resultType="java.lang.Integer">
+        select count(descendant) from grp_path where ancestor in (
+            select id from grp where code = #{grpCode,jdbcType=VARCHAR} and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+        ) and descendant = #{grpId,jdbcType=INTEGER};
+    </select>
+
+    <select id="querySubGrpIds" resultType="java.lang.List">
+        select descendant from grp_path where ancestor in (
+            select id from grp where code = #{grpCode,jdbcType=VARCHAR} and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+        ) and deepth lt;gt; 0;
+    </select>
 </mapper>

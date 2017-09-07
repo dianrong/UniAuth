@@ -14,6 +14,7 @@ import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
+import com.dianrong.common.uniauth.server.exp.TreeTypeMisMatchException;
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
 import com.dianrong.common.uniauth.server.mq.v1.ninfo.*;
@@ -21,10 +22,12 @@ import com.dianrong.common.uniauth.server.service.cache.AttributeExtendCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.inner.*;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 import com.dianrong.common.uniauth.server.util.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,7 @@ import java.util.Map.Entry;
 /**
  * Created by Arc on 14/1/16.
  */
+@Slf4j
 @Service
 public class GroupService extends TenancyBasedService {
 
@@ -514,6 +518,7 @@ public class GroupService extends TenancyBasedService {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.parameter.empty", "groupId, userIds"));
     }
+    checkTreeType(groupId);
     UserGrpExample userGrpExample = new UserGrpExample();
     List<UserGrpKey> userGrpKeys;
     if (normalMember == null || normalMember) {
@@ -542,7 +547,6 @@ public class GroupService extends TenancyBasedService {
           userGrp.setType((byte) 1);
         }
         userGrpMapper.insert(userGrp);
-
         // 只处理普通的关系
         if (normalMember == null || normalMember) {
           uniauthNotify.notify(new UsersToGroupNotifyInfo().setGroupId(groupId).setUserId(userId)
@@ -562,6 +566,13 @@ public class GroupService extends TenancyBasedService {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.parameter.empty", "groupId, userId pair"));
     }
+
+    // Check
+    Set<Integer> grpIds = new HashSet<>(userIdGrpIdPairs.size());
+    for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
+      grpIds.add(linkage.getEntry2());
+    }
+    checkTreeType(new ArrayList<Integer>(grpIds));
 
     for (Linkage<Long, Integer> linkage : userIdGrpIdPairs) {
       Long userId = linkage.getEntry1();
@@ -1499,6 +1510,62 @@ public class GroupService extends TenancyBasedService {
         }
         descendantDtos.add(gdto);
       }
+    }
+  }
+
+  //-----------------------------------------------------------------------------------------------
+  /**
+   * 树类型的检测
+   */
+  /**
+   * 指定的组id集合是否跟当前操作的树类型匹配.
+   *
+   * @param grpIds 指定的组Id集合.
+   * @throws TreeTypeMisMatchException 不匹配抛出异常.
+   */
+  private void checkTreeType(List<Integer> grpIds) throws TreeTypeMisMatchException {
+    if (grpIds == null || grpIds.isEmpty()) {
+      return;
+    }
+    String rootCode = TreeTypeHolder.getWithCheck().getRootCode();
+    Long tenancyId = tenancyService.getTenancyIdWithCheck();
+    List<Integer> subGrpIds = grpMapper.querySubGrpIds(rootCode, tenancyId);
+    Set<Integer> subGrpIdSet = new HashSet<>(subGrpIds);
+    for (Integer grpId : grpIds){
+      // 不在子组的范围内
+      if (!subGrpIdSet.contains(grpId)) {
+        String msg = String.format("Group Id %d is not a sub group of root grp %s, tenancy id:%d", grpId, rootCode,
+            tenancyId);
+        TreeTypeMisMatchException ex = new TreeTypeMisMatchException(InfoName.BAD_REQUEST, msg);
+        ex.setGrpId(grpId);
+        ex.setType(TreeTypeHolder.getWithCheck());
+        log.debug(msg);
+        throw ex;
+      }
+    }
+  }
+
+  /**
+   * 指定的组id是否跟当前操作的树类型匹配.
+   *
+   * @param grpId 指定的组Id.
+   * @throws TreeTypeMisMatchException 不匹配抛出异常.
+   */
+  private void checkTreeType(Integer grpId) throws TreeTypeMisMatchException {
+    if (grpId == null) {
+      return;
+    }
+    String rootCode = TreeTypeHolder.getWithCheck().getRootCode();
+    Long tenancyId = tenancyService.getTenancyIdWithCheck();
+    int num = grpMapper.querySubGrpNum(rootCode, grpId, tenancyId);
+    if (num == 0) {
+      String msg = String.format("Group Id %d is not a sub group of root grp %s, tenancy id:%d", grpId, rootCode,
+          tenancyId);
+      TreeTypeMisMatchException ex = new TreeTypeMisMatchException(InfoName.BAD_REQUEST, msg);
+      ex.setGrpId(grpId);
+      ex.setType(TreeTypeHolder.getWithCheck());
+      log.debug(msg);
+      throw ex;
     }
   }
 }
