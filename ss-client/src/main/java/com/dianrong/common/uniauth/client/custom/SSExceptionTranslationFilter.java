@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.client.custom;
 
+import com.dianrong.common.uniauth.client.custom.redirect.UniauthRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.redirect.SimpleRedirectFormat;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
    * 如果不注入则使用默认的实现SimpleRedirectFormat.
    */
   @Autowired(required = false)
-  private CustomizedRedirectFormat customizedRedirectFormat = new SimpleRedirectFormat();
+  private UniauthRedirectFormat redirectFormat = new SimpleRedirectFormat();
 
   /**
    * 当Ajax请求的时候处理其返回值.
@@ -49,8 +51,8 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
     this.zooKeeperConfig = zooKeeperConfig;
   }
 
-  public void setCustomizedRedirectFormat(CustomizedRedirectFormat customizedRedirectFormat) {
-    this.customizedRedirectFormat = customizedRedirectFormat;
+  public void setRedirectFormat(UniauthRedirectFormat redirectFormat) {
+    this.redirectFormat = redirectFormat;
   }
 
   public SSExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint,
@@ -77,7 +79,7 @@ public class SSExceptionTranslationFilter extends ExceptionTranslationFilter {
     SecurityContextHolder.getContext().setAuthentication(null);
     if (HttpRequestUtil.isAjaxRequest(request) || HttpRequestUtil.isCorsRequest(request)) {
       log.debug("This ia an ajax or cors request, return json to client side.");
-      this.ajaxResponseProcessor.sendAjaxResponse(request, response, customizedRedirectFormat);
+      this.ajaxResponseProcessor.sendAjaxResponse(request, response, redirectFormat);
     } else {
       super.sendStartAuthentication(request, response, chain, reason);
     }

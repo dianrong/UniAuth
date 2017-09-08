@@ -1,11 +1,13 @@
 package com.dianrong.common.uniauth.client.custom;
 
+import com.dianrong.common.uniauth.client.custom.redirect.UniauthRedirectFormat;
+
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 定义接口用于处理所有的ajax的返回结果.
+ * Ajax请求跳转处理.
  *
  * @author wanglin
  */
@@ -16,8 +18,8 @@ public interface AjaxResponseProcessor {
    *
    * @param request HttpServletRequest
    * @param response HttpServletResponse
-   * @param customizedRedirectFormat 返回结果的格式定义
+   * @param redirectFormat 返回结果的格式定义
    */
   void sendAjaxResponse(HttpServletRequest request, HttpServletResponse response,
-      CustomizedRedirectFormat customizedRedirectFormat) throws IOException;
+      UniauthRedirectFormat redirectFormat) throws IOException;
 }

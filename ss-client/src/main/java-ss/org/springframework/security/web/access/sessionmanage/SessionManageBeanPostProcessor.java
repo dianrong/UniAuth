@@ -1,7 +1,7 @@
 package org.springframework.security.web.access.sessionmanage;
 
-import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
-import com.dianrong.common.uniauth.client.custom.SimpleRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.redirect.UniauthRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.redirect.SimpleRedirectFormat;
 import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
@@ -29,7 +29,7 @@ public class SessionManageBeanPostProcessor implements BeanPostProcessor {
    * 通过注解配置CustomizedRedirectFormat.
    */
   @Autowired(required = false)
-  private CustomizedRedirectFormat customizedRedirectFormat = new SimpleRedirectFormat();
+  private UniauthRedirectFormat customizedRedirectFormat = new SimpleRedirectFormat();
 
   public ZooKeeperConfig getZooKeeperConfig() {
     return zooKeeperConfig;
@@ -39,14 +39,14 @@ public class SessionManageBeanPostProcessor implements BeanPostProcessor {
     this.zooKeeperConfig = zooKeeperConfig;
   }
 
-  public CustomizedRedirectFormat getCustomizedRedirectFormat() {
+  public UniauthRedirectFormat getCustomizedRedirectFormat() {
     return customizedRedirectFormat;
   }
 
   /**
    * 设置自定义的跳转格式处理.
    */
-  public void setCustomizedRedirectFormat(CustomizedRedirectFormat customizedRedirectFormat) {
+  public void setCustomizedRedirectFormat(UniauthRedirectFormat customizedRedirectFormat) {
     if (customizedRedirectFormat == null) {
       log.warn("set customizedRedirectFormat is null");
     } else {

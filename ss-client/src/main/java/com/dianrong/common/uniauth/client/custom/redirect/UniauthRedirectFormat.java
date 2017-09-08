@@ -1,8 +1,8 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.redirect;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface CustomizedRedirectFormat {
+public interface UniauthRedirectFormat {
 
   /**
    * 生成一个返回的对象.

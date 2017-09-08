@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.client.custom;
 
+import com.dianrong.common.uniauth.client.custom.redirect.UniauthRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.redirect.SimpleRedirectFormat;
 import com.dianrong.common.uniauth.common.client.ZooKeeperConfig;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
@@ -9,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Uniauth的ajax请求返回结果实现.
+ * Uniauth的ajax请求处理redirect.
  *
  * @author wanglin
  */
@@ -29,7 +31,8 @@ public class UniauthAjaxResponseProcessor implements AjaxResponseProcessor {
 
   @Override
   public void sendAjaxResponse(HttpServletRequest request, HttpServletResponse response,
-      CustomizedRedirectFormat customizedRedirectFormat) throws IOException {
+      UniauthRedirectFormat redirectFormat) throws IOException {
+    // 默认实现跳转到cas首页,带上service参数.
     String casServerUrl = zooKeeperConfig.getCasServerUrl();
     String domainUrl = zooKeeperConfig.getDomainUrl();
     domainUrl += "/login/cas";
@@ -41,10 +44,10 @@ public class UniauthAjaxResponseProcessor implements AjaxResponseProcessor {
     response.addHeader("Cache-Control", "no-store");
     response.setStatus(200);
     Object redirectObj;
-    if (customizedRedirectFormat == null) {
+    if (redirectFormat == null) {
       redirectObj = new SimpleRedirectFormat().getRedirectInfo(request, loginUrl);
     } else {
-      redirectObj = customizedRedirectFormat.getRedirectInfo(request, loginUrl);
+      redirectObj = redirectFormat.getRedirectInfo(request, loginUrl);
     }
     if (redirectObj != null) {
       response.getWriter().println(JsonUtil.object2Jason(redirectObj));
