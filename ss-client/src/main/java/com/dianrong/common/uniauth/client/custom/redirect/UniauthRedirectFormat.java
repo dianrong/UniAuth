@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.redirect;
 
 import javax.servlet.http.HttpServletRequest;
 
