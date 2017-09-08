@@ -1,7 +1,7 @@
 package org.springframework.security.web.access.sessionmanage;
 
 import com.dianrong.common.uniauth.client.custom.AjaxResponseProcessor;
-import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.redirect.UniauthRedirectFormat;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import java.io.IOException;
@@ -30,10 +30,10 @@ public class CompatibleAjaxInvalidSessionStrategy implements InvalidSessionStrat
    */
   private Set<Class<? extends InvalidSessionStrategy>> ignoreWhenAjaxRequest;
 
-  private CustomizedRedirectFormat customizedRedirectFormat;
+  private UniauthRedirectFormat customizedRedirectFormat;
 
   public CompatibleAjaxInvalidSessionStrategy setCustomizedRedirectFormat(
-      CustomizedRedirectFormat customizedRedirectFormat) {
+      UniauthRedirectFormat customizedRedirectFormat) {
     this.customizedRedirectFormat = customizedRedirectFormat;
     return this;
   }

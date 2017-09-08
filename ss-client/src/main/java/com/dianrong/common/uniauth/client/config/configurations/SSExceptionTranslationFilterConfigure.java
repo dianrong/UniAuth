@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.client.config.configurations;
 
 import com.dianrong.common.uniauth.client.config.Configure;
 import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
-import com.dianrong.common.uniauth.client.custom.CustomizedRedirectFormat;
+import com.dianrong.common.uniauth.client.custom.redirect.UniauthRedirectFormat;
 import com.dianrong.common.uniauth.client.custom.UniauthAjaxResponseProcessor;
 import com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter;
 import com.dianrong.common.uniauth.client.custom.handler.UniauthSimpleAccessDeniedHandler;
@@ -32,7 +32,7 @@ public class SSExceptionTranslationFilterConfigure
   private ZooKeeperConfig zooKeeperConfig;
 
   @Autowired(required = false)
-  private CustomizedRedirectFormat customizedRedirectFormat;
+  private UniauthRedirectFormat customizedRedirectFormat;
 
   @Override
   public SSExceptionTranslationFilter create(Object... args) {
@@ -46,7 +46,7 @@ public class SSExceptionTranslationFilterConfigure
         new SSExceptionTranslationFilter(casAuthEntryPoint);
     ssExceptionTranslationFilter.setAccessDeniedHandler(accessDeniedHandlerImpl);
     ssExceptionTranslationFilter.setZooKeeperConfig(zooKeeperConfig);
-    ssExceptionTranslationFilter.setCustomizedRedirectFormat(customizedRedirectFormat);
+    ssExceptionTranslationFilter.setRedirectFormat(customizedRedirectFormat);
     ssExceptionTranslationFilter
         .setAjaxResponseProcessor(new UniauthAjaxResponseProcessor(this.zooKeeperConfig));
     return ssExceptionTranslationFilter;
