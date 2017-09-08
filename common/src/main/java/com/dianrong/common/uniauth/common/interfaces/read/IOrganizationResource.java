@@ -2,10 +2,7 @@ package com.dianrong.common.uniauth.common.interfaces.read;
 
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
-import com.dianrong.common.uniauth.common.bean.request.OrganizationParam;
-import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
+import com.dianrong.common.uniauth.common.bean.request.*;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -25,6 +22,10 @@ public interface IOrganizationResource {
   @POST
   @Path("tree")
   Response<OrganizationDto> getOrganizationTree(OrganizationParam organizationParam);
+
+  @POST
+  @Path("query")
+  Response<PageDto<OrganizationDto>> queryOrganization(OrganizationQuery organizationQuery);
 
   @POST
   @Path("owners")

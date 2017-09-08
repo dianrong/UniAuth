@@ -38,7 +38,7 @@ public class AttributeExtendInnerService extends TenancyBasedService {
   public AttributeExtendDto add(String code, String category, String subcategory,
       String description) {
     CheckEmpty.checkEmpty(code, "attributeExtendCode");
-    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code.trim());
+    dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_CODE, code.trim());
     AttributeExtend attributeExtend =
         innerAddAttributeExtend(code, category, subcategory, description);
     AttributeExtendDto attributeExtendDto =

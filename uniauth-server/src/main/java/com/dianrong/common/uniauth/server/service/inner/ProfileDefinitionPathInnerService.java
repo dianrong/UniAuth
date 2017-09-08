@@ -84,7 +84,7 @@ public class ProfileDefinitionPathInnerService extends TenancyBasedService {
     // 子profile_definition必须存在
     if (!ObjectUtil.collectionIsEmptyOrNull(subProfileIds)) {
       for (Long pdid : subProfileIds) {
-        profileDefinitionDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
+        profileDefinitionDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID,
             pdid);
       }
       // 新设置的子Profile不能与当前Profile形成循环. Profile循环check
@@ -145,7 +145,7 @@ public class ProfileDefinitionPathInnerService extends TenancyBasedService {
     // 子profile_definition必须存在
     if (!ObjectUtil.collectionIsEmptyOrNull(processProfileIdSet)) {
       for (Long pdid : processProfileIdSet) {
-        profileDefinitionDataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID,
+        profileDefinitionDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID,
             pdid);
       }
       // 新设置的子Profile不能与当前Profile形成循环. Profile循环check

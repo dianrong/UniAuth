@@ -44,7 +44,7 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
       }
     }
     // 查看是否存在其他的记录是该信息
-    this.addFieldsCheck(FilterType.EXSIT_DATA, equalsField);
+    this.addFieldsCheck(FilterType.NON_EXIST, equalsField);
   }
 
   @Override
@@ -55,14 +55,14 @@ public abstract class CurrentAbstractDataFilter<T> extends MultiTenancyCheck {
     }
     Assert.notNull(ftype);
     switch (ftype) {
-      case EXSIT_DATA:
+      case NON_EXIST:
         if (multiFieldsDuplicateCheck(equalsField)) {
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("datafilter.data.mutilcondition.exsit.error", getProcessTableName(),
                   getFieldTypeKeyAndValue(equalsField)));
         }
         break;
-      case NO_DATA:
+      case EXIST:
         if (!multiFieldsDuplicateCheck(equalsField)) {
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("datafilter.data.mutilcondition.notexsit.error",

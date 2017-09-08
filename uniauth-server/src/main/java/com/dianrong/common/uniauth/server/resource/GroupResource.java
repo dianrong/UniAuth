@@ -140,16 +140,14 @@ public class GroupResource implements IGroupRWResource {
   @ApiOperation(value = "根据组id查询所有与其有owner关系的用户列表")
   @ApiImplicitParams(value = {@ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query")})
   @Override @Timed public Response<List<UserDto>> getGroupOwners(PrimaryKeyParam primaryKeyParam) {
-    List<UserDto> userDtos = groupService.getGroupOwners(primaryKeyParam.getId());
-    return Response.success(userDtos);
+    return Response.success(groupService.getGroupOwners(primaryKeyParam.getId()));
   }
 
   @ApiOperation(value = "根据组id查询该组在某个域下的所有角色") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "domainId", value = "域id", required = true, dataType = "long", paramType = "query")})
   @Override public Response<List<RoleDto>> getAllRolesToGroupAndDomain(GroupParam groupParam) {
-    List<RoleDto> roleDtos = groupService.getAllRolesToGroupAndDomain(groupParam.getId(), groupParam.getDomainId());
-    return Response.success(roleDtos);
+    return Response.success(groupService.getAllRolesToGroupAndDomain(groupParam.getId(), groupParam.getDomainId()));
   }
 
   @ApiOperation(value = "关联组和角色") @ApiImplicitParams(value = {

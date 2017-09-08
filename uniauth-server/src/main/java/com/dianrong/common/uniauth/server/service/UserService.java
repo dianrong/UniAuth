@@ -624,7 +624,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate email
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_EMAIL, email);
+      dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_EMAIL, email);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL,
           email);
@@ -649,7 +649,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate phone
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_PHONE, phone);
+      dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_PHONE, phone);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE,
           phone);

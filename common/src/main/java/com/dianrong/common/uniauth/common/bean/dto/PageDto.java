@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.common.bean.dto;
 
+import com.dianrong.common.uniauth.common.util.Assert;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
@@ -24,6 +25,17 @@ public class PageDto<T extends Serializable> implements Serializable {
 
   public PageDto() {
     super();
+  }
+
+  /**
+   * 构造函数.
+   */
+  public PageDto(PageDto<?> originalPageDto, List<T> data) {
+    Assert.notNull(originalPageDto);
+    this.currentPage = originalPageDto.getCurrentPage();
+    this.pageSize = originalPageDto.getPageSize();
+    this.totalCount = originalPageDto.totalCount;
+    this.data = data;
   }
 
   /**

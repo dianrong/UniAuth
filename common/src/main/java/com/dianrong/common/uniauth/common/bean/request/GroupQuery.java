@@ -2,12 +2,14 @@ package com.dianrong.common.uniauth.common.bean.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 
 import java.util.List;
 
 /**
  * Created by Arc on 3/3/2016.
  */
+@ToString
 @ApiModel("组查询信息")
 public class GroupQuery extends PageParam {
 
@@ -203,15 +205,5 @@ public class GroupQuery extends PageParam {
   public GroupQuery setIncludeOwner(Boolean includeOwner) {
     this.includeOwner = includeOwner;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "GroupQuery [id=" + id + ", groupIds=" + groupIds + ", code=" + code + ", name=" + name
-        + ", description=" + description + ", status=" + status + ", userGroupType="
-        + userGroupType + ", userId=" + userId + ", roleId=" + roleId + ", tagId=" + tagId
-        + ", needTag=" + needTag + ", needUser=" + needUser + ", needParentId="
-        + needParentId + ", includeOwner=" + includeOwner + ", includeIndirectAncestors="
-        + includeIndirectAncestors + "]";
   }
 }

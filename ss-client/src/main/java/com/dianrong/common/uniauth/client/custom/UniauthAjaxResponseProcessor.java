@@ -49,5 +49,6 @@ public class UniauthAjaxResponseProcessor implements AjaxResponseProcessor {
     if (redirectObj != null) {
       response.getWriter().println(JsonUtil.object2Jason(redirectObj));
     }
+    response.flushBuffer();
   }
 }

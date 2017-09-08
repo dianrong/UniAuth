@@ -4,8 +4,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
 import com.dianrong.common.uniauth.common.bean.dto.OrganizationDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.bean.request.OrganizationParam;
+import com.dianrong.common.uniauth.common.bean.request.OrganizationQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.server.service.GroupService;
@@ -21,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @TreeTypeTag(TreeType.ORGANIZATION) @Api("组织关系操作相关接口") @RestController @Slf4j
@@ -116,6 +119,37 @@ public class OrganizationResource implements IOrganizationRWResource {
             param.getUserGroupType(), null, null,
             param.getNeedOwnerMarkup(), param.getOpUserId(), param.getIncludeDisableUser());
     return Response.success(BeanConverter.convert(grpDto));
+  }
+
+  @ApiOperation("根据查询条件分页查询组织关系信息") @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "userGroupType", value = "查询条件:传入用户id与组关联关系(0:普通关联关系,1:用户是组的owner)", dataType = "integer", paramType = "query", allowableValues = "0,1"),
+      @ApiImplicitParam(name = "userId", value = "查询条件:限定查询组的范围为与userId有关联关系", dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "id", value = "组织id", dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "groupIds", value = "组织id列表", dataType = "java.util.List", paramType = "query"),
+      @ApiImplicitParam(name = "name", value = "组织名称", dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "code", value = "组code", dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "description", value = "组描述", dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "status", value = "状态", dataType = "string", paramType = "query", allowableValues = "0, 1"),
+      @ApiImplicitParam(name = "needUser", value = "是否将关联的user信息一块查出来", dataType = "boolean", paramType = "query"),
+      @ApiImplicitParam(name = "needParentId", value = "是否将父组id也查出来", dataType = "boolean", paramType = "query")})
+  @Override
+  public Response<PageDto<OrganizationDto>> queryOrganization(OrganizationQuery organizationQuery) {
+    PageDto<GroupDto> groupDtoPageDto = groupService
+        .searchGroup(organizationQuery.getUserGroupType(), organizationQuery.getUserId(), null,
+            organizationQuery.getId(), organizationQuery.getGroupIds(), organizationQuery.getName(),
+            organizationQuery.getCode(), organizationQuery.getDescription(), organizationQuery.getStatus(),
+            null, null, organizationQuery.getNeedUser(), organizationQuery.getNeedParentId(),
+            organizationQuery.getPageNumber(), organizationQuery.getPageSize());
+    if (groupDtoPageDto != null && groupDtoPageDto.getData() != null) {
+      List<GroupDto> groupDtoList = groupDtoPageDto.getData();
+      List<OrganizationDto> organizationDtoList = new ArrayList<>(groupDtoList.size());
+      for (GroupDto groupDto : groupDtoList) {
+        organizationDtoList.add(BeanConverter.convert(groupDto));
+      }
+      return Response.success(new PageDto<OrganizationDto>(groupDtoPageDto, organizationDtoList));
+    }
+    return Response.success(new PageDto<OrganizationDto>());
   }
 
 
