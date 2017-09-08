@@ -9,6 +9,7 @@
         <li role="presentation" ng-class="{active: $state.is('batch')}" class="text-left"><a ui-sref="batch" translate='menu.batch'>批量处理</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('domain')}" class="text-left"><a ui-sref="domain" translate='menu.domainrMgr'>域管理</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('audit')}" class="text-left"><a ui-sref="audit" translate='menu.logMgr'>日志管理</a></li>
+        <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('synchronous')}" class="text-left"><a ui-sref="synchronous" translate='menu.synchronous'>同步管理</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('sys-cfg')}" class="text-left"><a ui-sref="sys-cfg" translate='menu.sysConfig'>系统配置</a></li>
     </ul>
 </div>

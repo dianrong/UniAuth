@@ -26,6 +26,7 @@ public class AuditDto extends TenancyBaseDto {
   private Long reqElapse;
   private String reqParam;
   private String reqResult;
+  private String requestDomainCode;
 
   public Integer getId() {
     return id;
@@ -159,6 +160,15 @@ public class AuditDto extends TenancyBaseDto {
 
   public AuditDto setReqResult(String reqResult) {
     this.reqResult = reqResult;
+    return this;
+  }
+
+  public String getRequestDomainCode() {
+    return requestDomainCode;
+  }
+
+  public AuditDto setRequestDomainCode(String requestDomainCode) {
+    this.requestDomainCode = requestDomainCode;
     return this;
   }
 }

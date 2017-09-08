@@ -38,5 +38,4 @@ public class AuditAction {
   public Response<Integer> deleteAudits(@RequestBody AuditParam auditParam) {
     return uarwFacade.getAuditResource().deleteAudit(auditParam);
   }
-
 }

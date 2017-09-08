@@ -402,7 +402,8 @@ public class BeanConverter {
           .setReqResult(audit.getReqResult()).setReqIp(audit.getReqIp())
           .setReqUrl(audit.getReqUrl()).setReqParam(audit.getReqParam())
           .setRequestDate(audit.getReqDate()).setReqClass(audit.getReqClass())
-          .setUserId(audit.getUserId()).setId(audit.getId()).setReqSequence(audit.getReqSeq());
+          .setUserId(audit.getUserId()).setId(audit.getId()).setReqSequence(audit.getReqSeq())
+          .setRequestDomainCode(audit.getRequestDomainCode());
       return auditDto;
     }
   }
