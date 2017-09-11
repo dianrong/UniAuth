@@ -1,0 +1,71 @@
+<div ui-view style="" class="col-md-29d4 col-sm-9">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'organizationMgr.label.operationTips' | translate }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <p>{{ 'organizationMgr.label.operateOnNode' | translate }}</p>
+            <p>
+                <i class="fa fa-user-plus"></i>
+                <span>：{{ 'organizationMgr.addUser' | translate }}</span>
+            </p>
+            <p>
+                <i class="fa fa-remove"></i>
+                <span>：{{ 'organizationMgr.delUser' | translate }}({{ 'organizationMgr.label.multiselect' | translate }})</span>
+            </p>
+            <p>
+                <i class="fa fa-exchange"></i>
+                <span>：{{ 'organizationMgr.moveUser' | translate}}</span>
+            </p>
+            <p>
+                <i class="fa fa-mail-forward"></i>
+                <span>：{{ 'organizationMgr.label.selectTargetOrganization' | translate }}</span>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="col-md-70d6 col-sm-9">
+    <!-- operation info -->
+    <!--<div ng-if="shareOrganization.selected.id">-->
+        <!--<i class="fa fa-exclamation-circle font-color-blue"></i>-->
+        <!--<span>-->
+            <!--{{ 'organizationMgr.selectedOrganizationText' | translate }} id: <strong>'{{shareOrganization.selected.id}}'</strong> {{ 'organizationMgr.name' | translate}}: <strong>'{{shareOrganization.selected.label}}'</strong> Code: <strong>'{{shareOrganization.selected.code}}'</strong> .-->
+        <!--</span>-->
+    <!--</div>-->
+    <!--<div ng-if="!shareOrganization.selected.id">-->
+        <!--<i class="fa fa-exclamation-circle font-color-blue"></i>-->
+        <!--<span>-->
+            <!--{{ 'organizationMgr.noOrganizationSelected' | translate }}-->
+        <!--</span>-->
+    <!--</div>-->
+    <!-- filter input -->
+    <input style="width: 24%" type="text" class="form-control margin-tb5" ng-model="predicate" placeholder="{{ 'organizationMgr.filterString' | translate}}" />
+    <!-- tree componnet -->
+    <treecontrol class="tree-custom" options="organizationUserOptions" tree-model="treedata.data" selected-nodes="selectedNodes" expanded-nodes="treedata.expandedNodes"
+                 on-selection="showSelectedNodes(node, selected, $parentNode)" filter-expression="predicate" filter-comparator="comparator">
+            <span ng-mouseenter="iconOpen=true" ng-mouseleave="iconOpen=false">
+                <span ng-switch="" on="node.type">
+                    <i ng-switch-when="oUser" class="fa fa-user font-color-red"></i>
+                    <i ng-switch-when="mUser" class="fa fa-user font-color-blue"></i>
+                    <i ng-switch-when="grp" class="fa fa-organization organization-font-color"></i>
+                </span>
+                <span >{{node.label}}</span>
+                <span ng-init="iconOpen = false" ng-show="iconOpen" class="font-color-555">
+                    <!-- icon button -->
+                    <i ng-if="judge.isAlAddOrganizationUser(node)" ng-show="!onMove" class="fa fa-user-plus margin-l5"
+                       ng-click="toOperateOrganization(node,$event)" title="{{ 'organizationMgr.addUser' | translate }}" ui-sref="organization.user.add"></i>
+
+                    <i ng-if="judge.isAlDelOrganizationUser(node)" ng-show="!onMove" class="fa fa-remove margin-l5"
+                       ng-click="showSelectedNodes(node, selected, $parentNode)" title="{{ 'organizationMgr.delUser' | translate }}" ui-sref="organization.user.delete"></i>
+
+                    <i ng-if="judge.isAlMoveOrganizationUser(node)" ng-show="!onMove" class="fa fa-exchange margin-l5"
+                       ng-click="toMoveUser(node, false, $event, $parentNode)" title="{{ 'organizationMgr.moveUser' | translate}}" ui-sref="organization.user.move"></i>
+
+                    <i ng-if="judge.isAlAddOrganizationUser(node)" ng-show="onMove" class="fa fa-mail-forward margin-l5"
+                       ng-click="toMoveUser(node,true,$event)" title="{{ 'organizationMgr.label.moveto' | translate }}" ui-sref="organization.user.move"></i>
+                </span>
+            </span>
+    </treecontrol>
+</div>

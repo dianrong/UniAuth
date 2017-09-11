@@ -128,8 +128,5 @@ public interface GrpMapper {
 
   Integer querySubGrpNum(@Param("grpCode")String grpCode, @Param("grpId") Integer grpId, @Param("tenancyId") Long tenancyId);
 
-  /**
-   * 查询子组.
-   */
   List<Integer> querySubGrpIds(@Param("rootCode")String rootCode, @Param("tenancyId") Long tenancyId);
 }

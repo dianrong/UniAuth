@@ -117,7 +117,6 @@ public class TenancyService {
    * 如果不能获取, 返回一个默认的非租户相关的租户id -1
    *
    * @return tenancyId for current request
-   * @see AppConstants.TENANCY_UNRELATED_TENANCY_ID
    */
   public Long getOneCanUsedTenancyId() {
     return tenancyInnerService.getOneCanUsedTenancyId();
@@ -194,8 +193,7 @@ public class TenancyService {
     admin.setTenancyId(tenancy.getId());
     userMapper.insert(admin);
 
-    // step3: init group
-    // root organization
+    // step3: init root organization
     Grp rootOrganization = new Grp();
     rootOrganization.setName(tenancy.getName());
     rootOrganization.setCode(AppConstants.ORGANIZATION_ROOT);
@@ -206,6 +204,21 @@ public class TenancyService {
     rootOrganization.setLastUpdate(now);
     grpMapper.insert(rootOrganization);
 
+    // init root organization grp_path
+    GrpPath organizationRootPath = new GrpPath();
+    organizationRootPath.setAncestor(rootOrganization.getId());
+    organizationRootPath.setDescendant(rootOrganization.getId());
+    organizationRootPath.setDeepth(AppConstants.ZERO_BYTE);
+    grpPathMapper.insert(organizationRootPath);
+
+    // root organization owner
+    UserGrpKey orgUserGrpOwner = new UserGrpKey();
+    orgUserGrpOwner.setUserId(admin.getId());
+    orgUserGrpOwner.setGrpId(rootOrganization.getId());
+    orgUserGrpOwner.setType(AppConstants.ONE_TYPE);
+    userGrpMapper.insert(orgUserGrpOwner);
+
+    // step4: init root group
     // root grp
     Grp rootGrp = new Grp();
     rootGrp.setName(tenancy.getName());
@@ -228,13 +241,12 @@ public class TenancyService {
     superAdminGrp.setLastUpdate(now);
     grpMapper.insert(superAdminGrp);
 
-    // step4: init grp_path
     // rootGrp - rootGrp - 0
-    GrpPath gpathRoot = new GrpPath();
-    gpathRoot.setAncestor(rootGrp.getId());
-    gpathRoot.setDescendant(rootGrp.getId());
-    gpathRoot.setDeepth(AppConstants.ZERO_BYTE);
-    grpPathMapper.insert(gpathRoot);
+    GrpPath groupRootPath = new GrpPath();
+    groupRootPath.setAncestor(rootGrp.getId());
+    groupRootPath.setDescendant(rootGrp.getId());
+    groupRootPath.setDeepth(AppConstants.ZERO_BYTE);
+    grpPathMapper.insert(groupRootPath);
 
     // rootGrp - superAdminGrp - 1
     GrpPath gpathRootSuperAdmin = new GrpPath();

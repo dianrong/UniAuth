@@ -1,0 +1,32 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'organizationMgr.add.owneradd.title' | translate}}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-organization">
+            <label>{{ 'organizationMgr.label.currentOperateOrganization' | translate}}：</label>
+            <p>{{targetOrganization.label}}</p>
+        </div>
+        <div class="form-organization">
+            <label>{{ 'organizationMgr.label.selectAOwner' | translate}}：</label>
+            <div class="margin-b15">
+                <ui-select ng-model="user.selected"
+                           theme="bootstrap"
+                           ng-disabled="disabled"
+                           reset-search-input="false"
+                           style="width:100%;margin-top: 6px;">
+                    <ui-select-match placeholder="Enter an account...">{{$select.selected.account}}</ui-select-match>
+                    <ui-select-choices repeat="user in users track by $index"
+                                       refresh="refreshUsers($select.search)"
+                                       refresh-delay="300">
+                        <div ng-bind-html="user.account | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <button type="button" class="btn btn-info" ng-click="addUserToOrganization()">{{ 'organizationMgr.add.confirm' | translate}}</button>
+        <button type="button" class="btn btn-link" ng-click="reset(false,true)">{{ 'organizationMgr.label.cancel'| translate }}</button>
+    </div>
+</div>

@@ -19,14 +19,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@TreeTypeTag(TreeType.ORGANIZATION) @Api("组织关系操作相关接口") @RestController @Slf4j
+@TreeTypeTag(TreeType.ORGANIZATION)
+@Api("组织关系操作相关接口")
+@RestController
 public class OrganizationResource implements IOrganizationRWResource {
 
   @Autowired private GroupService groupService;
@@ -52,7 +53,7 @@ public class OrganizationResource implements IOrganizationRWResource {
 
   @ApiOperation(value = "移动用户到指定组织中") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "目标组织id", required = true, dataType = "long", paramType = "query"),
-      @ApiImplicitParam(name = "userIdGroupIdPairs", value = "用户和组的原始关系", required = true, paramType = "query"),
+      @ApiImplicitParam(name = "userIdGroupIdPairs", value = "用户和组的原始关系", dataType = "java.util.List", required = true, paramType = "query"),
       @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true")})
   @Override public Response<Void> moveOrganizationUser(UserListParam userListParam) {
     groupService.moveUser(userListParam.getGroupId(), userListParam.getUserIdGroupIdPairs(),

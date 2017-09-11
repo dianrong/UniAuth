@@ -47,6 +47,25 @@ public class StringUtil {
     return false;
   }
 
+
+  /**
+   * 截取字符串,返回指定的前几个字符.
+   *
+   * @param str str
+   * @param num 指定的前几个字
+   * @return 截取处理过的字符串.
+   */
+  public static String subStrIfNeed(final String str, int num) {
+    if (strIsNullOrEmpty(str)) {
+      return str;
+    }
+    int len = str.length();
+    if (len <= num) {
+      return str;
+    }
+    return str.substring(0, num);
+  }
+
   /**
    * 获取对象的字符串表示方式.
    *

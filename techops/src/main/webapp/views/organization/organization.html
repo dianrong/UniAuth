@@ -1,0 +1,19 @@
+<ul class="nav nav-pills nav-justified margin-b15">
+    <li ng-class="{active: $state.includes('organization.this')}">
+        <a ui-sref="organization.this" ng-click="initTree(true,-1)">{{ 'organizationMgr.label.organization' | translate}}</a>
+    </li>
+    <li ng-class="{active: $state.includes('organization.user')}">
+        <a  ui-sref="organization.user" ng-click="initTree(false, 0)">{{ 'organizationMgr.label.organizationUser' | translate}}</a>
+    </li>
+    <li ng-class="{active: $state.includes('organization.owner')}">
+        <a ui-sref="organization.owner" ng-click="initTree(false, 1)">{{ 'organizationMgr.label.organizationOwner' | translate}}</a>
+    </li>
+</ul>
+<div class="panel panel-default">
+
+    <div class="panel-body">
+        <div ui-view class="row">
+        </div>
+    </div>
+</div>
+

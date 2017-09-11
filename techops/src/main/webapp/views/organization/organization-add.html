@@ -1,0 +1,36 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'organizationMgr.add.title' | translate}}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <ng-form name="addOrganizationForm" novalidate role="form">
+                <div class="form-organization">
+                    <label>{{ 'organizationMgr.label.parentOrganizationId'| translate}}:</label>
+                    <p>{{targetOrganization.id}}</p>
+                </div>
+                <div class="form-organization">
+                    <label>{{ 'organizationMgr.label.parentOrganizationName'| translate}}:</label>
+                    <p>{{targetOrganization.label}}</p>
+                </div>
+                <div class="form-organization">
+                    <label for="name"> {{ 'organizationMgr.organizationName'| translate}}:</label>
+                    <input type="text" class="form-control" placeholder="{{ 'organizationMgr.organizationName'| translate}}" id="name" ng-model="grp.name" required>
+                </div>
+                <div class="form-organization">
+                    <label for="code">{{ 'organizationMgr.add.organizationCode' | translate}}:</label>
+                    <input type="text" class="form-control" placeholder="{{ 'organizationMgr.add.organizationKey' | translate}}" id="code" ng-model="grp.code" required>
+                </div>
+                <div class="form-organization">
+                    <label for="description" placeholder="{{ 'organizationMgr.add.organizationDesc'| translate}}">{{ 'organizationMgr.add.organizationDesc'| translate}}:</label>
+                    <textarea class="form-control" rows="3" id="description" placeholder="{{ 'organizationMgr.add.organizationDesc'| translate}}" ng-model="grp.description"></textarea>
+                </div>
+                <button type="button" class="btn btn-info" ng-click="addOrganization()"
+                        ng-disabled="(addOrganizationForm.$dirty && addOrganizationForm.$invalid) || addOrganizationForm.$pristine">{{ 'organizationMgr.add.confirm' | translate}}</button>
+                <button type="button" class="btn btn-link" ng-click="reset(false,true)">{{ 'organizationMgr.label.cancel'| translate }}</button>
+            </ng-form>
+        </div>
+    </div>
+</div>

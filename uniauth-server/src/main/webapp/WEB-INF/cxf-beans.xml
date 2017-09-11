@@ -27,8 +27,8 @@
             <ref bean="userProfileResource"/>
             <ref bean="groupProfileResource"/>
             <ref bean="userDetailResource"/>
-            <ref bean="userWorkRelationshipResource"/>
             <ref bean="synchronousDataResource"/>
+            <ref bean="organizationResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jacksonJsonProvider" />

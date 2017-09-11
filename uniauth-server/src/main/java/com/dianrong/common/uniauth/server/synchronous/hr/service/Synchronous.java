@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.synchronous.hr.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.HrSynchronousLogDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.common.util.SystemUtil;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.HrSynchronousLogMapper;
@@ -132,7 +133,7 @@ import java.util.concurrent.Executors;
         .append(SynchronousFile.JOB_UA.getName()).append(",")
         .append(SynchronousFile.LE_UA.getName()).append(",")
         .append(SynchronousFile.PERSON_UA.getName());
-    hrSynchronousLog.setProcessContent(sb.toString());
+    hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(sb.toString(), 200));
     hrSynchronousLog.setComputerIp(SystemUtil.getLocalIp());
     try {
       // 加载所有的文件内容
@@ -175,7 +176,7 @@ import java.util.concurrent.Executors;
       // 其他异常
       log.error("Synchronous HR system data failed, exception occured.", e);
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.FAILURE.toString());
-      String expInfo = ExceptionUtils.getStackTrace(e);
+      String expInfo = StringUtil.subStrIfNeed(ExceptionUtils.getStackTrace(e), 500);
       hrSynchronousLog.setFailureMsg(expInfo);
       throw new AppException(InfoName.INTERNAL_ERROR, expInfo);
     } finally {
@@ -289,7 +290,7 @@ import java.util.concurrent.Executors;
           ftpFileDeleter.deleteFtpFileByExpiredTime(calendar.getTime());
       // 删除成功
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.SUCCESS.toString());
-      hrSynchronousLog.setProcessContent(successDeleteFileNames.toString());
+      hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(successDeleteFileNames.toString(), 200));
     } catch (DeleteFTPFileFailureException dfe) {
       log.debug("Failed delete files update time before:" + calendar.getTime(), dfe);
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.FAILURE.toString());

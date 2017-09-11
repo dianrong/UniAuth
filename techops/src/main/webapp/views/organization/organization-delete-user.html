@@ -1,0 +1,22 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'organizationMgr.delete.user.title' | translate}}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <div style="font-size: 13px">
+                <div ng-repeat="selectedNode in selectedNodes">
+                    <p>
+                        {{$index + 1}}.{{ 'organizationMgr.label.organization' | translate}}
+                        <strong style="color: #337AC3">'{{selectedNode.parent.label}}'</strong>-
+                        <strong style="color: #FF338E">{{selectedNode.label}}</strong>
+                    </p>
+                </div>
+            </div>
+            <button type="button" class="btn btn-info" ng-click="removeUserFromOrganization()">{{ 'organizationMgr.delete.confirm' | translate}}</button>
+            <button type="button" class="btn btn-link" ng-click="reset(false,true)">{{ 'organizationMgr.label.cancel'| translate }}</button>
+        </div>
+    </div>
+</div>
