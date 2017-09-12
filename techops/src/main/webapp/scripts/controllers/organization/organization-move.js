@@ -1,8 +1,5 @@
 define(['../../utils/constant'], function(constant) {
-    /**
-     * A module representing a User controller.
-     * @exports controllers/organization.move
-     */
+
     var Controller = function ($rootScope, $scope, OrganizationService, AlertService) {
 
         $scope.move = function () {
@@ -17,7 +14,7 @@ define(['../../utils/constant'], function(constant) {
             }
             OrganizationService.move({
                 "id": $rootScope.moveOrganization.from.id,
-                "targetOrganizationId": $rootScope.moveOrganization.to.id
+                "targetGroupId": $rootScope.moveOrganization.to.id
             }, function (res) {
                 var result = res.data;
                 if(res.info) {

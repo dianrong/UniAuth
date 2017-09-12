@@ -7,23 +7,23 @@
     <div class="panel-body">
         <div>
             <ng-form name="addOrganizationForm" novalidate role="form">
-                <div class="form-organization">
+                <div class="form-group">
                     <label>{{ 'organizationMgr.label.parentOrganizationId'| translate}}:</label>
                     <p>{{targetOrganization.id}}</p>
                 </div>
-                <div class="form-organization">
+                <div class="form-group">
                     <label>{{ 'organizationMgr.label.parentOrganizationName'| translate}}:</label>
                     <p>{{targetOrganization.label}}</p>
                 </div>
-                <div class="form-organization">
+                <div class="form-group">
                     <label for="name"> {{ 'organizationMgr.organizationName'| translate}}:</label>
-                    <input type="text" class="form-control" placeholder="{{ 'organizationMgr.organizationName'| translate}}" id="name" ng-model="grp.name" required>
+                    <input type="text" class="form-control" placeholder="{{ 'organizationMgr.organizationName'| translate}}" id="name" ng-model="organization.name" required>
                 </div>
-                <div class="form-organization">
+                <div class="form-group">
                     <label for="code">{{ 'organizationMgr.add.organizationCode' | translate}}:</label>
-                    <input type="text" class="form-control" placeholder="{{ 'organizationMgr.add.organizationKey' | translate}}" id="code" ng-model="grp.code" required>
+                    <input type="text" class="form-control" placeholder="{{ 'organizationMgr.add.organizationKey' | translate}}" id="code" ng-model="organization.code" required>
                 </div>
-                <div class="form-organization">
+                <div class="form-group">
                     <label for="description" placeholder="{{ 'organizationMgr.add.organizationDesc'| translate}}">{{ 'organizationMgr.add.organizationDesc'| translate}}:</label>
                     <textarea class="form-control" rows="3" id="description" placeholder="{{ 'organizationMgr.add.organizationDesc'| translate}}" ng-model="grp.description"></textarea>
                 </div>

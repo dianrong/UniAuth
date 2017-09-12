@@ -20,7 +20,7 @@ define(['../../utils/constant'],function(constant) {
                 userIdOrganizationIdPairs.push(linkage);
             }
             var params = {};
-            params.userIdOrganizationIdPairs = userIdOrganizationIdPairs;
+            params.userIdGroupIdPairs = userIdOrganizationIdPairs;
             params.normalMember=false;
 
             OrganizationService.deleteUser(params, function (res) {

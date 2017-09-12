@@ -1,16 +1,13 @@
 define(['../../utils/constant'],function(constant) {
-    /**
-     * A module representing a User controller.
-     * @exports controllers/User
-     */
+
     var Controller = function ($rootScope, $scope, OrganizationService, AlertService) {
         $scope.addOrganization = function () {
-            var params = $scope.grp;
+            var params = $scope.organization;
             if(!$rootScope.targetOrganization || !$rootScope.targetOrganization.id){
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('organizationMgr.tips.selectedParentOrganization'));
                 return;
             }
-            params.targetOrganizationId=$rootScope.targetOrganization.id;
+            params.targetGroupId=$rootScope.targetOrganization.id;
 
             OrganizationService.add(params, function (res) {
                 var result = res.data;

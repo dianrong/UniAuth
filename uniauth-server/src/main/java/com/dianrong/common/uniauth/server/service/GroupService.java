@@ -137,11 +137,11 @@ public class GroupService extends TenancyBasedService {
     CheckEmpty.checkEmpty(pageNumber, "pageNumber");
     CheckEmpty.checkEmpty(pageSize, "pageSize");
 
-    GrpPathGrpExample pathGrpExample = constructGrpPathGrpExample();
-    pathGrpExample.setOrderByClause("create_date desc");
-    pathGrpExample.setPageOffSet(pageNumber * pageSize);
-    pathGrpExample.setPageSize(pageSize);
-    GrpExample.Criteria criteria = pathGrpExample.createCriteria();
+    GrpExample grpExample = createNewGrpExample();
+    grpExample.setOrderByClause("create_date desc");
+    grpExample.setPageOffSet(pageNumber * pageSize);
+    grpExample.setPageSize(pageSize);
+    GrpExample.Criteria criteria = grpExample.createCriteria();
     if (!StringUtils.isEmpty(name)) {
       criteria.andNameLike("%" + name + "%");
     }
@@ -229,9 +229,9 @@ public class GroupService extends TenancyBasedService {
         return null;
       }
     }
-    int count = grpMapper.countByExample(pathGrpExample);
+    int count = grpMapper.countByExample(grpExample);
     ParamCheck.checkPageParams(pageNumber, pageSize, count);
-    List<Grp> grpList = grpMapper.selectByExample(pathGrpExample);
+    List<Grp> grpList = grpMapper.selectByExample(grpExample);
     if (!CollectionUtils.isEmpty(grpList)) {
       List<GroupDto> groupDtos = new ArrayList<>();
       Map<Integer, GroupDto> groupIdGroupDtoPair = new HashMap<>();
@@ -368,6 +368,13 @@ public class GroupService extends TenancyBasedService {
     String groupCode = groupParam.getCode();
     CheckEmpty.checkEmpty(targetGroupId, "targetGroupId");
     CheckEmpty.checkEmpty(groupCode, "groupCode");
+
+    // 根组不能进行修改，修改只能走数据库修改
+    if (UniauthServerConstant.isRootGrp(groupCode)) {
+      throw new AppException(InfoName.BAD_REQUEST, UniBundle
+          .getMsg("group.add.forbidden.code", UniauthServerConstant.rootCodeList().toString()));
+    }
+
     checkTreeType(targetGroupId);
 
     // 父group需要存在
@@ -436,7 +443,7 @@ public class GroupService extends TenancyBasedService {
       GrpExample deleteExample = new GrpExample();
       GrpExample.Criteria criteria = deleteExample.createCriteria();
       criteria.andIdIn(disableGrpIds);
-      grpMapper.updateByExample(record, deleteExample);
+      grpMapper.updateByExampleSelective(record, deleteExample);
     }
     // 发送通知
     uniauthNotify.notify(new BaseGroupNotifyInfo().setGroupId(grp.getId()).setType(NotifyInfoType.GROUP_DISABLE));
@@ -747,11 +754,11 @@ public class GroupService extends TenancyBasedService {
       }
     }
     if (rootGrp == null && groupCode != null) {
-      GrpPathGrpExample grpPathGrpExample = constructGrpPathGrpExample();
-      grpPathGrpExample.createCriteria().andCodeEqualTo(groupCode)
+      GrpExample grpExample = createNewGrpExample();
+      grpExample.createCriteria().andCodeEqualTo(groupCode)
           .andStatusEqualTo(AppConstants.STATUS_ENABLED)
           .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-      List<Grp> grpList = grpMapper.selectByExample(grpPathGrpExample);
+      List<Grp> grpList = grpMapper.selectByExample(grpExample);
       if (CollectionUtils.isEmpty(grpList)) {
         throw new AppException(InfoName.VALIDATE_FAIL,
             UniBundle.getMsg("common.entity.code.not found", groupCode, Grp.class.getSimpleName()));
@@ -846,14 +853,14 @@ public class GroupService extends TenancyBasedService {
       treeTypeChecked = true;
     }
     if (groupCode == null && (groupId == null || Integer.valueOf(-1).equals(groupId))) {
-      GrpExample grpExample = new GrpExample();
+      GrpExample grpExample = createNewGrpExample();
       grpExample.createCriteria().andCodeEqualTo(TreeTypeHolder.getWithCheck().getRootCode())
           .andStatusEqualTo(AppConstants.STATUS_ENABLED)
           .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
       rootGrp = grpMapper.selectByExample(grpExample).get(0);
       treeTypeChecked = true;
     } else if (groupCode != null && groupId != null) {
-      GrpExample grpExample = constructGrpPathGrpExample();
+      GrpExample grpExample = createNewGrpExample();
       grpExample.createCriteria().andCodeEqualTo(groupCode)
           .andStatusEqualTo(AppConstants.STATUS_ENABLED)
           .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck()).andIdEqualTo(groupId);
@@ -864,7 +871,7 @@ public class GroupService extends TenancyBasedService {
       }
       rootGrp = grpList.get(0);
     } else if (groupCode != null && groupId == null) {
-      GrpExample grpExample = constructGrpPathGrpExample();
+      GrpExample grpExample = createNewGrpExample();
       grpExample.createCriteria().andCodeEqualTo(groupCode)
           .andStatusEqualTo(AppConstants.STATUS_ENABLED)
           .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
@@ -1323,11 +1330,11 @@ public class GroupService extends TenancyBasedService {
     if (grpId == null) {
       CheckEmpty.checkEmpty(code, "code");
       // 根据编码Code来确定查询的根组id
-      GrpPathGrpExample grpPathGrpExample = constructGrpPathGrpExample();
-      GrpExample.Criteria criteria = grpPathGrpExample.createCriteria();
+      GrpExample grpExample = createNewGrpExample();
+      GrpExample.Criteria criteria = grpExample.createCriteria();
       criteria.andCodeEqualTo(code).andStatusEqualTo(AppConstants.STATUS_ENABLED)
           .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-      List<Grp> grpList = grpMapper.selectByExample(grpPathGrpExample);
+      List<Grp> grpList = grpMapper.selectByExample(grpExample);
       if (ObjectUtil.collectionIsEmptyOrNull(grpList)) {
         return PageDto.emptyPageDto(GroupDto.class);
       }
@@ -1502,12 +1509,12 @@ public class GroupService extends TenancyBasedService {
   /**
    * 设置GROUP查询的范围.
    */
-  private GrpPathGrpExample constructGrpPathGrpExample() {
-    GrpPathGrpExample grpPathGrpExample = new GrpPathGrpExample();
-    grpPathGrpExample.setTenancyId(tenancyService.getTenancyIdWithCheck());
-    grpPathGrpExample.setStatus(AppConstants.STATUS_ENABLED);
-    grpPathGrpExample.setGrpCode(TreeTypeHolder.getWithCheck().getRootCode());
-    return grpPathGrpExample;
+  private GrpExample createNewGrpExample() {
+    GrpExample grpExample = new GrpExample();
+    grpExample.setTenancyId(tenancyService.getTenancyIdWithCheck());
+    grpExample.setStatus(AppConstants.STATUS_ENABLED);
+    grpExample.setGrpCode(TreeTypeHolder.getWithCheck().getRootCode());
+    return grpExample;
   }
 
   /**

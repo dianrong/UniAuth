@@ -1,8 +1,5 @@
 define(['../../utils/constant'], function(constant) {
-    /**
-     * A module representing a User controller.
-     * @exports controllers/organization.move
-     */
+
     var Controller = function ($rootScope, $scope, OrganizationService, AlertService) {
 
         $scope.move = function () {
@@ -23,10 +20,9 @@ define(['../../utils/constant'], function(constant) {
                 entry2:user.parent.id
             }];
             var params = {};
-            params.userIdOrganizationIdPairs = userIdOrganizationIdPairs;
+            params.userIdGroupIdPairs = userIdOrganizationIdPairs;
             params.normalMember=false;
-            params.organizationId = $rootScope.moveUser.organization.id;
-
+            params.groupId = $rootScope.moveUser.organization.id;
 
             OrganizationService.moveUser(params, function (res) {
                 var result = res.data;

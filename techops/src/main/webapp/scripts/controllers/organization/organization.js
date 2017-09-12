@@ -21,7 +21,7 @@ define(['../../utils/constant'], function (constant) {
                 $rootScope.shareOrganization.selected = $scope.selected;
                 // if user is modifying the organization, load the organization's description
                 if($rootScope.$state.current.name == 'organization.modify') {
-                    OrganizationService.getGrpDetails({
+                    OrganizationService.getOrganizationDetails({
                         id: $rootScope.shareOrganization.selected.id
                     }, function (result) {
                         $scope.selected = result.data;
@@ -69,7 +69,7 @@ define(['../../utils/constant'], function (constant) {
             $rootScope.targetOrganization = node;
             $rootScope.isTarget = true;
             if($state.includes("organization.this")) {
-                OrganizationService.getGrpDetails({
+                OrganizationService.getOrganizationDetails({
                     id: $rootScope.targetOrganization.id
                 }, function (result) {
                     $rootScope.targetOrganization = result.data;
@@ -125,10 +125,10 @@ define(['../../utils/constant'], function (constant) {
         //initialize the tree component
         $rootScope.initTree = function(onlyShowOrganizationType, userOrganizationType, isNeedResetExpandedNodes){
             var paramsCtlLevel = {
-                onlyShowOrganization:onlyShowOrganizationType,
-                userOrganizationType:userOrganizationType
+                onlyShowGroup:onlyShowOrganizationType,
+                userGroupType:userOrganizationType
             };
-            OrganizationService.syncTree(paramsCtlLevel,false,isNeedResetExpandedNodes);
+            OrganizationService.syncTree(paramsCtlLevel,isNeedResetExpandedNodes);
         };
         //for determine the icon button status
         $rootScope.judge = {

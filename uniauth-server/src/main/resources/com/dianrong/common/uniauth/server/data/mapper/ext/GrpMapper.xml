@@ -138,9 +138,9 @@
         ) and descendant = #{grpId,jdbcType=INTEGER};
     </select>
 
-    <select id="querySubGrpIds" resultType="java.util.List">
+    <select id="querySubGrpIds" resultType="java.lang.Integer">
         select descendant from grp_path where ancestor in (
-            select id from grp where code = #{grpCode,jdbcType=VARCHAR} and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
-        ) and deepth lt;gt; 0;
+            select id from grp where code = #{rootCode,jdbcType=VARCHAR} and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+        );
     </select>
 </mapper>

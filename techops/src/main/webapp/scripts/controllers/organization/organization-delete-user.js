@@ -1,8 +1,5 @@
 define(['../../utils/constant'],function(constant) {
-    /**
-     * A module representing a User controller.
-     * @exports controllers/User
-     */
+
     var Controller = function ($rootScope, $scope, OrganizationService, AlertService) {
         $scope.removeUserFromOrganization = function () {
             if(!$scope.selectedNodes || $scope.selectedNodes.length == 0){
@@ -18,7 +15,7 @@ define(['../../utils/constant'],function(constant) {
                 userIdOrganizationIdPairs.push(linkage);
             }
             var params = {};
-            params.userIdOrganizationIdPairs = userIdOrganizationIdPairs;
+            params.userIdGroupIdPairs = userIdOrganizationIdPairs;
             params.normalMember=true;
             OrganizationService.deleteUser(params, function (res) {
                 if(res.info) {

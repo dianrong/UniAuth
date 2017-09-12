@@ -7,11 +7,11 @@
     <div class="panel-body">
         <div>
             <ng-form name="moveOrganizationForm" novalidate role="form">
-                <div class="form-organization">
+                <div class="form-group">
                     <label class="panel-label" for="user">{{ 'organizationMgr.label.moveOwner' | translate}}:</label>
                     <input type="text" class="form-control" name="user" id="user" ng-model="moveUser.user.label" required disabled>
                 </div>
-                <div class="form-organization">
+                <div class="form-group">
                     <label class="panel-label" for="organization">{{ 'organizationMgr.targetOrganization' | translate}}:</label>
                     <input type="text" class="form-control" name="organization" id="organization" ng-model="moveUser.organization.label" required disabled>
                 </div>

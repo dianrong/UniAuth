@@ -236,9 +236,10 @@
   </insert>
   <select id="countByExample" parameterType="com.dianrong.common.uniauth.server.data.entity.GrpExample" resultType="java.lang.Integer">
     <if test="linkedQuery">
-      select num from (
+      select ot.num from (
+        select count(it.id) as num from(
     </if>
-    select count(id) as num from grp
+    select id from grp
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -259,7 +260,7 @@
       <if test="tenancyId != null">
         and tenancy_id = #{tenancyId,jdbcType=BIGINT}
       </if>
-      )
+      )) ot
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">

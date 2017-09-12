@@ -15,7 +15,7 @@ define(['../../utils/constant'], function(constant) {
                     "name": $rootScope.targetOrganization.label,
                     "code": $rootScope.targetOrganization.code,
                     "description": $rootScope.targetOrganization.description,
-                    "targetOrganizationId": $rootScope.targetOrganization.id
+                    "targetGroupId": $rootScope.targetOrganization.id
                 }, function (res) {
                 var result = res.data;
                 if(res.info) {
@@ -28,7 +28,7 @@ define(['../../utils/constant'], function(constant) {
                 AlertService.addAutoDismissAlert(constant.messageType.info, $rootScope.translate('organizationMgr.tips.organizationModifySuccess'));
 
                 //sync the selected organization
-                OrganizationService.getGrpDetails({
+                OrganizationService.getOrganizationDetails({
                     id: $rootScope.targetOrganization.id
                 }, function (result) {
                     $scope.selected = result.data;

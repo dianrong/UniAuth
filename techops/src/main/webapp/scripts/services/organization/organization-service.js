@@ -1,6 +1,6 @@
 define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
     var Service = function ($rootScope,  $resource) {
-        var svc = $resource(constant.apiBase + '/group/:method/:method2', null, {
+        var svc = $resource(constant.apiBase + '/organization/:method/:method2', null, {
             queryOrganization: {
                 method: 'POST',
                 params: {
@@ -131,35 +131,21 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         	};
         	return processArray;
         })();
-        svc.syncTree = function(params, roleUserGrpTreeOrTree, isNeedResetExpandedNodes) {
-            // separate the variable that different module use.
-            if(!roleUserGrpTreeOrTree) {
-                // only owner can operate the group in frontend.
-                params.needOwnerMarkup = true;
-                svc.getTree(params, function (res) {
-                    svc.tree.data = res.data;
-                    if(isNeedResetExpandedNodes){
-                        var expandedNodes = [];
-                        expandedNodes.push(svc.tree.data[0]);
-                        svc.tree.expandedNodes = expandedNodes;
-                    }
-                    svc.tree.msg = '';
-                }, function (res) {
-                    svc.tree.msg =$rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
-                    console.log('syncTree failed' + res);
-                });
-            } else {
-                svc.getTree(params, function (res) {
-                    svc.roleUserGrpTree.data = res.data;
-                    //this is for force the tree to update data.
-                    svc.roleUserGrpTree.data[0].date = new Date();
-                    svc.roleUserGrpTree.expandedNodes = getExpandedNodes(svc.roleUserGrpTree.data);
-                    svc.roleUserGrpTree.msg = '';
-                }, function (res) {
-                    svc.roleUserGrpTree.msg = $rootScope.translate('relMgr.msg.roleUserGrpTree.failed');
-                    console.log('syncTree failed' + res);
-                });
-            }
+        svc.syncTree = function(params, isNeedResetExpandedNodes) {
+            // only owner can operate the group in frontend.
+            params.needOwnerMarkup = true;
+            svc.getTree(params, function (res) {
+                svc.tree.data = res.data;
+                if(isNeedResetExpandedNodes){
+                    var expandedNodes = [];
+                    expandedNodes.push(svc.tree.data[0]);
+                    svc.tree.expandedNodes = expandedNodes;
+                }
+                svc.tree.msg = '';
+            }, function (res) {
+                svc.tree.msg =$rootScope.translate('relMgr.msg.organizationTree.failed');
+                console.log('syncTree failed' + res);
+            });
         };
         return svc;
     };

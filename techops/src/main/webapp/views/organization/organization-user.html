@@ -27,20 +27,6 @@
     </div>
 </div>
 <div class="col-md-70d6 col-sm-9">
-    <!-- operation info -->
-    <!--<div ng-if="shareOrganization.selected.id">-->
-        <!--<i class="fa fa-exclamation-circle font-color-blue"></i>-->
-        <!--<span>-->
-            <!--{{ 'organizationMgr.selectedOrganizationText' | translate }} id: <strong>'{{shareOrganization.selected.id}}'</strong> {{ 'organizationMgr.name' | translate}}: <strong>'{{shareOrganization.selected.label}}'</strong> Code: <strong>'{{shareOrganization.selected.code}}'</strong> .-->
-        <!--</span>-->
-    <!--</div>-->
-    <!--<div ng-if="!shareOrganization.selected.id">-->
-        <!--<i class="fa fa-exclamation-circle font-color-blue"></i>-->
-        <!--<span>-->
-            <!--{{ 'organizationMgr.noOrganizationSelected' | translate }}-->
-        <!--</span>-->
-    <!--</div>-->
-    <!-- filter input -->
     <input style="width: 24%" type="text" class="form-control margin-tb5" ng-model="predicate" placeholder="{{ 'organizationMgr.filterString' | translate}}" />
     <!-- tree componnet -->
     <treecontrol class="tree-custom" options="organizationUserOptions" tree-model="treedata.data" selected-nodes="selectedNodes" expanded-nodes="treedata.expandedNodes"
@@ -49,7 +35,7 @@
                 <span ng-switch="" on="node.type">
                     <i ng-switch-when="oUser" class="fa fa-user font-color-red"></i>
                     <i ng-switch-when="mUser" class="fa fa-user font-color-blue"></i>
-                    <i ng-switch-when="grp" class="fa fa-organization organization-font-color"></i>
+                    <i ng-switch-when="grp" class="fa fa-group group-font-color"></i>
                 </span>
                 <span >{{node.label}}</span>
                 <span ng-init="iconOpen = false" ng-show="iconOpen" class="font-color-555">

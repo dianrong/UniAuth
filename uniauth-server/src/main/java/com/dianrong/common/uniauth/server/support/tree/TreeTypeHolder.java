@@ -22,6 +22,14 @@ public final class TreeTypeHolder {
     return TREE_TYPES.get();
   }
 
+  public static TreeType get(TreeType defaultType) {
+    TreeType type = TREE_TYPES.get();
+    if (type == null) {
+      return defaultType;
+    }
+    return type;
+  }
+
   /**
    * 如果当前线程没有设置树类型信息,则抛出异常.
    * @throws UniauthCommonException 当前线程中没有树类型信息.

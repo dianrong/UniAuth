@@ -4,7 +4,6 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpPathGrpExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
 import com.dianrong.common.uniauth.server.datafilter.FilterData;
@@ -34,9 +33,8 @@ public class GroupDataFilter extends CurrentAbstractDataFilter<Grp> {
 
   @Override
   protected boolean multiFieldsDuplicateCheck(FilterData... equalsField) {
-    GrpPathGrpExample condition = new GrpPathGrpExample();
-    treeTypeCheck(condition);
-    GrpExample.Criteria criteria = condition.createCriteria();
+    GrpExample grpExample = constructGrpExample();
+    GrpExample.Criteria criteria = grpExample.createCriteria();
     criteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andTenancyIdEqualTo(getTenancyId());
     // 构造查询条件
     for (FilterData fd : equalsField) {
@@ -52,7 +50,7 @@ public class GroupDataFilter extends CurrentAbstractDataFilter<Grp> {
       }
     }
     // 查询
-    int count = grpMapper.countByExample(condition);
+    int count = grpMapper.countByExample(grpExample);
     if (count > 0) {
       return true;
     }
@@ -67,11 +65,10 @@ public class GroupDataFilter extends CurrentAbstractDataFilter<Grp> {
   @Override
   protected Grp getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "grpId");
-    GrpPathGrpExample condition = new GrpPathGrpExample();
-    condition.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED)
+    GrpExample grpExample = constructGrpExample();
+    grpExample.createCriteria().andIdEqualTo(id).andStatusEqualTo(AppConstants.STATUS_ENABLED)
         .andTenancyIdEqualTo(getTenancyId());
-    treeTypeCheck(condition);
-    List<Grp> grpList = grpMapper.selectByExample(condition);
+    List<Grp> grpList = grpMapper.selectByExample(grpExample);
     if (ObjectUtil.IsNotEmptyOrNull(grpList)) {
       return grpList.get(0);
     }
@@ -79,15 +76,13 @@ public class GroupDataFilter extends CurrentAbstractDataFilter<Grp> {
   }
 
   /**
-   * 加入TreeType检测的逻辑.
+   * 构造一个GrpExample.
    */
-  private void treeTypeCheck(GrpPathGrpExample condition){
-    TreeType type = TreeTypeHolder.get();
-    if (type == null) {
-      return;
-    }
-    condition.setGrpCode(type.getRootCode());
-    condition.setStatus(AppConstants.STATUS_ENABLED);
-    condition.setTenancyId(getTenancyId());
+  private GrpExample constructGrpExample(){
+    GrpExample grpExample = new GrpExample();
+    grpExample.setGrpCode(TreeTypeHolder.get(TreeType.NORMAL).getRootCode());
+    grpExample.setStatus(AppConstants.STATUS_ENABLED);
+    grpExample.setTenancyId(getTenancyId());
+    return grpExample;
   }
 }

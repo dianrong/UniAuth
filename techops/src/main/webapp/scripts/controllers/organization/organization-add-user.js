@@ -1,8 +1,5 @@
 define(['../../utils/constant'],function(constant) {
-    /**
-     * A module representing a User controller.
-     * @exports controllers/User
-     */
+
     var Controller = function ($rootScope, $scope, OrganizationService, UserService, AlertService) {
         $scope.user = {};
         $scope.refreshUsers = function(account) {
@@ -17,7 +14,6 @@ define(['../../utils/constant'],function(constant) {
         };
 
         $scope.addUserToOrganization = function () {
-
             if(!$rootScope.targetOrganization || !$rootScope.targetOrganization.id){
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('organizationMgr.tips.choosePOrganizationBeforeUser'));
                 return;
@@ -28,7 +24,7 @@ define(['../../utils/constant'],function(constant) {
             }
 
             var params = {
-                organizationId:$rootScope.targetOrganization.id,
+                groupId:$rootScope.targetOrganization.id,
                 normalMember:true,
                 userIds:[]
             };

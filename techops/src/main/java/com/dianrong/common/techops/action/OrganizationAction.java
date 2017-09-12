@@ -89,18 +89,6 @@ import java.util.List;
     return false;
   }
 
-  @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize(
-      "hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') "
-          + "and principal.permMap['DOMAIN'] != null "
-          + "and principal.permMap['DOMAIN'].contains('techops') "
-          + "and hasPermission(#groupParam,'PERM_ORGANIZATION_OWNER')")
-  public Response<OrganizationDto> addNewOrganizationIntoOrganization(
-      @RequestBody OrganizationParam organizationParam) {
-    return uarwFacade.getOrganizationRWResource()
-        .addNewOrganizationIntoOrganization(organizationParam);
-  }
-
   @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize(
       "hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') "
@@ -136,9 +124,21 @@ import java.util.List;
       "hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') "
           + "and principal.permMap['DOMAIN'] != null "
           + "and principal.permMap['DOMAIN'].contains('techops') "
-          + "and hasPermission(#groupParam,'PERM_ORGANIZATION_OWNER')")
+          + "and hasPermission(#organizationParam,'PERM_ORGANIZATION_OWNER')")
   public Response<OrganizationDto> modifyOrganization(@RequestBody OrganizationParam organizationParam) {
     return uarwFacade.getOrganizationRWResource().updateOrganization(organizationParam);
+  }
+
+  @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize(
+      "hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') "
+          + "and principal.permMap['DOMAIN'] != null "
+          + "and principal.permMap['DOMAIN'].contains('techops') "
+          + "and hasPermission(#organizationParam,'PERM_ORGANIZATION_OWNER')")
+  public Response<OrganizationDto> addNewOrganizationIntoOrganization(
+      @RequestBody OrganizationParam organizationParam) {
+    return uarwFacade.getOrganizationRWResource()
+        .addNewOrganizationIntoOrganization(organizationParam);
   }
 
   @RequestMapping(value = "/del", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -146,7 +146,7 @@ import java.util.List;
       "hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') "
           + "and principal.permMap['DOMAIN'] != null "
           + "and principal.permMap['DOMAIN'].contains('techops') "
-          + "and hasPermission(#groupParam,'PERM_ORGANIZATION_OWNER')")
+          + "and hasPermission(#organizationParam,'PERM_ORGANIZATION_OWNER')")
   public Response<OrganizationDto> deleteOrganization(@RequestBody OrganizationParam organizationParam) {
     return uarwFacade.getOrganizationRWResource().deleteOrganization(organizationParam);
   }

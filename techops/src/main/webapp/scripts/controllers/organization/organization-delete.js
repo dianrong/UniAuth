@@ -1,8 +1,5 @@
 define(['../../utils/constant'], function(constant) {
-    /**
-     * A module representing a User controller.
-     * @exports controllers/User
-     */
+
     var Controller = function ($rootScope, $scope, OrganizationService, AlertService) {
         $scope.confirm = function () {
 
@@ -14,7 +11,7 @@ define(['../../utils/constant'], function(constant) {
                 "id": $rootScope.targetOrganization.id,
                 "code": $rootScope.targetOrganization.code,
                 "status": 1,
-                "targetOrganizationId": $rootScope.targetOrganization.id
+                "targetGroupId": $rootScope.targetOrganization.id
             }, function (res) {
                 if(res.info) {
                     for(var i=0; i<res.info.length;i++) {
