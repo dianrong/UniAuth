@@ -33,8 +33,8 @@ public interface AppConstants {
   String TECHOPS_SUPER_ADMIN_GRP = "GRP_TECHOPS_SUPER_ADMIN";
 
   byte MAX_AUTH_FAIL_COUNT = 10;
-  int MAX_PASSWORD_VALID_MONTH = 12;
-  int DUPLICATE_PWD_VALID_MONTH = 12;
+  int MAX_PASSWORD_VALID_MONTH = 3;
+  int DUPLICATE_PWD_VALID_MONTH = 8;
   // this value can avoid the "data.query.result.number.exceed" exception when you need query as
   // much as more.
   Integer MAX_PAGE_SIZE_MINUS_ONE = 4999;

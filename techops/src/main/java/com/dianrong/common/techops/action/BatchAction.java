@@ -86,6 +86,24 @@ public class BatchAction {
   }
 
   /**
+   * 删除用户和组的关联关系.
+   */
+  @RequestMapping(value = "remove-user-grp-relation", method = RequestMethod.POST,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') "
+      + "and hasPermission(#groupId, 'PERM_GROUP_OWNER')")
+  public Response<BatchProcessResult> removeUserGrpRelation(
+      @RequestParam(value = "file", required = true) MultipartFile file,
+      @RequestParam(value = "groupId", required = true) Integer groupId) throws IOException {
+    try {
+      return Response.success(batchService.removeUserGrpRelation(file.getInputStream(), groupId));
+    } catch (BatchProcessException bpe) {
+      LOGGER.error("failed to process batch dis relate users and group", bpe);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));
+    }
+  }
+
+  /**
    * 批量关联用户和标签.
    */
   @RequestMapping(value = "relate-user-tag", method = RequestMethod.POST,
