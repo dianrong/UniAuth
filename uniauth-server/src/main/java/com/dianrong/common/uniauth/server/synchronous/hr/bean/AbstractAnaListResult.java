@@ -14,6 +14,8 @@ public abstract class AbstractAnaListResult<T> implements AnaListResult<T> {
    */
   private List<T> result = Lists.newArrayList();
 
+  private String fileName;
+
   @Override public List<T> content() {
     return this.result;
   }
@@ -21,5 +23,13 @@ public abstract class AbstractAnaListResult<T> implements AnaListResult<T> {
   @Override public void add(T t) {
     Assert.notNull(t);
     this.result.add(t);
+  }
+
+  @Override public String getFileName() {
+    return fileName;
+  }
+
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
   }
 }

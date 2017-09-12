@@ -2,6 +2,7 @@ package com.dianrong.common.uniauth.server.synchronous.hr.support;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.synchronous.exp.FileLoadFailureException;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.LoadContent;
 import com.dianrong.common.uniauth.server.synchronous.support.FileLoader;
 import com.dianrong.common.uniauth.server.synchronous.support.SFTPConnectionManager;
 import com.jcraft.jsch.ChannelSftp;
@@ -52,8 +53,7 @@ import java.util.List;
    * @param file 需要再加的文件的模糊名称.
    * @throws FileLoadFailureException 加载异常.
    */
-  @Override
-  public InputStream loadFile(String file) throws FileLoadFailureException {
+  @Override public LoadContent<InputStream> loadFile(String file) throws FileLoadFailureException {
     Assert.notNull(file);
     ChannelSftp channelSftp = null;
     try {
@@ -63,7 +63,7 @@ import java.util.List;
         throw new FileLoadFailureException(
             "File name start with " + file + " is not exist!");
       }
-      return channelSftp.get(fileName);
+      return new LoadContent<InputStream>(channelSftp.get(fileName), fileName);
     } catch (SftpException e) {
       log.error("Failed to load file " + file + " from sftp server", e);
     } finally {
@@ -77,8 +77,8 @@ import java.util.List;
    * @param file 需要再加的文件的模糊名称.
    * @throws FileLoadFailureException 加载异常.
    */
-  @Override
-  public String loadFileContent(String file) throws FileLoadFailureException {
+  @Override public LoadContent<String> loadFileContent(String file)
+      throws FileLoadFailureException {
     ChannelSftp channelSftp = null;
     ByteArrayOutputStream baos = null;
     try {
@@ -90,7 +90,7 @@ import java.util.List;
       }
       baos = new ByteArrayOutputStream();
       channelSftp.get(fileName, baos);
-      return baos.toString("UTF-8");
+      return new LoadContent<String>(baos.toString("UTF-8"), fileName);
     } catch (SftpException | UnsupportedEncodingException e) {
       log.error("Failed to load file " + file + " from sftp server", e);
     } finally {

@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -133,18 +134,26 @@ import java.util.concurrent.Executors;
         .append(SynchronousFile.JOB_UA.getName()).append(",")
         .append(SynchronousFile.LE_UA.getName()).append(",")
         .append(SynchronousFile.PERSON_UA.getName());
-    hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(sb.toString(), 200));
+
     hrSynchronousLog.setComputerIp(SystemUtil.getLocalIp());
     try {
       // 加载所有的文件内容
-      DepartmentList departmentList =
-          hrDeptAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.DEPT_UA.getName()));
-      JobList jobList =
-          hrJobAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.JOB_UA.getName()));
-      LegalEntityList legalEntityList =
-          hrLeAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.LE_UA.getName()));
-      PersonList personList =
-          hrPersonAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.PERSON_UA.getName()));
+      LoadContent<InputStream> depContent = fileLoader.loadFile(SynchronousFile.DEPT_UA.getName());
+      DepartmentList departmentList = hrDeptAnalyzer.analyze(depContent.getContent());
+
+      LoadContent<InputStream> jobContent = fileLoader.loadFile(SynchronousFile.JOB_UA.getName());
+      JobList jobList = hrJobAnalyzer.analyze(jobContent.getContent());
+
+      LoadContent<InputStream> leContent = fileLoader.loadFile(SynchronousFile.LE_UA.getName());
+      LegalEntityList legalEntityList = hrLeAnalyzer.analyze(leContent.getContent());
+
+      LoadContent<InputStream> personContent =
+          fileLoader.loadFile(SynchronousFile.PERSON_UA.getName());
+      PersonList personList = hrPersonAnalyzer.analyze(personContent.getContent());
+
+      hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(Arrays
+          .asList(depContent.getSourceName(), jobContent.getSourceName(), leContent.getSourceName(),
+              personContent.getSourceName()).toString(), 200));
 
       // 外键约束检测
       foreignKeyCheck(departmentList, jobList, legalEntityList, personList);
