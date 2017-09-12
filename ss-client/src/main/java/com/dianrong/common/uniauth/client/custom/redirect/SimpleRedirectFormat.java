@@ -1,10 +1,10 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.redirect;
 
 import com.dianrong.common.uniauth.client.custom.model.SimpleRedirectInfo;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import javax.servlet.http.HttpServletRequest;
 
-public class SimpleRedirectFormat implements CustomizedRedirectFormat {
+public class SimpleRedirectFormat implements UniauthRedirectFormat {
 
   @Override
   public Object getRedirectInfo(HttpServletRequest request, String loginUrl) {
