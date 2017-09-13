@@ -46,6 +46,7 @@ public class UARWFacade {
 
   private IDomainRWResource domainRWResource;
   private IGroupRWResource groupRWResource;
+  private IOrganizationRWResource organizationRWResource;
   private IPermissionRWResource permissionRWResource;
   private IRoleRWResource roleRWResource;
   private IUserRWResource userRWResource;
@@ -89,6 +90,8 @@ public class UARWFacade {
         UniauthRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
     groupRWResource =
         UniauthRSClientFactory.create(uniWsEndpoint, IGroupRWResource.class, providers);
+    organizationRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, IOrganizationRWResource.class, providers);
     permissionRWResource =
         UniauthRSClientFactory.create(uniWsEndpoint, IPermissionRWResource.class, providers);
     userRWResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserRWResource.class, providers);
@@ -102,7 +105,7 @@ public class UARWFacade {
     synchronousDateRWResource =
         UniauthRSClientFactory.create(uniWsEndpoint, ISynchronousDateRWResource.class, providers);
 
-    ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource,
+    ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource,organizationRWResource,
         permissionRWResource, userRWResource, roleRWResource, auditResource, configRWResource,
         tagRWResource, tenancyRWResource, synchronousDateRWResource);
   }
@@ -161,6 +164,10 @@ public class UARWFacade {
 
   public ITenancyRWResource getTenancyRWResource() {
     return tenancyRWResource;
+  }
+
+  public IOrganizationRWResource getOrganizationRWResource() {
+    return organizationRWResource;
   }
 
   public ISynchronousDateRWResource getSynchronousDateRWResource() {

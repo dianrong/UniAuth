@@ -55,7 +55,7 @@ public class SSAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
         retryUrlIsValid = true;
       }
     } else {
-      log.warn("retry URL cant's be empty!");
+      log.warn("retry URL can not be empty!");
     }
   }
 

@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.TagType;
 import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
 import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
@@ -7,11 +8,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by Arc on 15/4/2016.
@@ -62,10 +62,9 @@ public class TagTypeDataFilter extends CurrentAbstractDataFilter<TagType> {
     CheckEmpty.checkEmpty(id, "tagTypeId");
     TagTypeExample condition = new TagTypeExample();
     condition.createCriteria().andIdEqualTo(id);
-    List<TagType> selectByExample = tagTypeMapper.selectByExample(condition);
-
-    if (selectByExample != null && !selectByExample.isEmpty()) {
-      return selectByExample.get(0);
+    List<TagType> tagTypeList = tagTypeMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(tagTypeList)) {
+      return tagTypeList.get(0);
     }
     return null;
   }

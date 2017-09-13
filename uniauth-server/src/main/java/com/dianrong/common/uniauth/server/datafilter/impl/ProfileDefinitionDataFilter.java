@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
 import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionExample;
 import com.dianrong.common.uniauth.server.data.mapper.ProfileDefinitionMapper;
@@ -7,11 +8,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Profile的数据过滤实现.
@@ -60,9 +60,9 @@ public class ProfileDefinitionDataFilter extends CurrentAbstractDataFilter<Profi
     CheckEmpty.checkEmpty(id, "profileDefinitionId");
     ProfileDefinitionExample condition = new ProfileDefinitionExample();
     condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
-    List<ProfileDefinition> selectByExample = profileDefinitionMapper.selectByExample(condition);
-    if (selectByExample != null && !selectByExample.isEmpty()) {
-      return selectByExample.get(0);
+    List<ProfileDefinition> profileDefinitionList = profileDefinitionMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(profileDefinitionList)) {
+      return profileDefinitionList.get(0);
     }
     return null;
   }

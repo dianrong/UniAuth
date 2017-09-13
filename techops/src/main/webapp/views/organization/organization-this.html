@@ -1,0 +1,64 @@
+<div ui-view style="" class="col-md-29d4 col-sm-9">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'organizationMgr.label.operationTips' | translate }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <p>{{ 'organizationMgr.label.operateOnNode' | translate }}</p>
+            <p>
+                <i class="fa fa-plus"></i>
+                <span>：{{ 'organizationMgr.addOrganization' | translate }}</span>
+            </p>
+            <p>
+                <i class="fa fa-remove"></i>
+                <span>：{{ 'organizationMgr.delOrganization' | translate }}</span>
+            </p>
+            <p>
+                <i class="fa fa-edit"></i>
+                <span>：{{ 'organizationMgr.editOrganization' | translate }}</span>
+            </p>
+            <p>
+                <i class="fa fa-exchange"></i>
+                <span>：{{ 'organizationMgr.moveOrganization' | translate}}</span>
+            </p>
+            <p>
+                <i class="fa fa-mail-forward"></i>
+                <span>：{{ 'organizationMgr.label.selectTargetOrganization' | translate }}</span>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="col-md-70d6 col-sm-9">
+    <input style="width: 24%" type="text" class="form-control margin-tb5" ng-model="predicate" placeholder="{{ 'organizationMgr.filterString' | translate}}" />
+    <!-- tree componnet -->
+    <treecontrol class="tree-custom" options="organizationOptions" tree-model="treedata.data" selected-node="selected" expanded-nodes="treedata.expandedNodes"
+                 on-selection="showSelected(node, selected)" filter-expression="predicate" filter-comparator="comparator">
+            <span ng-mouseenter="iconOpen=true" ng-mouseleave="iconOpen=false">
+                <span ng-switch="" on="node.type">
+                    <i ng-switch-when="oUser" class="fa fa-user font-color-red"></i>
+                    <i ng-switch-when="mUser" class="fa fa-user font-color-blue"></i>
+                    <i ng-switch-when="grp" class="fa fa-group group-font-color"></i>
+                </span>
+                <span >{{node.label}}</span>
+                <span ng-init="iconOpen=false" ng-show="iconOpen" class="font-color-555">
+                    <!-- icon button -->
+                    <i ng-if="judge.isAlAddOrganization(node)" ng-show="!onMove" class="fa fa-plus margin-l5"
+                       ng-click="toOperateOrganization(node,$event)" title="{{ 'organizationMgr.addOrganization' | translate }}" ui-sref="organization.this.add"></i>
+
+                    <i ng-if="judge.isAlDelOrganization(node)" ng-show="!onMove" class="fa fa-remove margin-l5"
+                       ng-click="toOperateOrganization(node,$event)" title="{{ 'organizationMgr.delOrganization' | translate }}" ui-sref="organization.this.delete"></i>
+
+                    <i ng-if="judge.isAlEditOrganization(node)" ng-show="!onMove" class="fa fa-edit margin-l5"
+                       ng-click="toOperateOrganization(node,$event)" title="{{ 'organizationMgr.editOrganization' | translate }}" ui-sref="organization.this.modify"></i>
+
+                    <i ng-if="judge.isAlMoveOrganization(node)" ng-show="!onMove" class="fa fa-exchange margin-l5"
+                       ng-click="toMoveOrganization(node,false,$event)" title="{{ 'organizationMgr.moveOrganization' | translate}}" ui-sref="organization.this.move"></i>
+
+                    <i ng-if="judge.isAlMoveToOrganization(node)" ng-show="onMove" class="fa fa-mail-forward margin-l5"
+                       ng-click="toMoveOrganization(node,true,$event)" title="{{ 'organizationMgr.label.moveto' | translate }}" ui-sref="organization.this.move"></i>
+                </span>
+            </span>
+    </treecontrol>
+</div>

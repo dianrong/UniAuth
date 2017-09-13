@@ -81,6 +81,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
+      $rootScope.shareOrganization = {};
       $rootScope.translate=function(msg){
     	  return $translate.instant(msg);
       };
@@ -209,6 +210,77 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             url: '/delete',
             controller: "GroupDeleteOwnerController",
             templateUrl: 'views/group/group-delete-owner.html'
+        }).
+    state('organization', {
+            // abstract: true,
+            url: "/organization",
+            controller: "OrganizationController",
+            templateUrl: "views/organization/organization.html"
+        }).
+        state('organization.this', {
+            url: '/this',
+            controller: "",
+            templateUrl: 'views/organization/organization-this.html'
+        }).
+        state('organization.this.add', {
+            url: '/add',
+            controller: "OrganizationAddController",
+            templateUrl: 'views/organization/organization-add.html'
+        }).
+        state('organization.this.modify', {
+            url: '/modify',
+            controller: "OrganizationModifyController",
+            templateUrl: 'views/organization/organization-modify.html'
+        }).
+        state('organization.this.move', {
+            url: '/move',
+            controller: "OrganizationMoveController",
+            templateUrl: 'views/organization/organization-move.html'
+        }).
+        state('organization.this.delete', {
+            url: '/delete',
+            controller: "OrganizationDeleteController",
+            templateUrl: 'views/organization/organization-delete.html'
+        }).
+        state('organization.user', {
+            url: '/user',
+            controller: "",
+            templateUrl: 'views/organization/organization-user.html'
+        }).
+        state('organization.user.add', {
+            url: '/add',
+            controller: "OrganizationAddUserController",
+            templateUrl: 'views/organization/organization-add-user.html'
+        }).
+        state('organization.user.move', {
+            url: '/move',
+            controller: "OrganizationMoveUserController",
+            templateUrl: 'views/organization/organization-move-user.html'
+        }).
+        state('organization.user.delete', {
+            url: '/delete',
+            controller: "OrganizationDeleteUserController",
+            templateUrl: 'views/organization/organization-delete-user.html'
+        }).
+        state('organization.owner', {
+            url: '/owner',
+            controller: "",
+            templateUrl: 'views/organization/organization-owner.html'
+        }).
+        state('organization.owner.add', {
+            url: '/add',
+            controller: "OrganizationAddOwnerController",
+            templateUrl: 'views/organization/organization-add-owner.html'
+        }).
+        state('organization.owner.move', {
+            url: '/move',
+            controller: "OrganizationMoveOwnerController",
+            templateUrl: 'views/organization/organization-move-owner.html'
+        }).
+        state('organization.owner.delete', {
+            url: '/delete',
+            controller: "OrganizationDeleteOwnerController",
+            templateUrl: 'views/organization/organization-delete-owner.html'
         }).
         state('role', {
             url: "/role",

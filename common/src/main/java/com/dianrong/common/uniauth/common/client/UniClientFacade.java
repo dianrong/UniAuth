@@ -67,6 +67,7 @@ public class UniClientFacade {
 
   private IDomainResource domainResource;
   private IGroupResource groupResource;
+  private IOrganizationResource organizationResource;
   private IPermissionResource permissionResource;
   private IUserResource userResource;
   private IRoleResource roleResource;
@@ -117,6 +118,8 @@ public class UniClientFacade {
         .create(uniWsEndpoint, IUserExtendValResource.class, providers);
     domainResource = UniauthRSClientFactory.create(uniWsEndpoint, IDomainResource.class, providers);
     groupResource = UniauthRSClientFactory.create(uniWsEndpoint, IGroupResource.class, providers);
+    organizationResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, IOrganizationResource.class, providers);
     permissionResource = UniauthRSClientFactory
         .create(uniWsEndpoint, IPermissionResource.class, providers);
     userResource = UniauthRSClientFactory.create(uniWsEndpoint, IUserResource.class, providers);
@@ -137,8 +140,8 @@ public class UniClientFacade {
         .create(uniWsEndpoint, IUserExtendValRWResource.class, providers);
     attributeExtendRWResource = UniauthRSClientFactory
         .create(uniWsEndpoint, IAttributeExtendRWResource.class, providers);
-    ClientFacadeUtil
-        .addApiKey(apiName, apiKey, domainResource, groupResource, permissionResource, userResource,
+    ClientFacadeUtil.addApiKey(apiName, apiKey, domainResource, groupResource, organizationResource,
+        permissionResource, userResource,
             roleResource, tagResource, configResource, tenancyResource, synchronousDataResource,
             userExtendResource, userExtendValResource, userExtendRWResource,
             userExtendValRWResource, attributeExtendResource, attributeExtendRWResource);
@@ -214,6 +217,10 @@ public class UniClientFacade {
 
   public IAttributeExtendResource getAttributeExtendResource() {
     return attributeExtendResource;
+  }
+
+  public IOrganizationResource getOrganizationResource() {
+    return organizationResource;
   }
 
   public IAttributeExtendRWResource getAttributeExtendRWResource() {

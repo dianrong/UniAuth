@@ -60,6 +60,12 @@
 					and status = 0
 			)
 		)
+         and grp_id in(
+             select descendant from grp_path where ancestor = (
+                select id from grp where code = #{rootCode, jdbcType=VARCHAR} and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+             and status = 0
+             )
+         )
 		<!-- filter disable sub group  -->
 		and grp_id not in (
 				select descendant from grp_path where ancestor in (
@@ -74,22 +80,27 @@
     </select>
     
     <select id="listGroupsRelateToUser" resultMap="BaseResultMap" parameterType="java.util.Map">
-        select
-            <include refid="Base_Column_List" />
-        from grp 
-        where id in (
-            <if test="includeIndirectAncestors != null and includeIndirectAncestors">
+        select <include refid="Base_Column_List" />
+        from (
+            select
+                <include refid="Base_Column_List" />
+            from grp
+            where id in (
+                <if test="includeIndirectAncestors != null and includeIndirectAncestors">
                     select ancestor from grp_path where descendant in (
-            </if>
-		            select grp_id from user_grp where user_id = #{userId, jdbcType=BIGINT}
-		            <if test="includeOwner == null or !includeOwner">
-		                and type = 0 
-		            </if>
-            <if test="includeIndirectAncestors != null and includeIndirectAncestors">
+                </if>
+                        select grp_id from user_grp where user_id = #{userId, jdbcType=BIGINT}
+                        <if test="includeOwner == null or !includeOwner">
+                            and type = 0
+                        </if>
+                <if test="includeIndirectAncestors != null and includeIndirectAncestors">
                     )
-            </if>
+                </if>
+            )
+            and status = 0
+        ) it left join grp_path gp on it.id = gp.descendant where gp.ancestor in (
+            select id from grp where code = #{rootCode, jdbcType=VARCHAR} and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
         )
-        and status = 0
     </select>
     
     <!-- 组分页查询实现 -->
@@ -119,5 +130,17 @@
         where grp_path.ancestor = #{grpId,jdbcType=INTEGER} and grp.status=0 order by id 
         limit #{pageOffSet},#{pageSize}) as t2 on t1.ancestor = t2.id
         where t1.deepth=1
+    </select>
+
+    <select id="querySubGrpNum" resultType="java.lang.Integer">
+        select count(descendant) from grp_path where ancestor in (
+            select id from grp where code = #{grpCode,jdbcType=VARCHAR} and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+        ) and descendant = #{grpId,jdbcType=INTEGER};
+    </select>
+
+    <select id="querySubGrpIds" resultType="java.lang.Integer">
+        select descendant from grp_path where ancestor in (
+            select id from grp where code = #{rootCode,jdbcType=VARCHAR} and status = 0 and tenancy_id = #{tenancyId, jdbcType=BIGINT}
+        );
     </select>
 </mapper>

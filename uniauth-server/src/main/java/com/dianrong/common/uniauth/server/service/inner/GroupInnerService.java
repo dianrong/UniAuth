@@ -2,28 +2,23 @@ package com.dianrong.common.uniauth.server.service.inner;
 
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.GrpExample;
-import com.dianrong.common.uniauth.server.data.entity.GrpPath;
-import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
 import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.support.tree.TreeType;
+import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class GroupInnerService extends TenancyBasedService {
@@ -72,6 +67,9 @@ public class GroupInnerService extends TenancyBasedService {
       grpIds.add(gp.getAncestor());
     }
     GrpExample grpExample = new GrpExample();
+    grpExample.setGrpCode(TreeTypeHolder.get(TreeType.NORMAL).getRootCode());
+    grpExample.setStatus(AppConstants.STATUS_ENABLED);
+    grpExample.setTenancyId(tenancyService.getTenancyIdWithCheck());
     GrpExample.Criteria grpCriteria = grpExample.createCriteria();
     grpCriteria.andIdIn(grpIds).andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
     List<Grp> grpList = grpMapper.selectByExample(grpExample);

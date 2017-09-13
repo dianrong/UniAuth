@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
@@ -7,11 +8,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 组扩展值数据过滤.
@@ -57,11 +57,11 @@ public class GrpExtendValDataFilter extends CurrentAbstractDataFilter<GrpExtendV
   @Override
   protected GrpExtendVal getEnableRecordByPrimaryKey(Integer id) {
     CheckEmpty.checkEmpty(id, "GrpExtendValId");
-    GrpExtendValExample condtion = new GrpExtendValExample();
-    condtion.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
-    List<GrpExtendVal> infoes = grpExtendValMapper.selectByExample(condtion);
-    if (infoes != null && infoes.size() > 0) {
-      return infoes.get(0);
+    GrpExtendValExample condition = new GrpExtendValExample();
+    condition.createCriteria().andIdEqualTo(TypeParseUtil.parseToLongFromObject(id));
+    List<GrpExtendVal> grpExtendValList = grpExtendValMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(grpExtendValList)) {
+      return grpExtendValList.get(0);
     }
     return null;
   }

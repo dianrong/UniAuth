@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -34,13 +33,10 @@ import java.util.List;
 
   @Override public T analyze(InputStream inputStream) throws InvalidContentException {
     Assert.notNull(inputStream, "inputStream can not be null!");
-    BufferedReader in = null;
-    InputStreamReader reader = null;
     StringBuilder sb = new StringBuilder();
-    try {
-      String line = "";
-      reader = new InputStreamReader(inputStream, "UTF-8");
-      in = new BufferedReader(reader);
+    String line;
+    try(InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+        BufferedReader in = new BufferedReader(reader)) {
       while ((line = in.readLine()) != null) {
         sb.append(line).append("\r\n");
       }
@@ -48,14 +44,9 @@ import java.util.List;
       throw new InvalidContentException("Failed read content from InputStream", e);
     } finally {
       try {
-        if (in != null) {
-          in.close();
-        }
-        if (reader != null) {
-          reader.close();
-        }
+        inputStream.close();
       } catch (IOException e) {
-        log.warn("Failed close Stream", e);
+        log.error("SFTP inputStream close failed.", e);
       }
     }
     return this.analyze(sb.toString());

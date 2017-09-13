@@ -44,6 +44,7 @@ define({
         loadError_code:'constant.loadingError',
         treeNodeType: {
             group:'grp',
+            organization:'grp',
             memberUser:'mUser',
             ownerUser:'oUser'
         },

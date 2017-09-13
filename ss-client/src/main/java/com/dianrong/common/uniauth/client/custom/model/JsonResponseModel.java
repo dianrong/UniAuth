@@ -58,7 +58,7 @@ public class JsonResponseModel<T extends Serializable> implements Serializable {
    * @param code 返回结果code, 不能为空
    * @param message 返回结果信息,一般是失败才会有结果信息.
    */
-  public JsonResponseModel(boolean success, T content, Integer code, String message) {
+  public <E extends T> JsonResponseModel(boolean success, E content, Integer code, String message) {
     Assert.notNull(code, "response code can not be null");
     this.code = code;
     if (success) {

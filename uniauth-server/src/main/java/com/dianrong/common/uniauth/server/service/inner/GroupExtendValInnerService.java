@@ -45,7 +45,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
     CheckEmpty.checkEmpty(extendId, "extendId");
 
     // 数据过滤
-    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.NON_EXIST,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_GRP_ID, grpId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
 

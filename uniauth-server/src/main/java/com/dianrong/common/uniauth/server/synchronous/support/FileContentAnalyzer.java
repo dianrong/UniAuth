@@ -21,7 +21,7 @@ public interface FileContentAnalyzer<T extends AnaListResult> {
 
   /**
    * 分析传入的内容.
-   * @param inputStream 内容的输入流.
+   * @param inputStream 内容的输入流,在读取完毕之后需要将文件流关闭.
    * @return 分析结果,不会为空.
    * @throws InvalidContentException 如果传入的内容有问题,则抛出改异常.
    */

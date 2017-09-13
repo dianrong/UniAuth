@@ -52,7 +52,7 @@ public class UserExtendValInnerService extends TenancyBasedService {
     CheckEmpty.checkEmpty(extendId, "extendId");
 
     // 数据过滤
-    dataFilter.addFieldsCheck(FilterType.EXSIT_DATA,
+    dataFilter.addFieldsCheck(FilterType.NON_EXIST,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_USER_ID, userId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_EXTEND_ID, extendId));
 

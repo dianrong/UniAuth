@@ -56,4 +56,11 @@ public final class ObjectUtil {
     }
     return false;
   }
+
+  /**
+   * 判断指定的集合是否不为空.
+   */
+  public static boolean IsNotEmptyOrNull(Collection<?> elements) {
+    return !collectionIsEmptyOrNull(elements);
+  }
 }

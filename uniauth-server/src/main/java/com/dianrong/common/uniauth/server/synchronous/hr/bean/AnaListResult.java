@@ -22,4 +22,9 @@ public interface AnaListResult<T> {
    * 处理的文件.
    */
   SynchronousFile synchronousFile();
+
+  /**
+   * 实际处理的文件名称.
+   */
+  String getFileName();
 }

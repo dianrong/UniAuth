@@ -32,6 +32,8 @@ import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
 import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.support.tree.TreeType;
+import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
@@ -452,6 +454,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
           } else {
             // 默认需要过滤掉禁用的组
             GrpExample grpExample = new GrpExample();
+            grpExample.setGrpCode(TreeTypeHolder.get(TreeType.NORMAL).getRootCode());
+            grpExample.setStatus(AppConstants.STATUS_ENABLED);
+            grpExample.setTenancyId(tenancyService.getTenancyIdWithCheck());
             grpExample.createCriteria().andIdIn(descendantIds)
                 .andStatusEqualTo(AppConstants.ZERO_BYTE)
                 .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
@@ -624,7 +629,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate email
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_EMAIL, email);
+      dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_EMAIL, email);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_EMAIL,
           email);
@@ -649,7 +654,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     // check duplicate phone
     if (userId == null) {
-      dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_PHONE, phone);
+      dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_PHONE, phone);
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE,
           phone);
