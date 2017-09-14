@@ -84,6 +84,24 @@ public class UserResource implements IUserRWResource {
     return Response.success(pageDto);
   }
 
+  @ApiOperation("与searchusers接口类似,但是该接口不区分租户.") @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "name", value = "用户姓名", dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "phone", value = "用户电话", dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "email", value = "用户邮箱", dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "account", value = "用户账号(邮箱,电话)", dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "status", value = "状态(0,1)", dataType = "java.lang.Integer", paramType = "query"),
+      @ApiImplicitParam(name = "pageSize", value = "分页大小", dataType = "java.lang.Integer", paramType = "query"),
+      @ApiImplicitParam(name = "pageNumber", value = "页数", dataType = "java.lang.Integer", paramType = "query")})
+  @Override @Timed public Response<PageDto<UserDto>> searchUserWithoutTenantConcern(
+      UserQuery userQuery) {
+    PageDto<UserDto> pageDto = userService
+        .searchUser(null, null, false, false, null, null, null, userQuery.getName(),
+            userQuery.getPhone(), userQuery.getEmail(), userQuery.getAccount(),
+            userQuery.getStatus(), null, false, userQuery.getPageNumber(), userQuery.getPageSize(),
+            true);
+    return Response.success(pageDto);
+  }
+
   @ApiOperation("登陆接口")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id或code", required = true, dataType = "long",

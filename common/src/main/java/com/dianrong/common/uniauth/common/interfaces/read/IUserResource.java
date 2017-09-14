@@ -28,6 +28,10 @@ public interface IUserResource {
   Response<PageDto<UserDto>> searchUser(UserQuery userQuery);
 
   @POST
+  @Path("search-users-without-tenant-concern")
+  Response<PageDto<UserDto>> searchUserWithoutTenantConcern(UserQuery userQuery);
+
+  @POST
   @Path("userswithrolechecked")
   // scenario: search user with role checked
   Response<List<UserDto>> searchUsersWithRoleCheck(PrimaryKeyParam primaryKeyParam);

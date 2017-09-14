@@ -431,7 +431,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     if (!CollectionUtils.isEmpty(excludeUserIds)) {
       criteria.andIdNotIn(excludeUserIds);
     }
-    criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    if (!(withoutTenantConcern != null && withoutTenantConcern)) {
+      criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    }
     if (groupId != null) {
       UserGrpExample userGrpExample = new UserGrpExample();
       UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();
