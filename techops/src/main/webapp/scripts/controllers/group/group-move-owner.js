@@ -11,7 +11,7 @@ define(['../../utils/constant'], function(constant) {
                 return;
             }
 
-            if(!$rootScope.moveUser.group.id){
+            if(!$rootScope.moveUser.group || !$rootScope.moveUser.group.id){
                 AlertService.addAutoDismissAlert(constant.messageType.warning, $rootScope.translate('groupMgr.tips.selectTargetGroup'));
                 return;
             }
@@ -20,7 +20,7 @@ define(['../../utils/constant'], function(constant) {
             //暂不支持批量移动
             var userIdGroupIdPairs = [{
                 entry1:user.id,
-                entry2:user.parent.id
+                entry2:user.parentId
             }];
             var params = {};
             params.userIdGroupIdPairs = userIdGroupIdPairs;

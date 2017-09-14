@@ -100,7 +100,7 @@ define(['../../utils/constant'], function (constant) {
             if(!isTarget){
                 $rootScope.onMove = true;
                 $rootScope.moveUser.user = node;
-                $rootScope.moveUser.user.parent = parent;
+                $rootScope.moveUser.user.parentId = parent.id;
             }else{
                 // $rootScope.onMove = false;
                 $rootScope.moveUser.group = node;
@@ -109,7 +109,7 @@ define(['../../utils/constant'], function (constant) {
         };
         $scope.selectedNodes = [];
         $scope.showSelectedNodes = function(node, selected, parent) {
-            node.parent = parent;
+            node.parentId = parent.id;
         };
 
         $scope.$state = $rootScope.$state;
