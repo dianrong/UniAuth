@@ -2,12 +2,7 @@ package com.dianrong.common.uniauth.server.resource;
 
 import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.TagDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
+import com.dianrong.common.uniauth.common.bean.dto.*;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
@@ -19,10 +14,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by Arc on 14/1/16.
