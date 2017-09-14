@@ -41,6 +41,16 @@ public class BeanConverter {
   }
 
   /**
+   * 将GroupDto转化成groupDto;
+   */
+  public static OrganizationDto convert(GroupDto groupDto) {
+    if (groupDto == null) {
+      return null;
+    }
+    return new OrganizationDto(groupDto);
+  }
+
+  /**
    * 将Entity转化为Dto.
    */
   public static HrSynchronousLogDto convert(HrSynchronousLog hrSynchronousLog) {
@@ -640,32 +650,6 @@ public class BeanConverter {
     userDetail.setTenancyId(StringUtil.translateIntegerToLong(userDetailDto.getTenancyId()));
     return userDetail;
   }
-
-  /**
-   * 对象转换.
-   */
-  public static UserWorkRelationshipDto convert(UserWorkRelationship userWorkRelationship) {
-    if (userWorkRelationship == null) {
-      return null;
-    }
-    UserWorkRelationshipDto userWorkRelationshipDto = new UserWorkRelationshipDto();
-    userWorkRelationshipDto.setAssignmentDate(userWorkRelationship.getAssignmentDate())
-        .setBusinessUnitName(userWorkRelationship.getBusinessUnitName())
-        .setCreateDate(userWorkRelationship.getCreateDate())
-        .setDepartmentName(userWorkRelationship.getDepartmentName())
-        .setHireDate(userWorkRelationship.getHireDate()).setId(userWorkRelationship.getId())
-        .setLastUpdate(userWorkRelationship.getLastUpdate())
-        .setLegalEntityName(userWorkRelationship.getLegalEntityName())
-        .setManagerId(userWorkRelationship.getManagerId())
-        .setSupervisorId(userWorkRelationship.getSupervisorId())
-        .setType(userWorkRelationship.getType()).setUserId(userWorkRelationship.getUserId())
-        .setWorkAddress(userWorkRelationship.getWorkAddress())
-        .setWorkLocation(userWorkRelationship.getWorkLocation())
-        .setWorkPhone(userWorkRelationship.getWorkPhone())
-        .setTenancyId(StringUtil.translateLongToInteger(userWorkRelationship.getTenancyId()));
-    return userWorkRelationshipDto;
-  }
-
 
   /**
    * 对象转换.

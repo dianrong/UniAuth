@@ -11,17 +11,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagDto;
 import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
-import com.dianrong.common.uniauth.common.bean.request.GroupParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
-import com.dianrong.common.uniauth.common.bean.request.RoleParam;
-import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
-import com.dianrong.common.uniauth.common.bean.request.TagParam;
-import com.dianrong.common.uniauth.common.bean.request.TagQuery;
-import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
-import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
-import com.dianrong.common.uniauth.common.bean.request.UserListParam;
-import com.dianrong.common.uniauth.common.bean.request.UserParam;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 
@@ -50,6 +40,7 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
     Set<Integer> domainIdSet = techOpsUserExtInfo.getDomainIdSet();
     String perm = (String) permission;
     GroupParam groupParam = null;
+    OrganizationParam organizationParam = null;
     RoleQuery roleQuery;
     RoleParam roleParam;
     UserParam userParam;
@@ -107,6 +98,33 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
         
         if (groupParam != null) {
           Response<Void> response = uniClientFacade.getGroupResource().checkOwner(groupParam);
+          infoList = response.getInfo();
+          if (CollectionUtils.isEmpty(infoList)) {
+            return true;
+          }
+        }
+        break;
+      case AppConstants.PERM_ORGANIZATION_OWNER:
+        if (targetObject instanceof OrganizationParam) {
+          organizationParam = (OrganizationParam) targetObject;
+        } else if (targetObject instanceof UserListParam) {
+          UserListParam userListParam = (UserListParam) targetObject;
+          List<Linkage<Long, Integer>> userIdGroupIdPairs = userListParam.getUserIdGroupIdPairs();
+          List<Integer> targetGroupIds = new ArrayList<>();
+          if (!CollectionUtils.isEmpty(userIdGroupIdPairs)) {
+            for (Linkage<Long, Integer> userIdGroupIdPair : userIdGroupIdPairs) {
+              targetGroupIds.add(userIdGroupIdPair.getEntry2());
+            }
+          }
+          organizationParam = (OrganizationParam)new OrganizationParam().setTargetGroupId(userListParam.getGroupId())
+              .setTargetGroupIds(targetGroupIds);
+        }
+        if (targetObject instanceof Integer) {
+          organizationParam = (OrganizationParam)new OrganizationParam().setTargetGroupId((Integer)targetObject);
+        }
+
+        if (organizationParam != null) {
+          Response<Void> response = uniClientFacade.getOrganizationResource().checkOwner(organizationParam);
           infoList = response.getInfo();
           if (CollectionUtils.isEmpty(infoList)) {
             return true;

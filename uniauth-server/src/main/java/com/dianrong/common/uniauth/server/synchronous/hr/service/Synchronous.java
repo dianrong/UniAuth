@@ -3,6 +3,7 @@ package com.dianrong.common.uniauth.server.synchronous.hr.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.HrSynchronousLogDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.common.util.SystemUtil;
 import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.mapper.HrSynchronousLogMapper;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -132,18 +134,26 @@ import java.util.concurrent.Executors;
         .append(SynchronousFile.JOB_UA.getName()).append(",")
         .append(SynchronousFile.LE_UA.getName()).append(",")
         .append(SynchronousFile.PERSON_UA.getName());
-    hrSynchronousLog.setProcessContent(sb.toString());
+
     hrSynchronousLog.setComputerIp(SystemUtil.getLocalIp());
     try {
       // 加载所有的文件内容
-      DepartmentList departmentList =
-          hrDeptAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.DEPT_UA.getName()));
-      JobList jobList =
-          hrJobAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.JOB_UA.getName()));
-      LegalEntityList legalEntityList =
-          hrLeAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.LE_UA.getName()));
-      PersonList personList =
-          hrPersonAnalyzer.analyze(fileLoader.loadFile(SynchronousFile.PERSON_UA.getName()));
+      LoadContent<InputStream> depContent = fileLoader.loadFile(SynchronousFile.DEPT_UA.getName());
+      DepartmentList departmentList = hrDeptAnalyzer.analyze(depContent.getContent());
+
+      LoadContent<InputStream> jobContent = fileLoader.loadFile(SynchronousFile.JOB_UA.getName());
+      JobList jobList = hrJobAnalyzer.analyze(jobContent.getContent());
+
+      LoadContent<InputStream> leContent = fileLoader.loadFile(SynchronousFile.LE_UA.getName());
+      LegalEntityList legalEntityList = hrLeAnalyzer.analyze(leContent.getContent());
+
+      LoadContent<InputStream> personContent =
+          fileLoader.loadFile(SynchronousFile.PERSON_UA.getName());
+      PersonList personList = hrPersonAnalyzer.analyze(personContent.getContent());
+
+      hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(Arrays
+          .asList(depContent.getSourceName(), jobContent.getSourceName(), leContent.getSourceName(),
+              personContent.getSourceName()).toString(), 200));
 
       // 外键约束检测
       foreignKeyCheck(departmentList, jobList, legalEntityList, personList);
@@ -175,7 +185,7 @@ import java.util.concurrent.Executors;
       // 其他异常
       log.error("Synchronous HR system data failed, exception occured.", e);
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.FAILURE.toString());
-      String expInfo = ExceptionUtils.getStackTrace(e);
+      String expInfo = StringUtil.subStrIfNeed(ExceptionUtils.getStackTrace(e), 500);
       hrSynchronousLog.setFailureMsg(expInfo);
       throw new AppException(InfoName.INTERNAL_ERROR, expInfo);
     } finally {
@@ -289,7 +299,7 @@ import java.util.concurrent.Executors;
           ftpFileDeleter.deleteFtpFileByExpiredTime(calendar.getTime());
       // 删除成功
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.SUCCESS.toString());
-      hrSynchronousLog.setProcessContent(successDeleteFileNames.toString());
+      hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(successDeleteFileNames.toString(), 200));
     } catch (DeleteFTPFileFailureException dfe) {
       log.debug("Failed delete files update time before:" + calendar.getTime(), dfe);
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.FAILURE.toString());

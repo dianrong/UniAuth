@@ -6,28 +6,8 @@ import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
-import com.dianrong.common.uniauth.server.data.entity.Domain;
-import com.dianrong.common.uniauth.server.data.entity.DomainExample;
-import com.dianrong.common.uniauth.server.data.entity.Grp;
-import com.dianrong.common.uniauth.server.data.entity.GrpPath;
-import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
-import com.dianrong.common.uniauth.server.data.entity.Permission;
-import com.dianrong.common.uniauth.server.data.entity.Role;
-import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
-import com.dianrong.common.uniauth.server.data.entity.Tenancy;
-import com.dianrong.common.uniauth.server.data.entity.TenancyExample;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
-import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
-import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
-import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
-import com.dianrong.common.uniauth.server.data.mapper.TenancyMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
-import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.mapper.*;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -35,23 +15,17 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.cache.TenancyCache;
 import com.dianrong.common.uniauth.server.service.common.CommonService;
 import com.dianrong.common.uniauth.server.service.inner.TenancyInnerService;
-import com.dianrong.common.uniauth.server.util.BeanConverter;
-import com.dianrong.common.uniauth.server.util.CheckEmpty;
-import com.dianrong.common.uniauth.server.util.TypeParseUtil;
-import com.dianrong.common.uniauth.server.util.UniBundle;
-import com.dianrong.common.uniauth.server.util.UniauthServerConstant;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.dianrong.common.uniauth.server.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class TenancyService {
@@ -143,7 +117,6 @@ public class TenancyService {
    * 如果不能获取, 返回一个默认的非租户相关的租户id -1
    *
    * @return tenancyId for current request
-   * @see AppConstants.TENANCY_UNRELATED_TENANCY_ID
    */
   public Long getOneCanUsedTenancyId() {
     return tenancyInnerService.getOneCanUsedTenancyId();
@@ -177,7 +150,7 @@ public class TenancyService {
     CheckEmpty.checkEmpty(code, "code");
     CheckEmpty.checkEmpty(adminEmail, "adminEmail");
     CheckEmpty.checkEmpty(adminPassword, "adminPassword");
-    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
+    dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_CODE, code);
     Tenancy tenancy = new Tenancy();
     tenancy.setCode(code);
     tenancy.setName(StringUtils.hasText(name) ? name : code);
@@ -220,7 +193,32 @@ public class TenancyService {
     admin.setTenancyId(tenancy.getId());
     userMapper.insert(admin);
 
-    // step3: init group
+    // step3: init root organization
+    Grp rootOrganization = new Grp();
+    rootOrganization.setName(tenancy.getName());
+    rootOrganization.setCode(AppConstants.ORGANIZATION_ROOT);
+    rootOrganization.setDescription(UniBundle.getMsg("tenancy.new.root.organization", tenancy.getName()));
+    rootOrganization.setStatus(AppConstants.STATUS_ENABLED);
+    rootOrganization.setTenancyId(tenancy.getId());
+    rootOrganization.setCreateDate(now);
+    rootOrganization.setLastUpdate(now);
+    grpMapper.insert(rootOrganization);
+
+    // init root organization grp_path
+    GrpPath organizationRootPath = new GrpPath();
+    organizationRootPath.setAncestor(rootOrganization.getId());
+    organizationRootPath.setDescendant(rootOrganization.getId());
+    organizationRootPath.setDeepth(AppConstants.ZERO_BYTE);
+    grpPathMapper.insert(organizationRootPath);
+
+    // root organization owner
+    UserGrpKey orgUserGrpOwner = new UserGrpKey();
+    orgUserGrpOwner.setUserId(admin.getId());
+    orgUserGrpOwner.setGrpId(rootOrganization.getId());
+    orgUserGrpOwner.setType(AppConstants.ONE_TYPE);
+    userGrpMapper.insert(orgUserGrpOwner);
+
+    // step4: init root group
     // root grp
     Grp rootGrp = new Grp();
     rootGrp.setName(tenancy.getName());
@@ -243,13 +241,12 @@ public class TenancyService {
     superAdminGrp.setLastUpdate(now);
     grpMapper.insert(superAdminGrp);
 
-    // step4: init grp_path
     // rootGrp - rootGrp - 0
-    GrpPath gpathRoot = new GrpPath();
-    gpathRoot.setAncestor(rootGrp.getId());
-    gpathRoot.setDescendant(rootGrp.getId());
-    gpathRoot.setDeepth(AppConstants.ZERO_BYTE);
-    grpPathMapper.insert(gpathRoot);
+    GrpPath groupRootPath = new GrpPath();
+    groupRootPath.setAncestor(rootGrp.getId());
+    groupRootPath.setDescendant(rootGrp.getId());
+    groupRootPath.setDeepth(AppConstants.ZERO_BYTE);
+    grpPathMapper.insert(groupRootPath);
 
     // rootGrp - superAdminGrp - 1
     GrpPath gpathRootSuperAdmin = new GrpPath();

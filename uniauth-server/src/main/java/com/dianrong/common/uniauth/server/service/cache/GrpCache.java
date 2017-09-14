@@ -7,6 +7,9 @@ import com.dianrong.common.uniauth.server.data.entity.GrpExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpExample.Criteria;
 import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.tree.TreeType;
+import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,7 +33,11 @@ public class GrpCache {
   public Grp getGrpInfoByCode(String grpCode, Long tenancyId) {
     Assert.notNull(grpCode);
     Assert.notNull(tenancyId);
+    // 默认需要过滤掉禁用的组
     GrpExample grpExample = new GrpExample();
+    grpExample.setGrpCode(TreeTypeHolder.get(TreeType.NORMAL).getRootCode());
+    grpExample.setStatus(AppConstants.STATUS_ENABLED);
+    grpExample.setTenancyId(tenancyId);
     Criteria grpCriteria = grpExample.createCriteria();
     grpCriteria.andCodeEqualTo(grpCode).andStatusEqualTo(AppConstants.STATUS_ENABLED)
         .andTenancyIdEqualTo(tenancyId);

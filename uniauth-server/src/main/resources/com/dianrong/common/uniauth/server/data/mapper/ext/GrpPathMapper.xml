@@ -24,6 +24,6 @@
         insert into grp_path (ancestor, descendant, deepth)
         select supertree.ancestor, subtree.descendant, supertree.deepth+subtree.deepth+1
         from grp_path as supertree join grp_path as
-        subtree where subtree.ancestor = #{subAncestor,jdbcType=INTEGER} and supertree.descendant = #{superDecendant,jdbcType=INTEGER};
+        subtree where subtree.ancestor = #{subAncestor,jdbcType=INTEGER} and supertree.descendant = #{superDescendant,jdbcType=INTEGER};
     </insert>
 </mapper>

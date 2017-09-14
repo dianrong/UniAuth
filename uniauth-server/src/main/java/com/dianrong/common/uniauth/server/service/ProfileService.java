@@ -65,11 +65,11 @@ public class ProfileService extends TenancyBasedService {
       Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {
     CheckEmpty.checkEmpty(code, "profile definition code");
     // code不能重复
-    dataFilter.addFieldCheck(FilterType.EXSIT_DATA, FieldType.FIELD_TYPE_CODE, code);
+    dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_CODE, code);
     // 子profile_definition必须存在
     if (!ObjectUtil.collectionIsEmptyOrNull(descendantProfileIds)) {
       for (Long pdid : descendantProfileIds) {
-        dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, pdid);
+        dataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, pdid);
       }
     }
 

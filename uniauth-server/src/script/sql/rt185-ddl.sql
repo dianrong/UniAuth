@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `hr_person` (
   `bank_account` VARCHAR(60) COMMENT '银行账号',
   `effective_start_date` DATE COMMENT '开始日期',
   `assignment_status_type` VARCHAR(20) COMMENT '分配状态类型',
-  `action_code` VARCHAR(20) COMMENT '操作编码',
+  `action_code` VARCHAR(50) COMMENT '操作编码',
   `travel_subsidies` VARCHAR(20) COMMENT '差标(根据业务规则按职级转换)',
   `bu_id` BIGINT(20) COMMENT '业务单位(关联部门表部门id)',
   `bu_short_code` VARCHAR(20) COMMENT '业务单位短码',

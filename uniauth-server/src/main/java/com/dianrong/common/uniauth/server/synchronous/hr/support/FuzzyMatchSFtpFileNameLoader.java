@@ -2,12 +2,12 @@ package com.dianrong.common.uniauth.server.synchronous.hr.support;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.synchronous.exp.FileLoadFailureException;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.LoadContent;
 import com.dianrong.common.uniauth.server.synchronous.support.FileLoader;
 import com.dianrong.common.uniauth.server.synchronous.support.SFTPConnectionManager;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * 模糊匹配FTP文件的名称的加载器.
@@ -50,8 +53,7 @@ import java.util.*;
    * @param file 需要再加的文件的模糊名称.
    * @throws FileLoadFailureException 加载异常.
    */
-  @Override
-  public InputStream loadFile(String file) throws FileLoadFailureException {
+  @Override public LoadContent<InputStream> loadFile(String file) throws FileLoadFailureException {
     Assert.notNull(file);
     ChannelSftp channelSftp = null;
     try {
@@ -59,9 +61,9 @@ import java.util.*;
       String fileName = computeFileName(channelSftp, file);
       if (fileName == null) {
         throw new FileLoadFailureException(
-            "File name start with " + getFileDateStr(file) + " is not exist!");
+            "File name start with " + file + " is not exist!");
       }
-      return channelSftp.get(fileName);
+      return new LoadContent<InputStream>(channelSftp.get(fileName), fileName);
     } catch (SftpException e) {
       log.error("Failed to load file " + file + " from sftp server", e);
     } finally {
@@ -75,8 +77,8 @@ import java.util.*;
    * @param file 需要再加的文件的模糊名称.
    * @throws FileLoadFailureException 加载异常.
    */
-  @Override
-  public String loadFileContent(String file) throws FileLoadFailureException {
+  @Override public LoadContent<String> loadFileContent(String file)
+      throws FileLoadFailureException {
     ChannelSftp channelSftp = null;
     ByteArrayOutputStream baos = null;
     try {
@@ -84,11 +86,11 @@ import java.util.*;
       String fileName = computeFileName(channelSftp, file);
       if (fileName == null) {
         throw new FileLoadFailureException(
-            "File name start with " + getFileDateStr(file) + " is not exist!");
+            "File name start with " + file + " is not exist!");
       }
       baos = new ByteArrayOutputStream();
       channelSftp.get(fileName, baos);
-      return baos.toString("UTF-8");
+      return new LoadContent<String>(baos.toString("UTF-8"), fileName);
     } catch (SftpException | UnsupportedEncodingException e) {
       log.error("Failed to load file " + file + " from sftp server", e);
     } finally {
@@ -111,22 +113,20 @@ import java.util.*;
    * @param file 文件的模糊名称.
    * @return 一个在FTP服务器上存在的文件的名称. 如果找不到,则返回Null.
    */
-  private String computeFileName(ChannelSftp channelSftp, String file) {
-    final String fileDateStr = getFileDateStr(file);
+  private String computeFileName(ChannelSftp channelSftp, final String file) {
     final SingleValueHolder<List<String>> holder = new SingleValueHolder<>(new ArrayList<String>(1));
     try {
       channelSftp.ls(".", new ChannelSftp.LsEntrySelector() {
         @Override public int select(ChannelSftp.LsEntry entry) {
           String fileName = entry.getFilename();
           if (fileName != null) {
-            String fileNamePrefix = fileDateStr;
+            String fileNamePrefix = file.trim();
             if (ignoreCase) {
               fileName = fileName.toLowerCase();
               fileNamePrefix = fileNamePrefix.toLowerCase();
             }
             if (fileName.startsWith(fileNamePrefix)) {
               holder.value.add(entry.getFilename());
-              return ChannelSftp.LsEntrySelector.BREAK;
             }
           }
           return ChannelSftp.LsEntrySelector.CONTINUE;
@@ -161,27 +161,6 @@ import java.util.*;
     public <E extends T>SingleValueHolder(E value){
       this.value = value;
     }
-  }
-
-  /**
-   * 返回文件的名字前缀.
-   * @return 例如字符串:LE_UA_20170824.
-   */
-  protected String getFileDateStr(String fileName){
-    StringBuilder sb = new StringBuilder();
-    sb.append(fileName.trim()).append(this.connectionSymbol).append(getDateStr());
-    return sb.toString();
-  }
-
-  /**
-   * 获取时间字符串的日期部分.<br>
-   * @return 20170827这种字符串.
-   */
-  protected String getDateStr() {
-    Calendar calendar = Calendar.getInstance();
-    // 计算前一天的日期
-    calendar.add(Calendar.DAY_OF_YEAR, -1);
-    return DateUtils.formatDate(calendar.getTime(), DATE_FORMAT);
   }
 
   public SFTPConnectionManager getSftpConnectionManager() {

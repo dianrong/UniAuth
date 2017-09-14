@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.datafilter.impl;
 
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.Cfg;
 import com.dianrong.common.uniauth.server.data.entity.CfgExample;
 import com.dianrong.common.uniauth.server.data.mapper.CfgMapper;
@@ -7,9 +8,10 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.TypeParseUtil;
 import com.dianrong.common.uniauth.server.util.UniBundle;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 配置的数据过滤处理实现.
@@ -54,9 +56,9 @@ public class CfgDataFilter extends CurrentAbstractDataFilter<Cfg> {
     CheckEmpty.checkEmpty(id, "cfgId");
     CfgExample condition = new CfgExample();
     condition.createCriteria().andIdEqualTo(id);
-    List<Cfg> selectByExample = cfgMapper.selectByExample(condition);
-    if (selectByExample != null && !selectByExample.isEmpty()) {
-      return selectByExample.get(0);
+    List<Cfg> cfgList = cfgMapper.selectByExample(condition);
+    if (ObjectUtil.IsNotEmptyOrNull(cfgList)) {
+      return cfgList.get(0);
     }
     return null;
   }

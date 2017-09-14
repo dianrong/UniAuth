@@ -126,7 +126,7 @@ public class ProfileCache {
   public void updateProfileDefinition(Long id, String name, String code, String description,
       Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {
     // Id 必须要存在.
-    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
+    dataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, id);
     if (!StringUtils.isBlank(code)) {
       dataFilter.updateFieldCheck(StringUtil.translateLongToInteger(id), FieldType.FIELD_TYPE_CODE,
           code);
@@ -188,7 +188,7 @@ public class ProfileCache {
   @Caching(evict = {@CacheEvict(key = "#id"), @CacheEvict(key = "'simple:' + #id")})
   public void extendProfileDefinition(Long id, Long tenancyId,
       Map<String, AttributeValModel> attributes, Set<Long> descendantProfileIds) {
-    dataFilter.addFieldCheck(FilterType.NO_DATA, FieldType.FIELD_TYPE_ID, id);
+    dataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, id);
     // 处理Profile的关联关系.
     profileDefinitionPathService.extendSubProfilePath(id, descendantProfileIds);
     // 处理扩展属性

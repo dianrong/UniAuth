@@ -247,10 +247,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
    */
   private String getConnectionDescription() {
     StringBuilder sb = new StringBuilder();
+    sb.append("\r\n");
     sb.append("Host:").append(serverHost).append(",");
     sb.append("Port:").append(serverPort).append(",");
     sb.append("Account:").append(sftpAccount).append(",");
-    sb.append("BaseDirectory:").append(baseDirectory);
+    sb.append("BaseDirectory:").append(baseDirectory).append(".\r\n");
     return sb.toString();
   }
 

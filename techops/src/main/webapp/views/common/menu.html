@@ -7,6 +7,7 @@
         <li role="presentation" ng-class="{active: $state.includes('tag')}" class="text-left"><a ui-sref="tag.tag-info" translate='menu.tagMgr'>标签管理</a></li>
         <li role="presentation" ng-class="{active: $state.includes('rel')}" class="text-left"><a ui-sref="rel.role--perm" translate='menu.relMgr'>关联管理</a></li>
         <li role="presentation" ng-class="{active: $state.is('batch')}" class="text-left"><a ui-sref="batch" translate='menu.batch'>批量处理</a></li>
+        <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.includes('organization')}" class="text-left"><a ui-sref="organization.this" translate='menu.organization'>组织关系</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('domain')}" class="text-left"><a ui-sref="domain" translate='menu.domainrMgr'>域管理</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('audit')}" class="text-left"><a ui-sref="audit" translate='menu.logMgr'>日志管理</a></li>
         <li ng-if="selectedDomain.option.code == 'techops'" role="presentation" ng-class="{active: $state.is('synchronous')}" class="text-left"><a ui-sref="synchronous" translate='menu.synchronous'>同步管理</a></li>

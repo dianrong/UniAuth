@@ -1,0 +1,25 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'organizationMgr.moveUser' | translate}}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <ng-form name="moveOrganizationForm" novalidate role="form">
+                <div class="form-group">
+                    <label class="panel-label" for="user">{{ 'organizationMgr.label.moveUser' | translate}}:</label>
+                    <input type="text" class="form-control" name="user" id="user" ng-model="moveUser.user.label" required disabled>
+                </div>
+                <div class="form-group">
+                    <label class="panel-label" for="organization">{{ 'organizationMgr.targetOrganization' | translate}}:</label>
+                    <input type="text" class="form-control" name="organization" id="organization" ng-model="moveUser.organization.label" required disabled>
+                </div>
+                <button type="button" class="btn btn-info" ng-click="move()"
+                        ng-disabled="moveOrganizationForm.fromOrganization.$invalid || moveOrganizationForm.toOrganization.$invalid">{{ 'organizationMgr.dialog.eav.confirmMove'| translate}}</button>
+                <button type="button" class="btn btn-link" ng-click="reset(false,true)">{{ 'organizationMgr.label.cancel'| translate }}</button>
+            </ng-form>
+        </div>
+    </div>
+</div>
+

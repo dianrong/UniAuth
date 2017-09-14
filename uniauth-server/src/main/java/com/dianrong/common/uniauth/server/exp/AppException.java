@@ -10,11 +10,16 @@ public class AppException extends UniauthException {
   private InfoName infoName;
   private String msg;
 
-  /**
-   * 构造一个AppException.
-   */
+  public AppException(InfoName infoName) {
+    this(infoName, null);
+  }
+
   public AppException(InfoName infoName, String msg) {
-    super(msg);
+    this(infoName, msg, null);
+  }
+
+  public AppException(InfoName infoName, String msg, Throwable t) {
+    super(msg, t);
     this.infoName = infoName;
     this.msg = msg;
   }
