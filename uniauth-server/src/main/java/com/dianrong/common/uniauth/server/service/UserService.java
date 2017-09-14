@@ -400,6 +400,18 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
       String name, String phone, String email, String account, Byte status, Integer tagId,
       Boolean needTag, Integer pageNumber, Integer pageSize) {
+    return searchUser(userId, groupId, needDescendantGrpUser, needDisabledGrpUser, roleId, userIds,
+        excludeUserIds, name, phone, email, account, status, tagId, needTag, pageNumber, pageSize,
+        false);
+  }
+
+  /**
+   * 根据条件查询用户.
+   */
+  public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser,
+      Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
+      String name, String phone, String email, String account, Byte status, Integer tagId,
+      Boolean needTag, Integer pageNumber, Integer pageSize, Boolean withoutTenantConcern) {
     if (pageNumber == null || pageSize == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -433,7 +445,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     if (!CollectionUtils.isEmpty(excludeUserIds)) {
       criteria.andIdNotIn(excludeUserIds);
     }
-    criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    if (!(withoutTenantConcern != null && withoutTenantConcern)) {
+      criteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    }
     if (groupId != null) {
       UserGrpExample userGrpExample = new UserGrpExample();
       UserGrpExample.Criteria userGrpExampleCriteria = userGrpExample.createCriteria();

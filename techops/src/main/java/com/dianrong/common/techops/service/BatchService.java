@@ -6,19 +6,10 @@ import com.dianrong.common.techops.service.analysis.IdentityAnalysisResult;
 import com.dianrong.common.techops.service.analysis.InputAnalyzer;
 import com.dianrong.common.techops.service.analysis.NormalAnalysisResult;
 import com.dianrong.common.techops.util.UniBundle;
+import com.dianrong.common.uniauth.common.bean.Linkage;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
-import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
-import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
-import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
-import com.dianrong.common.uniauth.common.bean.request.RoleParam;
-import com.dianrong.common.uniauth.common.bean.request.TagParam;
-import com.dianrong.common.uniauth.common.bean.request.UserListParam;
-import com.dianrong.common.uniauth.common.bean.request.UserParam;
-import com.dianrong.common.uniauth.common.bean.request.UserQuery;
+import com.dianrong.common.uniauth.common.bean.dto.*;
+import com.dianrong.common.uniauth.common.bean.request.*;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
@@ -27,22 +18,16 @@ import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * 处理批量上传处理功能的service.
@@ -168,9 +153,9 @@ public class BatchService {
 
   /**
    * 批量关联用户和组.
-   * 
+   *
    * @param grpId 组id,不能为空
-   * 
+   *
    * @throws BatchProcessException 批量处理异常
    */
   public BatchProcessResult relateUsersGrp(InputStream inputStream, Integer grpId)
@@ -201,6 +186,53 @@ public class BatchService {
     userListParam.setUserIds(new ArrayList<>(userIds));
     userListParam.setNormalMember(Boolean.TRUE);
     Response<Void> response = uarwFacade.getGroupRWResource().addUsersIntoGroup(userListParam);
+    if (!CollectionUtils.isEmpty(response.getInfo())) {
+      throw new BatchProcessException(response.getInfo().get(0).getMsg());
+    }
+    return processResult;
+  }
+
+  /**
+   * 批量去除用户和组的关联.
+   *
+   * @param grpId 组id,不能为空
+   *
+   * @throws BatchProcessException 批量处理异常
+   */
+  public BatchProcessResult removeUserGrpRelation(InputStream inputStream, Integer grpId)
+      throws IOException {
+    List<IdentityAnalysisResult> results = InputAnalyzer.analysisInputForIdentity(inputStream);
+    BatchProcessResult processResult = new BatchProcessResult();
+    Set<Long> userIds = Sets.newHashSet();
+    for (IdentityAnalysisResult result : results) {
+      UserParam userParam = result.getUserParam();
+      String identity = getIdentity(userParam);
+      // 根据条件查找用户
+      List<UserDto> users = queryUser(userParam);
+      if (users.isEmpty()) {
+        processResult.getErrors().add(BatchProcessResult.Failure.build(identity,
+            UniBundle.getMsg("service.batch.process.query.user.none")));
+        continue;
+      } else {
+        for (UserDto ud : users) {
+          userIds.add(ud.getId());
+        }
+        processResult.getSuccesses().add(identity);
+      }
+    }
+
+    // 取消用户和组的关联关系
+    UserListParam userListParam = new UserListParam();
+    List<Linkage<Long, Integer>> userIdGroupIdPairs = new ArrayList<>(userIds.size());
+    for(Long userId : userIds) {
+      Linkage<Long, Integer> linkage = new Linkage<>();
+      linkage.setEntry1(userId);
+      linkage.setEntry2(grpId);
+      userIdGroupIdPairs.add(linkage);
+    }
+    userListParam.setUserIdGroupIdPairs(userIdGroupIdPairs);
+    userListParam.setNormalMember(Boolean.TRUE);
+    Response<Void> response = uarwFacade.getGroupRWResource().removeUsersFromGroup(userListParam);
     if (!CollectionUtils.isEmpty(response.getInfo())) {
       throw new BatchProcessException(response.getInfo().get(0).getMsg());
     }

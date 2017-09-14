@@ -6,4 +6,4 @@ insert into api_permission(uri,status,method,type,comment,create_date,last_updat
 values('^/ws/rs/attribute-extend/search-attribute-extend$',0,'GET',1,'',now(),now());
 
 -- update dianrong tenancy name
-UPDATE tenancy SET name='点融' where code = 'DIANRONG'
+UPDATE tenancy SET name='点融' where code = 'DIANRONG';

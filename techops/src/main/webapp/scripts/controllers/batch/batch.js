@@ -147,7 +147,34 @@ define(
 							finish_i18n_code : function() {
 								return 'batch.process.finish.relate.user.grp';
 							}
-						}, 
+						},
+						{
+                            // 批量去除用户和组关联
+                            type : function() {
+                                return 'batch-remove-user-grp-relation';
+                            },
+                            addParams : function(fileItem) {
+                                var p = {
+                                    groupId : $scope.process_param.grp_param.selected.id
+                                };
+                                fileItem.formData.push(p);
+                            },
+                            grp_query_show : function() {
+                                return true;
+                            },
+                            process_url : function() {
+                                return constant.apiBase + "/batch/remove-user-grp-relation";
+                            },
+                            process_btn_enable : function() {
+                                if ($scope.process_param.grp_param && $scope.process_param.grp_param.selected) {
+                                    return true;
+                                }
+                                return false;
+                            },
+                            finish_i18n_code : function() {
+                                return 'batch.process.finish.remove.user.grp.relation';
+                            }
+                        },
 						{
 							// 批量添加用户
 							type : function() {
@@ -234,7 +261,7 @@ define(
 							finish_i18n_code : function() {
 								return 'batch.process.finish.relate.user.tag';
 							}
-						}, 
+						},
 						{
 							// 批量关联用户和角色
 							type : function() {
