@@ -342,14 +342,25 @@ public class GroupService extends TenancyBasedService {
       }
       if (needParentId != null && needParentId) {
         GrpPathExample grpPathExample = new GrpPathExample();
+        grpPathExample.setOrderByClause(" deepth asc ");
         grpPathExample.createCriteria()
-            .andDescendantIn(new ArrayList<>(groupIdGroupDtoPair.keySet()))
-            .andDeepthEqualTo(AppConstants.ONE_BYTE);
+            .andDescendantIn(new ArrayList<>(groupIdGroupDtoPair.keySet()));
         List<GrpPath> grpPaths = grpPathMapper.selectByExample(grpPathExample);
         if (!CollectionUtils.isEmpty(grpPaths)) {
           for (GrpPath grpPath : grpPaths) {
+            if (grpPath.getAncestor().equals(grpPath.getDescendant())) {
+              continue;
+            }
             GroupDto groupDto = groupIdGroupDtoPair.get(grpPath.getDescendant());
-            groupDto.setParentId(grpPath.getAncestor());
+            if (AppConstants.ONE_BYTE.equals(grpPath.getDeepth())) {
+              groupDto.setParentId(grpPath.getAncestor());
+            }
+            List<Integer> parentIds = groupDto.getParentIds();
+            if (parentIds == null) {
+              parentIds = Lists.newArrayList();
+              groupDto.setParentIds(parentIds);
+            }
+            parentIds.add(grpPath.getAncestor());
           }
         }
       }

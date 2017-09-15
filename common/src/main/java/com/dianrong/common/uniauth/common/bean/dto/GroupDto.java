@@ -28,6 +28,8 @@ public class GroupDto extends TenancyBaseDto {
   private String description;
   @ApiModelProperty("父组id")
   private Integer parentId;
+  @ApiModelProperty("父组id集合")
+  private List<Integer> parentIds;
   @ApiModelProperty("组对应的标签信息")
   private List<TagDto> tags;
   @ApiModelProperty("与组关联的用户")
@@ -201,5 +203,13 @@ public class GroupDto extends TenancyBaseDto {
   public GroupDto setGrpExtendVals(List<GrpExtendValDto> grpExtendVals) {
     this.grpExtendVals = grpExtendVals;
     return this;
+  }
+
+  public List<Integer> getParentIds() {
+    return parentIds;
+  }
+
+  public void setParentIds(List<Integer> parentIds) {
+    this.parentIds = parentIds;
   }
 }
