@@ -17,7 +17,7 @@ define(['../../utils/constant'], function(constant) {
             //暂不支持批量移动
             var userIdOrganizationIdPairs = [{
                 entry1:user.id,
-                entry2:user.parent.id
+                entry2:user.parentId
             }];
             var params = {};
             params.userIdGroupIdPairs = userIdOrganizationIdPairs;

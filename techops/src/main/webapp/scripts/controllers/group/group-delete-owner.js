@@ -16,7 +16,7 @@ define(['../../utils/constant'],function(constant) {
             for(var i=0;i<nodes.length;i++) {
                 var linkage = {};
                 linkage.entry1 = nodes[i].id;
-                linkage.entry2 = nodes[i].parent.id;
+                linkage.entry2 = nodes[i].parentId;
                 userIdGroupIdPairs.push(linkage);
             }
             var params = {};

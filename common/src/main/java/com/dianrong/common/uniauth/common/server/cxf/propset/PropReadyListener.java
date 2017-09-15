@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * . 在spring 初始化完成之后执行
+ * 在spring 初始化完成之后执行.
  *
  * @author wanglin
  */
@@ -32,15 +32,13 @@ public class PropReadyListener implements ApplicationListener<ContextRefreshedEv
   @Override
   public void onApplicationEvent(ContextRefreshedEvent event) {
     // root context
-    if (event.getApplicationContext().getParent() == null) {
       try {
-        ClientFilterSingleton.propSetInvoke(findBeanList(HeaderProducer.class));
-        ServerFilterSingletion.propSetInvoke(findBeanList(HeaderConsumer.class));
+        ClientFilterSingleton.addNewHeaderProducers(findBeanList(HeaderProducer.class));
+        ServerFilterSingletion.addNewHeaderProducers(findBeanList(HeaderConsumer.class));
       } catch (InterruptedException e) {
         log.error("failed to set prop to cxf filter", e);
         Thread.currentThread().interrupt();
       }
-    }
   }
 
   @Override

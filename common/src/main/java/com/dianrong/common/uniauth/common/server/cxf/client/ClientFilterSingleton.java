@@ -1,33 +1,31 @@
 package com.dianrong.common.uniauth.common.server.cxf.client;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.cxf.common.util.CollectionUtils;
+import org.springframework.core.OrderComparator;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public final class ClientFilterSingleton {
 
   private static UniauthCxfClientFilter instance = new UniauthCxfClientFilter();
-  private static final AtomicBoolean propSetOnce = new AtomicBoolean(false);
 
   public static ClientRequestFilter getInstance() {
     return instance;
   }
 
-  /**
-   * 初始化HeaderProducer的接口.
-   */
-  public static void propSetInvoke(List<HeaderProducer> producers) {
-    if (propSetOnce.compareAndSet(false, true)) {
-      if (producers != null) {
-        instance.setProducers(producers);
-      }
-    }
+  // 添加新的HeaderProducer
+  public static void addNewHeaderProducers(Collection<HeaderProducer> producers) {
+    instance.addHeaderProducers(producers);
+  }
+
+  public static void addNewHeaderProducers(HeaderProducer producer) {
+    instance.addHeaderProducer(producer);
   }
 
   @Provider
@@ -35,17 +33,19 @@ public final class ClientFilterSingleton {
 
     private Set<HeaderProducer> producers;
 
-    public UniauthCxfClientFilter() {
-      this(new ArrayList<HeaderProducer>());
-    }
+    private volatile boolean modified = false;
 
-    public UniauthCxfClientFilter(List<HeaderProducer> producers) {
-      setProducers(producers);
+    private Set<HeaderProducer> tempProducers;
+
+    public UniauthCxfClientFilter() {
+      this.producers = new HashSet<>();
+      this.tempProducers = new HashSet<>(0);
     }
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-      for (HeaderProducer producer : this.producers) {
+      sortProducers();
+      for (HeaderProducer producer : this.tempProducers) {
         String key = producer.key();
         try {
           String value = producer.produce();
@@ -58,29 +58,44 @@ public final class ClientFilterSingleton {
       }
     }
 
-    // sorted list
-    public void setProducers(List<HeaderProducer> producers) {
-      if (producers == null) {
+    public synchronized void addHeaderProducer(HeaderProducer headerProducer) {
+      if (headerProducer == null) {
+        log.warn("Cannot set null headerProducer");
         return;
       }
-      producers = new ArrayList<HeaderProducer>(producers);
-      Collections.sort(producers, new Comparator<HeaderProducer>() {
-        @Override
-        public int compare(HeaderProducer o1, HeaderProducer o2) {
-          if (o2.getOrder() > o1.getOrder()) {
-            return 1;
-          }
-          if (o2.getOrder() == o1.getOrder()) {
-            return 0;
-          }
-          return -1;
-        }
-      });
-      Map<String, HeaderProducer> map = new HashMap<String, HeaderProducer>();
-      for (HeaderProducer hp : producers) {
-        map.put(hp.key(), hp);
+      this.producers.add(headerProducer);
+      this.modified = true;
+    }
+
+    public synchronized void addHeaderProducers(Collection<HeaderProducer> headerProducers) {
+      if (CollectionUtils.isEmpty(headerProducers)) {
+        return;
       }
-      this.producers = new HashSet<HeaderProducer>(map.values());
+      this.producers.addAll(headerProducers);
+      this.modified = true;
+    }
+
+    // sorted list
+    private void sortProducers() {
+      if (!this.modified) {
+        return;
+      }
+      synchronized (this) {
+        Comparator<Object> comparator = OrderComparator.INSTANCE;
+        List<HeaderProducer> headerProducersList = new ArrayList<>(this.producers);
+        Collections.sort(headerProducersList, comparator);
+        Map<String, HeaderProducer> map =
+            new HashMap<String, HeaderProducer>(headerProducersList.size());
+
+        for (HeaderProducer hp : headerProducersList) {
+          if (map.get(hp.key()) != null) {
+            continue;
+          }
+          map.put(hp.key(), hp);
+        }
+        this.tempProducers = new HashSet<HeaderProducer>(map.values());
+      }
+      this.modified = false;
     }
   }
 }

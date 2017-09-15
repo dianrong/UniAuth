@@ -4,7 +4,7 @@ import com.dianrong.common.uniauth.common.server.UniauthLocaleInfoHolder;
 import org.springframework.stereotype.Component;
 
 /**
- * . 默认实现
+ * 默认实现.
  *
  * @author wanglin
  */
