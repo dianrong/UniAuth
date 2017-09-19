@@ -398,10 +398,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser,
       Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
-      String name, String phone, String email, String account, Byte status, Integer tagId,
+      String name, String phone, String exactPhone, String email, String exactEmail, String account,
+      Byte status, Integer tagId,
       Boolean needTag, Integer pageNumber, Integer pageSize) {
     return searchUser(userId, groupId, needDescendantGrpUser, needDisabledGrpUser, roleId, userIds,
-        excludeUserIds, name, phone, email, account, status, tagId, needTag, pageNumber, pageSize,
+        excludeUserIds, name, phone, exactPhone, email, exactEmail, account, status, tagId, needTag,
+        pageNumber, pageSize,
         false);
   }
 
@@ -410,7 +412,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser,
       Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
-      String name, String phone, String email, String account, Byte status, Integer tagId,
+      String name, String phone, String exactPhone, String email, String exactEmail, String account,
+      Byte status, Integer tagId,
       Boolean needTag, Integer pageNumber, Integer pageSize, Boolean withoutTenantConcern) {
     if (pageNumber == null || pageSize == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
@@ -427,8 +430,14 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     if (phone != null) {
       criteria.andPhoneLike("%" + phone + "%");
     }
+    if (exactPhone != null) {
+      criteria.andPhoneEqualTo(exactPhone);
+    }
     if (email != null) {
       criteria.andEmailLike("%" + email + "%");
+    }
+    if (exactEmail != null) {
+      criteria.andEmailEqualTo(exactEmail);
     }
     if (account != null) {
       criteria.andAccountLike("%" + account + "%");
