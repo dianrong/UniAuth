@@ -36,6 +36,10 @@ public class GroupProfileResource implements IGroupProfileRWResource {
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",
           required = true, paramType = "query"),
+      @ApiImplicitParam(name = "groupId", value = "组id", dataType = "long",
+          required = true, paramType = "query"),
+      @ApiImplicitParam(name = "profileId", value = "指定返回的profile的Id", dataType = "long",
+          paramType = "query"),
       @ApiImplicitParam(name = "attributes", value = "更新的扩展属性值集合", dataType = "java.util.Map",
           required = true, paramType = "query")})
   @Timed
