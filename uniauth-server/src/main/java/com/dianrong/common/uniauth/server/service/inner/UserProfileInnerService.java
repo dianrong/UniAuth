@@ -6,6 +6,9 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
+import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
@@ -21,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * 用户Profile操作的service实现.
@@ -41,12 +46,16 @@ public class UserProfileInnerService extends TenancyBasedService {
   @Autowired
   private UserExtendValMapper userExtendValMapper;
 
+  @Resource(name = "userDataFilter")
+  private DataFilter UserDataFilter;
+
   /**
    * 更新用户的扩展属性值.
    */
   @Transactional
   public void addOrUpdateUserAttributes(Long userId, Map<String, String> attributes) {
     CheckEmpty.checkEmpty(userId, "userId");
+    UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, userId);
     if (attributes != null && !attributes.isEmpty()) {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
@@ -64,6 +73,7 @@ public class UserProfileInnerService extends TenancyBasedService {
   @Transactional
   public void addOrUpdateUserProfile(Long uniauthId, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(uniauthId, "uniauthId");
+    UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, uniauthId);
     if (attributes != null && !attributes.isEmpty()) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
@@ -103,6 +113,7 @@ public class UserProfileInnerService extends TenancyBasedService {
   private UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
     CheckEmpty.checkEmpty(userId, "userId");
     CheckEmpty.checkEmpty(extendId, "extendId");
+    UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, userId);
     UserExtendValExample userExtendValExample = new UserExtendValExample();
     UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
     criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)

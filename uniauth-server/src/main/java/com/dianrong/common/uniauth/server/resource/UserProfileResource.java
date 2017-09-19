@@ -7,16 +7,14 @@ import com.dianrong.common.uniauth.common.bean.request.ProfileParam;
 import com.dianrong.common.uniauth.server.service.UserProfileService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserProfileRWResource;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * 用户Profile操作相关接口.

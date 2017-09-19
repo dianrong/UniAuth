@@ -99,6 +99,9 @@ public class GroupProfileService extends TenancyBasedService {
   public Map<String, Object> addOrUpdateGrpProfile(Integer grpId, Long profileId,
       Map<String, AttributeValModel> attributes) {
     groupProfileInnerService.addOrUpdateGrpProfile(grpId, attributes);
+    if (profileId == null) {
+      return Collections.emptyMap();
+    }
     return getGroupProfile(grpId, profileId, null);
   }
 }

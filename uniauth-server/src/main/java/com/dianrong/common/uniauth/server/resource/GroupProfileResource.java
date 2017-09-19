@@ -6,16 +6,14 @@ import com.dianrong.common.uniauth.common.bean.request.ProfileParam;
 import com.dianrong.common.uniauth.server.service.GroupProfileService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupProfileRWResource;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * Group的Profile相关操作.

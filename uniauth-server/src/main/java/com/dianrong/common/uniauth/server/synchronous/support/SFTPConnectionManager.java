@@ -1,7 +1,6 @@
 package com.dianrong.common.uniauth.server.synchronous.support;
 
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.server.synchronous.exp.NoMoreFTPClientException;
 import com.dianrong.common.uniauth.server.synchronous.exp.SFTPServerProcessException;
 import com.dianrong.common.uniauth.server.synchronous.hr.support.HrDataSynchronousSwitcher;
 import com.jcraft.jsch.*;
@@ -11,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 处理SFTP连接的管理类.
@@ -22,19 +18,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j @Component public class SFTPConnectionManager implements InitializingBean {
 
-  /**
-   * 最多同时存在5个Channel.
-   */
-  public static final int MAX_POOL_SIZE = 5;
-
-  @Value("#{uniauthConfig['synchronization.hr.sftp.host']}")
-  private String serverHost = "";
+  @Value("#{uniauthConfig['synchronization.hr.sftp.host']}") private String serverHost = "";
 
   /**
    * 默认端口号为22.
    */
-  @Value("#{uniauthConfig['synchronization.hr.sftp.port']?:'22'}")
-  private int serverPort = 22;
+  @Value("#{uniauthConfig['synchronization.hr.sftp.port']?:'22'}") private int serverPort = 22;
 
   /**
    * 登录SFTP服务器的账号和密码
@@ -45,16 +34,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
   /**
    * 登录SFTP的base路径.
    */
-  @Value("#{uniauthConfig['synchronization.hr.sftp.base.directory']}")
-  private String baseDirectory = "/";
-
-  /**
-   * 存放所有创建的Channel.
-   * Key为一个Boolean变量.
-   * <p>true:可分配使用;false:已经被分配使用.</p>
-   */
-  private ConcurrentHashMap<ChannelSftp, AtomicBoolean> allSFtpClients =
-      new ConcurrentHashMap<>(MAX_POOL_SIZE);
+  @Value("#{uniauthConfig['synchronization.hr.sftp.base.directory']}") private String
+      baseDirectory = "/";
 
   /**
    * 开关.
@@ -65,12 +46,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
    * 创建SFTP连接的管理类.
    */
   private JSch jsch;
-  private volatile Session session;
-
-  /**
-   * 用于创建连接的时候,加锁.
-   */
-  private Object lock = new Object();
 
   @Override public void afterPropertiesSet() throws Exception {
     init();
@@ -85,30 +60,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
       return;
     }
     this.jsch = new JSch();
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      // 系统退出,退出所有的FTP登录.
-      @Override
-      public void run() {
-        disConnectAll();
-      }
-    });
-  }
-
-
-
-  /**
-   * 断掉所有的连接.
-   */
-  public void disConnectAll() {
-    log.info("DisConnect all ftp client, total count:{}", allSFtpClients.size());
-    for (Map.Entry<ChannelSftp, AtomicBoolean> entry : allSFtpClients.entrySet()) {
-      ChannelSftp channelSftp = entry.getKey();
-      disConnectChannel(channelSftp);
-    }
-    // 关闭session
-    if (this.session != null) {
-      this.session.disconnect();
-    }
   }
 
   /**
@@ -118,16 +69,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
     if (channelSftp == null) {
       return;
     }
-
-    for (Map.Entry<ChannelSftp, AtomicBoolean> entry : allSFtpClients.entrySet()) {
-      ChannelSftp sftp = entry.getKey();
-      // 同一个对象
-      if (channelSftp == sftp) {
-        AtomicBoolean availableBoolean = entry.getValue();
-        availableBoolean.compareAndSet(false, true);
-        break;
-      }
-    }
+    // 断开连接
+    disConnectChannel(channelSftp);
   }
 
   /**
@@ -135,45 +78,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
    */
   public ChannelSftp getSftpClient() throws SFTPServerProcessException {
     ChannelSftp sftp = null;
-    for (Map.Entry<ChannelSftp, AtomicBoolean> entry : allSFtpClients.entrySet()) {
-      entry.getValue();
-      AtomicBoolean availableBoolean = entry.getValue();
-      // 如果可用
-      if (availableBoolean.get()) {
-        if (availableBoolean.compareAndSet(true, false)) {
-          sftp = entry.getKey();
-          break;
-        }
-      }
-    }
-    if (sftp == null) {
-      int currentNum = allSFtpClients.size();
-      if (currentNum < MAX_POOL_SIZE) {
-        synchronized (lock) {
-          // double check
-          currentNum = allSFtpClients.size();
-          if (currentNum < MAX_POOL_SIZE) {
-            try {
-              ensureSessionAvailable();
-              // 创建新的sftp Channel
-              Channel channel = this.session.openChannel("sftp");
-              sftp = (ChannelSftp) channel;
-              // 放入到容器中
-              allSFtpClients.put(sftp, new AtomicBoolean(false));
-            } catch (JSchException jsh) {
-              log.error("Session failed open a new ChannelSftp." + getConnectionDescription(), jsh);
-            }
-          }
-        }
-      }
-    }
-    if (sftp == null) {
-      throw new NoMoreFTPClientException("No more available channelSftp.");
+    Session session = refreshNewSession();
+    try {
+      // 创建新的sftp Channel
+      Channel channel = session.openChannel("sftp");
+      sftp = (ChannelSftp) channel;
+    } catch (JSchException jsh) {
+      log.error("Session failed open a new ChannelSftp." + getConnectionDescription(), jsh);
+      throw new SFTPServerProcessException(
+          "Session failed open a new ChannelSftp." + getConnectionDescription(), jsh);
     }
     try {
-      if (!sftp.isConnected()) {
-        sftp.connect();
-      }
+      sftp.connect();
       // 切换到目标路径
       sftp.cd(this.baseDirectory);
     } catch (JSchException e) {
@@ -191,37 +107,30 @@ import java.util.concurrent.atomic.AtomicBoolean;
   }
 
   /**
-   * 确保当前session可用.
+   * 每次都创建一个新的session来用,老的session关掉.
    */
-  private void ensureSessionAvailable() {
-    // 正常情况,直接返回.
-    if (this.session != null) {
-      if (this.session.isConnected()) {
-        return;
-      }
+  private Session refreshNewSession() {
+    Session session;
+    try {
+      session = this.jsch.getSession(this.sftpAccount, this.serverHost, this.serverPort);
+    } catch (JSchException e) {
+      log.error("Failed create sftp session." + getConnectionDescription(), e);
+      throw new SFTPServerProcessException(
+          "Failed to create sftp session." + getConnectionDescription(), e);
     }
-    // 重新创建一个新的session
-    synchronized (lock) {
-      try {
-        this.session = this.jsch.getSession(this.sftpAccount, this.serverHost, this.serverPort);
-      } catch (JSchException e) {
-        log.error("Failed create sftp session." + getConnectionDescription(), e);
-        throw new SFTPServerProcessException(
-            "Failed to create sftp session." + getConnectionDescription(), e);
-      }
-      log.debug("Session created." + getConnectionDescription());
-      session.setPassword(this.sftpPassword);
-      Properties sshConfig = new Properties();
-      sshConfig.put("StrictHostKeyChecking", "no");
-      session.setConfig(sshConfig);
-      try {
-        this.session.connect();
-      } catch (JSchException e) {
-        log.error("Failed connect sftp session." + getConnectionDescription(), e);
-        throw new SFTPServerProcessException(
-            "Failed to connect sftp session." + getConnectionDescription(), e);
-      }
+    log.debug("Session created." + getConnectionDescription());
+    session.setPassword(this.sftpPassword);
+    Properties sshConfig = new Properties();
+    sshConfig.put("StrictHostKeyChecking", "no");
+    session.setConfig(sshConfig);
+    try {
+      session.connect();
+    } catch (JSchException e) {
+      log.error("Failed connect sftp session." + getConnectionDescription(), e);
+      throw new SFTPServerProcessException(
+          "Failed to connect sftp session." + getConnectionDescription(), e);
     }
+    return session;
   }
 
   /**
@@ -230,9 +139,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
   private void disConnectChannel(ChannelSftp channelSftp) throws SFTPServerProcessException {
     log.debug("Disconnect the channelSftp:{}", channelSftp);
     try {
-      if (channelSftp.isConnected()) {
-        channelSftp.disconnect();
+      Session session = channelSftp.getSession();
+      if (session != null) {
+        session.disconnect();
       }
+      channelSftp.disconnect();
     } catch (Exception ex) {
       log.error("Failed to disconnect channel." + getConnectionDescription(), ex);
     } finally {
@@ -269,8 +180,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
   }
 
   public void setServerPort(int serverPort) {
-    if (serverPort < 0 || serverPort >65535) {
-      throw new IllegalArgumentException("serverPort need between 0 and 65525, but set "+serverHost);
+    if (serverPort < 0 || serverPort > 65535) {
+      throw new IllegalArgumentException(
+          "serverPort need between 0 and 65525, but set " + serverHost);
     }
     this.serverPort = serverPort;
   }
