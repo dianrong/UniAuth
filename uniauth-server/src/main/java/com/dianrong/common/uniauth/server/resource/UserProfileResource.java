@@ -7,16 +7,14 @@ import com.dianrong.common.uniauth.common.bean.request.ProfileParam;
 import com.dianrong.common.uniauth.server.service.UserProfileService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserProfileRWResource;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * 用户Profile操作相关接口.
@@ -41,6 +39,10 @@ public class UserProfileResource implements IUserProfileRWResource {
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",
           required = true, paramType = "query"),
+      @ApiImplicitParam(name = "uniauthId", value = "用户id", dataType = "long",
+          required = true, paramType = "query"),
+      @ApiImplicitParam(name = "profileId", value = "指定返回的profile的Id", dataType = "long",
+          paramType = "query"),
       @ApiImplicitParam(name = "attributes", value = "更新的扩展属性值集合", dataType = "java.util.Map",
           required = true, paramType = "query")})
   @Timed

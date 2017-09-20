@@ -15,7 +15,9 @@ public class UserQuery extends PageParam {
   private List<Long> userIds;
   private String name;
   private String phone;
+  private String exactPhone;
   private String email;
+  private String exactEmail;
   private Byte status;
   private Integer tagId;
   private Integer groupId;
@@ -157,6 +159,24 @@ public class UserQuery extends PageParam {
 
   public UserQuery setAccount(String account) {
     this.account = account;
+    return this;
+  }
+
+  public String getExactPhone() {
+    return exactPhone;
+  }
+
+  public UserQuery setExactPhone(String exactPhone) {
+    this.exactPhone = exactPhone;
+    return this;
+  }
+
+  public String getExactEmail() {
+    return exactEmail;
+  }
+
+  public UserQuery setExactEmail(String exactEmail) {
+    this.exactEmail = exactEmail;
     return this;
   }
 }

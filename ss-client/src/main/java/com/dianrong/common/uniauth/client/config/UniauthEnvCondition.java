@@ -23,10 +23,10 @@ public abstract class UniauthEnvCondition implements ConfigurationCondition {
       beanFactory.getBeanDefinition("methodSecurityExpressionHandler");
       beanFactory.getBeanDefinition("ssAuthenticationSuccessHandler");
     } catch (NoSuchBeanDefinitionException e) {
-      log.warn("Need load uniauth spring env first", e);
+      log.info("Current set up environment is spring boot.");
       return false;
     }
-    log.info("Loaded uniauth spring environment");
+    log.info("Current set up environment is normal spring web context.");
     return doMatchesProcess(context, metadata);
   }
 

@@ -19,17 +19,11 @@ import com.dianrong.common.uniauth.server.service.support.QueryProfileDefinition
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 用户Profile操作的service实现.
@@ -147,6 +141,9 @@ public class UserProfileService extends TenancyBasedService {
   public Map<String, Object> addOrUpdateUserProfile(Long uniauthId, Long profileId,
       Map<String, AttributeValModel> attributes) {
     userProfileInnerService.addOrUpdateUserProfile(uniauthId, attributes);
+    if (profileId == null) {
+      return Collections.emptyMap();
+    }
     return getUserProfile(uniauthId, profileId);
   }
 }

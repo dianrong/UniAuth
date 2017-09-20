@@ -7,23 +7,22 @@ import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
+import com.dianrong.common.uniauth.server.datafilter.FieldType;
+import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 组Profile操作的service实现.
@@ -47,12 +46,16 @@ public class GroupProfileInnerService extends TenancyBasedService {
   @Resource(name = "grpExtendValDataFilter")
   private DataFilter dataFilter;
 
+  @Resource(name = "groupDataFilter")
+  private DataFilter groupDataFilter;
+
   /**
    * 更新组的扩展属性值.
    */
   @Transactional
   public void addOrUpdateUserAttributes(Integer grpId, Map<String, String> attributes) {
     CheckEmpty.checkEmpty(grpId, "groupId");
+    groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, grpId);
     if (attributes != null && !attributes.isEmpty()) {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
@@ -70,6 +73,7 @@ public class GroupProfileInnerService extends TenancyBasedService {
   @Transactional
   public void addOrUpdateGrpProfile(Integer grpId, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(grpId, "groupId");
+    groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, grpId);
     if (attributes != null && !attributes.isEmpty()) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
@@ -109,6 +113,7 @@ public class GroupProfileInnerService extends TenancyBasedService {
   private GrpExtendValDto addOrUpdate(Integer groupId, Long extendId, String value) {
     CheckEmpty.checkEmpty(groupId, "groupId");
     CheckEmpty.checkEmpty(extendId, "extendId");
+    groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, groupId);
     GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
     GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
     criteria.andGrpIdEqualTo(groupId).andExtendIdEqualTo(extendId)
