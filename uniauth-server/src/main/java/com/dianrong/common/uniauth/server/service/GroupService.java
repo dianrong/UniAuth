@@ -1309,7 +1309,7 @@ public class GroupService extends TenancyBasedService {
     paramMap.put("rootCode", TreeTypeHolder.getWithCheck().getRootCode());
     List<Grp> grpList = grpMapper.listGroupsRelateToUser(paramMap);
     List<GroupDto> groupDtos = Lists.newArrayList();
-    if (ObjectUtil.IsNotEmptyOrNull(groupDtos)) {
+    if (ObjectUtil.IsNotEmptyOrNull(grpList)) {
       for (Grp grp : grpList) {
         groupDtos.add(BeanConverter.convert(grp));
       }
