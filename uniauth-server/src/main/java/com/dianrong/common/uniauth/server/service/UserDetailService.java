@@ -12,7 +12,7 @@ import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
-import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -124,33 +124,33 @@ public class UserDetailService extends TenancyBasedService {
 
   private void updateUserExtendVal(UserDetailInfoParam param, boolean updateEmptyVal) {
     Map<String, String> attributes = Maps.newHashMap();
-    updateAttributes(attributes, AtrributeDefine.FIRST_NAME, param.getFirstName(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.LAST_NAME, param.getLastName(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.DISPLAY_NAME, param.getDisplayName(),
+    updateAttributes(attributes, AttributeDefine.FIRST_NAME, param.getFirstName(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.LAST_NAME, param.getLastName(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.DISPLAY_NAME, param.getDisplayName(),
         updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.NICK_NAME, param.getNickName(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.IDENTITY_NO, param.getIdentityNo(),
+    updateAttributes(attributes, AttributeDefine.NICK_NAME, param.getNickName(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.IDENTITY_NO, param.getIdentityNo(),
         updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.MOTTO, param.getMotto(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.IMAGE, param.getImage(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.SSN, param.getSsn(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.WEIBO, param.getWeibo(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.WECHAT_NO, param.getWechatNo(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.ADDRESS, param.getAddress(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.BIRTHDAY, param.getBirthday(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.GENDER, param.getGender(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.POSITION, param.getPosition(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.LAST_POSITION_MODIFY_DATE,
+    updateAttributes(attributes, AttributeDefine.MOTTO, param.getMotto(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.IMAGE, param.getImage(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.SSN, param.getSsn(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.WEIBO, param.getWeibo(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.WECHAT_NO, param.getWechatNo(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.ADDRESS, param.getAddress(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.BIRTHDAY, param.getBirthday(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.GENDER, param.getGender(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.POSITION, param.getPosition(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.LAST_POSITION_MODIFY_DATE,
         param.getLastPositionModifyDate(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.DEPARTMENT, param.getDepartment(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.TITLE, param.getTitle(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.AID, param.getAid(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.ENTRY_DATE, param.getEntryDate(), updateEmptyVal);
-    updateAttributes(attributes, AtrributeDefine.LEAVE_DATE, param.getLeaveDate(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.DEPARTMENT, param.getDepartment(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.TITLE, param.getTitle(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.AID, param.getAid(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.ENTRY_DATE, param.getEntryDate(), updateEmptyVal);
+    updateAttributes(attributes, AttributeDefine.LEAVE_DATE, param.getLeaveDate(), updateEmptyVal);
     userProfileInnerService.addOrUpdateUserAttributes(param.getUserId(), attributes);
   }
 
-  private void updateAttributes(Map<String, String> attributes, AtrributeDefine define, Object val,
+  private void updateAttributes(Map<String, String> attributes, AttributeDefine define, Object val,
       boolean updateEmptyVal) {
     if (updateEmptyVal || val != null) {
       attributes.put(define.getAttributeCode(), define.getTypeTranslater().toString(val));

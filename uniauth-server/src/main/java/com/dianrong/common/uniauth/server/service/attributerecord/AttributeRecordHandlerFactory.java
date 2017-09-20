@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public final class AttributeRecordHanlderFactory implements InitializingBean {
+public final class AttributeRecordHandlerFactory implements InitializingBean {
   
   @Autowired
   private UserExtendValInnerService userExtendValInnerService;
@@ -42,12 +42,12 @@ public final class AttributeRecordHanlderFactory implements InitializingBean {
   /**
    * 此种方式通过Spring的@Autowired自动注入.
    */
-  public AttributeRecordHanlderFactory() {}
+  public AttributeRecordHandlerFactory() {}
 
   /**
    * 构造器方式注入.
    */
-  public AttributeRecordHanlderFactory(UserExtendValInnerService userExtendValInnerService,
+  public AttributeRecordHandlerFactory(UserExtendValInnerService userExtendValInnerService,
       GroupExtendValInnerService groupExtendValInnerService) {
     this.setUserExtendValInnerService(userExtendValInnerService);
     this.setGroupExtendValInnerService(groupExtendValInnerService);

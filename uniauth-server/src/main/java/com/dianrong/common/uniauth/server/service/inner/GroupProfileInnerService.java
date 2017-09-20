@@ -11,7 +11,7 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import lombok.extern.slf4j.Slf4j;
@@ -83,8 +83,8 @@ public class GroupProfileInnerService extends TenancyBasedService {
             .addAttributeExtendIfNonExistent(attributeCode, attributeVal);
         String value = attributeVal != null ? attributeVal.getValue() : null;
         // 判断如果是System定义的Code,则需要通过其他方式去更新
-        AtrributeDefine sysGrpAtrributeDefine =
-            AtrributeDefine.getSystemDefineGroupAttribute(attributeCode);
+        AttributeDefine sysGrpAtrributeDefine =
+            AttributeDefine.getSystemDefineGroupAttribute(attributeCode);
         if (sysGrpAtrributeDefine != null) {
           // 系统预定义的扩展属性. 比如Grp表中定义好的属性.
           if (sysGrpAtrributeDefine.isWritable()) {

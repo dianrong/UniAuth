@@ -11,7 +11,7 @@ import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 
@@ -83,17 +83,17 @@ public class UserProfileInnerService extends TenancyBasedService {
             .addAttributeExtendIfNonExistent(attributeCode, attributeVal);
         String value = attributeVal != null ? attributeVal.getValue() : null;
         // 判断如果是System定义的Code,则需要继续更新系统表中相应的数据
-        AtrributeDefine sysUserAtrributeDefine =
-            AtrributeDefine.getSystemDefineUserAttribute(attributeCode);
-        if (sysUserAtrributeDefine != null) {
+        AttributeDefine sysUserAttributeDefine =
+            AttributeDefine.getSystemDefineUserAttribute(attributeCode);
+        if (sysUserAttributeDefine != null) {
           // 系统预定义的扩展属性. 比如User表,UserDetail表中定义好的属性.
-          if (sysUserAtrributeDefine.isWritable()) {
+          if (sysUserAttributeDefine.isWritable()) {
             extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
-                sysUserAtrributeDefine.getDefineTable().getIdentityFieldName(),
-                sysUserAtrributeDefine.getDefineTable().getTableName(),
-                sysUserAtrributeDefine.getFieldName(),
-                sysUserAtrributeDefine.getTypeTranslater().toRealType(value),
-                sysUserAtrributeDefine.getDefineTable().isUpdateAttributeCheck());
+                sysUserAttributeDefine.getDefineTable().getIdentityFieldName(),
+                sysUserAttributeDefine.getDefineTable().getTableName(),
+                sysUserAttributeDefine.getFieldName(),
+                sysUserAttributeDefine.getTypeTranslater().toRealType(value),
+                sysUserAttributeDefine.getDefineTable().isUpdateAttributeCheck());
             // 更新扩展属性表中的相应字段
             addOrUpdate(uniauthId, attributeExtend.getId(), value);
           } else {

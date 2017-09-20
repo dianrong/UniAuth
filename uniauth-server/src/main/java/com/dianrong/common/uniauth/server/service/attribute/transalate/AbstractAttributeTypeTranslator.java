@@ -2,7 +2,7 @@ package com.dianrong.common.uniauth.server.service.attribute.transalate;
 
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class AbstractAttributeTypeTranslater implements AttributeTypeTranslater {
+public abstract class AbstractAttributeTypeTranslator implements AttributeTypeTranslator {
   
   @Override
   public Object toRealType(String attribute) {
@@ -28,5 +28,10 @@ public abstract class AbstractAttributeTypeTranslater implements AttributeTypeTr
   /**
    * 从实际类型转换为一个字符.
    */
-  public abstract String doToString(Object obj);
+  public String doToString(Object obj) {
+    if (obj == null) {
+      return null;
+    }
+    return obj.toString();
+  }
 }

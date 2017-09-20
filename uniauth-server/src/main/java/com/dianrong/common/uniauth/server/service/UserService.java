@@ -31,7 +31,7 @@ import com.dianrong.common.uniauth.server.service.common.notify.NotifyType;
 import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
 import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
-import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.support.tree.TreeType;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
@@ -149,9 +149,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     // 联动更新扩展属性值
     Map<String, String> attributes = Maps.newHashMap();
-    attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
-    attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
-    attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
+    attributes.put(AttributeDefine.USER_NAME.getAttributeCode(), name);
+    attributes.put(AttributeDefine.PHONE.getAttributeCode(), phone);
+    attributes.put(AttributeDefine.EMAIL.getAttributeCode(), email);
     UserDto userDto = BeanConverter.convert(user);
     userProfileInnerService.addOrUpdateUserAttributes(userDto.getId(), attributes);
 
@@ -280,9 +280,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     // 联动更新扩展属性值
     Map<String, String> attributes = Maps.newHashMap();
-    attributes.put(AtrributeDefine.USER_NAME.getAttributeCode(), name);
-    attributes.put(AtrributeDefine.PHONE.getAttributeCode(), phone);
-    attributes.put(AtrributeDefine.EMAIL.getAttributeCode(), email);
+    attributes.put(AttributeDefine.USER_NAME.getAttributeCode(), name);
+    attributes.put(AttributeDefine.PHONE.getAttributeCode(), phone);
+    attributes.put(AttributeDefine.EMAIL.getAttributeCode(), email);
     userProfileInnerService.addOrUpdateUserAttributes(user.getId(), attributes);
 
     // 发送通知

@@ -28,11 +28,11 @@ public class ExtendValInnerService extends TenancyBasedService {
    * @param tableName 需要更新的表名.
    * @param fieldName 需要更新的字段名.
    * @param value 属性需要更新成的值.
-   * @param needUpdateChcek 是否需要进行更新前的check(是否有可能做Insert操作).
+   * @param needUpdateCheck 是否需要进行更新前的check(是否有可能做Insert操作).
    */
   @Transactional
   public void addOrUpdateSystemDefineAttribute(Object identityId, String idFieldName,
-      String tableName, String fieldName, Object value, boolean needUpdateChcek) {
+      String tableName, String fieldName, Object value, boolean needUpdateCheck) {
     CheckEmpty.checkEmpty(identityId, "identityId");
     CheckEmpty.checkEmpty(idFieldName, "idFieldName");
     CheckEmpty.checkEmpty(tableName, "tableName");
@@ -44,7 +44,7 @@ public class ExtendValInnerService extends TenancyBasedService {
     params.put("fieldName", fieldName);
     params.put("value", value);
     params.put("tenancyId", tenancyService.getTenancyIdWithCheck());
-    if (!needUpdateChcek) {
+    if (!needUpdateCheck) {
       extendValMapper.updateSystemDefineAttribute(params);
       return;
     }
