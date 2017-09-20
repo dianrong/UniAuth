@@ -3,7 +3,9 @@ package com.dianrong.common.uniauth.server.service.attribute.transalate.type;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.InvalidParameterTypeException;
 
-public class Email {
+import java.io.Serializable;
+
+public class Email implements Serializable {
 
   private String email;
 

@@ -1,7 +1,9 @@
 package com.dianrong.common.uniauth.server.service.support;
 
-import com.dianrong.common.uniauth.server.service.attribute.transalate.AttributeTypeTranslatorFactory;
 import com.dianrong.common.uniauth.server.service.attribute.transalate.AttributeTypeTranslator;
+import com.dianrong.common.uniauth.server.service.attribute.transalate.AttributeTypeTranslatorFactory;
+import com.dianrong.common.uniauth.server.service.attribute.transalate.type.Email;
+import com.dianrong.common.uniauth.server.service.attribute.transalate.type.Phone;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,11 +17,11 @@ public enum AttributeDefine {
 
   // Table user
   USER_NAME(AttributeTable.USER, "name"),
-  EMAIL(AttributeTable.USER, "email", false),
-  PHONE(AttributeTable.USER, "phone", false),
-  STAFF_NO(AttributeTable.USER, "staff_no", false),
-  LDAP_DN(AttributeTable.USER, "ldap_dn", false),
-  USER_GUID(AttributeTable.USER, "user_guid", false),
+  EMAIL(AttributeTable.USER, "email", true, Email.class),
+  PHONE(AttributeTable.USER, "phone", true, Phone.class),
+  STAFF_NO(AttributeTable.USER, "staff_no", true),
+  LDAP_DN(AttributeTable.USER, "ldap_dn", true),
+  USER_GUID(AttributeTable.USER, "user_guid", true),
 
   // Table user_detail
   FIRST_NAME(AttributeTable.USER_DETAIL, "first_name"),
@@ -45,10 +47,10 @@ public enum AttributeDefine {
 
   // Table group
   GROUP_NAME(AttributeTable.GRP, "name"),
-  GROUP_CODE(AttributeTable.GRP, "code", false),
-  GROUP_DESCRiPTION(AttributeTable.GRP, "description");
+  GROUP_CODE(AttributeTable.GRP, "code", true),
+  GROUP_DESCRIPTION(AttributeTable.GRP, "description");
 
-  public static final String UN_READER_VALUE = "Property is no permission to read";
+  public static final String UN_READER_VALUE = "No permission to read";
 
   /**
    * 系统定义表中的User的属性编码与定义的Map.
@@ -66,10 +68,10 @@ public enum AttributeDefine {
   static {
     for (AttributeDefine ad : AttributeDefine.values()) {
       if (AttributeTable.isUserTable(ad.getDefineTable())) {
-        SYSTEM_DEFINE_USE_ATTRIBUTES_MAP.put(ad.getAttributeCode(), ad);
+        SYSTEM_DEFINE_USE_ATTRIBUTES_MAP.put(ad.getAttributeCode().trim().toLowerCase(), ad);
       }
       if (AttributeTable.isGrpTable(ad.getDefineTable())) {
-        SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP.put(ad.getAttributeCode(), ad);
+        SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP.put(ad.getAttributeCode().trim().toLowerCase(), ad);
       }
     }
   }
@@ -82,7 +84,7 @@ public enum AttributeDefine {
     if (StringUtils.isBlank(attributeCode)) {
       return null;
     }
-    return SYSTEM_DEFINE_USE_ATTRIBUTES_MAP.get(attributeCode);
+    return SYSTEM_DEFINE_USE_ATTRIBUTES_MAP.get(attributeCode.trim().toLowerCase());
   }
 
   /**
@@ -92,34 +94,7 @@ public enum AttributeDefine {
     if (StringUtils.isBlank(attributeCode)) {
       return null;
     }
-    return SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP.get(attributeCode);
-  }
-
-  private AttributeDefine(AttributeTable defineTable, String fieldName, Class<?> clz) {
-    this(defineTable, fieldName, fieldName, true, true, clz);
-  }
-
-  private AttributeDefine(AttributeTable defineTable,
-      String fieldName, boolean writable, Class<?> clz) {
-    this(defineTable, fieldName, fieldName, true, writable, clz);
-  }
-  
-  private AttributeDefine(AttributeTable defineTable, String fieldName) {
-    this(defineTable, fieldName, fieldName, true, true, String.class);
-  }
-
-  private AttributeDefine(AttributeTable defineTable, String fieldName, boolean writable) {
-    this(defineTable, fieldName, fieldName, true, writable, String.class);
-  }
-
-  private AttributeDefine(AttributeTable defineTable, String attributeCode, String fieldName,
-      boolean readable, boolean writable, Class<?> fieldType) {
-    this.defineTable = defineTable;
-    this.attributeCode = attributeCode;
-    this.fieldName = fieldName;
-    this.readable = readable;
-    this.writable = writable;
-    this.fieldType = fieldType;
+    return SYSTEM_DEFINE_GROUP_ATTRIBUTES_MAP.get(attributeCode.trim().toLowerCase());
   }
 
   /**
@@ -146,7 +121,41 @@ public enum AttributeDefine {
    * 该属性是否可通过profile修改.某些属性是不允许通过profile修改的,需要通过其他接口,以便进行相应的校验处理.
    */
   private final boolean writable;
+
+  /**
+   * 是否是唯一的属性.
+   */
+  private final boolean isUniqueField;
+
+  private AttributeDefine(AttributeTable defineTable, String fieldName, Class<?> clz) {
+    this(defineTable, fieldName, fieldName, true, true, false, clz);
+  }
+
+  private AttributeDefine(AttributeTable defineTable, String fieldName, boolean isUniqueField,
+      Class<?> clz) {
+    this(defineTable, fieldName, fieldName, true, true, isUniqueField, clz);
+  }
   
+  private AttributeDefine(AttributeTable defineTable, String fieldName) {
+    this(defineTable, fieldName, fieldName, true, true, false, String.class);
+  }
+
+  private AttributeDefine(AttributeTable defineTable, String fieldName, boolean isUniqueField) {
+    this(defineTable, fieldName, fieldName, true, true, isUniqueField, String.class);
+  }
+
+  private AttributeDefine(AttributeTable defineTable, String attributeCode, String fieldName,
+      boolean readable, boolean writable, boolean isUniqueField, Class<?> fieldType) {
+    this.defineTable = defineTable;
+    this.attributeCode = attributeCode;
+    this.fieldName = fieldName;
+    this.readable = readable;
+    this.writable = writable;
+    this.fieldType = fieldType;
+    this.isUniqueField = isUniqueField;
+  }
+
+
   /**
    * 属性的java类型.
    */
@@ -176,7 +185,11 @@ public enum AttributeDefine {
     return writable;
   }
 
-  public AttributeTypeTranslator getTypeTranslater() {
+  public boolean isUniqueField() {
+    return isUniqueField;
+  }
+
+  public AttributeTypeTranslator getTypeTranslator() {
     return AttributeTypeTranslatorFactory.getTranslator(this.fieldType);
   }
 }

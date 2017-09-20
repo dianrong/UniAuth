@@ -69,7 +69,7 @@ public class AttributeExtendInnerService extends TenancyBasedService {
     if (attributeExtend != null) {
       return attributeExtend;
     }
-    log.debug("add new attibute code: {}", code);
+    log.debug("add new attribute code: {}", code);
     return innerAddAttributeExtend(code, category, subcategory, description);
   }
   

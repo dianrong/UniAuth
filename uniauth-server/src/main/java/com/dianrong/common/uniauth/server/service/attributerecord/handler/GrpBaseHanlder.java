@@ -43,7 +43,7 @@ public abstract class GrpBaseHanlder extends AbstractAttributeRecordHandler {
       log.debug(
           "primary id is exist, so get group extend value record by primary id. Primary id {}",
           primaryId);
-      return groupExtendValInnerService.queryByPrimaykey(primaryId);
+      return groupExtendValInnerService.queryByPrimaryKey(primaryId);
     }
     Integer grpId = StringUtil.translateObjectToInteger(valIdentity.getIdentity());
     Long extendId = valIdentity.getExtendId();

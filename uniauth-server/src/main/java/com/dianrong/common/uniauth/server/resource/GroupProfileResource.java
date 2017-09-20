@@ -26,6 +26,11 @@ public class GroupProfileResource implements IGroupProfileRWResource {
   private GroupProfileService groupProfileService;
 
   @ApiOperation("根据Uniauth中的组Id和ProfileId获取用户的属性集合")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "groupId", value = "组id", dataType = "long",
+          required = true, paramType = "query"),
+      @ApiImplicitParam(name = "profileId", value = "指定返回的profile的Id", dataType = "long",
+          required = true, paramType = "query")})
   @Timed
   @Override
   public Response<Map<String, Object>> getGroupProfile(Integer groupId, Long profileId, Long time) {

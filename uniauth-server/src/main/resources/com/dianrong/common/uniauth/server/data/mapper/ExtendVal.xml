@@ -8,15 +8,19 @@
 		#{identityId}
 	</select>
 
+	<select id="queryEnableExtendVal" parameterType="map" resultType="java.util.HashMap">
+		SELECT ${idFieldName} FROM ${tableName} where ${fieldName} =
+		#{value} and tenancy_id = #{tenancyId} and status = 0
+	</select>
+
 	<update id="updateSystemDefineAttribute" parameterType="map">
-		UPDATE ${tableName} SET ${fieldName} = #{value, jdbcType=VARCHAR}
+		UPDATE ${tableName} SET ${fieldName} = #{value}
 		where ${idFieldName} = #{identityId}
 	</update>
 
 	<insert id="insertSystemDefineAttribute" parameterType="map">
 		INSERT
 		INTO ${tableName} (${idFieldName}, ${fieldName}, tenancy_id)
-		values(#{identityId}, #{value, jdbcType=VARCHAR}, #{tenancyId,
-		jdbcType=BIGINT})
+		values(#{identityId}, #{value}, #{tenancyId})
 	</insert>
 </mapper>

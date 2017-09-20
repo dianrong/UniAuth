@@ -2,6 +2,8 @@ package com.dianrong.common.uniauth.server.service.attribute.transalate;
 
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.server.service.attribute.transalate.type.Email;
+import com.dianrong.common.uniauth.server.service.attribute.transalate.type.Phone;
 import com.google.common.collect.Maps;
 
 import java.sql.Date;
@@ -20,6 +22,8 @@ public final class AttributeTypeTranslatorFactory {
     ATTRIBUTE_TYPE_TRANSLATERS.put(Integer.class, new IntegerTranslator());
     ATTRIBUTE_TYPE_TRANSLATERS.put(Long.class, new LongTranslator());
     ATTRIBUTE_TYPE_TRANSLATERS.put(String.class, new StringTranslator());
+    ATTRIBUTE_TYPE_TRANSLATERS.put(Email.class, new EmailTranslator());
+    ATTRIBUTE_TYPE_TRANSLATERS.put(Phone.class, new PhoneTranslator());
   }
 
   /**

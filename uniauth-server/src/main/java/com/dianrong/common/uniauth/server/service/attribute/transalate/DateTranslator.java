@@ -17,23 +17,23 @@ import lombok.extern.slf4j.Slf4j;
 public class DateTranslator extends AbstractAttributeTypeTranslator {
 
   /**
-   * 由于DateFormater有线程安全,所以采用ThreadLocal来封装一下.
+   * 由于DateFormatter有线程安全,所以采用ThreadLocal来封装一下.
    */
-  private final ThreadLocal<DateFormatter> dateFormator = new ThreadLocal<DateFormatter>() {
+  private final ThreadLocal<DateFormatter> dateFormatter = new ThreadLocal<DateFormatter>() {
     protected DateFormatter initialValue() {
       return new DateFormatter();
     }
   };
 
   @Override
-  public Object doToRealType(String attribute) {
-    return dateFormator.get().toDate(attribute);
+  public Object doToDatabaseType(String attribute) {
+    return dateFormatter.get().toDate(attribute);
   }
 
   @Override
   public String doToString(Object obj) {
     if (obj instanceof Date) {
-      return dateFormator.get().toString((Date)obj);
+      return dateFormatter.get().toString((Date)obj);
     }
     return null;
   }

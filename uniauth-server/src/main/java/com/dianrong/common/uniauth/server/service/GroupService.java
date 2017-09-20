@@ -404,7 +404,7 @@ public class GroupService extends TenancyBasedService {
     Map<String, String> attributes = Maps.newHashMap();
     attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
     attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
-    attributes.put(AttributeDefine.GROUP_DESCRiPTION.getAttributeCode(),
+    attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(),
         groupParam.getDescription());
     groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
@@ -506,7 +506,7 @@ public class GroupService extends TenancyBasedService {
     Map<String, String> attributes = Maps.newHashMap();
     attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupName);
     attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupCode);
-    attributes.put(AttributeDefine.GROUP_DESCRiPTION.getAttributeCode(), description);
+    attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(), description);
     groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
     Integer count = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());

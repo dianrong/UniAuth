@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -56,7 +57,7 @@ public class GroupProfileInnerService extends TenancyBasedService {
   public void addOrUpdateUserAttributes(Integer grpId, Map<String, String> attributes) {
     CheckEmpty.checkEmpty(grpId, "groupId");
     groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, grpId);
-    if (attributes != null && !attributes.isEmpty()) {
+    if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         String value = entry.getValue();
@@ -74,7 +75,7 @@ public class GroupProfileInnerService extends TenancyBasedService {
   public void addOrUpdateGrpProfile(Integer grpId, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(grpId, "groupId");
     groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, grpId);
-    if (attributes != null && !attributes.isEmpty()) {
+    if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         AttributeValModel attributeVal = entry.getValue();
@@ -83,17 +84,18 @@ public class GroupProfileInnerService extends TenancyBasedService {
             .addAttributeExtendIfNonExistent(attributeCode, attributeVal);
         String value = attributeVal != null ? attributeVal.getValue() : null;
         // 判断如果是System定义的Code,则需要通过其他方式去更新
-        AttributeDefine sysGrpAtrributeDefine =
+        AttributeDefine sysGrpAttributeDefine =
             AttributeDefine.getSystemDefineGroupAttribute(attributeCode);
-        if (sysGrpAtrributeDefine != null) {
+        if (sysGrpAttributeDefine != null) {
           // 系统预定义的扩展属性. 比如Grp表中定义好的属性.
-          if (sysGrpAtrributeDefine.isWritable()) {
+          if (sysGrpAttributeDefine.isWritable()) {
             extendValInnerService.addOrUpdateSystemDefineAttribute(grpId,
-                sysGrpAtrributeDefine.getDefineTable().getIdentityFieldName(),
-                sysGrpAtrributeDefine.getDefineTable().getTableName(),
-                sysGrpAtrributeDefine.getFieldName(),
-                sysGrpAtrributeDefine.getTypeTranslater().toRealType(value),
-                sysGrpAtrributeDefine.getDefineTable().isUpdateAttributeCheck());
+                sysGrpAttributeDefine.getDefineTable().getIdentityFieldName(),
+                sysGrpAttributeDefine.getDefineTable().getTableName(),
+                sysGrpAttributeDefine.getFieldName(),
+                sysGrpAttributeDefine.getTypeTranslator().toDatabaseType(value),
+                sysGrpAttributeDefine.isUniqueField(),
+                sysGrpAttributeDefine.getDefineTable().isUpdateAttributeCheck());
             // 同时更新在扩展属性表中的属性
             addOrUpdate(grpId, attributeExtend.getId(), value);
           } else {

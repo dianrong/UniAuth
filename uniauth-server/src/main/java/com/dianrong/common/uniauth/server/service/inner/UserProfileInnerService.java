@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 
@@ -56,7 +57,7 @@ public class UserProfileInnerService extends TenancyBasedService {
   public void addOrUpdateUserAttributes(Long userId, Map<String, String> attributes) {
     CheckEmpty.checkEmpty(userId, "userId");
     UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, userId);
-    if (attributes != null && !attributes.isEmpty()) {
+    if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         String value = entry.getValue();
@@ -74,7 +75,7 @@ public class UserProfileInnerService extends TenancyBasedService {
   public void addOrUpdateUserProfile(Long uniauthId, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(uniauthId, "uniauthId");
     UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, uniauthId);
-    if (attributes != null && !attributes.isEmpty()) {
+    if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         AttributeValModel attributeVal = entry.getValue();
@@ -92,7 +93,8 @@ public class UserProfileInnerService extends TenancyBasedService {
                 sysUserAttributeDefine.getDefineTable().getIdentityFieldName(),
                 sysUserAttributeDefine.getDefineTable().getTableName(),
                 sysUserAttributeDefine.getFieldName(),
-                sysUserAttributeDefine.getTypeTranslater().toRealType(value),
+                sysUserAttributeDefine.getTypeTranslator().toDatabaseType(value),
+                sysUserAttributeDefine.isUniqueField(),
                 sysUserAttributeDefine.getDefineTable().isUpdateAttributeCheck());
             // 更新扩展属性表中的相应字段
             addOrUpdate(uniauthId, attributeExtend.getId(), value);

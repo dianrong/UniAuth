@@ -3,7 +3,9 @@ package com.dianrong.common.uniauth.server.service.attribute.transalate.type;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.server.service.attributerecord.exp.InvalidParameterTypeException;
 
-public class Phone {
+import java.io.Serializable;
+
+public class Phone implements Serializable{
 
   private String phone;
 

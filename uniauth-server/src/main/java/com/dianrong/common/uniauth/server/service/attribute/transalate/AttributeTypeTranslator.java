@@ -7,9 +7,9 @@ package com.dianrong.common.uniauth.server.service.attribute.transalate;
 public interface AttributeTypeTranslator {
   
   /**
-   * 从字符串转化为对应的类型.
+   * 转化成一个数据库认识的类型.
    */
-  Object toRealType(String attribute);
+  Object toDatabaseType(String attribute);
   
   /**
    * 从实际类型转换为一个字符.

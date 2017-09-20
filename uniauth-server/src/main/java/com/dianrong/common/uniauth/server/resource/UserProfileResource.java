@@ -27,6 +27,11 @@ public class UserProfileResource implements IUserProfileRWResource {
   private UserProfileService userProfileService;
 
   @ApiOperation("根据Identity获取用户对应的Profile")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "uniauthId", value = "用户id", dataType = "long",
+          required = true, paramType = "query"),
+      @ApiImplicitParam(name = "profileId", value = "指定返回的profile的Id", dataType = "long",
+          required = true, paramType = "query")})
   @Timed
   @Override
   public Response<Map<String, Object>> getUserProfileByIdentity(String identity, Long profileId,

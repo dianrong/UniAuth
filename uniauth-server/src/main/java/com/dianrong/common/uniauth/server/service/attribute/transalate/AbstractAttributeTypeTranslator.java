@@ -5,11 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class AbstractAttributeTypeTranslator implements AttributeTypeTranslator {
   
   @Override
-  public Object toRealType(String attribute) {
+  public Object toDatabaseType(String attribute) {
     if (StringUtils.isBlank(attribute)) {
       return null;
     }
-    return doToRealType(attribute);
+    return doToDatabaseType(attribute);
   }
   
   @Override
@@ -21,9 +21,9 @@ public abstract class AbstractAttributeTypeTranslator implements AttributeTypeTr
   }
   
   /**
-   * 从字符串转化为对应的类型.
+   * 从字符串转化成一个数据能处理的对象.
    */
-  public abstract Object doToRealType(String attribute);
+  public abstract Object doToDatabaseType(String attribute);
   
   /**
    * 从实际类型转换为一个字符.

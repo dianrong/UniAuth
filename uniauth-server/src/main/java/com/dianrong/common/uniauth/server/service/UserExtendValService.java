@@ -4,14 +4,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
-import com.dianrong.common.uniauth.server.data.entity.AttributeExtendExample;
-import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
-import com.dianrong.common.uniauth.server.data.entity.User;
-import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecords;
-import com.dianrong.common.uniauth.server.data.entity.UserExample;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
-import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
+import com.dianrong.common.uniauth.server.data.entity.*;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample.Criteria;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
 import com.dianrong.common.uniauth.server.data.mapper.AttributeExtendMapper;
@@ -27,21 +20,13 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -246,15 +231,11 @@ public class UserExtendValService extends TenancyBasedService {
     if (ObjectUtil.collectionIsEmptyOrNull(extendAttributeIds)) {
       return resultMap;
     }
-    if (time == null) {
+    Long now = System.currentTimeMillis();
+    if (time == null || time > now) {
       queryAttributeVal(userId, extendAttributeIds, resultMap, attributeExtendMap);
       return resultMap;
     } else {
-      Long now = System.currentTimeMillis();
-      if (time > now) {
-        log.debug("query the future profile is not supported");
-        return resultMap;
-      }
       queryAttributeVal(userId, extendAttributeIds, new Date(time), resultMap, attributeExtendMap);
       return resultMap;
     }
