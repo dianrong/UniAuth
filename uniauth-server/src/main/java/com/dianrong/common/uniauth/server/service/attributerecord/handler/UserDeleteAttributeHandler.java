@@ -13,9 +13,9 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class UserDeleteAttributeHanlder extends UserBaseHanlder {
+public class UserDeleteAttributeHandler extends UserBaseHandler {
 
-  public UserDeleteAttributeHanlder(UserExtendValInnerService userExtendValInnerService) {
+  public UserDeleteAttributeHandler(UserExtendValInnerService userExtendValInnerService) {
     super(userExtendValInnerService);
   }
 

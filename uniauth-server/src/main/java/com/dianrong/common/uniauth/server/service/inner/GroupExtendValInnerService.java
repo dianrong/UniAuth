@@ -87,7 +87,7 @@ public class GroupExtendValInnerService extends TenancyBasedService {
   /**
    * 根据主键id查找.
    */
-  public GrpExtendVal queryByPrimaykey(Long primaryId) {
+  public GrpExtendVal queryByPrimaryKey(Long primaryId) {
     CheckEmpty.checkEmpty(primaryId, "primaryId");
     return grpExtendValMapper.selectByPrimaryKey(primaryId);
   }

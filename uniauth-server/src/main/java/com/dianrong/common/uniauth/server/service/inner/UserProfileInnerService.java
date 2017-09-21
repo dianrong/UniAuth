@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
+import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
@@ -9,23 +10,24 @@ import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
+import com.dianrong.common.uniauth.server.service.attribute.exp.InvalidPropertyValueException;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.dianrong.common.uniauth.server.util.UniBundle;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 用户Profile操作的service实现.
@@ -56,7 +58,7 @@ public class UserProfileInnerService extends TenancyBasedService {
   public void addOrUpdateUserAttributes(Long userId, Map<String, String> attributes) {
     CheckEmpty.checkEmpty(userId, "userId");
     UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, userId);
-    if (attributes != null && !attributes.isEmpty()) {
+    if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         String value = entry.getValue();
@@ -74,7 +76,7 @@ public class UserProfileInnerService extends TenancyBasedService {
   public void addOrUpdateUserProfile(Long uniauthId, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(uniauthId, "uniauthId");
     UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, uniauthId);
-    if (attributes != null && !attributes.isEmpty()) {
+    if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
         AttributeValModel attributeVal = entry.getValue();
@@ -83,17 +85,24 @@ public class UserProfileInnerService extends TenancyBasedService {
             .addAttributeExtendIfNonExistent(attributeCode, attributeVal);
         String value = attributeVal != null ? attributeVal.getValue() : null;
         // 判断如果是System定义的Code,则需要继续更新系统表中相应的数据
-        AtrributeDefine sysUserAtrributeDefine =
-            AtrributeDefine.getSystemDefineUserAttribute(attributeCode);
-        if (sysUserAtrributeDefine != null) {
+        AttributeDefine sysUserAttributeDefine =
+            AttributeDefine.getSystemDefineUserAttribute(attributeCode);
+        if (sysUserAttributeDefine != null) {
           // 系统预定义的扩展属性. 比如User表,UserDetail表中定义好的属性.
-          if (sysUserAtrributeDefine.isWritable()) {
-            extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
-                sysUserAtrributeDefine.getDefineTable().getIdentityFieldName(),
-                sysUserAtrributeDefine.getDefineTable().getTableName(),
-                sysUserAtrributeDefine.getFieldName(),
-                sysUserAtrributeDefine.getTypeTranslater().toRealType(value),
-                sysUserAtrributeDefine.getDefineTable().isUpdateAttributeCheck());
+          if (sysUserAttributeDefine.isWritable()) {
+            try {
+              extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
+                  sysUserAttributeDefine.getDefineTable().getIdentityFieldName(),
+                  sysUserAttributeDefine.getDefineTable().getTableName(),
+                  sysUserAttributeDefine.getFieldName(),
+                  sysUserAttributeDefine.getTypeTranslator().toDatabaseType(value),
+                  sysUserAttributeDefine.isUniqueField(),
+                  sysUserAttributeDefine.getDefineTable().isUpdateAttributeCheck());
+
+            } catch (InvalidPropertyValueException e) {
+              throw new AppException(InfoName.VALIDATE_FAIL, UniBundle
+                  .getMsg("data.filter.extend.value.invalid", e.getInvalidValue(), e.getType()));
+            }
             // 更新扩展属性表中的相应字段
             addOrUpdate(uniauthId, attributeExtend.getId(), value);
           } else {

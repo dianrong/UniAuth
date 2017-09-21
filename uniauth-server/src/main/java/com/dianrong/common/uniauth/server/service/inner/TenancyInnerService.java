@@ -34,7 +34,6 @@ public class TenancyInnerService {
    * 如果不能获取, 返回一个默认的非租户相关的租户id -1
    *
    * @return tenancyId for current request
-   * @see AppConstants.TENANCY_UNRELATED_TENANCY_ID
    */
   public Long getOneCanUsedTenancyId() {
     return getTenancyId(false);

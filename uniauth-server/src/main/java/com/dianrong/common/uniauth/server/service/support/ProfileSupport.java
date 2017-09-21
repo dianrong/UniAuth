@@ -36,6 +36,13 @@ public final class ProfileSupport {
       Map<String, String> currentProfileAttributes = Maps.newHashMap();
       for (Entry<String, AttributeExtendDto> entry : profileAttributeDefine.entrySet()) {
         String attributeCode = entry.getKey();
+        AttributeDefine sysUserAttributeDefine =
+            AttributeDefine.getSystemDefineUserAttribute(attributeCode);
+        if (sysUserAttributeDefine != null && !sysUserAttributeDefine.isReadable()) {
+          // 某些属性不可读
+          currentProfileAttributes.put(attributeCode, AttributeDefine.UN_READER_VALUE);
+          continue;
+        }
         ExtendVal extendVal = extendValMap.get(attributeCode);
         if (extendVal != null) {
           currentProfileAttributes.put(attributeCode, extendVal.getValue());

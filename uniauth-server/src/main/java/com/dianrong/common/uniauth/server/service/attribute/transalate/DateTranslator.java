@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service.attribute.transalate;
 
-import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import com.dianrong.common.uniauth.server.service.attribute.exp.InvalidPropertyValueException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -11,34 +12,31 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
-public class DateTranslater extends AbstractAttributeTypeTranslater {
+public class DateTranslator extends AbstractAttributeTypeTranslator {
 
   /**
-   * 由于DateFormater有线程安全,所以采用ThreadLocal来封装一下.
+   * 由于DateFormatter有线程安全,所以采用ThreadLocal来封装一下.
    */
-  private final ThreadLocal<DateFormator> dateFormator = new ThreadLocal<DateFormator>() {
-    protected DateFormator initialValue() {
-      return new DateFormator();
+  private final ThreadLocal<DateFormatter> dateFormatter = new ThreadLocal<DateFormatter>() {
+    protected DateFormatter initialValue() {
+      return new DateFormatter();
     }
   };
 
-  @Override
-  public Object doToRealType(String attribute) {
-    return dateFormator.get().toDate(attribute);
+  @Override public Object doToRealType(String attribute) {
+    return dateFormatter.get().toDate(attribute);
   }
 
   @Override
   public String doToString(Object obj) {
     if (obj instanceof Date) {
-      return dateFormator.get().toString((Date)obj);
+      return dateFormatter.get().toString((Date)obj);
     }
     return null;
   }
 
-  private class DateFormator {
+  private class DateFormatter {
     private static final String DATE_FORMAT_1 = "yyyy-MM-dd HH:mm:ss";
     private static final String DATE_FORMAT_2 = "yyyy/MM/dd HH:mm:ss";
     private static final String DATE_FORMAT_3 = "yyyy-MM-dd";
@@ -47,7 +45,7 @@ public class DateTranslater extends AbstractAttributeTypeTranslater {
 
     private Map<String, DateFormat> dateFormatMap;
 
-    public DateFormator() {
+    public DateFormatter() {
       this.dateFormatMap = new LinkedHashMap<>();
       dateFormatMap.put(DATE_FORMAT_1, null);
       dateFormatMap.put(DATE_FORMAT_2, null);
@@ -75,7 +73,7 @@ public class DateTranslater extends AbstractAttributeTypeTranslater {
           return result;
         }
       }
-      throw new UniauthCommonException(str + " is not a supported Date string");
+      throw new InvalidPropertyValueException(str + " is a invalid date string", "Date", str);
     }
 
     public String toString(Date date) {

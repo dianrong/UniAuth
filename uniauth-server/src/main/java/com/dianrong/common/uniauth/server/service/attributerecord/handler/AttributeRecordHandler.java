@@ -25,7 +25,6 @@ public interface AttributeRecordHandler {
    * @param identity 唯一标识某一条属性记录,不能为空.
    * @param throwable 如果在调用目标方法的时候抛出的异常.
    * @param originalVal 在调用操作之前的值.有可能为空, 如果为Add操作.
-   * @param 操作记录需要写入到数据库中的记录.
    * @throws InvalidParameterTypeException 如果传入的identity和extendId类型不合法.
    */
   AttributeRecords invokeTargetAfter(AttributeValIdentity identity, ExtendVal originalVal,

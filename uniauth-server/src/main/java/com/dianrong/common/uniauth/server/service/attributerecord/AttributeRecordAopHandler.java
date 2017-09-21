@@ -52,7 +52,7 @@ public class AttributeRecordAopHandler {
    * 通过工厂获取对应的处理handler.
    */
   @Autowired
-  private AttributeRecordHanlderFactory attributeRecordHanlderFactory;
+  private AttributeRecordHandlerFactory attributeRecordHandlerFactory;
 
   @Autowired
   private UserAttributeRecordsInnerService userAttributeRecordsInnerService;
@@ -67,7 +67,7 @@ public class AttributeRecordAopHandler {
   public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
     AttributeValIdentity valIdentity = getValIndentity(joinPoint);
     TypeOperate typeOperate = getTypeOperate(joinPoint);
-    AttributeRecordHandler handler = attributeRecordHanlderFactory.getHandler(typeOperate);
+    AttributeRecordHandler handler = attributeRecordHandlerFactory.getHandler(typeOperate);
     boolean parameterCheckOk = true;
     ExtendVal originalVal = null;
     try {
@@ -152,9 +152,7 @@ public class AttributeRecordAopHandler {
       valIdentity.setPrimaryId(primaryId);
       return valIdentity;
     }
-
     // 如果没有指定主键id,继续通过identity和extendId去匹配.
-
     // Identity
     Object identity;
     String identityExp = extendAttributeRecord.identity();

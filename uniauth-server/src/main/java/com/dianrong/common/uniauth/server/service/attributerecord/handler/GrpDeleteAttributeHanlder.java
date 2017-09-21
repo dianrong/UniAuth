@@ -13,7 +13,7 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GrpDeleteAttributeHanlder extends GrpBaseHanlder {
+public class GrpDeleteAttributeHanlder extends GrpBaseHandler {
 
   public GrpDeleteAttributeHanlder(GroupExtendValInnerService groupExtendValInnerService) {
     super(groupExtendValInnerService);

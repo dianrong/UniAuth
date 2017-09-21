@@ -21,7 +21,7 @@ import com.dianrong.common.uniauth.server.mq.v1.ninfo.*;
 import com.dianrong.common.uniauth.server.service.cache.AttributeExtendCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.inner.*;
-import com.dianrong.common.uniauth.server.service.support.AtrributeDefine;
+import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 import com.dianrong.common.uniauth.server.util.*;
 import com.google.common.collect.Lists;
@@ -402,9 +402,9 @@ public class GroupService extends TenancyBasedService {
     grpMapper.insert(grp);
     // 联动添加组的扩展属性值
     Map<String, String> attributes = Maps.newHashMap();
-    attributes.put(AtrributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
-    attributes.put(AtrributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
-    attributes.put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(),
+    attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
+    attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
+    attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(),
         groupParam.getDescription());
     groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
@@ -504,9 +504,9 @@ public class GroupService extends TenancyBasedService {
 
     // 联动添加组的扩展属性值
     Map<String, String> attributes = Maps.newHashMap();
-    attributes.put(AtrributeDefine.GROUP_NAME.getAttributeCode(), groupName);
-    attributes.put(AtrributeDefine.GROUP_CODE.getAttributeCode(), groupCode);
-    attributes.put(AtrributeDefine.GROUP_DESCRiPTION.getAttributeCode(), description);
+    attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupName);
+    attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupCode);
+    attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(), description);
     groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
     Integer count = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());
