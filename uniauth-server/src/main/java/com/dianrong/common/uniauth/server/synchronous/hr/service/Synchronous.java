@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -129,26 +128,21 @@ import java.util.concurrent.Executors;
     hrSynchronousLog.setSynchronousStartTime(new Date());
     // 同步HR数据
     hrSynchronousLog.setSynchronousType(HrSynchronousLogType.SYNCHRONOUS_HR_DATA.toString());
-    StringBuilder sb = new StringBuilder();
-    sb.append(SynchronousFile.DEPT_UA.getName()).append(",")
-        .append(SynchronousFile.JOB_UA.getName()).append(",")
-        .append(SynchronousFile.LE_UA.getName()).append(",")
-        .append(SynchronousFile.PERSON_UA.getName());
-
     hrSynchronousLog.setComputerIp(SystemUtil.getLocalIp());
     try {
       // 加载所有的文件内容
-      LoadContent<InputStream> depContent = fileLoader.loadFile(SynchronousFile.DEPT_UA.getName());
+      LoadContent<String> depContent =
+          fileLoader.loadFileContent(SynchronousFile.DEPT_UA.getName());
       DepartmentList departmentList = hrDeptAnalyzer.analyze(depContent.getContent());
 
-      LoadContent<InputStream> jobContent = fileLoader.loadFile(SynchronousFile.JOB_UA.getName());
+      LoadContent<String> jobContent = fileLoader.loadFileContent(SynchronousFile.JOB_UA.getName());
       JobList jobList = hrJobAnalyzer.analyze(jobContent.getContent());
 
-      LoadContent<InputStream> leContent = fileLoader.loadFile(SynchronousFile.LE_UA.getName());
+      LoadContent<String> leContent = fileLoader.loadFileContent(SynchronousFile.LE_UA.getName());
       LegalEntityList legalEntityList = hrLeAnalyzer.analyze(leContent.getContent());
 
-      LoadContent<InputStream> personContent =
-          fileLoader.loadFile(SynchronousFile.PERSON_UA.getName());
+      LoadContent<String> personContent =
+          fileLoader.loadFileContent(SynchronousFile.PERSON_UA.getName());
       PersonList personList = hrPersonAnalyzer.analyze(personContent.getContent());
 
       hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(Arrays
