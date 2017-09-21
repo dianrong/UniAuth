@@ -4,14 +4,17 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractAttributeTypeTranslator implements AttributeTypeTranslator {
   
-  @Override
-  public Object toDatabaseType(String attribute) {
+  @Override public Object toDatabaseType(String attribute) {
+    return toRealType(attribute);
+  }
+
+  @Override public Object toRealType(String attribute) {
     if (StringUtils.isBlank(attribute)) {
       return null;
     }
-    return doToDatabaseType(attribute);
+    return doToRealType(attribute);
   }
-  
+
   @Override
   public String toString(Object obj) {
     if (obj == null) {
@@ -19,11 +22,8 @@ public abstract class AbstractAttributeTypeTranslator implements AttributeTypeTr
     }
     return doToString(obj);
   }
-  
-  /**
-   * 从字符串转化成一个数据能处理的对象.
-   */
-  public abstract Object doToDatabaseType(String attribute);
+
+  public abstract Object doToRealType(String attribute);
   
   /**
    * 从实际类型转换为一个字符.

@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.server.service.attribute.transalate;
 
-import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import com.dianrong.common.uniauth.server.service.attribute.exp.InvalidPropertyValueException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,8 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DateTranslator extends AbstractAttributeTypeTranslator {
@@ -25,8 +24,7 @@ public class DateTranslator extends AbstractAttributeTypeTranslator {
     }
   };
 
-  @Override
-  public Object doToDatabaseType(String attribute) {
+  @Override public Object doToRealType(String attribute) {
     return dateFormatter.get().toDate(attribute);
   }
 
@@ -75,7 +73,7 @@ public class DateTranslator extends AbstractAttributeTypeTranslator {
           return result;
         }
       }
-      throw new UniauthCommonException(str + " is not a supported Date string");
+      throw new InvalidPropertyValueException(str + " is a invalid date string", "Date", str);
     }
 
     public String toString(Date date) {

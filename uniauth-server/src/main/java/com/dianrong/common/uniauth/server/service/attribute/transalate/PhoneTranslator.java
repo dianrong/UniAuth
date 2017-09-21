@@ -6,9 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PhoneTranslator extends AbstractAttributeTypeTranslator {
 
-  @Override
-  public Object doToDatabaseType(String attribute) {
-    Phone phone = new Phone(attribute);
-    return phone.getPhone();
+  @Override public Object doToRealType(String attribute) {
+    return new Phone(attribute);
+  }
+
+  @Override public Object toDatabaseType(String attribute) {
+    Object obj = super.toDatabaseType(attribute);
+    if (obj instanceof Phone) {
+      return ((Phone) obj).getPhone();
+    }
+    return null;
   }
 }

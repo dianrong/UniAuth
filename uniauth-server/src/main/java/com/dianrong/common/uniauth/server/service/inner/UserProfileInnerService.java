@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
+import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
@@ -9,24 +10,24 @@ import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
+import com.dianrong.common.uniauth.server.service.attribute.exp.InvalidPropertyValueException;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.dianrong.common.uniauth.server.util.UniBundle;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 用户Profile操作的service实现.
@@ -89,13 +90,19 @@ public class UserProfileInnerService extends TenancyBasedService {
         if (sysUserAttributeDefine != null) {
           // 系统预定义的扩展属性. 比如User表,UserDetail表中定义好的属性.
           if (sysUserAttributeDefine.isWritable()) {
-            extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
-                sysUserAttributeDefine.getDefineTable().getIdentityFieldName(),
-                sysUserAttributeDefine.getDefineTable().getTableName(),
-                sysUserAttributeDefine.getFieldName(),
-                sysUserAttributeDefine.getTypeTranslator().toDatabaseType(value),
-                sysUserAttributeDefine.isUniqueField(),
-                sysUserAttributeDefine.getDefineTable().isUpdateAttributeCheck());
+            try {
+              extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
+                  sysUserAttributeDefine.getDefineTable().getIdentityFieldName(),
+                  sysUserAttributeDefine.getDefineTable().getTableName(),
+                  sysUserAttributeDefine.getFieldName(),
+                  sysUserAttributeDefine.getTypeTranslator().toDatabaseType(value),
+                  sysUserAttributeDefine.isUniqueField(),
+                  sysUserAttributeDefine.getDefineTable().isUpdateAttributeCheck());
+
+            } catch (InvalidPropertyValueException e) {
+              throw new AppException(InfoName.VALIDATE_FAIL, UniBundle
+                  .getMsg("data.filter.extend.value.invalid", e.getInvalidValue(), e.getType()));
+            }
             // 更新扩展属性表中的相应字段
             addOrUpdate(uniauthId, attributeExtend.getId(), value);
           } else {

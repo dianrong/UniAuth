@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.server.service.inner;
 
+import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
@@ -9,11 +10,14 @@ import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
+import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
+import com.dianrong.common.uniauth.server.service.attribute.exp.InvalidPropertyValueException;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.UniBundle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,13 +93,18 @@ public class GroupProfileInnerService extends TenancyBasedService {
         if (sysGrpAttributeDefine != null) {
           // 系统预定义的扩展属性. 比如Grp表中定义好的属性.
           if (sysGrpAttributeDefine.isWritable()) {
-            extendValInnerService.addOrUpdateSystemDefineAttribute(grpId,
-                sysGrpAttributeDefine.getDefineTable().getIdentityFieldName(),
-                sysGrpAttributeDefine.getDefineTable().getTableName(),
-                sysGrpAttributeDefine.getFieldName(),
-                sysGrpAttributeDefine.getTypeTranslator().toDatabaseType(value),
-                sysGrpAttributeDefine.isUniqueField(),
-                sysGrpAttributeDefine.getDefineTable().isUpdateAttributeCheck());
+            try {
+              extendValInnerService.addOrUpdateSystemDefineAttribute(grpId,
+                  sysGrpAttributeDefine.getDefineTable().getIdentityFieldName(),
+                  sysGrpAttributeDefine.getDefineTable().getTableName(),
+                  sysGrpAttributeDefine.getFieldName(),
+                  sysGrpAttributeDefine.getTypeTranslator().toDatabaseType(value),
+                  sysGrpAttributeDefine.isUniqueField(),
+                  sysGrpAttributeDefine.getDefineTable().isUpdateAttributeCheck());
+            } catch (InvalidPropertyValueException e) {
+              throw new AppException(InfoName.VALIDATE_FAIL, UniBundle
+                  .getMsg("data.filter.extend.value.invalid", e.getInvalidValue(), e.getType()));
+            }
             // 同时更新在扩展属性表中的属性
             addOrUpdate(grpId, attributeExtend.getId(), value);
           } else {

@@ -6,9 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmailTranslator extends AbstractAttributeTypeTranslator {
 
-  @Override
-  public Object doToDatabaseType(String attribute) {
-    Email email = new Email(attribute);
-    return email.getEmail();
+  @Override public Object doToRealType(String attribute) {
+    return new Email(attribute);
+  }
+
+  @Override public Object toDatabaseType(String attribute) {
+    Object obj = super.toDatabaseType(attribute);
+    if (obj instanceof Email) {
+      return ((Email) obj).getEmail();
+    }
+    return null;
   }
 }
