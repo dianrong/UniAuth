@@ -7,9 +7,9 @@ import com.dianrong.common.uniauth.server.service.attributerecord.exp.NotSupport
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.AttributeRecordHandler;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpAddAttributeHanlder;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpDeleteAttributeHanlder;
-import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpUpdateAttributeHanlder;
-import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserAddAttributeHanlder;
-import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserDeleteAttributeHanlder;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.GrpUpdateAttributeHandler;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserAddAttributeHandler;
+import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserDeleteAttributeHandler;
 import com.dianrong.common.uniauth.server.service.attributerecord.handler.UserUpdateAttributeHanlder;
 import com.dianrong.common.uniauth.server.service.inner.GroupExtendValInnerService;
 import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerService;
@@ -71,15 +71,15 @@ public final class AttributeRecordHandlerFactory implements InitializingBean {
    */
   public void init() {
     caches.put(TypeOperate.build(RecordType.USER, RecordOperate.ADD),
-        new UserAddAttributeHanlder(userExtendValInnerService));
+        new UserAddAttributeHandler(userExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.USER, RecordOperate.UPDATE),
         new UserUpdateAttributeHanlder(userExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.USER, RecordOperate.DELETE),
-        new UserDeleteAttributeHanlder(userExtendValInnerService));
+        new UserDeleteAttributeHandler(userExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.ADD),
         new GrpAddAttributeHanlder(groupExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.UPDATE),
-        new GrpUpdateAttributeHanlder(groupExtendValInnerService));
+        new GrpUpdateAttributeHandler(groupExtendValInnerService));
     caches.put(TypeOperate.build(RecordType.GROUP, RecordOperate.DELETE),
         new GrpDeleteAttributeHanlder(groupExtendValInnerService));
   }

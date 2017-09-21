@@ -3,7 +3,6 @@ package com.dianrong.common.uniauth.server.service.attributerecord.handler;
 import com.dianrong.common.uniauth.server.data.entity.AttributeRecords;
 import com.dianrong.common.uniauth.server.data.entity.ExtendVal;
 import com.dianrong.common.uniauth.server.service.attributerecord.AttributeValIdentity;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

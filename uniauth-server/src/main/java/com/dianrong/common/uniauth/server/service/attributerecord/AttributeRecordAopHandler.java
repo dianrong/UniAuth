@@ -152,9 +152,7 @@ public class AttributeRecordAopHandler {
       valIdentity.setPrimaryId(primaryId);
       return valIdentity;
     }
-
     // 如果没有指定主键id,继续通过identity和extendId去匹配.
-
     // Identity
     Object identity;
     String identityExp = extendAttributeRecord.identity();

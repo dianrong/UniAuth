@@ -13,9 +13,9 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class UserAddAttributeHanlder extends UserBaseHanlder {
+public class UserAddAttributeHandler extends UserBaseHandler {
 
-  public UserAddAttributeHanlder(UserExtendValInnerService userExtendValInnerService) {
+  public UserAddAttributeHandler(UserExtendValInnerService userExtendValInnerService) {
     super(userExtendValInnerService);
   }
 

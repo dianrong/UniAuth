@@ -11,11 +11,11 @@ import com.dianrong.common.uniauth.server.service.inner.GroupExtendValInnerServi
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class GrpBaseHanlder extends AbstractAttributeRecordHandler {
+public abstract class GrpBaseHandler extends AbstractAttributeRecordHandler {
 
   private GroupExtendValInnerService groupExtendValInnerService;
 
-  public GrpBaseHanlder(GroupExtendValInnerService groupExtendValInnerService) {
+  public GrpBaseHandler(GroupExtendValInnerService groupExtendValInnerService) {
     Assert.notNull(groupExtendValInnerService);
     this.groupExtendValInnerService = groupExtendValInnerService;
   }

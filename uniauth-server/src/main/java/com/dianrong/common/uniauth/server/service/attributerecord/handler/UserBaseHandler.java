@@ -11,11 +11,11 @@ import com.dianrong.common.uniauth.server.service.inner.UserExtendValInnerServic
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class UserBaseHanlder extends AbstractAttributeRecordHandler {
+public abstract class UserBaseHandler extends AbstractAttributeRecordHandler {
 
   private UserExtendValInnerService userExtendValInnerService;
 
-  public UserBaseHanlder(UserExtendValInnerService userExtendValInnerService) {
+  public UserBaseHandler(UserExtendValInnerService userExtendValInnerService) {
     Assert.notNull(userExtendValInnerService);
     this.userExtendValInnerService = userExtendValInnerService;
   }
