@@ -43,6 +43,7 @@ public class ServerMapperAopHandler {
       add("countByExample");
       add("selectByExample");
       add("selectByPrimaryKey");
+      add("selectByExampleWithBlobs");
     }
   };
 
