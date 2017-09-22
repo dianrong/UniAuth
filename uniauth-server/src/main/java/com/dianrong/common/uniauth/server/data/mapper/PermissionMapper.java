@@ -6,8 +6,11 @@ import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
 import java.util.List;
 import java.util.Map;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface PermissionMapper {
 
   /**

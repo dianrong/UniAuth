@@ -19,6 +19,11 @@ public interface AppConstants {
   // 1 = 禁用
   byte ONE_BYTE_PRIMITIVE = (byte) 1;
 
+  // 0 = 启用
+  Byte SUCCESS = ZERO_BYTE;
+  // 1 = 禁用
+  Byte FAILURE = ONE_BYTE;
+
   // 人性化设计
   byte STATUS_ENABLED = ZERO_BYTE_PRIMITIVE;
   byte STATUS_DISABLED = ONE_BYTE_PRIMITIVE;

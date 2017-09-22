@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
 import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
 import com.dianrong.common.uniauth.server.service.PermissionService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.IPermissionRWResource;
 import io.swagger.annotations.Api;
 import java.util.List;
@@ -31,18 +32,21 @@ public class PermissionResource implements IPermissionRWResource {
     return new Response<List<PermTypeDto>>(permTypeDtoList);
   }
 
+  @ResourceAudit
   @Override
   public Response<PermissionDto> addNewPerm(PermissionParam permissionParam) {
     PermissionDto permissionDto = permissionService.addNewPerm(permissionParam);
     return new Response<PermissionDto>(permissionDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> updatePerm(PermissionParam permissionParam) {
     permissionService.updatePerm(permissionParam);
     return Response.success();
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> replaceRolesToPerm(PermissionParam permissionParam) {
     permissionService.replaceRolesToPerm(permissionParam.getId(), permissionParam.getRoleIds());
@@ -57,6 +61,7 @@ public class PermissionResource implements IPermissionRWResource {
     return new Response<List<RoleDto>>(roleDtoList);
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> saveRolesToPerm(PermissionParam permissionParam) {
     permissionService.saveRolesToPerm(permissionParam);

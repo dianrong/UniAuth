@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.request.CfgParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.server.service.ConfigService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.IConfigRWResource;
 import io.swagger.annotations.Api;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ConfigResource implements IConfigRWResource {
   @Autowired
   private ConfigService configService;
 
+  @ResourceAudit
   @Override
   public Response<ConfigDto> addOrUpdateConfig(CfgParam cfgParam) {
     ConfigDto configDto = configService.addOrUpdateConfig(cfgParam.getId(), cfgParam.getCfgKey(),
@@ -42,6 +44,7 @@ public class ConfigResource implements IConfigRWResource {
     return Response.success(configDtoPageDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> delConfig(PrimaryKeyParam primaryKeyParam) {
     configService.delConfig(primaryKeyParam.getId());

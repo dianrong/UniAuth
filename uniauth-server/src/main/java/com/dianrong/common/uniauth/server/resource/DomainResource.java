@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.common.bean.request.DomainParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.server.service.DomainService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.IDomainRWResource;
 import io.swagger.annotations.Api;
 import java.util.List;
@@ -55,30 +56,35 @@ public class DomainResource implements IDomainRWResource {
     return new Response<DomainDto>(domainDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<DomainDto> addNewDomain(DomainParam domainParam) {
     DomainDto domainDto = domainService.addNewDomain(domainParam);
     return new Response<DomainDto>(domainDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> updateDomain(DomainParam domainParam) {
     domainService.updateDomain(domainParam);
     return Response.success();
   }
 
+  @ResourceAudit
   @Override
   public Response<StakeholderDto> addNewStakeholder(StakeholderParam stakeholderParam) {
     StakeholderDto stakeholderDto = domainService.addNewStakeholder(stakeholderParam);
     return new Response<StakeholderDto>(stakeholderDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> updateStakeholder(StakeholderParam stakeholderParam) {
     domainService.updateStakeholder(stakeholderParam);
     return Response.success();
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> deleteStakeholder(PrimaryKeyParam primaryKeyParam) {
     domainService.deleteStakeholder(primaryKeyParam);

@@ -6,8 +6,11 @@ import com.dianrong.common.uniauth.server.data.entity.UserAttributeRecordsExampl
 import java.util.Date;
 import java.util.List;
 
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface UserAttributeRecordsMapper {
 
   /**
@@ -100,6 +103,7 @@ public interface UserAttributeRecordsMapper {
    */
   int updateByPrimaryKey(UserAttributeRecords record);
 
-  List<UserAttributeRecords> queryUserHisotryProfileVal(@Param("userId") Long userId,
+  @NoneMapperAudit
+  List<UserAttributeRecords> queryUserHistoryProfileVal(@Param("userId") Long userId,
       @Param("optDate") Date optDate, @Param("extendIds") List<Long> extendIds);
 }

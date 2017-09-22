@@ -11,6 +11,7 @@ import com.dianrong.common.uniauth.common.bean.request.OrganizationQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.server.service.GroupService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.server.support.tree.TreeType;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeTag;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
@@ -32,6 +33,7 @@ public class OrganizationResource implements IOrganizationRWResource {
 
   @Autowired private GroupService groupService;
 
+  @ResourceAudit
   @ApiOperation(value = "添加用户与组织的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "组织id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "userIds", value = "用户列表", required = true, dataType = "java.util.List", paramType = "query"),
@@ -42,6 +44,7 @@ public class OrganizationResource implements IOrganizationRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "删除用户与组织的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "userIdGrpIdPairs", value = "组织和用户的映射列表", required = true, dataType = "java.util.List", paramType = "query"),
       @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true")})
@@ -51,6 +54,7 @@ public class OrganizationResource implements IOrganizationRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "移动用户到指定组织中") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "目标组织id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "userIdGroupIdPairs", value = "用户和组的原始关系", dataType = "java.util.List", required = true, paramType = "query"),
@@ -61,6 +65,7 @@ public class OrganizationResource implements IOrganizationRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "向父组织中添加子组织", notes = "每一个组织的code都需要是唯一的") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "targetGroupId", value = "父组织id", required = true, dataType = "long", paramType = "query"),
@@ -74,6 +79,7 @@ public class OrganizationResource implements IOrganizationRWResource {
     return Response.success(BeanConverter.convert(groupDto));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "根据主键id更新组织信息", notes = "每一个组织的code都是唯一的") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "主键id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "code", value = "组织code(不能为空)", required = true, dataType = "string", paramType = "query"),
@@ -89,6 +95,7 @@ public class OrganizationResource implements IOrganizationRWResource {
     return Response.success(BeanConverter.convert(groupDto));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "根据主键id删除组织(与更新组织的区别是,该接口会明确将组组织下的所有关系删除)") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "主键id", required = true, dataType = "long", paramType = "query")})
   @Override
@@ -97,6 +104,7 @@ public class OrganizationResource implements IOrganizationRWResource {
     return Response.success(BeanConverter.convert(grpDto));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "移动组织") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "目标组织id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "targetGroupId", value = "目标组织新的父组织id", required = true, dataType = "long", paramType = "query"),})

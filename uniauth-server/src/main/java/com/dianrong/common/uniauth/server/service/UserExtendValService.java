@@ -264,7 +264,7 @@ public class UserExtendValService extends TenancyBasedService {
   private void queryAttributeVal(Long userId, List<Long> extendAttributeIds, Date optDate,
       Map<String, ExtendVal> resultMap, Map<Long, AttributeExtend> attributeExtendMap) {
     List<UserAttributeRecords> userAttributeRecordsList =
-        userAttributeRecordsMapper.queryUserHisotryProfileVal(userId, optDate, extendAttributeIds);
+        userAttributeRecordsMapper.queryUserHistoryProfileVal(userId, optDate, extendAttributeIds);
     if (ObjectUtil.collectionIsEmptyOrNull(userAttributeRecordsList)) {
       return;
     }

@@ -33,6 +33,10 @@ public class GlobalVar implements Cloneable {
     return invokeSeq;
   }
 
+  public Long incrementInvokeSeq() {
+    return ++invokeSeq;
+  }
+
   public void setInvokeSeq(Long invokeSeq) {
     this.invokeSeq = invokeSeq;
   }

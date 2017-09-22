@@ -7,8 +7,11 @@ import com.dianrong.common.uniauth.server.data.entity.ext.UserExtendValExt;
 import java.util.List;
 import java.util.Map;
 
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface UserExtendValMapper {
 
   /**
@@ -101,10 +104,13 @@ public interface UserExtendValMapper {
    */
   int updateByPrimaryKey(UserExtendVal record);
 
+  @NoneMapperAudit
   List<UserExtendValExt> selectByUserIdAndCode(Map<String, String> params);
 
+  @NoneMapperAudit
   int countByCode(Map<String, String> params);
 
+  @NoneMapperAudit
   int countByUserExtend(Map<String, String> params);
 
   int updateValue(@Param("userId") Long userId, @Param("extendId") Long extendId,

@@ -3,8 +3,12 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.ApiCallerInfo;
 import com.dianrong.common.uniauth.server.data.entity.ApiCallerInfoExample;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface ApiCallerInfoMapper {
 
   /**
@@ -103,5 +107,6 @@ public interface ApiCallerInfoMapper {
    * @param account domainCode
    * @return ApiCallerInfo list
    */
+  @NoneMapperAudit
   List<ApiCallerInfo> searchApiCaller(String account);
 }

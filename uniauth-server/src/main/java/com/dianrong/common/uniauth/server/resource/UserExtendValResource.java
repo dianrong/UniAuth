@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendValRWR
 import com.dianrong.common.uniauth.server.data.entity.User;
 import com.dianrong.common.uniauth.server.service.UserExtendValService;
 import com.dianrong.common.uniauth.server.service.UserService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,11 +42,10 @@ public class UserExtendValResource implements IUserExtendValRWResource {
           dataType = "long", paramType = "query")})
   @Override
   public Response<List<UserExtendValDto>> searchByUserId(UserExtendValParam userExtendValParam) {
-    List<UserExtendValDto> userExtendValDtos =
-        userExtendValService.searchByUserId(userExtendValParam.getUserId());
-    return Response.success(userExtendValDtos);
+    return Response.success(userExtendValService.searchByUserId(userExtendValParam.getUserId()));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "新增用户扩展属性值")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "long",
@@ -58,20 +58,20 @@ public class UserExtendValResource implements IUserExtendValRWResource {
           paramType = "query"),})
   @Override
   public Response<UserExtendValDto> add(UserExtendValParam userExtendValParam) {
-    UserExtendValDto userExtendValDto = userExtendValService.add(userExtendValParam.getUserId(),
-        userExtendValParam.getExtendId(), userExtendValParam.getValue());
-    return Response.success(userExtendValDto);
+    return Response.success(userExtendValService.add(userExtendValParam.getUserId(),
+        userExtendValParam.getExtendId(), userExtendValParam.getValue()));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "根据主键id删除扩展属性值")
   @ApiImplicitParams(value = {@ApiImplicitParam(name = "id", value = "扩展属性值记录id", required = true,
       dataType = "long", paramType = "query"),})
   @Override
   public Response<Integer> delById(UserExtendValParam userExtendValParam) {
-    int count = userExtendValService.delById(userExtendValParam.getId());
-    return Response.success(count);
+    return Response.success(userExtendValService.delById(userExtendValParam.getId()));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "根据主键id更新扩展属性值")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "扩展属性值记录id", required = true, dataType = "long",
@@ -82,10 +82,8 @@ public class UserExtendValResource implements IUserExtendValRWResource {
       @ApiImplicitParam(name = "value", value = "扩展值", dataType = "string", paramType = "query")})
   @Override
   public Response<Integer> updateById(UserExtendValParam userExtendValParam) {
-    int count =
-        userExtendValService.updateById(userExtendValParam.getId(), userExtendValParam.getUserId(),
-            userExtendValParam.getExtendId(), userExtendValParam.getValue());
-    return Response.success(count);
+    return Response.success(userExtendValService.updateById(userExtendValParam.getId(), userExtendValParam.getUserId(),
+        userExtendValParam.getExtendId(), userExtendValParam.getValue()));
   }
 
   @ApiOperation(value = "根据用户id和扩展属性code分页查询扩展值")

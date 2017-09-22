@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 import com.dianrong.common.uniauth.server.service.RoleService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.IRoleRWResource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -52,6 +53,7 @@ public class RoleResource implements IRoleRWResource {
     return Response.success(roleDtos);
   }
 
+  @ResourceAudit
   @Override
   public Response<RoleDto> addNewRole(RoleParam roleParam) {
     RoleDto roleDto = roleService.addNewRole(roleParam.getDomainId(), roleParam.getRoleCodeId(),
@@ -59,6 +61,7 @@ public class RoleResource implements IRoleRWResource {
     return Response.success(roleDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> updateRole(RoleParam roleParam) {
     roleService.updateRole(roleParam.getId(), roleParam.getRoleCodeId(), roleParam.getName(),
@@ -66,12 +69,14 @@ public class RoleResource implements IRoleRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> replacePermsToRole(RoleParam roleParam) {
     roleService.replacePermsToRole(roleParam.getId(), roleParam.getPermIds());
     return Response.success();
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> replaceGroupsAndUsersToRole(RoleParam roleParam) {
     roleService.replaceGroupsAndUsersToRole(roleParam.getId(), roleParam.getGrpIds(),
@@ -80,12 +85,14 @@ public class RoleResource implements IRoleRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> savePermsToRole(RoleParam roleParam) {
     roleService.savePermsToRole(roleParam.getId(), roleParam.getPermIds());
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation("批量关联用户和角色")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,

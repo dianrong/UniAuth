@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dianrong.common.uniauth.server.data.mapper.UserAttributeRecordsMapper" >
-  <select id="queryUserHisotryProfileVal" resultMap="BaseResultMap" >
+  <select id="queryUserHistoryProfileVal" resultMap="BaseResultMap" >
         SELECT
         t1.cur_val, t1.pre_val, t1.opt_type, t1.extend_id, t1.tenancy_id
         FROM

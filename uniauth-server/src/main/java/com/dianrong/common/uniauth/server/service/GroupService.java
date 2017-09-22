@@ -1254,7 +1254,7 @@ public class GroupService extends TenancyBasedService {
     for (Integer tagId : tagIds) {
       tagKeyList.add(new GrpTagKey().setGrpId(grpId).setTagId(tagId));
     }
-    grpTagMapper.bacthInsert(tagKeyList);
+    grpTagMapper.batchInsert(tagKeyList);
   }
 
   public List<Grp> queryGroupByAncestor(Integer id) {

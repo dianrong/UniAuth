@@ -4,8 +4,12 @@ import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.server.data.entity.Role;
 import com.dianrong.common.uniauth.server.data.entity.RoleExample;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface RoleMapper {
 
   /**
@@ -99,5 +103,6 @@ public interface RoleMapper {
    */
   int updateByPrimaryKey(Role record);
 
+  @NoneMapperAudit
   List<Integer> selectRoleIdsExtendedFromGrp(@Param("id") Long id);
 }

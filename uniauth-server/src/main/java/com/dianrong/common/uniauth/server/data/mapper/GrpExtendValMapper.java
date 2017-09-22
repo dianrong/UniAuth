@@ -6,8 +6,10 @@ import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import java.util.List;
 import java.util.Map;
 
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface GrpExtendValMapper {
 
   /**
