@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.request.ProfileParam;
 import com.dianrong.common.uniauth.server.service.GroupProfileService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupProfileRWResource;
 import io.swagger.annotations.Api;
@@ -37,6 +38,7 @@ public class GroupProfileResource implements IGroupProfileRWResource {
     return Response.success(groupProfileService.getGroupProfile(groupId, profileId, time));
   }
 
+  @ResourceAudit
   @ApiOperation("更新一个组的扩展属性值(如果扩展属性不存在,则添加),随后返回对应ProfileId的Profile.")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",

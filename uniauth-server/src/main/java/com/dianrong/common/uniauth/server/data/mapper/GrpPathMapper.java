@@ -5,8 +5,11 @@ import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpPathKey;
 import java.util.List;
 import java.util.Map;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface GrpPathMapper {
 
   /**

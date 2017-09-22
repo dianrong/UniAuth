@@ -108,7 +108,7 @@ public class GroupExtendValService extends TenancyBasedService {
   private void queryAttributeVal(Integer grpId, List<Long> extendAttributeIds, Date optDate,
       Map<String, ExtendVal> resultMap, Map<Long, AttributeExtend> attributeExtendMap) {
     List<GrpAttributeRecords> grpAttributeRecordsList =
-        grpAttributeRecordsMapper.queryGrpHisotryProfileVal(grpId, optDate, extendAttributeIds);
+        grpAttributeRecordsMapper.queryGrpHistoryProfileVal(grpId, optDate, extendAttributeIds);
     if (ObjectUtil.collectionIsEmptyOrNull(grpAttributeRecordsList)) {
       return;
     }

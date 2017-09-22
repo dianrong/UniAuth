@@ -172,7 +172,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   @Transactional
   public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId,
       String tenancyCode, String name, String phone, String email, String password,
-      String orginPassword, Boolean ignorePwdStrategyCheck, Byte status) {
+      String originalPassword, Boolean ignorePwdStrategyCheck, Byte status) {
     if (userActionEnum == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
@@ -248,11 +248,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         // same as case:RESET_PASSWORD_AND_CHECK
       case RESET_PASSWORD_AND_CHECK:
         // 原始密码验证通过
-        if (orginPassword == null) {
+        if (originalPassword == null) {
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("common.parameter.empty", "Original password"));
         }
-        if (!UniPasswordEncoder.isPasswordValid(user.getPassword(), orginPassword,
+        if (!UniPasswordEncoder.isPasswordValid(user.getPassword(), originalPassword,
             user.getPasswordSalt())) {
           throw new AppException(InfoName.VALIDATE_FAIL,
               UniBundle.getMsg("common.parameter.origin.password.wrong"));
@@ -1564,7 +1564,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     for (Integer tagId : tagIds) {
       infoes.add(new UserTagKey().setUserId(userId).setTagId(tagId));
     }
-    userTagMapper.bacthInsert(infoes);
+    userTagMapper.batchInsert(infoes);
   }
 
   /**

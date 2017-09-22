@@ -32,12 +32,15 @@ public class RequestHolderAopHandler {
    */
   @Around("anyServerResources()")
   public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
+    holderSet(joinPoint);
+    return joinPoint.proceed();
+  }
 
+  private void holderSet(ProceedingJoinPoint joinPoint) {
     // 处理租户标识信息
     processTenancyIdentity(joinPoint);
     // 处理树类型信息
     processTreeTypeTag(joinPoint);
-    return joinPoint.proceed();
   }
 
   /**

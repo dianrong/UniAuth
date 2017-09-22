@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
 import com.dianrong.common.uniauth.common.bean.request.ProfileDefinitionParam;
 import com.dianrong.common.uniauth.server.service.ProfileService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.sharerw.interfaces.IProfileRWResource;
 
@@ -28,6 +29,7 @@ public class ProfileResource implements IProfileRWResource {
     return Response.success(profileService.getProfileDefinition(id));
   }
 
+  @ResourceAudit
   @ApiOperation("新增Profile定义")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或者tenancyCode)", dataType = "long",
@@ -49,6 +51,7 @@ public class ProfileResource implements IProfileRWResource {
         param.getDescendantProfileIds()));
   }
 
+  @ResourceAudit
   @ApiOperation("更新Profile定义")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",
@@ -71,6 +74,7 @@ public class ProfileResource implements IProfileRWResource {
         BeanConverter.convertToModel(param.getAttributes()), param.getDescendantProfileIds()));
   }
 
+  @ResourceAudit
   @ApiOperation("扩展Profile定义的扩展属性和子ProfileId")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户Id(或者传tenancyCode)", dataType = "long",

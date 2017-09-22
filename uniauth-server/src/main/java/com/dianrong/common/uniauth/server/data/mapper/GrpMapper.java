@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface GrpMapper {
 
   /**
@@ -105,28 +108,40 @@ public interface GrpMapper {
    */
   int updateByPrimaryKey(Grp record);
 
+  @NoneMapperAudit
   List<Grp> getGroupTree(Integer groupId);
 
+  @NoneMapperAudit
   List<HashMap<String, Integer>> getGroupTreeLinks(Integer groupId);
 
+  @NoneMapperAudit
   Integer selectNameCountBySameLayerGrpId(Integer groupId);
 
+  @NoneMapperAudit
   Integer checkOwner(Map<String, Object> paramMap);
 
+  @NoneMapperAudit
   Set<Integer> getOwnGrpIds(Long ownerId);
 
+  @NoneMapperAudit
   Integer getUserIdInGroupOrSub(Map<String, Object> paramMap);
 
+  @NoneMapperAudit
   @Timed
   List<Grp> listGroupsRelateToUser(Map<String, Object> paramMap);
 
+  @NoneMapperAudit
   List<Grp> queryPageGroup(Map<String, Object> paramMap);
 
+  @NoneMapperAudit
   List<HashMap<String, Integer>> queryPageGroupTreeLinks(Map<String, Object> paramMap);
 
+  @NoneMapperAudit
   Integer queryPageGroupCount(@Param("grpId") Integer grpId);
 
+  @NoneMapperAudit
   Integer querySubGrpNum(@Param("grpCode")String grpCode, @Param("grpId") Integer grpId, @Param("tenancyId") Long tenancyId);
 
+  @NoneMapperAudit
   List<Integer> querySubGrpIds(@Param("rootCode")String rootCode, @Param("tenancyId") Long tenancyId);
 }

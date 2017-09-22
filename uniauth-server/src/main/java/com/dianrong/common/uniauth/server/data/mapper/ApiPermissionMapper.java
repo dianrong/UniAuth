@@ -3,8 +3,12 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.ApiPermission;
 import com.dianrong.common.uniauth.server.data.entity.ApiPermissionExample;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface ApiPermissionMapper {
 
   /**
@@ -97,6 +101,6 @@ public interface ApiPermissionMapper {
    */
   int updateByPrimaryKey(ApiPermission record);
 
-
+  @NoneMapperAudit
   List<ApiPermission> searchAllPrivatePermissions(Integer apiCallerId);
 }

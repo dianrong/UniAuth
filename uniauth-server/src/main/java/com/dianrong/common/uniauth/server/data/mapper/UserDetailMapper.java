@@ -3,8 +3,11 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.UserDetail;
 import com.dianrong.common.uniauth.server.data.entity.UserDetailExample;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface UserDetailMapper {
 
   /**

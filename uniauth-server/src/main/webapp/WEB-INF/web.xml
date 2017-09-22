@@ -36,14 +36,14 @@
     </filter-mapping>
     
     <filter>
-        <filter-name>tenancyIdentityClearFilter</filter-name>
-        <filter-class>com.dianrong.common.uniauth.server.filter.TenancyIdentityClearFilter</filter-class>
+        <filter-name>holderClearFilter</filter-name>
+        <filter-class>com.dianrong.common.uniauth.server.filter.HolderClearFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>tenancyIdentityClearFilter</filter-name>
+        <filter-name>holderClearFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+
 	<filter>
 	    <filter-name>TrackFilter</filter-name>
 	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -69,16 +69,6 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-	    <!-- cxf header clear -->
-    <filter>
-    	<filter-name>HolderClearFilter</filter-name>
-    	<filter-class>com.dianrong.common.uniauth.server.support.HolderClearFilter</filter-class>
-    </filter>
-    <filter-mapping>
-    	<filter-name>HolderClearFilter</filter-name>
-    	<url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <!-- SpringMVC -->
     <servlet>
         <servlet-name>restful</servlet-name>
