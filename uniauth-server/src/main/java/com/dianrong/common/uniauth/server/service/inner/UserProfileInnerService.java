@@ -122,7 +122,6 @@ public class UserProfileInnerService extends TenancyBasedService {
   private UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
     CheckEmpty.checkEmpty(userId, "userId");
     CheckEmpty.checkEmpty(extendId, "extendId");
-    UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, userId);
     UserExtendValExample userExtendValExample = new UserExtendValExample();
     UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
     criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)
