@@ -1,20 +1,18 @@
-package com.dianrong.common.uniauth.server.support;
+package com.dianrong.common.uniauth.server.filter;
+
 
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 
+import javax.servlet.*;
 import java.io.IOException;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+
+/**
+ * 清空ThreadLocal中的信息.
+ */
 
 public class HolderClearFilter implements Filter {
-
-  @Override
-  public void init(FilterConfig filterConfig) throws ServletException {
+  @Override public void init(FilterConfig filterConfig) throws ServletException {
   }
 
   @Override
@@ -23,13 +21,13 @@ public class HolderClearFilter implements Filter {
     try {
       chain.doFilter(request, response);
     } finally {
-      // clear
+      // 清空Holder信息
       CxfHeaderHolder.clearAllHolder();
       TreeTypeHolder.clear();
     }
   }
 
-  @Override
-  public void destroy() {
+  @Override public void destroy() {
+
   }
 }

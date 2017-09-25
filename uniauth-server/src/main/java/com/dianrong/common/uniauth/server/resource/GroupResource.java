@@ -8,6 +8,7 @@ import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserListParam;
 import com.dianrong.common.uniauth.server.service.GroupService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.server.support.tree.TreeType;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeTag;
 import com.dianrong.common.uniauth.sharerw.interfaces.IGroupRWResource;
@@ -77,6 +78,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success(groupDtos);
   }
 
+  @ResourceAudit
   @ApiOperation(value = "添加用户与组的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "userIds", value = "用户列表", required = true, dataType = "java.util.List", paramType = "query"),
@@ -87,6 +89,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "删除用户与组的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "userIdGrpIdPairs", value = "组和用户的映射列表", required = true, dataType = "java.util.List", paramType = "query"),
       @ApiImplicitParam(name = "normalMember", value = "普通关联关系(或owner关系)", dataType = "boolean", paramType = "query", defaultValue = "true"),})
@@ -95,6 +98,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "移动用户到指定组") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "groupId", value = "目标组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "userIdGroupIdPairs", value = "用户和组的原始关系", dataType = "java.util.List", required = true, paramType = "query"),
@@ -105,6 +109,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "向父组中添加子组", notes = "每一个组的code都需要是唯一的") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "targetGroupId", value = "父组id", required = true, dataType = "long", paramType = "query"),
@@ -117,6 +122,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success(groupDto);
   }
 
+  @ResourceAudit
   @ApiOperation(value = "根据主键id更新组信息", notes = "每一个组的code都是唯一的") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "主键id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "code", value = "组code(不能为空)", required = true, dataType = "string", paramType = "query"),
@@ -129,6 +135,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success(groupDto);
   }
 
+  @ResourceAudit
   @ApiOperation(value = "根据主键id删除组(与更新组的区别是,该接口会明确将组的所有子组删除)") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "主键id", required = true, dataType = "long", paramType = "query")})
   @Override public Response<GroupDto> deleteGroup(GroupParam groupParam) {
@@ -148,6 +155,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success(groupService.getAllRolesToGroupAndDomain(groupParam.getId(), groupParam.getDomainId()));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "关联组和角色") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "roleIds", value = "角色id列表", required = true, dataType = "java.util.List", paramType = "query")})
@@ -165,6 +173,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "替换组与角色的关联关系") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "domainId", value = "域id", required = true, dataType = "long", paramType = "query"),
@@ -182,6 +191,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success(groupService.searchTagsWithrChecked(groupParam.getId(), groupParam.getDomainId()));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "替换组关联的标签") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "tagIds", value = "新的标签列表id", required = true, dataType = "java.util.List", paramType = "query")})
@@ -190,6 +200,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation(value = "移动组") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "目标组id", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "targetGroupId", value = "目标组新的父组id", required = true, dataType = "long", paramType = "query")})
@@ -217,6 +228,7 @@ public class GroupResource implements IGroupRWResource {
     return Response.success(groupList);
   }
 
+  @Timed
   @ApiOperation(value = "根据条件查询组的信息(关联的角色,标签,扩展信息,用户等.侧重点在用户的各种信息,而不是根据条件筛选组)") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "id", value = "组id", dataType = "integer", paramType = "query"),

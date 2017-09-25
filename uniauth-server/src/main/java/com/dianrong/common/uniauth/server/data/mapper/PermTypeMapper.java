@@ -3,8 +3,12 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
 import com.dianrong.common.uniauth.server.data.entity.PermTypeExample;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface PermTypeMapper {
 
   /**

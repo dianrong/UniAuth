@@ -73,10 +73,10 @@ public interface UserTagMapper {
   int updateByExample(@Param("record") UserTagKey record, @Param("example") UserTagExample example);
 
   /**
-   * . batch insert userTag
+   * Batch insert userTag.
    *
-   * @param infoes insert infoes
+   * @param infos insert infos
    * @return result
    */
-  int bacthInsert(@Param("infoes") List<UserTagKey> infoes);
+  int batchInsert(@Param("infos") List<UserTagKey> infos);
 }

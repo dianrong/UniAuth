@@ -10,6 +10,7 @@ import com.dianrong.common.uniauth.common.bean.request.TagQuery;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
 import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
 import com.dianrong.common.uniauth.server.service.TagService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITagRWResource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,28 +42,28 @@ public class TagResource implements ITagRWResource {
     return Response.success(tagDtoPageDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<TagDto> addNewTag(TagParam tagParam) {
-    TagDto tagDto = tagService.addNewTag(tagParam.getCode(), tagParam.getTagTypeId(),
-        tagParam.getDescription());
-    return Response.success(tagDto);
+    return Response.success(tagService.addNewTag(tagParam.getCode(), tagParam.getTagTypeId(),
+        tagParam.getDescription()));
   }
 
+  @ResourceAudit
   @Override
   public Response<TagDto> updateTag(TagParam tagParam) {
-    TagDto tagDto = tagService.updateTag(tagParam.getId(), tagParam.getCode(), tagParam.getStatus(),
-        tagParam.getTagTypeId(), tagParam.getDescription());
-    return Response.success(tagDto);
+    return Response.success(tagService.updateTag(tagParam.getId(), tagParam.getCode(), tagParam.getStatus(),
+        tagParam.getTagTypeId(), tagParam.getDescription()));
   }
 
   @Override
   @Timed
   public Response<List<TagTypeDto>> searchTagTypes(TagTypeQuery tagTypeQuery) {
-    List<TagTypeDto> tagTypeDtos = tagService.searchTagTypes(tagTypeQuery.getId(),
-        tagTypeQuery.getDomainIds(), tagTypeQuery.getDomainId(), tagTypeQuery.getCode());
-    return Response.success(tagTypeDtos);
+    return Response.success(tagService.searchTagTypes(tagTypeQuery.getId(),
+        tagTypeQuery.getDomainIds(), tagTypeQuery.getDomainId(), tagTypeQuery.getCode()));
   }
 
+  @ResourceAudit
   @Override
   public Response<TagTypeDto> addNewTagType(TagTypeParam tagTypeParam) {
     TagTypeDto tagTypeDto =
@@ -70,6 +71,7 @@ public class TagResource implements ITagRWResource {
     return Response.success(tagTypeDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<TagTypeDto> updateTagType(TagTypeParam tagTypeParam) {
     TagTypeDto tagTypeDto = tagService.updateTagType(tagTypeParam.getId(), tagTypeParam.getCode(),
@@ -77,12 +79,14 @@ public class TagResource implements ITagRWResource {
     return Response.success(tagTypeDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> deleteTagType(TagTypeParam tagTypeParam) {
     tagService.deleteTagType(tagTypeParam.getId());
     return Response.success();
   }
 
+  @ResourceAudit
   @Override
   public Response<Void> replaceGroupsAndUsersToTag(TagParam tagParam) {
     tagService.replaceGroupsAndUsersToTag(tagParam.getId(), tagParam.getGrpIds(),
@@ -90,6 +94,7 @@ public class TagResource implements ITagRWResource {
     return Response.success();
   }
 
+  @ResourceAudit
   @ApiOperation("批量关联用户和标签")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,

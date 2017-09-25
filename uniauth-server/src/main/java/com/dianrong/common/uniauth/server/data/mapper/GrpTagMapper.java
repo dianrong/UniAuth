@@ -3,8 +3,11 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.GrpTagExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpTagKey;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface GrpTagMapper {
 
   /**
@@ -75,5 +78,5 @@ public interface GrpTagMapper {
   /**
    * batch insert GrpTagKey.
    */
-  int bacthInsert(@Param("infoes") List<GrpTagKey> infoes);
+  int batchInsert(@Param("infoes") List<GrpTagKey> infoes);
 }

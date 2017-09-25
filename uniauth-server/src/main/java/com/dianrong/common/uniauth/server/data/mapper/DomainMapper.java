@@ -3,8 +3,11 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.Domain;
 import com.dianrong.common.uniauth.server.data.entity.DomainExample;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface DomainMapper {
 
   /**

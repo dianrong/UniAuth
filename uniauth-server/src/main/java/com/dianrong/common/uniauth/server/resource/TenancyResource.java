@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
 import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.server.service.TenancyService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.ITenancyRWResource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -66,6 +67,7 @@ public class TenancyResource implements ITenancyRWResource {
     return new Response<TenancyDto>(tenancyService.getEnableTenancyByCode(tenancyCode));
   }
 
+  @ResourceAudit
   @ApiOperation("新增租户")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "code", value = "租户编码", required = true, dataType = "string",
@@ -90,6 +92,7 @@ public class TenancyResource implements ITenancyRWResource {
             tenancyParam.getAdminEmail(), tenancyParam.getAdminPassword()));
   }
 
+  @ResourceAudit
   @ApiOperation("更新租户信息")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "主键id", required = true, dataType = "long",

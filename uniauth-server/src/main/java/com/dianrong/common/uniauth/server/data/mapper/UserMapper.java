@@ -6,8 +6,12 @@ import com.dianrong.common.uniauth.server.data.entity.UserExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
 import java.util.List;
 import java.util.Map;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface UserMapper {
 
   /**
@@ -101,14 +105,19 @@ public interface UserMapper {
    */
   int updateByPrimaryKey(User record);
 
+  @NoneMapperAudit
   List<User> getGroupOwners(Integer groupId);
 
+  @NoneMapperAudit
   // userId + email + groupId
   List<UserExt> getUsersByParentGrpIdByUserType(Map<String, Object> params);
 
+  @NoneMapperAudit
   List<User> selectByEmailOrPhone(Map<String, Object> map);
 
+  @NoneMapperAudit
   List<User> getUsersByGroupCodeRoleIds(Map<String, Object> param);
-  
+
+  @NoneMapperAudit
   User getUserByIdentity(Map<String, Object> param);
 }

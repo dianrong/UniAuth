@@ -6,8 +6,11 @@ import com.dianrong.common.uniauth.server.data.entity.GrpAttributeRecordsExample
 import java.util.Date;
 import java.util.List;
 
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface GrpAttributeRecordsMapper {
 
   /**
@@ -100,6 +103,7 @@ public interface GrpAttributeRecordsMapper {
    */
   int updateByPrimaryKey(GrpAttributeRecords record);
 
-  List<GrpAttributeRecords> queryGrpHisotryProfileVal(@Param("grpId") Integer grpId,
+  @NoneMapperAudit
+  List<GrpAttributeRecords> queryGrpHistoryProfileVal(@Param("grpId") Integer grpId,
       @Param("optDate") Date optDate, @Param("extendIds") List<Long> extendIds);
 }

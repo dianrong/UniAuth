@@ -4,6 +4,7 @@ import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDetailInfoDto;
 import com.dianrong.common.uniauth.common.bean.request.UserDetailInfoParam;
 import com.dianrong.common.uniauth.server.service.UserDetailService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserDetailRWResource;
 
 import io.swagger.annotations.Api;
@@ -29,6 +30,7 @@ public class UserDetailResource implements IUserDetailRWResource {
     return Response.success(userDetailService.searchByUserId(param.getUserId()));
   }
 
+  @ResourceAudit
   @ApiOperation("新增或修改用户的detail信息(所有属性更新))")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "userId", value = "关联的用户id", required = true, dataType = "long",
@@ -40,6 +42,7 @@ public class UserDetailResource implements IUserDetailRWResource {
     return Response.success(userDetailService.addOrUpdateUserDetail(param));
   }
 
+  @ResourceAudit
   @ApiOperation("更新用户detail信息(只更新不为空的字段)")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "userId", value = "关联的用户id", required = true, dataType = "long",

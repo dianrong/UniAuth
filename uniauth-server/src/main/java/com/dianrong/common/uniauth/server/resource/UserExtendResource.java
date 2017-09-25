@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.common.bean.request.UserExtendPageParam;
 import com.dianrong.common.uniauth.common.bean.request.UserExtendParam;
 import com.dianrong.common.uniauth.common.interfaces.readwrite.IUserExtendRWResource;
 import com.dianrong.common.uniauth.server.service.AttributeExtendService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
@@ -61,6 +62,7 @@ public class UserExtendResource implements IUserExtendRWResource {
     return Response.success(result);
   }
 
+  @ResourceAudit
   @ApiOperation(value = "新增用户扩展属性", notes = "不能存在两个code相同的扩展信息")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
@@ -77,6 +79,7 @@ public class UserExtendResource implements IUserExtendRWResource {
     return Response.success(BeanConverter.convert(attributeExtendDto));
   }
 
+  @ResourceAudit
   @ApiOperation(value = "根据主键id更新用户扩展属性", notes = "不能存在两个code相同的扩展信息")
   @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "id", value = "扩展属性id", required = true, dataType = "long",

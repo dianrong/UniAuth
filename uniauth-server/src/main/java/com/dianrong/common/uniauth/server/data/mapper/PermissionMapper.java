@@ -6,8 +6,12 @@ import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
 import java.util.List;
 import java.util.Map;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface PermissionMapper {
 
   /**
@@ -103,5 +107,6 @@ public interface PermissionMapper {
    */
   int updateByPrimaryKey(Permission record);
 
+  @NoneMapperAudit
   List<UrlRoleMappingExt> selectUrlRoleMapping(Map<String, Object> values);
 }

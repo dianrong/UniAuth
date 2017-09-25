@@ -4,8 +4,11 @@ import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface GrpRoleMapper {
 
   /**

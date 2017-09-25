@@ -9,6 +9,7 @@ import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.server.service.multidata.DelegateUserAuthentication;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -28,30 +29,26 @@ import java.util.List;
 
   @Autowired private DelegateUserAuthentication delegateUserAuthentication;
 
-  @Override public Response<UserDto> addNewUser(UserParam userParam) {
-    UserDto userDto =
-        userService.addNewUser(userParam.getName(), userParam.getPhone(), userParam.getEmail());
-
-    return Response.success(userDto);
+  @ResourceAudit @Override public Response<UserDto> addNewUser(UserParam userParam) {
+    return Response.success(
+        userService.addNewUser(userParam.getName(), userParam.getPhone(), userParam.getEmail()));
   }
 
-  @Override public Response<UserDto> updateUser(UserParam userParam) {
-    UserDto userDto = userService
+  @ResourceAudit @Override public Response<UserDto> updateUser(UserParam userParam) {
+    return Response.success(userService
         .updateUser(userParam.getUserActionEnum(), userParam.getId(), userParam.getAccount(),
             userParam.getTenancyId(), userParam.getTenancyCode(), userParam.getName(),
             userParam.getPhone(), userParam.getEmail(), userParam.getPassword(),
             userParam.getOriginPassword(), userParam.getIgnorePwdStrategyCheck(),
-            userParam.getStatus());
-    return Response.success(userDto);
+            userParam.getStatus()));
   }
 
   @Override @Timed public Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam) {
-    List<RoleDto> roleDtos =
-        userService.getAllRolesToUser(userParam.getId(), userParam.getDomainId());
-    return Response.success(roleDtos);
+    return Response
+        .success(userService.getAllRolesToUser(userParam.getId(), userParam.getDomainId()));
   }
 
-  @Override public Response<Void> saveRolesToUser(UserParam userParam) {
+  @ResourceAudit @Override public Response<Void> saveRolesToUser(UserParam userParam) {
     userService.saveRolesToUser(userParam.getId(), userParam.getRoleIds());
     return Response.success();
   }
@@ -97,7 +94,7 @@ import java.util.List;
     return Response.success(pageDto);
   }
 
-  @ApiOperation("登陆接口") @ApiImplicitParams(value = {
+  @ResourceAudit @ApiOperation("登陆接口") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id或code", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "account", value = "账号", required = true, dataType = "string", paramType = "query"),
       @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "string", paramType = "query"),
@@ -125,12 +122,12 @@ import java.util.List;
     return new Response<UserDto>(delegateUserAuthentication.getUserByEmailOrPhone(loginParam));
   }
 
-  @Override public Response<Void> resetPassword(UserParam userParam) {
+  @ResourceAudit @Override public Response<Void> resetPassword(UserParam userParam) {
     userService.resetPassword(userParam);
     return Response.success();
   }
 
-  @Override public Response<Void> replaceRolesToUser(UserParam userParam) {
+  @ResourceAudit @Override public Response<Void> replaceRolesToUser(UserParam userParam) {
     userService
         .replaceRolesToUser(userParam.getId(), userParam.getRoleIds(), userParam.getDomainId());
     return Response.success();
@@ -138,35 +135,30 @@ import java.util.List;
 
   @Override
   public Response<List<UserDto>> searchUsersWithRoleCheck(PrimaryKeyParam primaryKeyParam) {
-    List<UserDto> userDtos = userService.searchUsersWithRoleCheck(primaryKeyParam.getId());
-    return Response.success(userDtos);
+    return Response.success(userService.searchUsersWithRoleCheck(primaryKeyParam.getId()));
   }
 
   @Override
   public Response<List<UserDto>> searchUsersWithTagCheck(PrimaryKeyParam primaryKeyParam) {
-    List<UserDto> userDtos = userService.searchUsersWithTagCheck(primaryKeyParam.getId());
-    return Response.success(userDtos);
+    return Response.success(userService.searchUsersWithTagCheck(primaryKeyParam.getId()));
   }
 
   @Override public Response<List<TagDto>> getTagsWithUserCheckedInfo(UserParam userParam) {
-    List<TagDto> tagDtos =
-        userService.searchTagsWithUserChecked(userParam.getId(), userParam.getDomainId());
-    return Response.success(tagDtos);
+    return Response
+        .success(userService.searchTagsWithUserChecked(userParam.getId(), userParam.getDomainId()));
   }
 
-  @Override public Response<Void> replaceTagsToUser(UserParam userParam) {
+  @ResourceAudit @Override public Response<Void> replaceTagsToUser(UserParam userParam) {
     userService.replaceTagsToUser(userParam.getId(), userParam.getTagIds());
     return Response.success();
   }
 
   @Override public Response<List<UserDto>> searchUserByRoleId(UserParam userParam) {
-    List<UserDto> userDtos = userService.searchUserByRoleIds(userParam.getRoleIds());
-    return Response.success(userDtos);
+    return Response.success(userService.searchUserByRoleIds(userParam.getRoleIds()));
   }
 
   @Override public Response<List<UserDto>> searchUserByTagId(UserParam userParam) {
-    List<UserDto> userDtos = userService.searchUserByTagIds(userParam.getTagIds());
-    return Response.success(userDtos);
+    return Response.success(userService.searchUserByTagIds(userParam.getTagIds()));
   }
 
   @ApiOperation("根据组code和角色id列表查询用户列表") @ApiImplicitParams(value = {
@@ -180,7 +172,7 @@ import java.util.List;
             userParam.getIncludeRoleIds()));
   }
 
-  @ApiOperation("vpn登陆接口") @ApiImplicitParams(value = {
+  @ResourceAudit @ApiOperation("vpn登陆接口") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyCode", value = "租户code", dataType = "string", paramType = "query", defaultValue = "DIANRONG"),
       @ApiImplicitParam(name = "account", value = "账号", required = true, dataType = "string", paramType = "query"),
       @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "string", paramType = "query"),
@@ -189,7 +181,7 @@ import java.util.List;
     return Response.success(userService.vpnLogin(loginParam));
   }
 
-  @ApiOperation("更新用户关联的IPA账号.在更新之前需要验证IPA账号和密码是否正确.") @ApiImplicitParams(value = {
+  @ResourceAudit @ApiOperation("更新用户关联的IPA账号.在更新之前需要验证IPA账号和密码是否正确.") @ApiImplicitParams(value = {
       @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "account", value = "用户账号", required = true, dataType = "long", paramType = "query"),
       @ApiImplicitParam(name = "ipa", value = "新的IPA账号", required = true, dataType = "string", paramType = "query"),

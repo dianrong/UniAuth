@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.bean.request.AuditParam;
 import com.dianrong.common.uniauth.common.interfaces.read.IAuditResource;
 import com.dianrong.common.uniauth.server.service.AuditService;
+import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,7 @@ public class AuditResource implements IAuditResource {
     return Response.success(auditDtoPageDto);
   }
 
+  @ResourceAudit
   @Override
   public Response<Integer> deleteAudit(AuditParam auditParam) {
     Integer affectedRows = auditService.deleteAudit(auditParam.getUserId(),
@@ -45,5 +47,4 @@ public class AuditResource implements IAuditResource {
         auditParam.getRequestDomainCode());
     return Response.success(affectedRows);
   }
-
 }

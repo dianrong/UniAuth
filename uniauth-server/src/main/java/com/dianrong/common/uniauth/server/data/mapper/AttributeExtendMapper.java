@@ -3,8 +3,12 @@ package com.dianrong.common.uniauth.server.data.mapper;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.AttributeExtendExample;
 import java.util.List;
+
+import com.dianrong.common.uniauth.server.support.audit.MapperAudit;
+import com.dianrong.common.uniauth.server.support.audit.NoneMapperAudit;
 import org.apache.ibatis.annotations.Param;
 
+@MapperAudit
 public interface AttributeExtendMapper {
 
   /**
@@ -100,5 +104,6 @@ public interface AttributeExtendMapper {
   /**
    * 根据ProfileId获取关联的扩展属性.
    */
+  @NoneMapperAudit
   List<AttributeExtend> getAttributesByProfileId(Long profileId);
 }

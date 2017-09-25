@@ -179,7 +179,7 @@ import java.util.concurrent.Executors;
       // 其他异常
       log.error("Synchronous HR system data failed, exception occured.", e);
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.FAILURE.toString());
-      String expInfo = StringUtil.subStrIfNeed(ExceptionUtils.getStackTrace(e), 500);
+      String expInfo = StringUtil.subStrIfNeed(ExceptionUtils.getStackTrace(e), 2000);
       hrSynchronousLog.setFailureMsg(expInfo);
       throw new AppException(InfoName.INTERNAL_ERROR, expInfo);
     } finally {
