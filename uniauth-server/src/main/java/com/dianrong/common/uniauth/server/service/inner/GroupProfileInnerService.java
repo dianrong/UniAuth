@@ -124,7 +124,6 @@ public class GroupProfileInnerService extends TenancyBasedService {
   private GrpExtendValDto addOrUpdate(Integer groupId, Long extendId, String value) {
     CheckEmpty.checkEmpty(groupId, "groupId");
     CheckEmpty.checkEmpty(extendId, "extendId");
-    groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, groupId);
     GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
     GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
     criteria.andGrpIdEqualTo(groupId).andExtendIdEqualTo(extendId)
