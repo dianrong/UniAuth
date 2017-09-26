@@ -122,7 +122,6 @@ public class UserProfileInnerService extends TenancyBasedService {
   private UserExtendValDto addOrUpdate(Long userId, Long extendId, String value) {
     CheckEmpty.checkEmpty(userId, "userId");
     CheckEmpty.checkEmpty(extendId, "extendId");
-    UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, userId);
     UserExtendValExample userExtendValExample = new UserExtendValExample();
     UserExtendValExample.Criteria criteria = userExtendValExample.createCriteria();
     criteria.andUserIdEqualTo(userId).andExtendIdEqualTo(extendId)
@@ -134,9 +133,13 @@ public class UserProfileInnerService extends TenancyBasedService {
       // add
       record = userExtendValInnerService.addNew(userId, extendId, value);
     } else {
-      // update
-      userExtendValInnerService.update(userId, extendId, value);
-      record = userExtendValInnerService.queryByUserIdAndExtendId(userId, extendId);
+      if (!ObjectUtil.objectEqual(existUserExtendVal.get(0).getValue(), value)) {
+        // update
+        userExtendValInnerService.update(userId, extendId, value);
+        record = userExtendValInnerService.queryByUserIdAndExtendId(userId, extendId);
+      } else {
+        record = existUserExtendVal.get(0);
+      }
     }
     return BeanConverter.convert(record, UserExtendValDto.class);
   }

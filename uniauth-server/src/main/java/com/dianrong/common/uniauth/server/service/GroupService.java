@@ -393,6 +393,7 @@ public class GroupService extends TenancyBasedService {
     // 子group不能存在
     dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_CODE, groupCode);
 
+    // 新增组:增加组和增加组关系都完成,才算添加组完成
     Grp grp = BeanConverter.convert(groupParam);
     Date now = new Date();
     grp.setStatus(AppConstants.STATUS_ENABLED);
@@ -400,13 +401,6 @@ public class GroupService extends TenancyBasedService {
     grp.setLastUpdate(now);
     grp.setTenancyId(tenancyService.getTenancyIdWithCheck());
     grpMapper.insert(grp);
-    // 联动添加组的扩展属性值
-    Map<String, String> attributes = Maps.newHashMap();
-    attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
-    attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
-    attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(),
-        groupParam.getDescription());
-    groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
     GrpPath grpPath = new GrpPath();
     grpPath.setDeepth(AppConstants.ZERO_BYTE);
@@ -418,6 +412,14 @@ public class GroupService extends TenancyBasedService {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("group.parameter.name", grp.getName()));
     }
+
+    // 联动添加组的扩展属性值
+    Map<String, String> attributes = Maps.newHashMap();
+    attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupParam.getName());
+    attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupParam.getCode());
+    attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(),
+        groupParam.getDescription());
+    groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
     // 发送通知
     uniauthNotify

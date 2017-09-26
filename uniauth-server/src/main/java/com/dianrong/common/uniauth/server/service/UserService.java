@@ -262,9 +262,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         }
         // 验证新密码
         checkUserPwd(user.getId(), password, ignorePwdStrategyCheck);
-        byte[] salttemp = AuthUtils.createSalt();
-        user.setPassword(Base64.encode(AuthUtils.digest(password, salttemp)));
-        user.setPasswordSalt(Base64.encode(salttemp));
+        byte[] salt_temp = AuthUtils.createSalt();
+        user.setPassword(Base64.encode(AuthUtils.digest(password, salt_temp)));
+        user.setPasswordSalt(Base64.encode(salt_temp));
         user.setPasswordDate(new Date());
         user.setFailCount(AppConstants.ZERO_BYTE);
         break;
@@ -281,12 +281,13 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     userMapper.updateByPrimaryKey(user);
 
-    // 联动更新扩展属性值
-    Map<String, String> attributes = Maps.newHashMap();
-    attributes.put(AttributeDefine.USER_NAME.getAttributeCode(), name);
-    attributes.put(AttributeDefine.PHONE.getAttributeCode(), phone);
-    attributes.put(AttributeDefine.EMAIL.getAttributeCode(), email);
-    userProfileInnerService.addOrUpdateUserAttributes(user.getId(), attributes);
+    if (UserActionEnum.isUpdateBasicInfo(userActionEnum)) {
+      Map<String, String> attributes = Maps.newHashMap();
+      attributes.put(AttributeDefine.USER_NAME.getAttributeCode(), name);
+      attributes.put(AttributeDefine.PHONE.getAttributeCode(), phone);
+      attributes.put(AttributeDefine.EMAIL.getAttributeCode(), email);
+      userProfileInnerService.addOrUpdateUserAttributes(user.getId(), attributes);
+    }
 
     // 发送通知
     if (UserActionEnum.STATUS_CHANGE.equals(userActionEnum)) {

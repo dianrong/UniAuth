@@ -124,7 +124,6 @@ public class GroupProfileInnerService extends TenancyBasedService {
   private GrpExtendValDto addOrUpdate(Integer groupId, Long extendId, String value) {
     CheckEmpty.checkEmpty(groupId, "groupId");
     CheckEmpty.checkEmpty(extendId, "extendId");
-    groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, groupId);
     GrpExtendValExample grpExtendValExample = new GrpExtendValExample();
     GrpExtendValExample.Criteria criteria = grpExtendValExample.createCriteria();
     criteria.andGrpIdEqualTo(groupId).andExtendIdEqualTo(extendId)
@@ -135,9 +134,13 @@ public class GroupProfileInnerService extends TenancyBasedService {
       // add
       record = groupExtendValInnerService.addNew(groupId, extendId, value);
     } else {
-      // update
-      groupExtendValInnerService.update(groupId, extendId, value);
-      record = groupExtendValInnerService.queryByGrpIdAndExtendId(groupId, extendId);
+      if (!ObjectUtil.objectEqual(existGrpExtendVal.get(0).getValue(), value)) {
+        // update
+        groupExtendValInnerService.update(groupId, extendId, value);
+        record = groupExtendValInnerService.queryByGrpIdAndExtendId(groupId, extendId);
+      } else {
+        record = existGrpExtendVal.get(0);
+      }
     }
     return BeanConverter.convert(record, GrpExtendValDto.class);
   }
