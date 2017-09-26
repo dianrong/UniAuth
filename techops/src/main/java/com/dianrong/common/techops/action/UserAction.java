@@ -44,10 +44,6 @@ public class UserAction {
     return uarwFacade.getUserRWResource().searchUser(userQuery);
   }
 
-  /**
-   * 添加用户.
-   */
-  // perm double checked
   @RequestMapping(value = "/add", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
@@ -99,7 +95,7 @@ public class UserAction {
    * 重置用户密码.
    */
   // perm double checked
-  @RequestMapping(value = "/resetpassword", method = RequestMethod.POST,
+  @RequestMapping(value = "/reset-password", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
       + "and principal.permMap['DOMAIN'].contains('techops')")

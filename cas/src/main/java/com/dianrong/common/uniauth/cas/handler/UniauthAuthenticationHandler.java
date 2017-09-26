@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.cas.handler;
 import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
 import com.dianrong.common.uniauth.cas.service.UserLoginService;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import java.security.GeneralSecurityException;
@@ -34,7 +34,7 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
     // 登陆操作
     UserDto userInfo = userLoginService.login(userName, password, tenancyCode);
     Map<String, Object> attributes = new HashMap<String, Object>();
-    attributes.put(CasProtocal.DianRongCas.getTenancyIdName(),
+    attributes.put(CasProtocol.DianRongCas.getTenancyIdName(),
         StringUtil.translateIntegerToLong(userInfo.getTenancyId()));
     // 防止userName中有空格,  这地方必须使用登陆使用的userName, 不能使用登陆返回的用户中的账号信息.
     return createHandlerResult(credential,

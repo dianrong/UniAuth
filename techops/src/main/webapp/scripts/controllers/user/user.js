@@ -1,4 +1,4 @@
-define(['../../utils/constant'], function (constant) {
+define(['../../utils/constant', '../../utils/utils'], function (constant, utils) {
     /**
      * A module representing a User controller.
      * @exports controllers/User
@@ -21,6 +21,16 @@ define(['../../utils/constant'], function (constant) {
             totalCount: 0
         };
 
+        $scope.getUserTypes = function getUserTypes() {
+            var userTypes = [
+                {code : $rootScope.translate('constant.selectplacehodler')},
+                {code : $rootScope.translate('userMgr.type.normal'), value : 0},
+                {code : $rootScope.translate('userMgr.type.system'), value : 1}
+            ]
+            utils.generatorDropdown($scope, 'userTypesDropdown', userTypes, userTypes[1]);
+        };
+        $scope.getUserTypes();
+
         $scope.queryUser = function (curPage) {
             var params = $scope.userQuery;
             if (!params) {
@@ -28,6 +38,7 @@ define(['../../utils/constant'], function (constant) {
             }
             params.pageNumber = typeof curPage === "number" ? curPage : $scope.pagination.curPage - 1;
             params.pageSize = $scope.pagination.pageSize;
+            params.type = $scope.userTypesDropdown.option.value;
 
             $scope.users = [];
             $scope.usersLoading = constant.loading;
@@ -178,6 +189,7 @@ define(['../../utils/constant'], function (constant) {
         };
         
         $scope.$on('selected-language-changed', $scope.queryUser);
+        $scope.$on('selected-language-changed', $scope.getUserTypes);
 
     };
 

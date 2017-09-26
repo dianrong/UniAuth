@@ -1,4 +1,4 @@
-define(['../../../utils/constant'], function (constant) {
+define(['../../../utils/constant', '../../../utils/utils'], function (constant, utils) {
     var Controller = function ($rootScope,$scope,$uibModalInstance, UserService, AlertService, data) {
     	// update_btn is enable
     	$scope.update_btn_enable = function() {
@@ -18,14 +18,27 @@ define(['../../../utils/constant'], function (constant) {
             $uibModalInstance.dismiss();
         }; // end cancel
 
+
+        $scope.getUserTypes = function getUserTypes() {
+             var userTypes = [
+                 {code : $rootScope.translate('userMgr.type.normal'), value : 0},
+                 {code : $rootScope.translate('userMgr.type.system'), value : 1}
+             ]
+             var selectedUserType;
+             for(var i=0; i<userTypes.length;i++) {
+                 if(userTypes[i].value == $scope.user.type) {
+                     selectedUserType = userTypes[i];
+                     break;
+                 }
+             }
+             utils.generatorDropdown($scope, 'userTypesDropdown', userTypes, selectedUserType);
+         };
+        $scope.getUserTypes();
+
         $scope.save = function(){
-            UserService.modifyUser(
-                {
-                    "id":$scope.user.id,
-                    "name":$scope.user.name,
-                    "email":$scope.user.email,
-                    "phone":$scope.user.phone
-                },
+            var params = $scope.user;
+            params.type = $scope.userTypesDropdown.option.value;
+            UserService.modifyUser(params,
                 function(res) {
                     // user add api successed
                     if(res.info) {

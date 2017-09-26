@@ -1,6 +1,6 @@
 package com.dianrong.common.uniauth.client.custom.multitenancy;
 
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import java.security.InvalidParameterException;
 import java.util.Map;
 import org.jasig.cas.client.validation.Assertion;
@@ -37,7 +37,7 @@ public class MultiTenancyUserDetailsWrapper implements
     if (assertion != null && assertion.getPrincipal() != null) {
       Map<String, Object> attributes = assertion.getPrincipal().getAttributes();
       long tenancyId = Long
-          .parseLong(attributes.get(CasProtocal.DianRongCas.getTenancyIdName()).toString());
+          .parseLong(attributes.get(CasProtocol.DianRongCas.getTenancyIdName()).toString());
       return this.userDetailsService
           .loadUserByUsername(assertion.getPrincipal().getName(), tenancyId);
     }

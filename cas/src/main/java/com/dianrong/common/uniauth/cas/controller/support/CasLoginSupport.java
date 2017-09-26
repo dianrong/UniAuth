@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.cas.controller.support;
 import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
 import com.dianrong.common.uniauth.cas.service.jwt.JWTCookieGenerator;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
@@ -216,7 +216,7 @@ public class CasLoginSupport {
       if (principal != null) {
         String identity = principal.getId();
         Long tenancyId = StringUtil.translateObjectToLong(
-            principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName()));
+            principal.getAttributes().get(CasProtocol.DianRongCas.getTenancyIdName()));
         return createJWT(identity, tenancyId);
       }
     }

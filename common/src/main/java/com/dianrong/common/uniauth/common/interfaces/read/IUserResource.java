@@ -52,6 +52,11 @@ public interface IUserResource {
   Response<UserDto> login(LoginParam loginParam);
 
   @POST
+  @Path("system-login")
+    // scenario: cas system account login
+  Response<UserDto> systemLogin(LoginParam loginParam);
+
+  @POST
   @Path("usedetailinfo")
   // scenario: get user detail info
   Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam);

@@ -8,6 +8,7 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
+import com.dianrong.common.uniauth.common.enm.UserType;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
 import com.dianrong.common.uniauth.common.util.*;
 import com.dianrong.common.uniauth.common.util.Base64;
@@ -126,12 +127,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   /**
    * 新增用户.
    */
-  @Transactional
-  public UserDto addNewUser(String name, String phone, String email) {
+  @Transactional public UserDto addNewUser(String name, String phone, String email, Byte type) {
     this.checkPhoneAndEmail(phone, email, null);
     User user = new User();
     user.setEmail(email);
     user.setName(name);
+    user.setType(type == null ? UserType.NORMAL : type);
     user.setTenancyId(tenancyService.getTenancyIdWithCheck());
     Date now = new Date();
     user.setFailCount(AppConstants.ZERO_BYTE);
@@ -155,7 +156,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     UserDto userDto = BeanConverter.convert(user);
     userProfileInnerService.addOrUpdateUserAttributes(userDto.getId(), attributes);
 
-
     // 用户添加成功后发送MQ
     uniauthSender.sendUserAdd(userDto);
     userDto.setPassword(randomPassword);
@@ -171,7 +171,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   @Transactional
   public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId,
-      String tenancyCode, String name, String phone, String email, String password,
+      String tenancyCode, String name, String phone, String email, Byte type, String password,
       String originalPassword, Boolean ignorePwdStrategyCheck, Byte status) {
     if (userActionEnum == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
@@ -231,6 +231,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         user.setName(name);
         user.setEmail(email);
         user.setPhone(phone);
+        if (type != null) {
+          user.setType(type);
+        }
         break;
       case UPDATE_INFO_BY_ACCOUNT:
         // 目前只能修改用户的名称
@@ -399,10 +402,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser,
       Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
       String name, String phone, String exactPhone, String email, String exactEmail, String account,
-      Byte status, Integer tagId,
+      Byte type, Byte status, Integer tagId,
       Boolean needTag, Integer pageNumber, Integer pageSize) {
     return searchUser(userId, groupId, needDescendantGrpUser, needDisabledGrpUser, roleId, userIds,
-        excludeUserIds, name, phone, exactPhone, email, exactEmail, account, status, tagId, needTag,
+        excludeUserIds, name, phone, exactPhone, email, exactEmail, account, type, status, tagId,
+        needTag,
         pageNumber, pageSize,
         false);
   }
@@ -413,7 +417,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser,
       Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
       String name, String phone, String exactPhone, String email, String exactEmail, String account,
-      Byte status, Integer tagId,
+      Byte type, Byte status, Integer tagId,
       Boolean needTag, Integer pageNumber, Integer pageSize, Boolean withoutTenantConcern) {
     if (pageNumber == null || pageSize == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
@@ -441,6 +445,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     if (account != null) {
       criteria.andAccountLike("%" + account + "%");
+    }
+    if (type != null) {
+      criteria.andTypeEqualTo(type);
     }
     if (status != null) {
       criteria.andStatusEqualTo(status);
@@ -696,7 +703,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     CheckEmpty.checkEmpty(ip, "IP地址");
 
     User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(),
-        loginParam.getTenancyId(), true, null);
+        loginParam.getTenancyId(), true, null, UserType.NORMAL);
     if (AppConstants.ONE_BYTE.equals(user.getStatus())) {
       throw new AppException(InfoName.LOGIN_ERROR_STATUS_1,
           UniBundle.getMsg("user.login.status.lock"));
@@ -736,6 +743,37 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
+   * 系统账号登录.
+   */
+  public UserDto systemLogin(LoginParam loginParam) {
+    String account = loginParam.getAccount();
+    String password = loginParam.getPassword();
+    String ip = loginParam.getIp();
+    CheckEmpty.checkEmpty(account, "账号");
+    CheckEmpty.checkEmpty(password, "密码");
+    CheckEmpty.checkEmpty(ip, "IP地址");
+
+    User user = getUserByAccount(account.trim(), loginParam.getTenancyCode(),
+        loginParam.getTenancyId(), true, null, UserType.SYSTEM);
+    if (AppConstants.ONE_BYTE.equals(user.getStatus())) {
+      throw new AppException(InfoName.LOGIN_ERROR_STATUS_1,
+          UniBundle.getMsg("user.login.status.lock"));
+    }
+    if (user.getFailCount() >= AppConstants.MAX_AUTH_FAIL_COUNT) {
+      throw new AppException(InfoName.LOGIN_ERROR_EXCEED_MAX_FAIL_COUNT,
+          UniBundle.getMsg("user.login.account.lock"));
+    }
+    if (!UniPasswordEncoder.isPasswordValid(user.getPassword(), password, user.getPasswordSalt())) {
+      updateLogin(user.getId(), ip, user.getFailCount() + 1, true);
+      throw new AppException(InfoName.LOGIN_ERROR, UniBundle.getMsg("user.login.error"));
+    }
+    // login successfully
+    updateLogin(user.getId(), ip, 0, false);
+
+    return BeanConverter.convert(user);
+  }
+
+  /**
    * VPN登陆方法.
    */
   public VPNLoginResult vpnLogin(LoginParam loginParam) {
@@ -753,10 +791,10 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     VPNLoginResult result = BeanConverter.convert(user);
 
     // 计算用户的组结构
-    List<Grp> grps = groupInnerService.listUserLastGrpPath(user.getId());
+    List<Grp> grpList = groupInnerService.listUserLastGrpPath(user.getId());
     List<String> grpCodes = Lists.newArrayList();
 
-    for (Grp grp : grps) {
+    for (Grp grp : grpList) {
       grpCodes.add(grp.getCode().trim());
     }
     result.setGroupCodes(grpCodes);
@@ -1361,6 +1399,11 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     return 1;
   }
 
+  public User getUserByAccount(String account, String tenancyCode, Long tenancyId,
+      boolean withPhoneChecked, Byte status) {
+    return getUserByAccount(account, tenancyCode, tenancyId, withPhoneChecked, status, null);
+  }
+
   /**
    * 根据帐号获取用户信息，注意判断用户状态.
    *
@@ -1369,13 +1412,14 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    * @param tenancyId 租户Id
    * @param withPhoneChecked 是否根据手机查询true是，false 否
    * @param status 用户启用禁用状态,null表示任意状态
+   * @param type 用户类型:0 普通用户, 1 系统管理员用户
    * @return 用户信息
    * @throws AppException not found or find multiple user
    * @see {@link AppConstants#STATUS_ENABLED 用户状态：启用}
    * @see {@link AppConstants#STATUS_DISABLED 用户状态：禁用}
    */
   public User getUserByAccount(String account, String tenancyCode, Long tenancyId,
-      boolean withPhoneChecked, Byte status) {
+      boolean withPhoneChecked, Byte status, Byte type) {
     Map<String, Object> map = Maps.newHashMap();
     map.put("email", account);
 
@@ -1394,6 +1438,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     }
     if (status != null) {
       map.put("status", status);
+    }
+    if (type != null) {
+      map.put("type", type);
     }
     List<User> userList = userMapper.selectByEmailOrPhone(map);
     if (userList == null || userList.isEmpty()) {

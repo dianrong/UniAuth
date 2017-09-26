@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
+import com.dianrong.common.uniauth.common.enm.UserType;
 import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.server.service.multidata.DelegateUserAuthentication;
 import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
@@ -30,15 +31,17 @@ import java.util.List;
   @Autowired private DelegateUserAuthentication delegateUserAuthentication;
 
   @ResourceAudit @Override public Response<UserDto> addNewUser(UserParam userParam) {
-    return Response.success(
-        userService.addNewUser(userParam.getName(), userParam.getPhone(), userParam.getEmail()));
+    return Response.success(userService
+        .addNewUser(userParam.getName(), userParam.getPhone(), userParam.getEmail(),
+            userParam.getType()));
   }
 
   @ResourceAudit @Override public Response<UserDto> updateUser(UserParam userParam) {
     return Response.success(userService
         .updateUser(userParam.getUserActionEnum(), userParam.getId(), userParam.getAccount(),
             userParam.getTenancyId(), userParam.getTenancyCode(), userParam.getName(),
-            userParam.getPhone(), userParam.getEmail(), userParam.getPassword(),
+            userParam.getPhone(), userParam.getEmail(), userParam.getType(),
+            userParam.getPassword(),
             userParam.getOriginPassword(), userParam.getIgnorePwdStrategyCheck(),
             userParam.getStatus()));
   }
@@ -68,7 +71,8 @@ import java.util.List;
         userQuery.getNeedDescendantGrpUser(), userQuery.getNeedDisabledGrpUser(),
         userQuery.getRoleId(), userQuery.getUserIds(), userQuery.getExcludeUserIds(),
         userQuery.getName(), userQuery.getPhone(), userQuery.getExactPhone(), userQuery.getEmail(),
-        userQuery.getExactEmail(), userQuery.getAccount(), userQuery.getStatus(),
+        userQuery.getExactEmail(), userQuery.getAccount(), userQuery.getType(),
+        userQuery.getStatus(),
         userQuery.getTagId(), userQuery.getNeedTag(), userQuery.getPageNumber(),
         userQuery.getPageSize());
     return Response.success(pageDto);
@@ -89,7 +93,8 @@ import java.util.List;
     PageDto<UserDto> pageDto = userService
         .searchUser(null, null, false, false, null, null, null, userQuery.getName(),
             userQuery.getPhone(), userQuery.getExactPhone(), userQuery.getEmail(),
-            userQuery.getExactEmail(), userQuery.getAccount(), userQuery.getStatus(), null, false,
+            userQuery.getExactEmail(), userQuery.getAccount(), UserType.NORMAL,
+            userQuery.getStatus(), null, false,
             userQuery.getPageNumber(), userQuery.getPageSize(), true);
     return Response.success(pageDto);
   }
@@ -100,8 +105,16 @@ import java.util.List;
       @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "string", paramType = "query"),
       @ApiImplicitParam(name = "ip", value = "登陆用户所在ip", required = true, dataType = "string", paramType = "query")})
   @Override @Timed public Response<UserDto> login(LoginParam loginParam) {
-    UserDto dto = delegateUserAuthentication.login(loginParam);
-    return Response.success(dto);
+    return Response.success(delegateUserAuthentication.login(loginParam));
+  }
+
+  @ResourceAudit @ApiOperation("系统账号登陆接口") @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id或code", required = true, dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "account", value = "账号", required = true, dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "string", paramType = "query"),
+      @ApiImplicitParam(name = "ip", value = "登陆用户所在ip", required = true, dataType = "string", paramType = "query")})
+  @Override public Response<UserDto> systemLogin(LoginParam loginParam) {
+    return Response.success(userService.systemLogin(loginParam));
   }
 
   @Override @Timed public Response<UserDetailDto> getUserDetailInfoByUid(UserParam userParam) {
@@ -191,4 +204,6 @@ import java.util.List;
         userParam.getTenancyCode(), userParam.getIpaAccount(), userParam.getIpaPassword());
     return Response.success();
   }
+
+
 }
