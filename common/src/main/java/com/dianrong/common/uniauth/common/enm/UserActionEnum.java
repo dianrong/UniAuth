@@ -40,7 +40,26 @@ public enum UserActionEnum {
   public static boolean isPasswordChange(UserActionEnum action) {
     return isUpdatePwdAdmin(action) || isUpdatePwdSelf(action);
   }
-  
+
+  /**
+   * 是否更新基础信息.
+   */
+  public static boolean isUpdateBasicInfo(UserActionEnum action) {
+    switch (action) {
+      case UPDATE_INFO:
+        return true;
+      case UPDATE_INFO_BY_ACCOUNT:
+        return true;
+      case UPDATE_EMAIL_BY_ACCOUNT:
+        return true;
+      case UPDATE_PHONE_BY_ACCOUNT:
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
+
   /**
    * 管理员重置密码.
    */

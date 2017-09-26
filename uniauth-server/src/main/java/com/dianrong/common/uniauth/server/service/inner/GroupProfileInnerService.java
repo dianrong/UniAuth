@@ -134,9 +134,13 @@ public class GroupProfileInnerService extends TenancyBasedService {
       // add
       record = groupExtendValInnerService.addNew(groupId, extendId, value);
     } else {
-      // update
-      groupExtendValInnerService.update(groupId, extendId, value);
-      record = groupExtendValInnerService.queryByGrpIdAndExtendId(groupId, extendId);
+      if (!ObjectUtil.objectEqual(existGrpExtendVal.get(0).getValue(), value)) {
+        // update
+        groupExtendValInnerService.update(groupId, extendId, value);
+        record = groupExtendValInnerService.queryByGrpIdAndExtendId(groupId, extendId);
+      } else {
+        record = existGrpExtendVal.get(0);
+      }
     }
     return BeanConverter.convert(record, GrpExtendValDto.class);
   }
