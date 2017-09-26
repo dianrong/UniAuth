@@ -133,9 +133,13 @@ public class UserProfileInnerService extends TenancyBasedService {
       // add
       record = userExtendValInnerService.addNew(userId, extendId, value);
     } else {
-      // update
-      userExtendValInnerService.update(userId, extendId, value);
-      record = userExtendValInnerService.queryByUserIdAndExtendId(userId, extendId);
+      if (!ObjectUtil.objectEqual(existUserExtendVal.get(0).getValue(), value)) {
+        // update
+        userExtendValInnerService.update(userId, extendId, value);
+        record = userExtendValInnerService.queryByUserIdAndExtendId(userId, extendId);
+      } else {
+        record = existUserExtendVal.get(0);
+      }
     }
     return BeanConverter.convert(record, UserExtendValDto.class);
   }
