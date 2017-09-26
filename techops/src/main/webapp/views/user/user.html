@@ -38,7 +38,7 @@
 </form>
 
 <div class="panel-body pull-right">
-	<a class="btn btn-info"  ng-click="launch('manage-eav')"  role="button">{{'userMgr.eavMgr' | translate}}</a>
+    <a class="btn btn-info"  ng-click="launch('manage-eav')"  role="button">{{'userMgr.eavMgr' | translate}}</a>
     <a class="btn btn-info" ng-click="launch('add')" role="button">{{'userMgr.userAdd' | translate}}</a>
     <button class="btn btn-info" ng-click="queryUser(0)">{{'userMgr.query' | translate}}</button>
 </div>
@@ -78,13 +78,13 @@
                     <a title="{{'userMgr.mgrRole' | translate}}" class="btn btn-info" ng-click="navigate(d)"><i class="fa fa-paw"></i></a>
                     <a title="{{'userMgr.mgrTag' | translate}}" class="btn btn-info" ng-click="navToTag(d)"><i class="fa fa-tags" aria-hidden="true"></i></a>
                     <a title="{{'userMgr.exEav' | translate}}" class="btn btn-info" ng-click="launch('user-eav', d)"><i class="fa fa-expand" aria-hidden="true"></i></a>
-                    <a title=" {{'userMgr.unlock' | translate}}" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
+                    <a ng-if="(loginDomainsDropdown.option.code == 'techops') || (d.type == 0)" title=" {{'userMgr.unlock' | translate}}" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
                     <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="{{'userMgr.resetPwd' | translate}}" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-key"></i></a>
-                    <a title="{{d.status?('userMgr.enableUser' | translate):('userMgr.disableUser' | translate)}}" class="btn btn-info" ng-click="launch('status', d)">
+                    <a ng-if="(loginDomainsDropdown.option.code == 'techops') || (d.type == 0)" title="{{d.status?('userMgr.enableUser' | translate):('userMgr.disableUser' | translate)}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
                     </a>
                     <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="{{'userMgr.modifyUserInfo' | translate}}" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
-               </div>
+                </div>
             </td>
         </tr>
         </tbody>
