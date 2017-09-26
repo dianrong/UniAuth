@@ -163,13 +163,13 @@ public class SSMultiTenancyUserDetailService
           } else {
             try {
               Class<?> clazz = Class.forName(userInfoClass);
-              UserExtInfo customeDefineUserExtInfo = null;
+              UserExtInfo customDefineUserExtInfo = null;
               // 尝试访问带有全所有参数的构造函数
               try {
                 Constructor<?> construct = clazz.getConstructor(String.class, String.class,
                     Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Collection.class,
                     Long.class, UserDto.class, DomainDto.class, Map.class, Map.class, Map.class);
-                customeDefineUserExtInfo =
+                customDefineUserExtInfo =
                     (UserExtInfo) construct.newInstance(currentDomainUserInfo.getUsername(),
                         currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(),
                         currentDomainUserInfo.isAccountNonExpired(),
@@ -185,7 +185,7 @@ public class SSMultiTenancyUserDetailService
                 Constructor<?> construct = clazz.getConstructor(String.class, String.class,
                     Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Collection.class,
                     Long.class, UserDto.class, DomainDto.class, Map.class, Map.class);
-                customeDefineUserExtInfo =
+                customDefineUserExtInfo =
                     (UserExtInfo) construct.newInstance(currentDomainUserInfo.getUsername(),
                         currentDomainUserInfo.getPassword(), currentDomainUserInfo.isEnabled(),
                         currentDomainUserInfo.isAccountNonExpired(),
@@ -196,11 +196,11 @@ public class SSMultiTenancyUserDetailService
                         currentDomainUserInfo.getPermMap(), currentDomainUserInfo.getPermDtoMap());
               }
               // 增加对IPA权限的支持
-              customeDefineUserExtInfo.setIpaPermissionDto(ipaPermissionDto);
+              customDefineUserExtInfo.setIpaPermissionDto(ipaPermissionDto);
               if (userInfoCallBack != null) {
-                userInfoCallBack.fill(customeDefineUserExtInfo);
+                userInfoCallBack.fill(customDefineUserExtInfo);
               }
-              userExtInfo = customeDefineUserExtInfo;
+              userExtInfo = customDefineUserExtInfo;
             } catch (Exception e) {
               log.error("Prepare to use ss-client's UserExtInfo, not the subsystem's"
                   + " customized one, possible reasons:\n (1) " + userInfoClass

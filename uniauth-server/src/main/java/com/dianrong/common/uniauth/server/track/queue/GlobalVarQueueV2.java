@@ -23,7 +23,7 @@ public class GlobalVarQueueV2 {
   private AuditMapper auditMapper;
 
   private BlockingQueue<GlobalVar> globVarQueue =
-      new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBALVAR_QUEUE_SIZE);
+      new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBAL_VAR_QUEUE_SIZE);
 
   /**
    * 实际插入数据库的线程池.

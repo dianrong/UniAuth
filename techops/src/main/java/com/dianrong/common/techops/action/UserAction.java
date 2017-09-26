@@ -36,7 +36,6 @@ public class UserAction {
   @Resource
   private TechOpsService techOpsService;
 
-  // perm double checked
   @RequestMapping(value = "/query", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
@@ -46,7 +45,8 @@ public class UserAction {
 
   @RequestMapping(value = "/add", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN') "
+      + "and hasPermission(#userParam, 'PERM_SYSTEM_USER_EDIT_CHECK')")
   public Response<?> addUser(@RequestBody UserParam userParam) {
     Response<UserDto> userDtoResponse = uarwFacade.getUserRWResource().addNewUser(userParam);
     if (!CollectionUtils.isEmpty(userDtoResponse.getInfo())) {
@@ -58,11 +58,11 @@ public class UserAction {
   /**
    * 禁用用户.
    */
-  // perm double checked
   @RequestMapping(value = "/enable-disable", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') or (hasRole('ROLE_ADMIN') "
-      + "and hasPermission(#userParam, 'PERM_USERID_CHECK'))")
+  @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') or (hasRole('ROLE_ADMIN') "
+      + "and hasPermission(#userParam, 'PERM_USERID_CHECK'))) "
+      + "and hasPermission(#userParam, 'PERM_SYSTEM_USER_EDIT_CHECK') ")
   public Response<?> enableDisableUser(@RequestBody UserParam userParam) {
     UserParam param = new UserParam();
     param.setId(userParam.getId());
@@ -78,10 +78,10 @@ public class UserAction {
   /**
    * 解锁用户.
    */
-  // perm double checked
   @RequestMapping(value = "/unlock", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_ADMIN') "
+      + "and hasPermission(#userParam, 'PERM_SYSTEM_USER_EDIT_CHECK') ")
   public Response<?> unlock(@RequestBody UserParam userParam) {
     userParam.setUserActionEnum(UserActionEnum.UNLOCK);
     Response<UserDto> userDtoResponse = uarwFacade.getUserRWResource().updateUser(userParam);
@@ -94,7 +94,6 @@ public class UserAction {
   /**
    * 重置用户密码.
    */
-  // perm double checked
   @RequestMapping(value = "/reset-password", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
@@ -113,7 +112,6 @@ public class UserAction {
   /**
    * 更新用户信息.
    */
-  // perm double checked
   @RequestMapping(value = "/modify", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
@@ -134,7 +132,6 @@ public class UserAction {
     return Response.success(loginUser);
   }
 
-  // perm double checked
   @RequestMapping(value = "/user-roles", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
@@ -145,7 +142,6 @@ public class UserAction {
     return uarwFacade.getUserRWResource().getAllRolesToUserAndDomain(userParam);
   }
 
-  // perm double checked
   @RequestMapping(value = "/replace-roles-to-user", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
@@ -155,7 +151,6 @@ public class UserAction {
     return uarwFacade.getUserRWResource().replaceRolesToUser(userParam);
   }
 
-  // perm double checked
   @RequestMapping(value = "/user-tags", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
@@ -165,7 +160,6 @@ public class UserAction {
     return uarwFacade.getUserRWResource().getTagsWithUserCheckedInfo(userParam);
   }
 
-  // perm double checked
   @RequestMapping(value = "/replace-tags-to-user", method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("(hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "

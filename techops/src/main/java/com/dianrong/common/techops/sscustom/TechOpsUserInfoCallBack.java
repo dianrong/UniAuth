@@ -42,9 +42,6 @@ public class TechOpsUserInfoCallBack implements UserInfoCallBack {
         }
       }
     }
-
     techOpsUserExtInfo.setDomainIdSet(domainIdSet);
-
   }
-
 }

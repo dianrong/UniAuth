@@ -50,9 +50,9 @@
             <th>{{'userMgr.username' | translate}}</th>
             <th>{{'userMgr.email' | translate}}</th>
             <th>{{'userMgr.mobile' | translate}}</th>
-            <th>{{'userMgr.updateTime' | translate}}</th>
+            <th style="width: 7em">{{'userMgr.updateTime' | translate}}</th>
             <th style="width: 4em">{{'userMgr.status' | translate}}</th>
-            <th ng-if="loginDomainsDropdown.option.code == 'techops'" style="width: 4em">{{'userMgr.type' | translate}}</th>
+            <th style="width: 4em">{{'userMgr.type' | translate}}</th>
             <th ng-class="loginDomainsDropdown.option.code == 'techops'?'operation_width_7':''" style="text-align: center">{{'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
@@ -64,15 +64,15 @@
 
         <tr ng-repeat="d in users">
             <td>
-                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.name}}</p>
+                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 140px">{{d.name}}</p>
             </td>
             <td>
-                <p title="{{d.email}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 200px">{{d.email}}</p>
+                <p title="{{d.email}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 180px">{{d.email}}</p>
             </td>
             <td ng-bind="d.phone"></td>
             <td>{{d.lastUpdate | date:'yyyy-MM-dd HH:mm'}}</td>
             <td ng-bind="!d.status?'{{'userMgr.enable' | translate}}':'{{'userMgr.disable' | translate}}'"></td>
-            <td ng-if="loginDomainsDropdown.option.code == 'techops'" ng-bind="!d.type == 0?'{{'userMgr.type.normal' | translate}}':'{{'userMgr.type.system' | translate}}'"></td>
+            <td ng-bind="d.type == 0?'{{'userMgr.type.normal' | translate}}':'{{'userMgr.type.system' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
                     <a title="{{'userMgr.mgrRole' | translate}}" class="btn btn-info" ng-click="navigate(d)"><i class="fa fa-paw"></i></a>
