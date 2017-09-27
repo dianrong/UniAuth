@@ -1,16 +1,15 @@
 package com.dianrong.common.uniauth.server.service.cache.manager;
 
-import java.util.Collection;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.http.util.Asserts;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
+
+import java.util.Collection;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 自动配置Cache的简单CacheManager.
@@ -33,7 +32,7 @@ public class DynamicConfigCacheCacheManager extends SimpleCacheManager {
   /**
    * 定时清空缓存的线程池.
    */
-  private ScheduledExecutorService excutor;
+  private ScheduledExecutorService executor;
 
   public DynamicConfigCacheCacheManager() {
     this(0);
@@ -59,9 +58,9 @@ public class DynamicConfigCacheCacheManager extends SimpleCacheManager {
       log.info("expireSeconds is 0, so do not processing cache!");
     }
     log.info("start processing cache per {} seconds", this.expireSeconds);
-    this.excutor = Executors.newSingleThreadScheduledExecutor();
+    this.executor = Executors.newSingleThreadScheduledExecutor();
     // 开启定时刷新缓存任务.
-    this.excutor.scheduleAtFixedRate(new Runnable() {
+    this.executor.scheduleAtFixedRate(new Runnable() {
       @Override
       public void run() {
         clearCache();
@@ -90,7 +89,6 @@ public class DynamicConfigCacheCacheManager extends SimpleCacheManager {
     log.debug("create a new ConcurrentMapCache[{}]", name);
     return new ConcurrentMapCache(name, this.allowNullValues);
   }
-
 
   public boolean isAllowNullValues() {
     return allowNullValues;

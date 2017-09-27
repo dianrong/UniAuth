@@ -31,7 +31,7 @@ public abstract class AbstractInvokeHandlerDelegate implements InvokeHandlerDele
     } finally {
       if (cause != null) {
         LOGGER
-            .warn("{} invoke consume {} milles", method, System.currentTimeMillis() - beforeInvoke);
+            .warn("{} invoke consume {} millis", method, System.currentTimeMillis() - beforeInvoke);
       }
     }
   }

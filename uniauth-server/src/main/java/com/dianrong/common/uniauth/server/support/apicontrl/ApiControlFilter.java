@@ -111,9 +111,9 @@ public class ApiControlFilter extends GenericFilterBean {
         } catch (LoadCredentialFailedException e) {
           log.info("load credential failed ", e);
           headerOperator.setHeader(HeaderKey.RESPONSE_TYPE,
-              ResponseVerifiedType.AUTENTICATION_FAILED.toString());
+              ResponseVerifiedType.AUTHENTICATION_FAILED.toString());
         } catch (InsufficientPrivilegesException e) {
-          log.info("request insufficent privileges  " + e);
+          log.info("request insufficient privileges  " + e);
           headerOperator.setHeader(HeaderKey.RESPONSE_TYPE,
               ResponseVerifiedType.INSUFFICIENT_PRIVILEGES.toString());
         } catch (InvalidTokenException e) {

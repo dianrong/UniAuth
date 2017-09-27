@@ -130,7 +130,7 @@ public final class ApiCallCtlManager {
         case INSUFFICIENT_PRIVILEGES:
           // 权限不足
           throw new InsufficientPrivilegesException();
-        case AUTENTICATION_FAILED:
+        case AUTHENTICATION_FAILED:
           // 身份认证失败
           throw new AutenticationFailedException();
         case TOKEN_AVAILABLE:

@@ -13,7 +13,7 @@ public enum ResponseVerifiedType {
 
   TOKEN_AVAILABLE, // 传入的token可用
 
-  AUTENTICATION_FAILED, // 账号密码错误
+  AUTHENTICATION_FAILED, // 账号密码错误
 
   TOKEN_INVALID, // TOKEN 验证失败
 
