@@ -11,7 +11,7 @@ import com.dianrong.common.uniauth.cas.service.jwt.JWTCookieGenerator;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.WebScopeUtil;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
@@ -212,7 +212,7 @@ public class ServiceTicketController {
           try {
             String identity = principal.getId();
             Long tenancyId = StringUtil.translateObjectToLong(
-                principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName()));
+                principal.getAttributes().get(CasProtocol.DianRongCas.getTenancyIdName()));
             String jwt = uniauthJWTSecurity
                 .createJwt(new UniauthUserJWTInfo(identity, tenancyId, jwtExpireSeconds * 1000L));
             // 设置cookie

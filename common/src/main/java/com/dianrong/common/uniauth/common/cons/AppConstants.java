@@ -63,7 +63,6 @@ public interface AppConstants {
    * zk配置中的分隔符.
    */
   String ZK_CFG_SPLIT = ".";
-
   /**
    * domain.
    */
@@ -103,7 +102,6 @@ public interface AppConstants {
 
 
   String SERVICE_LOGIN_SUFFIX = "/login/cas";
-
   String ROLE_ADMIN = "ROLE_ADMIN";
   String ROLE_SUPER_ADMIN = "ROLE_SUPER_ADMIN";
 
@@ -117,24 +115,8 @@ public interface AppConstants {
   String CFG_TYPE_TEXT = "TEXT";
   String CFG_TYPE_FILE = "FILE";
 
-  // 60 minutes
-  long PSWDFORGET_MAIL_VERIFY_CODE_EXPIRE_MILLES = 60L * 60L * 1000L;
-  // 5 minutes
-  long PSWDFORGET_MAIL_VERIFY_EXPIRDATE_MILLES = 5L * 60L * 1000L;
-
-  String PERM_GROUP_OWNER = "PERM_GROUP_OWNER";
-  String PERM_ORGANIZATION_OWNER = "PERM_ORGANIZATION_OWNER";
-
-  String PERM_USERID_CHECK = "PERM_USERID_CHECK";
-  String PERM_ROLEID_CHECK = "PERM_ROLEID_CHECK";
-  String PERM_ROLEIDS_CHECK = "PERM_ROLEIDS_CHECK";
-  String PERM_PERMID_CHECK = "PERM_PERMID_CHECK";
-  String PERM_PERMIDS_CHECK = "PERM_PERMIDS_CHECK";
-  String PERM_TAGTYPEID_CHECK = "PERM_TAGTYPEID_CHECK";
-  String PERM_TAGID_CHECK = "PERM_TAGID_CHECK";
-
   String MAIL_PREFIX = "[TechOps]";
-  int GLOBALVAR_QUEUE_SIZE = 2048;
+  int GLOBAL_VAR_QUEUE_SIZE = 2048;
   int AUDIT_INSERT_LIST_SIZE = 1024;
   int AUDIT_INSERT_LIST_CACHE_SIZE = 40960;
   int AUDIT_INSERT_EVERY_SECOND = 60;
@@ -143,7 +125,7 @@ public interface AppConstants {
 
   String HTTP_METHOD_ALL = "ALL";
 
-  // cxf 传递的locale的key
+  // Cxf 传递的locale的key
   @Deprecated
   String CAS_CXF_HEADER_LOCALE_KEY = "cas.cxf.header.locale.key";
 
@@ -159,10 +141,8 @@ public interface AppConstants {
   String UNIAUTH_APICTL_JWT_SECKEY = "apicall.jwt.security.key";
   // 配置techops的api访问密码
   String UNIAUTH_APICTL_TECHOPS_PSWD = "apicall.techops.pwd";
-
   // 配置项, 指定是否使用notification实现的通知发送
   String UNIAUTH_NOTIFY_USE_NOTIFICATION = "notify.notification";
-
   // uniauth_server使用的GlobalVarQueue是否采用旧的实现
   String UNIAUTH_GLOBAL_VAR_QUEUE_USE_OLD_IMPL = "global.var.queue.old.impl";
 

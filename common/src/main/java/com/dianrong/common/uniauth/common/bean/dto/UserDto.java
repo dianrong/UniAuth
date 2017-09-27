@@ -33,6 +33,8 @@ public class UserDto extends TenancyBaseDto {
   private String email;
   @ApiModelProperty("电话")
   private String phone;
+  @ApiModelProperty("用户类型:0 普通用户,1 系统账号")
+  private Byte type;
   @ApiModelProperty("最近的一次登陆时间")
   private Date lastLoginTime;
   @ApiModelProperty("最近的一次登陆ip")
@@ -311,6 +313,15 @@ public class UserDto extends TenancyBaseDto {
 
   public UserDto setUserExtendValMap(Map<String, String> userExtendValMap) {
     this.userExtendValMap = userExtendValMap;
+    return this;
+  }
+
+  public Byte getType() {
+    return type;
+  }
+
+  public UserDto setType(Byte type) {
+    this.type = type;
     return this;
   }
 }

@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
+import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.client.ApiCtrlAccountHolder;
 import com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder;
 import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
@@ -59,6 +61,27 @@ public class UARWFacade {
   @Autowired(required = false)
   private ApiCtrlAccountHolder apiCtrlAccountHolder;
 
+
+  /**
+   * 构造函数.
+   */
+  public UARWFacade(String uniWsEndpoint) {
+    this.uniWsEndpoint = uniWsEndpoint;
+    init();
+  }
+
+  /**
+   * 构造函数.
+   */
+  public UARWFacade(String uniWsEndpoint, String account, String password) {
+    this.uniWsEndpoint = uniWsEndpoint;
+    SimpleApiCtrlAccountHolder simpleApiCtrlAccountHolder = new SimpleApiCtrlAccountHolder();
+    simpleApiCtrlAccountHolder.setAccount(account);
+    simpleApiCtrlAccountHolder.setPassword(password);
+    apiCtrlAccountHolder = simpleApiCtrlAccountHolder;
+    init();
+  }
+
   /**
    * 初始化.
    */
@@ -108,17 +131,6 @@ public class UARWFacade {
     ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource,organizationRWResource,
         permissionRWResource, userRWResource, roleRWResource, auditResource, configRWResource,
         tagRWResource, tenancyRWResource, synchronousDateRWResource);
-  }
-
-  /**
-   * 构造函数.
-   */
-  public UARWFacade(String uniWsEndpoint, String account, String password) {
-    this.uniWsEndpoint = uniWsEndpoint;
-    SimpleApiCtrlAccountHolder simpleApiCtrlAccountHolder = new SimpleApiCtrlAccountHolder();
-    simpleApiCtrlAccountHolder.setAccount(account);
-    simpleApiCtrlAccountHolder.setPassword(password);
-    apiCtrlAccountHolder = simpleApiCtrlAccountHolder;
   }
 
   public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {

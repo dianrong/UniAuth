@@ -35,7 +35,7 @@ define(['../../utils/constant'], function (constant) {
             resetpassword: {
                 method: 'POST',
                 params: {
-                    method: 'resetpassword'
+                    method: 'reset-password'
                 },
                 timeout: constant.reqTimeout
             },

@@ -261,7 +261,7 @@ public class BeanConverter {
           .setPhone(user.getPhone()).setLastLoginTime(user.getLastLoginTime())
           .setFailCount(user.getFailCount()).setLastLoginIp(user.getLastLoginIp())
           .setCreateDate(user.getCreateDate()).setStatus(user.getStatus())
-          .setLastUpdate(user.getLastUpdate())
+          .setLastUpdate(user.getLastUpdate()).setType(user.getType())
           .setTenancyId(StringUtil.translateLongToInteger(user.getTenancyId()));
       return userDto;
     }

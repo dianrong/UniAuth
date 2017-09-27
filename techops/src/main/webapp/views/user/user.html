@@ -19,10 +19,26 @@
             </div>
         </div>
     </div>
+    <div class="form-group">
+        <div class="col-md-4">
+            <span class="col-md-4 control-label">{{'userMgr.type' | translate}}:</span>
+            <div class="col-md-8 btn-group" uib-dropdown is-open="userTypesDropdown.isOpen">
+                <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
+                    <span ng-bind="userTypesDropdown.option.code"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="it in userTypesDropdown.items">
+                        <a ng-click="userTypesDropdown.selectOption(it)" ng-bind="it.code"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
 
 <div class="panel-body pull-right">
-	<a class="btn btn-info"  ng-click="launch('manage-eav')"  role="button">{{'userMgr.eavMgr' | translate}}</a>
+    <a class="btn btn-info"  ng-click="launch('manage-eav')"  role="button">{{'userMgr.eavMgr' | translate}}</a>
     <a class="btn btn-info" ng-click="launch('add')" role="button">{{'userMgr.userAdd' | translate}}</a>
     <button class="btn btn-info" ng-click="queryUser(0)">{{'userMgr.query' | translate}}</button>
 </div>
@@ -34,8 +50,9 @@
             <th>{{'userMgr.username' | translate}}</th>
             <th>{{'userMgr.email' | translate}}</th>
             <th>{{'userMgr.mobile' | translate}}</th>
-            <th>{{'userMgr.updateTime' | translate}}</th>
+            <th style="width: 7em">{{'userMgr.updateTime' | translate}}</th>
             <th style="width: 4em">{{'userMgr.status' | translate}}</th>
+            <th style="width: 4em">{{'userMgr.type' | translate}}</th>
             <th ng-class="loginDomainsDropdown.option.code == 'techops'?'operation_width_7':''" style="text-align: center">{{'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
@@ -47,26 +64,27 @@
 
         <tr ng-repeat="d in users">
             <td>
-                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.name}}</p>
+                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 140px">{{d.name}}</p>
             </td>
             <td>
-                <p title="{{d.email}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 200px">{{d.email}}</p>
+                <p title="{{d.email}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 180px">{{d.email}}</p>
             </td>
             <td ng-bind="d.phone"></td>
             <td>{{d.lastUpdate | date:'yyyy-MM-dd HH:mm'}}</td>
             <td ng-bind="!d.status?'{{'userMgr.enable' | translate}}':'{{'userMgr.disable' | translate}}'"></td>
+            <td ng-bind="d.type == 0?'{{'userMgr.type.normal' | translate}}':'{{'userMgr.type.system' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">
                     <a title="{{'userMgr.mgrRole' | translate}}" class="btn btn-info" ng-click="navigate(d)"><i class="fa fa-paw"></i></a>
                     <a title="{{'userMgr.mgrTag' | translate}}" class="btn btn-info" ng-click="navToTag(d)"><i class="fa fa-tags" aria-hidden="true"></i></a>
                     <a title="{{'userMgr.exEav' | translate}}" class="btn btn-info" ng-click="launch('user-eav', d)"><i class="fa fa-expand" aria-hidden="true"></i></a>
-                    <a title=" {{'userMgr.unlock' | translate}}" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
+                    <a ng-if="(loginDomainsDropdown.option.code == 'techops') || (d.type == 0)" title=" {{'userMgr.unlock' | translate}}" class="btn btn-info" ng-click="launch('unlock', d)"><i class="fa fa-unlock"></i></a>
                     <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="{{'userMgr.resetPwd' | translate}}" class="btn btn-info" ng-click="launch('resetpwd', d)"><i class="fa fa-key"></i></a>
-                    <a title="{{d.status?('userMgr.enableUser' | translate):('userMgr.disableUser' | translate)}}" class="btn btn-info" ng-click="launch('status', d)">
+                    <a ng-if="(loginDomainsDropdown.option.code == 'techops') || (d.type == 0)" title="{{d.status?('userMgr.enableUser' | translate):('userMgr.disableUser' | translate)}}" class="btn btn-info" ng-click="launch('status', d)">
                         <i ng-class="d.status?'fa fa-check':'fa fa-ban'"></i>
                     </a>
                     <a ng-if="loginDomainsDropdown.option.code == 'techops'" title="{{'userMgr.modifyUserInfo' | translate}}" class="btn btn-info" ng-click="launch('modify', d)"><i class="fa fa-pencil"></i></a>
-               </div>
+                </div>
             </td>
         </tr>
         </tbody>

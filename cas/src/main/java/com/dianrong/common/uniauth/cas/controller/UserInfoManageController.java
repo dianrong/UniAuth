@@ -9,7 +9,7 @@ import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.exp.UniauthException;
 
@@ -258,7 +258,7 @@ public class UserInfoManageController {
     // 获取用户账号
     String account = principal.getId();
     Long tenancyId =
-        (Long) principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName());
+        (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getTenancyIdName());
     return new UserIdentity(account, tenancyId);
   }
 

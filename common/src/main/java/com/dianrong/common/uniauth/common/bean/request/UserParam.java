@@ -14,6 +14,7 @@ public class UserParam extends Operator {
   private String name;
   private String phone;
   private String email;
+  private Byte type;
   private String password;
   private String originPassword;
   private Byte status;
@@ -221,6 +222,15 @@ public class UserParam extends Operator {
 
   public UserParam setIpaPassword(String ipaPassword) {
     this.ipaPassword = ipaPassword;
+    return this;
+  }
+
+  public Byte getType() {
+    return type;
+  }
+
+  public UserParam setType(Byte type) {
+    this.type = type;
     return this;
   }
 }

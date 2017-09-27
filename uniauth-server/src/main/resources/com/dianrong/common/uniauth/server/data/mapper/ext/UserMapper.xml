@@ -47,6 +47,9 @@
 		<if test="status != null">
 			and status = #{status,jdbcType=TINYINT}
 		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=TINYINT}
+		</if>
 		<if test="phone == null">
 			and email = #{email, jdbcType=VARCHAR}
 		</if>

@@ -18,6 +18,8 @@ public class UserQuery extends PageParam {
   private String exactPhone;
   private String email;
   private String exactEmail;
+  // 根据用户的类型 查询用户
+  private Byte type;
   private Byte status;
   private Integer tagId;
   private Integer groupId;
@@ -177,6 +179,15 @@ public class UserQuery extends PageParam {
 
   public UserQuery setExactEmail(String exactEmail) {
     this.exactEmail = exactEmail;
+    return this;
+  }
+
+  public Byte getType() {
+    return type;
+  }
+
+  public UserQuery setType(Byte type) {
+    this.type = type;
     return this;
   }
 }

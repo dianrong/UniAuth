@@ -63,6 +63,7 @@ public class UniClientFacade {
     simpleApiCtrlAccountHolder.setAccount(account);
     simpleApiCtrlAccountHolder.setPassword(password);
     apiCtrlAccountHolder = simpleApiCtrlAccountHolder;
+    init();
   }
 
   private IDomainResource domainResource;
@@ -188,7 +189,7 @@ public class UniClientFacade {
   }
 
   /**
-   * @see getAttributeExtendResource.
+   * @see #getAttributeExtendResource()
    */
   @Deprecated
   public IUserExtendResource getUserExtendResource() {
@@ -200,7 +201,7 @@ public class UniClientFacade {
   }
 
   /**
-   * @see getAttributeExtendRWResource.
+   * @see #getAttributeExtendRWResource()
    */
   @Deprecated
   public IUserExtendRWResource getUserExtendRWResource() {

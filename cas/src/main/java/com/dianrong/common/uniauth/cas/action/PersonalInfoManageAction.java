@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.cas.action;
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
-import com.dianrong.common.uniauth.common.enm.CasProtocal;
+import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.exp.UniauthException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 
@@ -66,7 +66,7 @@ public class PersonalInfoManageAction extends AbstractAction {
     // 获取用户账号
     String account = principal.getId();
     Long tenancyId =
-        (Long) principal.getAttributes().get(CasProtocal.DianRongCas.getTenancyIdName());
+        (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getTenancyIdName());
     return queryUserInfo(context, account, tenancyId);
   }
 

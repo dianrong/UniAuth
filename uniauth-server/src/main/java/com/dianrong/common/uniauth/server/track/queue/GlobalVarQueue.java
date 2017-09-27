@@ -22,7 +22,7 @@ public class GlobalVarQueue {
   private AuditMapper auditMapper;
 
   private BlockingQueue<GlobalVar> globVarQueue =
-      new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBALVAR_QUEUE_SIZE);
+      new ArrayBlockingQueue<GlobalVar>(AppConstants.GLOBAL_VAR_QUEUE_SIZE);
 
   private Object lock = new Object();
 
