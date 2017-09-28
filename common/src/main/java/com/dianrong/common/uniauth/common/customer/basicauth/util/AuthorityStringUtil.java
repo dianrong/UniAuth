@@ -8,7 +8,7 @@ public class AuthorityStringUtil {
   /**
    * 转换Role为Spring security认识的类型.
    */
-  public static String roleAuthrorityFormat(String permType) {
+  public static String roleAuthorityFormat(String permType) {
     if (permType == null) {
       return permType;
     }

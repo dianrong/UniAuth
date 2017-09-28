@@ -33,7 +33,7 @@ public class RoleCodeHandler implements ModeHandler {
           for (RoleDto roleDto : roleList) {
             simpleGrantedAuthorityArrayList
                 .add(new SimpleGrantedAuthority(
-                    AuthorityStringUtil.roleAuthrorityFormat(roleDto.getRoleCode())));
+                    AuthorityStringUtil.roleAuthorityFormat(roleDto.getRoleCode())));
           }
           break;
         } else {
@@ -51,7 +51,7 @@ public class RoleCodeHandler implements ModeHandler {
       for (RoleDto roleDto : roleList) {
         simpleGrantedAuthorityArrayList
             .add(new SimpleGrantedAuthority(
-                AuthorityStringUtil.roleAuthrorityFormat(roleDto.getRoleCode())));
+                AuthorityStringUtil.roleAuthorityFormat(roleDto.getRoleCode())));
       }
     } else {
       log.info("公有域不存在");
