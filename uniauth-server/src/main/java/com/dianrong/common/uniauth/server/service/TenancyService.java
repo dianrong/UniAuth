@@ -191,7 +191,7 @@ public class TenancyService {
     // 如果是使用默认的密码,需要登陆的时候修改密码
     admin.setPasswordDate(StringUtils.hasText(adminEmail) ? now : null);
     admin.setTenancyId(tenancy.getId());
-    userMapper.insert(admin);
+    userMapper.insertSelective(admin);
 
     // step3: init root organization
     Grp rootOrganization = new Grp();
