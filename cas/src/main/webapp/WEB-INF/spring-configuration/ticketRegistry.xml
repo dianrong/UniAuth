@@ -71,7 +71,7 @@
         <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
      </bean>
 
-     <bean id="redisSentinelConfiguration"  lazy-init="true" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+    <bean id="redisSentinelConfiguration"  lazy-init="true" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
         <constructor-arg ref="mapPropertySource"></constructor-arg>
     </bean>
     <bean id="mapPropertySource" class="org.springframework.core.env.MapPropertySource">
