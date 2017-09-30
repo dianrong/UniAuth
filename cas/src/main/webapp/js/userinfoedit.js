@@ -184,6 +184,7 @@ $(function() {
 				}
 				var data = {
 						identity : $('#update_email_new_email').val(),
+						tenancy_code: cookieOperation.getTenancyCode(),
 						captcha : captcha_val
 				};
 				$.ajax({  
@@ -326,6 +327,7 @@ $(function() {
 				}
 				var data = {
 					identity : $('#update_phone_new_phone').val(),
+					tenancy_code: cookieOperation.getTenancyCode(),
 					captcha : captcha_val
 				};
 				$.ajax({  
