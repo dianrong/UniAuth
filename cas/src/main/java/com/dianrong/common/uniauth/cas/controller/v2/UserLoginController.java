@@ -86,7 +86,7 @@ public class UserLoginController {
               new CodeMessage(ResponseCode.USER_NOT_FOUND, "api.v2.login.user.not.found"));
 
           put(UserPasswordNotMatchException.class, new CodeMessage(
-              ResponseCode.USER_NAME_PSWD_NOT_MATCH, "api.v2.login.account.pssword.not.match"));
+              ResponseCode.USER_NAME_PSWD_NOT_MATCH, "api.v2.login.account.password.not.match"));
 
           put(MultiUsersFoundException.class, new CodeMessage(ResponseCode.MULTIPLE_USERS_FOUND,
               "api.v2.login.multiple.user.found"));
@@ -99,7 +99,7 @@ public class UserLoginController {
 
           put(IpaAccountLoginFailedTooManyTimesException.class,
               new CodeMessage(ResponseCode.IPA_ACCOUNT_LOGIN_FAILED_TOO_MANAY_TIMES,
-                  "api.v2.login.ipa.account.failed.too.manay.times"));
+                  "api.v2.login.ipa.account.failed.too.many.times"));
 
           put(FreshUserException.class, new CodeMessage(ResponseCode.ACCOUNT_NEED_INIT_PSWD,
               "api.v2.login.account.need.init"));
