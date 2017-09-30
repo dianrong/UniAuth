@@ -36,8 +36,11 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
         $scope.getUserTypes();
 
         $scope.save = function(){
-            var params = $scope.user;
-            params.type = $scope.userTypesDropdown.option.value;
+             var params = { id:$scope.user.id,
+                            name:$scope.user.name,
+                            email:$scope.user.email,
+                            phone:$scope.user.phone,
+                            type: $scope.userTypesDropdown.option.value};
             UserService.modifyUser(params,
                 function(res) {
                     // user add api successed
