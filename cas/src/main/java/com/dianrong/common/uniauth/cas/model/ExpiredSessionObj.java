@@ -12,12 +12,12 @@ public class ExpiredSessionObj<T extends Serializable> implements Serializable {
   /**
    * 时间戳.
    */
-  private long startMilles;
+  private long startMillis;
 
   /**
-   * 存活时间milles.
+   * 存活时间millis.
    */
-  private long lifeMilles;
+  private long lifeMillis;
 
   /**
    * 内容.
@@ -29,8 +29,8 @@ public class ExpiredSessionObj<T extends Serializable> implements Serializable {
    */
   public ExpiredSessionObj(T content, long lifeMilles) {
     this.content = content;
-    this.startMilles = System.currentTimeMillis();
-    this.lifeMilles = lifeMilles < 0 ? 0 : lifeMilles;
+    this.startMillis = System.currentTimeMillis();
+    this.lifeMillis = lifeMilles < 0 ? 0 : lifeMilles;
   }
 
   public T getContent() {
@@ -45,18 +45,18 @@ public class ExpiredSessionObj<T extends Serializable> implements Serializable {
    * 判断当前对象是否已过期.
    */
   public boolean isExpired() {
-    long nowMilles = System.currentTimeMillis();
-    return nowMilles - startMilles > lifeMilles;
+    long nowMillis = System.currentTimeMillis();
+    return nowMillis - startMillis > lifeMillis;
   }
 
   /**
    * Build a new ExpiredSessionObj.
    *
    * @param content the content
-   * @param lifeMilles the content alive milliseconds
+   * @param lifeMillis the content alive milliseconds
    * @return a new ExpiredSessionObj
    */
-  public static <E extends Serializable> ExpiredSessionObj<E> build(E content, long lifeMilles) {
-    return new ExpiredSessionObj<E>(content, lifeMilles);
+  public static <E extends Serializable> ExpiredSessionObj<E> build(E content, long lifeMillis) {
+    return new ExpiredSessionObj<E>(content, lifeMillis);
   }
 }

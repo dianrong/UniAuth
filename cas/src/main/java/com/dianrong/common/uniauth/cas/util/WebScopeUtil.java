@@ -1,28 +1,26 @@
 package com.dianrong.common.uniauth.cas.util;
 
 import com.dianrong.common.uniauth.cas.model.CasLoginCaptchaInfoModel;
+import com.dianrong.common.uniauth.cas.model.ExpiredSessionObj;
 import com.dianrong.common.uniauth.cas.model.HttpResponseModel;
 import com.dianrong.common.uniauth.cas.model.IdentityExpiredSessionObj;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.Base64;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
-import java.net.URLDecoder;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
+import org.springframework.util.StringUtils;
+import org.springframework.webflow.execution.RequestContext;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.http.entity.ContentType;
-import org.springframework.util.StringUtils;
-import org.springframework.webflow.execution.RequestContext;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URL;
+import java.net.URLDecoder;
 
 /**
  * Request, Response, Session等的一些统一操作的工具方法.
@@ -101,7 +99,7 @@ public final class WebScopeUtil {
   // SMS
   /**
    * Set SMS Verification Code to session.
-   * 
+   *
    * @return true or false
    */
   public static boolean putSmsVerificationToSession(HttpSession session,
@@ -204,7 +202,8 @@ public final class WebScopeUtil {
     Assert.notNull(session);
     Assert.notNull(identity);
     String sessionKey = Base64.encode(identity.getBytes());
-    putValToSession(session, sessionKey, Boolean.TRUE);
+    putValToSession(session, sessionKey, ExpiredSessionObj
+        .build(Boolean.TRUE, CasConstants.VERIFICATION_SUCCESS_ALIVE_MINUTES * 60L * 1000L));
   }
 
   /**
@@ -219,8 +218,8 @@ public final class WebScopeUtil {
       return false;
     }
     String sessionKey = Base64.encode(identity.getBytes());
-    Boolean checked = getValFromSession(session, sessionKey);
-    if (checked != null && checked) {
+    ExpiredSessionObj<Boolean> checked = getValFromSession(session, sessionKey);
+    if (checked != null && !checked.isExpired() && checked.getContent()) {
       return true;
     }
     return false;
@@ -302,7 +301,7 @@ public final class WebScopeUtil {
 
   /**
    * Write JSON to response stream.
-   * 
+   *
    * @param jsonContent JSON to be write to response stream
    */
   public static void writeJsonContentToResponse(ServletResponse response, String jsonContent) {
