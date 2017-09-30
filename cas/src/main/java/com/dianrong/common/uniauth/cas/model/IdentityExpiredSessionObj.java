@@ -17,8 +17,8 @@ public class IdentityExpiredSessionObj<T extends Serializable> extends ExpiredSe
     return identity;
   }
   
-  public IdentityExpiredSessionObj(T content, long lifeMilles, String identity) {
-    super(content, lifeMilles);
+  public IdentityExpiredSessionObj(T content, long lifeMillis, String identity) {
+    super(content, lifeMillis);
     Assert.notNull(identity);
     this.identity = identity;
   }
@@ -26,7 +26,7 @@ public class IdentityExpiredSessionObj<T extends Serializable> extends ExpiredSe
   /**
    * 构造一个IdentityExpiredSessionObj
    */
-  public static <E extends Serializable> IdentityExpiredSessionObj<E> build(E content, long lifeMilles, String identity) {
-    return new IdentityExpiredSessionObj<E>(content, lifeMilles, identity);
+  public static <E extends Serializable> IdentityExpiredSessionObj<E> build(E content, long lifeMillis, String identity) {
+    return new IdentityExpiredSessionObj<E>(content, lifeMillis, identity);
   }
 }

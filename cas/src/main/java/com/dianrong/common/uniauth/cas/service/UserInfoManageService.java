@@ -27,7 +27,7 @@ public class UserInfoManageService extends BaseService {
   private UniClientFacade uniClientFacade;
 
   /**
-   * . 根据用户邮箱或者电话获取用户信息
+   * 根据用户邮箱或者电话获取用户信息.
    *
    * @param account 用户信息标识
    * @param tenancyCode 租户code
@@ -45,7 +45,7 @@ public class UserInfoManageService extends BaseService {
   }
 
   /**
-   * . 根据用户邮箱或者电话获取用户信息
+   * 根据用户邮箱或者电话获取用户信息.
    *
    * @param account 用户信息标识
    * @param tenancyId 租户idgetUserDetailInfo

@@ -18,7 +18,12 @@ public interface CasConstants {
 
   // 1 hour
   long VERIFICATION_EXPIRED_MINUTES = 60L;
-  long VERIFICATION_EXPIRED_MILLES = VERIFICATION_EXPIRED_MINUTES * 60L * 1000L;
+
+  // login verification
+  long LOGIN_VERIFICATION_EXPIRED_MINUTES = 5L;
+
+  // verification success alive minutes
+  long VERIFICATION_SUCCESS_ALIVE_MINUTES = 10L;
 
   /**
    * 用于指定登陆成功之后,跳转的目标地址.
