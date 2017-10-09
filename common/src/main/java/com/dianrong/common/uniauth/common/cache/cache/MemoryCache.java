@@ -1,8 +1,5 @@
 package com.dianrong.common.uniauth.common.cache.cache;
 
-import com.dianrong.common.uniauth.common.cache.UniauthCache;
-import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
-import com.dianrong.common.uniauth.common.util.Assert;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.ref.SoftReference;
@@ -84,17 +81,6 @@ import java.util.concurrent.TimeUnit;
       this.cacheMap.remove(key);
     }
     return value;
-  }
-
-  @Override public <T> T get(String key, Class<T> type) throws IllegalStateException {
-    Object value = get(key);
-    if (value == null) {
-      return null;
-    }
-    if (!type.isAssignableFrom(value.getClass())){
-      throw new IllegalStateException("The cache with key:" + key + " is not the type of " + type.getName());
-    }
-    return (T)value;
   }
 
   @Override public void evict(String key) {

@@ -13,7 +13,7 @@ public class ClusterRedisConnectionFactoryCreator implements RedisConnectionFact
   @Override public RedisConnectionFactory create(RedisConnectionFactoryConfiguration configuration,
       JedisPoolConfig poolConfig) {
     RedisClusterConfiguration redisClusterConfiguration =
-        new RedisClusterConfiguration(configuration.getClusterNodes());
+        new RedisClusterConfiguration(configuration.getClusters());
     redisClusterConfiguration.setMaxRedirects(configuration.getMaxRedirects());
     JedisConnectionFactory jedisConnectionFactory =
         new JedisConnectionFactory(redisClusterConfiguration, poolConfig);

@@ -23,11 +23,4 @@ public interface UniauthCacheManager {
    * 获取所有的缓存的名称集合.
    */
   Collection<String> getCacheNames();
-
-
-  /**
-   * 当缓存对象不存在的时候生成一个缓存对象.
-   * @param name 缓存对应的名称.
-   */
-  UniauthCache getMissingCache(String name);
 }

@@ -60,10 +60,6 @@
         <property name="testOnBorrow" value="true" />  
     </bean>
 
-    <!--<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"-->
-          <!--p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"-->
-          <!--p:database="#{uniauthConfig['redis.database']?:'0'}"   p:pool-config-ref="poolConfig"/>-->
-
     <bean id="connectionFactory" class="com.dianrong.common.uniauth.cas.registry.SwitchCtledJedisConnectionFactory"
     	p:password="#{uniauthConfig['redis.password']}" p:database="#{uniauthConfig['redis.database']?:'0'}"
     	p:connectionSwitch="#{uniauthConfig['cas.iscluster']?:'false'}">
@@ -90,11 +86,9 @@
         <property name="hashKeySerializer" ref="stringRedisSerializer"/>
     </bean>
     <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
-    
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->
-    
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
           c:ticketRegistry-ref="ticketRegistry"/>

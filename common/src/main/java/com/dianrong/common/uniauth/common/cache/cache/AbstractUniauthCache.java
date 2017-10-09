@@ -26,6 +26,17 @@ public abstract class AbstractUniauthCache implements UniauthCache {
     this.name = name;
   }
 
+  @Override public <T> T get(String key, Class<T> type) throws IllegalStateException {
+    Object value = get(key);
+    if (value == null) {
+      return null;
+    }
+    if (!type.isAssignableFrom(value.getClass())){
+      throw new IllegalStateException("The cache with key:" + key + " is not the type of " + type.getName());
+    }
+    return (T)value;
+  }
+
   @Override public String getName() {
     return this.name;
   }

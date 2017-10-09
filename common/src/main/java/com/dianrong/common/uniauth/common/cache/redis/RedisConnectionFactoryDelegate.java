@@ -1,6 +1,7 @@
 package com.dianrong.common.uniauth.common.cache.redis;
 
 import com.dianrong.common.uniauth.common.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
@@ -13,6 +14,8 @@ import redis.clients.jedis.JedisPoolConfig;
 /**
  * 根据配置动态支持Redis的三种连接方式.
  */
+
+@Slf4j
 public class RedisConnectionFactoryDelegate
     implements RedisConnectionFactory, InitializingBean, DisposableBean {
 
@@ -35,6 +38,7 @@ public class RedisConnectionFactoryDelegate
       JedisPoolConfig poolConfig, String redisType) {
     Assert.notNull(configuration, "RedisConnectionFactoryConfiguration can not be null.");
     RedisType type = RedisType.toType(redisType);
+    log.info("Current application use redis connection type is:" + type.toString() );
     this.delegate = type.getConnectionFactoryCreator().create(configuration, poolConfig);
   }
 
