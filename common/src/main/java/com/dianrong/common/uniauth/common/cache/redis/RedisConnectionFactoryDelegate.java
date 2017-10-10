@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.cache.redis;
 
+import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
+import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
 import com.dianrong.common.uniauth.common.util.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -25,23 +27,17 @@ public class RedisConnectionFactoryDelegate
   private RedisConnectionFactory delegate;
 
   /**
-   * 是否启用.默认是启用状态.
+   * 配置字符串.
    */
-  private Boolean on;
+  private UseRedisSwitch redisSwitch = new SimpleUseRedisSwitch();
 
   public RedisConnectionFactoryDelegate(RedisConnectionFactoryConfiguration configuration,
       JedisPoolConfig poolConfig) {
-    this(configuration, poolConfig, RedisType.SINGLE.toString());
-  }
-
-  public RedisConnectionFactoryDelegate(RedisConnectionFactoryConfiguration configuration,
-      JedisPoolConfig poolConfig, String redisType) {
     Assert.notNull(configuration, "RedisConnectionFactoryConfiguration can not be null.");
-    RedisType type = RedisType.toType(redisType);
+    RedisType type = configuration.getType();
     log.info("Current application use redis connection type is:" + type.toString() );
     this.delegate = type.getConnectionFactoryCreator().create(configuration, poolConfig);
   }
-
 
   @Override public RedisConnection getConnection() {
     return delegate.getConnection();
@@ -64,7 +60,7 @@ public class RedisConnectionFactoryDelegate
   }
 
   @Override public void destroy() throws Exception {
-    if (getOn()) {
+    if (this.redisSwitch.isOn()) {
       if (delegate instanceof DisposableBean) {
         ((DisposableBean) delegate).destroy();
       }
@@ -72,25 +68,15 @@ public class RedisConnectionFactoryDelegate
   }
 
   @Override public void afterPropertiesSet() throws Exception {
-    if (getOn()) {
+    if (this.redisSwitch.isOn()) {
       if (delegate instanceof InitializingBean) {
         ((InitializingBean) delegate).afterPropertiesSet();
       }
     }
   }
 
-  /**
-   * 是否处于启用状态.
-   */
-  public Boolean getOn() {
-    if (on == null) {
-      // 默认是True
-      return true;
-    }
-    return on;
-  }
-
-  public void setOn(Boolean on) {
-    this.on = on;
+  public void setRedisSwitch(UseRedisSwitch redisSwitch) {
+    Assert.notNull(redisSwitch, "redisSwitch must not be null.");
+    this.redisSwitch = redisSwitch;
   }
 }

@@ -19,6 +19,7 @@
 
 	<!--为避免Redis连接的配置繁琐,所以将这部分复杂的配置放到common配置中提前配置好-->
 	<bean id="redisDefaultConfiguration" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration">
+		<property name="type" value="#{uniauthConfig['redis.type']}"/>
 		<property name="database" value="#{uniauthConfig['redis.database']}"/>
 		<property name="password" value="#{uniauthConfig['redis.password']}"/>
 		<property name="timeout" value="#{uniauthConfig['redis.timeout']}"/>

@@ -19,6 +19,16 @@ import java.util.Set;
   private RedisConnectionFactoryConfiguration defaultConfiguration;
 
   /**
+   * 选取redis的类型,默认值为SINGLE.
+   */
+  private ConfigTagItem<RedisType> type =
+      new ConfigTagItem<>(RedisType.SINGLE, new ValueQuery<RedisType>() {
+        @Override public RedisType get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+          return defaultConfiguration.getType();
+        }
+      });
+
+  /**
    * 选取redis的database,默认值为0.
    */
   private ConfigTagItem<Integer> database = new ConfigTagItem<>(0, new ValueQuery<Integer>() {
@@ -101,6 +111,13 @@ import java.util.Set;
     }
   });
 
+  public void setType(String type) {
+    if (type == null) {
+      return;
+    }
+    this.type.setContent(RedisType.toType(type));
+  }
+
   public void setDatabase(String database) {
     if (database == null) {
       return;
@@ -168,8 +185,8 @@ import java.util.Set;
     this.maxRedirects.setContent(tempMaxRedirects);
   }
 
-  public Set<String> getClusters() {
-    return getValue(clusters);
+  public RedisType getType() {
+    return getValue(type);
   }
 
   public int getDatabase() {
@@ -198,6 +215,10 @@ import java.util.Set;
 
   public Set<String> getSentinels() {
     return getValue(sentinels);
+  }
+
+  public Set<String> getClusters() {
+    return getValue(clusters);
   }
 
   public int getMaxRedirects() {
