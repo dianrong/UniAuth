@@ -2,6 +2,9 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import lombok.ToString;
 
+import java.util.List;
+import java.util.Map;
+
 @ToString
 public class PermissionDto extends TenancyBaseDto {
 
@@ -18,6 +21,40 @@ public class PermissionDto extends TenancyBaseDto {
 
   // whether this permission connected with this role
   private Boolean checked;
+
+  // Permission->UserList
+  private List<UserDto> relatedUsers;
+  // Permission->RoleList
+  private List<RoleDto> relatedRoles;
+  // Role->UserList
+  private Map<Integer, List<UserDto>> roleUserListMap;
+
+  public List<UserDto> getRelatedUsers() {
+    return relatedUsers;
+  }
+
+  public PermissionDto setRelatedUsers(List<UserDto> relatedUsers) {
+    this.relatedUsers = relatedUsers;
+    return this;
+  }
+
+  public List<RoleDto> getRelatedRoles() {
+    return relatedRoles;
+  }
+
+  public PermissionDto setRelatedRoles(List<RoleDto> relatedRoles) {
+    this.relatedRoles = relatedRoles;
+    return this;
+  }
+
+  public Map<Integer, List<UserDto>> getRoleUserListMap() {
+    return roleUserListMap;
+  }
+
+  public PermissionDto setRoleUserListMap(Map<Integer, List<UserDto>> roleUserListMap) {
+    this.roleUserListMap = roleUserListMap;
+    return this;
+  }
 
   public String getPermType() {
     return permType;
