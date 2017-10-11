@@ -1,14 +1,15 @@
 package com.dianrong.common.uniauth.common.util;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.DigestUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.DigestUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class StringUtil {
@@ -23,16 +24,15 @@ public class StringUtil {
    */
   public static final Pattern EMAIL_NUMBER = Pattern.compile(
       "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
-  
+
   /**
    * 验证码用到的字符数组.
    */
-  public static final char[] CAPTCHA_CHARACTORS = {
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
-      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
-      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-  };
-  
+  public static final char[] CAPTCHA_CHARACTORS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+      't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+      'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
   /**
    * Judge string is null or empty.
    *
@@ -187,7 +187,7 @@ public class StringUtil {
     }
     return sb.toString();
   }
-  
+
   /**
    * 生成目标长度的数字字符串.
    */
@@ -269,18 +269,20 @@ public class StringUtil {
     }
     return false;
   }
-  
+
   /**
    * 将一个字符串Md5.默认以UTF-8的格式处理.
+   * 
    * @param str 字符串不能为空.
    * @throws UnsupportedEncodingException 指定编码格式不支持.
    */
   public static String md5(String str) throws UnsupportedEncodingException {
     return md5(str, "UTF-8");
   }
-  
+
   /**
    * 将一个字符串Md5.
+   * 
    * @param str 字符串不能为空.
    * @param charsetName 编码格式.
    * @throws UnsupportedEncodingException 指定编码格式不支持.
@@ -288,6 +290,6 @@ public class StringUtil {
   public static String md5(String str, String charsetName) throws UnsupportedEncodingException {
     Assert.notNull(str);
     Assert.notNull(charsetName);
-    return new String(DigestUtils.md5Digest(str.getBytes(charsetName)), charsetName);
+    return DigestUtils.md5DigestAsHex(str.getBytes(charsetName));
   }
 }

@@ -16,6 +16,7 @@
 			">
     
     <b:import resource="classpath:ss-uniauth-common.xml"/>
+    <b:import resource="classpath:ss-uniauth-client-cache.xml"/>
 
     <global-method-security pre-post-annotations="enabled" proxy-target-class="true">
     	<expression-handler ref="methodSecurityExpressionHandler"/>
@@ -24,11 +25,6 @@
 	<b:bean id="methodSecurityExpressionHandler" class="com.dianrong.common.uniauth.client.custom.handler.SSMethodSecurityExpressionHandler">
 	</b:bean>
     
-    <!--
-    exclude the pattern which does not need protection
-	<http pattern="/index.jsp" security="none"/> 
-	 -->
-	
 	<b:bean id="casAuthEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
 		<b:property name="loginUrl" value="#{uniauthConfig['cas_server']}/login"/>
 		<b:property name="serviceProperties" ref="casService"/>
@@ -54,16 +50,23 @@
         <b:property name="key" value="dianrong-ss-uniauth-cas"/>
         <b:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>
     </b:bean>
-    
+
+	<!--JWT-->
     <b:bean id="jwtAuthenticationProvider" class="com.dianrong.common.uniauth.client.custom.jwt.JWTAuthenticationProvider">
         <b:constructor-arg ref="ssUserDetailService"/>
     </b:bean>
+
+	<!--BasicAuth-->
+	<b:bean id="basicAuthAuthenticationProvider" class="com.dianrong.common.uniauth.client.custom.basicauth.UniauthBasicAuthProvider">
+		<b:constructor-arg ref="ssUserLoginService"/>
+	</b:bean>
 	
 	<b:bean id="authenticationProviders" class="com.dianrong.common.uniauth.client.custom.sharedomain.ShareDomainCasAuthenticationManager">
 	   <b:constructor-arg>
 	       <b:list>
 	           <b:ref bean= "casAuthenticationProvider"/>
 	           <b:ref bean= "jwtAuthenticationProvider"/>
+			   <b:ref bean= "basicAuthAuthenticationProvider"/>
 	       </b:list>
 	   </b:constructor-arg>
 	</b:bean>
@@ -96,9 +99,37 @@
 	
 	<b:bean id="securityContextLogoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
 	<b:bean id="ssUserDetailService" class="com.dianrong.common.uniauth.client.custom.multitenancy.SSMultiTenancyUserDetailService" />
+	<b:bean id="ssUserLoginService" class="com.dianrong.common.uniauth.client.custom.multitenancy.SSMultiTenancyUserLoginService" />
     <b:bean id="ssBeanPostProcessor" class="org.springframework.security.web.access.expression.SSBeanPostProcessor"/>
     <b:bean id="ssRegularBeanPostProcessor" class="org.springframework.security.web.access.regular.SSRegularFilterBeanPostProcessor"/>
     <b:bean id="sessionManageBeanPostProcessor" class="org.springframework.security.web.access.sessionmanage.SessionManageBeanPostProcessor">
         <b:property name="zooKeeperConfig" ref="zooKeeperConfig"/>
     </b:bean>
+
+	<!-- Cache -->
+	<!-- Redis configuration -->
+	<b:bean id="useRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch">
+		<b:property name="config" value="#{uniauthConfig['cas.iscluster']?:'false'}"/>
+	</b:bean>
+
+	<b:bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="200" />
+		<property name="testOnBorrow" value="true" />
+	</b:bean>
+
+	<b:bean id="connectionFactory" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate">
+		<constructor-arg name="configuration" ref="redisDefaultConfiguration"/>
+		<constructor-arg name="poolConfig" ref="poolConfig"/>
+		<property name="redisSwitch" ref="useRedisSwitch"/>
+	</b:bean>
+
+	<b:bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<constructor-arg ref="connectionFactory" />
+		<property name="keySerializer" ref="jacksonSerializer" />
+		<property name="valueSerializer" ref="jacksonSerializer" />
+		<property name="hashKeySerializer" ref="jacksonSerializer" />
+		<property name="hashValueSerializer" ref="jacksonSerializer" />
+	</b:bean>
+	<b:bean id="jacksonSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+
 </b:beans>

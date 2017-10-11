@@ -1,17 +1,21 @@
 package com.dianrong.common.uniauth.common.cache.redis;
 
-import com.dianrong.common.uniauth.common.util.StringUtil;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Set;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.util.Set;
+import com.dianrong.common.uniauth.common.util.StringUtil;
+
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Redis ConnectionFactory的配置参数.
  */
-@Slf4j @ToString public class RedisConnectionFactoryConfiguration {
+@Slf4j
+@ToString
+public class RedisConnectionFactoryConfiguration {
 
   /**
    * 配置的默认配置.如果没有主动配置属性,则使用defaultConfiguration的配置信息作为配置.
@@ -23,7 +27,8 @@ import java.util.Set;
    */
   private ConfigTagItem<RedisType> type =
       new ConfigTagItem<>(RedisType.SINGLE, new ValueQuery<RedisType>() {
-        @Override public RedisType get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+        @Override
+        public RedisType get(RedisConnectionFactoryConfiguration defaultConfiguration) {
           return defaultConfiguration.getType();
         }
       });
@@ -32,7 +37,8 @@ import java.util.Set;
    * 选取redis的database,默认值为0.
    */
   private ConfigTagItem<Integer> database = new ConfigTagItem<>(0, new ValueQuery<Integer>() {
-    @Override public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getDatabase();
     }
   });
@@ -41,7 +47,8 @@ import java.util.Set;
    * 连接redis的密码
    */
   private ConfigTagItem<String> password = new ConfigTagItem<>(new ValueQuery<String>() {
-    @Override public String get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public String get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getPassword();
     }
   });
@@ -50,7 +57,8 @@ import java.util.Set;
    * 连接的超时时间(毫秒数).
    */
   private ConfigTagItem<Integer> timeout = new ConfigTagItem<>(3000, new ValueQuery<Integer>() {
-    @Override public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getTimeout();
     }
   });
@@ -60,7 +68,8 @@ import java.util.Set;
    * Redis服务器Host.
    */
   private ConfigTagItem<String> host = new ConfigTagItem<>("localhost", new ValueQuery<String>() {
-    @Override public String get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public String get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getHost();
     }
   });
@@ -69,7 +78,8 @@ import java.util.Set;
    * Redis服务器端口.
    */
   private ConfigTagItem<Integer> port = new ConfigTagItem<>(6379, new ValueQuery<Integer>() {
-    @Override public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getPort();
     }
   });
@@ -79,7 +89,8 @@ import java.util.Set;
    * Master节点.
    */
   private ConfigTagItem<String> master = new ConfigTagItem<>("mymaster", new ValueQuery<String>() {
-    @Override public String get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public String get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getMaster();
     }
   });
@@ -87,7 +98,8 @@ import java.util.Set;
    * 哨兵节点集合.
    */
   private ConfigTagItem<Set<String>> sentinels = new ConfigTagItem<>(new ValueQuery<Set<String>>() {
-    @Override public Set<String> get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public Set<String> get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getSentinels();
     }
   });
@@ -97,7 +109,8 @@ import java.util.Set;
    * 集群节点集合.
    */
   private ConfigTagItem<Set<String>> clusters = new ConfigTagItem<>(new ValueQuery<Set<String>>() {
-    @Override public Set<String> get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public Set<String> get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getClusters();
     }
   });
@@ -106,7 +119,8 @@ import java.util.Set;
    * 集群失败之后的重定向次数.
    */
   private ConfigTagItem<Integer> maxRedirects = new ConfigTagItem<>(5, new ValueQuery<Integer>() {
-    @Override public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
+    @Override
+    public Integer get(RedisConnectionFactoryConfiguration defaultConfiguration) {
       return defaultConfiguration.getMaxRedirects();
     }
   });
@@ -213,6 +227,14 @@ import java.util.Set;
     return getValue(master);
   }
 
+  public String getSentinelsStr() {
+    return StringUtils.collectionToCommaDelimitedString(getValue(sentinels));
+  }
+
+  public String getClustersStr() {
+    return StringUtils.collectionToCommaDelimitedString(getValue(clusters));
+  }
+
   public Set<String> getSentinels() {
     return getValue(sentinels);
   }
@@ -226,9 +248,7 @@ import java.util.Set;
   }
 
   /**
-   * 如果item是主动配置过的,则直接返回其值.
-   * 如果没有主动配置过的,则查看是否有配置默认的配置对象,
-   * 返回默认配置的信息.
+   * 如果item是主动配置过的,则直接返回其值. 如果没有主动配置过的,则查看是否有配置默认的配置对象, 返回默认配置的信息.
    */
   private <E> E getValue(ConfigTagItem<E> item) {
     if (item.configTag) {

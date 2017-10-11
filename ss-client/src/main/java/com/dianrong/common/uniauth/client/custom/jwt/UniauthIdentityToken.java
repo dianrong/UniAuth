@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.custom.model;
+package com.dianrong.common.uniauth.client.custom.jwt;
 
 import com.dianrong.common.uniauth.common.util.Assert;
 

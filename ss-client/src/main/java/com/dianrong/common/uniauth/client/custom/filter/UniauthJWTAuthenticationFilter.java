@@ -6,7 +6,7 @@ import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil.JWTUserTagInfo;
 import com.dianrong.common.uniauth.client.custom.jwt.exp.JWTInvalidAuthenticationException;
-import com.dianrong.common.uniauth.client.custom.model.UniauthIdentityToken;
+import com.dianrong.common.uniauth.client.custom.jwt.UniauthIdentityToken;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
@@ -177,7 +177,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
    * 
    * @param requestMatcher
    */
-  public final void setLoginReuqestRequestMatcher(RequestMatcher requestMatcher) {
+  public final void setLoginRequestRequestMatcher(RequestMatcher requestMatcher) {
     Assert.notNull(requestMatcher, "requestMatcher cannot be null");
     this.loginRequestMatcher = requestMatcher;
   }
@@ -191,7 +191,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
    * 设置登陆的请求的URL.
    */
   public void setLoginRequestUrl(String loginRequestUrl) {
-    setLoginReuqestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
+    setLoginRequestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
   }
 
   @Override

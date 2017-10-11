@@ -1,13 +1,13 @@
 package com.dianrong.common.uniauth.client.custom.jwt;
 
-import com.dianrong.common.uniauth.client.custom.model.UniauthIdentityToken;
-import com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsService;
-import com.dianrong.common.uniauth.common.util.Assert;
-
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.dianrong.common.uniauth.client.custom.model.StatelessAuthenticationSuccessToken;
+import com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsService;
+import com.dianrong.common.uniauth.common.util.Assert;
 
 /**
  * 用于处理JWT信息登陆的Provider.
@@ -29,7 +29,7 @@ public class JWTAuthenticationProvider implements AuthenticationProvider {
     UniauthIdentityToken uniauthIdentityToken = (UniauthIdentityToken) authentication;
     UserDetails userDetails = userDetailsService.loadUserByUsername(
         uniauthIdentityToken.getIdentity(), uniauthIdentityToken.getTenancyId());
-    return new JWTAuthenticationToken(userDetails.getAuthorities(), userDetails,
+    return new StatelessAuthenticationSuccessToken(userDetails.getAuthorities(), userDetails,
         userDetails.getPassword());
   }
 

@@ -1,7 +1,7 @@
 package org.springframework.security.web.access.regular;
 
 import com.dianrong.common.uniauth.common.client.DomainDefine;
-import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
+import com.dianrong.common.uniauth.common.client.enums.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.util.List;
