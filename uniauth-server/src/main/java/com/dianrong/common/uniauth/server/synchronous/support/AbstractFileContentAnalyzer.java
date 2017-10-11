@@ -62,7 +62,7 @@ import java.util.List;
     if (!StringUtils.hasText(content)) {
       return Collections.emptyList();
     }
-    String[] rows = content.split("\n|\n\r|\r");
+    String[] rows = content.split("\r|\n|\n\r|\r\n");
     List<String> strList = Lists.newArrayList();
     for (String row : rows) {
       if (row.length() == 0) {
