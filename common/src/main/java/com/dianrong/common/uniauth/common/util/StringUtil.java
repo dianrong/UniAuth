@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
@@ -28,10 +29,10 @@ public class StringUtil {
   /**
    * 验证码用到的字符数组.
    */
-  public static final char[] CAPTCHA_CHARACTORS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-      't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-      'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+  public static final char[] CAPTCHA_CHARACTERS = {'1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's',
+      't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L',
+      'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
   /**
    * Judge string is null or empty.
@@ -181,9 +182,9 @@ public class StringUtil {
     }
     StringBuilder sb = new StringBuilder();
     Random r = new Random();
-    int charNum = CAPTCHA_CHARACTORS.length;
+    int charNum = CAPTCHA_CHARACTERS.length;
     for (int i = 0; i < length; i++) {
-      sb.append(CAPTCHA_CHARACTORS[r.nextInt(charNum)]);
+      sb.append(CAPTCHA_CHARACTERS[r.nextInt(charNum)]);
     }
     return sb.toString();
   }
@@ -276,8 +277,13 @@ public class StringUtil {
    * @param str 字符串不能为空.
    * @throws UnsupportedEncodingException 指定编码格式不支持.
    */
-  public static String md5(String str) throws UnsupportedEncodingException {
-    return md5(str, "UTF-8");
+  public static String md5(String str) {
+    try {
+      return md5(str, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      log.error("UTF-8 is not supported.", e);
+      throw new UniauthCommonException("UTF-8 is not supported", e);
+    }
   }
 
   /**

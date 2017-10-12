@@ -1,11 +1,6 @@
 package com.dianrong.common.uniauth.client.config;
 
-import com.dianrong.common.uniauth.client.custom.filter.AllAuthenticationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
-import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTLogoutFilter;
+import com.dianrong.common.uniauth.client.custom.filter.*;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
 
 import java.util.Map;
@@ -23,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
@@ -75,15 +71,19 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
         beanCreator.create(UniauthCasAuthenticationFilter.class);
     UniauthJWTAuthenticationFilter jwtAuthenticationFilter =
         beanCreator.create(UniauthJWTAuthenticationFilter.class);
+
     AllAuthenticationFilter allAuthenticationFilter = beanCreator
         .create(AllAuthenticationFilter.class, casAuthenticationFilter, jwtAuthenticationFilter);
-    
+
     DelegateAuthenticationFilter authenticationFilter =
         beanCreator.create(DelegateAuthenticationFilter.class, casAuthenticationFilter,
             jwtAuthenticationFilter, allAuthenticationFilter);
 
     http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
     http.addFilterAfter(authenticationFilter, CasAuthenticationFilter.class);
+    UniauthBasicAuthAuthenticationFilter basicAuthAuthenticationFilter =
+        beanCreator.create(UniauthBasicAuthAuthenticationFilter.class);
+    http.addFilterAfter(basicAuthAuthenticationFilter, BasicAuthenticationFilter.class);
     http.addFilterAfter(beanCreator.create(UniauthJWTLogoutFilter.class), CsrfFilter.class);
     http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
     http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class),

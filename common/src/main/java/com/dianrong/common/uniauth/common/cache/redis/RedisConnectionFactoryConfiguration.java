@@ -153,10 +153,16 @@ public class RedisConnectionFactoryConfiguration {
   }
 
   public void setHost(String host) {
+    if (host == null) {
+      return;
+    }
     this.host.setContent(host);
   }
 
   public void setPassword(String password) {
+    if (password == null) {
+      return;
+    }
     this.password.setContent(password);
   }
 
@@ -171,6 +177,9 @@ public class RedisConnectionFactoryConfiguration {
   }
 
   public void setMaster(String master) {
+    if (master == null) {
+      return;
+    }
     this.master.setContent(master);
   }
 

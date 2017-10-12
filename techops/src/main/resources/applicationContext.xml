@@ -51,6 +51,8 @@
         </sec:headers>
         <sec:custom-filter ref="authenticationFilter"
             position="CAS_FILTER" />
+        <sec:custom-filter ref="basicAuthAuthenticationFilter"
+                           position="BASIC_AUTH_FILTER" />
         <sec:custom-filter ref="jwtLogoutFilter"
             after="CSRF_FILTER" />
         <sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER"
@@ -82,14 +84,14 @@
             </bean>
         </property>
     </bean>
-    
+
     <bean id="concurrencyFilter"
         class="org.springframework.security.web.session.ConcurrentSessionFilter">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry"></constructor-arg>
         <constructor-arg name="expiredUrl"
             value="#{uniauthConfig['cas_server']}/logout?dupsession=true"></constructor-arg>
     </bean>
-    
+
     <bean id="sessionRegistry"
         class="org.springframework.security.core.session.SessionRegistryImpl" />
 
@@ -141,11 +143,12 @@
     <!-- CAS方式登陆成功之后,验证ST失败的处理Handler -->
     <bean id="ssAuthenticationFailHandler"
         class="com.dianrong.common.uniauth.client.custom.handler.SSAuthenticationFailureHandler" />
-        
+
     <bean id="jwtAuthenticationFilter"
         class="com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter">
         <constructor-arg index="0" ref="uniauthJWTSecurity" />
         <constructor-arg index="1" ref="jwtQuery" />
+        <constructor-arg index="2" ref="uniauthCacheManager"/>
         <property name="authenticationManager" ref="authenticationManager" />
         <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
         <property name="authenticationFailureHandler" ref="jwtAuthenticationFailureHandler"></property>
@@ -160,7 +163,14 @@
         <property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"></property>
         <property name="sessionAuthenticationStrategy" ref="sas" />
     </bean>
-    
+
+    <bean id="basicAuthAuthenticationFilter"
+          class="com.dianrong.common.uniauth.client.custom.filter.UniauthBasicAuthAuthenticationFilter">
+        <constructor-arg index="0" ref="uniauthCacheManager" />
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="sessionAuthenticationStrategy" ref="sas" />
+    </bean>
+
     <!-- 提供两个jwt获取的方式,可配置header和parameter名来自定义参数名 -->
     <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestHeaderJWTQuery"/>
     <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestParameterJWTQuery"/>

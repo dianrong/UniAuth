@@ -1,5 +1,14 @@
 package com.dianrong.uniauth.ssclient;
 
+import org.apache.catalina.filters.CorsFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
+import org.springframework.context.annotation.*;
+import org.springframework.core.Ordered;
+
 import com.dianrong.common.uniauth.client.custom.jwt.RequestHeaderJWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.RequestParameterJWTQuery;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
@@ -7,25 +16,13 @@ import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
 import com.dianrong.uniauth.ssclient.config.MyAuthenticationProvider;
 
-import org.apache.catalina.filters.CorsFilter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.embedded.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.Ordered;
-
 @EnableAutoConfiguration
 @Configuration
 @ComponentScan(basePackageClasses = {ApplicationStarter.class})
 @PropertySource(value = "classpath:/config/application.yml")
 @ImportResource({"classpath:spring-context.xml"})
 public class ApplicationStarter {
+
   public static void main(String[] args) {
     SpringApplication.run(ApplicationStarter.class, args);
   }

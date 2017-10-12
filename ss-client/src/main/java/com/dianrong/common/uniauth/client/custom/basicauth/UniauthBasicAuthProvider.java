@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.dianrong.common.uniauth.client.custom.model.StatelessAuthenticationSuccessToken;
 import com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserLoginService;
 import com.dianrong.common.uniauth.common.util.Assert;
 
@@ -30,8 +29,9 @@ public class UniauthBasicAuthProvider implements AuthenticationProvider {
     UserDetails userDetails =
         multiTenancyUserLoginService.loadLoginUserDetails(basicAuthToken.getTenancyCode(),
             basicAuthToken.getAccount(), basicAuthToken.getPassword(), basicAuthToken.getIp());
-    return new StatelessAuthenticationSuccessToken(userDetails.getAuthorities(), userDetails,
-        userDetails.getPassword());
+    return new BasicAuthStatelessAuthenticationSuccessToken(userDetails.getAuthorities(),
+        userDetails, userDetails.getPassword(), basicAuthToken.getTenancyCode(),
+        basicAuthToken.getAccount());
   }
 
   @Override

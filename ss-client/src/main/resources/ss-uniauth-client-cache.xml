@@ -27,16 +27,16 @@
 
 	<b:bean id="ssclientInnerRedisConfiguration" class = "com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration">
 		<b:property name="defaultConfiguration" ref="redisDefaultConfiguration"/>
-		<b:property name="type" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
+		<b:property name="type" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.type}"/>
 		<b:property name="database" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="password" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="timeout" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="host" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="port" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="master" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="sentinels" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="clusters" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="maxRedirects" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
+		<b:property name="password" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.password}"/>
+		<b:property name="timeout" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.timeout}"/>
+		<b:property name="host" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.host}"/>
+		<b:property name="port" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.port}"/>
+		<b:property name="master" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.master}"/>
+		<b:property name="sentinels" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.sentinelsStr}"/>
+		<b:property name="clusters" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.clustersStr}"/>
+		<b:property name="maxRedirects" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.maxRedirects}"/>
 	</b:bean>
 
 	<b:bean id="ssclientInnerPoolConfig" class="redis.clients.jedis.JedisPoolConfig">

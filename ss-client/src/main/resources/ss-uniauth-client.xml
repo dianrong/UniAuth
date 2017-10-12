@@ -105,31 +105,4 @@
     <b:bean id="sessionManageBeanPostProcessor" class="org.springframework.security.web.access.sessionmanage.SessionManageBeanPostProcessor">
         <b:property name="zooKeeperConfig" ref="zooKeeperConfig"/>
     </b:bean>
-
-	<!-- Cache -->
-	<!-- Redis configuration -->
-	<b:bean id="useRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch">
-		<b:property name="config" value="#{uniauthConfig['cas.iscluster']?:'false'}"/>
-	</b:bean>
-
-	<b:bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxIdle" value="200" />
-		<property name="testOnBorrow" value="true" />
-	</b:bean>
-
-	<b:bean id="connectionFactory" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate">
-		<constructor-arg name="configuration" ref="redisDefaultConfiguration"/>
-		<constructor-arg name="poolConfig" ref="poolConfig"/>
-		<property name="redisSwitch" ref="useRedisSwitch"/>
-	</b:bean>
-
-	<b:bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
-		<constructor-arg ref="connectionFactory" />
-		<property name="keySerializer" ref="jacksonSerializer" />
-		<property name="valueSerializer" ref="jacksonSerializer" />
-		<property name="hashKeySerializer" ref="jacksonSerializer" />
-		<property name="hashValueSerializer" ref="jacksonSerializer" />
-	</b:bean>
-	<b:bean id="jacksonSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
-
 </b:beans>

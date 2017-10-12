@@ -1,5 +1,18 @@
 package com.dianrong.common.uniauth.common.customer.basicauth;
 
+import static com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode.ROLE_CODE;
+import static com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType.DOMAIN;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Response;
@@ -15,21 +28,9 @@ import com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode;
 import com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.dianrong.common.uniauth.common.customer.basicauth.mode.Mode.ROLE_CODE;
-import static com.dianrong.common.uniauth.common.customer.basicauth.mode.PermissionType.DOMAIN;
 
 /**
  * Created by denghb on 6/13/17.
@@ -186,11 +187,6 @@ public class DelegateAuthenticationProvider implements AuthenticationProvider {
    */
   private String getIdentityMd5Key(String userName, String password) {
     String originStr = userName.trim() + password.trim();
-    try {
-      return StringUtil.md5(originStr);
-    } catch (UnsupportedEncodingException e) {
-      log.error("not supported encoding type!", e);
-      return null;
-    }
+    return StringUtil.md5(originStr);
   }
 }

@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.dianrong.common.uniauth.client.custom.model.StatelessAuthenticationSuccessToken;
 import com.dianrong.common.uniauth.client.custom.multitenancy.MultiTenancyUserDetailsService;
 import com.dianrong.common.uniauth.common.util.Assert;
 
@@ -29,8 +28,9 @@ public class JWTAuthenticationProvider implements AuthenticationProvider {
     UniauthIdentityToken uniauthIdentityToken = (UniauthIdentityToken) authentication;
     UserDetails userDetails = userDetailsService.loadUserByUsername(
         uniauthIdentityToken.getIdentity(), uniauthIdentityToken.getTenancyId());
-    return new StatelessAuthenticationSuccessToken(userDetails.getAuthorities(), userDetails,
-        userDetails.getPassword());
+    return new JWTStatelessAuthenticationSuccessToken(userDetails.getAuthorities(), userDetails,
+        userDetails.getPassword(), uniauthIdentityToken.getIdentity(),
+        uniauthIdentityToken.getTenancyId());
   }
 
   @Override

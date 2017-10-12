@@ -33,7 +33,7 @@ import org.springframework.web.filter.GenericFilterBean;
 public class DelegateAuthenticationFilter extends GenericFilterBean {
 
   /**
-   * 验证的方式,默认采用CAS的方式验证.
+   * 验证的方式.
    */
   private AuthenticationType authenticationType = AuthenticationType.ALL;
 

@@ -1,7 +1,5 @@
 package com.dianrong.common.uniauth.common.cache.cache;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.ref.SoftReference;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,10 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 基于内存的缓存实现.
  */
-@Slf4j public class MemoryCache extends AbstractUniauthCache {
+@Slf4j
+public class MemoryCache extends AbstractUniauthCache {
 
   /**
    * 不会过期的缓存时间.
@@ -37,7 +38,8 @@ import java.util.concurrent.TimeUnit;
     this.refreshExecutor = Executors.newSingleThreadScheduledExecutor();
     // 启动线程,定时刷新过期缓存
     this.refreshExecutor.scheduleWithFixedDelay(new Runnable() {
-      @Override public void run() {
+      @Override
+      public void run() {
         refreshExpiredCache();
       }
     }, REFRESH_EXPIRED_CACHE_MINUTES, REFRESH_EXPIRED_CACHE_MINUTES, TimeUnit.MINUTES);
@@ -57,16 +59,19 @@ import java.util.concurrent.TimeUnit;
     }
   }
 
-  @Override public void put(String key, Object value) {
-    this.cacheMap.put(key, new ExpiredCache(value));
+  @Override
+  public void doPut(String key, Object value) {
+    this.cacheMap.put(key, new ExpiredCache(key));
   }
 
-  @Override public void put(String key, Object value, Long expireTime, TimeUnit timeUnit) {
+  @Override
+  public void doPut(String key, Object value, Long expireTime, TimeUnit timeUnit) {
     this.cacheMap.put(key,
         new ExpiredCache(value, System.currentTimeMillis() + timeUnit.toMillis(expireTime)));
   }
 
-  @Override public Object get(String key) {
+  @Override
+  public Object doGet(String key) {
     ExpiredCache<?> cache = this.cacheMap.get(key);
     if (cache == null) {
       return null;
@@ -83,14 +88,15 @@ import java.util.concurrent.TimeUnit;
     return value;
   }
 
-  @Override public void evict(String key) {
-      this.cacheMap.remove(key);
+  @Override
+  public void doEvict(String key) {
+    this.cacheMap.remove(key);
   }
 
-  @Override public void clear() {
-      this.cacheMap.clear();
+  @Override
+  public void clear() {
+    this.cacheMap.clear();
   }
-
 
   /**
    * 会过期的缓存信息.
@@ -113,7 +119,7 @@ import java.util.concurrent.TimeUnit;
         // 永远不过期
         return false;
       }
-      return this.cacheMillis >= System.currentTimeMillis();
+      return this.cacheMillis < System.currentTimeMillis();
     }
 
     public Long getCacheMillis() {
