@@ -67,7 +67,7 @@ allprojects {
     repositories{
 		mavenCentral()
 	}
-	
+
 	publishing {
     	publications.all {
 			pom.withXml {
@@ -81,13 +81,13 @@ allprojects {
         repositories {
             maven {
             	if(project.version.endsWith('-SNAPSHOT')) {
-            		url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' 
+            		url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
             	}
            		else {
-           		 	url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' 
+           		 	url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/'
            		}
             }
-            
+
             maven {
 	            if(project.version.endsWith('-SNAPSHOT')) {
 	            	url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
@@ -98,13 +98,13 @@ allprojects {
 	        }
         }
     }
-	
+
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
-    
+
     dependencyManagement {
 	    imports {
 	       //see dependencies http://docs.spring.io/platform/docs/2.0.8.RELEASE/reference/htmlsingle/#appendix-dependency-versions
@@ -118,7 +118,7 @@ allprojects {
             dependency 'org.mybatis:mybatis:3.2.8'
             dependency 'org.mybatis:mybatis-spring:1.2.2'
             dependency "javax.mail:mail:1.5.0-b01"
-            
+
             // jackson
             dependency "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
             dependency "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
@@ -127,9 +127,9 @@ allprojects {
             } else {
                 dependency "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
             }
-            
+
             dependency 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
-            
+
             // update log4j version
             dependency "org.apache.logging.log4j:log4j-core:${log4j_version_new}"
             dependency "org.apache.logging.log4j:log4j:${log4j_version_new}"
@@ -187,7 +187,7 @@ project(':ss-client') {
 		compile 'org.springframework.security:spring-security-openid'
 		compile 'org.springframework.security:spring-security-taglibs'
 		compile 'org.hibernate:hibernate-validator'
-		
+
 		compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
         if (rootProject.dianrongRepoEnable) {
@@ -199,15 +199,7 @@ project(':ss-client') {
         compile 'com.auth0:java-jwt:3.0.2'
 
 		// Redis
-		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
-			exclude group: 'org.springframework', module: 'spring-aop'
-			exclude group: 'org.springframework', module: 'spring-beans'
-			exclude group: 'org.springframework', module: 'spring-context'
-			exclude group: 'org.springframework', module: 'spring-context-support'
-			exclude group: 'org.springframework', module: 'spring-core'
-			exclude group: 'org.springframework', module: 'spring-expression'
-			exclude group: 'org.springframework', module: 'spring-oxm'
-		}
+		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE')
 		compile 'redis.clients:jedis:2.8.2'
 	}
 
@@ -254,7 +246,7 @@ project(':ss-client') {
 
 project('examples:subsystem') {
 	apply plugin: 'war'
-	
+
 	dependencies {
 	    compile project(":ss-client")
 	    providedCompile 'javax.servlet:javax.servlet-api'
@@ -264,7 +256,7 @@ project('examples:subsystem') {
 	configurations{
     	runtime.exclude group : 'commons-logging',module:'commons-logging'
 	}
-	
+
 	war {
     	archiveName = project.name + '.war'
 	}
@@ -295,7 +287,7 @@ project(':cas') {
 		shengLongTomcatUsername = 'admin'
 		shengLongTomcatPassword = 'admin'
 		shengLongTomcatHost = '192.168.56.101:8080'
-		
+
 		cwlTomcatHost = 'localhost:8080'        //
 		wlinTomcatHost = 'localhost:8080'        //
 	}
@@ -303,11 +295,11 @@ project(':cas') {
 	configurations{
     	runtime.exclude group : 'commons-logging',module:'commons-logging'
 	}
-	
+
 	war {
     	archiveName = project.name + '.war'
 	}
-	
+
 	dependencies {
 		compile(project(':share-rw')){
 			exclude group: 'org.springframework'
@@ -323,7 +315,7 @@ project(':cas') {
     		 "org.jasig.cas:cas-server-webapp-support:${cas_version}",
     		 "org.jasig.cas:cas-server-integration-restlet:${cas_version}",
 		)
-		
+
 		compile(
     		  "com.ryantenney.metrics:metrics-spring:3.1.3",
     		  'org.apache.commons:commons-pool2:2.4.2',
@@ -331,7 +323,7 @@ project(':cas') {
     		  'javax.servlet:jstl:1.2',
 		)
         compile "com.github.penggle:kaptcha:2.3.2"
-        
+
         compile 'com.auth0:java-jwt:3.0.2'
 
         // notification 
@@ -350,7 +342,7 @@ project(':cas') {
 		compile 'org.apache.httpcomponents:httpmime'
 		compile "org.jasig.cas:cas-server-support-rest:${cas_version}"
 		// compile 'ch.qos.logback:logback-classic'
-		
+
 		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
 			exclude group: 'org.springframework', module: 'spring-aop'
 			exclude group: 'org.springframework', module: 'spring-beans'
@@ -361,7 +353,7 @@ project(':cas') {
 			exclude group: 'org.springframework', module: 'spring-oxm'
 			exclude group: 'org.springframework', module: 'spring-tx'
 		}
-        
+
         // jackson
         compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"

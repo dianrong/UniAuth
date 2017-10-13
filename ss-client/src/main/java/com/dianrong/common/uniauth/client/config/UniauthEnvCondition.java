@@ -26,7 +26,7 @@ public abstract class UniauthEnvCondition implements ConfigurationCondition {
       log.info("Current set up environment is spring boot.");
       return false;
     }
-    log.info("Current set up environment is normal spring web context.");
+    log.debug("Current set up environment is normal spring web context.");
     return doMatchesProcess(context, metadata);
   }
 
