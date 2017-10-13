@@ -35,4 +35,8 @@ public interface IPermissionResource {
   @Path("urlrolemappings")
   // scenario: populate url and role mappings for ss-client project
   Response<List<UrlRoleMappingDto>> getUrlRoleMapping(DomainParam domainParam);
+
+  @POST
+  @Path("search-users-by-perms")
+  Response<List<PermissionDto>> searchUsersByPerms(PermissionQuery permissionQuery);
 }
