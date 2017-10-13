@@ -1,8 +1,12 @@
 debug: true
 spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
   profiles:
     active: local
-    
+
 ---
 spring:
   profiles: local

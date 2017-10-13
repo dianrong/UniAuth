@@ -27,8 +27,7 @@ dependencies {
     compile 'org.springframework.security:spring-security-web:4.1.0.RELEASE'
     compile("javax.servlet:jstl")
 
-//    compile project(":ss-client")
-    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.04.RELEASE"
+    compile project(":ss-client")
 
     //Log
     compile 'ch.qos.logback:logback-classic:1.1.7'
