@@ -75,8 +75,8 @@ dependencies {
     // so if there is a version upgrade, we should make sure the release version is work for techops system first then ask other teams to upgrade.
         
     if (rootProject.dianrongRepoEnable) {
-//         compile "com.dianrong.common.uniauth:share-rw:2.0.20.RELEASE"
-//         compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.20.RELEASE"
+//         compile "com.dianrong.common.uniauth:share-rw:2.0.20-SNAPSHOT"
+//         compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.20-SNAPSHOT"
          compile project(":ss-client")
          compile project(":share-rw")
     } else {
@@ -101,24 +101,24 @@ dependencies {
     compile "org.aspectj:aspectjrt:1.8.8"
     compile "org.aspectj:aspectjtools:1.8.8"
 
-    //Java EE
+    //JavaEE
     providedCompile 'javax.servlet:javax.servlet-api'
     compile 'javax.validation:validation-api'
     compile 'org.hibernate:hibernate-validator'
 
-    //Http Components
+    //Http components
     compile 'org.apache.httpcomponents:httpclient'
     compile 'org.apache.httpcomponents:fluent-hc'
     compile 'org.apache.httpcomponents:httpmime'
 
-    // common
+    // Common
     compile 'org.apache.commons:commons-lang3'
     compile 'commons-fileupload:commons-fileupload'
 
-    //Google Jar
+    //Google jar
     compile 'com.google.guava:guava'
 
-    //Test Suite
+    //Test suite
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test"
@@ -127,7 +127,7 @@ dependencies {
     compile 'io.springfox:springfox-swagger2:2.2.2'
     compile 'io.springfox:springfox-swagger-ui:2.2.2'
     
-    // log
+    // Log
     compile 'ch.qos.logback:logback-classic'
     
     compile 'org.springframework.security:spring-security-aspects'

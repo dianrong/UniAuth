@@ -3,22 +3,17 @@ apply plugin: 'war'
 dependencies {
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
     compile 'org.springframework:spring-webmvc:4.2.2.RELEASE'
-    
-	//zoo keeper
+
     compile 'commons-logging:commons-logging:1.2'
-    
+    compile 'ch.qos.logback:logback-classic'
+
     //Http Components
     compile 'org.apache.httpcomponents:httpclient:4.4'
     compile 'org.apache.httpcomponents:fluent-hc:4.4'
     compile 'org.apache.httpcomponents:httpmime:4.4'
-    
-    // log
-    compile 'ch.qos.logback:logback-classic'
-     
-     compile project(":ss-client")
+
+    compile project(":ss-client")
 }
-
-
 
 war {
     archiveName = project.name + '.war'

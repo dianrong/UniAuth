@@ -48,7 +48,7 @@ task checkDianrongRepoStatus()  {
 
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '2.0.19.RELEASE'
+    version = '2.0.20-SNAPSHOT'
     ext{
         spring_version = '4.1.6.RELEASE'
     }
@@ -199,7 +199,7 @@ project(':ss-client') {
         compile 'com.auth0:java-jwt:3.0.2'
 
 		// Redis
-		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE')
+		compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
 		compile 'redis.clients:jedis:2.8.2'
 	}
 
@@ -343,17 +343,7 @@ project(':cas') {
 		compile "org.jasig.cas:cas-server-support-rest:${cas_version}"
 		// compile 'ch.qos.logback:logback-classic'
 
-		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
-			exclude group: 'org.springframework', module: 'spring-aop'
-			exclude group: 'org.springframework', module: 'spring-beans'
-			exclude group: 'org.springframework', module: 'spring-context'
-			exclude group: 'org.springframework', module: 'spring-context-support'
-			exclude group: 'org.springframework', module: 'spring-core'
-			exclude group: 'org.springframework', module: 'spring-expression'
-			exclude group: 'org.springframework', module: 'spring-oxm'
-			exclude group: 'org.springframework', module: 'spring-tx'
-		}
-
+		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE')
         // jackson
         compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
