@@ -70,6 +70,11 @@ public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthentication
   private UniauthCacheManager uniauthCacheManager;
 
   /**
+   * 控制参数,BasicAuth Filter是否启用.
+   */
+  private boolean enable = true;
+
+  /**
    * 缓存的分钟数.
    */
   private long cacheMinutes = 10;
@@ -97,7 +102,11 @@ public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthentication
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
       throws IOException, ServletException {
     try {
-      super.doFilter(req, res, chain);
+      if(enable) {
+        super.doFilter(req, res, chain);
+      } else {
+        chain.doFilter(req, res);
+      }
     } finally {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       // 清理Token信息
@@ -279,6 +288,14 @@ public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthentication
 
   public void setCacheMinutes(long cacheMinutes) {
     this.cacheMinutes = cacheMinutes;
+  }
+
+  protected boolean isEnable() {
+    return enable;
+  }
+
+  public void setEnable(boolean enable) {
+    this.enable = enable;
   }
 
   @Override

@@ -52,9 +52,7 @@
         <sec:custom-filter ref="authenticationFilter"
             position="CAS_FILTER" />
         <sec:custom-filter ref="basicAuthAuthenticationFilter"
-                           position="BASIC_AUTH_FILTER" />
-        <sec:custom-filter ref="jwtLogoutFilter"
-            after="CSRF_FILTER" />
+                           after="BASIC_AUTH_FILTER" />
         <sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER"
             ref="exceptionTranslationFilter" />
         <sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
@@ -113,17 +111,6 @@
         </constructor-arg>
     </bean>
 
-    <!-- JWT logout filter -->
-    <bean id="jwtLogoutFilter" class="com.dianrong.common.uniauth.client.custom.filter.UniauthJWTLogoutFilter">
-       <constructor-arg ref="uniauthJWTSecurity" />
-       <constructor-arg value="#{uniauthConfig['cas_server']}/logout" />
-       <constructor-arg>
-           <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
-       </constructor-arg>
-        <property name="jwtQuery" ref="jwtQuery" />
-        <property name="authenticationType" value="#{domainDefine.authenticationType}" />
-    </bean>
-
     <!--AuthenticationFilter -->
     <bean id="authenticationFilter"
         class="com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter">
@@ -152,7 +139,6 @@
         <property name="authenticationManager" ref="authenticationManager" />
         <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
         <property name="authenticationFailureHandler" ref="jwtAuthenticationFailureHandler"></property>
-        <property name="sessionAuthenticationStrategy" ref="sas" />
     </bean>
 
     <bean id="casAuthenticationFilter"
@@ -168,7 +154,7 @@
           class="com.dianrong.common.uniauth.client.custom.filter.UniauthBasicAuthAuthenticationFilter">
         <constructor-arg index="0" ref="uniauthCacheManager" />
         <property name="authenticationManager" ref="authenticationManager" />
-        <property name="sessionAuthenticationStrategy" ref="sas" />
+        <property name="enable" value="#{domainDefine.enableBasicAuth}" />
     </bean>
 
     <!-- 提供两个jwt获取的方式,可配置header和parameter名来自定义参数名 -->

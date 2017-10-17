@@ -1,13 +1,8 @@
 package com.dianrong.common.uniauth.client.config;
 
-import com.dianrong.common.uniauth.client.custom.filter.*;
-import com.dianrong.common.uniauth.common.client.DomainDefine;
-
 import java.util.Map;
 
 import javax.annotation.Resource;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +14,13 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
+
+import com.dianrong.common.uniauth.client.custom.filter.*;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Uniauth 针对spring boot的集成配置对象 一般做法是直接继承该类作为spring security配置.<br>
@@ -84,7 +83,6 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
     UniauthBasicAuthAuthenticationFilter basicAuthAuthenticationFilter =
         beanCreator.create(UniauthBasicAuthAuthenticationFilter.class);
     http.addFilterAfter(basicAuthAuthenticationFilter, BasicAuthenticationFilter.class);
-    http.addFilterAfter(beanCreator.create(UniauthJWTLogoutFilter.class), CsrfFilter.class);
     http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
     http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class),
         ExceptionTranslationFilter.class);

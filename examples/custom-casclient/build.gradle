@@ -16,7 +16,9 @@ dependencies {
     // log
     compile 'ch.qos.logback:logback-classic'
      
-     compile project(":common")
+//    compile project(":common")
+
+    compile 'com.dianrong.common.uniauth:common-uniauth:2.0.20.RELEASE'
 }
 
 war {

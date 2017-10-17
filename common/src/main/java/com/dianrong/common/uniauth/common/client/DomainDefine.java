@@ -48,6 +48,11 @@ public class DomainDefine implements Serializable {
   private RedisConnectionFactoryConfiguration innerCacheRedisConfiguration;
 
   /**
+   * 是否启用BasicAuth功能.
+   */
+  private boolean enableBasicAuth = true;
+
+  /**
    * 权限控制类型定义,默认为使用uri_pattern.
    */
   private CasPermissionControlType controlType = CasPermissionControlType.URI_PATTERN;
@@ -240,6 +245,14 @@ public class DomainDefine implements Serializable {
 
   public RedisConnectionFactoryConfiguration getInnerCacheRedisConfiguration() {
     return innerCacheRedisConfiguration;
+  }
+
+  public boolean isEnableBasicAuth() {
+    return enableBasicAuth;
+  }
+
+  public void setEnableBasicAuth(boolean enableBasicAuth) {
+    this.enableBasicAuth = enableBasicAuth;
   }
 
   public void setInnerCacheRedisConfiguration(

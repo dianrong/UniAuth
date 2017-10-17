@@ -5,9 +5,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
@@ -23,21 +23,21 @@ public class BasicAuthAuthenticationFilterConfigure
   @Resource(name = "authenticationManager")
   private AuthenticationManager authenticationManager;
 
-  @Resource(name = "sas")
-  private SessionAuthenticationStrategy sas;
-
   @Resource(name = "uniauthConfig")
   private Map<String, String> allZkNodeMap;
 
   @Autowired
   private UniauthCacheManager uniauthCacheManager;
 
+  @Value("#{domainDefine.enableBasicAuth}")
+  private boolean enable;
+
   @Override
   public UniauthBasicAuthAuthenticationFilter create(Object... args) {
     UniauthBasicAuthAuthenticationFilter basicAuthAuthenticationFilter =
         new UniauthBasicAuthAuthenticationFilter(uniauthCacheManager);
     basicAuthAuthenticationFilter.setAuthenticationManager(authenticationManager);
-    basicAuthAuthenticationFilter.setSessionAuthenticationStrategy(sas);
+    basicAuthAuthenticationFilter.setEnable(enable);
     return basicAuthAuthenticationFilter;
   }
 
