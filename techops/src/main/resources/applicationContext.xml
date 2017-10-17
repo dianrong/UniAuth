@@ -61,11 +61,7 @@
         <sec:csrf disabled="true" />
         <sec:custom-filter position="CONCURRENT_SESSION_FILTER"
             ref="concurrencyFilter" />
-        <sec:session-management
-            session-authentication-strategy-ref="sas"
-            invalid-session-url="#{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas" />
-        <sec:logout delete-cookies="JSESSIONID" />
-        <!-- the following part is customized intercept-url element definition 
+        <!-- the following part is customized intercept-url element definition
             for subsystem note: conflict with the judgment of regular expression, so 
             the priority problem MUST be resolved. -->
         <sec:intercept-url pattern="/**" access="isAuthenticated()" />

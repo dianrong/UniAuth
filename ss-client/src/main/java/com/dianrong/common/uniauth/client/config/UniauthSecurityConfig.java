@@ -1,9 +1,5 @@
 package com.dianrong.common.uniauth.client.config;
 
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
@@ -12,13 +8,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
 
 import com.dianrong.common.uniauth.client.custom.filter.*;
-import com.dianrong.common.uniauth.common.client.DomainDefine;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,15 +29,6 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private ConfigureBeanCreator beanCreator;
 
-  @Resource(name = "sas")
-  private SessionAuthenticationStrategy sas;
-
-  @Resource(name = "uniauthConfig")
-  private Map<String, String> uniauthConfig;
-
-  @Autowired
-  private DomainDefine domainDefine;
-
   @Autowired
   private CasAuthenticationEntryPoint casAuthEntryPoint;
 
@@ -57,10 +42,6 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // <sec:intercept-url pattern="/**" access="isAuthenticated()" />
     http.authorizeRequests().anyRequest().authenticated();
-
-    // session management configure
-    http.sessionManagement().sessionAuthenticationStrategy(sas)
-        .invalidSessionUrl(getInvalidSessionUrl());
 
     // logout delete cookie and csrf configure
     http.logout().deleteCookies("JSESSIONID").and().csrf().disable();
@@ -92,16 +73,5 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
     // entry-point configure
     http.exceptionHandling().authenticationEntryPoint(casAuthEntryPoint);
     log.info("finish uniauth security configure");
-  }
-
-  /**
-   * #{uniauthConfig['cas_server']}/login?
-   * service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas
-   */
-  private String getInvalidSessionUrl() {
-    String invalidSessionUrl = uniauthConfig.get("cas_server") + "/login?service="
-        + uniauthConfig.get("domains." + domainDefine.getDomainCode()) + "/login/cas";
-    log.info("invalidSessionUrl is " + invalidSessionUrl);
-    return invalidSessionUrl;
   }
 }
