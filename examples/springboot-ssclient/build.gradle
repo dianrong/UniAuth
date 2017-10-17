@@ -35,6 +35,10 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator') {
         exclude module: 'spring-boot-starter-logging'
     }
+
+    // Redis
+    compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
+    compile 'redis.clients:jedis:2.8.2'
 }
 
 task wrapper(type: Wrapper) {

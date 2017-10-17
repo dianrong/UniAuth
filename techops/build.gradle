@@ -132,6 +132,10 @@ dependencies {
     
     compile 'org.springframework.security:spring-security-aspects'
     aspectpath 'org.springframework.security:spring-security-aspects'
+
+    // Redis
+    compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
+    compile 'redis.clients:jedis:2.8.2'
 }
 
 loadConfiguration()
