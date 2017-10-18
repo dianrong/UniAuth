@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
@@ -26,6 +27,9 @@ public class BasicAuthAuthenticationFilterConfigure
   @Resource(name = "uniauthConfig")
   private Map<String, String> allZkNodeMap;
 
+  @Resource(name = "sas")
+  private SessionAuthenticationStrategy sas;
+
   @Autowired
   private UniauthCacheManager uniauthCacheManager;
 
@@ -38,6 +42,7 @@ public class BasicAuthAuthenticationFilterConfigure
         new UniauthBasicAuthAuthenticationFilter(uniauthCacheManager);
     basicAuthAuthenticationFilter.setAuthenticationManager(authenticationManager);
     basicAuthAuthenticationFilter.setEnable(enable);
+    basicAuthAuthenticationFilter.setSessionAuthenticationStrategy(sas);
     return basicAuthAuthenticationFilter;
   }
 

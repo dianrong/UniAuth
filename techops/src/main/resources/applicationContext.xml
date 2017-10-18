@@ -61,6 +61,9 @@
         <sec:csrf disabled="true" />
         <sec:custom-filter position="CONCURRENT_SESSION_FILTER"
             ref="concurrencyFilter" />
+        <sec:session-management session-authentication-strategy-ref="sas"
+                invalid-session-url="#{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>
+        <sec:logout delete-cookies="JSESSIONID" />
         <!-- the following part is customized intercept-url element definition
             for subsystem note: conflict with the judgment of regular expression, so 
             the priority problem MUST be resolved. -->
@@ -133,16 +136,17 @@
         <constructor-arg index="1" ref="jwtQuery" />
         <constructor-arg index="2" ref="uniauthCacheManager"/>
         <property name="authenticationManager" ref="authenticationManager" />
-        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
-        <property name="authenticationFailureHandler" ref="jwtAuthenticationFailureHandler"></property>
+        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"/>
+        <property name="authenticationFailureHandler" ref="jwtAuthenticationFailureHandler"/>
+        <property name="sessionAuthenticationStrategy" ref="sas" />
     </bean>
 
     <bean id="casAuthenticationFilter"
         class="com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter">
         <property name="authenticationManager" ref="authenticationManager" />
-        <property name="filterProcessesUrl" value="/login/cas"></property>
-        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
-        <property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"></property>
+        <property name="filterProcessesUrl" value="/login/cas"/>
+        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"/>
+        <property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"/>
         <property name="sessionAuthenticationStrategy" ref="sas" />
     </bean>
 
@@ -151,6 +155,7 @@
         <constructor-arg index="0" ref="uniauthCacheManager" />
         <property name="authenticationManager" ref="authenticationManager" />
         <property name="enable" value="#{domainDefine.enableBasicAuth}" />
+        <property name="sessionAuthenticationStrategy" ref="sas" />
     </bean>
 
     <!-- 提供两个jwt获取的方式,可配置header和parameter名来自定义参数名 -->

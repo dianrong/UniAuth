@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
 
 import com.dianrong.common.uniauth.client.config.Configure;
@@ -37,6 +38,9 @@ public class JWTAuthenticationFilterConfigure implements Configure<UniauthJWTAut
   @Resource(name = "authenticationManager")
   private AuthenticationManager authenticationManager;
 
+  @Resource(name = "sas")
+  private SessionAuthenticationStrategy sas;
+
   @Resource(name = "uniauthConfig")
   private Map<String, String> allZkNodeMap;
 
@@ -52,6 +56,7 @@ public class JWTAuthenticationFilterConfigure implements Configure<UniauthJWTAut
     if (this.authenticationFailureHandler != null) {
       jwtAuthenticationFilter.setAuthenticationFailureHandler(this.authenticationFailureHandler);
     }
+    jwtAuthenticationFilter.setSessionAuthenticationStrategy(sas);
     return jwtAuthenticationFilter;
   }
 
