@@ -1,9 +1,9 @@
 package com.dianrong.common.uniauth.common.client.enums;
 
-import com.google.common.collect.Sets;
-
 import java.util.Arrays;
 import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 /**
  * 定义Uniauth中的Authentication类型.
@@ -24,9 +24,14 @@ public enum AuthenticationType {
   CAS("CAS"),
 
   /**
+   * BasicAuth的验证方式.
+   */
+  BASIC_AUTH("BASIC_AUTH"),
+
+  /**
    * 支持所有的验证的验证方式.
    */
-  ALL( AuthenticationType.class.getName() + "_ALL");
+  ALL(AuthenticationType.class.getName() + "_ALL");
 
   /**
    * 支持所有的验证方式.

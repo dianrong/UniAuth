@@ -1,12 +1,9 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,15 +16,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.dianrong.common.uniauth.client.custom.handler.EmptyAuthenticationSuccessHandler;
-import com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTStatelessAuthenticationSuccessToken;
 import com.dianrong.common.uniauth.client.custom.jwt.UniauthIdentityToken;
 import com.dianrong.common.uniauth.client.custom.jwt.exp.JWTInvalidAuthenticationException;
 import com.dianrong.common.uniauth.client.custom.model.ItemBox;
-import com.dianrong.common.uniauth.client.custom.model.StatelessAuthenticationSuccessToken;
-import com.dianrong.common.uniauth.common.cache.UniauthCache;
-import com.dianrong.common.uniauth.common.cache.UniauthCacheManager;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
@@ -35,7 +28,6 @@ import com.dianrong.common.uniauth.common.jwt.exp.InvalidJWTExpiredException;
 import com.dianrong.common.uniauth.common.jwt.exp.LoginJWTExpiredException;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.common.util.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,8 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter
     implements UniauthAuthenticationFilter {
-  private static final String JWT_CACHE_NAME = "JWT_CACHE";
-
   /**
    * JWT验证工具.
    */
@@ -58,9 +48,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   /**
    * 获取JWT工具类, 默认值.
    */
-  private JWTQuery jwtQuery = new ComposedJWTQuery();
-
-  private UniauthCacheManager uniauthCacheManager;
+  private final JWTQuery jwtQuery;
 
   /**
    * 拦截登陆的请求.
@@ -68,29 +56,17 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   private RequestMatcher loginRequestMatcher = new AntPathRequestMatcher("/login/cas");
 
   /**
-   * 缓存的分钟数.
-   */
-  private long cacheMinutes = 10;
-
-  /**
    * 覆盖父类中的AuthenticationSuccessHandler.
    */
   private AuthenticationSuccessHandler loginSuccessHandler;
 
-  public UniauthJWTAuthenticationFilter(UniauthJWTSecurity uniauthJWTSecurity, JWTQuery jwtQuery,
-      UniauthCacheManager uniauthCacheManager) {
-    this(uniauthJWTSecurity, uniauthCacheManager);
-    Assert.notNull(jwtQuery);
-    this.jwtQuery = jwtQuery;
-  }
-
-  public UniauthJWTAuthenticationFilter(UniauthJWTSecurity uniauthJWTSecurity,
-      UniauthCacheManager uniauthCacheManager) {
+  public UniauthJWTAuthenticationFilter(UniauthJWTSecurity uniauthJWTSecurity, JWTQuery jwtQuery) {
     super(new AntPathRequestMatcher("/**"));
-    Assert.notNull(uniauthJWTSecurity);
+    Assert.notNull(uniauthJWTSecurity, "UniauthJWTSecurity must not be null");
+    Assert.notNull(jwtQuery, "JWTQuery must not be null");
+    this.jwtQuery = jwtQuery;
     this.uniauthJWTSecurity = uniauthJWTSecurity;
     this.loginSuccessHandler = super.getSuccessHandler();
-    this.uniauthCacheManager = uniauthCacheManager;
     super.setAuthenticationSuccessHandler(new EmptyAuthenticationSuccessHandler());
   }
 
@@ -100,43 +76,14 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   }
 
   @Override
-  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-      throws IOException, ServletException {
-    try {
-      super.doFilter(req, res, chain);
-    } finally {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      // 清理Token信息
-      if (authentication instanceof StatelessAuthenticationSuccessToken) {
-        SecurityContextHolder.clearContext();
-      }
-      if (authentication instanceof ItemBox) {
-        StatelessAuthenticationSuccessToken statelessAuthenticationSuccessToken =
-            ItemBox.getItem((ItemBox) authentication, StatelessAuthenticationSuccessToken.class);
-        if (statelessAuthenticationSuccessToken != null) {
-          SecurityContextHolder.clearContext();
-        }
-      }
-    }
-  }
-
-  @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
       HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
     String jwt = jwtQuery.getJWT(request);
     try {
       UniauthUserJWTInfo info = uniauthJWTSecurity.getInfoFromJwt(jwt);
-      String identity = info.getIdentity();
-      Long tenancyId = info.getTenancyId();
-      UniauthIdentityToken authRequest = new UniauthIdentityToken(identity, tenancyId);
-      Authentication authentication = this.getAuthenticationManager().authenticate(authRequest);
-
-      // Cache authentication
-      String md5Str = StringUtil.md5(jwt);
-      UniauthCache uniauthCache = uniauthCacheManager.getCache(JWT_CACHE_NAME);
-      uniauthCache.put(md5Str, authentication, cacheMinutes, TimeUnit.MINUTES);
-
-      return authentication;
+      UniauthIdentityToken authRequest =
+          new UniauthIdentityToken(info.getIdentity(), info.getTenancyId());
+      return this.getAuthenticationManager().authenticate(authRequest);
     } catch (LoginJWTExpiredException | InvalidJWTExpiredException e) {
       log.error("JWT is invalid!", e);
       throw new JWTInvalidAuthenticationException(jwt + " is a invalid JWT string!", e);
@@ -165,11 +112,6 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
     return jwtQuery;
   }
 
-  public void setJwtQuery(JWTQuery jwtQuery) {
-    Assert.notNull(jwtQuery, "JWTQuery can not be null ");
-    this.jwtQuery = jwtQuery;
-  }
-
   /**
    * 重写覆盖父类的setAuthenticationSuccessHandler方法.
    */
@@ -195,7 +137,6 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
     if (jwt == null) {
       return false;
     }
-
     // 验证JWT.
     UniauthUserJWTInfo info;
     try {
@@ -204,20 +145,18 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
       log.error("JWT is invalid!", e);
       throw new JWTInvalidAuthenticationException(jwt + " is a invalid JWT string!", e);
     }
-    String key = StringUtil.md5(jwt);
-    UniauthCache uniauthCache = uniauthCacheManager.getCache(JWT_CACHE_NAME);
-    Authentication authentication =
-        uniauthCache.get(key, Authentication.class);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()) {
       return true;
     }
 
     JWTStatelessAuthenticationSuccessToken token = null;
     if (authentication instanceof JWTStatelessAuthenticationSuccessToken) {
-      token = (JWTStatelessAuthenticationSuccessToken)authentication;
+      token = (JWTStatelessAuthenticationSuccessToken) authentication;
     }
     if (token == null && authentication instanceof ItemBox) {
-      token = ItemBox.getItem((ItemBox) authentication, JWTStatelessAuthenticationSuccessToken.class);
+      token =
+          ItemBox.getItem((ItemBox) authentication, JWTStatelessAuthenticationSuccessToken.class);
     }
     if (token == null) {
       log.warn("Cache conflict, authentication:" + authentication);
@@ -231,11 +170,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
       // 此种方式会导致不停的访问服务验证身份,缓存不起作用.
       return true;
     }
-
-    // set authentication to spring security holder
-    SecurityContextHolder.getContext().setAuthentication(authentication);
     return false;
-
   }
 
   /**
@@ -243,14 +178,6 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
    */
   public void setLoginRequestUrl(String loginRequestUrl) {
     setLoginRequestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
-  }
-
-  public long getCacheMinutes() {
-    return cacheMinutes;
-  }
-
-  public void setCacheMinutes(long cacheMinutes) {
-    this.cacheMinutes = cacheMinutes;
   }
 
   @Override

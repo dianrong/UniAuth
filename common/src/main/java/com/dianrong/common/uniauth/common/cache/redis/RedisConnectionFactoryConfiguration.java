@@ -126,14 +126,14 @@ public class RedisConnectionFactoryConfiguration {
   });
 
   public void setType(String type) {
-    if (type == null) {
+    if (!StringUtils.hasText(type)) {
       return;
     }
     this.type.setContent(RedisType.toType(type));
   }
 
   public void setDatabase(String database) {
-    if (database == null) {
+    if (!StringUtils.hasText(database)) {
       return;
     }
     Integer tempDatabase = StringUtil.tryToTranslateStrToInt(database);
@@ -143,7 +143,7 @@ public class RedisConnectionFactoryConfiguration {
   }
 
   public void setTimeout(String timeout) {
-    if (timeout == null) {
+    if (!StringUtils.hasText(timeout)) {
       return;
     }
     Integer tempTimeout = StringUtil.tryToTranslateStrToInt(timeout);
@@ -153,7 +153,7 @@ public class RedisConnectionFactoryConfiguration {
   }
 
   public void setHost(String host) {
-    if (host == null) {
+    if (!StringUtils.hasText(host)) {
       return;
     }
     this.host.setContent(host);
@@ -167,7 +167,7 @@ public class RedisConnectionFactoryConfiguration {
   }
 
   public void setPort(String port) {
-    if (port == null) {
+    if (!StringUtils.hasText(port)) {
       return;
     }
     Integer tempPort = StringUtil.tryToTranslateStrToInt(port);
@@ -177,14 +177,14 @@ public class RedisConnectionFactoryConfiguration {
   }
 
   public void setMaster(String master) {
-    if (master == null) {
+    if (!StringUtils.hasText(master)) {
       return;
     }
     this.master.setContent(master);
   }
 
   public void setSentinels(String sentinels) {
-    if (sentinels == null) {
+    if (!StringUtils.hasText(sentinels)) {
       return;
     }
     this.sentinels.setContent(StringUtils.commaDelimitedListToSet(sentinels.trim()));
@@ -192,14 +192,14 @@ public class RedisConnectionFactoryConfiguration {
 
 
   public void setClusters(String clusters) {
-    if (clusters == null) {
+    if (!StringUtils.hasText(clusters)) {
       return;
     }
     this.clusters.setContent(StringUtils.commaDelimitedListToSet(clusters.trim()));
   }
 
   public void setMaxRedirects(String maxRedirects) {
-    if (maxRedirects == null) {
+    if (!StringUtils.hasText(maxRedirects)) {
       return;
     }
     Integer tempMaxRedirects = StringUtil.tryToTranslateStrToInt(maxRedirects);

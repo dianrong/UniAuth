@@ -1,7 +1,5 @@
 package com.dianrong.common.uniauth.client.config.configurations;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import com.dianrong.common.uniauth.client.config.UniauthConfigEnvLoadCondition;
 import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
 import com.dianrong.common.uniauth.client.custom.handler.JWTAuthenticationFailureHandler;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
-import com.dianrong.common.uniauth.common.cache.UniauthCacheManager;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 
 @Component
@@ -32,25 +29,19 @@ public class JWTAuthenticationFilterConfigure implements Configure<UniauthJWTAut
   @Autowired
   private AuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
 
-  @Autowired
+  @Autowired(required = false)
   private JWTAuthenticationFailureHandler authenticationFailureHandler;
-
-  @Resource(name = "authenticationManager")
-  private AuthenticationManager authenticationManager;
 
   @Resource(name = "sas")
   private SessionAuthenticationStrategy sas;
 
-  @Resource(name = "uniauthConfig")
-  private Map<String, String> allZkNodeMap;
-
-  @Autowired
-  private UniauthCacheManager uniauthCacheManager;
+  @Resource(name = "authenticationManager")
+  private AuthenticationManager authenticationManager;
 
   @Override
   public UniauthJWTAuthenticationFilter create(Object... args) {
     UniauthJWTAuthenticationFilter jwtAuthenticationFilter =
-        new UniauthJWTAuthenticationFilter(uniauthJWTSecurity, jwtQuery, uniauthCacheManager);
+        new UniauthJWTAuthenticationFilter(uniauthJWTSecurity, jwtQuery);
     jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
     jwtAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
     if (this.authenticationFailureHandler != null) {

@@ -14,6 +14,7 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
 
@@ -47,6 +48,9 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private CasAuthenticationEntryPoint casAuthEntryPoint;
 
+  @Resource(name = "uniauthSecurityContextRepository")
+  private SecurityContextRepository securityContextRepository;
+
   /**
    * Configure security filter chain for uniauth.
    */
@@ -58,9 +62,12 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
     // <sec:intercept-url pattern="/**" access="isAuthenticated()" />
     http.authorizeRequests().anyRequest().authenticated();
 
+    // 自定义SecurityContextRepository实现
+    http.setSharedObject(SecurityContextRepository.class, securityContextRepository);
+
     // session management configure
     http.sessionManagement().sessionAuthenticationStrategy(sas)
-        .invalidSessionUrl(getInvalidSessionUrl());
+        .invalidSessionUrl(getInvalidSessionUrl()).enableSessionUrlRewriting(false);
 
     // logout delete cookie and csrf configure
     http.logout().deleteCookies("JSESSIONID").and().csrf().disable();

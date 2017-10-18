@@ -17,6 +17,7 @@
     
     <b:import resource="classpath:ss-uniauth-common.xml"/>
     <b:import resource="classpath:ss-uniauth-client-cache.xml"/>
+	<b:import resource="classpath:ss-uniauth-client-sec-repo.xml"/>
 
     <global-method-security pre-post-annotations="enabled" proxy-target-class="true">
     	<expression-handler ref="methodSecurityExpressionHandler"/>
@@ -80,7 +81,7 @@
 	</b:bean>
 	
 	<!-- for JWT -->
-	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery"/>
+	<b:bean id="jwtQuery" class="com.dianrong.common.uniauth.client.custom.jwt.CompositeJWTQuery"/>
 	
 	<!-- 提供一个默认实现 -->
 	<b:bean id="cookieJWTQuery" class="com.dianrong.common.uniauth.client.custom.jwt.CookieJWTQuery">

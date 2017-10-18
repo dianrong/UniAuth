@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class ComposedPermissionJudger
+public class CompositePermissionJudger
     implements PermissionJudger<ApiCtlPermission, HttpServletRequest> {
 
   @Autowired
@@ -43,9 +43,9 @@ public class ComposedPermissionJudger
    * Add a new permission judger.
    *
    * @param judger new judger
-   * @return ComposedPermissionJudger
+   * @return CompositePermissionJudger
    */
-  public ComposedPermissionJudger addJudger(
+  public CompositePermissionJudger addJudger(
       PermissionJudger<ApiCtlPermission, HttpServletRequest> judger) {
     Assert.notNull(judger);
     permissionJudgers.add(judger);

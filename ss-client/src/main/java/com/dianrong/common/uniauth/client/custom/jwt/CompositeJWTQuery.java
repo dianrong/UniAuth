@@ -28,7 +28,7 @@ import org.springframework.core.OrderComparator;
  */
 
 @Slf4j
-public class ComposedJWTQuery implements JWTQuery, ApplicationContextAware, InitializingBean {
+public class CompositeJWTQuery implements JWTQuery, ApplicationContextAware, InitializingBean {
 
   /**
    * JWTQuery实现集合.
@@ -59,8 +59,8 @@ public class ComposedJWTQuery implements JWTQuery, ApplicationContextAware, Init
     List<JWTQuery> jwtQuerys = Lists.newArrayList();
     for (String name : names) {
       Object object = this.applicationContext.getBean(name);
-      if (object instanceof ComposedJWTQuery) {
-        log.debug("Ignore ComposedJWTQuery type JWTQuery :" + object);
+      if (object instanceof CompositeJWTQuery) {
+        log.debug("Ignore CompositeJWTQuery type JWTQuery :" + object);
         continue;
       }
       jwtQuerys.add((JWTQuery) object);
