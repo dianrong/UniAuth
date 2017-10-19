@@ -24,6 +24,7 @@
         <property name="userInfoClass"
                   value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"/>
         <property name="rejectPublicInvocations" value="false"/>
+        <property name="innerCacheUseRedis" value="true"/>
     </bean>
 
     <sec:http pattern="/views/**" security="none"/>
@@ -41,7 +42,7 @@
     <sec:http pattern="/dump" security="none"/>
 
     <sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
-              request-matcher="ant" security-context-repository-ref="securityContextRepository"
+              request-matcher="ant" security-context-repository-ref="uniauthSecurityContextRepository"
               disable-url-rewriting="false">
         <sec:headers>
             <sec:frame-options disabled="true"/>
@@ -72,8 +73,7 @@
           class="com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter">
         <constructor-arg name="authenticationEntryPoint" ref="casAuthEntryPoint"/>
         <property name="accessDeniedHandler">
-            <bean
-                    class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+            <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
                 <property name="errorPage" value="/errors/403.jsp"/>
             </bean>
         </property>

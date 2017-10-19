@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<b:beans 
+<b:beans
 	xmlns="http://www.springframework.org/schema/security"
-	xmlns:b="http://www.springframework.org/schema/beans" 
+	xmlns:b="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
@@ -9,10 +9,6 @@
 			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 			http://www.springframework.org/schema/security
 			http://www.springframework.org/schema/security/spring-security.xsd
-			http://www.springframework.org/schema/context
-			http://www.springframework.org/schema/context/spring-context-4.0.xsd
-			http://www.springframework.org/schema/aop 
-			http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
 			">
 
 	<b:bean id="uniauthCacheManager" class="com.dianrong.common.uniauth.common.cache.SimpleUniauthCacheManager">
@@ -52,10 +48,10 @@
 
 	<b:bean id="ssclientInnerRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
 		<b:constructor-arg ref="ssclientInnerRedisConnectionFactory" />
-		<b:property name="keySerializer" ref="jacksonSerializer" />
-		<b:property name="valueSerializer" ref="jacksonSerializer" />
-		<b:property name="hashKeySerializer" ref="jacksonSerializer" />
-		<b:property name="hashValueSerializer" ref="jacksonSerializer" />
+		<b:property name="keySerializer" ref="jdkSerializer" />
+		<b:property name="valueSerializer" ref="jdkSerializer" />
+		<b:property name="hashKeySerializer" ref="jdkSerializer" />
+		<b:property name="hashValueSerializer" ref="jdkSerializer" />
 	</b:bean>
-	<b:bean id="jacksonSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+	<b:bean id="jdkSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
 </b:beans>

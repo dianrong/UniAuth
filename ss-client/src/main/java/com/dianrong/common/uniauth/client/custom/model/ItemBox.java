@@ -1,9 +1,11 @@
 package com.dianrong.common.uniauth.client.custom.model;
 
+import java.io.Serializable;
+
 /**
  * 对于有内部对象这种数据结构的封装.
  */
-public abstract class ItemBox<T> {
+public abstract class ItemBox<T> implements Serializable {
 
   private final T item;
 

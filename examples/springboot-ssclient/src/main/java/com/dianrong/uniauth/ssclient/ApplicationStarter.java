@@ -43,7 +43,6 @@ public class ApplicationStarter {
     domainDefine.setUserInfoClass("com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo");
     domainDefine.setRejectPublicInvocations(false);
     domainDefine.setCustomizedLoginRedirecUrl("/content");
-    domainDefine.setInnerCacheUseRedis(true);
     return domainDefine;
   }
 

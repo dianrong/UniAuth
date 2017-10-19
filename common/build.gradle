@@ -1,5 +1,5 @@
 dependencies {
-	compile project(":dianrong-lib:zkcfg")
+    compile project(":dianrong-lib:zkcfg")
     //Google Jar
     //compile 'org.apache.commons:commons-lang3:3.4'
 
@@ -18,28 +18,28 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test"
     testCompile "org.springframework:spring-web"
-    
-	compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
-	
-	compile 'javax.servlet:javax.servlet-api'
-	
+
+    compile 'org.apache.cxf:cxf-rt-rs-client:3.1.4'
+
+    compile 'javax.servlet:javax.servlet-api'
+
     // spring security
     compileOnly "org.springframework.security:spring-security-web:4.2.1.RELEASE"
     compileOnly "org.springframework.security:spring-security-config:4.2.1.RELEASE"
-	// cas
-	compileOnly 'org.jasig.cas.client:cas-client-core:3.4.1'
-	
-	// spring
-	compileOnly   "org.springframework:spring-webmvc"
-	
-	// swagger
-	compileOnly 'io.swagger:swagger-annotations:1.5.12'
-	
-	// Jwt
+    // cas
+    compileOnly 'org.jasig.cas.client:cas-client-core:3.4.1'
+
+    // spring
+    compileOnly   "org.springframework:spring-webmvc"
+
+    // swagger
+    compileOnly 'io.swagger:swagger-annotations:1.5.12'
+
+    // Jwt
     compileOnly 'com.auth0:java-jwt:3.0.2'
-	
-	// jackson
-	compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
+
+    // jackson
+    compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
     compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
     if (rootProject.dianrongRepoEnable) {
         compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
@@ -49,8 +49,8 @@ dependencies {
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
 
     // Redis
-    compileOnly 'org.springframework.data:spring-data-redis:1.7.1.RELEASE'
-    compileOnly 'redis.clients:jedis:2.8.2'
+    compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
+    compile 'redis.clients:jedis:2.8.2'
 }
 
 jar {
