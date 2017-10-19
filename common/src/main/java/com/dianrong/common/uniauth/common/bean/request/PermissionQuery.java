@@ -1,11 +1,20 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
+
 import java.util.List;
 
+@ApiModel(value = "权限查询参数")
+@ToString
 public class PermissionQuery extends PageParam {
-
   private static final long serialVersionUID = 4131252066057083988L;
+
+  @ApiModelProperty(value = "id")
   private Integer id;
+
+  @ApiModelProperty(value = "value")
   private String value;
   private String description;
   private Byte status;
@@ -13,6 +22,12 @@ public class PermissionQuery extends PageParam {
   private Integer domainId;
   private List<Integer> permIds;
   private String valueExt;
+
+  private Boolean includePermRole;
+
+  private Boolean includeRoleUser;
+
+  private Boolean includeDisableUser;
 
   public Integer getId() {
     return id;
@@ -86,10 +101,42 @@ public class PermissionQuery extends PageParam {
     return this;
   }
 
-  @Override
-  public String toString() {
-    return "PermissionQuery [id=" + id + ", value=" + value + ", description=" + description
-        + ", status=" + status + ", permTypeId=" + permTypeId + ", domainId=" + domainId
-        + ", permIds=" + permIds + ", valueExt=" + valueExt + "]";
+  public Boolean getIncludePermRole() {
+    return includePermRole;
+  }
+
+  /**
+   * 指定通过权限Id查询关联用户的时候,返回结果是否包含权限和角色的关联关系信息.
+   * <p>默认为false</p>
+   */
+  public PermissionQuery setIncludePermRole(Boolean includePermRole) {
+    this.includePermRole = includePermRole;
+    return this;
+  }
+
+  public Boolean getIncludeRoleUser() {
+    return includeRoleUser;
+  }
+
+  /**
+   * 指定通过权限Id查询关联用户的时候,返回结果是否包含角色和用户的关联关系信息.
+   * <p>默认为false</p>
+   */
+  public PermissionQuery setIncludeRoleUser(Boolean includeRoleUser) {
+    this.includeRoleUser = includeRoleUser;
+    return this;
+  }
+
+  public Boolean getIncludeDisableUser() {
+    return includeDisableUser;
+  }
+
+  /**
+   * 是否将关联的禁用用户查询出来.
+   * <p>默认为false</p>
+   */
+  public PermissionQuery setIncludeDisableUser(Boolean includeDisableUser) {
+    this.includeDisableUser = includeDisableUser;
+    return this;
   }
 }

@@ -2,12 +2,15 @@ package com.dianrong.common.uniauth.common.bean.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 
 @ApiModel("租户信息")
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
+@ToString
 public class TenancyBaseDto implements Serializable {
 
   private static final long serialVersionUID = 7612408066715418041L;

@@ -101,24 +101,24 @@ dependencies {
     compile "org.aspectj:aspectjrt:1.8.8"
     compile "org.aspectj:aspectjtools:1.8.8"
 
-    //JavaEE
+    //Java EE
     providedCompile 'javax.servlet:javax.servlet-api'
     compile 'javax.validation:validation-api'
     compile 'org.hibernate:hibernate-validator'
 
-    //Http components
+    //Http Components
     compile 'org.apache.httpcomponents:httpclient'
     compile 'org.apache.httpcomponents:fluent-hc'
     compile 'org.apache.httpcomponents:httpmime'
 
-    // Common
+    // common
     compile 'org.apache.commons:commons-lang3'
     compile 'commons-fileupload:commons-fileupload'
 
-    //Google jar
+    //Google Jar
     compile 'com.google.guava:guava'
 
-    //Test suite
+    //Test Suite
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test"
@@ -127,15 +127,11 @@ dependencies {
     compile 'io.springfox:springfox-swagger2:2.2.2'
     compile 'io.springfox:springfox-swagger-ui:2.2.2'
     
-    // Log
+    // log
     compile 'ch.qos.logback:logback-classic'
     
     compile 'org.springframework.security:spring-security-aspects'
     aspectpath 'org.springframework.security:spring-security-aspects'
-
-    // Redis
-    compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
-    compile 'redis.clients:jedis:2.8.2'
 }
 
 loadConfiguration()

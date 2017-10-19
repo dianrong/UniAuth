@@ -286,6 +286,4 @@ public class UserResource implements IUserRWResource {
         userParam.getTenancyCode(), userParam.getIpaAccount(), userParam.getIpaPassword());
     return Response.success();
   }
-
-
 }
