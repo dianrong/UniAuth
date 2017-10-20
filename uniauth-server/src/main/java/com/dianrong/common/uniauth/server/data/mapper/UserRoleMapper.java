@@ -75,4 +75,9 @@ public interface UserRoleMapper {
    */
   int updateByExample(@Param("record") UserRoleKey record,
       @Param("example") UserRoleExample example);
+
+  /**
+   * 批量添加用户和角色的关联关系.
+   */
+  int batchInsert(@Param("recordList")List<UserRoleKey> recordList);
 }
