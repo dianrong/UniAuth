@@ -5,6 +5,5 @@ package com.dianrong.common.uniauth.server.synchronous.hr.bean;
  */
 public enum HrSynchronousLogResult {
   SUCCESS,
-  FAILURE,
-  ;
+  FAILURE,;
 }

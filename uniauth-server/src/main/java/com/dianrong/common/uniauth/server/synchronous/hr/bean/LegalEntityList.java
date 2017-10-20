@@ -7,7 +7,8 @@ import com.dianrong.common.uniauth.server.data.entity.HrLe;
  */
 public class LegalEntityList extends AbstractAnaListResult<HrLe> {
 
-  @Override public SynchronousFile synchronousFile() {
+  @Override
+  public SynchronousFile synchronousFile() {
     return SynchronousFile.LE_UA;
   }
 }

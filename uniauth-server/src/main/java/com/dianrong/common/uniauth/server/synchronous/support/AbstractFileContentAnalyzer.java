@@ -4,10 +4,6 @@ import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.synchronous.exp.InvalidContentException;
 import com.dianrong.common.uniauth.server.synchronous.hr.bean.AnaListResult;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.utils.DateUtils;
-import org.springframework.util.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,13 +11,17 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.utils.DateUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * 分析文件的内容.
  *
  * @param <T> 分析的内容类型.
  */
-@Slf4j public abstract class AbstractFileContentAnalyzer<T extends AnaListResult>
+@Slf4j
+public abstract class AbstractFileContentAnalyzer<T extends AnaListResult>
     implements FileContentAnalyzer<T> {
 
   private static final String SIMPLE_DATE_FORMAT = "yyyy/MM/dd";
@@ -31,11 +31,12 @@ import java.util.List;
    */
   private String rowDelimiter = "\",\"";
 
-  @Override public T analyze(InputStream inputStream) throws InvalidContentException {
+  @Override
+  public T analyze(InputStream inputStream) throws InvalidContentException {
     Assert.notNull(inputStream, "inputStream can not be null!");
     StringBuilder sb = new StringBuilder();
     String line;
-    try(InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
+    try (InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
         BufferedReader in = new BufferedReader(reader)) {
       while ((line = in.readLine()) != null) {
         sb.append(line).append("\r\n");
@@ -84,7 +85,7 @@ import java.util.List;
       return new String[]{};
     }
     String[] items = contentRow.split(rowDelimiter);
-    for(int i =0; i< items.length;i++) {
+    for (int i = 0; i < items.length; i++) {
       items[i] = cleanItem(items[i].trim());
     }
     return items;
@@ -93,7 +94,7 @@ import java.util.List;
   /**
    * Check实际列数是否与预期一致.
    *
-   * @param items  实际内容.
+   * @param items 实际内容.
    * @param length 预期的列数.
    * @throws InvalidContentException 如果内容与预期不一致.
    */
@@ -141,7 +142,7 @@ import java.util.List;
     if (!StringUtils.hasText(item)) {
       return null;
     }
-    Date date = DateUtils.parseDate(item, new String[] {SIMPLE_DATE_FORMAT});
+    Date date = DateUtils.parseDate(item, new String[]{SIMPLE_DATE_FORMAT});
     if (date == null) {
       log.error(item + " is not a valid Date string.");
       throw new InvalidContentException(

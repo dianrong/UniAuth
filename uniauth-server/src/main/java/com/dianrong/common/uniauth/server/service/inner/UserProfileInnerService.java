@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -48,8 +49,8 @@ public class UserProfileInnerService extends TenancyBasedService {
   @Autowired
   private UserExtendValMapper userExtendValMapper;
 
-  @Resource(name = "userDataFilter")
-  private DataFilter UserDataFilter;
+  @Autowired
+  private UserMapper userMapper;
 
   /**
    * 更新用户的扩展属性值.
@@ -57,7 +58,10 @@ public class UserProfileInnerService extends TenancyBasedService {
   @Transactional
   public void addOrUpdateUserAttributes(Long userId, Map<String, String> attributes) {
     CheckEmpty.checkEmpty(userId, "userId");
-    UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, userId);
+    if (userMapper.selectByPrimaryKey(userId) == null) {
+      log.error("User id:{} not exist, but try to update its attributes");
+      return;
+    }
     if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
@@ -75,7 +79,10 @@ public class UserProfileInnerService extends TenancyBasedService {
   @Transactional
   public void addOrUpdateUserProfile(Long uniauthId, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(uniauthId, "uniauthId");
-    UserDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, uniauthId);
+    if (userMapper.selectByPrimaryKey(uniauthId) == null) {
+      log.error("User id:{} not exist, but try to update its attributes");
+      return;
+    }
     if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();

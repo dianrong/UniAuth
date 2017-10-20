@@ -14,6 +14,7 @@ public interface AnaListResult<T> {
 
   /**
    * 添加分析结果.
+   *
    * @param t 添加的嗯对象.
    */
   void add(T t);

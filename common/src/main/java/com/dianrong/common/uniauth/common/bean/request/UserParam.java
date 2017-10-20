@@ -29,6 +29,10 @@ public class UserParam extends Operator {
   private Integer domainId;
 
   private List<Integer> roleIds;
+  /**
+   * 是添加还是删除. True:添加,False:删除.
+   */
+  private Boolean addOrDelete;
 
   private List<Integer> tagIds;
 
@@ -231,6 +235,15 @@ public class UserParam extends Operator {
 
   public UserParam setType(Byte type) {
     this.type = type;
+    return this;
+  }
+
+  public Boolean getAddOrDelete() {
+    return addOrDelete;
+  }
+
+  public UserParam setAddOrDelete(Boolean addOrDelete) {
+    this.addOrDelete = addOrDelete;
     return this;
   }
 }

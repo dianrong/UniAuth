@@ -12,8 +12,7 @@ public enum HrSynchronousLogType {
   /**
    * 删除过期的文件.
    */
-  DELETE_FTP_HR_EXPIRED_DATA("Delete expired synchronization files on the FTP server"),
-  ;
+  DELETE_FTP_HR_EXPIRED_DATA("Delete expired synchronization files on the FTP server"),;
 
   private String description;
 

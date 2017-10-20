@@ -19,7 +19,7 @@ dependencies {
     compile "org.springframework:spring-aop"
     compile "org.springframework.amqp:spring-amqp"
     compile "org.springframework.amqp:spring-rabbit"
-    
+
     compile "org.springframework.ldap:spring-ldap-core"
     compile "org.springframework.data:spring-data-commons"
 
@@ -41,11 +41,13 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient'
     compile 'org.apache.httpcomponents:fluent-hc'
     compile 'org.apache.httpcomponents:httpmime'
+    compile "commons-httpclient:commons-httpclient"
 
     //cxf
     compile "org.apache.cxf:cxf-rt-transports-http:${cxf_version}"
-    compile "org.apache.cxf:cxf-rt-rs-service-description:${cxf_version}"  // for wadl generate purpose
-    
+    compile "org.apache.cxf:cxf-rt-rs-service-description:${cxf_version}"
+    // for wadl generate purpose
+
     //spring-metrics
     compile 'com.ryantenney.metrics:metrics-spring:3.1.2'
     compile 'io.dropwizard.metrics:metrics-servlets:3.1.2'
@@ -67,39 +69,42 @@ dependencies {
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile "org.springframework:spring-test"
     testCompile "org.springframework:spring-web"
-    
+
     // Jwt
     compile 'com.auth0:java-jwt:3.0.2'
-    
+
     // swagger
     compile 'io.swagger:swagger-jaxrs:1.5.12'
-    
+
     compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
-            exclude group: 'org.springframework', module: 'spring-aop'
-            exclude group: 'org.springframework', module: 'spring-beans'
-            exclude group: 'org.springframework', module: 'spring-context'
-            exclude group: 'org.springframework', module: 'spring-context-support'
-            exclude group: 'org.springframework', module: 'spring-core'
-            exclude group: 'org.springframework', module: 'spring-expression'
-            exclude group: 'org.springframework', module: 'spring-oxm'
-            exclude group: 'org.springframework', module: 'spring-tx'
+        exclude group: 'org.springframework', module: 'spring-aop'
+        exclude group: 'org.springframework', module: 'spring-beans'
+        exclude group: 'org.springframework', module: 'spring-context'
+        exclude group: 'org.springframework', module: 'spring-context-support'
+        exclude group: 'org.springframework', module: 'spring-core'
+        exclude group: 'org.springframework', module: 'spring-expression'
+        exclude group: 'org.springframework', module: 'spring-oxm'
+        exclude group: 'org.springframework', module: 'spring-tx'
     }
-    
-    // redis   
-    compile 'redis.clients:jedis:2.8.2' 
-    
-    // notification 
+
+    // redis
+    compile 'redis.clients:jedis:2.8.2'
+
+    // notification
     compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
     compile(
-        'com.squareup.retrofit2:retrofit:2.1.0',
-        'com.squareup.retrofit2:converter-jackson:2.1.0',
-        'com.squareup.retrofit2:converter-scalars:2.1.0',
-        'joda-time:joda-time',
-        'commons-io:commons-io',
+            'com.squareup.retrofit2:retrofit:2.1.0',
+            'com.squareup.retrofit2:converter-jackson:2.1.0',
+            'com.squareup.retrofit2:converter-scalars:2.1.0',
+            'joda-time:joda-time',
+            'commons-io:commons-io',
     )
 
     // sftp
     compile 'com.jcraft:jsch:0.1.54'
+
+    // ucm
+    compile files("$rootDir/dianrong-lib/lib/oracle.ucm.ridc-11.1.1.jar")
 }
 
 sonarqube {
