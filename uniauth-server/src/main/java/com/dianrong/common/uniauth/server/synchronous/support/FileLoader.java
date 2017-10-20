@@ -14,7 +14,7 @@ public interface FileLoader {
   /**
    * 通过文件来导入文件内容.
    * @param file 文件内容.
-   * @return 文输入流.在外部必须将文件流关闭.
+   * @return 文输入流.外部需要自行处理输入流.
    * @exception FileLoadFailureException 加载文件异常.
    */
   LoadContent<InputStream> loadFile(String file) throws FileLoadFailureException;

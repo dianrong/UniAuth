@@ -9,22 +9,28 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
-
 /**
  * FTP文件的删除处理.
  */
 
-@Slf4j @Component public class SFTPFileDeleter {
+@Slf4j
+@Component
+public class SFTPFileDeleter {
 
   private SFTPConnectionManager sftpConnectionManager;
 
-  @Autowired public SFTPFileDeleter(SFTPConnectionManager SFTPConnectionManager) {
+  @Autowired
+  public SFTPFileDeleter(SFTPConnectionManager SFTPConnectionManager) {
     Assert.notNull(SFTPConnectionManager);
     this.sftpConnectionManager = SFTPConnectionManager;
   }
@@ -56,7 +62,8 @@ import java.util.*;
       }
       try {
         channelSftp.ls(".", new ChannelSftp.LsEntrySelector() {
-          @Override public int select(ChannelSftp.LsEntry entry) {
+          @Override
+          public int select(ChannelSftp.LsEntry entry) {
             Calendar addTime = Calendar.getInstance();
             addTime.setTime(new Date(entry.getAttrs().getATime() * 1000L));
             String fileName = entry.getFilename();
@@ -111,7 +118,7 @@ import java.util.*;
   /**
    * 根据文件名称删除文件.
    *
-   * @param fileNames   待删除的文件名称列表.
+   * @param fileNames 待删除的文件名称列表.
    * @param channelSftp 外部提供的ChannelSftp,不能为空.
    * @return 删除的文件的名称列表.
    * @throws DeleteFTPFileFailureException 删除指定文件失败.

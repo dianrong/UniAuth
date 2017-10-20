@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
 import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -48,11 +49,8 @@ public class GroupProfileInnerService extends TenancyBasedService {
   @Autowired
   private GrpExtendValMapper grpExtendValMapper;
 
-  @Resource(name = "grpExtendValDataFilter")
-  private DataFilter dataFilter;
-
-  @Resource(name = "groupDataFilter")
-  private DataFilter groupDataFilter;
+  @Autowired
+  private GrpMapper grpMapper;
 
   /**
    * 更新组的扩展属性值.
@@ -60,7 +58,10 @@ public class GroupProfileInnerService extends TenancyBasedService {
   @Transactional
   public void addOrUpdateUserAttributes(Integer grpId, Map<String, String> attributes) {
     CheckEmpty.checkEmpty(grpId, "groupId");
-    groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, grpId);
+    if (grpMapper.selectByPrimaryKey(grpId) == null) {
+      log.error("Group id:{} not exist, but try to update its attributes");
+      return;
+    }
     if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, String> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();
@@ -78,7 +79,10 @@ public class GroupProfileInnerService extends TenancyBasedService {
   @Transactional
   public void addOrUpdateGrpProfile(Integer grpId, Map<String, AttributeValModel> attributes) {
     CheckEmpty.checkEmpty(grpId, "groupId");
-    groupDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, grpId);
+    if (grpMapper.selectByPrimaryKey(grpId) == null) {
+      log.error("Group id:{} not exist, but try to update its attributes");
+      return;
+    }
     if (!CollectionUtils.isEmpty(attributes)) {
       for (Entry<String, AttributeValModel> entry : attributes.entrySet()) {
         String attributeCode = entry.getKey();

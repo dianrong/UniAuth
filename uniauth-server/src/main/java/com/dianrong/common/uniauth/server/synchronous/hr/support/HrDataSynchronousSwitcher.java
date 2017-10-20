@@ -10,10 +10,12 @@ public class HrDataSynchronousSwitcher implements Switcher {
   /**
    * 开关.
    */
-  @Value("#{uniauthConfig['synchronization.hr.switch']}") private String switchFlag;
+  @Value("#{uniauthConfig['synchronization.hr.switch']}")
+  private String switchFlag;
 
 
-  @Override public boolean isOn() {
+  @Override
+  public boolean isOn() {
     if (Boolean.TRUE.toString().equalsIgnoreCase(this.switchFlag)) {
       return true;
     }

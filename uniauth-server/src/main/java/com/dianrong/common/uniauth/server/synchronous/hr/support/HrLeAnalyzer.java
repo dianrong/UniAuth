@@ -4,9 +4,8 @@ import com.dianrong.common.uniauth.server.data.entity.HrLe;
 import com.dianrong.common.uniauth.server.synchronous.exp.InvalidContentException;
 import com.dianrong.common.uniauth.server.synchronous.hr.bean.LegalEntityList;
 import com.dianrong.common.uniauth.server.synchronous.support.AbstractFileContentAnalyzer;
-import org.springframework.util.StringUtils;
-
 import java.util.List;
+import org.springframework.util.StringUtils;
 
 public class HrLeAnalyzer extends AbstractFileContentAnalyzer<LegalEntityList> {
 
@@ -21,7 +20,7 @@ public class HrLeAnalyzer extends AbstractFileContentAnalyzer<LegalEntityList> {
 
     // 实际解析过程
     List<String> strList = anaToList(content);
-    for(int i =1; i < strList.size(); i++) {
+    for (int i = 1; i < strList.size(); i++) {
       String recordStr = strList.get(i);
       String[] items = splitContentRow(recordStr);
       itemLengthCheck(items, ITEM_LENGTH);

@@ -32,7 +32,7 @@
                              targetPackage="com.dianrong.common.uniauth.server.data.mapper" targetProject="${targetProject}">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
-        <table tableName="user" enableCountByExample="true"
+        <table tableName="hr_dept" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true"
                enableSelectByExample="true" selectByExampleQueryId="true"/>
     </context>

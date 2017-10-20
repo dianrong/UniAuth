@@ -10,7 +10,7 @@ import java.util.List;
 
 public class HrDeptAnalyzer extends AbstractFileContentAnalyzer<DepartmentList> {
 
-  public static final int ITEM_LENGTH = 15;
+  public static final int ITEM_LENGTH = 16;
 
   @Override public DepartmentList analyze(String content) throws InvalidContentException {
     DepartmentList result = new DepartmentList();
@@ -41,6 +41,7 @@ public class HrDeptAnalyzer extends AbstractFileContentAnalyzer<DepartmentList> 
       hrDept.setManagerId(strToLong(items[12]));
       hrDept.setManagerNum(items[13]);
       hrDept.setCostCenter(items[14]);
+      hrDept.setBuShortCode(items[15]);
       result.add(hrDept);
     }
     return result;
