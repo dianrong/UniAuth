@@ -1,43 +1,43 @@
 buildscript {
-	repositories {
-	    maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
-	    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-		jcenter()
-		mavenCentral()
-	}
-	dependencies {
-		classpath 'io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE'
-		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
-		classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.0'
-	}
+    repositories {
+        maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
+        classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.0'
+    }
 }
 plugins {
-	id "org.sonarqube" version "2.0.1"
+    id "org.sonarqube" version "2.0.1"
 }
 
 ext {
     dianrongRepoEnable = false
     jackson_version_old = '2.8.8'
     jackson_databind_version = '2.8.10-SNAPSHOT'
-    log4j_version_new='2.8.2'
+    log4j_version_new = '2.8.2'
     webflow_version = '2.4.5.RELEASE'
 }
 
 // Dianrong repo status set
-task checkDianrongRepoStatus()  {
+task checkDianrongRepoStatus() {
     URL url = new URL("http://nexus.dianrong.com/nexus/#welcome");
     URLConnection rulConnection = url.openConnection();
     HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
     httpUrlConnection.setReadTimeout(1000);
     try {
-      def responseCode = httpUrlConnection.getResponseCode();
-       if (responseCode == 200 ) {
+        def responseCode = httpUrlConnection.getResponseCode();
+        if (responseCode == 200) {
             dianrongRepoEnable = true;
-       } else {
+        } else {
             dianrongRepoEnable = false;
-       }
-    } catch(Exception ex) {
-            dianrongRepoEnable = false;
+        }
+    } catch (Exception ex) {
+        dianrongRepoEnable = false;
     }
     if (dianrongRepoEnable) {
         println 'DianRong repository is enable'
@@ -49,7 +49,7 @@ task checkDianrongRepoStatus()  {
 allprojects {
     group = 'com.dianrong.common.uniauth'
     version = '2.0.30.RELEASE'
-    ext{
+    ext {
         spring_version = '4.1.6.RELEASE'
     }
 
@@ -57,60 +57,58 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
-	apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'io.spring.dependency-management'
 
     repositories {
         maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     }
 
-    repositories{
-		mavenCentral()
-	}
-	
-	publishing {
-    	publications.all {
-			pom.withXml {
-				asNode().dependencies.'*'.findAll() {
-					it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
-						dep.name == it.artifactId.text()
-					}
-				}.each { it.scope*.value = 'compile'}
-			}
-		}
+    repositories {
+        mavenCentral()
+    }
+
+    publishing {
+        publications.all {
+            pom.withXml {
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each { it.scope*.value = 'compile' }
+            }
+        }
         repositories {
             maven {
-            	if(project.version.endsWith('-SNAPSHOT')) {
-            		url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' 
-            	}
-           		else {
-           		 	url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' 
-           		}
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
+                } else {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/'
+                }
             }
-            
+
             maven {
-	            if(project.version.endsWith('-SNAPSHOT')) {
-	            	url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
-	            }
-	            else {
-	            	url 'http://nexus.dianrong.com/nexus/content/repositories/internal/'
-	            }
-	        }
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
+                } else {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/internal/'
+                }
+            }
         }
     }
-	
+
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
-    
+
     dependencyManagement {
-	    imports {
-	       //see dependencies http://docs.spring.io/platform/docs/2.0.8.RELEASE/reference/htmlsingle/#appendix-dependency-versions
-	        mavenBom 'io.spring.platform:platform-bom:2.0.8.RELEASE'
-	    }
-	    dependencies {
+        imports {
+            //see dependencies http://docs.spring.io/platform/docs/2.0.8.RELEASE/reference/htmlsingle/#appendix-dependency-versions
+            mavenBom 'io.spring.platform:platform-bom:2.0.8.RELEASE'
+        }
+        dependencies {
             dependency 'org.projectlombok:lombok:1.16.10'
             dependency 'org.apache.httpcomponents:fluent-hc:4.5.2'
             dependency 'com.google.guava:guava:18.0'
@@ -118,7 +116,7 @@ allprojects {
             dependency 'org.mybatis:mybatis:3.2.8'
             dependency 'org.mybatis:mybatis-spring:1.2.2'
             dependency "javax.mail:mail:1.5.0-b01"
-            
+
             // jackson
             dependency "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
             dependency "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
@@ -127,9 +125,9 @@ allprojects {
             } else {
                 dependency "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
             }
-            
+
             dependency 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
-            
+
             // update log4j version
             dependency "org.apache.logging.log4j:log4j-core:${log4j_version_new}"
             dependency "org.apache.logging.log4j:log4j:${log4j_version_new}"
@@ -137,58 +135,58 @@ allprojects {
             dependency "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version_new}"
             dependency "org.apache.logging.log4j:log4j-jcl:${log4j_version_new}"
             dependency "org.apache.logging.log4j:log4j-web:${log4j_version_new}"
-         }
-	}
+        }
+    }
 
-	dependencies {
-    	testCompile 'junit:junit'
-	}
+    dependencies {
+        testCompile 'junit:junit'
+    }
 
-	sonarqube {
-		properties {
-			property "sonar.host.url", "http://10.18.19.64:9000"
-			property "sonar.jdbc.url", "jdbc:mysql://10.18.19.43:3308/sonar?useUnicode=true&characterEncoding=utf8"
-			property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
-			property "sonar.jdbc.username", "sonar"
-			property "sonar.jdbc.password", "sonar"
+    sonarqube {
+        properties {
+            property "sonar.host.url", "http://10.18.19.64:9000"
+            property "sonar.jdbc.url", "jdbc:mysql://10.18.19.43:3308/sonar?useUnicode=true&characterEncoding=utf8"
+            property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
+            property "sonar.jdbc.username", "sonar"
+            property "sonar.jdbc.password", "sonar"
 
-			property "sonar.projectKey", "dianrong:uniauth"
-			property "sonar.projectName", "uniauth"
-			property "sonar.projectVersion", version
+            property "sonar.projectKey", "dianrong:uniauth"
+            property "sonar.projectName", "uniauth"
+            property "sonar.projectVersion", version
 
-			property "sonar.exclusions", "**/*Test.java"
-			property "sonar.test.inclusions", "**/*Test.java"
-			property "sonar.java.coveragePlugin", "jacoco"
-			property "sonar.junit.reportsPath", "build/test-results/"
-			property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
-			property "sonar.jacoc.itReportPath", "build/jacoco/jacoco.exec"
-		}
-	}
+            property "sonar.exclusions", "**/*Test.java"
+            property "sonar.test.inclusions", "**/*Test.java"
+            property "sonar.java.coveragePlugin", "jacoco"
+            property "sonar.junit.reportsPath", "build/test-results/"
+            property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
+            property "sonar.jacoc.itReportPath", "build/jacoco/jacoco.exec"
+        }
+    }
 }
 
 project(':common') {
-	dependencies {
-		compile 'org.apache.commons:commons-lang3:3.4'
-		compile 'com.google.guava:guava:18.0'
-	}
+    dependencies {
+        compile 'org.apache.commons:commons-lang3:3.4'
+        compile 'com.google.guava:guava:18.0'
+    }
 }
 
 project(':ss-client') {
-	dependencies {
-		compile project(":common")
-	    compile 'org.apache.curator:curator-recipes:2.9.1'
-	    compile 'org.springframework.security:spring-security-web'
-		compile 'org.springframework.security:spring-security-config'
-		compile 'org.springframework.security:spring-security-core'
-		compile 'org.springframework.security:spring-security-remoting'
-		compile 'org.springframework.security:spring-security-ldap'
-		compile 'org.springframework.security:spring-security-acl'
-		compile 'org.springframework.security:spring-security-cas'
-		compile 'org.springframework.security:spring-security-openid'
-		compile 'org.springframework.security:spring-security-taglibs'
-		compile 'org.hibernate:hibernate-validator'
-		
-		compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
+    dependencies {
+        compile project(":common")
+        compile 'org.apache.curator:curator-recipes:2.9.1'
+        compile 'org.springframework.security:spring-security-web'
+        compile 'org.springframework.security:spring-security-config'
+        compile 'org.springframework.security:spring-security-core'
+        compile 'org.springframework.security:spring-security-remoting'
+        compile 'org.springframework.security:spring-security-ldap'
+        compile 'org.springframework.security:spring-security-acl'
+        compile 'org.springframework.security:spring-security-cas'
+        compile 'org.springframework.security:spring-security-openid'
+        compile 'org.springframework.security:spring-security-taglibs'
+        compile 'org.hibernate:hibernate-validator'
+
+        compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
         if (rootProject.dianrongRepoEnable) {
             compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"
@@ -196,28 +194,32 @@ project(':ss-client') {
             compile "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
         }
         compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
-        
-        compile 'com.auth0:java-jwt:3.0.2'
-	}
 
-	sourceSets {
-	    main {
-	        java {
-	            srcDirs = ['src/main/java', 'src/main/java-ss']
-	        }
-	        resources {
-	            srcDirs = ['src/main/resources']
-	        }
-	    }
-	    test {
-	        java {
-	            srcDirs = ['src/test/java', 'src/test/java-ss']
-	        }
-	        resources {
-	            srcDirs = ['src/test/resources']
-	        }
-	    }
-	}
+        compile 'com.auth0:java-jwt:3.0.2'
+
+        // Redis
+        compile 'org.springframework.data:spring-data-redis:1.7.0.RELEASE'
+        compile 'redis.clients:jedis:2.8.2'
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src/main/java', 'src/main/java-ss']
+            }
+            resources {
+                srcDirs = ['src/main/resources']
+            }
+        }
+        test {
+            java {
+                srcDirs = ['src/test/java', 'src/test/java-ss']
+            }
+            resources {
+                srcDirs = ['src/test/resources']
+            }
+        }
+    }
 
     jar {
         baseName = 'common-uniauth-ssclient'
@@ -242,90 +244,90 @@ project(':ss-client') {
 }
 
 project('examples:subsystem') {
-	apply plugin: 'war'
-	
-	dependencies {
-	    compile project(":ss-client")
-	    providedCompile 'javax.servlet:javax.servlet-api'
-	    compile 'org.springframework:spring-webmvc'
-	    compile 'ch.qos.logback:logback-classic'
-	}
-	configurations{
-    	runtime.exclude group : 'commons-logging',module:'commons-logging'
-	}
-	
-	war {
-    	archiveName = project.name + '.war'
-	}
+    apply plugin: 'war'
+
+    dependencies {
+        compile project(":ss-client")
+        providedCompile 'javax.servlet:javax.servlet-api'
+        compile 'org.springframework:spring-webmvc'
+        compile 'ch.qos.logback:logback-classic'
+    }
+    configurations {
+        runtime.exclude group: 'commons-logging', module: 'commons-logging'
+    }
+
+    war {
+        archiveName = project.name + '.war'
+    }
 }
 
 project(':cas') {
-	apply plugin: 'war'
+    apply plugin: 'war'
 
-	sourceSets {
-		deployment {
-			java {
-				srcDir 'src/deployment/java'
-			}
-			resources {
-				srcDir 'src/deployment/mybatis'
-			}
-			compileClasspath += configurations.compile
-			runtimeClasspath += configurations.compile
-		}
-	}
+    sourceSets {
+        deployment {
+            java {
+                srcDir 'src/deployment/java'
+            }
+            resources {
+                srcDir 'src/deployment/mybatis'
+            }
+            compileClasspath += configurations.compile
+            runtimeClasspath += configurations.compile
+        }
+    }
 
-	ext {
-		tomcatUsername = 'tomcat'        //Tomcat用户
-		tomcatPassword = 'tomcat'        //Tomcat密码
-		tomcatHost = 'localhost:8080'        //
-		tomcatWarFile = 'build/libs/' + project.name + '.war'
+    ext {
+        tomcatUsername = 'tomcat'        //Tomcat用户
+        tomcatPassword = 'tomcat'        //Tomcat密码
+        tomcatHost = 'localhost:8080'        //
+        tomcatWarFile = 'build/libs/' + project.name + '.war'
 
-		shengLongTomcatUsername = 'admin'
-		shengLongTomcatPassword = 'admin'
-		shengLongTomcatHost = '192.168.56.101:8080'
-		
-		cwlTomcatHost = 'localhost:8080'        //
-		wlinTomcatHost = 'localhost:8080'        //
-	}
+        shengLongTomcatUsername = 'admin'
+        shengLongTomcatPassword = 'admin'
+        shengLongTomcatHost = '192.168.56.101:8080'
 
-	configurations{
-    	runtime.exclude group : 'commons-logging',module:'commons-logging'
-	}
-	
-	war {
-    	archiveName = project.name + '.war'
-	}
-	
-	dependencies {
-		compile(project(':share-rw')){
-			exclude group: 'org.springframework'
-			exclude group: 'org.springframework.security'
-			exclude group: 'com.fasterxml.jackson.core'
-		}
+        cwlTomcatHost = 'localhost:8080'        //
+        wlinTomcatHost = 'localhost:8080'        //
+    }
 
-		providedCompile( "org.apache.tomcat:tomcat-catalina:7.0.63")
-		compile (
-    		 'javax.servlet:javax.servlet-api:3.1.0'  ,
-    		 "org.jasig.cas:cas-server-core:${cas_version}",
-    		 'org.jasig.cas:cas-server-security-filter:2.0.4',
-    		 "org.jasig.cas:cas-server-webapp-support:${cas_version}",
-    		 "org.jasig.cas:cas-server-integration-restlet:${cas_version}",
-		)
-		
-		compile(
-    		  "com.ryantenney.metrics:metrics-spring:3.1.3",
-    		  'org.apache.commons:commons-pool2:2.4.2',
-    		  'redis.clients:jedis:2.8.2',
-    		  'javax.servlet:jstl:1.2',
-		)
+    configurations {
+        runtime.exclude group: 'commons-logging', module: 'commons-logging'
+    }
+
+    war {
+        archiveName = project.name + '.war'
+    }
+
+    dependencies {
+        compile(project(':share-rw')) {
+            exclude group: 'org.springframework'
+            exclude group: 'org.springframework.security'
+            exclude group: 'com.fasterxml.jackson.core'
+        }
+
+        providedCompile("org.apache.tomcat:tomcat-catalina:7.0.63")
+        compile(
+            'javax.servlet:javax.servlet-api:3.1.0',
+            "org.jasig.cas:cas-server-core:${cas_version}",
+            'org.jasig.cas:cas-server-security-filter:2.0.4',
+            "org.jasig.cas:cas-server-webapp-support:${cas_version}",
+            "org.jasig.cas:cas-server-integration-restlet:${cas_version}",
+        )
+
+        compile(
+            "com.ryantenney.metrics:metrics-spring:3.1.3",
+            'org.apache.commons:commons-pool2:2.4.2',
+            'redis.clients:jedis:2.8.2',
+            'javax.servlet:jstl:1.2',
+        )
         compile "com.github.penggle:kaptcha:2.3.2"
-        
+
         compile 'com.auth0:java-jwt:3.0.2'
 
         // notification 
-		compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
-		compile(
+        compile files("$rootDir/dianrong-lib/lib/dianrong-notification-client-1.0.3.jar")
+        compile(
             'com.squareup.retrofit2:retrofit:2.1.0',
             'com.squareup.retrofit2:converter-jackson:2.1.0',
             'com.squareup.retrofit2:converter-scalars:2.1.0',
@@ -333,24 +335,24 @@ project(':cas') {
             'commons-io:commons-io',
         )
 
-		//Http Components for deploy on local
-		compile 'org.apache.httpcomponents:httpclient'
-		compile 'org.apache.httpcomponents:fluent-hc'
-		compile 'org.apache.httpcomponents:httpmime'
-		compile "org.jasig.cas:cas-server-support-rest:${cas_version}"
-		// compile 'ch.qos.logback:logback-classic'
-		
-		compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
-			exclude group: 'org.springframework', module: 'spring-aop'
-			exclude group: 'org.springframework', module: 'spring-beans'
-			exclude group: 'org.springframework', module: 'spring-context'
-			exclude group: 'org.springframework', module: 'spring-context-support'
-			exclude group: 'org.springframework', module: 'spring-core'
-			exclude group: 'org.springframework', module: 'spring-expression'
-			exclude group: 'org.springframework', module: 'spring-oxm'
-			exclude group: 'org.springframework', module: 'spring-tx'
-		}
-        
+        //Http Components for deploy on local
+        compile 'org.apache.httpcomponents:httpclient'
+        compile 'org.apache.httpcomponents:fluent-hc'
+        compile 'org.apache.httpcomponents:httpmime'
+        compile "org.jasig.cas:cas-server-support-rest:${cas_version}"
+        // compile 'ch.qos.logback:logback-classic'
+
+        compile('org.springframework.data:spring-data-redis:1.7.1.RELEASE') {
+            exclude group: 'org.springframework', module: 'spring-aop'
+            exclude group: 'org.springframework', module: 'spring-beans'
+            exclude group: 'org.springframework', module: 'spring-context'
+            exclude group: 'org.springframework', module: 'spring-context-support'
+            exclude group: 'org.springframework', module: 'spring-core'
+            exclude group: 'org.springframework', module: 'spring-expression'
+            exclude group: 'org.springframework', module: 'spring-oxm'
+            exclude group: 'org.springframework', module: 'spring-tx'
+        }
+
         // jackson
         compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
@@ -361,122 +363,126 @@ project(':cas') {
         }
         compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
 
-		// spring-web-flow
-		compile "org.springframework.webflow:spring-binding:${webflow_version}"
+        // spring-web-flow
+        compile "org.springframework.webflow:spring-binding:${webflow_version}"
         compile "org.springframework.webflow:spring-js:${webflow_version}"
         compile "org.springframework.webflow:spring-js-resources:${webflow_version}"
         compile "org.springframework.webflow:spring-webflow:${webflow_version}"
-	}
-	task warCas(dependsOn: war) {
 
-	}
+        // Redis
+        compile 'org.springframework.data:spring-data-redis:1.7.0.RELEASE'
+        compile 'redis.clients:jedis:2.8.2'
+    }
+    task warCas(dependsOn: war) {
 
-	task tomcatUndeploy(type: JavaExec) {
-		main = 'gradle.TomcatDeploy'
-		args = ['undeploy',
-				project.name,
-				tomcatUsername,
-				tomcatPassword,
-				tomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-		doFirst {
-			println "removing war file from Tomcat."
-		}
-	}
+    }
 
-	task tomcatDeployCas(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "deploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['deploy',
-				project.name,
-				tomcatWarFile,
-				tomcatUsername,
-				tomcatPassword,
-				tomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
+    task tomcatUndeploy(type: JavaExec) {
+        main = 'gradle.TomcatDeploy'
+        args = ['undeploy',
+                project.name,
+                tomcatUsername,
+                tomcatPassword,
+                tomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+        doFirst {
+            println "removing war file from Tomcat."
+        }
+    }
 
-	task tomcatRedeploy(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "redeploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['redeploy',
-				project.name,
-				tomcatWarFile,
-				tomcatUsername,
-				tomcatPassword,
-				tomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
-	task shengLongTomcatUndeploy(type: JavaExec) {
-		main = 'gradle.TomcatDeploy'
-		args = ['undeploy',
-				project.name,
-				shengLongTomcatUsername,
-				shengLongTomcatPassword,
-				shengLongTomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-		doFirst {
-			println "removing war file from Tomcat."
-		}
-	}
+    task tomcatDeployCas(type: JavaExec, dependsOn: warCas) {
+        doFirst {
+            println "deploying war file " + tomcatWarFile + " to Tomcat."
+        }
+        main = 'gradle.TomcatDeploy'
+        args = ['deploy',
+                project.name,
+                tomcatWarFile,
+                tomcatUsername,
+                tomcatPassword,
+                tomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+    }
 
-	task shengLongTomcatDeploy(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "deploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['deploy',
-				project.name,
-				tomcatWarFile,
-				shengLongTomcatUsername,
-				shengLongTomcatPassword,
-				shengLongTomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
+    task tomcatRedeploy(type: JavaExec, dependsOn: warCas) {
+        doFirst {
+            println "redeploying war file " + tomcatWarFile + " to Tomcat."
+        }
+        main = 'gradle.TomcatDeploy'
+        args = ['redeploy',
+                project.name,
+                tomcatWarFile,
+                tomcatUsername,
+                tomcatPassword,
+                tomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+    }
+    task shengLongTomcatUndeploy(type: JavaExec) {
+        main = 'gradle.TomcatDeploy'
+        args = ['undeploy',
+                project.name,
+                shengLongTomcatUsername,
+                shengLongTomcatPassword,
+                shengLongTomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+        doFirst {
+            println "removing war file from Tomcat."
+        }
+    }
 
-	task shengLongTomcatRedeploy(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "redeploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['redeploy',
-				project.name,
-				tomcatWarFile,
-				shengLongTomcatUsername,
-				shengLongTomcatPassword,
-				shengLongTomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
+    task shengLongTomcatDeploy(type: JavaExec, dependsOn: warCas) {
+        doFirst {
+            println "deploying war file " + tomcatWarFile + " to Tomcat."
+        }
+        main = 'gradle.TomcatDeploy'
+        args = ['deploy',
+                project.name,
+                tomcatWarFile,
+                shengLongTomcatUsername,
+                shengLongTomcatPassword,
+                shengLongTomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+    }
 
-	task tomcatWLinDeployCas(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "deploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['deploy',
-				project.name,
-				tomcatWarFile,
-				tomcatUsername,
-				tomcatPassword,
-				wlinTomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
+    task shengLongTomcatRedeploy(type: JavaExec, dependsOn: warCas) {
+        doFirst {
+            println "redeploying war file " + tomcatWarFile + " to Tomcat."
+        }
+        main = 'gradle.TomcatDeploy'
+        args = ['redeploy',
+                project.name,
+                tomcatWarFile,
+                shengLongTomcatUsername,
+                shengLongTomcatPassword,
+                shengLongTomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+    }
 
-	task tomcatWLinRedeployCas(type: JavaExec, dependsOn: warCas) {
-		doFirst {
-			println "redeploying war file " + tomcatWarFile + " to Tomcat."
-		}
-		main = 'gradle.TomcatDeploy'
-		args = ['redeploy',
-				project.name,
-				tomcatWarFile,
-				tomcatUsername,
-				tomcatPassword,
-				wlinTomcatHost]
-		classpath = sourceSets.deployment.runtimeClasspath
-	}
+    task tomcatWLinDeployCas(type: JavaExec, dependsOn: warCas) {
+        doFirst {
+            println "deploying war file " + tomcatWarFile + " to Tomcat."
+        }
+        main = 'gradle.TomcatDeploy'
+        args = ['deploy',
+                project.name,
+                tomcatWarFile,
+                tomcatUsername,
+                tomcatPassword,
+                wlinTomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+    }
+
+    task tomcatWLinRedeployCas(type: JavaExec, dependsOn: warCas) {
+        doFirst {
+            println "redeploying war file " + tomcatWarFile + " to Tomcat."
+        }
+        main = 'gradle.TomcatDeploy'
+        args = ['redeploy',
+                project.name,
+                tomcatWarFile,
+                tomcatUsername,
+                tomcatPassword,
+                wlinTomcatHost]
+        classpath = sourceSets.deployment.runtimeClasspath
+    }
 }

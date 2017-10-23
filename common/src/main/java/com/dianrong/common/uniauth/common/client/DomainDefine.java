@@ -7,13 +7,16 @@ import com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConf
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.client.enums.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
-
-import javax.annotation.PostConstruct;
-import java.io.Serializable;
-import java.util.*;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 public class DomainDefine implements Serializable {
@@ -28,8 +31,8 @@ public class DomainDefine implements Serializable {
   private String customizedLoginRedirecUrl;
   private boolean useAllDomainUserInfoShareMode;
 
-  // 采用的身份认证方式
-  private AuthenticationType authenticationType = AuthenticationType.ALL;
+  // 采用的身份认证方式集合.
+  private List<AuthenticationType> authenticationTypeList = Arrays.asList(AuthenticationType.ALL);
 
   /**
    * ServiceTicket的验证是否走内网.
@@ -37,8 +40,8 @@ public class DomainDefine implements Serializable {
   private boolean serviceTicketValidateWithInnerAddress;
 
   /**
-   * 集成系统的集成ssclient中的内存是否采用Redis,否则采用依赖ConcurrentHashMap实现的一个简易的内存实现.
-   * 默认为false. 如果设置为true,需要配置Redis相关信息.具体参见Zk的配置文档.
+   * 集成系统的集成ssclient中的内存是否采用Redis,否则采用依赖ConcurrentHashMap实现的一个简易的内存实现. 默认为false.
+   * 如果设置为true,需要配置Redis相关信息.具体参见Zk的配置文档.
    */
   private boolean innerCacheUseRedis = false;
 
@@ -46,11 +49,6 @@ public class DomainDefine implements Serializable {
    * 如果SSClient采用的缓存实现是Redis(innerCacheUseRedis=true),则可通过该参数来配置Redis的一些参数.
    */
   private RedisConnectionFactoryConfiguration innerCacheRedisConfiguration;
-
-  /**
-   * 是否启用BasicAuth功能.
-   */
-  private boolean enableBasicAuth = true;
 
   /**
    * 权限控制类型定义,默认为使用uri_pattern.
@@ -190,9 +188,9 @@ public class DomainDefine implements Serializable {
 
   /**
    * Set permission control type.
-   * 
+   *
    * @throws IllegalArgumentException if parameter type is not a legal CasPermissionControlType
-   *         string
+   * string
    */
   public void setControlType(String type) throws IllegalArgumentException {
     try {
@@ -227,12 +225,21 @@ public class DomainDefine implements Serializable {
     this.serviceTicketValidateWithInnerAddress = serviceTicketValidateWithInnerAddress;
   }
 
-  public AuthenticationType getAuthenticationType() {
-    return authenticationType;
+  public void setAuthenticationType(String authenticationType) {
+    if (StringUtils.isEmpty(authenticationType)) {
+      log.info("setAuthenticationType parameter authenticationType is empty, so just ignore. ");
+      return;
+    }
+    String[] authenticationTypeItems = authenticationType.split(",");
+    List<AuthenticationType> authenticationTypes = new ArrayList<>(authenticationTypeItems.length);
+    for (String item : authenticationTypeItems) {
+      authenticationTypes.add(AuthenticationType.valueOf(item));
+    }
+    this.authenticationTypeList = authenticationTypes;
   }
 
-  public void setAuthenticationType(String authenticationType) {
-    this.authenticationType = AuthenticationType.valueOf(authenticationType);
+  public List<AuthenticationType> getAuthenticationTypeList() {
+    return Collections.unmodifiableList(authenticationTypeList);
   }
 
   public boolean isInnerCacheUseRedis() {
@@ -245,14 +252,6 @@ public class DomainDefine implements Serializable {
 
   public RedisConnectionFactoryConfiguration getInnerCacheRedisConfiguration() {
     return innerCacheRedisConfiguration;
-  }
-
-  public boolean isEnableBasicAuth() {
-    return enableBasicAuth;
-  }
-
-  public void setEnableBasicAuth(boolean enableBasicAuth) {
-    this.enableBasicAuth = enableBasicAuth;
   }
 
   public void setInnerCacheRedisConfiguration(

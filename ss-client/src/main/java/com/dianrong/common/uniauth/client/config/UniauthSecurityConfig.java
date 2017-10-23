@@ -1,9 +1,14 @@
 package com.dianrong.common.uniauth.client.config;
 
+import com.dianrong.common.uniauth.client.custom.filter.DelegateUniauthAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.UniauthBasicAuthAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter;
+import com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
@@ -13,20 +18,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 import org.springframework.util.Assert;
 
-import com.dianrong.common.uniauth.client.custom.filter.*;
-import com.dianrong.common.uniauth.common.client.DomainDefine;
-
-import lombok.extern.slf4j.Slf4j;
-
 /**
- * Uniauth 针对spring boot的集成配置对象 一般做法是直接继承该类作为spring security配置.<br>
- * 如果需要 重写自定义configure（HttpSecurity http）<br>
- * 请不要忘记: 调用该类中的配置：super.configure(HttpSecurity http)<br>
+ * Uniauth 针对spring boot的集成配置对象 一般做法是直接继承该类作为spring security配置.<br> 如果需要 重写自定义configure（HttpSecurity
+ * http）<br> 请不要忘记: 调用该类中的配置：super.configure(HttpSecurity http)<br>
  *
  * @author wanglin
  */
@@ -77,17 +75,14 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
         beanCreator.create(UniauthCasAuthenticationFilter.class);
     UniauthJWTAuthenticationFilter jwtAuthenticationFilter =
         beanCreator.create(UniauthJWTAuthenticationFilter.class);
-    AllAuthenticationFilter allAuthenticationFilter = beanCreator
-        .create(AllAuthenticationFilter.class, casAuthenticationFilter, jwtAuthenticationFilter);
-
-    DelegateAuthenticationFilter authenticationFilter =
-        beanCreator.create(DelegateAuthenticationFilter.class, casAuthenticationFilter,
-            jwtAuthenticationFilter, allAuthenticationFilter);
+    UniauthBasicAuthAuthenticationFilter basicAuthAuthenticationFilter =
+        beanCreator.create(UniauthBasicAuthAuthenticationFilter.class);
+    DelegateUniauthAuthenticationFilter delegateUniauthAuthenticationFilter = beanCreator
+        .create(DelegateUniauthAuthenticationFilter.class, casAuthenticationFilter,
+            jwtAuthenticationFilter, basicAuthAuthenticationFilter);
 
     http.addFilter(beanCreator.create(ConcurrentSessionFilter.class));
-    http.addFilterAfter(authenticationFilter, CasAuthenticationFilter.class);
-    http.addFilterAfter(beanCreator.create(UniauthBasicAuthAuthenticationFilter.class),
-        BasicAuthenticationFilter.class);
+    http.addFilterAfter(delegateUniauthAuthenticationFilter, CasAuthenticationFilter.class);
     http.addFilterBefore(beanCreator.create(LogoutFilter.class), LogoutFilter.class);
     http.addFilterAfter(beanCreator.create(SSExceptionTranslationFilter.class),
         ExceptionTranslationFilter.class);
@@ -100,8 +95,7 @@ public class UniauthSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   /**
-   * #{uniauthConfig['cas_server']}/login?
-   * service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas
+   * #{uniauthConfig['cas_server']}/login? service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas
    */
   private String getInvalidSessionUrl() {
     String invalidSessionUrl = uniauthConfig.get("cas_server") + "/login?service="

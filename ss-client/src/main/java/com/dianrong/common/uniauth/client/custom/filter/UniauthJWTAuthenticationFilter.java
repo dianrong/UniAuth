@@ -1,20 +1,5 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-
 import com.dianrong.common.uniauth.client.custom.handler.EmptyAuthenticationSuccessHandler;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTStatelessAuthenticationSuccessToken;
@@ -28,18 +13,27 @@ import com.dianrong.common.uniauth.common.jwt.exp.InvalidJWTExpiredException;
 import com.dianrong.common.uniauth.common.jwt.exp.LoginJWTExpiredException;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  * 用于JWT的身份认证实现.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 @Slf4j
-public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter
-    implements UniauthAuthenticationFilter {
+public class UniauthJWTAuthenticationFilter extends UniauthAbstractAuthenticationFilter {
+
   /**
    * JWT验证工具.
    */
@@ -123,8 +117,6 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
 
   /**
    * 设置登陆的请求匹配的Matcher.
-   * 
-   * @param requestMatcher
    */
   public final void setLoginRequestRequestMatcher(RequestMatcher requestMatcher) {
     Assert.notNull(requestMatcher, "requestMatcher cannot be null");
@@ -141,9 +133,12 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
     UniauthUserJWTInfo info;
     try {
       info = uniauthJWTSecurity.getInfoFromJwt(jwt);
-    } catch (LoginJWTExpiredException | InvalidJWTExpiredException e) {
-      log.error("JWT is invalid!", e);
-      throw new JWTInvalidAuthenticationException(jwt + " is a invalid JWT string!", e);
+    } catch (LoginJWTExpiredException e) {
+      log.error("JWT:{jwt} is expired!", e);
+      return false;
+    } catch (InvalidJWTExpiredException e) {
+      log.error("JWT:{jwt} is invalid!", e);
+      return false;
     }
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()) {
@@ -178,10 +173,5 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
    */
   public void setLoginRequestUrl(String loginRequestUrl) {
     setLoginRequestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
-  }
-
-  @Override
-  public int getOrder() {
-    return -90;
   }
 }

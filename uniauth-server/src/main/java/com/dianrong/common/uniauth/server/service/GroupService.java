@@ -870,7 +870,12 @@ public class GroupService extends TenancyBasedService {
       grpExample.createCriteria().andCodeEqualTo(TreeTypeHolder.getWithCheck().getRootCode())
           .andStatusEqualTo(AppConstants.STATUS_ENABLED)
           .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-      rootGrp = grpMapper.selectByExample(grpExample).get(0);
+      List<Grp> rootGrpList = grpMapper.selectByExample(grpExample);
+      if (CollectionUtils.isEmpty(rootGrpList)) {
+        throw new AppException(InfoName.VALIDATE_FAIL,
+            UniBundle.getMsg("common.parameter.wrong", "tenancy identity"));
+      }
+      rootGrp = rootGrpList.get(0);
       treeTypeChecked = true;
     } else if (groupCode != null && groupId != null) {
       GrpExample grpExample = createNewGrpExample();

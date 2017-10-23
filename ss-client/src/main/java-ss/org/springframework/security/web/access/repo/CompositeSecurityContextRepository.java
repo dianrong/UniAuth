@@ -1,24 +1,20 @@
 package org.springframework.security.web.access.repo;
 
+import com.dianrong.common.uniauth.client.custom.auth.AuthenticationTypeDetector;
+import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
+import com.dianrong.common.uniauth.common.util.Assert;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.util.StringUtils;
-
-import com.dianrong.common.uniauth.client.custom.AuthenticationTypeDetector;
-import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
-import com.dianrong.common.uniauth.common.util.Assert;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CompositeSecurityContextRepository implements SecurityContextRepository {

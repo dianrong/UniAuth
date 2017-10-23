@@ -1,22 +1,5 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuth;
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthDetector;
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthStatelessAuthenticationSuccessToken;
@@ -24,25 +7,31 @@ import com.dianrong.common.uniauth.client.custom.basicauth.UniauthBasicAuthToken
 import com.dianrong.common.uniauth.client.custom.handler.BasicAuthAuthenticationFailureHandler;
 import com.dianrong.common.uniauth.client.custom.handler.EmptyAuthenticationSuccessHandler;
 import com.dianrong.common.uniauth.client.custom.model.ItemBox;
+import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.HttpRequestUtil;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * 用于BasicAuth的实现.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 @Slf4j
-public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-  /**
-   * 控制参数,BasicAuth Filter是否启用.
-   */
-  private boolean enable = true;
+public class UniauthBasicAuthAuthenticationFilter extends UniauthAbstractAuthenticationFilter {
 
   /**
    * 覆盖父类中的AuthenticationSuccessHandler.
@@ -53,16 +42,6 @@ public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthentication
     super(new AntPathRequestMatcher("/**"));
     super.setAuthenticationSuccessHandler(new EmptyAuthenticationSuccessHandler());
     super.setAuthenticationFailureHandler(new BasicAuthAuthenticationFailureHandler());
-  }
-
-  @Override
-  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-      throws IOException, ServletException {
-    if (enable) {
-      super.doFilter(req, res, chain);
-    } else {
-      chain.doFilter(req, res);
-    }
   }
 
   @Override
@@ -87,7 +66,6 @@ public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthentication
     return this.getAuthenticationManager().authenticate(basicAuthToken);
   }
 
-
   /**
    * 设置成功认证身份的标识.
    */
@@ -98,6 +76,11 @@ public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthentication
     super.successfulAuthentication(request, response, chain, authResult);
     // 普通访问, 继续执行Filter链
     chain.doFilter(request, response);
+  }
+
+  @Override
+  protected AuthenticationType authenticationType() {
+    return AuthenticationType.BASIC_AUTH;
   }
 
   /**
@@ -146,13 +129,5 @@ public class UniauthBasicAuthAuthenticationFilter extends AbstractAuthentication
       return true;
     }
     return false;
-  }
-
-  protected boolean isEnable() {
-    return enable;
-  }
-
-  public void setEnable(boolean enable) {
-    this.enable = enable;
   }
 }

@@ -2,10 +2,9 @@ package com.dianrong.common.uniauth.client.support;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ExtractRequestUrl {
+public final class ExtractRequestUrl {
 
-  private ExtractRequestUrl() {
-  }
+  private ExtractRequestUrl() {}
 
   public static String extractRequestUrl(HttpServletRequest request) {
     return extractRequestUrl(request, true);

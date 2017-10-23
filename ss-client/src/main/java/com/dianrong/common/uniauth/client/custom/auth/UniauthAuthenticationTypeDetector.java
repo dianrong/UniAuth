@@ -1,11 +1,10 @@
-package com.dianrong.common.uniauth.client.custom;
-
-import javax.servlet.http.HttpServletRequest;
+package com.dianrong.common.uniauth.client.custom.auth;
 
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthDetector;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.util.Assert;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 检测顺序为: 1 BasicAuth类型 2 JWT类型 3 默认为CAS类型.

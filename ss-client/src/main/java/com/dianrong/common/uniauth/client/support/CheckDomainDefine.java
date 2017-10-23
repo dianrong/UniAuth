@@ -2,11 +2,9 @@ package com.dianrong.common.uniauth.client.support;
 
 import com.dianrong.common.uniauth.client.exp.DomainNotDefinedException;
 
-public class CheckDomainDefine {
+public final class CheckDomainDefine {
 
-  private CheckDomainDefine() {
-
-  }
+  private CheckDomainDefine() {}
 
   /**
    * Check domain code.

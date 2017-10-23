@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.custom;
+package com.dianrong.common.uniauth.client.custom.auth;
 
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 

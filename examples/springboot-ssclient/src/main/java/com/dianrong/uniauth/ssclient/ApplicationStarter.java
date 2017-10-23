@@ -77,7 +77,7 @@ public class ApplicationStarter {
   public RequestHeaderJWTQuery requestHeaderJWTQuery() {
     RequestHeaderJWTQuery requestHeaderJWTQuery = new RequestHeaderJWTQuery();
     // 可以自定义header名
-    // requestHeaderJWTQuery.setJwtHeaderName("custom_uniauth_jwt");
+     requestHeaderJWTQuery.setJwtHeaderName("custom_uniauth_jwt");
     return requestHeaderJWTQuery;
   }
 

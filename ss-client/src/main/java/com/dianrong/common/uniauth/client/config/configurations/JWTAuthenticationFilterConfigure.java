@@ -1,8 +1,11 @@
 package com.dianrong.common.uniauth.client.config.configurations;
 
+import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
+import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -37,6 +40,7 @@ public class JWTAuthenticationFilterConfigure implements Configure<UniauthJWTAut
 
   @Resource(name = "authenticationManager")
   private AuthenticationManager authenticationManager;
+
 
   @Override
   public UniauthJWTAuthenticationFilter create(Object... args) {

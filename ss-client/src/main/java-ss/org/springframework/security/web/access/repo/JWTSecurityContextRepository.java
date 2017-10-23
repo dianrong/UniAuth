@@ -1,20 +1,19 @@
 package org.springframework.security.web.access.repo;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthStatelessAuthenticationSuccessToken;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
+import com.dianrong.common.uniauth.client.custom.jwt.JWTStatelessAuthenticationSuccessToken;
 import com.dianrong.common.uniauth.common.cache.UniauthCacheManager;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
 
 public class JWTSecurityContextRepository extends AbstractCacheSecurityContextRepository {
 
   private static final String JWT_CACHE_NAME = "JWT_CACHE";
 
-  /**
-   * 获取JWT工具类, 默认值.
-   */
   private final JWTQuery jwtQuery;
 
   public JWTSecurityContextRepository(UniauthCacheManager uniauthCacheManager, JWTQuery jwtQuery) {
@@ -40,5 +39,10 @@ public class JWTSecurityContextRepository extends AbstractCacheSecurityContextRe
       return null;
     }
     return StringUtil.md5(jwt);
+  }
+
+  @Override
+  public Class<? extends Authentication> supportAuthenticationClz() {
+    return JWTStatelessAuthenticationSuccessToken.class;
   }
 }

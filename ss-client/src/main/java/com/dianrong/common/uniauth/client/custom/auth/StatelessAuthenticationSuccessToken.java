@@ -1,4 +1,4 @@
-package com.dianrong.common.uniauth.client.custom.model;
+package com.dianrong.common.uniauth.client.custom.auth;
 
 import java.util.Collection;
 

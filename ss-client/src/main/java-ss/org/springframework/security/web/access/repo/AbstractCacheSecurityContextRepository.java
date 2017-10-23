@@ -1,19 +1,16 @@
 package org.springframework.security.web.access.repo;
 
-import java.util.concurrent.TimeUnit;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpRequestResponseHolder;
-
 import com.dianrong.common.uniauth.common.cache.UniauthCache;
 import com.dianrong.common.uniauth.common.cache.UniauthCacheManager;
 import com.dianrong.common.uniauth.common.util.Assert;
-
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpRequestResponseHolder;
 
 @Slf4j
 public abstract class AbstractCacheSecurityContextRepository
@@ -33,7 +30,7 @@ public abstract class AbstractCacheSecurityContextRepository
     HttpServletRequest request = requestResponseHolder.getRequest();
     String key = getCacheKey(request);
     if (key == null) {
-      log.warn(getCacheName() + ": the cache key is null");
+      log.warn(getCacheName() + ":the cache key is null");
       return null;
     }
     Object contextFromCache = contextCache.get(key);
@@ -93,4 +90,5 @@ public abstract class AbstractCacheSecurityContextRepository
   protected abstract String getCacheName();
 
   protected abstract String getCacheKey(HttpServletRequest request);
+
 }

@@ -49,8 +49,8 @@ dependencies {
     compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
 
     // Redis
-    compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
-    compile 'redis.clients:jedis:2.8.2'
+    compileOnly 'org.springframework.data:spring-data-redis:1.7.0.RELEASE'
+    compileOnly 'redis.clients:jedis:2.8.2'
 }
 
 jar {

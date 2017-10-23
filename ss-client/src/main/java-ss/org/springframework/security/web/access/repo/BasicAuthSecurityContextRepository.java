@@ -1,15 +1,14 @@
 package org.springframework.security.web.access.repo;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuth;
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthDetector;
+import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthStatelessAuthenticationSuccessToken;
 import com.dianrong.common.uniauth.common.cache.UniauthCacheManager;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
-
+import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 
 @Slf4j
 public class BasicAuthSecurityContextRepository extends AbstractCacheSecurityContextRepository {
@@ -43,5 +42,10 @@ public class BasicAuthSecurityContextRepository extends AbstractCacheSecurityCon
       log.error("Failed to get basic auth info from request.", ex);
     }
     return null;
+  }
+
+  @Override
+  public Class<? extends Authentication> supportAuthenticationClz() {
+    return BasicAuthStatelessAuthenticationSuccessToken.class;
   }
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.dianrong.common.uniauth.client.custom.model.StatelessAuthenticationSuccessToken;
+import com.dianrong.common.uniauth.client.custom.auth.StatelessAuthenticationSuccessToken;
 
 public class JWTStatelessAuthenticationSuccessToken extends StatelessAuthenticationSuccessToken {
 

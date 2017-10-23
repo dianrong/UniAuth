@@ -49,8 +49,6 @@
         </sec:headers>
         <sec:custom-filter ref="authenticationFilter"
                            position="CAS_FILTER"/>
-        <sec:custom-filter ref="basicAuthAuthenticationFilter"
-                           after="BASIC_AUTH_FILTER"/>
         <sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER"
                            ref="exceptionTranslationFilter"/>
         <sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>
@@ -71,7 +69,7 @@
     <!-- do not change: start -->
     <bean id="exceptionTranslationFilter"
           class="com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter">
-        <constructor-arg name="authenticationEntryPoint" ref="casAuthEntryPoint"/>
+        <constructor-arg ref="casAuthEntryPoint"/>
         <property name="accessDeniedHandler">
             <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
                 <property name="errorPage" value="/errors/403.jsp"/>
@@ -81,9 +79,8 @@
 
     <bean id="concurrencyFilter"
           class="org.springframework.security.web.session.ConcurrentSessionFilter">
-        <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
-        <constructor-arg name="expiredUrl"
-                         value="#{uniauthConfig['cas_server']}/logout?dupsession=true"/>
+        <constructor-arg index="0" ref="sessionRegistry"/>
+        <constructor-arg index="1" value="#{uniauthConfig['cas_server']}/logout?dupsession=true"/>
     </bean>
 
     <bean id="sessionRegistry"
@@ -109,20 +106,16 @@
 
     <!--AuthenticationFilter -->
     <bean id="authenticationFilter"
-          class="com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter">
-        <property name="authenticationType" value="#{domainDefine.authenticationType}"/>
-        <property name="authenticationFilters">
+          class="com.dianrong.common.uniauth.client.custom.filter.DelegateUniauthAuthenticationFilter">
+        <constructor-arg>
             <list>
                 <ref bean="casAuthenticationFilter"/>
                 <ref bean="jwtAuthenticationFilter"/>
-                <ref bean="allAuthenticationFilter"/>
+                <ref bean="basicAuthAuthenticationFilter"/>
             </list>
-        </property>
+        </constructor-arg>
+        <constructor-arg value="#{domainDefine.authenticationTypeList}"/>
     </bean>
-
-    <!-- 支持所有的身份认证方式的一种验证实现 -->
-    <bean id="allAuthenticationFilter"
-          class="com.dianrong.common.uniauth.client.custom.filter.AllAuthenticationFilter"/>
 
     <!-- CAS方式登陆成功之后,验证ST失败的处理Handler -->
     <bean id="ssAuthenticationFailHandler"
@@ -150,7 +143,6 @@
     <bean id="basicAuthAuthenticationFilter"
           class="com.dianrong.common.uniauth.client.custom.filter.UniauthBasicAuthAuthenticationFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="enable" value="#{domainDefine.enableBasicAuth}"/>
         <property name="sessionAuthenticationStrategy" ref="sas"/>
     </bean>
 

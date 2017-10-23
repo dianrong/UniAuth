@@ -12,10 +12,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public final class LoginUserInfoHolder {
 
   /**
-   * 获取当前登陆用户的信息
+   * 获取当前登陆用户的信息.
    *
-   * @return 当前登陆用户对象
-   * @throws UserNotLoginException if not login
+   * @return 当前登陆用户对象.
+   * @throws UserNotLoginException if not login.
    */
   public static UserExtInfo getLoginUserInfo() throws UserNotLoginException {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -30,10 +30,10 @@ public final class LoginUserInfoHolder {
   }
 
   /**
-   * 获取当前登陆用户的租户id
+   * 获取当前登陆用户的租户id.
    *
-   * @return current login user tenancyId
-   * @throws UserNotLoginException if not login
+   * @return current login user tenancyId.
+   * @throws UserNotLoginException if not login.
    */
   public static long getCurrentLoginUserTenancyId() throws UserNotLoginException {
     return getLoginUserInfo().getUserDto().getTenancyId();
