@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security.xsd
+			">
+
+	<b:bean id="uniauthCacheManager" class="com.dianrong.common.uniauth.common.cache.SimpleUniauthCacheManager">
+		<b:property name="redisOperations" ref="ssclientInnerRedisTemplate"/>
+		<b:property name="redisSwitch" ref="ssclientInnerUseRedisSwitch"/>
+	</b:bean>
+
+	<!-- Redis configuration -->
+	<b:bean id="ssclientInnerUseRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch">
+		<b:property name="config" value="#{domainDefine.innerCacheUseRedis}"/>
+	</b:bean>
+
+	<b:bean id="ssclientInnerRedisConfiguration" class = "com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration">
+		<b:property name="defaultConfiguration" ref="redisDefaultConfiguration"/>
+		<b:property name="type" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.type}"/>
+		<b:property name="database" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
+		<b:property name="password" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.password}"/>
+		<b:property name="timeout" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.timeout}"/>
+		<b:property name="host" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.host}"/>
+		<b:property name="port" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.port}"/>
+		<b:property name="master" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.master}"/>
+		<b:property name="sentinels" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.sentinelsStr}"/>
+		<b:property name="clusters" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.clustersStr}"/>
+		<b:property name="maxRedirects" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.maxRedirects}"/>
+	</b:bean>
+
+	<b:bean id="ssclientInnerPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<b:property name="maxIdle" value="200" />
+		<b:property name="testOnBorrow" value="true" />
+	</b:bean>
+
+	<b:bean id="ssclientInnerRedisConnectionFactory" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate">
+		<b:constructor-arg name="configuration" ref="ssclientInnerRedisConfiguration"/>
+		<b:constructor-arg name="poolConfig" ref="ssclientInnerPoolConfig"/>
+		<b:property name="redisSwitch" ref="ssclientInnerUseRedisSwitch"/>
+	</b:bean>
+
+	<b:bean id="ssclientInnerRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<b:constructor-arg ref="ssclientInnerRedisConnectionFactory" />
+		<b:property name="keySerializer" ref="jdkSerializer" />
+		<b:property name="valueSerializer" ref="jdkSerializer" />
+		<b:property name="hashKeySerializer" ref="jdkSerializer" />
+		<b:property name="hashValueSerializer" ref="jdkSerializer" />
+	</b:bean>
+	<b:bean id="jdkSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+</b:beans>

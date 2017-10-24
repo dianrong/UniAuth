@@ -1,33 +1,11 @@
 package org.springframework.security.web.access.expression;
 
-import com.dianrong.common.uniauth.client.custom.SSExpressionSecurityMetadataSource;
-import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
-import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
-import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
-import com.dianrong.common.uniauth.common.bean.request.DomainParam;
-import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
-import com.dianrong.common.uniauth.common.client.DomainDefine;
-import com.dianrong.common.uniauth.common.client.DomainDefine.CasPermissionControlType;
-import com.dianrong.common.uniauth.common.client.UniClientFacade;
-import com.dianrong.common.uniauth.common.cons.AppConstants;
-import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
-import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import lombok.extern.slf4j.Slf4j;
+
+import com.dianrong.common.uniauth.common.client.enums.CasPermissionControlType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.Expression;
@@ -39,6 +17,22 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import com.dianrong.common.uniauth.client.custom.SSExpressionSecurityMetadataSource;
+import com.dianrong.common.uniauth.client.support.CheckDomainDefine;
+import com.dianrong.common.uniauth.common.bean.Response;
+import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
+import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.bean.request.TenancyParam;
+import com.dianrong.common.uniauth.common.client.DomainDefine;
+import com.dianrong.common.uniauth.common.client.UniClientFacade;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
+import com.dianrong.common.uniauth.common.util.ReflectionUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
@@ -70,8 +64,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
       // to be true
       filterSecurityInterceptor
           .setRejectPublicInvocations(domainDefine.isRejectPublicInvocations());
-      FilterInvocationSecurityMetadataSource securityMetadataSource = filterSecurityInterceptor
-          .getSecurityMetadataSource();
+      FilterInvocationSecurityMetadataSource securityMetadataSource =
+          filterSecurityInterceptor.getSecurityMetadataSource();
       if (securityMetadataSource instanceof ExpressionBasedFilterInvocationSecurityMetadataSource) {
         ExpressionBasedFilterInvocationSecurityMetadataSource expressionSecurityMetadataSource =
             (ExpressionBasedFilterInvocationSecurityMetadataSource) securityMetadataSource;
@@ -93,8 +87,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
   private void composeMetadataSource(FilterSecurityInterceptor filterSecurityInterceptor,
       LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> originRequestMap,
       String currentDomainCode) {
-    Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedReuqestMap = getAppendMap(
-        currentDomainCode);
+    Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> configedReuqestMap =
+        getAppendMap(currentDomainCode);
     filterSecurityInterceptor.setSecurityMetadataSource(
         new SSExpressionSecurityMetadataSource(originRequestMap, configedReuqestMap));
   }
@@ -106,8 +100,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
     List<Long> enableTenancyIds = new ArrayList<>();
     while (true) {
       try {
-        Response<List<TenancyDto>> enableTenancys = uniClientFacade.getTenancyResource()
-            .searchTenancy(tenancyParam);
+        Response<List<TenancyDto>> enableTenancys =
+            uniClientFacade.getTenancyResource().searchTenancy(tenancyParam);
         if (enableTenancys.getInfo() != null && !enableTenancys.getInfo().isEmpty()) {
           log.error("failed to  query enable tenancy ids");
           break;
@@ -139,13 +133,13 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
         if (startIndex >= enableTenancyIds.size()) {
           break;
         }
-        int endIndex =
-            (startIndex + perQueryTenancyCount) > enableTenancyIds.size() ? (enableTenancyIds.size()
-                - startIndex) : perQueryTenancyCount;
+        int endIndex = (startIndex + perQueryTenancyCount) > enableTenancyIds.size()
+            ? (enableTenancyIds.size() - startIndex)
+            : perQueryTenancyCount;
         List<Long> includeTenancyIds = enableTenancyIds.subList(startIndex, endIndex);
         domainParam.setIncludeTenancyIds(includeTenancyIds);
-        Response<List<UrlRoleMappingDto>> response = uniClientFacade.getPermissionResource()
-            .getUrlRoleMapping(domainParam);
+        Response<List<UrlRoleMappingDto>> response =
+            uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);
         // Query error
         if (!ObjectUtil.collectionIsEmptyOrNull(response.getInfo())) {
           throw new UniauthCommonException("failed to getUrlRoleMapping");
@@ -179,7 +173,8 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
 
   private Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> convert2StandardMap(
       Map<Long, List<UrlRoleMappingDto>> allUrlRoleMappings) {
-    Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> allMaps = new ConcurrentHashMap<>();
+    Map<Long, LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>> allMaps =
+        new ConcurrentHashMap<>();
     Set<Long> tenancyIds = allUrlRoleMappings.keySet();
     for (Long tenancyId : tenancyIds) {
       List<UrlRoleMappingDto> urlRoleMappingList = allUrlRoleMappings.get(tenancyId);

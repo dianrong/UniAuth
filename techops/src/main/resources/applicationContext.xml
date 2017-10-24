@@ -1,166 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
-    xmlns="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/context
                         http://www.springframework.org/schema/context/spring-context.xsd
-                        http://www.springframework.org/schema/aop
-                        http://www.springframework.org/schema/aop/spring-aop.xsd
-                        http://www.springframework.org/schema/tx
-                        http://www.springframework.org/schema/tx/spring-tx.xsd
                         http://www.springframework.org/schema/security
                         http://www.springframework.org/schema/security/spring-security-4.0.xsd
                         http://www.springframework.org/schema/util 
-                        http://www.springframework.org/schema/util/spring-util.xsd
-                        ">
+                        http://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:component-scan
-        base-package="com.dianrong.common.techops.service, com.dianrong.common.techops.sscustom" />
+            base-package="com.dianrong.common.techops.service, com.dianrong.common.techops.sscustom"/>
 
-    <import resource="classpath:ss-uniauth-client.xml" />
+    <import resource="classpath:ss-uniauth-client.xml"/>
 
     <bean id="domainDefine" class="com.dianrong.common.uniauth.common.client.DomainDefine">
-        <property name="domainCode" value="techops"></property>
+        <property name="domainCode" value="techops"/>
         <property name="userInfoClass"
-            value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"></property>
-        <property name="rejectPublicInvocations" value="false"></property>
+                  value="com.dianrong.common.techops.sscustom.TechOpsUserExtInfo"/>
+        <property name="rejectPublicInvocations" value="false"/>
+        <property name="innerCacheUseRedis" value="true"/>
     </bean>
 
-    <sec:http pattern="/views/**" security="none" />
-    <sec:http pattern="/scripts/**" security="none" />
-    <sec:http pattern="/styles/**" security="none" />
-    <sec:http pattern="/i18n/**" security="none" />
-    <sec:http pattern="/images/**" security="none" />
-    <sec:http pattern="/swagger-ui/**" security="none" />
-    <sec:http pattern="/v2/api-docs" security="none" />
+    <sec:http pattern="/views/**" security="none"/>
+    <sec:http pattern="/scripts/**" security="none"/>
+    <sec:http pattern="/styles/**" security="none"/>
+    <sec:http pattern="/i18n/**" security="none"/>
+    <sec:http pattern="/images/**" security="none"/>
+    <sec:http pattern="/swagger-ui/**" security="none"/>
+    <sec:http pattern="/v2/api-docs" security="none"/>
 
-    <sec:http pattern="/metrics" security="none" />
-    <sec:http pattern="/health" security="none" />
-    <sec:http pattern="/mappings" security="none" />
-    <sec:http pattern="/beans" security="none" />
-    <sec:http pattern="/dump" security="none" />
+    <sec:http pattern="/metrics" security="none"/>
+    <sec:http pattern="/health" security="none"/>
+    <sec:http pattern="/mappings" security="none"/>
+    <sec:http pattern="/beans" security="none"/>
+    <sec:http pattern="/dump" security="none"/>
 
     <sec:http entry-point-ref="casAuthEntryPoint" use-expressions="true"
-        request-matcher="ant">
+              request-matcher="ant" security-context-repository-ref="uniauthSecurityContextRepository"
+              disable-url-rewriting="false">
         <sec:headers>
             <sec:frame-options disabled="true"/>
         </sec:headers>
         <sec:custom-filter ref="authenticationFilter"
-            position="CAS_FILTER" />
-        <sec:custom-filter ref="jwtLogoutFilter"
-            after="CSRF_FILTER" />
+                           position="CAS_FILTER"/>
         <sec:custom-filter after="EXCEPTION_TRANSLATION_FILTER"
-            ref="exceptionTranslationFilter" />
-        <sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
+                           ref="exceptionTranslationFilter"/>
+        <sec:custom-filter ref="singleLogoutFilter" before="CAS_FILTER"/>
         <sec:custom-filter ref="requestSingleLogoutFilter"
-            before="LOGOUT_FILTER" />
-        <sec:csrf disabled="true" />
+                           before="LOGOUT_FILTER"/>
+        <sec:csrf disabled="true"/>
         <sec:custom-filter position="CONCURRENT_SESSION_FILTER"
-            ref="concurrencyFilter" />
-        <sec:session-management
-            session-authentication-strategy-ref="sas"
-            invalid-session-url="#{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas" />
-        <sec:logout delete-cookies="JSESSIONID" />
-        <!-- the following part is customized intercept-url element definition 
+                           ref="concurrencyFilter"/>
+        <sec:session-management session-authentication-strategy-ref="sas"
+                                invalid-session-url="#{uniauthConfig['cas_server']}/login?service=#{uniauthConfig['domains.'+domainDefine.domainCode]}/login/cas"/>
+        <sec:logout delete-cookies="JSESSIONID"/>
+        <!-- the following part is customized intercept-url element definition
             for subsystem note: conflict with the judgment of regular expression, so 
             the priority problem MUST be resolved. -->
-        <sec:intercept-url pattern="/**" access="isAuthenticated()" />
+        <sec:intercept-url pattern="/**" access="isAuthenticated()"/>
     </sec:http>
 
     <!-- do not change: start -->
     <bean id="exceptionTranslationFilter"
-        class="com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter">
-        <constructor-arg name="authenticationEntryPoint" ref="casAuthEntryPoint"></constructor-arg>
+          class="com.dianrong.common.uniauth.client.custom.filter.SSExceptionTranslationFilter">
+        <constructor-arg ref="casAuthEntryPoint"/>
         <property name="accessDeniedHandler">
-            <bean
-                class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-                <property name="errorPage" value="/errors/403.jsp" />
+            <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+                <property name="errorPage" value="/errors/403.jsp"/>
             </bean>
         </property>
     </bean>
-    
+
     <bean id="concurrencyFilter"
-        class="org.springframework.security.web.session.ConcurrentSessionFilter">
-        <constructor-arg name="sessionRegistry" ref="sessionRegistry"></constructor-arg>
-        <constructor-arg name="expiredUrl"
-            value="#{uniauthConfig['cas_server']}/logout?dupsession=true"></constructor-arg>
+          class="org.springframework.security.web.session.ConcurrentSessionFilter">
+        <constructor-arg index="0" ref="sessionRegistry"/>
+        <constructor-arg index="1" value="#{uniauthConfig['cas_server']}/logout?dupsession=true"/>
     </bean>
-    
+
     <bean id="sessionRegistry"
-        class="org.springframework.security.core.session.SessionRegistryImpl" />
+          class="org.springframework.security.core.session.SessionRegistryImpl"/>
 
     <bean id="sas"
-        class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+          class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
         <constructor-arg>
             <list>
                 <bean
-                    class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
-                    <constructor-arg ref="sessionRegistry" />
+                        class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+                    <constructor-arg ref="sessionRegistry"/>
                 </bean>
                 <bean
-                    class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
-                    <constructor-arg ref="sessionRegistry" />
-                    <property name="maximumSessions" value="1" />
-                    <property name="exceptionIfMaximumExceeded" value="false" />
+                        class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+                    <constructor-arg ref="sessionRegistry"/>
+                    <property name="maximumSessions" value="1"/>
+                    <property name="exceptionIfMaximumExceeded" value="false"/>
                 </bean>
             </list>
         </constructor-arg>
     </bean>
 
-    <!-- JWT logout filter -->
-    <bean id="jwtLogoutFilter" class="com.dianrong.common.uniauth.client.custom.filter.UniauthJWTLogoutFilter">
-       <constructor-arg ref="uniauthJWTSecurity" />
-       <constructor-arg value="#{uniauthConfig['cas_server']}/logout" />
-       <constructor-arg>
-           <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
-       </constructor-arg>
-        <property name="jwtQuery" ref="jwtQuery" />
-        <property name="authenticationType" value="#{domainDefine.authenticationType}" />
-    </bean>
-
     <!--AuthenticationFilter -->
     <bean id="authenticationFilter"
-        class="com.dianrong.common.uniauth.client.custom.filter.DelegateAuthenticationFilter">
-        <property name="authenticationType" value="#{domainDefine.authenticationType}" />
-        <property name="authenticationFilters">
+          class="com.dianrong.common.uniauth.client.custom.filter.DelegateUniauthAuthenticationFilter">
+        <constructor-arg>
             <list>
-                <ref bean="casAuthenticationFilter" />
-                <ref bean="jwtAuthenticationFilter" />
-                <ref bean="allAuthenticationFilter"/>
+                <ref bean="casAuthenticationFilter"/>
+                <ref bean="jwtAuthenticationFilter"/>
+                <ref bean="basicAuthAuthenticationFilter"/>
             </list>
-        </property>
+        </constructor-arg>
+        <constructor-arg value="#{domainDefine.authenticationTypeList}"/>
     </bean>
-
-    <!-- 支持所有的身份认证方式的一种验证实现 -->
-    <bean id="allAuthenticationFilter" class="com.dianrong.common.uniauth.client.custom.filter.AllAuthenticationFilter"/>
 
     <!-- CAS方式登陆成功之后,验证ST失败的处理Handler -->
     <bean id="ssAuthenticationFailHandler"
-        class="com.dianrong.common.uniauth.client.custom.handler.SSAuthenticationFailureHandler" />
-        
+          class="com.dianrong.common.uniauth.client.custom.handler.SSAuthenticationFailureHandler"/>
+
     <bean id="jwtAuthenticationFilter"
-        class="com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter">
-        <constructor-arg index="0" ref="uniauthJWTSecurity" />
-        <constructor-arg index="1" ref="jwtQuery" />
-        <property name="authenticationManager" ref="authenticationManager" />
-        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
-        <property name="authenticationFailureHandler" ref="jwtAuthenticationFailureHandler"></property>
-        <property name="sessionAuthenticationStrategy" ref="sas" />
+          class="com.dianrong.common.uniauth.client.custom.filter.UniauthJWTAuthenticationFilter">
+        <constructor-arg index="0" ref="uniauthJWTSecurity"/>
+        <constructor-arg index="1" ref="jwtQuery"/>
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"/>
+        <property name="authenticationFailureHandler" ref="jwtAuthenticationFailureHandler"/>
+        <property name="sessionAuthenticationStrategy" ref="sas"/>
     </bean>
 
     <bean id="casAuthenticationFilter"
-        class="com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter">
-        <property name="authenticationManager" ref="authenticationManager" />
-        <property name="filterProcessesUrl" value="/login/cas"></property>
-        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"></property>
-        <property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"></property>
-        <property name="sessionAuthenticationStrategy" ref="sas" />
+          class="com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="filterProcessesUrl" value="/login/cas"/>
+        <property name="authenticationSuccessHandler" ref="ssAuthenticationSuccessHandler"/>
+        <property name="authenticationFailureHandler" ref="ssAuthenticationFailHandler"/>
+        <property name="sessionAuthenticationStrategy" ref="sas"/>
     </bean>
-    
+
+    <bean id="basicAuthAuthenticationFilter"
+          class="com.dianrong.common.uniauth.client.custom.filter.UniauthBasicAuthAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="sessionAuthenticationStrategy" ref="sas"/>
+    </bean>
+
     <!-- 提供两个jwt获取的方式,可配置header和parameter名来自定义参数名 -->
     <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestHeaderJWTQuery"/>
     <bean class="com.dianrong.common.uniauth.client.custom.jwt.RequestParameterJWTQuery"/>
@@ -169,13 +154,11 @@
     <!-- trick: must be same id or name, not more than one PermissionEvaluators 
         allowed, see AccessControlListTag.java -->
     <bean id="uniauthPermissionEvaluator"
-        class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator"
-        primary="true"></bean>
-
+          class="com.dianrong.common.techops.sscustom.TechOpsPermissionEvaluator" primary="true"/>
 
     <bean id="handlerMappingC"
-        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
-        p:alwaysUseFullPath="true">
+          class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
+          p:alwaysUseFullPath="true">
         <property name="mappings">
             <util:properties>
                 <prop key="/servicei18n">i18nController</prop>
@@ -184,23 +167,23 @@
     </bean>
 
     <bean id="i18nController"
-        class="com.dianrong.common.uniauth.common.server.UniauthI18NController" />
+          class="com.dianrong.common.uniauth.common.server.UniauthI18NController"/>
 
     <bean id="techopsResourceService"
-        class="com.dianrong.common.uniauth.common.server.UniauthResourceService">
-        <property name="path" value="techops" />
-        <property name="menuPath" value="menus.properties"></property>
+          class="com.dianrong.common.uniauth.common.server.UniauthResourceService">
+        <property name="path" value="techops"/>
+        <property name="menuPath" value="menus.properties"/>
     </bean>
 
     <bean id="i18nHolder"
-        class="com.dianrong.common.uniauth.common.server.UniauthI18NHolder">
-        <property name="techOpsResource" ref="techopsResourceService" />
+          class="com.dianrong.common.uniauth.common.server.UniauthI18NHolder">
+        <property name="techOpsResource" ref="techopsResourceService"/>
     </bean>
 
     <!-- set api control account -->
     <bean
-        class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
-        <property name="account" value="techops" />
-        <property name="password" value="#{uniauthConfig['apicall.techops.pwd']?:''}" />
+            class="com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder">
+        <property name="account" value="techops"/>
+        <property name="password" value="#{uniauthConfig['apicall.techops.pwd']?:''}"/>
     </bean>
 </beans>

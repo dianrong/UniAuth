@@ -16,4 +16,18 @@
 			value="#{systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] == null? '/com/dianrong/cfg/1.0.0/uniauth' : systemEnvironment['DR_CFG_ZOOKEEPER_BASE_PATH'] + '/uniauth'}" />
 		<property name="needKeepAlive" value="true" />
 	</bean>
+
+	<!--为避免Redis连接的配置繁琐,所以将这部分复杂的配置放到common配置中提前配置好-->
+	<bean id="redisDefaultConfiguration" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration">
+		<property name="type" value="#{uniauthConfig['redis.type']}"/>
+		<property name="database" value="#{uniauthConfig['redis.database']}"/>
+		<property name="password" value="#{uniauthConfig['redis.password']}"/>
+		<property name="timeout" value="#{uniauthConfig['redis.timeout']}"/>
+		<property name="host" value="#{uniauthConfig['redis.host']}"/>
+		<property name="port" value="#{uniauthConfig['redis.port']}"/>
+		<property name="master" value="#{uniauthConfig['redis.master']}"/>
+		<property name="sentinels" value="#{uniauthConfig['redis.sentinels']}"/>
+		<property name="clusters" value="#{uniauthConfig['redis.clusters']}"/>
+		<property name="maxRedirects" value="#{uniauthConfig['redis.maxRedirects']}"/>
+	</bean>
 </beans>

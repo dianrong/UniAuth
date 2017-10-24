@@ -65,7 +65,7 @@ public class PermissionHandler implements ModeHandler {
     for (Set<String> set : arrayList) {
       for (String permType : set) {
         simpleGrantedAuthorityArrayList
-            .add(new SimpleGrantedAuthority(AuthorityStringUtil.roleAuthrorityFormat(permType)));
+            .add(new SimpleGrantedAuthority(AuthorityStringUtil.roleAuthorityFormat(permType)));
       }
     }
   }

@@ -8,31 +8,29 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
+import com.dianrong.common.uniauth.client.custom.model.ItemBox;
+
 /**
  * 用于共享域的实现.
  *
  * @author wanglin
  */
-public class ShareDomainAuthentication implements Authentication {
+public class ShareDomainAuthentication extends ItemBox<Authentication> implements Authentication {
 
   private static final long serialVersionUID = -9091689502132190220L;
 
   /**
    * 用户的详细信息.
    */
-  private Object principal;
-  /**
-   * 原始Authentication.
-   */
-  private Authentication originalAuthentication;
+  private final Object principal;
 
   /**
    * 构造函数.
    */
   public ShareDomainAuthentication(Authentication originalAuthentication, Object principal) {
+    super(originalAuthentication);
     Assert.notNull(originalAuthentication);
     Assert.notNull(principal);
-    this.originalAuthentication = originalAuthentication;
     this.principal = principal;
   }
 
@@ -44,36 +42,36 @@ public class ShareDomainAuthentication implements Authentication {
     if (principal instanceof UserDetails) {
       return Collections.unmodifiableCollection(((UserDetails) principal).getAuthorities());
     }
-    return Collections.unmodifiableCollection(this.originalAuthentication.getAuthorities());
+    return Collections.unmodifiableCollection(super.getItem().getAuthorities());
   }
 
   @Override
   public String getName() {
-    return this.originalAuthentication.getName();
+    return super.getItem().getName();
   }
 
   @Override
   public Object getCredentials() {
-    return this.originalAuthentication.getCredentials();
+    return super.getItem().getCredentials();
   }
 
   @Override
   public Object getDetails() {
-    return this.originalAuthentication.getDetails();
+    return super.getItem().getDetails();
   }
 
   @Override
   public Object getPrincipal() {
-    return this.originalAuthentication.getPrincipal();
+    return super.getItem().getPrincipal();
   }
 
   @Override
   public boolean isAuthenticated() {
-    return this.originalAuthentication.isAuthenticated();
+    return super.getItem().isAuthenticated();
   }
 
   @Override
   public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-    this.originalAuthentication.setAuthenticated(isAuthenticated);
+    super.getItem().setAuthenticated(isAuthenticated);
   }
 }

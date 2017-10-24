@@ -115,7 +115,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
   }
 
   /**
-   * . 指定删除service ticket
+   * 指定删除service ticket.
    */
   private boolean deleteServiceTicket(String ticketId) {
     if (ticketId == null) {

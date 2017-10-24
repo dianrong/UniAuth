@@ -1,43 +1,43 @@
 buildscript {
-	repositories {
-	    maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
-	    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-		jcenter()
-		mavenCentral()
-	}
-	dependencies {
-		classpath 'io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE'
-		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
-		classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.0'
-	}
+    repositories {
+        maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE'
+        classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.0'
+    }
 }
 plugins {
-	id "org.sonarqube" version "2.0.1"
+    id "org.sonarqube" version "2.0.1"
 }
 
 ext {
     dianrongRepoEnable = false
     jackson_version_old = '2.8.8'
     jackson_databind_version = '2.8.10-SNAPSHOT'
-    log4j_version_new='2.8.2'
+    log4j_version_new = '2.8.2'
     webflow_version = '2.4.5.RELEASE'
 }
 
 // Dianrong repo status set
-task checkDianrongRepoStatus()  {
+task checkDianrongRepoStatus() {
     URL url = new URL("http://nexus.dianrong.com/nexus/#welcome");
     URLConnection rulConnection = url.openConnection();
     HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
     httpUrlConnection.setReadTimeout(1000);
     try {
-      def responseCode = httpUrlConnection.getResponseCode();
-       if (responseCode == 200 ) {
+        def responseCode = httpUrlConnection.getResponseCode();
+        if (responseCode == 200) {
             dianrongRepoEnable = true;
-       } else {
+        } else {
             dianrongRepoEnable = false;
-       }
-    } catch(Exception ex) {
-            dianrongRepoEnable = false;
+        }
+    } catch (Exception ex) {
+        dianrongRepoEnable = false;
     }
     if (dianrongRepoEnable) {
         println 'DianRong repository is enable'
@@ -48,8 +48,8 @@ task checkDianrongRepoStatus()  {
 
 allprojects {
     group = 'com.dianrong.common.uniauth'
-    version = '2.0.25.RELEASE'
-    ext{
+    version = '2.0.32.RELEASE'
+    ext {
         spring_version = '4.1.6.RELEASE'
     }
 
@@ -57,60 +57,58 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
-	apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'io.spring.dependency-management'
 
     repositories {
         maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     }
 
-    repositories{
-		mavenCentral()
-	}
-	
-	publishing {
-    	publications.all {
-			pom.withXml {
-				asNode().dependencies.'*'.findAll() {
-					it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
-						dep.name == it.artifactId.text()
-					}
-				}.each { it.scope*.value = 'compile'}
-			}
-		}
+    repositories {
+        mavenCentral()
+    }
+
+    publishing {
+        publications.all {
+            pom.withXml {
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each { it.scope*.value = 'compile' }
+            }
+        }
         repositories {
             maven {
-            	if(project.version.endsWith('-SNAPSHOT')) {
-            		url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/' 
-            	}
-           		else {
-           		 	url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/' 
-           		}
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
+                } else {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/mirror/'
+                }
             }
-            
+
             maven {
-	            if(project.version.endsWith('-SNAPSHOT')) {
-	            	url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
-	            }
-	            else {
-	            	url 'http://nexus.dianrong.com/nexus/content/repositories/internal/'
-	            }
-	        }
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/snapshots/'
+                } else {
+                    url 'http://nexus.dianrong.com/nexus/content/repositories/internal/'
+                }
+            }
         }
     }
-	
+
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
-    
+
     dependencyManagement {
-	    imports {
-	       //see dependencies http://docs.spring.io/platform/docs/2.0.8.RELEASE/reference/htmlsingle/#appendix-dependency-versions
-	        mavenBom 'io.spring.platform:platform-bom:2.0.8.RELEASE'
-	    }
-	    dependencies {
+        imports {
+            //see dependencies http://docs.spring.io/platform/docs/2.0.8.RELEASE/reference/htmlsingle/#appendix-dependency-versions
+            mavenBom 'io.spring.platform:platform-bom:2.0.8.RELEASE'
+        }
+        dependencies {
             dependency 'org.projectlombok:lombok:1.16.10'
             dependency 'org.apache.httpcomponents:fluent-hc:4.5.2'
             dependency 'com.google.guava:guava:18.0'
@@ -118,7 +116,7 @@ allprojects {
             dependency 'org.mybatis:mybatis:3.2.8'
             dependency 'org.mybatis:mybatis-spring:1.2.2'
             dependency "javax.mail:mail:1.5.0-b01"
-            
+
             // jackson
             dependency "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
             dependency "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
@@ -127,9 +125,9 @@ allprojects {
             } else {
                 dependency "com.fasterxml.jackson.core:jackson-databind:${jackson_version_old}"
             }
-            
+
             dependency 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.6.7'
-            
+
             // update log4j version
             dependency "org.apache.logging.log4j:log4j-core:${log4j_version_new}"
             dependency "org.apache.logging.log4j:log4j:${log4j_version_new}"
@@ -137,58 +135,58 @@ allprojects {
             dependency "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version_new}"
             dependency "org.apache.logging.log4j:log4j-jcl:${log4j_version_new}"
             dependency "org.apache.logging.log4j:log4j-web:${log4j_version_new}"
-         }
-	}
+        }
+    }
 
-	dependencies {
-    	testCompile 'junit:junit'
-	}
+    dependencies {
+        testCompile 'junit:junit'
+    }
 
-	sonarqube {
-		properties {
-			property "sonar.host.url", "http://10.18.19.64:9000"
-			property "sonar.jdbc.url", "jdbc:mysql://10.18.19.43:3308/sonar?useUnicode=true&characterEncoding=utf8"
-			property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
-			property "sonar.jdbc.username", "sonar"
-			property "sonar.jdbc.password", "sonar"
+    sonarqube {
+        properties {
+            property "sonar.host.url", "http://10.18.19.64:9000"
+            property "sonar.jdbc.url", "jdbc:mysql://10.18.19.43:3308/sonar?useUnicode=true&characterEncoding=utf8"
+            property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
+            property "sonar.jdbc.username", "sonar"
+            property "sonar.jdbc.password", "sonar"
 
-			property "sonar.projectKey", "dianrong:uniauth"
-			property "sonar.projectName", "uniauth"
-			property "sonar.projectVersion", version
+            property "sonar.projectKey", "dianrong:uniauth"
+            property "sonar.projectName", "uniauth"
+            property "sonar.projectVersion", version
 
-			property "sonar.exclusions", "**/*Test.java"
-			property "sonar.test.inclusions", "**/*Test.java"
-			property "sonar.java.coveragePlugin", "jacoco"
-			property "sonar.junit.reportsPath", "build/test-results/"
-			property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
-			property "sonar.jacoc.itReportPath", "build/jacoco/jacoco.exec"
-		}
-	}
+            property "sonar.exclusions", "**/*Test.java"
+            property "sonar.test.inclusions", "**/*Test.java"
+            property "sonar.java.coveragePlugin", "jacoco"
+            property "sonar.junit.reportsPath", "build/test-results/"
+            property "sonar.jacoco.reportPath", "build/jacoco/test.exec"
+            property "sonar.jacoc.itReportPath", "build/jacoco/jacoco.exec"
+        }
+    }
 }
 
 project(':common') {
-	dependencies {
-		compile 'org.apache.commons:commons-lang3:3.4'
-		compile 'com.google.guava:guava:18.0'
-	}
+    dependencies {
+        compile 'org.apache.commons:commons-lang3:3.4'
+        compile 'com.google.guava:guava:18.0'
+    }
 }
 
 project(':ss-client') {
-	dependencies {
-		compile project(":common")
-	    compile 'org.apache.curator:curator-recipes:2.9.1'
-	    compile 'org.springframework.security:spring-security-web'
-		compile 'org.springframework.security:spring-security-config'
-		compile 'org.springframework.security:spring-security-core'
-		compile 'org.springframework.security:spring-security-remoting'
-		compile 'org.springframework.security:spring-security-ldap'
-		compile 'org.springframework.security:spring-security-acl'
-		compile 'org.springframework.security:spring-security-cas'
-		compile 'org.springframework.security:spring-security-openid'
-		compile 'org.springframework.security:spring-security-taglibs'
-		compile 'org.hibernate:hibernate-validator'
-		
-		compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
+    dependencies {
+        compile project(":common")
+        compile 'org.apache.curator:curator-recipes:2.9.1'
+        compile 'org.springframework.security:spring-security-web'
+        compile 'org.springframework.security:spring-security-config'
+        compile 'org.springframework.security:spring-security-core'
+        compile 'org.springframework.security:spring-security-remoting'
+        compile 'org.springframework.security:spring-security-ldap'
+        compile 'org.springframework.security:spring-security-acl'
+        compile 'org.springframework.security:spring-security-cas'
+        compile 'org.springframework.security:spring-security-openid'
+        compile 'org.springframework.security:spring-security-taglibs'
+        compile 'org.hibernate:hibernate-validator'
+
+        compile "com.fasterxml.jackson.core:jackson-core:${jackson_version_old}"
         compile "com.fasterxml.jackson.core:jackson-annotations:${jackson_version_old}"
         if (rootProject.dianrongRepoEnable) {
             compile "com.fasterxml.jackson.core:jackson-databind:${jackson_databind_version}"

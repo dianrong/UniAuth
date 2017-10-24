@@ -1,12 +1,17 @@
+debug: true
 spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
   profiles:
     active: local
-    
+
 ---
 spring:
   profiles: local
 
-DR_CFG_ZOOKEEPER_ENV_URL: "localhost:2181"
+DR_CFG_ZOOKEEPER_ENV_URL: "10.8.10.154:2181"
 domainCode: springboot-ssclient
 server: 
   port: 8180

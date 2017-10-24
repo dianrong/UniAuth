@@ -1,44 +1,41 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
-import com.dianrong.common.uniauth.client.custom.jwt.ComposedJWTQuery;
-import com.dianrong.common.uniauth.client.custom.jwt.JWTAuthenticationRequestMatcher;
+import com.dianrong.common.uniauth.client.custom.auth.AuthenticationTagHolder;
+import com.dianrong.common.uniauth.client.custom.handler.EmptyAuthenticationSuccessHandler;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
-import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil;
-import com.dianrong.common.uniauth.client.custom.jwt.JWTWebScopeUtil.JWTUserTagInfo;
+import com.dianrong.common.uniauth.client.custom.jwt.JWTStatelessAuthenticationSuccessToken;
+import com.dianrong.common.uniauth.client.custom.jwt.UniauthIdentityToken;
 import com.dianrong.common.uniauth.client.custom.jwt.exp.JWTInvalidAuthenticationException;
-import com.dianrong.common.uniauth.client.custom.model.UniauthIdentityToken;
+import com.dianrong.common.uniauth.client.custom.model.ItemBox;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity;
 import com.dianrong.common.uniauth.common.jwt.UniauthUserJWTInfo;
 import com.dianrong.common.uniauth.common.jwt.exp.InvalidJWTExpiredException;
 import com.dianrong.common.uniauth.common.jwt.exp.LoginJWTExpiredException;
 import com.dianrong.common.uniauth.common.util.Assert;
-
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.access.repo.DynamicSecurityContext;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  * 用于JWT的身份认证实现.
- * 
- * @author wanglin
  *
+ * @author wanglin
  */
 @Slf4j
-public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter
-    implements UniauthAuthenticationFilter {
+public class UniauthJWTAuthenticationFilter extends UniauthAbstractAuthenticationFilter {
 
   /**
    * JWT验证工具.
@@ -48,7 +45,7 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   /**
    * 获取JWT工具类, 默认值.
    */
-  private JWTQuery jwtQuery = new ComposedJWTQuery();
+  private final JWTQuery jwtQuery;
 
   /**
    * 拦截登陆的请求.
@@ -58,46 +55,15 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
   /**
    * 覆盖父类中的AuthenticationSuccessHandler.
    */
-  private AuthenticationSuccessHandler localSuccessHandler;
-
-  /**
-   * 请求身份拦截匹配.
-   */
-  private RequestMatcher requiresAuthenticationRequestMatcher;
-
-  /**
-   * 定义一个什么都不做的AuthenticationSuccessHandler来替换父类中的AuthenticationSuccessHandler.
-   * 
-   */
-  private static final class EmptyAuthenticationSuccessHandler
-      implements AuthenticationSuccessHandler {
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-        Authentication authentication) throws IOException, ServletException {
-      // do nothing
-    }
-  }
-
-  /**
-   * 用于缓存解析的JWT信息.
-   */
-  private static final ThreadLocal<JWTUserTagInfo> TAG_INFO_CACHE =
-      new ThreadLocal<JWTUserTagInfo>();
+  private AuthenticationSuccessHandler loginSuccessHandler;
 
   public UniauthJWTAuthenticationFilter(UniauthJWTSecurity uniauthJWTSecurity, JWTQuery jwtQuery) {
-    this(new JWTAuthenticationRequestMatcher(jwtQuery), uniauthJWTSecurity);
-    Assert.notNull(jwtQuery);
+    super(new AntPathRequestMatcher("/**"));
+    Assert.notNull(uniauthJWTSecurity, "UniauthJWTSecurity must not be null");
+    Assert.notNull(jwtQuery, "JWTQuery must not be null");
     this.jwtQuery = jwtQuery;
-  }
-
-  public UniauthJWTAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher,
-      UniauthJWTSecurity uniauthJWTSecurity) {
-    super(requiresAuthenticationRequestMatcher);
-    Assert.notNull(requiresAuthenticationRequestMatcher);
-    Assert.notNull(uniauthJWTSecurity);
-    this.requiresAuthenticationRequestMatcher = requiresAuthenticationRequestMatcher;
     this.uniauthJWTSecurity = uniauthJWTSecurity;
-    this.localSuccessHandler = super.getSuccessHandler();
+    this.loginSuccessHandler = super.getSuccessHandler();
     super.setAuthenticationSuccessHandler(new EmptyAuthenticationSuccessHandler());
   }
 
@@ -112,16 +78,8 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
     String jwt = jwtQuery.getJWT(request);
     try {
       UniauthUserJWTInfo info = uniauthJWTSecurity.getInfoFromJwt(jwt);
-      String identity = info.getIdentity();
-      Long tenancyId = info.getTenancyId();
-
-      // Cache
-      JWTUserTagInfo tagCache = new JWTUserTagInfo();
-      tagCache.setIdentity(identity);
-      tagCache.setTenancyId(tenancyId);
-      TAG_INFO_CACHE.set(tagCache);
-
-      UniauthIdentityToken authRequest = new UniauthIdentityToken(identity, tenancyId);
+      UniauthIdentityToken authRequest =
+          new UniauthIdentityToken(info.getIdentity(), info.getTenancyId());
       return this.getAuthenticationManager().authenticate(authRequest);
     } catch (LoginJWTExpiredException | InvalidJWTExpiredException e) {
       log.error("JWT is invalid!", e);
@@ -137,13 +95,10 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
       FilterChain chain, Authentication authResult) throws IOException, ServletException {
     // 完成登陆成功的处理流程
     super.successfulAuthentication(request, response, chain, authResult);
-    JWTUserTagInfo tagInfo = TAG_INFO_CACHE.get();
-    JWTWebScopeUtil.refreshJWTUserInfoTag(tagInfo, request);
-
     // 判断是否继续访问,还是跳转到首页
     if (loginRequestMatcher.matches(request)) {
       // 登陆操作,需要跳转到首页去
-      this.localSuccessHandler.onAuthenticationSuccess(request, response, authResult);
+      this.loginSuccessHandler.onAuthenticationSuccess(request, response, authResult);
     } else {
       // 普通访问, 继续执行Filter链
       chain.doFilter(request, response);
@@ -154,48 +109,76 @@ public class UniauthJWTAuthenticationFilter extends AbstractAuthenticationProces
     return jwtQuery;
   }
 
-  public void setJwtQuery(JWTQuery jwtQuery) {
-    Assert.notNull(jwtQuery);
-    this.jwtQuery = jwtQuery;
-    if (this.requiresAuthenticationRequestMatcher instanceof JWTAuthenticationRequestMatcher) {
-      ((JWTAuthenticationRequestMatcher) this.requiresAuthenticationRequestMatcher)
-          .setJwtQuery(jwtQuery);
-    }
-  }
-
   /**
    * 重写覆盖父类的setAuthenticationSuccessHandler方法.
    */
   @Override
   public void setAuthenticationSuccessHandler(AuthenticationSuccessHandler successHandler) {
     Assert.notNull(successHandler, "successHandler cannot be null");
-    this.localSuccessHandler = successHandler;
+    this.loginSuccessHandler = successHandler;
   }
 
   /**
    * 设置登陆的请求匹配的Matcher.
-   * 
-   * @param requestMatcher
    */
-  public final void setLoginReuqestRequestMatcher(RequestMatcher requestMatcher) {
+  public final void setLoginRequestRequestMatcher(RequestMatcher requestMatcher) {
     Assert.notNull(requestMatcher, "requestMatcher cannot be null");
     this.loginRequestMatcher = requestMatcher;
   }
 
   @Override
   public boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-    return this.requiresAuthenticationRequestMatcher.matches(request);
+    String jwt = jwtQuery.getJWT(request);
+    if (jwt == null) {
+      return false;
+    }
+    // 验证JWT.
+    UniauthUserJWTInfo info;
+    try {
+      info = uniauthJWTSecurity.getInfoFromJwt(jwt);
+    } catch (LoginJWTExpiredException e) {
+      log.error("JWT:{jwt} is expired!", e);
+      return false;
+    } catch (InvalidJWTExpiredException e) {
+      log.error("JWT:{jwt} is invalid!", e);
+      return false;
+    }
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+      return true;
+    }
+
+    JWTStatelessAuthenticationSuccessToken token = null;
+    if (authentication instanceof JWTStatelessAuthenticationSuccessToken) {
+      token = (JWTStatelessAuthenticationSuccessToken) authentication;
+    }
+    if (token == null && authentication instanceof ItemBox) {
+      token =
+          ItemBox.getItem((ItemBox) authentication, JWTStatelessAuthenticationSuccessToken.class);
+    }
+    if (token == null) {
+      log.warn("Cache conflict, authentication:" + authentication);
+      return true;
+    }
+    // 匹配一下tenancyCode 和 account
+    if (!ObjectUtil.objectEqual(info.getTenancyId(), token.getTenancyId())
+        || !ObjectUtil.objectEqual(info.getIdentity(), token.getIdentity())) {
+      log.warn("JWT cache key conflict:TenancyId:{},Identity:{}", token.getTenancyId(),
+          token.getIdentity());
+      // 此种方式会导致不停的访问服务验证身份,缓存不起作用.
+      return true;
+    }
+
+    // 缓存生效,相当于通过缓存认证成功了一次
+    AuthenticationTagHolder.authenticated(authenticationType());
+    return false;
   }
 
   /**
    * 设置登陆的请求的URL.
    */
   public void setLoginRequestUrl(String loginRequestUrl) {
-    setLoginReuqestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
-  }
-
-  @Override
-  public int getOrder() {
-    return -100;
+    setLoginRequestRequestMatcher(new AntPathRequestMatcher(loginRequestUrl));
   }
 }

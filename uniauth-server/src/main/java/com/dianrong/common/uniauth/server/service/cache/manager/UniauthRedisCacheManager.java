@@ -1,22 +1,23 @@
 package com.dianrong.common.uniauth.server.service.cache.manager;
 
+import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
+import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
 import com.dianrong.common.uniauth.common.util.Assert;
-import com.dianrong.common.uniauth.server.service.cache.switcher.RedisCacheSwitch;
-import com.dianrong.common.uniauth.server.service.cache.switcher.Switch;
-
-import java.util.Collection;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager;
 
+import java.util.Collection;
+
 @Slf4j
 public class UniauthRedisCacheManager implements CacheManager, InitializingBean {
 
-  private Switch configSwitch;
+  /**
+   * 配置字符串.
+   */
+  private UseRedisSwitch redisSwitch;
 
   private CacheManager cacheManager;
 
@@ -29,9 +30,9 @@ public class UniauthRedisCacheManager implements CacheManager, InitializingBean 
 
   private int expireSeconds;
 
-  public void setConfigSwitch(Switch configSwitch) {
-    Assert.notNull(configSwitch);
-    this.configSwitch = configSwitch;
+  public void setRedisSwitch(UseRedisSwitch redisSwitch) {
+    Assert.notNull(redisSwitch, "redisSwitch must not be null.");
+    this.redisSwitch = redisSwitch;
   }
 
   @Override
@@ -61,10 +62,10 @@ public class UniauthRedisCacheManager implements CacheManager, InitializingBean 
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    if (this.configSwitch == null) {
-      this.configSwitch = new RedisCacheSwitch(Boolean.TRUE.toString());
+    if (this.redisSwitch == null) {
+      this.redisSwitch = new SimpleUseRedisSwitch(Boolean.TRUE.toString());
     }
-    if (this.configSwitch.on()) {
+    if (this.redisSwitch.isOn()) {
       Assert.notNull(this.redisCacheManager,
           "use useRedisCacheManager, useRedisCacheManager can not be null");
       log.info("Spring Cache use RedisCacheManager");

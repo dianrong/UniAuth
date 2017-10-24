@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
+import com.dianrong.common.uniauth.common.client.enums.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.google.common.collect.Lists;
@@ -132,7 +133,7 @@ public final class SingleDomainUserExtInfo extends User {
   // for initiate current user's regular pattern set
   private Set<SSRegularPattern> constructPermittedRegularPattern() {
     Set<PermissionDto> permissions =
-        permDtoMap.get(DomainDefine.CasPermissionControlType.REGULAR_PATTERN.getTypeStr());
+        permDtoMap.get(CasPermissionControlType.REGULAR_PATTERN.getTypeStr());
     if (permissions == null || permissions.isEmpty()) {
       return Collections.emptySet();
     }

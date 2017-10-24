@@ -1,11 +1,11 @@
 buildscript {
     repositories {
-         maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
-         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-         mavenCentral()
+        maven { url 'http://nexus.dianrong.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        mavenCentral()
     }
     dependencies {
-        classpath ("org.springframework.boot:spring-boot-gradle-plugin:1.3.6.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.6.RELEASE")
     }
 }
 
@@ -20,21 +20,26 @@ repositories {
 }
 
 dependencies {
-    compile ("org.springframework.boot:spring-boot-starter-web")
-    
-    // jsp 
-    compile ("org.apache.tomcat.embed:tomcat-embed-jasper")
-    compile 'org.springframework.security:spring-security-web:4.1.0.RELEASE'
-    compile ("javax.servlet:jstl")
+    compile("org.springframework.boot:spring-boot-starter-web")
 
-     compile project(":ss-client")
-    
+    // Jsp
+    compile("org.apache.tomcat.embed:tomcat-embed-jasper")
+    compile 'org.springframework.security:spring-security-web:4.1.0.RELEASE'
+    compile("javax.servlet:jstl")
+
+    compile project(":ss-client")
+//    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.21-SNAPSHOT"
+
     //Log
-     compile 'ch.qos.logback:logback-classic:1.1.7'
-    
-    compile('org.springframework.boot:spring-boot-starter-actuator'){
-         exclude  module:'spring-boot-starter-logging'
+    compile 'ch.qos.logback:logback-classic:1.1.7'
+
+    compile('org.springframework.boot:spring-boot-starter-actuator') {
+        exclude module: 'spring-boot-starter-logging'
     }
+
+    // Redis
+    compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
+    compile 'redis.clients:jedis:2.8.2'
 }
 
 task wrapper(type: Wrapper) {

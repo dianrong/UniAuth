@@ -1,5 +1,8 @@
 package com.dianrong.common.uniauth.cas.registry;
 
+import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
+import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
+import com.dianrong.common.uniauth.common.util.Assert;
 import org.jasig.cas.ticket.registry.DefaultTicketRegistry;
 import org.jasig.cas.ticket.registry.TicketRegistry;
 
@@ -9,7 +12,10 @@ public class TicketRegistryFactoryBean {
 
   private RedisTicketRegistry redisTicketRegistry;
 
-  private String casIsCluster;
+  /**
+   * 配置字符串.
+   */
+  private UseRedisSwitch redisSwitch = new SimpleUseRedisSwitch();
 
   public DefaultTicketRegistry getDefaultTicketRegistry() {
     return defaultTicketRegistry;
@@ -27,19 +33,16 @@ public class TicketRegistryFactoryBean {
     this.redisTicketRegistry = redisTicketRegistry;
   }
 
-  public String getCasIsCluster() {
-    return casIsCluster;
-  }
-
-  public void setCasIsCluster(String casIsCluster) {
-    this.casIsCluster = casIsCluster;
+  public void setRedisSwitch(UseRedisSwitch redisSwitch) {
+    Assert.notNull(redisSwitch, "redisSwitch must not be null.");
+    this.redisSwitch = redisSwitch;
   }
 
   /**
    * 根据控制开关决定TicketRegistry的具体实现.
    */
   public TicketRegistry buildTicketRegistry() {
-    if (casIsCluster != null && "true".equalsIgnoreCase(casIsCluster)) {
+    if (this.redisSwitch.isOn()) {
       return redisTicketRegistry;
     } else {
       return defaultTicketRegistry;

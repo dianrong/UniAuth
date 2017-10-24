@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans
+        xmlns="http://www.springframework.org/schema/security"
+        xmlns:b="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+			http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- SecurityContextRepository configuration -->
+    <b:bean id="uniauthSecurityContextRepository"
+            class="org.springframework.security.web.access.repo.CompositeSecurityContextRepository">
+        <b:property name="securityContextRepositoryList">
+            <b:list>
+                <b:ref bean="sessionSecurityContextRepository"/>
+                <b:ref bean="jwtSecurityContextRepository"/>
+                <b:ref bean="basicAuthSecurityContextRepository"/>
+            </b:list>
+        </b:property>
+    </b:bean>
+
+    <!-- 配置SecurityContextRepository-->
+    <b:bean id="sessionSecurityContextRepository"
+            class="org.springframework.security.web.access.repo.CasSecurityContextRepository">
+        <b:property name="disableUrlRewriting" value="true"/>
+    </b:bean>
+
+    <b:bean id="jwtSecurityContextRepository"
+            class="org.springframework.security.web.access.repo.JWTSecurityContextRepository">
+        <b:constructor-arg name="uniauthCacheManager" ref="uniauthCacheManager"/>
+        <b:constructor-arg name="jwtQuery" ref="jwtQuery"/>
+    </b:bean>
+
+    <b:bean id="basicAuthSecurityContextRepository"
+            class="org.springframework.security.web.access.repo.BasicAuthSecurityContextRepository">
+        <b:constructor-arg name="uniauthCacheManager" ref="uniauthCacheManager"/>
+    </b:bean>
+</b:beans>

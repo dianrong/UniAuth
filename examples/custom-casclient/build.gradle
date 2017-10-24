@@ -16,7 +16,7 @@ dependencies {
     // log
     compile 'ch.qos.logback:logback-classic'
      
-     compile project(":common")
+    compile project(":common")
 }
 
 war {

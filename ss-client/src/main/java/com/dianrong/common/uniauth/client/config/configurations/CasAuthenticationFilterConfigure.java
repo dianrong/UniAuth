@@ -6,12 +6,9 @@ import com.dianrong.common.uniauth.client.custom.filter.UniauthCasAuthentication
 import com.dianrong.common.uniauth.client.custom.handler.JWTAuthenticationFailureHandler;
 import com.dianrong.common.uniauth.client.custom.handler.SSAuthenticationFailureHandler;
 import com.dianrong.common.uniauth.common.client.DomainDefine;
-
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -25,7 +22,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)
-public class CasAuthenticationFilterConfigure implements Configure<UniauthCasAuthenticationFilter>, ApplicationContextAware {
+public class CasAuthenticationFilterConfigure implements Configure<UniauthCasAuthenticationFilter>,
+    ApplicationContextAware {
 
   private static final String DEFAULT_FILTER_PROCESS_URL = "/login/cas";
 
@@ -53,15 +51,16 @@ public class CasAuthenticationFilterConfigure implements Configure<UniauthCasAut
 
   @PostConstruct
   private void init() {
-    String[] names = this.applicationContext.getBeanNamesForType(AuthenticationFailureHandler.class, false, false);
-    for (String name: names) {
+    String[] names = this.applicationContext
+        .getBeanNamesForType(AuthenticationFailureHandler.class, false, false);
+    for (String name : names) {
       Object o = this.applicationContext.getBean(name);
       if (!(o instanceof JWTAuthenticationFailureHandler)) {
-        this.authenticationFailureHandler = (AuthenticationFailureHandler)o;
+        this.authenticationFailureHandler = (AuthenticationFailureHandler) o;
         break;
       }
     }
-    
+
     if (authenticationFailureHandler == null) {
       SSAuthenticationFailureHandler ssAuthenticationFailureHandler =
           new SSAuthenticationFailureHandler();

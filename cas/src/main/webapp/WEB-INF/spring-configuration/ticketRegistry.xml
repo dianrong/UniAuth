@@ -22,30 +22,25 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:c="http://www.springframework.org/schema/c"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="
-              http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-              http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-              http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <description>
         Configuration for the default TicketRegistry which stores the tickets in-memory and cleans them out as specified
         intervals.
     </description>
-    
-    
+
     <!-- Ticket Registry -->
-    <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"></bean>
-    
+    <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"/>
     <bean id="ticketRegistryFactoryBean" class="com.dianrong.common.uniauth.cas.registry.TicketRegistryFactoryBean">
-    	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"></property>
-    	<property name="redisTicketRegistry" ref="redisTicketRegistry"></property>
-    	<property name="casIsCluster" value="#{uniauthConfig['cas.iscluster']?:'false'}"></property>
+    	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"/>
+    	<property name="redisTicketRegistry" ref="redisTicketRegistry"/>
+        <property name="redisSwitch" ref="useRedisSwitch"/>
     </bean>
-    
+
+    <bean id="useRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch">
+        <property name="config" value="#{uniauthConfig['cas.iscluster']?:'false'}"/>
+    </bean>
+
     <!--Default Ticket Registry -->
     <bean id="defaultTicketRegistry" class="org.jasig.cas.ticket.registry.DefaultTicketRegistry"/>
 
@@ -60,41 +55,21 @@
         <property name="testOnBorrow" value="true" />  
     </bean>
 
-    <!--<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"-->
-          <!--p:host-name="#{uniauthConfig['redis.host']?:'localhost'}" p:port="#{uniauthConfig['redis.port']?:'6379'}"-->
-          <!--p:database="#{uniauthConfig['redis.database']?:'0'}"   p:pool-config-ref="poolConfig"/>-->
-
-    <bean id="connectionFactory" class="com.dianrong.common.uniauth.cas.registry.SwitchCtledJedisConnectionFactory"
-    	p:password="#{uniauthConfig['redis.password']}" p:database="#{uniauthConfig['redis.database']?:'0'}"
-    	p:connectionSwitch="#{uniauthConfig['cas.iscluster']?:'false'}">
-        <constructor-arg name="sentinelConfig" ref="redisSentinelConfiguration"></constructor-arg>
-        <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
-     </bean>
-
-     <bean id="redisSentinelConfiguration"  lazy-init="true" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
-        <constructor-arg ref="mapPropertySource"></constructor-arg>
+    <bean id="connectionFactory" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate">
+        <constructor-arg name="configuration" ref="redisDefaultConfiguration"/>
+        <constructor-arg name="poolConfig" ref="poolConfig"/>
+        <property name="redisSwitch" ref="useRedisSwitch"/>
     </bean>
-    <bean id="mapPropertySource" class="org.springframework.core.env.MapPropertySource">
-        <constructor-arg name="name" value="RedisSentinelConfiguration"></constructor-arg>
-        <constructor-arg name="source">
-            <map>
-                <entry key="spring.redis.sentinel.master" value="#{uniauthConfig['redis.master']?:'mymaster'}"></entry>
-                <entry key="spring.redis.sentinel.nodes" value="#{uniauthConfig['redis.sentinels']?:'127.0.0.1:26379'}"></entry>
-            </map>
-        </constructor-arg>
-    </bean>
-     
+
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
         p:connection-factory-ref="connectionFactory">
         <property name="keySerializer" ref="stringRedisSerializer"/>
         <property name="hashKeySerializer" ref="stringRedisSerializer"/>
     </bean>
     <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
-    
 
     <!--Quartz -->
     <!-- TICKET REGISTRY CLEANER -->
-    
     <bean id="ticketRegistryCleaner" class="org.jasig.cas.ticket.registry.support.DefaultTicketRegistryCleaner"
           c:centralAuthenticationService-ref="centralAuthenticationService"
           c:ticketRegistry-ref="ticketRegistry"/>

@@ -3,15 +3,20 @@ package com.dianrong.common.uniauth.common.client;
 import com.dianrong.common.uniauth.common.bean.Response;
 import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
 import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
+import com.dianrong.common.uniauth.common.client.enums.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
-
-import javax.annotation.PostConstruct;
-import java.io.Serializable;
-import java.util.*;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 public class DomainDefine implements Serializable {
@@ -20,30 +25,42 @@ public class DomainDefine implements Serializable {
   private String domainCode;
   private String userInfoClass;
   private boolean rejectPublicInvocations;
+  // 如果在登录成功跳转前有session,如果此配置有值,则跳转此Url.
   private String customizedSavedRequestUrl;
-  // 自定义登陆成功的跳转url
+  // 如果在登录成功的跳转之前,集成系统中没有创建session,则跳转此Url,默认为'/'.
   private String customizedLoginRedirecUrl;
   private boolean useAllDomainUserInfoShareMode;
 
-  // 采用的身份认证方式
-  private AuthenticationType authenticationType = AuthenticationType.ALL;
-
-  private static Integer domainId;
-  // 每一个服务就只有一个的域名code定义
-  private static String staticDomainCode;
+  // 采用的身份认证方式集合.
+  private List<AuthenticationType> authenticationTypeList = Arrays.asList(AuthenticationType.ALL);
 
   /**
    * ServiceTicket的验证是否走内网.
    */
   private boolean serviceTicketValidateWithInnerAddress;
 
-  @Autowired
-  private transient UniClientFacade uniClientFacade;
+  /**
+   * 集成系统的集成ssclient中的内存是否采用Redis,否则采用依赖ConcurrentHashMap实现的一个简易的内存实现. 默认为false.
+   * 如果设置为true,需要配置Redis相关信息.具体参见Zk的配置文档.
+   */
+  private boolean innerCacheUseRedis = false;
+
+  /**
+   * 如果SSClient采用的缓存实现是Redis(innerCacheUseRedis=true),则可通过该参数来配置Redis的一些参数.
+   */
+  private RedisConnectionFactoryConfiguration innerCacheRedisConfiguration;
 
   /**
    * 权限控制类型定义,默认为使用uri_pattern.
    */
   private CasPermissionControlType controlType = CasPermissionControlType.URI_PATTERN;
+
+  private static Integer domainId;
+  // 每一个服务就只有一个的域名code定义
+  private static String staticDomainCode;
+
+  @Autowired
+  private transient UniClientFacade uniClientFacade;
 
   /**
    * DomainDefine的初始化工作,会check配置的Domain Code是否正确.
@@ -84,13 +101,13 @@ public class DomainDefine implements Serializable {
     }
     if (result.getInfo() != null && !result.getInfo().isEmpty()) {
       throw new UniauthCommonException(
-          "query domain info by configed domainCode failed, please check "
+          "query domain info by configuration:domainCode failed, please check "
               + "domainCode is correct or uniauth-server is alreay running");
     }
     List<DomainDto> data = result.getData();
     if (data == null || data.isEmpty()) {
       throw new UniauthCommonException(String.format(
-          "please check whether the configed domainCode [%s] is correct! Need "
+          "please check whether the configuration:domainCode [%s] is correct! Need "
               + "configure a domain in Techops, the domain code is equals [%s]",
           domainCode, domainCode));
     }
@@ -171,9 +188,9 @@ public class DomainDefine implements Serializable {
 
   /**
    * Set permission control type.
-   * 
+   *
    * @throws IllegalArgumentException if parameter type is not a legal CasPermissionControlType
-   *         string
+   * string
    */
   public void setControlType(String type) throws IllegalArgumentException {
     try {
@@ -208,59 +225,37 @@ public class DomainDefine implements Serializable {
     this.serviceTicketValidateWithInnerAddress = serviceTicketValidateWithInnerAddress;
   }
 
-  public AuthenticationType getAuthenticationType() {
-    return authenticationType;
-  }
-
   public void setAuthenticationType(String authenticationType) {
-    this.authenticationType = AuthenticationType.valueOf(authenticationType);
+    if (StringUtils.isEmpty(authenticationType)) {
+      log.info("setAuthenticationType parameter authenticationType is empty, so just ignore. ");
+      return;
+    }
+    String[] authenticationTypeItems = authenticationType.split(",");
+    List<AuthenticationType> authenticationTypes = new ArrayList<>(authenticationTypeItems.length);
+    for (String item : authenticationTypeItems) {
+      authenticationTypes.add(AuthenticationType.valueOf(item));
+    }
+    this.authenticationTypeList = authenticationTypes;
   }
 
-  /**
-   * Uniauth的权限控制类型定义.
-   */
-  public static enum CasPermissionControlType {
-    // default type
-    URI_PATTERN("URI_PATTERN", "URI_PATTERN"),
-    // 正则类型
-    REGULAR_PATTERN("REGULAR_PATTERN", "REGULAR_PATTERN"),
-    // 启用所有
-    ALL("ALL", "URI_PATTERN", "REGULAR_PATTERN"),
-    // 一种都不启用
-    NONE("NONE");
-    private final String typeStr;
-    private final Set<String> supportTypes;
+  public List<AuthenticationType> getAuthenticationTypeList() {
+    return Collections.unmodifiableList(authenticationTypeList);
+  }
 
-    private CasPermissionControlType(String type, String... types) {
-      Assert.notNull(type);
-      this.typeStr = type;
-      this.supportTypes = new HashSet<String>(Arrays.asList(types));
-    }
+  public boolean isInnerCacheUseRedis() {
+    return innerCacheUseRedis;
+  }
 
-    public String getTypeStr() {
-      return typeStr;
-    }
+  public void setInnerCacheUseRedis(boolean innerCacheUseRedis) {
+    this.innerCacheUseRedis = innerCacheUseRedis;
+  }
 
-    public boolean support(String type) {
-      return supportTypes.contains(type);
-    }
+  public RedisConnectionFactoryConfiguration getInnerCacheRedisConfiguration() {
+    return innerCacheRedisConfiguration;
+  }
 
-    /**
-     * get CasPermissionControlType all type string, split with ,
-     *
-     * @return types string. eg. ALL, NONE...
-     */
-    public static String allType() {
-      StringBuilder sb = new StringBuilder();
-      int index = 0;
-      for (CasPermissionControlType type : CasPermissionControlType.values()) {
-        if (index > 0) {
-          sb.append(", ");
-        }
-        sb.append(type.getTypeStr());
-        index++;
-      }
-      return sb.toString();
-    }
+  public void setInnerCacheRedisConfiguration(
+      RedisConnectionFactoryConfiguration innerCacheRedisConfiguration) {
+    this.innerCacheRedisConfiguration = innerCacheRedisConfiguration;
   }
 }
