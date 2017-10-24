@@ -21,7 +21,7 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Component
 @Conditional(UniauthConfigEnvLoadCondition.class)
-public class InnerRedisConnectionFactory implements Configure<RedisConnectionFactory> {
+public class InnerRedisConnectionFactoryConfigure implements Configure<RedisConnectionFactory> {
 
   @Autowired
   private UseRedisSwitch useRedisSwitch;
