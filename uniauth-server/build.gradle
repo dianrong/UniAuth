@@ -75,7 +75,7 @@ dependencies {
 
     // swagger
     compile 'io.swagger:swagger-jaxrs:1.5.12'
-    
+
     // Redis
     compile('org.springframework.data:spring-data-redis:1.7.0.RELEASE')
     compile 'redis.clients:jedis:2.8.2'
