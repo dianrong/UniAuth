@@ -3,16 +3,13 @@
 	xmlns="http://www.springframework.org/schema/security"
 	xmlns:b="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 			http://www.springframework.org/schema/security
 			http://www.springframework.org/schema/security/spring-security.xsd
 			">
 
-	<b:bean id="uniauthCacheManager" class="com.dianrong.common.uniauth.common.cache.SimpleUniauthCacheManager">
-		<b:property name="redisOperations" ref="ssclientInnerRedisTemplate"/>
+	<b:bean id="uniauthCacheManager" class="com.dianrong.common.uniauth.client.support.DelegateUniauthCacheManager">
 		<b:property name="redisSwitch" ref="ssclientInnerUseRedisSwitch"/>
 	</b:bean>
 
@@ -34,24 +31,4 @@
 		<b:property name="clusters" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.clustersStr}"/>
 		<b:property name="maxRedirects" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.maxRedirects}"/>
 	</b:bean>
-
-	<b:bean id="ssclientInnerPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<b:property name="maxIdle" value="200" />
-		<b:property name="testOnBorrow" value="true" />
-	</b:bean>
-
-	<b:bean id="ssclientInnerRedisConnectionFactory" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate">
-		<b:constructor-arg name="configuration" ref="ssclientInnerRedisConfiguration"/>
-		<b:constructor-arg name="poolConfig" ref="ssclientInnerPoolConfig"/>
-		<b:property name="redisSwitch" ref="ssclientInnerUseRedisSwitch"/>
-	</b:bean>
-
-	<b:bean id="ssclientInnerRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
-		<b:constructor-arg ref="ssclientInnerRedisConnectionFactory" />
-		<b:property name="keySerializer" ref="jdkSerializer" />
-		<b:property name="valueSerializer" ref="jdkSerializer" />
-		<b:property name="hashKeySerializer" ref="jdkSerializer" />
-		<b:property name="hashValueSerializer" ref="jdkSerializer" />
-	</b:bean>
-	<b:bean id="jdkSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
 </b:beans>
