@@ -69,7 +69,6 @@ public class SSRegularPermissionFilter extends GenericFilterBean {
    * .
    * process not permitted request, response code 403
    *
-   * @param request HttpServletRequest
    * @param response HttpServletResponse
    */
   private void unPermittedRequest(HttpServletResponse response) {

@@ -1,12 +1,11 @@
 package org.springframework.security.web.access.regular;
 
-import com.dianrong.common.uniauth.common.client.DomainDefine;
 import com.dianrong.common.uniauth.common.client.enums.CasPermissionControlType;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.util.List;
 import javax.servlet.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.Ordered;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -24,17 +23,15 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Ordered, SwitchControl {
 
   /**
-   * .
-   * spring security处理filter链的bean name
+   * . spring security处理filter链的bean name
    */
   private static final String SPRING_SECURITY_FILETER_BEAN_NAME = "org.springframework.security.filterChainProxy";
 
-  @Autowired
-  private DomainDefine domainDefine;
+  @Value("#{domainDefine.controlType}")
+  private String controlType;
 
   /**
-   * .
-   * 最低优先级，最后执行
+   * . 最低优先级，最后执行
    */
   @Override
   public int getOrder() {
@@ -42,8 +39,7 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
   }
 
   /**
-   * .
-   * do not process
+   * . do not process
    */
   @Override
   public Object postProcessBeforeInitialization(Object bean, String beanName) {
@@ -51,9 +47,7 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
   }
 
   /**
-   * .
-   * update bean field
-   * 注入uniauth的正则处理权限的filter
+   * . update bean field 注入uniauth的正则处理权限的filter
    */
   @Override
   public Object postProcessAfterInitialization(Object bean, String beanName) {
@@ -103,6 +97,11 @@ public class SSRegularFilterBeanPostProcessor implements BeanPostProcessor, Orde
 
   @Override
   public boolean isOn() {
-    return domainDefine.controlTypeSupport(CasPermissionControlType.REGULAR_PATTERN);
+    CasPermissionControlType permissionControlType = CasPermissionControlType
+        .valueOf(this.controlType);
+    if (permissionControlType == null) {
+      return false;
+    }
+    return permissionControlType.support(CasPermissionControlType.REGULAR_PATTERN.getTypeStr());
   }
 }
