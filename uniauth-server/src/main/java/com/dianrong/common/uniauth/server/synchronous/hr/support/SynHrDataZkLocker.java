@@ -28,7 +28,8 @@ import org.springframework.util.StringUtils;
  * 基于ZK实现的同步HR数据的锁.
  */
 @Component
-@Slf4j public class SynHrDataZkLocker implements ProcessLocker, InitializingBean {
+@Slf4j
+public class SynHrDataZkLocker implements ProcessLocker, InitializingBean {
 
   /**
    * 默认的Lock节点名称.
@@ -43,12 +44,14 @@ import org.springframework.util.StringUtils;
   /**
    * 开关.
    */
-  @Autowired private HrDataSynchronousSwitcher switchControl;
+  @Autowired
+  private HrDataSynchronousSwitcher switchControl;
 
   /**
    * Zookeeper的连接字符串.
    */
-  @Value("${DR_CFG_ZOOKEEPER_ENV_URL}") private String zkConnectionString;
+  @Value("${DR_CFG_ZOOKEEPER_ENV_URL}")
+  private String zkConnectionString;
 
   private String lockNodeName = DEFAULT_LOCK_NODE_NAME;
 
@@ -135,7 +138,8 @@ import org.springframework.util.StringUtils;
           log.info("Listen zookeeper error.", e);
         }
         cache.getListenable().addListener(new PathChildrenCacheListener() {
-          @Override public void childEvent(CuratorFramework client, PathChildrenCacheEvent event)
+          @Override
+          public void childEvent(CuratorFramework client, PathChildrenCacheEvent event)
               throws Exception {
             if (event != null && event.getData() != null && getLockNodePath()
                 .equals(event.getData().getPath())) {
@@ -167,11 +171,13 @@ import org.springframework.util.StringUtils;
     }
   }
 
-  @Override public void lock() throws AcquireLockFailureException {
+  @Override
+  public void lock() throws AcquireLockFailureException {
     if (this.lockFlag) {
       return;
     }
-    AcquireLockFailureException afe = new AcquireLockFailureException("Lock is hold by Server :" + this.lockNodeContent);
+    AcquireLockFailureException afe = new AcquireLockFailureException(
+        "Lock is hold by Server :" + this.lockNodeContent);
     afe.setHoldLockServerIp(this.lockNodeContent);
     throw afe;
   }
@@ -189,7 +195,8 @@ import org.springframework.util.StringUtils;
     this.lockNodePath = baseNodePath + "/" + this.lockNodeName;
   }
 
-  @Override public boolean tryLock() {
+  @Override
+  public boolean tryLock() {
     return lockFlag;
   }
 
@@ -197,7 +204,9 @@ import org.springframework.util.StringUtils;
    * 监听断线情况.
    */
   private class LockNodeConnectionStateListener implements ConnectionStateListener {
-    @Override public void stateChanged(CuratorFramework client, ConnectionState newState) {
+
+    @Override
+    public void stateChanged(CuratorFramework client, ConnectionState newState) {
       if (ConnectionState.LOST.equals(newState)) {
         // 遇到断线的情况
         lockFlag = false;
@@ -208,7 +217,8 @@ import org.springframework.util.StringUtils;
     }
   }
 
-  @Override public void afterPropertiesSet() throws Exception {
+  @Override
+  public void afterPropertiesSet() throws Exception {
     init();
   }
 

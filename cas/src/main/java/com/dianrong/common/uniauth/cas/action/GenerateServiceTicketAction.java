@@ -33,10 +33,16 @@ public final class GenerateServiceTicketAction extends AbstractAction {
     final String ticketGrantingTicket = WebUtils.getTicketGrantingTicketId(context);
 
     try {
-      final Credential credential = WebUtils.getCredential(context);
-
-      final ServiceTicket serviceTicketId = this.centralAuthenticationService
-          .grantServiceTicket(ticketGrantingTicket, service, credential);
+      ServiceTicket serviceTicketId;
+      // 如果存在ticketGrantingTicket,则代表用户已经登录成功了.直接根据TGT生成ST即可.
+      if (StringUtils.hasText(ticketGrantingTicket)) {
+        serviceTicketId =
+            this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicket, service);
+      } else {
+        Credential credential = WebUtils.getCredential(context);
+        serviceTicketId = this.centralAuthenticationService.grantServiceTicket(ticketGrantingTicket,
+            service, credential);
+      }
       WebUtils.putServiceTicketInRequestScope(context, serviceTicketId);
       return success();
     } catch (final AuthenticationException e) {

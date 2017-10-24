@@ -3,18 +3,72 @@ package com.dianrong.common.uniauth.server.service;
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
 import com.dianrong.common.uniauth.common.bean.UserIdentityType;
-import com.dianrong.common.uniauth.common.bean.dto.*;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
 import com.dianrong.common.uniauth.common.enm.UserType;
 import com.dianrong.common.uniauth.common.server.cxf.CxfHeaderHolder;
-import com.dianrong.common.uniauth.common.util.*;
+import com.dianrong.common.uniauth.common.util.AuthUtils;
 import com.dianrong.common.uniauth.common.util.Base64;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.common.util.ObjectUtil;
+import com.dianrong.common.uniauth.common.util.StringUtil;
+import com.dianrong.common.uniauth.common.util.UniPasswordEncoder;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.DomainExample;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.PermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.RoleCodeExample;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionExample;
+import com.dianrong.common.uniauth.server.data.entity.RolePermissionKey;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagExample;
 import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
-import com.dianrong.common.uniauth.server.data.mapper.*;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserPwdLog;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
+import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
+import com.dianrong.common.uniauth.server.data.entity.UserThirdAccount;
+import com.dianrong.common.uniauth.server.data.entity.UserThirdAccountExample;
+import com.dianrong.common.uniauth.server.data.mapper.DomainMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
+import com.dianrong.common.uniauth.server.data.mapper.PermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleCodeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RolePermissionMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserPwdLogMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserThirdAccountMapper;
 import com.dianrong.common.uniauth.server.data.query.UserPwdLogQueryParam;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
@@ -41,6 +95,21 @@ import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
@@ -53,11 +122,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 
 /**
  * Created by Arc on 14/1/16.
@@ -65,6 +129,7 @@ import java.util.concurrent.Executors;
 @Service
 @Slf4j
 public class UserService extends TenancyBasedService implements UserAuthentication {
+
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -127,7 +192,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   /**
    * 新增用户.
    */
-  @Transactional public UserDto addNewUser(String name, String phone, String email, Byte type) {
+  @Transactional
+  public UserDto addNewUser(String name, String phone, String email, Byte type) {
     this.checkPhoneAndEmail(phone, email, null);
     User user = new User();
     user.setEmail(email);
@@ -301,7 +367,6 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       }
       uniauthNotify.notify(notifyInfo);
     }
-
 
     // 通知用户密码修改了
     if (UserActionEnum.isUpdatePwdAdmin(userActionEnum)) {
@@ -832,7 +897,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     // 删除已经存在的IPA账号关联信息
     UserThirdAccountExample deleteExample = new UserThirdAccountExample();
     UserThirdAccountExample.Criteria criteria = deleteExample.createCriteria();
-    criteria.andTenancyIdEqualTo(user.getTenancyId()).andTypeEqualTo(ThirdAccountType.IPA.toString());
+    criteria.andTenancyIdEqualTo(user.getTenancyId())
+        .andTypeEqualTo(ThirdAccountType.IPA.toString());
     userThirdAccountMapper.deleteByExample(deleteExample);
 
     // 添加新的IPA账号信息
@@ -842,6 +908,64 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     record.setThirdAccount(ipa);
     record.setType(ThirdAccountType.IPA.toString());
     userThirdAccountMapper.insert(record);
+  }
+
+  /**
+   * 为指定用户添加或者删除角色.
+   */
+  @Transactional
+  public void configUserRoles(Long id, List<Integer> roleIdList, Boolean addOrDelete) {
+    CheckEmpty.checkEmpty(id, "user id");
+    if (CollectionUtils.isEmpty(roleIdList)) {
+      return;
+    }
+
+    // 限定用户id必须是当前租户的
+    dataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, id);
+
+    // 限定roleIdList到当前租户的范围.
+    RoleExample roleExample = new RoleExample();
+    RoleExample.Criteria rCriteria = roleExample.createCriteria();
+    rCriteria.andStatusEqualTo(AppConstants.STATUS_ENABLED).andIdIn(roleIdList)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<Role> roleList = roleMapper.selectByExample(roleExample);
+    List<Integer> enableRoleIdList = new ArrayList<>(roleIdList.size());
+    for (Role role : roleList) {
+      enableRoleIdList.add(role.getId());
+    }
+
+    // 获取已经存在的关系
+    UserRoleExample userRoleExample = new UserRoleExample();
+    UserRoleExample.Criteria urCriteria = userRoleExample.createCriteria();
+    urCriteria.andUserIdEqualTo(id);
+    List<UserRoleKey> userRoleKeyList = userRoleMapper.selectByExample(userRoleExample);
+    Set<Integer> existRoleId = new HashSet<>();
+    for (UserRoleKey userRoleKey : userRoleKeyList) {
+      existRoleId.add(userRoleKey.getRoleId());
+    }
+    if (addOrDelete == null || addOrDelete) {
+      // Add
+      enableRoleIdList.removeAll(existRoleId);
+      if (!enableRoleIdList.isEmpty()) {
+        List<UserRoleKey> insertUserRoleKeyList = new ArrayList<>(enableRoleIdList.size());
+        for (Integer roleId : enableRoleIdList) {
+          UserRoleKey urk = new UserRoleKey();
+          urk.setRoleId(roleId);
+          urk.setUserId(id);
+          insertUserRoleKeyList.add(urk);
+        }
+        userRoleMapper.batchInsert(insertUserRoleKeyList);
+      }
+    } else {
+      // Delete
+      existRoleId.retainAll(enableRoleIdList);
+      if (!CollectionUtils.isEmpty(existRoleId)) {
+        UserRoleExample deleteUserRoleExample = new UserRoleExample();
+        UserRoleExample.Criteria durCriteria = deleteUserRoleExample.createCriteria();
+        durCriteria.andUserIdEqualTo(id).andRoleIdIn(new ArrayList<Integer>(existRoleId));
+        userRoleMapper.deleteByExample(deleteUserRoleExample);
+      }
+    }
   }
 
   /**
@@ -1006,7 +1130,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 根据账号以及租户信息查询用户的详细信息.
-   * 
+   *
    * @param loginStatusCheck 是否检测用户的登陆可用状态
    */
   public UserDetailDto getUserDetailInfo(LoginParam loginParam, boolean loginStatusCheck) {
@@ -1108,9 +1232,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    * 获取角色下面所有的权限
    *
    * @param enableRoleIds 可用的角色id集合
-   * @return roleId与对应的权限集合映射;<br/>
-   *         1.如果角色没有任何权限,那么角色的权限是空;<br/>
-   *         2.如果没有任何角色,那么返回empty map
+   * @return roleId与对应的权限集合映射;<br/> 1.如果角色没有任何权限,那么角色的权限是空;<br/> 2.如果没有任何角色,那么返回empty map
    */
   @SuppressWarnings("unchecked")
   private Map<Integer, List<Permission>> getRolePermission(List<Integer> enableRoleIds) {
@@ -1495,7 +1617,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 获取对应用户的三方账号信息.
-   * 
+   *
    * @param userId 用户id,不能为空.
    * @param includeThirdAccount 是否需要包含三方账号信息.
    * @return 有值或者为空的Map.
@@ -1714,7 +1836,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   /**
    * 根据用户的Identity和Identity的类型获取用户信息.
-   * 
+   *
    * @param identity 用户的标识信息,不能为空.
    * @param tenancyId 租户的id.
    * @param identityType 标识类型,不能为空.

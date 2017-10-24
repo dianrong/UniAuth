@@ -1,13 +1,13 @@
 package com.dianrong.common.uniauth.server.resource;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.codahale.metrics.annotation.Timed;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.*;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
 import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
@@ -17,11 +17,13 @@ import com.dianrong.common.uniauth.server.service.UserService;
 import com.dianrong.common.uniauth.server.service.multidata.DelegateUserAuthentication;
 import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.sharerw.interfaces.IUserRWResource;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by Arc on 14/1/16.
@@ -284,6 +286,24 @@ public class UserResource implements IUserRWResource {
   public Response<Void> updateUserIPAAccount(UserParam userParam) {
     userService.updateUserIPAAccount(userParam.getAccount(), userParam.getTenancyId(),
         userParam.getTenancyCode(), userParam.getIpaAccount(), userParam.getIpaPassword());
+    return Response.success();
+  }
+
+  @ResourceAudit
+  @ApiOperation("为指定的某个用户批量的添加或者删除角色(如果给定的角色Id不在指定的租户下,将被忽略)")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
+          dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "id", value = "用户的id", required = true, dataType = "long",
+          paramType = "query"),
+      @ApiImplicitParam(name = "roleIds", value = "需要处理的角色Id集合", dataType = "java.util.List",
+          paramType = "query"),
+      @ApiImplicitParam(name = "addOrDelete", value = "True:添加角色,False:删除角色.", dataType = "java.lang.Boolean",
+          paramType = "query", defaultValue = "true")})
+  @Override
+  public Response<Void> configUserRoles(UserParam userParam) {
+    userService.configUserRoles(userParam.getId(), userParam.getRoleIds(),
+        userParam.getAddOrDelete());
     return Response.success();
   }
 }

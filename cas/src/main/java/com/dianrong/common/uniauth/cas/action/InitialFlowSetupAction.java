@@ -71,7 +71,7 @@ public final class InitialFlowSetupAction extends AbstractAction {
     // 添加分支处理用户编辑管理
     String requestType = request.getParameter(CasConstants.CAS_USERINFO_MANAGE_EDIT_KEY);
     if (!StringUtil.strIsNullOrEmpty(requestType)) {
-      // 往flowscope中放入一个标识符用于区分不同的流程
+      // 往FlowScope中放入一个标识符用于区分不同的流程
       context.getFlowScope().put(CasConstants.CAS_USERINFO_MANAGE_EDIT_KEY, "go");
     }
     if (!this.pathPopulated) {

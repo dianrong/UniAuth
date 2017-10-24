@@ -5,18 +5,50 @@ import com.dianrong.common.uniauth.common.bean.dto.HrSynchronousLogDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.common.util.SystemUtil;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.entity.HrDept;
+import com.dianrong.common.uniauth.server.data.entity.HrJob;
+import com.dianrong.common.uniauth.server.data.entity.HrLe;
+import com.dianrong.common.uniauth.server.data.entity.HrPerson;
+import com.dianrong.common.uniauth.server.data.entity.HrSynchronousLog;
+import com.dianrong.common.uniauth.server.data.entity.HrSynchronousLogExample;
 import com.dianrong.common.uniauth.server.data.mapper.HrSynchronousLogMapper;
 import com.dianrong.common.uniauth.server.exp.AppException;
-import com.dianrong.common.uniauth.server.synchronous.exp.*;
-import com.dianrong.common.uniauth.server.synchronous.hr.bean.*;
-import com.dianrong.common.uniauth.server.synchronous.hr.support.*;
+import com.dianrong.common.uniauth.server.synchronous.exp.AcquireLockFailureException;
+import com.dianrong.common.uniauth.server.synchronous.exp.DeleteFTPFileFailureException;
+import com.dianrong.common.uniauth.server.synchronous.exp.FileLoadFailureException;
+import com.dianrong.common.uniauth.server.synchronous.exp.ForeignKeyCheckFailureException;
+import com.dianrong.common.uniauth.server.synchronous.exp.InvalidContentException;
+import com.dianrong.common.uniauth.server.synchronous.exp.SFTPServerProcessException;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.DepartmentList;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.HrSynchronousLogResult;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.HrSynchronousLogType;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.JobList;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.LegalEntityList;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.LoadContent;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.PersonList;
+import com.dianrong.common.uniauth.server.synchronous.hr.bean.SynchronousFile;
+import com.dianrong.common.uniauth.server.synchronous.hr.support.HrDataSynchronousSwitcher;
+import com.dianrong.common.uniauth.server.synchronous.hr.support.HrDeptAnalyzer;
+import com.dianrong.common.uniauth.server.synchronous.hr.support.HrJobAnalyzer;
+import com.dianrong.common.uniauth.server.synchronous.hr.support.HrLeAnalyzer;
+import com.dianrong.common.uniauth.server.synchronous.hr.support.HrPersonAnalyzer;
+import com.dianrong.common.uniauth.server.synchronous.hr.support.SFTPFileDeleter;
 import com.dianrong.common.uniauth.server.synchronous.support.FileContentAnalyzer;
 import com.dianrong.common.uniauth.server.synchronous.support.FileLoader;
 import com.dianrong.common.uniauth.server.synchronous.support.ProcessLocker;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +56,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * 处理批量的更新的逻辑.
  */
-@Slf4j @Service public class Synchronous {
+@Slf4j
+@Service
+public class Synchronous {
 
   private static final int THREAD_POOL_SIZE = 5;
 
   /**
    * 异步线程池.
    */
-  private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+  private static final ExecutorService EXECUTOR_SERVICE = Executors
+      .newFixedThreadPool(THREAD_POOL_SIZE);
 
   /**
    * 文件内容分析器.
@@ -51,12 +82,14 @@ import java.util.concurrent.Executors;
   /**
    * 获取锁任务.
    */
-  @Autowired private ProcessLocker processLocker;
+  @Autowired
+  private ProcessLocker processLocker;
 
   /**
    * 加载文件的加载器.
    */
-  @Autowired private FileLoader fileLoader;
+  @Resource(name = "fuzzyMatchUCMFileNameLoader")
+  private FileLoader fileLoader;
 
   /**
    * 开关.
@@ -67,13 +100,14 @@ import java.util.concurrent.Executors;
   /**
    * 在过期多少天之后删除.
    */
-  @Value("#{uniauthConfig['synchronization.hr.delete.expired.days']?:'7'}") private int
-      deleteAfterExpiredDays = 7;
+  @Value("#{uniauthConfig['synchronization.hr.delete.expired.days']?:'7'}")
+  private int deleteAfterExpiredDays = 7;
 
   /**
    * 数据库操作service
    */
-  @Autowired private SynchronousDb synchronousDb;
+  @Autowired
+  private SynchronousDb synchronousDb;
 
   /**
    * 同步日志记录Mapper.
@@ -81,7 +115,8 @@ import java.util.concurrent.Executors;
   @Autowired
   private HrSynchronousLogMapper hrSynchronousLogMapper;
 
-  @Autowired private SFTPFileDeleter ftpFileDeleter;
+  @Autowired
+  private SFTPFileDeleter ftpFileDeleter;
 
   /**
    * 异步执行同步数据处理逻辑.
@@ -92,6 +127,7 @@ import java.util.concurrent.Executors;
 
   /**
    * 同步数据处理逻辑.
+   *
    * @param asynchronous 是否异步执行.
    */
   public void startSynchronize(boolean asynchronous) {
@@ -110,7 +146,8 @@ import java.util.concurrent.Executors;
 
     if (asynchronous) {
       EXECUTOR_SERVICE.submit(new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
           synchronousDataProcess();
         }
       });
@@ -122,7 +159,7 @@ import java.util.concurrent.Executors;
   /**
    * 同步数据处理方法.
    */
-  private void synchronousDataProcess(){
+  private void synchronousDataProcess() {
     // 同步日志对象.
     HrSynchronousLog hrSynchronousLog = new HrSynchronousLog();
     hrSynchronousLog.setSynchronousStartTime(new Date());
@@ -192,13 +229,13 @@ import java.util.concurrent.Executors;
   /**
    * 根据条件分页查询同步日志数据.
    *
-   * @param startTime  开始时间
-   * @param endTime    结束时间
-   * @param type       日志类型
+   * @param startTime 开始时间
+   * @param endTime 结束时间
+   * @param type 日志类型
    * @param computerIp 操作服务器的ip
-   * @param result     同步结果
+   * @param result 同步结果
    * @param pageNumber 分页页码
-   * @param pageSize   分页大小
+   * @param pageSize 分页大小
    * @return 查询结果
    */
   public PageDto<HrSynchronousLogDto> queryHrSynchronousLog(Date startTime, Date endTime,
@@ -246,14 +283,15 @@ import java.util.concurrent.Executors;
    */
   public void deleteExpiredFtpFile() {
     deleteExpiredFtpFile(false);
-
   }
 
   /**
    * 删除过期的FTP同步文件.
    */
   public void deleteExpiredFtpFile(boolean asynchronous) {
-    if (!switchControl.isOn()) {
+//    if (!switchControl.isOn()) {
+    // 关闭删除文件的处理.
+    if (true) {
       log.info("HR data synchronous switch is off, so just ignore delete expired FTP file call.");
       return;
     }
@@ -267,7 +305,8 @@ import java.util.concurrent.Executors;
     }
     if (asynchronous) {
       EXECUTOR_SERVICE.submit(new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
           deleteExpiredFileProcess();
         }
       });
@@ -279,7 +318,7 @@ import java.util.concurrent.Executors;
   /**
    * 删除过期文件的实际执行逻辑.
    */
-  private void deleteExpiredFileProcess(){
+  private void deleteExpiredFileProcess() {
     // 同步日志对象.
     HrSynchronousLog hrSynchronousLog = new HrSynchronousLog();
     hrSynchronousLog.setSynchronousStartTime(new Date());
@@ -293,7 +332,8 @@ import java.util.concurrent.Executors;
           ftpFileDeleter.deleteFtpFileByExpiredTime(calendar.getTime());
       // 删除成功
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.SUCCESS.toString());
-      hrSynchronousLog.setProcessContent(StringUtil.subStrIfNeed(successDeleteFileNames.toString(), 200));
+      hrSynchronousLog
+          .setProcessContent(StringUtil.subStrIfNeed(successDeleteFileNames.toString(), 200));
     } catch (DeleteFTPFileFailureException dfe) {
       log.debug("Failed delete files update time before:" + calendar.getTime(), dfe);
       hrSynchronousLog.setSynchronousResult(HrSynchronousLogResult.FAILURE.toString());
@@ -316,10 +356,10 @@ import java.util.concurrent.Executors;
   /**
    * 根据传入的内容,进行外键分析检测.
    *
-   * @param departmentList  部门信息列表.
-   * @param jobList         职位信息列表.
+   * @param departmentList 部门信息列表.
+   * @param jobList 职位信息列表.
    * @param legalEntityList 法律实体信息列表.
-   * @param personList      员工信息列表.
+   * @param personList 员工信息列表.
    * @throws ForeignKeyCheckFailureException 外键检测不过.
    */
   private void foreignKeyCheck(DepartmentList departmentList, JobList jobList,

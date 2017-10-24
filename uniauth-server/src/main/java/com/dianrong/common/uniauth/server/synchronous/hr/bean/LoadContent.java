@@ -9,7 +9,8 @@ public class LoadContent<T> {
 
   private String sourceName;
 
-  public LoadContent() {}
+  public LoadContent() {
+  }
 
   public LoadContent(T content, String sourceName) {
     this.content = content;

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:task="http://www.springframework.org/schema/task"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/task
                         http://www.springframework.org/schema/task/spring-task.xsd">
@@ -10,9 +10,15 @@
     <task:scheduled-tasks>
         <!-- 定时同步HR系统数据-->
         <task:scheduled ref="synchronous" method="startSynchronize"
-                        cron="#{uniauthConfig['synchronization.hr.cron']?:'0 30 2 * * ?'}"/>
+          cron="#{uniauthConfig['synchronization.hr.cron']?:'0 30 2 * * ?'}"/>
         <!--定时删除过期文件-->
         <task:scheduled ref="synchronous" method="deleteExpiredFtpFile"
-                        cron="#{uniauthConfig['synchronization.hr.cron']?:'0 40 2 * * ?'}"/>
+          cron="#{uniauthConfig['synchronization.hr.cron']?:'0 40 2 * * ?'}"/>
     </task:scheduled-tasks>
+
+    <bean id="fuzzyMatchUCMFileNameLoader" class="com.dianrong.common.uniauth.server.synchronous.hr.support.FuzzyMatchUCMFileNameLoader">
+        <constructor-arg index="0" value="#{uniauthConfig['synchronization.hr.ucm.url']?:'127.0.0.1:80/ucm'}"/>
+        <constructor-arg index="1" value="#{uniauthConfig['synchronization.hr.ucm.account']?:'account'}"/>
+        <constructor-arg index="2" value="#{uniauthConfig['synchronization.hr.ucm.pwd']?:'pwd'}"/>
+    </bean>
 </beans>
