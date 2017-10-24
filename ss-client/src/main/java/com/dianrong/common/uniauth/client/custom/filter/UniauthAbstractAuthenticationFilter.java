@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.core.Ordered;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.access.repo.DynamicSecurityContext;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -31,6 +34,11 @@ public abstract class UniauthAbstractAuthenticationFilter extends
     try {
       // 或者已经认证过,则不再认证.
       if (!AuthenticationTagHolder.isAuthenticated()) {
+        // 切换SecurityContext
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext instanceof DynamicSecurityContext) {
+          ((DynamicSecurityContext) securityContext).setSecurityContext(authenticationType());
+        }
         super.doFilter(req, res, chain);
       } else {
         chain.doFilter(req, res);

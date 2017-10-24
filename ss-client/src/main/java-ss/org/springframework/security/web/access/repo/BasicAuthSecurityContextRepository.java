@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 
 @Slf4j
 public class BasicAuthSecurityContextRepository extends AbstractCacheSecurityContextRepository {
+
   /**
    * 缓存的名称.
    */
@@ -22,8 +23,8 @@ public class BasicAuthSecurityContextRepository extends AbstractCacheSecurityCon
   }
 
   @Override
-  public boolean support(AuthenticationType authenticationType) {
-    return AuthenticationType.BASIC_AUTH.isSupported(authenticationType);
+  public AuthenticationType supportedAuthenticationType() {
+    return AuthenticationType.BASIC_AUTH;
   }
 
   @Override

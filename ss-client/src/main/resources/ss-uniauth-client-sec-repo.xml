@@ -9,14 +9,8 @@
 			http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!-- SecurityContextRepository configuration -->
-    <b:bean id="authenticationTypeDetector"
-            class="com.dianrong.common.uniauth.client.custom.auth.UniauthAuthenticationTypeDetector">
-        <b:constructor-arg name="jwtQuery" ref="jwtQuery"/>
-    </b:bean>
-
     <b:bean id="uniauthSecurityContextRepository"
             class="org.springframework.security.web.access.repo.CompositeSecurityContextRepository">
-        <b:constructor-arg name="authenticationTypeDetector" ref="authenticationTypeDetector"/>
         <b:property name="securityContextRepositoryList">
             <b:list>
                 <b:ref bean="sessionSecurityContextRepository"/>
@@ -28,7 +22,7 @@
 
     <!-- 配置SecurityContextRepository-->
     <b:bean id="sessionSecurityContextRepository"
-            class="org.springframework.security.web.access.repo.UniauthCasSecurityContextRepository">
+            class="org.springframework.security.web.access.repo.CasSecurityContextRepository">
         <b:property name="disableUrlRewriting" value="true"/>
     </b:bean>
 

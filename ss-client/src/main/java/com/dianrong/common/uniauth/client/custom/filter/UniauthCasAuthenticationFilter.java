@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
+import com.dianrong.common.uniauth.client.custom.auth.AuthenticationTagHolder;
 import com.dianrong.common.uniauth.common.client.enums.AuthenticationType;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -75,6 +76,8 @@ public class UniauthCasAuthenticationFilter extends UniauthAbstractAuthenticatio
       eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(
           authResult, this.getClass()));
     }
+
+
     chain.doFilter(request, response);
   }
 
@@ -113,6 +116,7 @@ public class UniauthCasAuthenticationFilter extends UniauthAbstractAuthenticatio
     return request.getParameter(artifactParameter);
   }
 
+  @Override
   protected boolean requiresAuthentication(final HttpServletRequest request,
       final HttpServletResponse response) {
     final boolean serviceTicketRequest = serviceTicketRequest(request, response);
@@ -120,6 +124,15 @@ public class UniauthCasAuthenticationFilter extends UniauthAbstractAuthenticatio
         || (proxyTicketRequest(serviceTicketRequest, request));
     if (logger.isDebugEnabled()) {
       logger.debug("requiresAuthentication = " + result);
+    }
+    if(result){
+      return true;
+    }
+
+    // 上下文中获取,查看是否已经认证成功
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+      AuthenticationTagHolder.authenticated(authenticationType());
     }
     return result;
   }

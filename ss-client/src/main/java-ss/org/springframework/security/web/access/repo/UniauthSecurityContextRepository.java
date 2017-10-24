@@ -7,9 +7,10 @@ import org.springframework.security.web.context.SecurityContextRepository;
 public interface UniauthSecurityContextRepository extends SecurityContextRepository {
 
   /**
-   * 判断是否支持指定的验证类型.
+   * 返回支持的AuthenticationType,不能为空.
+   * @see AuthenticationType
    */
-  boolean support(AuthenticationType authenticationType);
+  AuthenticationType supportedAuthenticationType();
 
 
   /**

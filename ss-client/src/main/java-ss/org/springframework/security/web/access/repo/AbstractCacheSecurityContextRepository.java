@@ -30,7 +30,7 @@ public abstract class AbstractCacheSecurityContextRepository
     HttpServletRequest request = requestResponseHolder.getRequest();
     String key = getCacheKey(request);
     if (key == null) {
-      log.warn(getCacheName() + ":the cache key is null");
+      log.debug(getCacheName() + ":the cache key is null");
       return null;
     }
     Object contextFromCache = contextCache.get(key);
@@ -51,7 +51,7 @@ public abstract class AbstractCacheSecurityContextRepository
     }
     String key = getCacheKey(request);
     if (key == null) {
-      log.warn(getCacheName() + ": the cache key is null");
+      log.debug(getCacheName() + ": the cache key is null");
       return;
     }
     if (!containsContext(request)) {
@@ -63,7 +63,7 @@ public abstract class AbstractCacheSecurityContextRepository
   public boolean containsContext(HttpServletRequest request) {
     String key = getCacheKey(request);
     if (key == null) {
-      log.warn(getCacheName() + ": the cache key is null");
+      log.debug(getCacheName() + ": the cache key is null");
       return false;
     }
     return contextCache.get(key) != null;

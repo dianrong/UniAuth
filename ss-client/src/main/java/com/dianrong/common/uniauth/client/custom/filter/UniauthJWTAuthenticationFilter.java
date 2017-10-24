@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
+import com.dianrong.common.uniauth.client.custom.auth.AuthenticationTagHolder;
 import com.dianrong.common.uniauth.client.custom.handler.EmptyAuthenticationSuccessHandler;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTQuery;
 import com.dianrong.common.uniauth.client.custom.jwt.JWTStatelessAuthenticationSuccessToken;
@@ -21,7 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.access.repo.DynamicSecurityContext;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -140,6 +143,7 @@ public class UniauthJWTAuthenticationFilter extends UniauthAbstractAuthenticatio
       log.error("JWT:{jwt} is invalid!", e);
       return false;
     }
+
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()) {
       return true;
@@ -165,6 +169,9 @@ public class UniauthJWTAuthenticationFilter extends UniauthAbstractAuthenticatio
       // 此种方式会导致不停的访问服务验证身份,缓存不起作用.
       return true;
     }
+
+    // 缓存生效,相当于通过缓存认证成功了一次
+    AuthenticationTagHolder.authenticated(authenticationType());
     return false;
   }
 

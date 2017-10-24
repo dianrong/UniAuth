@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.client.custom.filter;
 
+import com.dianrong.common.uniauth.client.custom.auth.AuthenticationTagHolder;
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuth;
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthDetector;
 import com.dianrong.common.uniauth.client.custom.basicauth.BasicAuthStatelessAuthenticationSuccessToken;
@@ -98,12 +99,13 @@ public class UniauthBasicAuthAuthenticationFilter extends UniauthAbstractAuthent
     try {
       basicAuth = BasicAuthDetector.getBasicAuthInfo(request);
     } catch (UnsupportedEncodingException e) {
-      log.error("Failed get BasicAuth info from request", e);
+      log.error("Get BasicAuth info from request,exception occured!", e);
     }
     // 不属于BasicAuth请求.
     if (basicAuth == null) {
       return false;
     }
+
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()) {
       return true;
@@ -128,6 +130,9 @@ public class UniauthBasicAuthAuthenticationFilter extends UniauthAbstractAuthent
       // 此种方式会导致不停的访问服务验证身份,缓存不起作用.
       return true;
     }
+
+    // 缓存生效,相当于通过缓存认证成功了一次
+    AuthenticationTagHolder.authenticated(authenticationType());
     return false;
   }
 }

@@ -37,6 +37,25 @@ public class DelegateUniauthAuthenticationFilter extends OncePerRequestFilter {
     this.authenticationTypeList = authenticationTypeList;
   }
 
+  /**
+   * 在创建好对象之后,配置好属性之后,需要调用该方法init.
+   */
+  public void init(){
+    // 根据配置,筛选出起作用的AuthenticationFilter
+    List<UniauthAbstractAuthenticationFilter> enableFilterList = new ArrayList<>(this.authenticationFilterList.size());
+    for (UniauthAbstractAuthenticationFilter uaAuthenticationFilter : this.authenticationFilterList) {
+      for (AuthenticationType authenticationType : this.authenticationTypeList) {
+        if (authenticationType.isSupported(uaAuthenticationFilter.authenticationType())) {
+          enableFilterList.add(uaAuthenticationFilter);
+          break;
+        }
+      }
+    }
+    // 排序
+    Collections.sort(enableFilterList, OrderComparator.INSTANCE);
+    this.authenticationFilterList = enableFilterList;
+  }
+
   public List<UniauthAbstractAuthenticationFilter> getAuthenticationFilterList() {
     return authenticationFilterList;
   }
@@ -70,18 +89,6 @@ public class DelegateUniauthAuthenticationFilter extends OncePerRequestFilter {
   @Override
   public void afterPropertiesSet() throws ServletException {
     super.afterPropertiesSet();
-    // 根据配置,筛选出起作用的AuthenticationFilter
-    List<UniauthAbstractAuthenticationFilter> enableFilterList = new ArrayList<>(this.authenticationFilterList.size());
-    for (UniauthAbstractAuthenticationFilter uaAuthenticationFilter : this.authenticationFilterList) {
-      for (AuthenticationType authenticationType : this.authenticationTypeList) {
-        if (authenticationType.isSupported(uaAuthenticationFilter.authenticationType())) {
-          enableFilterList.add(uaAuthenticationFilter);
-          break;
-        }
-      }
-    }
-    // 排序
-    Collections.sort(enableFilterList, OrderComparator.INSTANCE);
-    this.authenticationFilterList = enableFilterList;
+    init();
   }
 }

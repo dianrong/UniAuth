@@ -29,7 +29,10 @@ public class DelegateUniauthAuthenticationFilterConfigure implements
         authenticationFilters.add((UniauthAbstractAuthenticationFilter) arg);
       }
     }
-    return new DelegateUniauthAuthenticationFilter(authenticationFilters, authenticationTypeList);
+    DelegateUniauthAuthenticationFilter filter = new DelegateUniauthAuthenticationFilter(
+        authenticationFilters, authenticationTypeList);
+    filter.init();
+    return filter;
   }
 
   @Override

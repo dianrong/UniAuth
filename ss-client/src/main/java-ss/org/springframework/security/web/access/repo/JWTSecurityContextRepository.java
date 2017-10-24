@@ -23,8 +23,8 @@ public class JWTSecurityContextRepository extends AbstractCacheSecurityContextRe
   }
 
   @Override
-  public boolean support(AuthenticationType authenticationType) {
-    return AuthenticationType.JWT.isSupported(authenticationType);
+  public AuthenticationType supportedAuthenticationType() {
+    return AuthenticationType.JWT;
   }
 
   @Override
