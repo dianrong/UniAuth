@@ -6,6 +6,7 @@ import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.bean.request.GroupQuery;
 import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 
+import com.dianrong.common.uniauth.common.bean.request.UserGroupParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -57,7 +58,6 @@ public interface IGroupResource {
    *        query.includeOwner &nbsp;&nbsp; the check result is include ownership or not, default is
    *        false.
    * @return Response.data true or false
-   * @throws Reponse.info exceptionInfo
    */
   @POST
   @Path("userInGroupOrSub")
@@ -94,4 +94,12 @@ public interface IGroupResource {
   @POST
   @Path("query-total-info")
   Response<PageDto<GroupDto>> queryTotalInfo(GroupParam groupParam);
+
+
+  /**
+   * 查询用户直接关联的组信息.
+   */
+  @POST
+  @Path("query-grps-relate-user")
+  Response<List<UserGroupDto>> queryGrpListRelateUser(UserGroupParam userGroupParam);
 }
