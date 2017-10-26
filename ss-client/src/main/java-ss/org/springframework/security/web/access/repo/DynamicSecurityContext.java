@@ -75,7 +75,7 @@ public class DynamicSecurityContext implements SecurityContext {
       this.targetSecurityContext = securityContext;
       return true;
     }
-    log.warn("AuthenticationType {} has no SecurityContext!", authenticationType);
+    log.debug("AuthenticationType {} has no SecurityContext!", authenticationType);
     return false;
   }
 }

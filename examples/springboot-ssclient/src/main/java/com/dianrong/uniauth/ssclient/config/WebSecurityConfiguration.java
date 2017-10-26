@@ -2,12 +2,14 @@ package com.dianrong.uniauth.ssclient.config;
 
 import com.dianrong.common.uniauth.client.config.UniauthSecurityConfig;
 
+import javax.servlet.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 /**
- * 自定义spring security 配置
+ * 自定义springSecurity 配置.
  *
  * @author wanglin
  */
