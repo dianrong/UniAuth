@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,7 +24,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = RedisAutoConfiguration.class)
 @Configuration
 @ComponentScan(basePackageClasses = {ApplicationStarter.class})
 @PropertySource(value = "classpath:/config/application.yml")
@@ -53,6 +54,7 @@ public class ApplicationStarter {
     domainDefine.setUserInfoClass("com.dianrong.uniauth.ssclient.bean.SSClientUserExtInfo");
     domainDefine.setRejectPublicInvocations(false);
     domainDefine.setCustomizedLoginRedirecUrl("/content");
+    domainDefine.setInnerCacheUseRedis(true);
     return domainDefine;
   }
 

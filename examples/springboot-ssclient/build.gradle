@@ -28,7 +28,6 @@ dependencies {
     compile("javax.servlet:jstl")
 
     compile project(":ss-client")
-//    compile "com.dianrong.common.uniauth:common-uniauth-ssclient:2.0.21-SNAPSHOT"
 
     //Log
     compile 'ch.qos.logback:logback-classic:1.1.7'

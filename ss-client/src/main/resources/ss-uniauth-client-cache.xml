@@ -1,34 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <b:beans
-	xmlns="http://www.springframework.org/schema/security"
-	xmlns:b="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  xmlns="http://www.springframework.org/schema/security"
+  xmlns:b="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
 			http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 			http://www.springframework.org/schema/security
 			http://www.springframework.org/schema/security/spring-security.xsd
 			">
 
-	<b:bean id="uniauthCacheManager" class="com.dianrong.common.uniauth.client.support.DelegateUniauthCacheManager">
-		<b:property name="redisSwitch" ref="ssclientInnerUseRedisSwitch"/>
-	</b:bean>
+  <b:bean id="defaultUniauthCacheManager" class="com.dianrong.common.uniauth.client.config.ConfigurableUniauthCacheManager">
+    <b:constructor-arg value="#{domainDefine.innerCacheUseRedis}"/>
+  </b:bean>
 
-	<!-- Redis configuration -->
-	<b:bean id="ssclientInnerUseRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch">
-		<b:property name="config" value="#{domainDefine.innerCacheUseRedis}"/>
-	</b:bean>
-
-	<b:bean id="ssclientInnerRedisConfiguration" class = "com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration">
-		<b:property name="defaultConfiguration" ref="redisDefaultConfiguration"/>
-		<b:property name="type" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.type}"/>
-		<b:property name="database" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.database}"/>
-		<b:property name="password" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.password}"/>
-		<b:property name="timeout" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.timeout}"/>
-		<b:property name="host" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.host}"/>
-		<b:property name="port" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.port}"/>
-		<b:property name="master" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.master}"/>
-		<b:property name="sentinels" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.sentinelsStr}"/>
-		<b:property name="clusters" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.clustersStr}"/>
-		<b:property name="maxRedirects" value="#{domainDefine.innerCacheRedisConfiguration==null?null:domainDefine.innerCacheRedisConfiguration.maxRedirects}"/>
-	</b:bean>
+  <b:bean id="uniauthCacheManager" class="com.dianrong.common.uniauth.client.config.DelegateUniauthCacheManager"/>
 </b:beans>
