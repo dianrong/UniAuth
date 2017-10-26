@@ -2,14 +2,60 @@ package com.dianrong.common.uniauth.server.service;
 
 import com.dianrong.common.uniauth.common.bean.InfoName;
 import com.dianrong.common.uniauth.common.bean.Linkage;
-import com.dianrong.common.uniauth.common.bean.dto.*;
+import com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto;
+import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserGroupDto;
 import com.dianrong.common.uniauth.common.bean.request.GroupParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.GrpExtendValExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpPath;
+import com.dianrong.common.uniauth.server.data.entity.GrpPathExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.GrpTagExample;
+import com.dianrong.common.uniauth.server.data.entity.GrpTagKey;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleExample;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagExample;
 import com.dianrong.common.uniauth.server.data.entity.TagExample.Criteria;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.TagTypeExample;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserExample;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendValExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrp;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpExample;
+import com.dianrong.common.uniauth.server.data.entity.UserGrpKey;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleExample;
+import com.dianrong.common.uniauth.server.data.entity.UserRoleKey;
+import com.dianrong.common.uniauth.server.data.entity.UserTagExample;
+import com.dianrong.common.uniauth.server.data.entity.UserTagKey;
 import com.dianrong.common.uniauth.server.data.entity.ext.UserExt;
-import com.dianrong.common.uniauth.server.data.mapper.*;
+import com.dianrong.common.uniauth.server.data.mapper.GrpExtendValMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpPathMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.GrpTagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.RoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagMapper;
+import com.dianrong.common.uniauth.server.data.mapper.TagTypeMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserExtendValMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserGrpMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserRoleMapper;
+import com.dianrong.common.uniauth.server.data.mapper.UserTagMapper;
 import com.dianrong.common.uniauth.server.datafilter.DataFilter;
 import com.dianrong.common.uniauth.server.datafilter.FieldType;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
@@ -17,26 +63,47 @@ import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.exp.TreeTypeMisMatchException;
 import com.dianrong.common.uniauth.server.mq.v1.NotifyInfoType;
 import com.dianrong.common.uniauth.server.mq.v1.UniauthNotify;
-import com.dianrong.common.uniauth.server.mq.v1.ninfo.*;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.BaseGroupNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupAddNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.GroupMoveNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupExchangeNotifyInfo;
+import com.dianrong.common.uniauth.server.mq.v1.ninfo.UsersToGroupNotifyInfo;
 import com.dianrong.common.uniauth.server.service.cache.AttributeExtendCache;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
-import com.dianrong.common.uniauth.server.service.inner.*;
+import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
+import com.dianrong.common.uniauth.server.service.inner.GroupProfileInnerService;
+import com.dianrong.common.uniauth.server.service.inner.RoleInnerService;
+import com.dianrong.common.uniauth.server.service.inner.TagInnerService;
+import com.dianrong.common.uniauth.server.service.inner.UserInnerService;
 import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
-import com.dianrong.common.uniauth.server.util.*;
+import com.dianrong.common.uniauth.server.util.BeanConverter;
+import com.dianrong.common.uniauth.server.util.CheckEmpty;
+import com.dianrong.common.uniauth.server.util.ParamCheck;
+import com.dianrong.common.uniauth.server.util.UniBundle;
+import com.dianrong.common.uniauth.server.util.UniauthServerConstant;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Created by Arc on 14/1/16.
@@ -459,7 +526,8 @@ public class GroupService extends TenancyBasedService {
       grpMapper.updateByExampleSelective(record, deleteExample);
     }
     // 发送通知
-    uniauthNotify.notify(new BaseGroupNotifyInfo().setGroupId(grp.getId()).setType(NotifyInfoType.GROUP_DISABLE));
+    uniauthNotify.notify(
+        new BaseGroupNotifyInfo().setGroupId(grp.getId()).setType(NotifyInfoType.GROUP_DISABLE));
 
     grp.setStatus(AppConstants.STATUS_DISABLED);
     return BeanConverter.convert(grp);
@@ -605,8 +673,8 @@ public class GroupService extends TenancyBasedService {
   @Transactional
   public void moveUser(Integer targetGroupId, List<Linkage<Long, Integer>> userIdGrpIdPairs,
       Boolean normalMember) {
-    CheckEmpty.checkEmpty(targetGroupId,"groupId");
-    CheckEmpty.checkEmpty(userIdGrpIdPairs,"groupId and userId pair");
+    CheckEmpty.checkEmpty(targetGroupId, "groupId");
+    CheckEmpty.checkEmpty(userIdGrpIdPairs, "groupId and userId pair");
     // Check tree type
     checkTreeType(targetGroupId);
 
@@ -1440,7 +1508,7 @@ public class GroupService extends TenancyBasedService {
         }
       }
     }
-    
+
     if (needGrpTag != null && needGrpTag) {
       CheckEmpty.checkEmpty(domainId, "domainId");
       Map<Integer, List<TagDto>> grpTagMap =
@@ -1525,7 +1593,8 @@ public class GroupService extends TenancyBasedService {
   }
 
   /**
-   * 设置GROUP查询的范围.
+   * 每次创建GrpExample必须走这个方法创建.
+   * 这样做的原因是为了限定每次操作的范围,因为该组接口同时支持组和组织关系.
    */
   private GrpExample createNewGrpExample() {
     GrpExample grpExample = new GrpExample();
@@ -1579,11 +1648,12 @@ public class GroupService extends TenancyBasedService {
     Long tenancyId = tenancyService.getTenancyIdWithCheck();
     List<Integer> subGrpIds = grpMapper.querySubGrpIds(rootCode, tenancyId);
     Set<Integer> subGrpIdSet = new HashSet<>(subGrpIds);
-    for (Integer grpId : grpIds){
+    for (Integer grpId : grpIds) {
       // 不在子组的范围内
       if (!subGrpIdSet.contains(grpId)) {
-        String msg = String.format("Group Id %d is not a sub group of root grp %s, tenancy id:%d", grpId, rootCode,
-            tenancyId);
+        String msg = String
+            .format("Group Id %d is not a sub group of root grp %s, tenancy id:%d", grpId, rootCode,
+                tenancyId);
         TreeTypeMisMatchException ex = new TreeTypeMisMatchException(InfoName.BAD_REQUEST, msg);
         ex.setGrpId(grpId);
         ex.setType(TreeTypeHolder.getWithCheck());
@@ -1607,13 +1677,105 @@ public class GroupService extends TenancyBasedService {
     Long tenancyId = tenancyService.getTenancyIdWithCheck();
     int num = grpMapper.querySubGrpNum(rootCode, grpId, tenancyId);
     if (num == 0) {
-      String msg = String.format("Group Id %d is not a sub group of root grp %s, tenancy id:%d", grpId, rootCode,
-          tenancyId);
+      String msg = String
+          .format("Group Id %d is not a sub group of root grp %s, tenancy id:%d", grpId, rootCode,
+              tenancyId);
       TreeTypeMisMatchException ex = new TreeTypeMisMatchException(InfoName.BAD_REQUEST, msg);
       ex.setGrpId(grpId);
       ex.setType(TreeTypeHolder.getWithCheck());
       log.debug(msg);
       throw ex;
     }
+  }
+
+  /**
+   * 根据用户id集合获取用户关联的组信息.
+   * @param userIds 用户id集合
+   * @param rootCode 根组编码.如果为空,则采用默认根组作为根组.
+   * @return 用户和组的关联关系集合.
+   */
+  public List<UserGroupDto> queryGrpListRelateUser(List<Long> userIds, String rootCode) {
+    if (CollectionUtils.isEmpty(userIds)) {
+      return null;
+    }
+    // 确定根组
+    GrpExample grpExample = createNewGrpExample();
+    GrpExample.Criteria gCriteria = grpExample.createCriteria();
+    gCriteria.andStatusEqualTo(AppConstants.STATUS_ENABLED)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    if (StringUtils.hasText(rootCode)) {
+      gCriteria.andCodeEqualTo(rootCode);
+    } else {
+      gCriteria.andCodeEqualTo(TreeTypeHolder.getWithCheck().getRootCode());
+    }
+    List<Grp> rootGrpList = grpMapper.selectByExample(grpExample);
+    if (CollectionUtils.isEmpty(rootGrpList)) {
+      return null;
+    }
+    Grp rootGrp = rootGrpList.get(0);
+    // 查询所有的子组id
+    GrpPathExample grpPathExample = new GrpPathExample();
+    grpPathExample.createCriteria().andAncestorEqualTo(rootGrp.getId());
+    List<GrpPath> grpPathList = grpPathMapper.selectByExample(grpPathExample);
+    if (CollectionUtils.isEmpty(grpPathList)) {
+      return null;
+    }
+    List<Integer> subGrpIdList = new ArrayList<>(grpPathList.size());
+    for (GrpPath grpPath : grpPathList) {
+      subGrpIdList.add(grpPath.getDescendant());
+    }
+
+    // 查询用户关联的组
+    UserGrpExample userGrpExample = new UserGrpExample();
+    UserGrpExample.Criteria ugCriteria = userGrpExample.createCriteria();
+    ugCriteria.andUserIdIn(userIds).andGrpIdIn(subGrpIdList).andTypeEqualTo(AppConstants.ZERO_BYTE);
+    List<UserGrpKey> userGrpKeyList = userGrpMapper.selectByExample(userGrpExample);
+    if (CollectionUtils.isEmpty(userGrpKeyList)) {
+      return null;
+    }
+    Map<Long, Set<Integer>> userGrpListMap = new HashMap<>();
+    Set<Integer> grpIdList = new HashSet<>();
+    for (UserGrpKey ugk : userGrpKeyList) {
+      Long userId = ugk.getUserId();
+      Integer grpId = ugk.getGrpId();
+      Set<Integer> grpIdSet = userGrpListMap.get(userId);
+      if (grpIdSet == null) {
+        grpIdSet = new HashSet<>();
+        userGrpListMap.put(userId, grpIdSet);
+      }
+      grpIdSet.add(grpId);
+      grpIdList.add(grpId);
+    }
+
+    grpExample = createNewGrpExample();
+    grpExample.createCriteria().andIdIn(new ArrayList<Integer>(grpIdList))
+        .andStatusEqualTo(AppConstants.STATUS_ENABLED)
+        .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
+    List<Grp> grpList = grpMapper.selectByExample(grpExample);
+    if (CollectionUtils.isEmpty(grpList)) {
+      return null;
+    }
+    Map<Integer, GroupDto> grpMap = new HashMap<>(grpList.size());
+    for (Grp grp : grpList) {
+      grpMap.put(grp.getId(), BeanConverter.convert(grp));
+    }
+    List<UserGroupDto> result = new ArrayList<>(userGrpListMap.keySet().size());
+    for (Map.Entry<Long, Set<Integer>> entry : userGrpListMap.entrySet()) {
+      UserGroupDto dto = new UserGroupDto();
+      dto.setUserId(entry.getKey());
+      Set<Integer> grpIdSet = entry.getValue();
+      List<GroupDto> grpDtoList = new ArrayList<>(grpIdSet.size());
+      dto.setGroupDtoList(grpDtoList);
+      if (!CollectionUtils.isEmpty(grpIdSet)) {
+        for (Integer grpId : grpIdSet) {
+          GroupDto grpDto = grpMap.get(grpId);
+          if (grpDto != null) {
+            grpDtoList.add(grpDto);
+          }
+        }
+      }
+      result.add(dto);
+    }
+    return result;
   }
 }
