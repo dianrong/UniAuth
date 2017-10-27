@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,7 +28,9 @@ public class SFTPFileDeleter {
 
   private SFTPConnectionManager sftpConnectionManager;
 
-  @Autowired
+  public SFTPFileDeleter() {
+  }
+
   public SFTPFileDeleter(SFTPConnectionManager SFTPConnectionManager) {
     Assert.notNull(SFTPConnectionManager);
     this.sftpConnectionManager = SFTPConnectionManager;
