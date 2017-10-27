@@ -1,0 +1,8 @@
+jar {
+    baseName = 'dianrong-lib-ucm'
+}
+
+// package the sources to be a jar file.
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}

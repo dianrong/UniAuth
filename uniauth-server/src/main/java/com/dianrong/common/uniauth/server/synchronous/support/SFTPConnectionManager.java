@@ -3,51 +3,62 @@ package com.dianrong.common.uniauth.server.synchronous.support;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.server.synchronous.exp.SFTPServerProcessException;
 import com.dianrong.common.uniauth.server.synchronous.hr.support.HrDataSynchronousSwitcher;
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
+import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.util.Properties;
 
 /**
  * 处理SFTP连接的管理类.
  */
 
-@Slf4j @Component public class SFTPConnectionManager implements InitializingBean {
+@Slf4j
+public class SFTPConnectionManager implements InitializingBean {
 
-  @Value("#{uniauthConfig['synchronization.hr.sftp.host']}") private String serverHost = "";
+  @Value("#{uniauthConfig['synchronization.hr.sftp.host']}")
+  private String serverHost = "";
 
   /**
    * 默认端口号为22.
    */
-  @Value("#{uniauthConfig['synchronization.hr.sftp.port']?:'22'}") private int serverPort = 22;
+  @Value("#{uniauthConfig['synchronization.hr.sftp.port']?:'22'}")
+  private int serverPort = 22;
 
   /**
    * 登录SFTP服务器的账号和密码
    */
-  @Value("#{uniauthConfig['synchronization.hr.sftp.account']}") private String sftpAccount = "";
-  @Value("#{uniauthConfig['synchronization.hr.sftp.pwd']}") private String sftpPassword = "";
+  @Value("#{uniauthConfig['synchronization.hr.sftp.account']}")
+  private String sftpAccount = "";
+  @Value("#{uniauthConfig['synchronization.hr.sftp.pwd']}")
+  private String sftpPassword = "";
 
   /**
    * 登录SFTP的base路径.
    */
-  @Value("#{uniauthConfig['synchronization.hr.sftp.base.directory']}") private String
+  @Value("#{uniauthConfig['synchronization.hr.sftp.base.directory']}")
+  private String
       baseDirectory = "/";
 
   /**
    * 开关.
    */
-  @Autowired private HrDataSynchronousSwitcher switchControl;
+  @Autowired
+  private HrDataSynchronousSwitcher switchControl;
 
   /**
    * 创建SFTP连接的管理类.
    */
   private JSch jsch;
 
-  @Override public void afterPropertiesSet() throws Exception {
+  @Override
+  public void afterPropertiesSet() throws Exception {
     init();
   }
 
@@ -147,9 +158,10 @@ import java.util.Properties;
     } catch (Exception ex) {
       log.error("Failed to disconnect channel." + getConnectionDescription(), ex);
     } finally {
-      if (channelSftp.isConnected())
+      if (channelSftp.isConnected()) {
         throw new SFTPServerProcessException(
             "Failed to disconnect channel." + getConnectionDescription());
+      }
     }
   }
 

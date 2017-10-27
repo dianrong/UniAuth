@@ -16,7 +16,7 @@
           cron="#{uniauthConfig['synchronization.hr.cron']?:'0 40 2 * * ?'}"/>
     </task:scheduled-tasks>
 
-    <bean id="fuzzyMatchUCMFileNameLoader" class="com.dianrong.common.uniauth.server.synchronous.hr.support.FuzzyMatchUCMFileNameLoader">
+    <bean id="fuzzyMatchUCMFileNameLoader" class="com.dianrong.common.uniauth.server.synchronous.hr.support.FuzzyMatchUCMWsdlFileNameLoader">
         <constructor-arg index="0" value="#{uniauthConfig['synchronization.hr.ucm.url']?:'127.0.0.1:80/ucm'}"/>
         <constructor-arg index="1" value="#{uniauthConfig['synchronization.hr.ucm.account']?:'account'}"/>
         <constructor-arg index="2" value="#{uniauthConfig['synchronization.hr.ucm.pwd']?:'pwd'}"/>

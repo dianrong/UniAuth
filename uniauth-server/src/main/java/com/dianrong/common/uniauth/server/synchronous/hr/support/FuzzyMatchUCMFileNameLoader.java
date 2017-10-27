@@ -23,7 +23,7 @@ import oracle.stellent.ridc.model.DataBinder;
 import oracle.stellent.ridc.model.DataObject;
 import oracle.stellent.ridc.model.DataResultSet;
 import oracle.stellent.ridc.protocol.ServiceResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -49,7 +49,6 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
   // 账户信息.
   private IdcContext userContext;
 
-  @Autowired
   public FuzzyMatchUCMFileNameLoader(String requestUrl, String userName, String password) {
     Assert.notNull(requestUrl, "UCM request url must not be null");
     Assert.notNull(userName, "UCM userName must not be null");
@@ -118,18 +117,22 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
       throws FileLoadFailureException {
     try {
       LoadContent<InputStream> inputStreamLoad = loadFile(file);
-      String line;
-      StringBuilder sb = new StringBuilder();
-      try (InputStreamReader reader = new InputStreamReader(inputStreamLoad.getContent(), "UTF-8");
-          BufferedReader in = new BufferedReader(reader)) {
-        while ((line = in.readLine()) != null) {
-          sb.append(line).append("\r\n");
+      try {
+        String line;
+        StringBuilder sb = new StringBuilder();
+        try (InputStreamReader reader = new InputStreamReader(inputStreamLoad.getContent(),
+            "UTF-8");
+            BufferedReader in = new BufferedReader(reader)) {
+          while ((line = in.readLine()) != null) {
+            sb.append(line).append("\r\n");
+          }
+        } catch (IOException e) {
+          throw new InvalidContentException("Failed read content from InputStream", e);
         }
-      } catch (IOException e) {
-        throw new InvalidContentException("Failed read content from InputStream", e);
+        return new LoadContent<String>(sb.toString(), inputStreamLoad.getSourceName());
+      } finally {
+        inputStreamLoad.getContent().close();
       }
-      inputStreamLoad.getContent().close();
-      return new LoadContent<String>(sb.toString(), inputStreamLoad.getSourceName());
     } catch (IOException e) {
       log.error("Failed to load file " + file + " from UCM server", e);
     }
@@ -161,7 +164,7 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
       DataResultSet resultSet = responseData.getResultSet("SearchResults");
 
       List<UCMFileBasicInfo> basicInfoList = null;
-      if (resultSet != null && !StringUtils.isEmpty(resultSet.getRows())) {
+      if (resultSet != null && !CollectionUtils.isEmpty(resultSet.getRows())) {
         basicInfoList = new ArrayList<>(resultSet.getRows().size());
         for (DataObject dataObject : resultSet.getRows()) {
           String dID = dataObject.get("dID");
@@ -174,7 +177,7 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
           }
         }
       }
-      if (StringUtils.isEmpty(basicInfoList)) {
+      if (CollectionUtils.isEmpty(basicInfoList)) {
         return null;
       }
       if (basicInfoList.size() > 1) {
