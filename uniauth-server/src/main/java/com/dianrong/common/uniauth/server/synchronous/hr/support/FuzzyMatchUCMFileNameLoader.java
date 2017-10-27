@@ -117,18 +117,22 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
       throws FileLoadFailureException {
     try {
       LoadContent<InputStream> inputStreamLoad = loadFile(file);
-      String line;
-      StringBuilder sb = new StringBuilder();
-      try (InputStreamReader reader = new InputStreamReader(inputStreamLoad.getContent(), "UTF-8");
-          BufferedReader in = new BufferedReader(reader)) {
-        while ((line = in.readLine()) != null) {
-          sb.append(line).append("\r\n");
+      try {
+        String line;
+        StringBuilder sb = new StringBuilder();
+        try (InputStreamReader reader = new InputStreamReader(inputStreamLoad.getContent(),
+            "UTF-8");
+            BufferedReader in = new BufferedReader(reader)) {
+          while ((line = in.readLine()) != null) {
+            sb.append(line).append("\r\n");
+          }
+        } catch (IOException e) {
+          throw new InvalidContentException("Failed read content from InputStream", e);
         }
-      } catch (IOException e) {
-        throw new InvalidContentException("Failed read content from InputStream", e);
+        return new LoadContent<String>(sb.toString(), inputStreamLoad.getSourceName());
+      } finally {
+        inputStreamLoad.getContent().close();
       }
-      inputStreamLoad.getContent().close();
-      return new LoadContent<String>(sb.toString(), inputStreamLoad.getSourceName());
     } catch (IOException e) {
       log.error("Failed to load file " + file + " from UCM server", e);
     }
