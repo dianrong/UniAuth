@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Component;
  */
 
 @Slf4j
-@Component
 public class FuzzyMatchSFtpFileNameLoader implements FileLoader {
 
   private SFTPConnectionManager sftpConnectionManager;
@@ -34,7 +32,6 @@ public class FuzzyMatchSFtpFileNameLoader implements FileLoader {
    */
   private boolean ignoreCase = true;
 
-  @Autowired
   public FuzzyMatchSFtpFileNameLoader(SFTPConnectionManager sftpConnectionManager) {
     Assert.notNull(sftpConnectionManager);
     this.sftpConnectionManager = sftpConnectionManager;

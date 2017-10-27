@@ -23,7 +23,6 @@ import oracle.stellent.ridc.model.DataBinder;
 import oracle.stellent.ridc.model.DataObject;
 import oracle.stellent.ridc.model.DataResultSet;
 import oracle.stellent.ridc.protocol.ServiceResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -50,7 +49,6 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
   // 账户信息.
   private IdcContext userContext;
 
-  @Autowired
   public FuzzyMatchUCMFileNameLoader(String requestUrl, String userName, String password) {
     Assert.notNull(requestUrl, "UCM request url must not be null");
     Assert.notNull(userName, "UCM userName must not be null");

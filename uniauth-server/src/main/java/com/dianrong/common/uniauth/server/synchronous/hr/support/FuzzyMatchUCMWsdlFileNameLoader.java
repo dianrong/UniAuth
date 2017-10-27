@@ -49,7 +49,6 @@ public class FuzzyMatchUCMWsdlFileNameLoader implements FileLoader {
   private final String account;
   private final String password;
 
-  @Autowired
   public FuzzyMatchUCMWsdlFileNameLoader(String requestUrl, String account, String password) {
     Assert.notNull(requestUrl, "UCM request url must not be null");
     Assert.notNull(account, "UCM account must not be null");
