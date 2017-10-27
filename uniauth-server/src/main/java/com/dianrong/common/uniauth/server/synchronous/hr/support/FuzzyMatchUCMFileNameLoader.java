@@ -24,6 +24,7 @@ import oracle.stellent.ridc.model.DataObject;
 import oracle.stellent.ridc.model.DataResultSet;
 import oracle.stellent.ridc.protocol.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -161,7 +162,7 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
       DataResultSet resultSet = responseData.getResultSet("SearchResults");
 
       List<UCMFileBasicInfo> basicInfoList = null;
-      if (resultSet != null && !StringUtils.isEmpty(resultSet.getRows())) {
+      if (resultSet != null && !CollectionUtils.isEmpty(resultSet.getRows())) {
         basicInfoList = new ArrayList<>(resultSet.getRows().size());
         for (DataObject dataObject : resultSet.getRows()) {
           String dID = dataObject.get("dID");
@@ -174,7 +175,7 @@ public class FuzzyMatchUCMFileNameLoader implements FileLoader {
           }
         }
       }
-      if (StringUtils.isEmpty(basicInfoList)) {
+      if (CollectionUtils.isEmpty(basicInfoList)) {
         return null;
       }
       if (basicInfoList.size() > 1) {
