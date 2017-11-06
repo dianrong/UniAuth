@@ -25,6 +25,7 @@
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
     <var name="credential" class="com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential"/>
+    <var name="userAttribute" class="com.dianrong.common.uniauth.cas.model.UserAttribute"/>
     <on-start>
         <evaluate expression="initialFlowSetupAction"/>
     </on-start>
@@ -69,11 +70,36 @@
         <transition to="loginTypeDecisionAction"/>
     </action-state>
 
+
+    <!--
+        If requires staff_no, give a chance to edit it.
+    -->
+    <!-- 继续检查JWT -->
+    <action-state id="warn">
+        <evaluate expression="staffNoPersistDecisionAction.decide()"/>
+        <transition on="true" to="editStaffNo"/>
+        <transition on="false" to="original_warn"/>
+    </action-state>
+
+    <view-state id="editStaffNo" view="editStaffNoView" model="userAttribute">
+        <binder>
+            <binding property="staffNo" required="false"/>
+        </binder>
+        <transition on="submit" bind="true" to="persistStaffNo" />
+        <transition on="continue" to="original_warn" />
+    </view-state>
+
+    <!-- 存储用户的员工号 -->
+    <action-state id="persistStaffNo">
+        <evaluate expression="persistStaffNoAction.persist(flowScope.userAttribute)"/>
+        <transition to="original_warn"/>
+    </action-state>
+
     <!--
         The "warn" action makes the determination of whether to redirect directly to the requested
         service or display the "confirmation" page to go back to the server.
     -->
-    <decision-state id="warn">
+    <decision-state id="original_warn">
         <if test="flowScope.warnCookieValue" then="showWarningView" else="redirect"/>
     </decision-state>
 
@@ -97,7 +123,7 @@
 	 -->
     <view-state id="viewLoginForm" view="casLoginView" model="credential">
         <binder>
-        	<binding property="domain" required="true"/>
+            <binding property="domain" required="true"/>
             <binding property="username" required="true"/>
             <binding property="password" required="true"/>
             <binding property="tenancyCode" required="true"/>
@@ -115,9 +141,7 @@
     </view-state>
 
     <action-state id="realSubmit">
-    
-        <evaluate
-                expression="uniauthAuthenticationViaFormSubmit.submit(flowRequestContext, flowScope.credential, messageContext)"/>
+        <evaluate expression="uniauthAuthenticationViaFormSubmit.submit(flowRequestContext, flowScope.credential, messageContext)"/>
         <transition on="warn" to="warn"/>
         <!--
         To enable AUP workflows, replace the 'success' transition with the following:

@@ -36,7 +36,6 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
     Map<String, Object> attributes = new HashMap<String, Object>();
     attributes.put(CasProtocol.DianRongCas.getTenancyIdName(),
         StringUtil.translateIntegerToLong(userInfo.getTenancyId()));
-    // 防止userName中有空格,  这地方必须使用登陆使用的userName, 不能使用登陆返回的用户中的账号信息.
     return createHandlerResult(credential,
         this.principalFactory.createPrincipal(userName, attributes), null);
   }
