@@ -1,9 +1,7 @@
 package com.dianrong.common.uniauth.cas.action;
 
 import com.dianrong.common.uniauth.cas.helper.StaffNoPersistTagHolder;
-import com.dianrong.common.uniauth.cas.model.UserAttribute;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.Event;
 
 /**
@@ -24,11 +22,10 @@ public class StaffNoPersistDecisionAction {
    */
   private static final String FALSE = "false";
 
-  protected Event decide() {
-    Long userId = StaffNoPersistTagHolder.get();
-    if (userId == null) {
-      return new Event(this,FALSE);
+  public Event decide() {
+    if (!StaffNoPersistTagHolder.get()) {
+      return new Event(this, FALSE);
     }
-    return new Event(this,TRUE);
+    return new Event(this, TRUE);
   }
 }

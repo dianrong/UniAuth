@@ -1,4 +1,4 @@
-package org.springframework.security.web.access;
+package com.dianrong.common.uniauth.common.customer;
 
 /**
  * Function whether on or off.

@@ -16,6 +16,7 @@ import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.dianrong.common.uniauth.server.service.attribute.exp.InvalidPropertyValueException;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
 import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
+import com.dianrong.common.uniauth.server.service.support.StaffNoUniqueCheckSwitchControl;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.UniBundle;
@@ -51,6 +52,9 @@ public class UserProfileInnerService extends TenancyBasedService {
 
   @Autowired
   private UserMapper userMapper;
+
+  @Autowired
+  private StaffNoUniqueCheckSwitchControl staffNoUniqueCheckSwitchControl;
 
   /**
    * 更新用户的扩展属性值.
@@ -98,6 +102,14 @@ public class UserProfileInnerService extends TenancyBasedService {
           // 系统预定义的扩展属性. 比如User表,UserDetail表中定义好的属性.
           if (sysUserAttributeDefine.isWritable()) {
             try {
+              boolean isUniqueField = sysUserAttributeDefine.isUniqueField();
+              if (sysUserAttributeDefine.equals(AttributeDefine.STAFF_NO)) {
+                if (!staffNoUniqueCheckSwitchControl.isOn()) {
+                  // 开关未开, 强制设置为false
+                  isUniqueField = false;
+                  log.debug("Staff No. unique check is off, so ignore staff No. update unique check.");
+                }
+              }
               extendValInnerService.addOrUpdateSystemDefineAttribute(uniauthId,
                   sysUserAttributeDefine.getDefineTable().getIdentityFieldName(),
                   sysUserAttributeDefine.getDefineTable().getTableName(),

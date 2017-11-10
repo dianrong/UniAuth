@@ -413,6 +413,5 @@
 		c:casLoginSupport-ref="casLoginSupport" c:jwtCookieGenerator-ref="jwtCookieGenerator" />
 	<!-- JWT相关的action -->
 
-	<bean id="persistStaffNoAction" class="com.dianrong.common.uniauth.cas.action.PersistStaffNoAction"/>
 	<bean id="staffNoPersistDecisionAction" class="com.dianrong.common.uniauth.cas.action.StaffNoPersistDecisionAction"/>
 </beans>

@@ -47,6 +47,9 @@ public class UserDataFilter extends CurrentAbstractDataFilter<User> {
         case FIELD_TYPE_PHONE:
           criteria.andPhoneEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
           break;
+        case FIELD_TYPE_STAFF_NO:
+          criteria.andStaffNoEqualTo(TypeParseUtil.parseToStringFromObject(fd.getValue()));
+          break;
         default:
           break;
       }

@@ -1,11 +1,11 @@
 package com.dianrong.common.uniauth.server.synchronous.hr.support;
 
-import com.dianrong.common.uniauth.server.synchronous.support.Switcher;
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HrDataSynchronousSwitcher implements Switcher {
+public class HrDataSynchronousSwitcher implements SwitchControl {
 
   /**
    * 开关.

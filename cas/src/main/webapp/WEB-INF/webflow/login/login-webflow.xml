@@ -25,7 +25,6 @@
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
 
     <var name="credential" class="com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential"/>
-    <var name="userAttribute" class="com.dianrong.common.uniauth.cas.model.UserAttribute"/>
     <on-start>
         <evaluate expression="initialFlowSetupAction"/>
     </on-start>
@@ -70,30 +69,17 @@
         <transition to="loginTypeDecisionAction"/>
     </action-state>
 
-
     <!--
         If requires staff_no, give a chance to edit it.
     -->
-    <!-- 继续检查JWT -->
     <action-state id="warn">
         <evaluate expression="staffNoPersistDecisionAction.decide()"/>
         <transition on="true" to="editStaffNo"/>
         <transition on="false" to="original_warn"/>
     </action-state>
 
-    <view-state id="editStaffNo" view="editStaffNoView" model="userAttribute">
-        <binder>
-            <binding property="staffNo" required="false"/>
-        </binder>
-        <transition on="submit" bind="true" to="persistStaffNo" />
-        <transition on="continue" to="original_warn" />
-    </view-state>
-
-    <!-- 存储用户的员工号 -->
-    <action-state id="persistStaffNo">
-        <evaluate expression="persistStaffNoAction.persist(flowScope.userAttribute)"/>
-        <transition to="original_warn"/>
-    </action-state>
+    <end-state id="editStaffNo" view="editStaffNoView">
+    </end-state>
 
     <!--
         The "warn" action makes the determination of whether to redirect directly to the requested
@@ -247,12 +233,12 @@
         </on-entry>
     </end-state>
 	
-	<!-- for user info edit, new branch  -->
-	<decision-state id="branchToEditOrLogin">
+	  <!-- for user info edit, new branch  -->
+	  <decision-state id="branchToEditOrLogin">
          <if test="flowScope.edituserinfo != null and flowScope.edituserinfo != '' " then="editUserInfo" else="viewGenericLoginSuccess"/>
     </decision-state>
 	
-	<action-state id="editUserInfo">
+	  <action-state id="editUserInfo">
         <evaluate expression="personalInfoManageAction"/>
         <transition on="query" to="editUserInfoEditPage"/>
         <transition on="update" to="updateUserInfo"/>

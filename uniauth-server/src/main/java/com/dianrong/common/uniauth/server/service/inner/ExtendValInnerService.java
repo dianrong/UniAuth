@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.util.StringUtils;
 
 /**
  * 扩展属性值Service的内部实现(用户和组的扩展属性).
@@ -51,8 +52,8 @@ public class ExtendValInnerService extends TenancyBasedService {
     params.put("value", value);
     params.put("tenancyId", tenancyService.getTenancyIdWithCheck());
 
-    // 更新的属性是有唯一性的
-    if (isUniqueField) {
+    // 更新的属性是有唯一性的. 值不能是为空的.
+    if (isUniqueField && value != null && StringUtils.hasText(value.toString())) {
       boolean isCheckPass = true;
       List<Map<String, Object>> extendValList = extendValMapper.queryEnableExtendVal(params);
       if (!CollectionUtils.isEmpty(extendValList)) {

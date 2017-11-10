@@ -1,6 +1,7 @@
 package org.springframework.security.web.access.regular;
 
 import com.dianrong.common.uniauth.common.client.enums.CasPermissionControlType;
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.ReflectionUtils;
 import java.util.List;
@@ -11,7 +12,6 @@ import org.springframework.core.Ordered;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.SwitchControl;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 

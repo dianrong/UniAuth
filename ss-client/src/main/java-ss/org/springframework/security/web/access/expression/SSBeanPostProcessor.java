@@ -1,5 +1,6 @@
 package org.springframework.security.web.access.expression;
 
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.Map.Entry;
@@ -12,7 +13,6 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.web.access.SwitchControl;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;

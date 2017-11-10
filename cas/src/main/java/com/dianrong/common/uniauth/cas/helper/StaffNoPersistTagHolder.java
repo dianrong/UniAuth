@@ -1,23 +1,25 @@
 package com.dianrong.common.uniauth.cas.helper;
 
 /**
- * 辅助类, 如果用户没有员工标号,则将该用户的id存储到ThreadLocal中.
+ * 辅助类, 标识是否需要进行员工编号编辑.
  */
-public class StaffNoPersistTagHolder {
-  private static final ThreadLocal<Long> PERSIST_STAFF_NO = new ThreadLocal<Long>();
+public final class StaffNoPersistTagHolder {
 
-  public static Long get(){
+  private static final ThreadLocal<Boolean> PERSIST_STAFF_NO = new ThreadLocal<Boolean>() {
+    protected Boolean initialValue() {
+      return Boolean.FALSE;
+    }
+  };
+
+  public static Boolean get() {
     return PERSIST_STAFF_NO.get();
   }
 
-  public static void persist(Long userId){
-    if (userId == null) {
-      return;
-    }
-    PERSIST_STAFF_NO.set(userId);
+  public static void persist() {
+    PERSIST_STAFF_NO.set(Boolean.TRUE);
   }
 
-  public static void remove(){
+  public static void remove() {
     PERSIST_STAFF_NO.remove();
   }
 }

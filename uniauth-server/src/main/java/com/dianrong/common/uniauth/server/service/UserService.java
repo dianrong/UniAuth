@@ -87,6 +87,7 @@ import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
 import com.dianrong.common.uniauth.server.service.inner.UserProfileInnerService;
 import com.dianrong.common.uniauth.server.service.multidata.UserAuthentication;
 import com.dianrong.common.uniauth.server.service.support.AttributeDefine;
+import com.dianrong.common.uniauth.server.service.support.StaffNoUniqueCheckSwitchControl;
 import com.dianrong.common.uniauth.server.support.tree.TreeType;
 import com.dianrong.common.uniauth.server.support.tree.TreeTypeHolder;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
@@ -186,6 +187,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   @Autowired
   private NotificationService notificationService;
 
+  @Autowired
+  private StaffNoUniqueCheckSwitchControl staffNoUniqueCheckSwitchControl;
+
   // 异步处理线程池.
   private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -193,8 +197,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    * 新增用户.
    */
   @Transactional
-  public UserDto addNewUser(String name, String phone, String email, Byte type) {
+  public UserDto addNewUser(String name, String phone, String email, String staffNo, Byte type) {
     this.checkPhoneAndEmail(phone, email, null);
+    this.checkStaffNo(staffNo, null);
     User user = new User();
     user.setEmail(email);
     user.setName(name);
@@ -210,6 +215,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     user.setLastUpdate(now);
     user.setCreateDate(now);
+    user.setStaffNo(staffNo);
     user.setPhone(phone);
     user.setStatus(AppConstants.STATUS_ENABLED);
     userMapper.insert(user);
@@ -219,6 +225,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     attributes.put(AttributeDefine.USER_NAME.getAttributeCode(), name);
     attributes.put(AttributeDefine.PHONE.getAttributeCode(), phone);
     attributes.put(AttributeDefine.EMAIL.getAttributeCode(), email);
+    attributes.put(AttributeDefine.STAFF_NO.getAttributeCode(), staffNo);
     UserDto userDto = BeanConverter.convert(user);
     userProfileInnerService.addOrUpdateUserAttributes(userDto.getId(), attributes);
 
@@ -237,8 +244,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   @Transactional
   public UserDto updateUser(UserActionEnum userActionEnum, Long id, String account, Long tenancyId,
-      String tenancyCode, String name, String phone, String email, Byte type, String password,
-      String originalPassword, Boolean ignorePwdStrategyCheck, Byte status) {
+      String tenancyCode, String name, String phone, String email, String staffNo, Byte type,
+      String password, String originalPassword, Boolean ignorePwdStrategyCheck, Byte status) {
     if (userActionEnum == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.parameter.empty", "userActionEnum"));
@@ -282,7 +289,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         user.setPassword(Base64.encode(AuthUtils.digest(password, salt)));
         user.setPasswordSalt(Base64.encode(salt));
         user.setPasswordDate(new Date());
-        // reset failed count
+        // reset fail count
         user.setFailCount(AppConstants.ZERO_BYTE);
         break;
       case STATUS_CHANGE:
@@ -294,20 +301,23 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         break;
       case UPDATE_INFO:
         this.checkPhoneAndEmail(phone, email, user.getId());
+        this.checkStaffNo(staffNo, user.getId());
         user.setName(name);
         user.setEmail(email);
         user.setPhone(phone);
-        if (type != null) {
-          user.setType(type);
-        }
+        user.setStaffNo(staffNo);
+        user.setType(type);
         break;
       case UPDATE_INFO_BY_ACCOUNT:
-        // 目前只能修改用户的名称
         user.setName(name);
         break;
       case UPDATE_EMAIL_BY_ACCOUNT:
         this.checkEmail(email, user.getId());
         user.setEmail(email);
+        break;
+      case UPDATE_STAFF_NO_BY_ACCOUNT:
+        this.checkStaffNo(staffNo, user.getId());
+        user.setStaffNo(staffNo);
         break;
       case UPDATE_PHONE_BY_ACCOUNT:
         this.checkPhone(phone, user.getId());
@@ -345,13 +355,22 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       }
     }
 
-    userMapper.updateByPrimaryKey(user);
+    userMapper.updateByPrimaryKeySelective(user);
 
     if (UserActionEnum.isUpdateBasicInfo(userActionEnum)) {
       Map<String, String> attributes = Maps.newHashMap();
-      attributes.put(AttributeDefine.USER_NAME.getAttributeCode(), name);
-      attributes.put(AttributeDefine.PHONE.getAttributeCode(), phone);
-      attributes.put(AttributeDefine.EMAIL.getAttributeCode(), email);
+      if (name != null) {
+        attributes.put(AttributeDefine.USER_NAME.getAttributeCode(), name);
+      }
+      if (phone != null) {
+        attributes.put(AttributeDefine.PHONE.getAttributeCode(), phone);
+      }
+      if (email != null) {
+        attributes.put(AttributeDefine.EMAIL.getAttributeCode(), email);
+      }
+      if (staffNo != null) {
+        attributes.put(AttributeDefine.STAFF_NO.getAttributeCode(), staffNo);
+      }
       userProfileInnerService.addOrUpdateUserAttributes(user.getId(), attributes);
     }
 
@@ -467,14 +486,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser,
       Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
-      String name, String phone, String exactPhone, String email, String exactEmail, String account,
-      Byte type, Byte status, Integer tagId,
+      String name, String phone, String exactPhone, String email, String exactEmail, String staffNo,
+      String exactStaffNo, String account, Byte type, Byte status, Integer tagId,
       Boolean needTag, Integer pageNumber, Integer pageSize) {
     return searchUser(userId, groupId, needDescendantGrpUser, needDisabledGrpUser, roleId, userIds,
-        excludeUserIds, name, phone, exactPhone, email, exactEmail, account, type, status, tagId,
-        needTag,
-        pageNumber, pageSize,
-        false);
+        excludeUserIds, name, phone, exactPhone, email, exactEmail, staffNo, exactStaffNo, account,
+        type, status, tagId, needTag, pageNumber, pageSize, false);
   }
 
   /**
@@ -482,9 +499,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
    */
   public PageDto<UserDto> searchUser(Long userId, Integer groupId, Boolean needDescendantGrpUser,
       Boolean needDisabledGrpUser, Integer roleId, List<Long> userIds, List<Long> excludeUserIds,
-      String name, String phone, String exactPhone, String email, String exactEmail, String account,
-      Byte type, Byte status, Integer tagId,
-      Boolean needTag, Integer pageNumber, Integer pageSize, Boolean withoutTenantConcern) {
+      String name, String phone, String exactPhone, String email, String exactEmail, String staffNo,
+      String exactStaffNo, String account, Byte type, Byte status, Integer tagId, Boolean needTag,
+      Integer pageNumber, Integer pageSize, Boolean withoutTenantConcern) {
     if (pageNumber == null || pageSize == null) {
       throw new AppException(InfoName.VALIDATE_FAIL,
           UniBundle.getMsg("common.parameter.empty", "pageNumber, pageSize"));
@@ -494,22 +511,28 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     userExample.setPageOffSet(pageNumber * pageSize);
     userExample.setPageSize(pageSize);
     UserExample.Criteria criteria = userExample.createCriteria();
-    if (name != null) {
+    if (StringUtils.hasText(name)) {
       criteria.andNameLike("%" + name + "%");
     }
-    if (phone != null) {
+    if (StringUtils.hasText(phone)) {
       criteria.andPhoneLike("%" + phone + "%");
     }
     if (exactPhone != null) {
       criteria.andPhoneEqualTo(exactPhone);
     }
-    if (email != null) {
+    if (StringUtils.hasText(email)) {
       criteria.andEmailLike("%" + email + "%");
     }
     if (exactEmail != null) {
       criteria.andEmailEqualTo(exactEmail);
     }
-    if (account != null) {
+    if (StringUtils.hasText(staffNo)) {
+      criteria.andStaffNoLike("%" + staffNo + "%");
+    }
+    if (exactStaffNo != null) {
+      criteria.andStaffNoEqualTo(exactStaffNo);
+    }
+    if (StringUtils.hasText(account)) {
       criteria.andAccountLike("%" + account + "%");
     }
     if (type != null) {
@@ -754,6 +777,33 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     } else {
       dataFilter.updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_PHONE,
           phone);
+    }
+  }
+
+  private void checkStaffNo(String staffNo, Long userId) {
+    // 员工号可为空
+    checkStaffNo(staffNo, userId, false);
+  }
+
+  private void checkStaffNo(String staffNo, Long userId, boolean checkEmpty) {
+    if (!StringUtils.hasText(staffNo)) {
+      if (checkEmpty) {
+        throw new AppException(InfoName.VALIDATE_FAIL,
+            UniBundle.getMsg("common.parameter.empty", "staffNo"));
+      }
+      return;
+    }
+
+    if (!staffNoUniqueCheckSwitchControl.isOn()) {
+      return;
+    }
+    // check duplicate staffNo
+    if (userId == null) {
+      dataFilter.addFieldCheck(FilterType.NON_EXIST, FieldType.FIELD_TYPE_STAFF_NO, staffNo);
+    } else {
+      dataFilter
+          .updateFieldCheck(Integer.parseInt(userId.toString()), FieldType.FIELD_TYPE_STAFF_NO,
+              staffNo);
     }
   }
 

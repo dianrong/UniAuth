@@ -1,5 +1,9 @@
 package com.dianrong.common.uniauth.common.cache.redis;
 
+import com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch;
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
+import com.dianrong.common.uniauth.common.util.Assert;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
@@ -7,12 +11,6 @@ import org.springframework.data.redis.connection.RedisClusterConnection;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisSentinelConnection;
-
-import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
-import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
-import com.dianrong.common.uniauth.common.util.Assert;
-
-import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
@@ -30,7 +28,7 @@ public class RedisConnectionFactoryDelegate
   /**
    * 配置字符串.
    */
-  private UseRedisSwitch redisSwitch = new SimpleUseRedisSwitch();
+  private SwitchControl redisSwitch = new SimpleUseRedisSwitch();
 
   public RedisConnectionFactoryDelegate(RedisConnectionFactoryConfiguration configuration,
       JedisPoolConfig poolConfig) {
@@ -83,7 +81,7 @@ public class RedisConnectionFactoryDelegate
     }
   }
 
-  public void setRedisSwitch(UseRedisSwitch redisSwitch) {
+  public void setRedisSwitch(SwitchControl redisSwitch) {
     Assert.notNull(redisSwitch, "redisSwitch must not be null.");
     this.redisSwitch = redisSwitch;
   }

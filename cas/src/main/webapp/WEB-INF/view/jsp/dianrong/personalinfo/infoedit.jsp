@@ -245,43 +245,43 @@
         <h4 class="modal-title" id="myModalLabel"><spring:message code="screen.personal.info.edit.update.ipa.modal.title"/></h4>
       </div>
       <div class="modal-body">
-            <form action="" class="form-horizontal">
-                        <div class="form-group">
-                                <label  class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.ipa" /></label>
-                                <label  class="col-sm-8 control-label infolabel" id="modal-update-ipa-label">${fn:escapeXml(userinfo.ipaAccount)}</label>
-                        </div>
-                        <div class="form-group">
-                                <label class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.new.ipa" /></label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control update-ipa-txt-check" id="update_ipa_new_ipa">
-                                </div>
-                        </div>
-                        <div class="form-group">
-                                <label class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.new.ipa.pwd" /></label>
-                                <div class="col-sm-8">
-                                    <input type="password" class="form-control update-ipa-txt-check" id="update_ipa_new_ipa_pwd">
-                                </div>
-                        </div>
-                        <div class="form-group">
-                                <label class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.ipa.captcha" /></label>
-		                        <div class="col-sm-8">
-		                            <div class="form-group">
-		                                     <div class="col-sm-6">
-                		                          <input type="text" class="form-control update-ipa-txt-check" id="update_ipa_input_captcha" placeholder="<spring:message code="screen.personal.info.edit.label.ipa.captcha"/>">
-		                                     </div>
-			                                <div class="col-sm-6 captcha-img" style="margin-left: -25px">
-	                                              <img alt="picture" src="<%=path %>/uniauth/verification/captcha" title="picture" id="update_ipa_captcha_pic"  style="height: 43px">
-			                                </div>
-			                        </div>
-		                        </div>
-                        </div>
-                        <div class="form-group">
-                                <div class="showwarninfo" style="text-align: center;">
-                                        <label for="warninfo"  id="update_ipa_warninfo">
-                                        </label>
-                                </div>
-                        </div>
-            </form>
+        <form class="form-horizontal">
+           <div class="form-group">
+             <label  class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.ipa" /></label>
+             <label  class="col-sm-8 control-label infolabel" id="modal-update-ipa-label">${fn:escapeXml(userinfo.ipaAccount)}</label>
+           </div>
+           <div class="form-group">
+             <label class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.new.ipa" /></label>
+             <div class="col-sm-8">
+               <input type="text" class="form-control update-ipa-txt-check" id="update_ipa_new_ipa">
+             </div>
+           </div>
+           <div class="form-group">
+             <label class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.new.ipa.pwd" /></label>
+             <div class="col-sm-8">
+                <input type="password" class="form-control update-ipa-txt-check" id="update_ipa_new_ipa_pwd">
+             </div>
+           </div>
+           <div class="form-group">
+             <label class="col-sm-3 control-label"><spring:message code="screen.personal.info.edit.label.ipa.captcha" /></label>
+             <div class="col-sm-8">
+               <div class="form-group">
+                 <div class="col-sm-6">
+                  <input type="text" class="form-control update-ipa-txt-check" id="update_ipa_input_captcha" placeholder="<spring:message code="screen.personal.info.edit.label.ipa.captcha"/>">
+                 </div>
+                 <div class="col-sm-6 captcha-img" style="margin-left: -25px">
+                  <img alt="picture" src="<%=path %>/uniauth/verification/captcha" title="picture" id="update_ipa_captcha_pic"  style="height: 43px">
+                 </div>
+               </div>
+             </div>
+           </div>
+           <div class="form-group">
+             <div class="showwarninfo" style="text-align: center;">
+               <label for="warninfo"  id="update_ipa_warninfo">
+               </label>
+             </div>
+           </div>
+         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="screen.personal.info.edit.canceledit" /></button>

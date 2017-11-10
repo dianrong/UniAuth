@@ -1,6 +1,8 @@
 package com.dianrong.common.uniauth.cas.controller;
 
 import com.dianrong.common.uniauth.cas.controller.support.CasLoginSupport;
+import com.dianrong.common.uniauth.cas.exp.InvalidStaffNoException;
+import com.dianrong.common.uniauth.cas.service.StaffNoCheckService;
 import com.dianrong.common.uniauth.cas.service.UserInfoManageService;
 import com.dianrong.common.uniauth.cas.util.CasConstants;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
@@ -12,15 +14,11 @@ import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.exp.UniauthException;
-
 import javax.security.auth.login.AccountException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.jasig.cas.authentication.principal.Principal;
-import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -52,6 +50,9 @@ public class UserInfoManageController {
   @Autowired
   private MessageSource messageSource;
 
+  @Autowired
+  private StaffNoCheckService staffNoCheckService;
+
   /**
    * 跳转到个人修改密码的页面.
    */
@@ -61,8 +62,7 @@ public class UserInfoManageController {
   }
 
   /**
-   * 根据原始密码和身份信息更新密码.
-   * <b>不需要处于登陆状态. 通过每次请求Check验证码来控制频繁访问</b>
+   * 根据原始密码和身份信息更新密码. <b>不需要处于登陆状态. 通过每次请求Check验证码来控制频繁访问</b>
    *
    * @return 更新结果
    */
@@ -132,7 +132,7 @@ public class UserInfoManageController {
     String identity = user.getEmail();
     // email should verify first
     if (!WebScopeUtil.getVerificationIsChecked(request.getSession(), identity)) {
-      log.debug("email verify faild");
+      log.debug("email verify failed");
       return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
           "manage.userinfo.controller.not.verification", "Email")));
     }
@@ -163,7 +163,7 @@ public class UserInfoManageController {
     String identity = user.getPhone();
     // phone should verify first
     if (!WebScopeUtil.getVerificationIsChecked(request.getSession(), identity)) {
-      log.debug("phone verify faild");
+      log.debug("phone verify failed");
       return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil.getMsg(messageSource,
           "manage.userinfo.controller.not.verification", "Phone")));
     }
@@ -234,11 +234,40 @@ public class UserInfoManageController {
   }
 
   /**
+   * 保存当前用户的员工号.<br> 用户必须处于登录状态.
+   */
+  @ResponseBody
+  @RequestMapping(value = "staff-no", method = RequestMethod.POST)
+  public Response<?> persistStaffNo(HttpServletRequest request, HttpServletResponse response,
+      @RequestParam(value = "staffNo", required = true) String staffNo) {
+    if (!checkIsLogin(request, response)) {
+      return getNotLoginResult();
+    }
+    UserIdentity userIdentity = getCurrentLoginUserId(request, response);
+    try {
+      // Check staffNo
+      staffNoCheckService
+          .checkStaffNo(userIdentity.getAccount(), userIdentity.getTenancyId(), staffNo);
+      userInfoManageService
+          .updateStaffNo(userIdentity.getAccount(), userIdentity.getTenancyId(), staffNo);
+    } catch (InvalidStaffNoException e) {
+      log.error("Staff No. parameter is invalid", e);
+      return Response.failure(Info.build(InfoName.BAD_REQUEST, UniBundleUtil
+          .getMsg(messageSource, "userinfo.persist.staff.no.invalid")));
+    } catch (Exception e) {
+      log.error("Failed update staff No.", e);
+      return Response.failure(Info.build(InfoName.INTERNAL_ERROR, UniBundleUtil
+          .getMsg(messageSource, "userinfo.persist.staff.no.failure")));
+    }
+    return Response.success();
+  }
+
+  /**
    * 判断当前的请求是否处于登陆状态.
    */
   private boolean checkIsLogin(HttpServletRequest request, HttpServletResponse response) {
     try {
-      casLoginSupport.queryTgtWithLogined(request, response);
+      casLoginSupport.queryTgtWithLoginStatus(request, response);
       return true;
     } catch (NotLoginException ex) {
       log.error("call update userInfo, but not login", ex);
@@ -248,13 +277,12 @@ public class UserInfoManageController {
 
   /**
    * 获取当前登陆用户的用户id.
-   * 
+   *
    * @throws NotLoginException 如果没有登陆则抛出该异常
    */
   private UserIdentity getCurrentLoginUserId(HttpServletRequest request,
       HttpServletResponse response) {
-    TicketGrantingTicket tgt = casLoginSupport.queryTgtWithLogined(request, response);
-    Principal principal = casLoginSupport.getAuthenticationPrincipal(tgt.getId());
+    Principal principal = casLoginSupport.getAuthenticationPrincipal(request, response);
     // 获取用户账号
     String account = principal.getId();
     Long tenancyId =
@@ -268,7 +296,6 @@ public class UserInfoManageController {
         UniBundleUtil.getMsg(messageSource, "manage.userinfo.controller.not.login")));
   }
 
-  // 辅助类 用于返回结果
   class UserIdentity {
 
     private final String account;

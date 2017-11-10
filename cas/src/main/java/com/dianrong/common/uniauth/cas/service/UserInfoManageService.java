@@ -124,6 +124,26 @@ public class UserInfoManageService extends BaseService {
   }
 
   /**
+   * 根据账号信息更新员工号.
+   *
+   * @param account 账号
+   * @param tenancyId 租户id
+   * @param staffNo 新的员工号
+   * @throws Exception 异常
+   */
+  @TenancyIdentity(index = 1)
+  public void updateStaffNo(String account, Long tenancyId, String staffNo) throws Exception {
+    UserParam userParam = new UserParam();
+    userParam.setAccount(StringUtil.trimCompatibleNull(account));
+    userParam.setTenancyId(tenancyId);
+    userParam.setStaffNo(StringUtil.trimCompatibleNull(staffNo));
+    userParam.setUserActionEnum(UserActionEnum.UPDATE_STAFF_NO_BY_ACCOUNT);
+    Response<UserDto> response = uarwFacade.getUserRWResource().updateUser(userParam);
+    List<Info> infoList = response.getInfo();
+    checkInfoList(infoList);
+  }
+
+  /**
    * 根据账号更新密码.
    *
    * @param account 账号

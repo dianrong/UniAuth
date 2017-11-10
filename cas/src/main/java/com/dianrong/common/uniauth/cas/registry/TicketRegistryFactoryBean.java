@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.cas.registry;
 
-import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
-import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
+import com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch;
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import com.dianrong.common.uniauth.common.util.Assert;
 import org.jasig.cas.ticket.registry.DefaultTicketRegistry;
 import org.jasig.cas.ticket.registry.TicketRegistry;
@@ -15,7 +15,7 @@ public class TicketRegistryFactoryBean {
   /**
    * 配置字符串.
    */
-  private UseRedisSwitch redisSwitch = new SimpleUseRedisSwitch();
+  private SwitchControl redisSwitch = new SimpleUseRedisSwitch();
 
   public DefaultTicketRegistry getDefaultTicketRegistry() {
     return defaultTicketRegistry;
@@ -33,7 +33,7 @@ public class TicketRegistryFactoryBean {
     this.redisTicketRegistry = redisTicketRegistry;
   }
 
-  public void setRedisSwitch(UseRedisSwitch redisSwitch) {
+  public void setRedisSwitch(SwitchControl redisSwitch) {
     Assert.notNull(redisSwitch, "redisSwitch must not be null.");
     this.redisSwitch = redisSwitch;
   }

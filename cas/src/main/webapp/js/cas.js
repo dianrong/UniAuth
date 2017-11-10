@@ -164,4 +164,10 @@ $(function() {
 		e.preventDefault();  
     login_fun();
 	});
+
+	// Continue
+	$('#continue_btn').click(function(e){
+      $('#staff_no_form').attr("action");
+
+  	});
 });
