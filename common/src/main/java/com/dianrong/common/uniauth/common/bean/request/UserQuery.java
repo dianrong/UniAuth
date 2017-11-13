@@ -18,6 +18,8 @@ public class UserQuery extends PageParam {
   private String exactPhone;
   private String email;
   private String exactEmail;
+  private String staffNo;
+  private String exactStaffNo;
   // 根据用户的类型 查询用户
   private Byte type;
   private Byte status;
@@ -188,6 +190,24 @@ public class UserQuery extends PageParam {
 
   public UserQuery setType(Byte type) {
     this.type = type;
+    return this;
+  }
+
+  public String getStaffNo() {
+    return staffNo;
+  }
+
+  public UserQuery setStaffNo(String staffNo) {
+    this.staffNo = staffNo;
+    return this;
+  }
+
+  public String getExactStaffNo() {
+    return exactStaffNo;
+  }
+
+  public UserQuery setExactStaffNo(String exactStaffNo) {
+    this.exactStaffNo = exactStaffNo;
     return this;
   }
 }

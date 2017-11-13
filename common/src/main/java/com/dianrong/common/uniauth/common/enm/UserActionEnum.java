@@ -9,6 +9,7 @@ public enum UserActionEnum {
   RESET_PASSWORD_AND_CHECK,
   UPDATE_INFO_BY_ACCOUNT,
   UPDATE_EMAIL_BY_ACCOUNT,
+  UPDATE_STAFF_NO_BY_ACCOUNT,
   UPDATE_PHONE_BY_ACCOUNT,
   UPDATE_PASSWORD_BY_ACCOUNT,;
 
@@ -27,6 +28,8 @@ public enum UserActionEnum {
       case UPDATE_PHONE_BY_ACCOUNT:
         return true;
       case UPDATE_PASSWORD_BY_ACCOUNT:
+        return true;
+      case UPDATE_STAFF_NO_BY_ACCOUNT:
         return true;
       default:
         break;
@@ -53,6 +56,8 @@ public enum UserActionEnum {
       case UPDATE_EMAIL_BY_ACCOUNT:
         return true;
       case UPDATE_PHONE_BY_ACCOUNT:
+        return true;
+      case UPDATE_STAFF_NO_BY_ACCOUNT:
         return true;
       default:
         break;

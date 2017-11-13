@@ -1,13 +1,13 @@
 package com.dianrong.common.uniauth.client.config;
 
 import com.dianrong.common.uniauth.common.cache.AbstractUniauthCacheManager;
+import com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch;
 import com.dianrong.common.uniauth.common.cache.UniauthCache;
 import com.dianrong.common.uniauth.common.cache.cache.MemoryCache;
 import com.dianrong.common.uniauth.common.cache.cache.RedisCache;
 import com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration;
 import com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate;
-import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
-import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class ConfigurableUniauthCacheManager extends AbstractUniauthCacheManager
   /**
    * 统一的控制开关.
    */
-  private final UseRedisSwitch redisSwitch;
+  private final SwitchControl redisSwitch;
 
   @Resource(name = "redisDefaultConfiguration")
   private RedisConnectionFactoryConfiguration defaultConfiguration;

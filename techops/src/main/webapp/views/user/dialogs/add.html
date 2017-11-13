@@ -13,6 +13,8 @@
             <input type="email" class="form-control" name="email" id="email" ng-model="user.email">
             <label class="control-label" for="phone" placeholder="{{'userMgr.dialog.add.mobile' | translate }}">{{'userMgr.dialog.add.mobile' | translate }}:</label>
             <input type="text" class="form-control" name="phone" id="phone" ng-model="user.phone"  ng-pattern="/^1(3|4|5|7|8)\d{9}$/"><br/>
+            <label class="control-label" for="staffNo" placeholder="{{'userMgr.dialog.add.staffNo' | translate }}">{{'userMgr.dialog.add.staffNo' | translate }}:</label>
+            <input type="text" class="form-control" name="staffNo" id="staffNo" ng-model="user.staffNo" ng-pattern="/^[a-zA-Z0-9]+$/"><br/>
             <label ng-if="loginDomainsDropdown.option.code == 'techops'" class="control-label" placeholder="{{'userMgr.type' | translate }}">{{'userMgr.type' | translate }}:</label>
             <div ng-if="loginDomainsDropdown.option.code == 'techops'" class="btn-group" uib-dropdown is-open="userTypesDropdown.isOpen">
                 <button type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">

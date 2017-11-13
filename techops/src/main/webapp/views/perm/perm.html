@@ -33,11 +33,11 @@
         <thead class="text-color-c4">
         <tr>
             <th>{{ 'permMgr.value' | translate}}</th>
-            <th style="width: 5em;">{{ 'permMgr.eavValue' | translate}}</th>
+            <th style="width: 7em;">{{ 'permMgr.eavValue' | translate}}</th>
             <th>{{ 'permMgr.permType' | translate}}</th>
             <th>{{'permMgr.desc' | translate}}</th>
-            <th style="width: 4em">{{ 'userMgr.status' | translate}}</th>
-            <th style="text-align: center;width: 10em;">{{ 'userMgr.operators' | translate}}</th>
+            <th style="width: 6em">{{ 'userMgr.status' | translate}}</th>
+            <th style="text-align: center;width: 12em;">{{ 'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
         <tbody class="text-color-c6">
@@ -48,14 +48,14 @@
 
         <tr ng-repeat="d in perms">
             <td>
-                <p title="{{d.value}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 120px">{{d.value}}</p>
+                <p title="{{d.value}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.value}}</p>
             </td>
             <td>
-                <p title="{{d.valueExt}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 120px">{{d.valueExt}}</p>
+                <p title="{{d.valueExt}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.valueExt}}</p>
             </td>
             <td ng-bind="d.permType"></td>
             <td>
-                <p title="{{d.description}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 280px">{{d.description}}</p>
+                <p title="{{d.description}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 360px">{{d.description}}</p>
             </td>
             <td ng-bind="!d.status?'{{ 'userMgr.enable'| translate}}':'{{ 'userMgr.disable'| translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">

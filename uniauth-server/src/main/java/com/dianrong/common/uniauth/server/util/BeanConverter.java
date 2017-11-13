@@ -1,24 +1,74 @@
 package com.dianrong.common.uniauth.server.util;
 
-import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.common.bean.request.*;
+import com.dianrong.common.uniauth.common.bean.dto.ApiPermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.AttributeExtendDto;
+import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
+import com.dianrong.common.uniauth.common.bean.dto.ConfigDto;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.GroupDto;
+import com.dianrong.common.uniauth.common.bean.dto.GrpExtendValDto;
+import com.dianrong.common.uniauth.common.bean.dto.HrSynchronousLogDto;
+import com.dianrong.common.uniauth.common.bean.dto.OrganizationDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionDto;
+import com.dianrong.common.uniauth.common.bean.dto.ProfileDefinitionPathDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.SimpleProfileDefinitionDto;
+import com.dianrong.common.uniauth.common.bean.dto.StakeholderDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.TenancyDto;
+import com.dianrong.common.uniauth.common.bean.dto.UrlRoleMappingDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailInfoDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserExtendValDto;
+import com.dianrong.common.uniauth.common.bean.dto.VPNLoginResult;
+import com.dianrong.common.uniauth.common.bean.request.AttributeExtendParam;
+import com.dianrong.common.uniauth.common.bean.request.DomainParam;
+import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
+import com.dianrong.common.uniauth.common.bean.request.StakeholderParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-import com.dianrong.common.uniauth.server.data.entity.*;
+import com.dianrong.common.uniauth.server.data.entity.ApiPermission;
+import com.dianrong.common.uniauth.server.data.entity.AttributeExtend;
+import com.dianrong.common.uniauth.server.data.entity.Audit;
+import com.dianrong.common.uniauth.server.data.entity.Cfg;
+import com.dianrong.common.uniauth.server.data.entity.Domain;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
+import com.dianrong.common.uniauth.server.data.entity.GrpExtendVal;
+import com.dianrong.common.uniauth.server.data.entity.HrSynchronousLog;
+import com.dianrong.common.uniauth.server.data.entity.PermType;
+import com.dianrong.common.uniauth.server.data.entity.Permission;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinition;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionAttribute;
+import com.dianrong.common.uniauth.server.data.entity.ProfileDefinitionPath;
+import com.dianrong.common.uniauth.server.data.entity.Role;
+import com.dianrong.common.uniauth.server.data.entity.RoleCode;
+import com.dianrong.common.uniauth.server.data.entity.Stakeholder;
+import com.dianrong.common.uniauth.server.data.entity.Tag;
+import com.dianrong.common.uniauth.server.data.entity.TagType;
+import com.dianrong.common.uniauth.server.data.entity.Tenancy;
+import com.dianrong.common.uniauth.server.data.entity.User;
+import com.dianrong.common.uniauth.server.data.entity.UserDetail;
+import com.dianrong.common.uniauth.server.data.entity.UserExtendVal;
 import com.dianrong.common.uniauth.server.data.entity.ext.PermissionExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.RoleExt;
 import com.dianrong.common.uniauth.server.data.entity.ext.UrlRoleMappingExt;
 import com.dianrong.common.uniauth.server.model.AttributeValModel;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.springframework.util.StringUtils;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.springframework.util.StringUtils;
 
 /**
  * Created by Arc on 15/1/16.
@@ -83,7 +133,7 @@ public class BeanConverter {
         .setValue(gev.getValue())
         .setTenancyId(StringUtil.translateLongToInteger(gev.getTenancyId()));
   }
-  
+
   /**
    * 将Entity转化为Dto.
    */
@@ -92,7 +142,8 @@ public class BeanConverter {
       return null;
     }
     return (UserExtendValDto) new UserExtendValDto().setCreateDate(uev.getCreateDate())
-        .setExtendId(uev.getExtendId()).setUserId(uev.getUserId()).setLastUpdate(uev.getLastUpdate())
+        .setExtendId(uev.getExtendId()).setUserId(uev.getUserId())
+        .setLastUpdate(uev.getLastUpdate())
         .setValue(uev.getValue())
         .setTenancyId(StringUtil.translateLongToInteger(uev.getTenancyId()));
   }
@@ -258,7 +309,8 @@ public class BeanConverter {
     } else {
       UserDto userDto = new UserDto();
       userDto.setName(user.getName()).setEmail(user.getEmail()).setId(user.getId())
-          .setPhone(user.getPhone()).setLastLoginTime(user.getLastLoginTime())
+          .setPhone(user.getPhone()).setStaffNo(user.getStaffNo()).setUserGuid(user.getUserGuid())
+          .setLdapDn(user.getLdapDn()).setLastLoginTime(user.getLastLoginTime())
           .setFailCount(user.getFailCount()).setLastLoginIp(user.getLastLoginIp())
           .setCreateDate(user.getCreateDate()).setStatus(user.getStatus())
           .setLastUpdate(user.getLastUpdate()).setType(user.getType())
@@ -448,7 +500,8 @@ public class BeanConverter {
     } else {
       UserDto userDto = new UserDto();
       userDto.setAccount(user.getUid()).setName(user.getCn()).setEmail(user.getEmail())
-          .setPhone(user.getPhone()).setStatus(AppConstants.STATUS_ENABLED);
+          .setPhone(user.getPhone()).setStatus(AppConstants.STATUS_ENABLED)
+          .setStaffNo(AppConstants.UNKNOWN_STAFF_NO);
       return userDto;
     }
   }

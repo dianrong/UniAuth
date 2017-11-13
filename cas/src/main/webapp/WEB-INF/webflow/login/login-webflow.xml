@@ -70,10 +70,22 @@
     </action-state>
 
     <!--
+        If requires staff_no, give a chance to edit it.
+    -->
+    <action-state id="warn">
+        <evaluate expression="staffNoPersistDecisionAction.decide()"/>
+        <transition on="true" to="editStaffNo"/>
+        <transition on="false" to="original_warn"/>
+    </action-state>
+
+    <end-state id="editStaffNo" view="editStaffNoView">
+    </end-state>
+
+    <!--
         The "warn" action makes the determination of whether to redirect directly to the requested
         service or display the "confirmation" page to go back to the server.
     -->
-    <decision-state id="warn">
+    <decision-state id="original_warn">
         <if test="flowScope.warnCookieValue" then="showWarningView" else="redirect"/>
     </decision-state>
 
@@ -97,7 +109,7 @@
 	 -->
     <view-state id="viewLoginForm" view="casLoginView" model="credential">
         <binder>
-        	<binding property="domain" required="true"/>
+            <binding property="domain" required="true"/>
             <binding property="username" required="true"/>
             <binding property="password" required="true"/>
             <binding property="tenancyCode" required="true"/>
@@ -115,9 +127,7 @@
     </view-state>
 
     <action-state id="realSubmit">
-    
-        <evaluate
-                expression="uniauthAuthenticationViaFormSubmit.submit(flowRequestContext, flowScope.credential, messageContext)"/>
+        <evaluate expression="uniauthAuthenticationViaFormSubmit.submit(flowRequestContext, flowScope.credential, messageContext)"/>
         <transition on="warn" to="warn"/>
         <!--
         To enable AUP workflows, replace the 'success' transition with the following:
@@ -223,12 +233,12 @@
         </on-entry>
     </end-state>
 	
-	<!-- for user info edit, new branch  -->
-	<decision-state id="branchToEditOrLogin">
+	  <!-- for user info edit, new branch  -->
+	  <decision-state id="branchToEditOrLogin">
          <if test="flowScope.edituserinfo != null and flowScope.edituserinfo != '' " then="editUserInfo" else="viewGenericLoginSuccess"/>
     </decision-state>
 	
-	<action-state id="editUserInfo">
+	  <action-state id="editUserInfo">
         <evaluate expression="personalInfoManageAction"/>
         <transition on="query" to="editUserInfoEditPage"/>
         <transition on="update" to="updateUserInfo"/>

@@ -191,6 +191,8 @@ define(['../../utils/constant', '../../utils/utils'], function (constant, utils)
         $scope.$on('selected-language-changed', $scope.queryUser);
         $scope.$on('selected-language-changed', $scope.getUserTypes);
 
+        // 用户类型,有可能出现国际化信息未加载完全,导致页面显示不正常. 监听国际化信息加载完成事件,将页面展示修复回来.
+        $rootScope.$on('$translateChangeSuccess', $scope.getUserTypes);
     };
 
     return {

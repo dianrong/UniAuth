@@ -57,6 +57,7 @@ public interface AppConstants {
 
   // ROLE_NORMAL
   String ROLE_CODE_ROLE_NORMAL = "ROLE_NORMAL";
+  String UNKNOWN_STAFF_NO = "UNKNOWN_STAFF_NO";
 
   /*** zk节点配置相关的常量定义. */
   /**

@@ -25,6 +25,12 @@ public class UserDto extends TenancyBaseDto {
   private String account;
   @ApiModelProperty("姓名")
   private String name;
+  @ApiModelProperty("员工号")
+  private String staffNo;
+  @ApiModelProperty("员工ladp名称")
+  private String ldapDn;
+  @ApiModelProperty("员工Guid")
+  private String userGuid;
   @ApiModelProperty("密码")
   private String password;
   @ApiModelProperty("密码盐")
@@ -322,6 +328,33 @@ public class UserDto extends TenancyBaseDto {
 
   public UserDto setType(Byte type) {
     this.type = type;
+    return this;
+  }
+
+  public String getStaffNo() {
+    return staffNo;
+  }
+
+  public UserDto setStaffNo(String staffNo) {
+    this.staffNo = staffNo;
+    return this;
+  }
+
+  public String getLdapDn() {
+    return ldapDn;
+  }
+
+  public UserDto setLdapDn(String ldapDn) {
+    this.ldapDn = ldapDn;
+    return this;
+  }
+
+  public String getUserGuid() {
+    return userGuid;
+  }
+
+  public UserDto setUserGuid(String userGuid) {
+    this.userGuid = userGuid;
     return this;
   }
 }

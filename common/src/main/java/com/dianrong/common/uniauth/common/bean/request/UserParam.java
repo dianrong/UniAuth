@@ -14,6 +14,7 @@ public class UserParam extends Operator {
   private String name;
   private String phone;
   private String email;
+  private String staffNo;
   private Byte type;
   private String password;
   private String originPassword;
@@ -244,6 +245,15 @@ public class UserParam extends Operator {
 
   public UserParam setAddOrDelete(Boolean addOrDelete) {
     this.addOrDelete = addOrDelete;
+    return this;
+  }
+
+  public String getStaffNo() {
+    return staffNo;
+  }
+
+  public UserParam setStaffNo(String staffNo) {
+    this.staffNo = staffNo;
     return this;
   }
 }

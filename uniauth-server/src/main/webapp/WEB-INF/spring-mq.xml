@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-    xsi:schemaLocation="
-                http://www.springframework.org/schema/beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans.xsd
-                http://www.springframework.org/schema/context
-                http://www.springframework.org/schema/context/spring-context.xsd 
+
+
                 http://www.springframework.org/schema/rabbit  
                 http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd">
 
 
-    <bean id="commonRabbitConfig" class="com.dianrong.platform.open.cfg.CfgGroup">
-        <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/common/rabbitmq" />
-        <property name="needKeepAlive" value="false" />
-    </bean>
+  <bean id="commonRabbitConfig" class="com.dianrong.platform.open.cfg.CfgGroup">
+    <property name="cfgRootNodeName" value="/com/dianrong/cfg/1.0.0/common/rabbitmq"/>
+    <property name="needKeepAlive" value="false"/>
+  </bean>
 
-    <bean id="UNIAUTH_RABBIT_OFF" class="java.lang.String">
-        <constructor-arg>
-            <value>UNIAUTH_RABBIT_OFF</value>
-        </constructor-arg>
-    </bean>
-    
-    <rabbit:connection-factory id="uniauth_mq_connectionFactory"
-        host="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['address']:UNIAUTH_RABBIT_OFF}"
-        port="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['port']:'9999'}"
-        username="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['username']:UNIAUTH_RABBIT_OFF}"
-        virtual-host="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['vhost']:UNIAUTH_RABBIT_OFF}"
-        password="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['password']:UNIAUTH_RABBIT_OFF}" />
+  <bean id="UNIAUTH_RABBIT_OFF" class="java.lang.String">
+    <constructor-arg>
+      <value>UNIAUTH_RABBIT_OFF</value>
+    </constructor-arg>
+  </bean>
 
-    <rabbit:admin id="uniauth_admin" connection-factory="uniauth_mq_connectionFactory" />
+  <rabbit:connection-factory id="uniauth_mq_connectionFactory"
+    host="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['address']:UNIAUTH_RABBIT_OFF}"
+    port="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['port']:'9999'}"
+    username="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['username']:UNIAUTH_RABBIT_OFF}"
+    virtual-host="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['vhost']:UNIAUTH_RABBIT_OFF}"
+    password="#{uniauthConfig['rabbit.switch']=='on'?commonRabbitConfig['password']:UNIAUTH_RABBIT_OFF}"/>
 
-    <rabbit:template id="uniauth_mq_template" exchange="#{uniauthConfig['rabbit.exchange']}" connection-factory="uniauth_mq_connectionFactory"  message-converter="daJsonMessageConverter"/>
-    <bean id="daJsonMessageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"/>  
-    <bean id="mqSender" class="com.dianrong.common.uniauth.server.mq.MqSenderFactory"  factory-bean="mqSenderFactory"  factory-method="getSender"/>
+  <rabbit:admin id="uniauth_admin" connection-factory="uniauth_mq_connectionFactory"/>
+
+  <rabbit:template id="uniauth_mq_template" exchange="#{uniauthConfig['rabbit.exchange']}"
+    connection-factory="uniauth_mq_connectionFactory" message-converter="daJsonMessageConverter"/>
+  <bean id="daJsonMessageConverter"
+    class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"/>
+  <bean id="mqSender" class="com.dianrong.common.uniauth.server.mq.MqSenderFactory"
+    factory-bean="mqSenderFactory" factory-method="getSender"/>
 </beans>

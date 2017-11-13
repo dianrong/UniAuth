@@ -118,7 +118,7 @@ public class UserThirdAccountService extends TenancyBasedService {
     Long userId = null;
     UserDto userDto = null;
     if (user == null) {
-      userDto = userService.addNewUser(name, insertPhone, email, UserType.NORMAL);
+      userDto = userService.addNewUser(name, insertPhone, email, null, UserType.NORMAL);
       log.info("{} login, create a new Uniauth user:ThirdAccout: {}, Name:{}, Email:{}, Phone:{}",
           type.toString(), thirdAccount, name, email, phone);
       userId = userDto.getId();

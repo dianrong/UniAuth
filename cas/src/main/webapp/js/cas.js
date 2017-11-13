@@ -136,13 +136,38 @@ $(function() {
 		top.window.location = redirect_url;
 	});
 	
+
+	// login process
+	var login_fun = function() {
+	  var enabled = !$('#btn_cas_submit').attr('disabled');
+	  if (!enabled) {
+	    return;
+	  }
+	  var loginForm = $('#login #fm1');
+    var input_tenancy = $("<input type='hidden' name='tenancyCode' />")
+      input_tenancy.attr('value', cookieOperation.getTenancyCode());
+    loginForm.append(input_tenancy);
+    loginForm.submit();
+	}
+
+  // 回车键登录
+	$(document).keypress(function(e) {
+    var eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+    if (eCode == 13){
+      e.preventDefault();
+      login_fun();
+    }
+  });
+
 	// login submit
 	$('#btn_cas_submit').click(function(e){
 		e.preventDefault();  
-		var loginForm = $('#login #fm1');
-		var input_tenancy = $("<input type='hidden' name='tenancyCode' />")
-	    input_tenancy.attr('value', cookieOperation.getTenancyCode());
-		loginForm.append(input_tenancy);
-		loginForm.submit();
+    login_fun();
 	});
+
+	// Continue
+	$('#continue_btn').click(function(e){
+      $('#staff_no_form').attr("action");
+
+  	});
 });

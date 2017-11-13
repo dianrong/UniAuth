@@ -35,7 +35,7 @@
             <th>{{ 'roleMgr.roleName' | translate}}</th>
             <th>{{ 'roleMgr.roleCode' | translate}}</th>
             <th>{{ 'roleMgr.roleDesc' | translate}}</th>
-            <th style="width: 4em"> {{ 'userMgr.status' | translate}}</th>
+            <th style="width: 6em"> {{ 'userMgr.status' | translate}}</th>
             <th style="text-align: center">{{ 'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
@@ -51,7 +51,7 @@
             </td>
             <td ng-bind="d.roleCode"></td>
             <td>
-                <p title="{{d.description}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 250px">{{d.description}}</p>
+                <p title="{{d.description}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 360px">{{d.description}}</p>
             </td>
             <td ng-bind="!d.status?'{{ 'userMgr.enable' | translate}}':'{{ 'userMgr.disable' | translate}}'"></td>
             <td class="text-color-c9" style="text-align: center">
