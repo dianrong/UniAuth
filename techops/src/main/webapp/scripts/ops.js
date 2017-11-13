@@ -83,7 +83,7 @@ require(['app',
                 // Register Factory
                 app.factory(components[i].name, components[i].svc);
             } else if (components[i].fn) {
-                // Register Controllder
+                // Register Controller
                 app.controller(components[i].name, components[i].fn);
             } else if (components[i].directiveFn) {
                 app.directive(components[i].name, components[i].directiveFn);

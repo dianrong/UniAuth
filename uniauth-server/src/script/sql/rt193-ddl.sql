@@ -49,3 +49,6 @@ ALTER TABLE hr_person MODIFY `legal_entities_code` VARCHAR(120) COMMENT '法人�
 ALTER TABLE hr_person MODIFY `legal_entities_name` VARCHAR(120) COMMENT '所属法人';
 ALTER TABLE hr_person MODIFY `company_code` VARCHAR(120) COMMENT '所属公司编码';
 ALTER TABLE hr_person MODIFY `company_name` VARCHAR(120) COMMENT '所属公司名称';
+
+-- hr_job
+ALTER TABLE hr_job MODIFY `sales` VARCHAR(100) COMMENT '是否销售(none sales和sales)';

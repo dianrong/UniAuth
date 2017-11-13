@@ -188,7 +188,7 @@ public class UserLoginController {
       @RequestParam(value = "service", required = true) String service, HttpServletRequest request,
       HttpServletResponse response) {
     try {
-      TicketGrantingTicket tgtTicket = loginSupport.queryTgtWithLogined(request, response);
+      TicketGrantingTicket tgtTicket = loginSupport.queryTgtWithLoginStatus(request, response);
       String serviceTicket = loginSupport.grantServiceTicket(request, tgtTicket.getId());
       log.info("create a service ticket {} successfully ", serviceTicket);
       return ApiResponse.success(serviceTicket);
@@ -248,7 +248,7 @@ public class UserLoginController {
   @RequestMapping(value = "jwt", method = RequestMethod.GET)
   public ApiResponse<String> getJWT(HttpServletRequest request, HttpServletResponse response) {
     try {
-      TicketGrantingTicket tgtTicket = loginSupport.queryTgtWithLogined(request, response);
+      TicketGrantingTicket tgtTicket = loginSupport.queryTgtWithLoginStatus(request, response);
       String jwt = loginSupport.createJWTByTgt(tgtTicket.getId());
       if (log.isDebugEnabled()) {
         log.debug("Create jwt successfully, tgt:" + tgtTicket.getId());

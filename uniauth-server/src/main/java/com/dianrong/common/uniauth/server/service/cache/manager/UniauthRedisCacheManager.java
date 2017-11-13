@@ -1,15 +1,14 @@
 package com.dianrong.common.uniauth.server.service.cache.manager;
 
-import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
-import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
+import com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch;
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import com.dianrong.common.uniauth.common.util.Assert;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager;
-
-import java.util.Collection;
 
 @Slf4j
 public class UniauthRedisCacheManager implements CacheManager, InitializingBean {
@@ -17,7 +16,7 @@ public class UniauthRedisCacheManager implements CacheManager, InitializingBean 
   /**
    * 配置字符串.
    */
-  private UseRedisSwitch redisSwitch;
+  private SwitchControl redisSwitch;
 
   private CacheManager cacheManager;
 
@@ -30,7 +29,7 @@ public class UniauthRedisCacheManager implements CacheManager, InitializingBean 
 
   private int expireSeconds;
 
-  public void setRedisSwitch(UseRedisSwitch redisSwitch) {
+  public void setRedisSwitch(SwitchControl redisSwitch) {
     Assert.notNull(redisSwitch, "redisSwitch must not be null.");
     this.redisSwitch = redisSwitch;
   }

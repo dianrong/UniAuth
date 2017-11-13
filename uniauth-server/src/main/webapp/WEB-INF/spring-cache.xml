@@ -1,58 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:cache="http://www.springframework.org/schema/cache"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns="http://www.springframework.org/schema/beans"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-                        http://www.springframework.org/schema/beans/spring-beans.xsd
-                        http://www.springframework.org/schema/context
-                        http://www.springframework.org/schema/context/spring-context.xsd
-                        http://www.springframework.org/schema/aop
-                        http://www.springframework.org/schema/aop/spring-aop.xsd
-                        http://www.springframework.org/schema/tx
-                        http://www.springframework.org/schema/tx/spring-tx.xsd
-                        http://www.springframework.org/schema/cache
-                        http://www.springframework.org/schema/cache/spring-cache.xsd">
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="cacheManager" class="com.dianrong.common.uniauth.server.service.cache.manager.UniauthRedisCacheManager">
-		<property name="expireSeconds" value="#{uniauthConfig['redis.uniauth.expiration']?:'3600'}" />
-		<property name="allowNullValues" value="true" />
-		<property name="redisSwitch" ref="useRedisSwitch"/>
-		<property name="redisCacheManager" ref="redisCacheManager" />
-	</bean>
+  <bean id="cacheManager"
+    class="com.dianrong.common.uniauth.server.service.cache.manager.UniauthRedisCacheManager">
+    <property name="expireSeconds" value="#{uniauthConfig['redis.uniauth.expiration']?:'3600'}"/>
+    <property name="allowNullValues" value="true"/>
+    <property name="redisSwitch" ref="useRedisSwitch"/>
+    <property name="redisCacheManager" ref="redisCacheManager"/>
+  </bean>
 
-	<bean id="useRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch">
-		<property name="config" value="#{uniauthConfig['redis.uniauth.use_redis']?:'true'}"/>
-	</bean>
+  <bean id="useRedisSwitch" class="com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch">
+    <property name="config" value="#{uniauthConfig['redis.uniauth.use_redis']?:'true'}"/>
+  </bean>
 
-	<!-- 配置redis -->
-	<bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
-		<constructor-arg ref="redisTemplate" />
-		<property name="usePrefix" value="true" />
-	</bean>
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
-		<constructor-arg ref="connectionFactory" />
-		<property name="keySerializer" ref="jacksonSerializer" />
-		<property name="valueSerializer" ref="jacksonSerializer" />
-		<property name="hashKeySerializer" ref="jacksonSerializer" />
-		<property name="hashValueSerializer" ref="jacksonSerializer" />
-	</bean>
-	<bean id="jacksonSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+  <!-- 配置redis -->
+  <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+    <constructor-arg ref="redisTemplate"/>
+    <property name="usePrefix" value="true"/>
+  </bean>
+  <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+    <constructor-arg ref="connectionFactory"/>
+    <property name="keySerializer" ref="jacksonSerializer"/>
+    <property name="valueSerializer" ref="jacksonSerializer"/>
+    <property name="hashKeySerializer" ref="jacksonSerializer"/>
+    <property name="hashValueSerializer" ref="jacksonSerializer"/>
+  </bean>
+  <bean id="jacksonSerializer"
+    class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
 
-	<!--重新定义部分配置参数-->
-	<bean id="uniauthServerRedisConfiguration" class = "com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration">
-		<property name="defaultConfiguration" ref="redisDefaultConfiguration"/>
-		<property name="database" value="#{uniauthConfig['redis.uniauth.database']}"/>
-	</bean>
-	<bean id="connectionFactory" class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate">
-		<constructor-arg name="configuration" ref="uniauthServerRedisConfiguration"/>
-		<constructor-arg name="poolConfig" ref="poolConfig"/>
-		<property name="redisSwitch" ref="useRedisSwitch"/>
-	</bean>
+  <!--重新定义部分配置参数-->
+  <bean id="uniauthServerRedisConfiguration"
+    class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryConfiguration">
+    <property name="defaultConfiguration" ref="redisDefaultConfiguration"/>
+    <property name="database" value="#{uniauthConfig['redis.uniauth.database']}"/>
+  </bean>
+  <bean id="connectionFactory"
+    class="com.dianrong.common.uniauth.common.cache.redis.RedisConnectionFactoryDelegate">
+    <constructor-arg name="configuration" ref="uniauthServerRedisConfiguration"/>
+    <constructor-arg name="poolConfig" ref="poolConfig"/>
+    <property name="redisSwitch" ref="useRedisSwitch"/>
+  </bean>
 
-	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxIdle" value="200" />
-		<property name="testOnBorrow" value="true" />
-	</bean>
+  <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+    <property name="maxIdle" value="200"/>
+    <property name="testOnBorrow" value="true"/>
+  </bean>
 </beans>

@@ -5,6 +5,9 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
     			if (!$scope.user.email && !$scope.user.phone) {
     				return false;
     			}
+    			if (!$scope.user.staffNo) {
+    			  return false;
+    			}
     			return true;
     	}
     	

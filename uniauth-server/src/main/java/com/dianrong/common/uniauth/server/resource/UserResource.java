@@ -42,7 +42,7 @@ public class UserResource implements IUserRWResource {
   @Override
   public Response<UserDto> addNewUser(UserParam userParam) {
     return Response.success(userService.addNewUser(userParam.getName(), userParam.getPhone(),
-        userParam.getEmail(), userParam.getType()));
+        userParam.getEmail(), userParam.getStaffNo(), userParam.getType()));
   }
 
   @ResourceAudit
@@ -50,8 +50,8 @@ public class UserResource implements IUserRWResource {
   public Response<UserDto> updateUser(UserParam userParam) {
     return Response.success(userService.updateUser(userParam.getUserActionEnum(), userParam.getId(),
         userParam.getAccount(), userParam.getTenancyId(), userParam.getTenancyCode(),
-        userParam.getName(), userParam.getPhone(), userParam.getEmail(), userParam.getType(),
-        userParam.getPassword(), userParam.getOriginPassword(),
+        userParam.getName(), userParam.getPhone(), userParam.getEmail(), userParam.getStaffNo(),
+        userParam.getType(), userParam.getPassword(), userParam.getOriginPassword(),
         userParam.getIgnorePwdStrategyCheck(), userParam.getStatus()));
   }
 
@@ -81,6 +81,10 @@ public class UserResource implements IUserRWResource {
           paramType = "query"),
       @ApiImplicitParam(name = "exactEmail", value = "用户邮箱(精确匹配)", dataType = "string",
           paramType = "query"),
+      @ApiImplicitParam(name = "staffNo", value = "员工号(模糊匹配)", dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "exactStaffNo", value = "员工号(精确匹配)", dataType = "string",
+          paramType = "query"),
       @ApiImplicitParam(name = "account", value = "用户账号(邮箱,电话)", dataType = "string",
           paramType = "query"),
       @ApiImplicitParam(name = "status", value = "状态(0,1)", dataType = "java.lang.Integer",
@@ -96,9 +100,9 @@ public class UserResource implements IUserRWResource {
         userQuery.getNeedDescendantGrpUser(), userQuery.getNeedDisabledGrpUser(),
         userQuery.getRoleId(), userQuery.getUserIds(), userQuery.getExcludeUserIds(),
         userQuery.getName(), userQuery.getPhone(), userQuery.getExactPhone(), userQuery.getEmail(),
-        userQuery.getExactEmail(), userQuery.getAccount(), userQuery.getType(),
-        userQuery.getStatus(), userQuery.getTagId(), userQuery.getNeedTag(),
-        userQuery.getPageNumber(), userQuery.getPageSize());
+        userQuery.getExactEmail(), userQuery.getStaffNo(), userQuery.getExactStaffNo(),
+        userQuery.getAccount(), userQuery.getType(), userQuery.getStatus(), userQuery.getTagId(),
+        userQuery.getNeedTag(), userQuery.getPageNumber(), userQuery.getPageSize());
     return Response.success(pageDto);
   }
 
@@ -114,6 +118,10 @@ public class UserResource implements IUserRWResource {
           paramType = "query"),
       @ApiImplicitParam(name = "exactEmail", value = "用户邮箱(精确匹配)", dataType = "string",
           paramType = "query"),
+      @ApiImplicitParam(name = "staffNo", value = "员工号(模糊匹配)", dataType = "string",
+          paramType = "query"),
+      @ApiImplicitParam(name = "exactStaffNo", value = "员工号(精确匹配)", dataType = "string",
+          paramType = "query"),
       @ApiImplicitParam(name = "account", value = "用户账号(邮箱,电话)", dataType = "string",
           paramType = "query"),
       @ApiImplicitParam(name = "status", value = "状态(0,1)", dataType = "java.lang.Integer",
@@ -127,8 +135,9 @@ public class UserResource implements IUserRWResource {
   public Response<PageDto<UserDto>> searchUserWithoutTenantConcern(UserQuery userQuery) {
     PageDto<UserDto> pageDto = userService.searchUser(null, null, false, false, null, null, null,
         userQuery.getName(), userQuery.getPhone(), userQuery.getExactPhone(), userQuery.getEmail(),
-        userQuery.getExactEmail(), userQuery.getAccount(), UserType.NORMAL, userQuery.getStatus(),
-        null, false, userQuery.getPageNumber(), userQuery.getPageSize(), true);
+        userQuery.getExactEmail(), userQuery.getStaffNo(), userQuery.getExactStaffNo(),
+        userQuery.getAccount(), UserType.NORMAL, userQuery.getStatus(), null, false,
+        userQuery.getPageNumber(), userQuery.getPageSize(), true);
     return Response.success(pageDto);
   }
 

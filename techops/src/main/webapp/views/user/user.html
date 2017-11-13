@@ -1,26 +1,32 @@
 <form style="margin-left: -20px;" class="form-horizontal" name="userQueryForm">
     <div class="form-group">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-sm-4 control-label" translate='userMgr.username'>{{ 'userMgr.username' | translate }}:</span>
             <div class="col-sm-8">
                 <input type="text" class="form-control" placeholder="{{'userMgr.username' | translate}}" ng-model="userQuery.name" maxlength="20">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">{{'userMgr.email' | translate}}:</span>
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="{{'userMgr.email' | translate}}" ng-model="userQuery.email" maxlength="40">
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">{{'userMgr.mobile' | translate}}:</span>
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="{{'userMgr.mobile' | translate}}" ng-model="userQuery.phone" maxlength="16">
             </div>
         </div>
+        <div class="col-md-3">
+            <span class="col-md-4 control-label">{{'userMgr.staffNo' | translate}}:</span>
+            <div class="col-md-8">
+                <input type="text" class="form-control" placeholder="{{'userMgr.staffNo' | translate}}" ng-model="userQuery.staffNo" maxlength="16">
+            </div>
+        </div>
     </div>
     <div class="form-group">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <span class="col-md-4 control-label">{{'userMgr.type' | translate}}:</span>
             <div class="col-md-8 btn-group" uib-dropdown is-open="userTypesDropdown.isOpen">
                 <button type="button" class="btn btn-primary" ng-disabled="disabled" uib-dropdown-toggle>
@@ -50,9 +56,10 @@
             <th>{{'userMgr.username' | translate}}</th>
             <th>{{'userMgr.email' | translate}}</th>
             <th>{{'userMgr.mobile' | translate}}</th>
-            <th style="width: 7em">{{'userMgr.updateTime' | translate}}</th>
-            <th style="width: 4em">{{'userMgr.status' | translate}}</th>
-            <th style="width: 4em">{{'userMgr.type' | translate}}</th>
+            <th>{{'userMgr.staffNo' | translate}}</th>
+            <th style="width: 12em">{{'userMgr.updateTime' | translate}}</th>
+            <th style="width: 6em">{{'userMgr.status' | translate}}</th>
+            <th style="width: 6em">{{'userMgr.type' | translate}}</th>
             <th ng-class="loginDomainsDropdown.option.code == 'techops'?'operation_width_7':''" style="text-align: center">{{'userMgr.operators' | translate}}</th>
         </tr>
         </thead>
@@ -64,12 +71,13 @@
 
         <tr ng-repeat="d in users">
             <td>
-                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 140px">{{d.name}}</p>
+                <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 180px">{{d.name}}</p>
             </td>
             <td>
-                <p title="{{d.email}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 180px">{{d.email}}</p>
+                <p title="{{d.email}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 250px">{{d.email}}</p>
             </td>
             <td ng-bind="d.phone"></td>
+            <td ng-bind="d.staffNo"></td>
             <td>{{d.lastUpdate | date:'yyyy-MM-dd HH:mm'}}</td>
             <td ng-bind="!d.status?'{{'userMgr.enable' | translate}}':'{{'userMgr.disable' | translate}}'"></td>
             <td ng-bind="d.type == 0?'{{'userMgr.type.normal' | translate}}':'{{'userMgr.type.system' | translate}}'"></td>

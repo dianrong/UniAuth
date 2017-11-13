@@ -1,11 +1,10 @@
 package com.dianrong.common.uniauth.common.cache;
 
+import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import org.springframework.data.redis.core.RedisOperations;
 
 import com.dianrong.common.uniauth.common.cache.cache.MemoryCache;
 import com.dianrong.common.uniauth.common.cache.cache.RedisCache;
-import com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch;
-import com.dianrong.common.uniauth.common.cache.switcher.UseRedisSwitch;
 import com.dianrong.common.uniauth.common.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ public class SimpleUniauthCacheManager extends AbstractUniauthCacheManager {
   /**
    * 配置字符串.
    */
-  private UseRedisSwitch redisSwitch = new SimpleUseRedisSwitch();
+  private SwitchControl redisSwitch = new SimpleUseRedisSwitch();
 
   private RedisOperations<String, Object> redisOperations;
 
@@ -43,7 +42,7 @@ public class SimpleUniauthCacheManager extends AbstractUniauthCacheManager {
     this.redisOperations = redisOperations;
   }
 
-  public void setRedisSwitch(UseRedisSwitch redisSwitch) {
+  public void setRedisSwitch(SwitchControl redisSwitch) {
     Assert.notNull(redisSwitch, "redisSwitch must not be null.");
     this.redisSwitch = redisSwitch;
   }

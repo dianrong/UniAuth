@@ -14,61 +14,59 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
     	directivesModule.directive(name, directiveFn);
     }
     app.bootstrap = function() {
-        (function () {
-            fetchPermission().then(fetchLanguages).then(bootstrapApplication);
-            function fetchPermission() {
-                var initInjector = angular.injector(["ng"]);
-                var $http = initInjector.get("$http");
-                return $http.get(constant.apiBase + "/user/current").then(function (res) {
-                    app.constant("permission", {
-                        userInfo : res.data.data
-                    });
-
-                }, function (errorResponse) {
-                    console.log('app init failed....');
+      (function () {
+        fetchPermission().then(fetchLanguages).then(bootstrapApplication);
+        function fetchPermission() {
+            var initInjector = angular.injector(["ng"]);
+            var $http = initInjector.get("$http");
+            return $http.get(constant.apiBase + "/user/current").then(function (res) {
+                app.constant("permission", {
+                    userInfo : res.data.data
                 });
-            }
 
-	    function fetchLanguages() {
-                var initInjector = angular.injector(["ng"]);
-                var $http = initInjector.get("$http");
-                return $http.get(constant.apiBase + "/i18n/query").then(function (res) {
-                    app.constant("languages", {
-                        langs : res.data.data
-                    });
-                }, function (errorResponse) {
-                    console.log('app init failed....');
-                });
-            }
+            }, function (errorResponse) {
+                console.log('app init failed....');
+            });
+        }
 
-            function bootstrapApplication() {
-                angular.element(document).ready(function () {
-                    angular.bootstrap(document, [appName]);
+	      function fetchLanguages() {
+            var initInjector = angular.injector(["ng"]);
+            var $http = initInjector.get("$http");
+            return $http.get(constant.apiBase + "/i18n/query").then(function (res) {
+                app.constant("languages", {
+                    langs : res.data.data
                 });
-            }
-        }());
+            }, function (errorResponse) {
+                console.log('app init failed....');
+            });
+        }
+
+        function bootstrapApplication() {
+            angular.element(document).ready(function () {
+                angular.bootstrap(document, [appName]);
+            });
+        }
+      }());
     };
 
-	app.controller('Ctrl', ['$translate', '$scope','$http','$rootScope', function ($translate, $scope,$http,$rootScope) {
-	 
-	  $scope.changeLanguage = function (langKey,it) {
-		  $http.get(constant.apiBase + "/i18n/changeLanguage?lang="+langKey).then(function (res) {
-			  		$translate.use(langKey).then(
-			  				function(){
-			  					$rootScope.translateConstant();
-			  					$scope.languagesDropdown.selectOption(it);
-
-                                //change html head title
-                                if(!$rootScope.techopsTitle){
-                                    $rootScope.pageTitle = $translate.instant('header.title');
-                                }
-			  				});
-		        }, function (errorResponse) {
-		        	console.log('change language error');
-		        	//$translate.use(langKey);
-		        });
-	  };
-	}]);
+    app.controller('Ctrl', ['$translate', '$scope','$http','$rootScope', function ($translate, $scope,$http,$rootScope) {
+      $scope.changeLanguage = function (langKey,it) {
+        $http.get(constant.apiBase + "/i18n/changeLanguage?lang="+langKey).then(function (res) {
+          $translate.use(langKey).then(
+            function(){
+              $rootScope.translateConstant();
+              $scope.languagesDropdown.selectOption(it);
+              //change html head title
+              if(!$rootScope.techopsTitle){
+                  $rootScope.pageTitle = $translate.instant('header.title');
+              }
+            });
+          }, function (errorResponse) {
+            console.log('change language error');
+            //$translate.use(langKey);
+          });
+      };
+    }]);
 
      app.run(['$cookies', '$location', '$rootScope', '$state', '$stateParams', 'permission', '$http','languages','$translate',
         function ($cookies, $location, $rootScope, $state, $stateParams, permission, $http,languages,$translate) {
@@ -78,10 +76,11 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       // to active whenever 'contacts.list' or one of its decendents is active.
       $rootScope.$state = $state;
       $rootScope.$stateParams = $stateParams;
-      
+
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
       $rootScope.shareOrganization = {};
+      console.log($translate.instant('constant.selectplacehodler'));
       $rootScope.translate=function(msg){
     	  return $translate.instant(msg);
       };
@@ -93,7 +92,7 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
     	  }
       };
       $rootScope.translateConstant = function(){
-    	//对constant进行翻译
+    	  //对constant进行翻译
     	  constant.loadEmpty=$rootScope.translate(constant.loadEmpty_code);
     	  constant.loading=$rootScope.translate(constant.loading_code);
     	  constant.createError=$rootScope.translate(constant.createError_code);
@@ -124,11 +123,15 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
           $rootScope.pageTitle = $translate.instant('header.title');
           $rootScope.translateConstant();
       });
-      
+
     }]);
-    
+
     app.config(['localStorageServiceProvider', '$httpProvider', '$translateProvider', '$stateProvider', '$urlRouterProvider', '$rootScopeProvider','languages',
         function(localStorageServiceProvider, $httpProvider, $translateProvider, $stateProvider, $urlRouterProvider, $rootScopeProvider,languages) {
+
+        $translateProvider.preferredLanguage(languages.langs.current);
+        $translateProvider.useUrlLoader('servicei18n');
+
         //$rootScopeProvider.digestTtl(100);
         $httpProvider.defaults.useXDomain = true;
         $httpProvider.defaults.withCredentials = true;
@@ -393,14 +396,6 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
             url: '/non-authorized',
             templateUrl: 'views/common/non-authorized.html'
         });
-        
-        
-        $translateProvider.useUrlLoader('servicei18n');
-
-        $translateProvider.preferredLanguage(languages.langs.current);
-        
-        //$translateProvider.fallbackLanguage('zh');
-
     }]);
     return app;
 });

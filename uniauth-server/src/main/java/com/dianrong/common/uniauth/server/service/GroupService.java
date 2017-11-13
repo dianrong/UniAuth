@@ -574,9 +574,15 @@ public class GroupService extends TenancyBasedService {
 
     // 联动添加组的扩展属性值
     Map<String, String> attributes = Maps.newHashMap();
-    attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupName);
-    attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupCode);
-    attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(), description);
+    if (groupName != null) {
+      attributes.put(AttributeDefine.GROUP_NAME.getAttributeCode(), groupName);
+    }
+    if (groupCode != null) {
+      attributes.put(AttributeDefine.GROUP_CODE.getAttributeCode(), groupCode);
+    }
+    if (description != null) {
+      attributes.put(AttributeDefine.GROUP_DESCRIPTION.getAttributeCode(), description);
+    }
     groupProfileInnerService.addOrUpdateUserAttributes(grp.getId(), attributes);
 
     Integer count = grpMapper.selectNameCountBySameLayerGrpId(grp.getId());

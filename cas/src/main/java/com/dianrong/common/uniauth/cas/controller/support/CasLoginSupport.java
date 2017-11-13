@@ -99,7 +99,7 @@ public class CasLoginSupport {
    * @return TicketGrantingTicket 对象
    * @throws NotLoginException if not login
    */
-  public TicketGrantingTicket queryTgtWithLogined(HttpServletRequest request,
+  public TicketGrantingTicket queryTgtWithLoginStatus(HttpServletRequest request,
       HttpServletResponse response) {
     final String tgtId = ticketGrantingTicketCookieGenerator.retrieveCookieValue(request);
     // tgtId is not exist
@@ -150,6 +150,15 @@ public class CasLoginSupport {
       log.warn(e.getMessage());
       throw new NotLoginException("not login");
     }
+  }
+
+  /**
+   * @see #getAuthenticationPrincipal(String)
+   */
+  public Principal getAuthenticationPrincipal(HttpServletRequest request, HttpServletResponse response)
+      throws NotLoginException {
+    TicketGrantingTicket tgt = queryTgtWithLoginStatus(request, response);
+    return getAuthenticationPrincipal(tgt.getId());
   }
 
   /**
@@ -210,8 +219,8 @@ public class CasLoginSupport {
     }
     Ticket ticket = ticketRegistry.getTicket(tgt);
     if (ticket instanceof TicketGrantingTicket) {
-      TicketGrantingTicket tgticket = (TicketGrantingTicket) ticket;
-      Authentication authentication = tgticket.getAuthentication();
+      TicketGrantingTicket tgtTicket = (TicketGrantingTicket) ticket;
+      Authentication authentication = tgtTicket.getAuthentication();
       Principal principal = authentication.getPrincipal();
       if (principal != null) {
         String identity = principal.getId();

@@ -22,9 +22,14 @@ public enum FieldType {
   FIELD_TYPE_EMAIL("email", "fieldTypeEmail"),
 
   /**
-   * . 通过phone去查找
+   * 通过phone去查找.
    */
   FIELD_TYPE_PHONE("phone", "fieldTypePhone"),
+
+  /**
+   * 通过staffNo去查找.
+   */
+  FIELD_TYPE_STAFF_NO("staffNo", "fieldTypeStaffNo"),
 
   /**
    * 通过表的value字段来找.

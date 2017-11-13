@@ -37,7 +37,7 @@
         <property name="redisSwitch" ref="useRedisSwitch"/>
     </bean>
 
-    <bean id="useRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.switcher.SimpleUseRedisSwitch">
+    <bean id="useRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch">
         <property name="config" value="#{uniauthConfig['cas.iscluster']?:'false'}"/>
     </bean>
 

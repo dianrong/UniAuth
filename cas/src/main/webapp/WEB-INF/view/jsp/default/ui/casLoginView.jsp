@@ -12,18 +12,18 @@
 <jsp:directive.include file="includes/login.jsp" />
 <%
 } else {
-	response.setContentType("application/json");
-	response.addHeader("Cache-Control", "no-store");
+    response.setContentType("application/json");
+    response.addHeader("Cache-Control", "no-store");
 %>
-{
-"info":
-[
-{
-"name": "<%=AppConstants.LOGIN_REDIRECT_URL%>",
-"msg": "<%= reqUrl %>"
-}
-]
-}
+  {
+  "info":
+    [
+      {
+        "name": "<%=AppConstants.LOGIN_REDIRECT_URL%>",
+        "msg": "<%= reqUrl %>"
+      }
+    ]
+  }
 <%
-	}
+}
 %>

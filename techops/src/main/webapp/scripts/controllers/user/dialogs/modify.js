@@ -5,6 +5,9 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
     			if (!$scope.user.email && !$scope.user.phone) {
     				return false;
     			}
+    			if (!$scope.user.staffNo) {
+            return false;
+          }
     			return true;
     	}
     	
@@ -40,6 +43,7 @@ define(['../../../utils/constant', '../../../utils/utils'], function (constant, 
                             name:$scope.user.name,
                             email:$scope.user.email,
                             phone:$scope.user.phone,
+                            staffNo:$scope.user.staffNo,
                             type: $scope.userTypesDropdown.option.value};
             UserService.modifyUser(params,
                 function(res) {

@@ -67,11 +67,11 @@ public class TenancyIdentityAop {
       CxfHeaderHolder holder = getCxfHeaderHolder(type);
       if (index >= args.length) {
         throw new IndexOutOfBoundsException(
-            "please check TenancyIdentity annotaion index parameter, it is start from 0 ");
+            "please check TenancyIdentity annotation index parameter, it is start from 0 ");
       }
       Object identity = args[index];
       holder.set(identity);
-      log.debug("indentity is " + identity);
+      log.debug("identity is " + identity);
       try {
         return joinPoint.proceed(joinPoint.getArgs());
       } finally {
