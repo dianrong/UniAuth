@@ -20,7 +20,7 @@
         <!-- endbuild -->
     </head>
 
-    <body ng-controller="MainController" class="container" style="width: 100%;min-width: 1400px">
+    <body ng-controller="MainController" class="container" style="width: 100%;min-width: 1650px">
         <script src="scripts/lib/requirejs/require.js"></script>
         <!-- build:js scripts/ops.js -->
         <script src="scripts/main.js"></script>
@@ -28,12 +28,12 @@
         <!-- endbuild -->
         <div ng-show="!pageLoaded" style="padding-top: 1em;text-align: left;">正在加载...</div>
         <div ng-show="pageLoaded">
-            <div ng-include="'views/common/header.html'" class="container" style="width: 90%;min-width: 1300px"></div>
+            <div ng-include="'views/common/header.html'" class="container" style="width: 90%;min-width: 1550px"></div>
             <div class="alert-container container" >
                 <uib-alert ng-cloak template-url="views/common/message-box.html" class="fade" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)"><span ng-bind="alert.msg"></span></uib-alert>
                 <uib-alert ng-cloak template-url="views/common/message-box.html" class="fade" ng-repeat="alert in autoDismissAlerts" type="{{alert.type}}" dismiss-on-timeout="2000" close="closeDismissAlert($index)"><span ng-bind="alert.msg"></span></uib-alert>
             </div>
-            <div class="container" style="width: 90%;min-width: 1300px">
+            <div class="container" style="width: 90%;min-width: 1550px">
                 <div class="row">
                     <div class="col-md-2 col-sm-3">
                         <div ng-include="'views/common/menu.html'"></div>

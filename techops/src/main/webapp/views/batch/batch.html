@@ -112,9 +112,9 @@
                 <div ng-bind-html="grp.name | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
-            <div class="checkbox" ng-show="is_show_sub_grp_check()">
+            <div class="checkbox" ng-show="is_show_sub_grp_check()" title="{{'batch.process.page.include.subgrp.title' | translate}}">
               <label>
-                <input type="checkbox" ng-model='process_param.grp_param.include_subgrp' title="{{'batch.process.page.include.subgrp.title' | translate}}">
+                <input type="checkbox" ng-model='process_param.grp_param.include_subgrp' >
                 {{'batch.process.page.include.subgrp' | translate}}
               </label>
             </div>

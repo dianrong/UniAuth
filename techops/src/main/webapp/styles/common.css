@@ -80,8 +80,8 @@
 
 .alert-container {
     position: fixed;
-    width: 518px;
-    margin-left: 279px;
+    width: 30%;
+    margin-left: 35%;
     top: 4px;
     z-index: 9999;
 }

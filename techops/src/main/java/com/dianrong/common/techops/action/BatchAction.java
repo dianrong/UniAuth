@@ -94,9 +94,10 @@ public class BatchAction {
       + "and hasPermission(#groupId, 'PERM_GROUP_OWNER')")
   public Response<BatchProcessResult> removeUserGrpRelation(
       @RequestParam(value = "file", required = true) MultipartFile file,
-      @RequestParam(value = "groupId", required = true) Integer groupId) throws IOException {
+      @RequestParam(value = "groupId", required = true) Integer groupId,
+      @RequestParam(value = "includeSubGrp", required = true) Boolean includeSubGrp) throws IOException {
     try {
-      return Response.success(batchService.removeUserGrpRelation(file.getInputStream(), groupId));
+      return Response.success(batchService.removeUserGrpRelation(file.getInputStream(), groupId, includeSubGrp));
     } catch (BatchProcessException bpe) {
       LOGGER.error("failed to process batch dis relate users and group", bpe);
       return Response.failure(Info.build(InfoName.BAD_REQUEST, bpe.getMessage()));

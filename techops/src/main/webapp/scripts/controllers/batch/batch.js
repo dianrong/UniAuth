@@ -163,7 +163,8 @@ define([ '../../utils/constant' ], function(constant) {
               },
               addParams : function(fileItem) {
                   var p = {
-                      groupId : $scope.process_param.grp_param.selected.id
+                      groupId : $scope.process_param.grp_param.selected.id,
+                      includeSubGrp: $scope.process_param.grp_param.include_subgrp|| false
                   };
                   fileItem.formData.push(p);
               },
@@ -347,13 +348,13 @@ define([ '../../utils/constant' ], function(constant) {
                 .addAutoDismissAlert(
                     constant.messageType.info,
                     $rootScope
-                        .translate('batch.process.tips.procese.success'));
+                        .translate('batch.process.tips.process.success'));
             if (response.info && response.info.length > 0) {
               AlertService.addAlert(constant.messageType.danger,
                   response.info[0].msg);
               return;
             }
-            $scope.process_result = response.data;
+            $scope.process_result = response.data || {};
             if (process_type) {
               $scope.process_result['process_type'] = $rootScope
               .translate(batch_process_handler.getHandler(
@@ -374,7 +375,7 @@ define([ '../../utils/constant' ], function(constant) {
 
         // 保证只有当前加入的file在队列中
         uploader.onAfterAddingFile = function(fileItem) {
-          uploader.queue = [ fileItem ];
+          uploader.queue = [fileItem];
         };
       };
       return {
