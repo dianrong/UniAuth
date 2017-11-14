@@ -74,8 +74,8 @@ define(['../../utils/constant'], function (constant) {
         }
         $scope.selectAllRolesForGrp = function(tag) {
         	tag = tag !== false;
-            for(var i=0;i<$scope.roles.length;i++) {
-                $scope.roles[i].checked = tag;
+            for(var i=0;i<$scope.filteredRoles.length;i++) {
+                $scope.filteredRoles[i].checked = tag;
             }
         }
         var watch = $scope.$watch('grp.selected', $scope.getGrpRolesWithCheckedInfo);

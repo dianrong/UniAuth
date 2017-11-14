@@ -40,7 +40,7 @@
             <td colspan="9" class="tc" ng-bind="grpRolesMsg"></td>
         </tr>
 
-        <tr ng-repeat="d in roles | filter:predicate:comparator">
+        <tr ng-repeat="d in roles | filter:predicate:comparator as filteredRoles">
             <th>{{$index + 1}}</th>
             <td ng-bind="d.name"></td>
             <td ng-bind="d.roleCode"></td>

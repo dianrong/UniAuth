@@ -40,7 +40,7 @@
             <td colspan="9" class="tc" ng-bind="rolePermsMsg"></td>
         </tr>
 
-        <tr ng-repeat="d in perms | filter:predicate:comparator">
+        <tr ng-repeat="d in perms | filter:predicate:comparator as filteredPerms">
             <th>{{$index + 1}}</th>
             <td ng-bind="d.value"></td>
             <td ng-bind="d.permType"></td>

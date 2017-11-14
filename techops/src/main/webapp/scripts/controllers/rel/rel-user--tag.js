@@ -23,7 +23,7 @@ define(['../../utils/constant'], function (constant, AlertService) {
             $scope.userTagsMsg = constant.loading;
             var params = {};
             
-            //根据userid查询用户关联tag信息
+            //根据userId查询用户关联tag信息
             if(!$scope.user.selected) {
                 $scope.tags = undefined;
                 $scope.userTagsMsg = constant.loadEmpty;
@@ -80,8 +80,8 @@ define(['../../utils/constant'], function (constant, AlertService) {
         }
         $scope.selectAllTagsForUser = function(tag) {
         	tag = tag !== false
-            for(var i=0;i<$scope.tags.length;i++) {
-                $scope.tags[i].tagUserChecked = tag;
+            for(var i=0;i<$scope.filteredTags.length;i++) {
+                $scope.filteredTags[i].tagUserChecked = tag;
             }
         }
         var watch = $scope.$watch('user.selected', $scope.getUserTagsWithCheckedInfo);

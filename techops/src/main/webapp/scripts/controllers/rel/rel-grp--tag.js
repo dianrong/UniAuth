@@ -79,8 +79,8 @@ define(['../../utils/constant'], function (constant, AlertService) {
         }
         $scope.selectAllTagsForGrp = function(tag) {
         	tag = tag !== false
-            for(var i=0;i<$scope.tags.length;i++) {
-                $scope.tags[i].tagGrouprChecked = tag;
+            for(var i=0;i<$scope.filteredTags.length;i++) {
+                $scope.filteredTags[i].tagGrouprChecked = tag;
             }
         }
         var watch = $scope.$watch('grp.selected', $scope.getGroupTagsWithCheckedInfo);

@@ -80,7 +80,6 @@ define(['angular', 'ngResource', 'angular.ui.router', 'ngCookies', 'ngTranslate'
       $rootScope.userInfo = permission.userInfo;
       $rootScope.shareGroup = {};
       $rootScope.shareOrganization = {};
-      console.log($translate.instant('constant.selectplacehodler'));
       $rootScope.translate=function(msg){
     	  return $translate.instant(msg);
       };

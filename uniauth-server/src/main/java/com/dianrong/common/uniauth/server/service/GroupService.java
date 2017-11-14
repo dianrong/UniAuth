@@ -1283,14 +1283,14 @@ public class GroupService extends TenancyBasedService {
     }
 
     // 查询tag信息
-    TagExample tagConditon = new TagExample();
-    Criteria andStatusEqualTo = tagConditon.createCriteria();
+    TagExample tagCondition = new TagExample();
+    Criteria andStatusEqualTo = tagCondition.createCriteria();
     andStatusEqualTo.andStatusEqualTo(AppConstants.STATUS_ENABLED)
         .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
 
     // 加入domainId的限制
     andStatusEqualTo.andTagTypeIdIn(new ArrayList<Integer>(tagTypeIdMap.keySet()));
-    List<Tag> allTags = tagMapper.selectByExample(tagConditon);
+    List<Tag> allTags = tagMapper.selectByExample(tagCondition);
 
     // 优化
     if (ObjectUtil.collectionIsEmptyOrNull(allTags)) {
@@ -1306,7 +1306,7 @@ public class GroupService extends TenancyBasedService {
       if (tagTypeIdMap.get(tagDto.getTagTypeId()) != null) {
         tagDto.setTagTypeCode(tagTypeIdMap.get(tagDto.getTagTypeId()).getCode());
       } else {
-        tagDto.setTagTypeCode("UNKNOW");
+        tagDto.setTagTypeCode("UNKNOWN");
       }
       tagDtos.add(tagDto);
     }
@@ -1326,10 +1326,9 @@ public class GroupService extends TenancyBasedService {
     delCondition.createCriteria().andGrpIdEqualTo(grpId);
     grpTagMapper.deleteByExample(delCondition);
 
-    // step2 .batch insert relationship
+    // step2. batch insert relationship
     if (CollectionUtils.isEmpty(tagIds)) {
-      throw new AppException(InfoName.BAD_REQUEST,
-          UniBundle.getMsg("common.parameter.empty", "tagIds"));
+      return;
     }
     List<GrpTagKey> tagKeyList = new ArrayList<GrpTagKey>(tagIds.size());
     for (Integer tagId : tagIds) {
