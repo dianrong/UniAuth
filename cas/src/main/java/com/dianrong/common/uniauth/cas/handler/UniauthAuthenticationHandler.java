@@ -47,9 +47,11 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
         StaffNoPersistTagHolder.persist();
       }
     }
-    Map<String, Object> attributes = new HashMap<String, Object>();
+    Map<String, Object> attributes = new HashMap<String, Object>(3);
     attributes.put(CasProtocol.DianRongCas.getTenancyIdName(),
         StringUtil.translateIntegerToLong(userInfo.getTenancyId()));
+    attributes.put(CasProtocol.DianRongCas.getUserIdName(), userInfo.getId());
+    attributes.put(CasProtocol.DianRongCas.getLoginAccountName(), userInfo.getAccount());
     return createHandlerResult(credential,
         this.principalFactory.createPrincipal(userName, attributes), null);
   }

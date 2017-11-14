@@ -284,10 +284,12 @@ public class UserInfoManageController {
       HttpServletResponse response) {
     Principal principal = casLoginSupport.getAuthenticationPrincipal(request, response);
     // 获取用户账号
-    String account = principal.getId();
+    String account = (String)principal.getAttributes().get(CasProtocol.DianRongCas.getLoginAccountName());
     Long tenancyId =
         (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getTenancyIdName());
-    return new UserIdentity(account, tenancyId);
+    Long userId =
+        (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getUserIdName());
+    return new UserIdentity(account, tenancyId, userId);
   }
 
   // 未登陆的结果对象
@@ -297,15 +299,17 @@ public class UserInfoManageController {
   }
 
   class UserIdentity {
-
     private final String account;
     private final long tenancyId;
+    private final long userId;
 
-    public UserIdentity(String account, Long tenancyId) {
+    public UserIdentity(String account, Long tenancyId, Long userId) {
       Assert.notNull(account);
       Assert.notNull(tenancyId);
+      Assert.notNull(userId);
       this.account = account;
       this.tenancyId = tenancyId;
+      this.userId = userId;
     }
 
     public String getAccount() {
@@ -314,6 +318,10 @@ public class UserInfoManageController {
 
     public long getTenancyId() {
       return tenancyId;
+    }
+
+    public long getUserId() {
+      return userId;
     }
   }
 }
