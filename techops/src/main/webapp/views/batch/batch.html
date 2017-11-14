@@ -97,8 +97,7 @@
             <label for="update_file_type">{{'batch.process.page.upload.file.label'
               | translate }}</label> <input type="file" name="file" accept=".csv,.CSV"
                                             nv-file-select uploader="uploader"
-                                            ng-model="process_param.file"
-                                            id="update_file_type">
+                                            id="update_file_input">
           </div>
           <div class="form-group" ng-show="is_show_grp_query()">
             <ui-select ng-model="process_param.grp_param.selected" theme="bootstrap"

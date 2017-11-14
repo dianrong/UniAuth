@@ -79,13 +79,13 @@ define([ '../../utils/constant' ], function(constant) {
             pageSize : 16
           };
           return GroupService.queryGroup(params).$promise
-              .then(function(response) {
-                if (response.data && response.data.data) {
-                  $scope.query_result.grps = response.data.data;
-                } else {
-                  $scope.query_result.grps = [];
-                }
-              });
+            .then(function(response) {
+              if (response.data && response.data.data) {
+                $scope.query_result.grps = response.data.data;
+              } else {
+                $scope.query_result.grps = [];
+              }
+            });
         }
 
         // 查询角色
@@ -362,6 +362,8 @@ define([ '../../utils/constant' ], function(constant) {
             } else {
               $scope.process_result['process_type'] = "Error";
             }
+            // clear file input
+            document.getElementById('update_file_input').value = null;
           }
           fileItem.onError = function(response, status, headers) {
             AlertService
