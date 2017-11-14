@@ -1,197 +1,222 @@
 <div class="row">
-	<div class="col-md-3" style="border-right: 1px solid;">
-		<div class="row">
-			<div class="col-md-10  col-md-offset-1">
-				<div class="radio">
-					<label> <input type="radio" name="optionsRadios"
-						id="batch-add-user" value="batch-add-user"
-						ng-model="process_param.type">{{
-						'batch.process.page.add.user.label' | translate }}
-					</label>
-				</div>
-			</div>
-		</div>
-		<div class="row" ng-if="selectedDomain.option.code == 'techops'" >
-			<div class="col-md-10  col-md-offset-1">
-				<div class="radio">
-					<label> <input type="radio" name="optionsRadios"
-						id="batch-disable-user" value="batch-disable-user"
-						ng-model="process_param.type"> {{
-						'batch.process.page.disable.user.label' | translate }}
-					</label>
-				</div>
-			</div>
-		</div>
-	    <div class="row">
-            <div class="col-md-10  col-md-offset-1">
-                <div class="radio">
-                    <label> <input type="radio" name="optionsRadios"
-                        id="batch-add-role" value="batch-add-role"
-                        ng-model="process_param.type">
-                        {{'batch.process.page.add.role.label' | translate }}
-                    </label>
-                </div>
-            </div>
+  <div class="col-md-3" style="border-right: 1px solid;">
+    <div class="row">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-add-user" value="batch-add-user"
+                         ng-model="process_param.type">{{
+            'batch.process.page.add.user.label' | translate }}
+          </label>
         </div>
-        <div class="row">
-            <div class="col-md-10  col-md-offset-1">
-                <div class="radio">
-                    <label> <input type="radio" name="optionsRadios"
-                        id="batch-add-permission" value="batch-add-permission"
-                        ng-model="process_param.type">
-                        {{'batch.process.page.add.permission.label' | translate }}
-                    </label>
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="row" ng-if="selectedDomain.option.code == 'techops'">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-disable-user" value="batch-disable-user"
+                         ng-model="process_param.type"> {{
+            'batch.process.page.disable.user.label' | translate }}
+          </label>
         </div>
-		<div class="row">
-			<div class="col-md-10  col-md-offset-1">
-				<div class="radio">
-					<label> <input type="radio" name="optionsRadios"
-						id="batch-relate-user-grp" value="batch-relate-user-grp"
-						ng-model="process_param.type">
-						{{'batch.process.page.relate.user.grp.label' | translate }}
-					</label>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-10  col-md-offset-1">
-				<div class="radio">
-					<label> <input type="radio" name="optionsRadios"
-								   id="batch-remove-user-grp-relation" value="batch-remove-user-grp-relation"
-								   ng-model="process_param.type">
-						{{'batch.process.page.remove.user.grp.relation.label' | translate }}
-					</label>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-10  col-md-offset-1">
-				<div class="radio">
-					<label> <input type="radio" name="optionsRadios"
-						id="batch-relate-user-tag" value="batch-relate-user-tag"
-						ng-model="process_param.type">
-						{{'batch.process.page.relate.user.tag.label' | translate }}
-					</label>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-10  col-md-offset-1">
-				<div class="radio">
-					<label> <input type="radio" name="optionsRadios"
-						id="batch-relate-user-role" value="batch-relate-user-role"
-						ng-model="process_param.type">
-						{{'batch.process.page.relate.user.role.label' | translate }}
-					</label>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-9">
-		<div class="row">
-			<div class="col-md-offset-1 col-md-5">
-				<form>
-					<div class="form-group">
-						<label for="update_file_type">{{'batch.process.page.upload.file.label'
-							| translate }}</label> <input type="file" name="file" accept=".csv,.CSV"
-							nv-file-select uploader="uploader" ng-model="process_param.file"
-							id="update_file_type">
-					</div>
-					<div class="form-group" ng-show="is_show_grp_query()">
-						<ui-select ng-model="process_param.grp_param.selected" theme="bootstrap"
-							ng-disabled="disabled" reset-search-input="false"
-							style="width:100%;margin-top: 6px;"> 
-					   <ui-select-match placeholder="{{'batch.process.page.grp.name.label' | translate}}">{{$select.selected.name}}</ui-select-match>
-						<ui-select-choices repeat="grp in query_result.grps track by $index"
-							refresh="refresh_grps($select.search)" refresh-delay="300">
-						  <div ng-bind-html="grp.name | highlight: $select.search"></div>
-						</ui-select-choices> </ui-select>
-						<div style="padding: 5px 5px 5px 5px">
-							<div ng-if="process_param.grp_param.selected.id">
-								<div>{{'batch.process.page.query.id' | translate}}: <strong>'{{process_param.grp_param.selected.id}}'</strong></div>
-								<div>{{'batch.process.page.query.code' | translate}}: <strong>'{{process_param.grp_param.selected.code}}'</strong></div>
-							</div>
-						</div>
-					</div>
-					<div class="form-group" ng-show="is_show_role_query()">
-                        <ui-select ng-model="process_param.role_param.selected" theme="bootstrap"
-                            ng-disabled="disabled" reset-search-input="false"
-                            style="width:100%;margin-top: 6px;"> 
-                       <ui-select-match placeholder="{{'batch.process.page.role.name.label' | translate}}">{{$select.selected.name}}</ui-select-match>
-                        <ui-select-choices repeat="role in query_result.roles track by $index"
-                            refresh="refresh_roles($select.search)" refresh-delay="300">
-                          <div ng-bind-html="role.name | highlight: $select.search"></div>
-                        </ui-select-choices> </ui-select>
-                        <div style="padding: 5px 5px 5px 5px">
-                            <div ng-if="process_param.role_param.selected.id">
-                                <div>{{'batch.process.page.query.id' | translate}}: <strong>'{{process_param.role_param.selected.id}}'</strong></div>
-                                <div>{{'batch.process.page.query.code' | translate}}: <strong>'{{process_param.role_param.selected.roleCode}}'</strong></div>
-                                <div>{{'batch.process.page.query.name' | translate}}: <strong>'{{process_param.role_param.selected.name}}'</strong></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group" ng-show="is_show_tag_query()">
-                        <ui-select ng-model="process_param.tag_param.selected" theme="bootstrap"
-                            ng-disabled="disabled" reset-search-input="false"
-                            style="width:100%;margin-top: 6px;"> 
-                       <ui-select-match placeholder="{{'batch.process.page.tag.code' | translate}}">{{$select.selected.code}}</ui-select-match>
-                        <ui-select-choices repeat="tag in query_result.tags track by $index"
-                            refresh="refresh_tags($select.search)" refresh-delay="300">
-                          <div ng-bind-html="tag.code | highlight: $select.search"></div>
-                        </ui-select-choices> </ui-select>
-                        <div style="padding: 5px 5px 5px 5px">
-                            <div ng-if="process_param.tag_param.selected.id">
-                                <div>{{'batch.process.page.query.id' | translate}}: <strong>'{{process_param.tag_param.selected.id}}'</strong></div>
-                                <div>{{'batch.process.page.query.code' | translate}}: <strong>'{{process_param.tag_param.selected.code}}'</strong></div>
-                            </div>
-                        </div>
-                    </div>
-				</form>
-			</div>
-			<div class="col-md-offset-2 col-md-3">
-				<button type="button" class="btn btn-primary" style="width: 100px;"
-					ng-disabled="!process_btn_enable();" ng-click="batch_process();">{{'batch.process.page.start.process.label'
-					| translate}}</button>
-			</div>
-		</div>
-		<div class="row"
-			ng-show="process_result.successes || process_result.errors">
-			<div class="col-md-offset-1 col-md-10">
-				<h2 ng-bind="process_result.process_type"></h2>
-				<div class="h4">
-					{{'batch.process.page.process.result.total.nums' | translate}}<span
-						class="h3"
-						ng-bind="process_result.successes.length + process_result.errors.length"></span>
-				</div>
-			</div>
-		</div>
-		<div class="row"
-            ng-show="process_result.errors && process_result.errors.length > 0"
-            style="color: #a94442;">
-            <div class="col-md-offset-1 col-md-10">
-                <h3>{{'batch.process.page.process.failure.tips' | translate}}</h3>
-                <div class="h4">
-                    {{'batch.process.page.process.result.nums' | translate}}
-                    <sapn ng-bind="process_result.errors.length"></sapn>
-                </div>
-                <div ng-repeat="item in process_result.errors">
-                   <b> {{item.identity}}</b> : {{item.msg}}</div>
-            </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-add-role" value="batch-add-role"
+                         ng-model="process_param.type">
+            {{'batch.process.page.add.role.label' | translate }}
+          </label>
         </div>
-		<div class="row" ng-show="process_result.successes"
-			style="color: #3c763d;">
-			<div class="col-md-offset-1 col-md-10">
-				<h3>{{'batch.process.page.process.success.tips' | translate}}</h3>
-				<div class="h4">
-					{{'batch.process.page.process.result.nums' | translate}}
-					<sapn ng-bind="process_result.successes.length"></sapn>
-				</div>
-				<div ng-show="process_result.errors.length > 0">
-				    <div ng-repeat="item in process_result.successes">{{item}}</div>
-				</div>
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-add-permission" value="batch-add-permission"
+                         ng-model="process_param.type">
+            {{'batch.process.page.add.permission.label' | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-relate-user-grp" value="batch-relate-user-grp"
+                         ng-model="process_param.type">
+            {{'batch.process.page.relate.user.grp.label' | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-remove-user-grp-relation" value="batch-remove-user-grp-relation"
+                         ng-model="process_param.type">
+            {{'batch.process.page.remove.user.grp.relation.label' | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-relate-user-tag" value="batch-relate-user-tag"
+                         ng-model="process_param.type">
+            {{'batch.process.page.relate.user.tag.label' | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10  col-md-offset-1">
+        <div class="radio">
+          <label> <input type="radio" name="optionsRadios"
+                         id="batch-relate-user-role" value="batch-relate-user-role"
+                         ng-model="process_param.type">
+            {{'batch.process.page.relate.user.role.label' | translate }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="row">
+      <div class="col-md-offset-1 col-md-5">
+        <form>
+          <div class="form-group">
+            <label for="update_file_type">{{'batch.process.page.upload.file.label'
+              | translate }}</label> <input type="file" name="file" accept=".csv,.CSV"
+                                            nv-file-select uploader="uploader"
+                                            id="update_file_input">
+          </div>
+          <div class="form-group" ng-show="is_show_grp_query()">
+            <ui-select ng-model="process_param.grp_param.selected" theme="bootstrap"
+                       ng-disabled="disabled" reset-search-input="false"
+                       style="width:100%;margin-top: 6px;">
+              <ui-select-match placeholder="{{'batch.process.page.grp.name.label' | translate}}">
+                {{$select.selected.name}}
+              </ui-select-match>
+              <ui-select-choices repeat="grp in query_result.grps track by $index"
+                                 refresh="refresh_grps($select.search)" refresh-delay="300">
+                <div ng-bind-html="grp.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+            <div class="checkbox" ng-show="is_show_sub_grp_check()" title="{{'batch.process.page.include.subgrp.title' | translate}}">
+              <label>
+                <input type="checkbox" ng-model='process_param.grp_param.include_subgrp' >
+                {{'batch.process.page.include.subgrp' | translate}}
+              </label>
+            </div>
+            <div style="padding: 5px 5px 5px 5px">
+              <div ng-if="process_param.grp_param.selected.id">
+                <div>{{'batch.process.page.query.id' | translate}}: <strong>'{{process_param.grp_param.selected.id}}'</strong>
+                </div>
+                <div>{{'batch.process.page.query.code' | translate}}: <strong>'{{process_param.grp_param.selected.code}}'</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" ng-show="is_show_role_query()">
+            <ui-select ng-model="process_param.role_param.selected" theme="bootstrap"
+                       ng-disabled="disabled" reset-search-input="false"
+                       style="width:100%;margin-top: 6px;">
+              <ui-select-match placeholder="{{'batch.process.page.role.name.label' | translate}}">
+                {{$select.selected.name}}
+              </ui-select-match>
+              <ui-select-choices repeat="role in query_result.roles track by $index"
+                                 refresh="refresh_roles($select.search)" refresh-delay="300">
+                <div ng-bind-html="role.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+            <div style="padding: 5px 5px 5px 5px">
+              <div ng-if="process_param.role_param.selected.id">
+                <div>{{'batch.process.page.query.id' | translate}}: <strong>'{{process_param.role_param.selected.id}}'</strong>
+                </div>
+                <div>{{'batch.process.page.query.code' | translate}}: <strong>'{{process_param.role_param.selected.roleCode}}'</strong>
+                </div>
+                <div>{{'batch.process.page.query.name' | translate}}: <strong>'{{process_param.role_param.selected.name}}'</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" ng-show="is_show_tag_query()">
+            <ui-select ng-model="process_param.tag_param.selected" theme="bootstrap"
+                       ng-disabled="disabled" reset-search-input="false"
+                       style="width:100%;margin-top: 6px;">
+              <ui-select-match placeholder="{{'batch.process.page.tag.code' | translate}}">
+                {{$select.selected.code}}
+              </ui-select-match>
+              <ui-select-choices repeat="tag in query_result.tags track by $index"
+                                 refresh="refresh_tags($select.search)" refresh-delay="300">
+                <div ng-bind-html="tag.code | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+            <div style="padding: 5px 5px 5px 5px">
+              <div ng-if="process_param.tag_param.selected.id">
+                <div>{{'batch.process.page.query.id' | translate}}: <strong>'{{process_param.tag_param.selected.id}}'</strong>
+                </div>
+                <div>{{'batch.process.page.query.code' | translate}}: <strong>'{{process_param.tag_param.selected.code}}'</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-offset-2 col-md-3">
+        <button type="button" class="btn btn-primary" style="width: 100px;"
+                ng-disabled="!process_btn_enable();" ng-click="batch_process();">
+          {{'batch.process.page.start.process.label'
+          | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="row"
+         ng-show="process_result.successes || process_result.errors">
+      <div class="col-md-offset-1 col-md-10">
+        <h2 ng-bind="process_result.process_type"></h2>
+        <div class="h4">
+          {{'batch.process.page.process.result.total.nums' | translate}}<span
+            class="h3"
+            ng-bind="process_result.successes.length + process_result.errors.length"></span>
+        </div>
+      </div>
+    </div>
+    <div class="row"
+         ng-show="process_result.errors && process_result.errors.length > 0"
+         style="color: #a94442;">
+      <div class="col-md-offset-1 col-md-10">
+        <h3>{{'batch.process.page.process.failure.tips' | translate}}</h3>
+        <div class="h4">
+          {{'batch.process.page.process.result.nums' | translate}}
+          <sapn ng-bind="process_result.errors.length"></sapn>
+        </div>
+        <div ng-repeat="item in process_result.errors">
+          <b> {{item.identity}}</b> : {{item.msg}}
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-show="process_result.successes"
+         style="color: #3c763d;">
+      <div class="col-md-offset-1 col-md-10">
+        <h3>{{'batch.process.page.process.success.tips' | translate}}</h3>
+        <div class="h4">
+          {{'batch.process.page.process.result.nums' | translate}}
+          <sapn ng-bind="process_result.successes.length"></sapn>
+        </div>
+        <div ng-show="process_result.errors.length > 0">
+          <div ng-repeat="item in process_result.successes">{{item}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

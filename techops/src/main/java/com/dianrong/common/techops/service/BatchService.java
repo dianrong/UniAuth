@@ -195,11 +195,12 @@ public class BatchService {
   /**
    * 批量去除用户和组的关联.
    *
-   * @param grpId 组id,不能为空
+   * @param grpId 组id,不能为空.
+   * @param includeSubGrp 去除操作是否作用于所有子组.
    *
    * @throws BatchProcessException 批量处理异常
    */
-  public BatchProcessResult removeUserGrpRelation(InputStream inputStream, Integer grpId)
+  public BatchProcessResult removeUserGrpRelation(InputStream inputStream, Integer grpId, Boolean includeSubGrp)
       throws IOException {
     List<IdentityAnalysisResult> results = InputAnalyzer.analysisInputForIdentity(inputStream);
     BatchProcessResult processResult = new BatchProcessResult();
@@ -221,14 +222,31 @@ public class BatchService {
       }
     }
 
+    List<Integer> grpIdList = new ArrayList<>();;
+    if (includeSubGrp != null && includeSubGrp) {
+      // 查询所有子组id
+      GroupParam groupParam = new GroupParam();
+      groupParam.setId(grpId).setOnlyShowGroup(true);
+      Response<GroupDto> response = uarwFacade.getGroupRWResource().getGroupTree(groupParam);
+      if (!CollectionUtils.isEmpty(response.getInfo())) {
+        throw new BatchProcessException(response.getInfo().get(0).getMsg());
+      }
+      grpIdList.addAll(parseGrpTree(response.getData()));
+    } else {
+      grpIdList.add(grpId);
+    }
+
     // 取消用户和组的关联关系
     UserListParam userListParam = new UserListParam();
     List<Linkage<Long, Integer>> userIdGroupIdPairs = new ArrayList<>(userIds.size());
-    for(Long userId : userIds) {
-      Linkage<Long, Integer> linkage = new Linkage<>();
-      linkage.setEntry1(userId);
-      linkage.setEntry2(grpId);
-      userIdGroupIdPairs.add(linkage);
+    // 双层for循环, 将用户和组的所有种关联关系都传进去.
+    for (Integer grpIdItem : grpIdList) {
+      for (Long userId : userIds) {
+        Linkage<Long, Integer> linkage = new Linkage<>();
+        linkage.setEntry1(userId);
+        linkage.setEntry2(grpIdItem);
+        userIdGroupIdPairs.add(linkage);
+      }
     }
     userListParam.setUserIdGroupIdPairs(userIdGroupIdPairs);
     userListParam.setNormalMember(Boolean.TRUE);
@@ -237,6 +255,24 @@ public class BatchService {
       throw new BatchProcessException(response.getInfo().get(0).getMsg());
     }
     return processResult;
+  }
+
+  /**
+   * 解析组树,将其所有的组都给解析出来.
+   */
+  private Set<Integer> parseGrpTree(GroupDto parentGroup) {
+    if (parentGroup == null) {
+      return Collections.emptySet();
+    }
+    Set<Integer> grpIdSet = new HashSet<>();
+    grpIdSet.add(parentGroup.getId());
+    List<GroupDto> subGrpList = parentGroup.getGroups();
+    if (!CollectionUtils.isEmpty(subGrpList)) {
+      for (GroupDto subGrp: subGrpList) {
+        grpIdSet.addAll(parseGrpTree(subGrp));
+      }
+    }
+    return grpIdSet;
   }
 
   /**
@@ -516,8 +552,8 @@ public class BatchService {
    */
   private List<UserDto> queryUser(UserParam userParam, Byte status) {
     UserQuery query = new UserQuery();
-    query.setEmail(StringUtils.isBlank(userParam.getEmail()) ? null : userParam.getEmail());
-    query.setPhone(StringUtils.isBlank(userParam.getPhone()) ? null : userParam.getPhone());
+    query.setExactEmail(StringUtils.isBlank(userParam.getEmail()) ? null : userParam.getEmail());
+    query.setExactPhone(StringUtils.isBlank(userParam.getPhone()) ? null : userParam.getPhone());
     if (status != null) {
       query.setStatus(status);
     }
