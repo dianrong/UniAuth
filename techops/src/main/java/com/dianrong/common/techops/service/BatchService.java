@@ -552,8 +552,8 @@ public class BatchService {
    */
   private List<UserDto> queryUser(UserParam userParam, Byte status) {
     UserQuery query = new UserQuery();
-    query.setEmail(StringUtils.isBlank(userParam.getEmail()) ? null : userParam.getEmail());
-    query.setPhone(StringUtils.isBlank(userParam.getPhone()) ? null : userParam.getPhone());
+    query.setExactEmail(StringUtils.isBlank(userParam.getEmail()) ? null : userParam.getEmail());
+    query.setExactPhone(StringUtils.isBlank(userParam.getPhone()) ? null : userParam.getPhone());
     if (status != null) {
       query.setStatus(status);
     }
