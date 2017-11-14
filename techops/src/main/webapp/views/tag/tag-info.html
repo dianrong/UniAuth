@@ -32,6 +32,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{'tagMgr.tagCode' | translate}}</th>
             <th>{{'tagMgr.tagCategory' | translate}}</th>
             <th>{{'tagMgr.tagDesc' | translate}}</th>
@@ -46,6 +47,7 @@
         </tr>
 
         <tr ng-repeat="d in tags">
+            <th>{{$index + 1}}</th>
             <td>
                 <p title="{{d.code}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 120px">{{d.code}}</p>
             </td>

@@ -32,6 +32,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{ 'roleMgr.roleName' | translate}}</th>
             <th>{{ 'roleMgr.roleCode' | translate}}</th>
             <th>{{ 'roleMgr.roleDesc' | translate}}</th>
@@ -46,6 +47,7 @@
         </tr>
 
         <tr ng-repeat="d in roles">
+            <th>{{$index + 1}}</th>
             <td>
                 <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.name}}</p>
             </td>

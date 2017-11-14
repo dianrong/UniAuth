@@ -27,6 +27,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{'permMgr.value' | translate}}</th>
             <th>{{'permMgr.permType' | translate}}</th>
             <th>{{'common.desc' | translate}}</th>
@@ -40,6 +41,7 @@
         </tr>
 
         <tr ng-repeat="d in perms | filter:predicate:comparator">
+            <th>{{$index + 1}}</th>
             <td ng-bind="d.value"></td>
             <td ng-bind="d.permType"></td>
             <td ng-bind="d.description"></td>

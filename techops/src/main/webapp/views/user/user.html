@@ -53,6 +53,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{'userMgr.username' | translate}}</th>
             <th>{{'userMgr.email' | translate}}</th>
             <th>{{'userMgr.mobile' | translate}}</th>
@@ -70,6 +71,7 @@
         </tr>
 
         <tr ng-repeat="d in users">
+            <th>{{$index + 1}}</th>
             <td>
                 <p title="{{d.name}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 180px">{{d.name}}</p>
             </td>

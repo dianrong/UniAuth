@@ -32,6 +32,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{ 'permMgr.value' | translate}}</th>
             <th style="width: 7em;">{{ 'permMgr.eavValue' | translate}}</th>
             <th>{{ 'permMgr.permType' | translate}}</th>
@@ -47,6 +48,7 @@
         </tr>
 
         <tr ng-repeat="d in perms">
+            <th>{{$index + 1}}</th>
             <td>
                 <p title="{{d.value}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 160px">{{d.value}}</p>
             </td>

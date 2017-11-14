@@ -61,6 +61,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{'synchronousLog.type' | translate}}</th>
             <th>{{'synchronousLog.content' | translate}}</th>
             <th>{{'synchronousLog.computerIp' | translate}}</th>
@@ -77,6 +78,7 @@
         </tr>
 
         <tr ng-repeat="d in synchronousLogs">
+            <th>{{$index + 1}}</th>
             <td ng-bind="d.synchronousType=='SYNCHRONOUS_HR_DATA'?'{{'synchronousLog.synchronous' | translate}}':'{{'synchronousLog.deleteFiles' | translate}}'"></td>
             <td>
                 <p title="{{d.processContent}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 120px">{{d.processContent}}</p>
