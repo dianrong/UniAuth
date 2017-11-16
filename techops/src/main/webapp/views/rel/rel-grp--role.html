@@ -27,6 +27,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{'relMgr.roleName' | translate}}</th>
             <th>{{'relMgr.roleCode' | translate}}</th>
              <th>{{'common.desc' | translate}}</th>
@@ -39,7 +40,8 @@
             <td colspan="9" class="tc" ng-bind="grpRolesMsg"></td>
         </tr>
 
-        <tr ng-repeat="d in roles | filter:predicate:comparator">
+        <tr ng-repeat="d in roles | filter:predicate:comparator as filteredRoles">
+            <th>{{$index + 1}}</th>
             <td ng-bind="d.name"></td>
             <td ng-bind="d.roleCode"></td>
             <td ng-bind="d.description"></td>

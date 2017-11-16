@@ -7,6 +7,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{ 'tagMgr.tagTypeCode' | translate}}</th>
             <th style="text-align: center">{{ 'userMgr.operators' | translate}}</th>
         </tr>
@@ -18,6 +19,7 @@
         </tr>
 
         <tr ng-repeat="d in tagTypes">
+            <th>{{$index + 1}}</th>
             <td><input ng-disabled="!d.editable || (d.editable && d.editable == false)" class="{{(!d.editable || (d.editable && d.editable == false))?'noborder':''}}" ng-model="d.code"></td>
             <td class="text-color-c9" style="text-align: center">
                 <div class="btn-group">

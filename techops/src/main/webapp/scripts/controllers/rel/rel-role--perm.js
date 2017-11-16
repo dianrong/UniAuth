@@ -4,7 +4,6 @@ define(['../../utils/constant'], function (constant) {
      * @exports controllers/User
      */
     var Controller = function ($scope, $rootScope, RoleService, AlertService) {
-
         $scope.role = RoleService.roleShared;
         $scope.refreshRoles = function(name) {
             if(!$rootScope.loginDomainsDropdown || !$rootScope.loginDomainsDropdown.option || !$rootScope.loginDomainsDropdown.option.id) {
@@ -85,9 +84,9 @@ define(['../../utils/constant'], function (constant) {
             });
         }
         $scope.selectAllPermsForRole = function(tag) {
-        	tag = tag !== false
-            for(var i=0;i<$scope.perms.length;i++) {
-                $scope.perms[i].checked = tag; 
+            tag = tag !== false
+            for(var i = 0; i < $scope.filteredPerms.length; i++) {
+               $scope.filteredPerms[i].checked = tag;
             }
         }
         var watch = $scope.$watch('role.selected', $scope.getAllPermsWithCheckedInfoInDomain);
@@ -101,7 +100,6 @@ define(['../../utils/constant'], function (constant) {
 
         $scope.predicate = '';
         $scope.comparator = false;
-        
         $scope.$on('selected-language-changed', $scope.getAllPermsWithCheckedInfoInDomain);
     };
 

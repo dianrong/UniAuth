@@ -38,6 +38,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
             <tr>
+                <th>#</th>
                 <th>Key</th>
                 <th>Value</th>
                 <th>Type</th>
@@ -50,6 +51,7 @@
             </tr>
 
             <tr ng-repeat="d in cfgs">
+                <th>{{$index + 1}}</th>
                 <td>
                     <p title="{{d.cfgKey}}" style="text-overflow:ellipsis;overflow: hidden; white-space: nowrap; width: 220px">{{d.cfgKey}}</p>
                 </td>

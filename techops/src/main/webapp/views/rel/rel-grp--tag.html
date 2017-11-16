@@ -28,6 +28,7 @@
     <table class="text-left table grey-border table-hover vertical-middle">
         <thead class="text-color-c4">
         <tr>
+            <th>#</th>
             <th>{{'relMgr.relCode' | translate}}</th>
             <th>{{'relMgr.category' | translate}}</th>
             <th>{{'common.desc' | translate}}</th>
@@ -40,7 +41,8 @@
             <td colspan="9" class="tc" ng-bind="grpTagsMsg"></td>
         </tr>
 
-        <tr ng-repeat="d in tags | filter:predicate:comparator">
+        <tr ng-repeat="d in tags | filter:predicate:comparator as filteredTags">
+            <th>{{$index + 1}}</th>
             <td ng-bind="d.code"></td>
             <td ng-bind="d.tagTypeCode"></td>
             <td ng-bind="d.description"></td>
