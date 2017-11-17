@@ -184,6 +184,8 @@ public class CasLoginSupport {
       }
       this.pathPopulated = true;
     }
+    // first logout
+    this.casLoginOut(request, response);
 
     TicketGrantingTicket ticketGrantingTicket =
         this.centralAuthenticationService.createTicketGrantingTicket(credential);
@@ -346,5 +348,12 @@ public class CasLoginSupport {
     log.info("login success, redirect to {} ", url);
     response.sendRedirect(url.toString());
     return true;
+  }
+
+  /**
+   * 返回JWT的有效秒数.
+   */
+  public int getJwtExpireSeconds() {
+    return jwtExpireSeconds;
   }
 }

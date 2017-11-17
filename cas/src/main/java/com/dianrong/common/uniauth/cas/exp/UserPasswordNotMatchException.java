@@ -3,7 +3,7 @@ package com.dianrong.common.uniauth.cas.exp;
 import javax.security.auth.login.AccountException;
 
 /**
- * . 用户密码不匹配异常
+ * 用户密码不匹配异常.
  *
  * @author wanglin
  */

@@ -15,8 +15,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,34 +32,45 @@ public class RoleResource implements IRoleRWResource {
   @Override
   @Timed
   public Response<List<RoleCodeDto>> getAllRoleCodes() {
-    List<RoleCodeDto> roleCodeDtos = roleService.getAllRoleCodes();
-    return Response.success(roleCodeDtos);
+    return Response.success(roleService.getAllRoleCodes());
   }
 
   @Override
   @Timed
   public Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam) {
-    List<PermissionDto> permissionDtos =
-        roleService.getAllPermsToRole(roleParam.getDomainId(), roleParam.getId());
-    return Response.success(permissionDtos);
+    return Response
+        .success(roleService.getAllPermsToRole(roleParam.getDomainId(), roleParam.getId()));
+  }
+
+  @ApiOperation("获取用户Id获取所有关联的角色(直接关联和通过组关联的),需要指定域")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyId", value = "租户id(或租户code)", required = true,
+          dataType = "long", paramType = "query"),
+      @ApiImplicitParam(name = "domainId", value = "域id", dataType = "int", required = true,
+          paramType = "query"),
+      @ApiImplicitParam(name = "userIds", value = "指定的角色列表", dataType = "java.util.List",
+          required = true, paramType = "query")})
+  @Override
+  public Response<Map<Long, Set<RoleDto>>> getUserRoles(RoleParam roleParam) {
+    return Response
+        .success(roleService.getUserRoles(roleParam.getUserIds(), roleParam.getDomainId()));
   }
 
   @Override
   @Timed
   public Response<PageDto<RoleDto>> searchRole(RoleQuery roleQuery) {
-    PageDto<RoleDto> roleDtos =
+    return Response.success(
         roleService.searchRole(roleQuery.getRoleIds(), roleQuery.getId(), roleQuery.getDomainId(),
             roleQuery.getName(), roleQuery.getRoleCodeId(), roleQuery.getStatus(),
-            roleQuery.getNeedDomainInfo(), roleQuery.getPageNumber(), roleQuery.getPageSize());
-    return Response.success(roleDtos);
+            roleQuery.getNeedDomainInfo(), roleQuery.getPageNumber(), roleQuery.getPageSize()));
   }
 
   @ResourceAudit
   @Override
   public Response<RoleDto> addNewRole(RoleParam roleParam) {
-    RoleDto roleDto = roleService.addNewRole(roleParam.getDomainId(), roleParam.getRoleCodeId(),
-        roleParam.getName(), roleParam.getDescription());
-    return Response.success(roleDto);
+    return Response
+        .success(roleService.addNewRole(roleParam.getDomainId(), roleParam.getRoleCodeId(),
+            roleParam.getName(), roleParam.getDescription()));
   }
 
   @ResourceAudit
@@ -86,6 +98,12 @@ public class RoleResource implements IRoleRWResource {
   }
 
   @ResourceAudit
+  @ApiOperation("批量关联角色和权限")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "id", value = "角色Id", dataType = "int", required = true,
+          paramType = "query"),
+      @ApiImplicitParam(name = "permIds", value = "需要关联到角色的权限id列表", dataType = "java.util.List",
+          required = true, paramType = "query")})
   @Override
   public Response<Void> savePermsToRole(RoleParam roleParam) {
     roleService.savePermsToRole(roleParam.getId(), roleParam.getPermIds());
@@ -106,5 +124,4 @@ public class RoleResource implements IRoleRWResource {
     roleService.relateUsersAndRole(roleParam.getId(), roleParam.getUserIds());
     return Response.success();
   }
-
 }

@@ -3,33 +3,34 @@ package com.dianrong.common.uniauth.cas.registry;
 import com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch;
 import com.dianrong.common.uniauth.common.customer.SwitchControl;
 import com.dianrong.common.uniauth.common.util.Assert;
-import org.jasig.cas.ticket.registry.DefaultTicketRegistry;
 import org.jasig.cas.ticket.registry.TicketRegistry;
 
 public class TicketRegistryFactoryBean {
 
-  private DefaultTicketRegistry defaultTicketRegistry;
+  private TgtIdentityTicketRegistry defaultTicketRegistry;
 
-  private RedisTicketRegistry redisTicketRegistry;
+  private TgtIdentityTicketRegistry redisTicketRegistry;
 
   /**
    * 配置字符串.
    */
   private SwitchControl redisSwitch = new SimpleUseRedisSwitch();
 
-  public DefaultTicketRegistry getDefaultTicketRegistry() {
+  public TgtIdentityTicketRegistry getDefaultTicketRegistry() {
     return defaultTicketRegistry;
   }
 
-  public void setDefaultTicketRegistry(DefaultTicketRegistry defaultTicketRegistry) {
+  public void setDefaultTicketRegistry(
+      TgtIdentityTicketRegistry defaultTicketRegistry) {
     this.defaultTicketRegistry = defaultTicketRegistry;
   }
 
-  public RedisTicketRegistry getRedisTicketRegistry() {
+  public TgtIdentityTicketRegistry getRedisTicketRegistry() {
     return redisTicketRegistry;
   }
 
-  public void setRedisTicketRegistry(RedisTicketRegistry redisTicketRegistry) {
+  public void setRedisTicketRegistry(
+      TgtIdentityTicketRegistry redisTicketRegistry) {
     this.redisTicketRegistry = redisTicketRegistry;
   }
 

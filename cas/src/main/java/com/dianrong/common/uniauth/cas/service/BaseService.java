@@ -101,7 +101,7 @@ public abstract class BaseService {
    * 处理异常信息.
    *
    * @param infoList 服务端返回的异常信息.
-   * @throws 如果有异常信息,则将该异常信息抛出.
+   * @throws Exception 如果有异常信息,则将该异常信息抛出.
    */
   protected void checkInfoList(List<Info> infoList) throws Exception {
     if (!ObjectUtil.collectionIsEmptyOrNull(infoList)) {

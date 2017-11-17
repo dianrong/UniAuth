@@ -51,9 +51,9 @@ public class UniauthAuthenticationHandler extends AbstractUsernamePasswordAuthen
     attributes.put(CasProtocol.DianRongCas.getTenancyIdName(),
         StringUtil.translateIntegerToLong(userInfo.getTenancyId()));
     attributes.put(CasProtocol.DianRongCas.getUserIdName(), userInfo.getId());
-    attributes.put(CasProtocol.DianRongCas.getLoginAccountName(), userInfo.getAccount());
+    attributes.put(CasProtocol.DianRongCas.getLoginAccountName(), userName);
     return createHandlerResult(credential,
-        this.principalFactory.createPrincipal(userName, attributes), null);
+        this.principalFactory.createPrincipal(userInfo.getAccount(), attributes), null);
   }
 
   @Override

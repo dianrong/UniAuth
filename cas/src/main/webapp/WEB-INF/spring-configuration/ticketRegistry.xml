@@ -32,13 +32,21 @@
     <!-- Ticket Registry -->
     <bean id="ticketRegistry" factory-bean="ticketRegistryFactoryBean" factory-method="buildTicketRegistry"/>
     <bean id="ticketRegistryFactoryBean" class="com.dianrong.common.uniauth.cas.registry.TicketRegistryFactoryBean">
-    	<property name="defaultTicketRegistry" ref="defaultTicketRegistry"/>
-    	<property name="redisTicketRegistry" ref="redisTicketRegistry"/>
+        <property name="defaultTicketRegistry" ref="defaultTgtIdentityLocalTicketRegistry"/>
+        <property name="redisTicketRegistry" ref="redisTgtIdentityLocalTicketRegistry"/>
         <property name="redisSwitch" ref="useRedisSwitch"/>
     </bean>
 
     <bean id="useRedisSwitch" class = "com.dianrong.common.uniauth.common.cache.SimpleUseRedisSwitch">
         <property name="config" value="#{uniauthConfig['cas.iscluster']?:'false'}"/>
+    </bean>
+
+    <!-- 对TicketRegistry的增强-->
+    <bean id="defaultTgtIdentityLocalTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.TgtIdentityLocalTicketRegistry">
+        <constructor-arg ref="defaultTicketRegistry"/>
+    </bean>
+    <bean id="redisTgtIdentityLocalTicketRegistry" class="com.dianrong.common.uniauth.cas.registry.TgtIdentityRedisTicketRegistry">
+        <constructor-arg ref="redisTicketRegistry"/>
     </bean>
 
     <!--Default Ticket Registry -->

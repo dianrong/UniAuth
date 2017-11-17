@@ -284,11 +284,9 @@ public class UserInfoManageController {
       HttpServletResponse response) {
     Principal principal = casLoginSupport.getAuthenticationPrincipal(request, response);
     // 获取用户账号
-    String account = (String)principal.getAttributes().get(CasProtocol.DianRongCas.getLoginAccountName());
-    Long tenancyId =
-        (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getTenancyIdName());
-    Long userId =
-        (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getUserIdName());
+    String account = principal.getId();
+    Long tenancyId = (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getTenancyIdName());
+    Long userId = (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getUserIdName());
     return new UserIdentity(account, tenancyId, userId);
   }
 

@@ -184,7 +184,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDetailDto> getUserDetailInfo(LoginParam loginParam) {
-    UserDetailDto userDetailDto = delegateUserAuthentication.getUserDetailInfo(loginParam);
+    UserDetailDto userDetailDto = userService.getUserDetailInfo(loginParam);
     return new Response<UserDetailDto>(userDetailDto);
   }
 
@@ -197,7 +197,7 @@ public class UserResource implements IUserRWResource {
   @Override
   @Timed
   public Response<UserDto> getUserInfoByUserTag(LoginParam loginParam) {
-    return new Response<UserDto>(delegateUserAuthentication.getUserByEmailOrPhone(loginParam));
+    return new Response<UserDto>(userService.getUserByEmailOrPhone(loginParam));
   }
 
   @ResourceAudit
@@ -278,6 +278,29 @@ public class UserResource implements IUserRWResource {
   @Timed
   public Response<VPNLoginResult> vpnLogin(LoginParam loginParam) {
     return Response.success(userService.vpnLogin(loginParam));
+  }
+
+  @ApiOperation("根据主键Id获取用户信息")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "id", value = "主键id", required = true, dataType = "long", paramType = "query")})
+  @Override
+  @Timed
+  public Response<UserDto> getUserById(UserParam userParam) {
+    return Response.success(userService.getUserById(userParam.getId()));
+  }
+
+  @ApiOperation("根据账号信息获取用户信息(支持邮箱和电话号码, 包括普通账号和系统账号)")
+  @ApiImplicitParams(value = {
+      @ApiImplicitParam(name = "tenancyCode", value = "租户code(或租户id)", dataType = "string", required = true,
+          paramType = "query"),
+      @ApiImplicitParam(name = "account", value = "账号", required = true, dataType = "string",
+          paramType = "query")})
+  @Override
+  @Timed
+  public Response<UserDto> getUserByAccount(UserParam userParam) {
+    return Response
+        .success(userService.getUserByAccount(userParam.getAccount(), userParam.getTenancyCode(),
+            userParam.getTenancyId()));
   }
 
   @ResourceAudit

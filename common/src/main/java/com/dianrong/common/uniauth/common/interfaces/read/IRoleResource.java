@@ -8,6 +8,8 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.bean.request.RoleParam;
 import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
 
+import java.util.Map;
+import java.util.Set;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -32,4 +34,8 @@ public interface IRoleResource {
   // scenario: retrieve all permissions connected with a role(including all other permissions
   // under a domain)
   Response<List<PermissionDto>> getAllPermsToRole(RoleParam roleParam);
+
+  @POST
+  @Path("user-roles")
+  Response<Map<Long, Set<RoleDto>>> getUserRoles(RoleParam roleParam);
 }

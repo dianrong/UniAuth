@@ -1,5 +1,7 @@
 package com.dianrong.common.uniauth.common.bean.request;
 
+import com.dianrong.common.uniauth.common.bean.ThirdAccountType;
+
 public class LoginParam extends Operator {
 
   /**
@@ -21,6 +23,11 @@ public class LoginParam extends Operator {
   private Long tenancyId;
 
   private String tenancyCode;
+
+  /**
+   * 某些登录会指定三方账号类型.
+   */
+  private ThirdAccountType thirdAccountType;
 
   /**
    * 返回的用户信息是否包含三方账号信息.
@@ -77,6 +84,15 @@ public class LoginParam extends Operator {
 
   public LoginParam setIncludeThirdAccount(Boolean includeThirdAccount) {
     this.includeThirdAccount = includeThirdAccount;
+    return this;
+  }
+
+  public ThirdAccountType getThirdAccountType() {
+    return thirdAccountType;
+  }
+
+  public LoginParam setThirdAccountType(ThirdAccountType thirdAccountType) {
+    this.thirdAccountType = thirdAccountType;
     return this;
   }
 }

@@ -45,30 +45,6 @@ public class DelegateUserAuthentication
   }
 
   /**
-   * 获取用户详细信息.
-   */
-  public UserDetailDto getUserDetailInfo(LoginParam loginParam) {
-    for (UserAuthentication da : authenticationList) {
-      if (da.supported(loginParam)) {
-        return da.getUserDetailInfo(loginParam);
-      }
-    }
-    throw notSupportedException();
-  }
-
-  /**
-   * 根据用户的邮箱或者电话获取用户信息.
-   */
-  public UserDto getUserByEmailOrPhone(LoginParam loginParam) {
-    for (UserAuthentication da : authenticationList) {
-      if (da.supported(loginParam)) {
-        return da.getUserByEmailOrPhone(loginParam);
-      }
-    }
-    throw notSupportedException();
-  }
-
-  /**
    * 便利方法.当前的实现不支持请求的参数时,抛出的异常.
    */
   private AuthenticationNotSupportedException notSupportedException() {
