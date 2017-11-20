@@ -51,7 +51,13 @@ public interface ResponseCode {
   /**
    *IPA账号登陆连续失败多次.
   */
-  int IPA_ACCOUNT_LOGIN_FAILED_TOO_MANAY_TIMES = 109;
+  int IPA_ACCOUNT_LOGIN_FAILED_TOO_MANY_TIMES = 109;
+
+  /**
+   *延续登录次数超过上限了.
+   */
+  int CONTINUE_LOGIN_EXCEEDED_MAX_TIMES = 130;
+
 
   /** 状态类. **/
   /**

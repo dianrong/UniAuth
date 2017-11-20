@@ -9,14 +9,16 @@ import com.dianrong.common.uniauth.common.bean.request.LoginParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.enm.UserActionEnum;
+import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.StringUtil;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
-
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+@Slf4j
 @Service
 public class UserInfoManageService extends BaseService {
 
@@ -65,7 +67,7 @@ public class UserInfoManageService extends BaseService {
 
   /**
    * 根据账号信息更新用户name.
-   * 
+   *
    * @param account 账号
    * @param tenancyId 租户id
    * @param newName 新的姓名
@@ -85,7 +87,7 @@ public class UserInfoManageService extends BaseService {
 
   /**
    * 根据账号信息更新Email.
-   * 
+   *
    * @param account 账号
    * @param tenancyId 租户id
    * @param email 新的邮箱
@@ -208,7 +210,8 @@ public class UserInfoManageService extends BaseService {
    * 根据用户id,验证IPA,更新用户关联的IPA账号.
    */
   @TenancyIdentity(index = 1)
-  public void updateUserIPA(String account, Long tenancyId, String ipa, String ipaPassword) throws Exception {
+  public void updateUserIPA(String account, Long tenancyId, String ipa, String ipaPassword)
+      throws Exception {
     UserParam userParam = new UserParam();
     userParam.setAccount(StringUtil.trimCompatibleNull(account));
     userParam.setTenancyId(tenancyId);
@@ -217,5 +220,43 @@ public class UserInfoManageService extends BaseService {
     Response<Void> response = uarwFacade.getUserRWResource().updateUserIPAAccount(userParam);
     List<Info> infoList = response.getInfo();
     checkInfoList(infoList);
+  }
+
+  /**
+   * 根据主键Id获取用户.
+   *
+   * @return 如果找不到则返回Null.
+   */
+  public UserDto queryUserById(Long userId) {
+    Assert.notNull(userId, "userId");
+    UserParam userParam = new UserParam();
+    userParam.setId(userId);
+    Response<UserDto> response = uarwFacade.getUserRWResource().getUserById(userParam);
+    List<Info> infoList = response.getInfo();
+    if (!CollectionUtils.isEmpty(infoList)) {
+      log.error("Failed query user By id." + infoList.get(0).getMsg());
+      return null;
+    }
+    return response.getData();
+  }
+
+  /**
+   * 根据账号获取用户.
+   *
+   * @return 如果找不到则返回Null.
+   */
+  public UserDto queryUserByIdentity(String account, String tenancyCode) {
+    Assert.notNull(account, "account");
+    Assert.notNull(tenancyCode, "tenancyCode");
+    UserParam userParam = new UserParam();
+    userParam.setAccount(account);
+    userParam.setTenancyCode(tenancyCode);
+    Response<UserDto> response = uarwFacade.getUserRWResource().getUserByAccount(userParam);
+    List<Info> infoList = response.getInfo();
+    if (!CollectionUtils.isEmpty(infoList)) {
+      log.error("Failed query user By identity." + infoList.get(0).getMsg());
+      return null;
+    }
+    return response.getData();
   }
 }

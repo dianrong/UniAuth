@@ -62,6 +62,7 @@
                    -->
                 <entry key-ref="proxyAuthenticationHandler" value-ref="proxyPrincipalResolver" />
                 <entry key-ref="primaryAuthenticationHandler"  value="#{null}"/>
+                <entry key-ref="continueLoginAuthenticationHandler"  value="#{null}"/>
             </map>
         </constructor-arg>
 
@@ -103,8 +104,8 @@
        | * org.jasig.cas.support.spnego.authentication.handler.support.JCIFSSpnegoAuthenticationHandler
        -->
     <import resource="classpath:ss-uniauth-common.xml"/>
-    <bean id="primaryAuthenticationHandler" class="com.dianrong.common.uniauth.cas.handler.UniauthAuthenticationHandler">
-    </bean>
+    <bean id="primaryAuthenticationHandler" class="com.dianrong.common.uniauth.cas.handler.UniauthAuthenticationHandler"/>
+    <bean id="continueLoginAuthenticationHandler" class="com.dianrong.common.uniauth.cas.handler.ContinueLoginAuthenticationHandler"/>
 
     <!-- Required for proxy ticket mechanism -->
     <bean id="proxyPrincipalResolver"
@@ -172,9 +173,11 @@
     </bean>
     
     <!-- JWT -->
+    <bean id = "defaultSecurityKey" class="com.dianrong.common.uniauth.common.jwt.DefaultSecurityKey"/>
     <bean id="uniauthJWTSecurity" class="com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity">
         <constructor-arg index="0" value="#{uniauthConfig['authentication.jwt.private.key']}"/>
         <constructor-arg index="1" value="#{uniauthConfig['authentication.jwt.public.key']}"/>
+        <constructor-arg index="2" ref="defaultSecurityKey"/>
     </bean>
     
     <bean id="jwtCookieGenerator" class="com.dianrong.common.uniauth.cas.service.jwt.JWTCookieGenerator">

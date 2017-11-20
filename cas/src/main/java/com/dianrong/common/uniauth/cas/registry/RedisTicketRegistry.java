@@ -1,27 +1,23 @@
 package com.dianrong.common.uniauth.cas.registry;
 
 import com.dianrong.common.uniauth.common.util.Assert;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.jasig.cas.authentication.principal.Service;
 import org.jasig.cas.ticket.ServiceTicket;
 import org.jasig.cas.ticket.Ticket;
 import org.jasig.cas.ticket.TicketGrantingTicket;
-import org.jasig.cas.ticket.registry.AbstractDistributedTicketRegistry;
+import org.jasig.cas.ticket.registry.AbstractTicketRegistry;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 
 @Slf4j
-public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
+public class RedisTicketRegistry extends AbstractTicketRegistry {
 
   @NotNull
   private final RedisTemplate<String, Object> redisTemplate;
@@ -68,15 +64,11 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
   @Override
   public Ticket getTicket(String ticketId) {
     try {
-      final Ticket t = (Ticket) this.redisTemplate.opsForValue().get(getTicketKey(ticketId));
-      if (t != null) {
-        return getProxiedTicketInstance(t);
-      }
+      return (Ticket) this.redisTemplate.opsForValue().get(getTicketKey(ticketId));
     } catch (final Exception e) {
       log.error("Failed fetching {} ", ticketId, e);
       throw e;
     }
-    return null;
   }
 
   @Override
@@ -96,7 +88,7 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
   }
 
   /**
-   * Delete TGT's service tickets.
+   * Delete Tgt's service tickets.
    *
    * @param ticket the ticket
    */
@@ -137,24 +129,6 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
     return new ArrayList<Ticket>();
   }
 
-  @Override
-  protected void updateTicket(Ticket ticket) {
-    log.debug("Updating ticket {}", ticket);
-    try {
-      this.redisTemplate.delete(getTicketKey(ticket.getId()));
-      redisTemplate.opsForValue()
-          .set(getTicketKey(ticket.getId()), ticket, getTimeout(ticket), TimeUnit.SECONDS);
-    } catch (final Exception e) {
-      log.error("Failed updating {}", ticket, e);
-      throw e;
-    }
-  }
-
-  @Override
-  protected boolean needsCallback() {
-    return true;
-  }
-
   private int getTimeout(final Ticket t) {
     if (t instanceof TicketGrantingTicket) {
       return this.tgtTimeout;
@@ -189,5 +163,17 @@ public class RedisTicketRegistry extends AbstractDistributedTicketRegistry {
     }
     log.info("set new ticketPrefix {}", ticketPrefix);
     this.ticketPrefix = ticketPrefix;
+  }
+
+  public RedisTemplate<String, Object> getRedisTemplate() {
+    return redisTemplate;
+  }
+
+  public int getTgtTimeout() {
+    return tgtTimeout;
+  }
+
+  public int getStTimeout() {
+    return stTimeout;
   }
 }

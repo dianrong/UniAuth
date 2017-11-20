@@ -97,4 +97,12 @@ public interface IUserResource {
   @Path("vpn-login")
   // scenario: VPN login
   Response<VPNLoginResult> vpnLogin(LoginParam loginParam);
+
+  @POST
+  @Path("query-by-id")
+  Response<UserDto> getUserById(UserParam userParam);
+
+  @POST
+  @Path("query-by-account")
+  Response<UserDto> getUserByAccount(UserParam userParam);
 }

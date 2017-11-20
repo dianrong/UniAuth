@@ -133,10 +133,10 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
         if (startIndex >= enableTenancyIds.size()) {
           break;
         }
-        int endIndex = (startIndex + perQueryTenancyCount) > enableTenancyIds.size()
+        int queryCount = (startIndex + perQueryTenancyCount) > enableTenancyIds.size()
             ? (enableTenancyIds.size() - startIndex)
             : perQueryTenancyCount;
-        List<Long> includeTenancyIds = enableTenancyIds.subList(startIndex, endIndex);
+        List<Long> includeTenancyIds = enableTenancyIds.subList(startIndex, startIndex + queryCount);
         domainParam.setIncludeTenancyIds(includeTenancyIds);
         Response<List<UrlRoleMappingDto>> response =
             uniClientFacade.getPermissionResource().getUrlRoleMapping(domainParam);

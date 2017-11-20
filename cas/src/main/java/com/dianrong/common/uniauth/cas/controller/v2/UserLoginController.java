@@ -7,22 +7,22 @@ import com.dianrong.common.uniauth.cas.exp.MultiUsersFoundException;
 import com.dianrong.common.uniauth.cas.exp.UserPasswordNotMatchException;
 import com.dianrong.common.uniauth.cas.exp.ValidateFailException;
 import com.dianrong.common.uniauth.cas.model.CasUsernamePasswordCredential;
+import com.dianrong.common.uniauth.cas.model.ExtendLoginCredential;
 import com.dianrong.common.uniauth.cas.model.vo.ApiResponse;
 import com.dianrong.common.uniauth.cas.model.vo.ResponseCode;
 import com.dianrong.common.uniauth.cas.service.UserLoginService;
 import com.dianrong.common.uniauth.cas.util.UniBundleUtil;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.exp.NotLoginException;
 import com.dianrong.common.uniauth.common.jwt.exp.LoginJWTCreateFailedException;
 import com.dianrong.common.uniauth.common.util.StringUtil;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.CredentialExpiredException;
@@ -30,15 +30,15 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.AuthenticationException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
+import org.jasig.cas.authentication.principal.Principal;
 import org.jasig.cas.ticket.TicketException;
 import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +54,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("v2")
-@SuppressWarnings("deprecation")
 public class UserLoginController {
 
   /**
@@ -76,11 +75,18 @@ public class UserLoginController {
   private UserLoginService userLoginService;
 
   /**
+   * 延续登录的最大次数.
+   */
+  @Value("${cas.max.continue.login.times:20}")
+  private Integer maxContinueLoginTimes = 20;
+
+  /**
    * 定义异常与异常信息的关联关系.
    */
   private static final Map<Class<? extends Exception>, CodeMessage> EXCEPTION_CODE_MAP =
       new HashMap<Class<? extends Exception>, CodeMessage>() {
         private static final long serialVersionUID = 296454014783954623L;
+
         {
           put(AccountNotFoundException.class,
               new CodeMessage(ResponseCode.USER_NOT_FOUND, "api.v2.login.user.not.found"));
@@ -98,7 +104,7 @@ public class UserLoginController {
               new CodeMessage(ResponseCode.ACCOUNT_LOCKED, "api.v2.login.account.locked"));
 
           put(IpaAccountLoginFailedTooManyTimesException.class,
-              new CodeMessage(ResponseCode.IPA_ACCOUNT_LOGIN_FAILED_TOO_MANAY_TIMES,
+              new CodeMessage(ResponseCode.IPA_ACCOUNT_LOGIN_FAILED_TOO_MANY_TIMES,
                   "api.v2.login.ipa.account.failed.too.many.times"));
 
           put(FreshUserException.class, new CodeMessage(ResponseCode.ACCOUNT_NEED_INIT_PSWD,
@@ -163,11 +169,8 @@ public class UserLoginController {
   }
 
   /**
-   * 登出.
-   * <P>
-   * 如果当前处于登陆状态,则直接登出. 如果不处于登陆状态,则直接忽略
-   * </p>
-   * 
+   * 登出. <P> 如果当前处于登陆状态,则直接登出. 如果不处于登陆状态,则直接忽略 </p>
+   *
    * @return 总是返回成功
    */
   @RequestMapping(value = "logout", method = {RequestMethod.POST, RequestMethod.GET})
@@ -179,7 +182,7 @@ public class UserLoginController {
 
   /**
    * 生成service ticket(该接口调用必须在用户登陆的状态下).
-   * 
+   *
    * @param service 用于生成service ticket的service参数
    * @return 结果
    */
@@ -208,9 +211,8 @@ public class UserLoginController {
   }
 
   /**
-   * 传入账号，密码，租户编码生成对应身份的JWT.<br>
-   * 但是不会影响当前的登陆状态.(不会修改当前设置生成的TGT，JWT等).
-   * 
+   * 传入账号，密码，租户编码生成对应身份的JWT.<br> 但是不会影响当前的登陆状态.(不会修改当前设置生成的TGT，JWT等).
+   *
    * @param identity 身份信息. 比如邮箱,电话号码等.
    * @param password 密码
    * @param tenancyCode 租户编码
@@ -235,6 +237,45 @@ public class UserLoginController {
     } catch (LoginException le) {
       log.warn("Login failed", le);
       CodeMessage codeMessage = queryExceptionCodeMessage(le);
+      return ApiResponse.failure(codeMessage.code,
+          UniBundleUtil.getMsg(messageSource, codeMessage.messageCode));
+    }
+  }
+
+  /**
+   * 用户处于登录状态下, 延续登录状态.相当于重新登录一次.
+   */
+  @RequestMapping(value = "continue-login", method = RequestMethod.POST)
+  public ApiResponse<?> continueLogin(HttpServletRequest request,
+      HttpServletResponse response) {
+    try {
+      Principal principal = loginSupport.getAuthenticationPrincipal(request, response);
+      Long userId = (Long) principal.getAttributes().get(CasProtocol.DianRongCas.getUserIdName());
+      Object times = principal.getAttributes()
+          .get(CasProtocol.DianRongCas.getContinueLoginTimeName());
+      Integer extendLoginTimes = times == null ? 0 : (Integer) times;
+      if (extendLoginTimes > this.maxContinueLoginTimes) {
+        // 延续登录次数超出最大次数了
+        log.info("User '{}' continue login exceeded maximum limit times", userId);
+        return ApiResponse.failure(ResponseCode.CONTINUE_LOGIN_EXCEEDED_MAX_TIMES,
+            UniBundleUtil.getMsg(messageSource, "api.v2.continue.login.exceeded.max.times",
+                this.maxContinueLoginTimes));
+      }
+      // 重新走一次登录流程
+      ExtendLoginCredential credential = new ExtendLoginCredential(userId, extendLoginTimes);
+      loginSupport.loginAndQueryTgt(credential, false, request, response);
+      return ApiResponse.success(loginSupport.getJwtExpireSeconds());
+    } catch (NotLoginException e) {
+      log.info("user not login, but try to query service ticket", e);
+      return ApiResponse.failure(ResponseCode.USER_NOT_LOGIN,
+          UniBundleUtil.getMsg(messageSource, "api.v2.login.user.not.login"));
+    } catch (TicketException e) {
+      log.warn("ticket create failed", e);
+      return ApiResponse.failure(ResponseCode.CREATE_SERVICE_TICKET_FAILURE,
+          UniBundleUtil.getMsg(messageSource, "api.v2.login.ticket.create.failure"));
+    } catch (AuthenticationException e) {
+      log.debug("login failed", e);
+      CodeMessage codeMessage = queryExceptionCodeMessage(e);
       return ApiResponse.failure(codeMessage.code,
           UniBundleUtil.getMsg(messageSource, codeMessage.messageCode));
     }
@@ -305,6 +346,7 @@ public class UserLoginController {
    * 便利的类, 用于包装结果和结果对应的消息码.
    */
   static class CodeMessage {
+
     private final Integer code;
     private final String messageCode;
 

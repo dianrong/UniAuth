@@ -13,7 +13,7 @@ public class UserDetailDto implements Serializable {
   private List<DomainDto> domainList;
 
   // 每个域共有的权限信息
-  private AllDomainPermissionDto allDoaminPermissionDto;
+  private AllDomainPermissionDto allDomainPermissionDto;
 
   public UserDto getUserDto() {
     return userDto;
@@ -29,7 +29,7 @@ public class UserDetailDto implements Serializable {
   }
 
   public AllDomainPermissionDto getAllDomainPermissionDto() {
-    return allDoaminPermissionDto;
+    return allDomainPermissionDto;
   }
 
   public UserDetailDto setDomainList(List<DomainDto> domainList) {
@@ -38,7 +38,7 @@ public class UserDetailDto implements Serializable {
   }
 
   public UserDetailDto setAllDomainPermissionDto(AllDomainPermissionDto allDomainPermissionDto) {
-    this.allDoaminPermissionDto = allDomainPermissionDto;
+    this.allDomainPermissionDto = allDomainPermissionDto;
     return this;
   }
 }

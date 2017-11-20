@@ -8,6 +8,7 @@ import com.dianrong.common.uniauth.common.bean.dto.RoleCodeDto;
 import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.util.ObjectUtil;
+import com.dianrong.common.uniauth.server.data.entity.Grp;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleExample;
 import com.dianrong.common.uniauth.server.data.entity.GrpRoleKey;
 import com.dianrong.common.uniauth.server.data.entity.PermType;
@@ -35,23 +36,24 @@ import com.dianrong.common.uniauth.server.datafilter.FilterData;
 import com.dianrong.common.uniauth.server.datafilter.FilterType;
 import com.dianrong.common.uniauth.server.exp.AppException;
 import com.dianrong.common.uniauth.server.service.cache.CommonCache;
+import com.dianrong.common.uniauth.server.service.common.CommonService;
 import com.dianrong.common.uniauth.server.service.common.TenancyBasedService;
+import com.dianrong.common.uniauth.server.service.inner.GroupInnerService;
 import com.dianrong.common.uniauth.server.util.BeanConverter;
 import com.dianrong.common.uniauth.server.util.CheckEmpty;
 import com.dianrong.common.uniauth.server.util.ParamCheck;
 import com.dianrong.common.uniauth.server.util.UniBundle;
 import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,6 +82,8 @@ public class RoleService extends TenancyBasedService {
 
   @Autowired
   private DomainService domainService;
+  @Autowired
+  private GroupInnerService groupInnerService;
 
   /**
    * 进行角色数据过滤的filter.
@@ -96,6 +100,9 @@ public class RoleService extends TenancyBasedService {
   @Autowired
   private CommonCache commonCache;
 
+  @Autowired
+  private CommonService commonService;
+
   /**
    * 获取所有的角色编码信息.
    */
@@ -111,9 +118,9 @@ public class RoleService extends TenancyBasedService {
     CheckEmpty.checkEmpty(roleCodeId, "roleCodeId");
     CheckEmpty.checkEmpty(name, "name");
 
-    // domainid必须是有效的
+    // domainId必须是有效的
     domainDataFilter.addFieldCheck(FilterType.EXIST, FieldType.FIELD_TYPE_ID, domainId);
-    // 不能存在domainid，roleCodeId，name完全一致的 role
+    // 不能存在domainId，roleCodeId，name完全一致的 role
     dataFilter.addFieldsCheck(FilterType.NON_EXIST,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, domainId),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, roleCodeId),
@@ -155,7 +162,7 @@ public class RoleService extends TenancyBasedService {
     role.setName(name);
     role.setRoleCodeId(roleCodeId);
 
-    // 不能存在domainid，roleCodeId，name完全一致的 role
+    // 不能存在domainId，roleCodeId，name完全一致的 role
     dataFilter.updateFieldsCheck(roleId,
         FilterData.buildFilterData(FieldType.FIELD_TYPE_DOMAIN_ID, role.getDomainId()),
         FilterData.buildFilterData(FieldType.FIELD_TYPE_ROLE_CODE_ID, role.getRoleCodeId()),
@@ -374,6 +381,119 @@ public class RoleService extends TenancyBasedService {
   }
 
   /**
+   * 根据用户id,获取指定域下的所有角色.(包括直接关联和通过组关联的).
+   */
+  public Map<Long, Set<RoleDto>> getUserRoles(List<Long> userIds, Integer domainId) {
+    CheckEmpty.checkEmpty(domainId, "domainId");
+    CheckEmpty.checkEmpty(userIds, "userIds");
+
+    // 根据域限定角色的范围
+    RoleExample roleExample = new RoleExample();
+    RoleExample.Criteria roleCriteria = roleExample.createCriteria();
+    roleCriteria.andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck())
+        .andDomainIdEqualTo(domainId)
+        .andStatusEqualTo(AppConstants.STATUS_ENABLED);
+    List<Role> roleList = roleMapper.selectByExample(roleExample);
+    if (CollectionUtils.isEmpty(roleList)) {
+      return Collections.emptyMap();
+    }
+
+    List<Integer> roleIdList = new ArrayList<>(roleList.size());
+    for (Role role : roleList) {
+      roleIdList.add(role.getId());
+    }
+
+    // 获取直接关联的角色
+    UserRoleExample userRoleExample = new UserRoleExample();
+    UserRoleExample.Criteria userRoleCriteria = userRoleExample.createCriteria();
+    userRoleCriteria.andRoleIdIn(roleIdList).andUserIdIn(userIds);
+    List<UserRoleKey> userRoleKeyList = userRoleMapper.selectByExample(userRoleExample);
+    Map<Long, Set<Integer>> userRoleIdSetMap = new HashMap<>(userIds.size());
+    Set<Integer> relatedRoleIdSet = new HashSet<>();
+    if (!CollectionUtils.isEmpty(userRoleKeyList)) {
+      for (UserRoleKey userRoleKey : userRoleKeyList) {
+        Integer urRoleId = userRoleKey.getRoleId();
+        Long urUserId = userRoleKey.getUserId();
+        Set<Integer> userRoleIdSet = userRoleIdSetMap.get(urUserId);
+        if (userRoleIdSet == null) {
+          userRoleIdSet = new HashSet<>();
+          userRoleIdSetMap.put(urUserId, userRoleIdSet);
+        }
+        userRoleIdSet.add(urRoleId);
+        relatedRoleIdSet.add(urRoleId);
+      }
+    }
+
+    // 获取根据组间接关联的角色
+    for (Long userId : userIds) {
+      List<Grp> grpList = groupInnerService.listAllGrpRelateUser(userId);
+      if (CollectionUtils.isEmpty(grpList)) {
+        continue;
+      }
+      List<Integer> grpIdList = new ArrayList<>(grpList.size());
+      for (Grp grp : grpList) {
+        grpIdList.add(grp.getId());
+      }
+      // 获取组关联的角色
+      GrpRoleExample grpRoleExample = new GrpRoleExample();
+      GrpRoleExample.Criteria grpRoleCriteria = grpRoleExample.createCriteria();
+      grpRoleCriteria.andRoleIdIn(roleIdList).andGrpIdIn(grpIdList);
+      List<GrpRoleKey> grpRoleKeyList = grpRoleMapper.selectByExample(grpRoleExample);
+      if (CollectionUtils.isEmpty(grpRoleKeyList)) {
+        continue;
+      }
+      Set<Integer> userRoleIdSet = userRoleIdSetMap.get(userId);
+      if (userRoleIdSet == null) {
+        userRoleIdSet = new HashSet<>();
+        userRoleIdSetMap.put(userId, userRoleIdSet);
+      }
+      for (GrpRoleKey grpRoleKey : grpRoleKeyList) {
+        userRoleIdSet.add(grpRoleKey.getRoleId());
+        relatedRoleIdSet.add(grpRoleKey.getRoleId());
+      }
+    }
+    if (CollectionUtils.isEmpty(relatedRoleIdSet)) {
+      return Collections.emptyMap();
+    }
+
+    // 根据角色Id集合获取角色
+    Map<Integer, Role> roleIdMap = new HashMap<>(roleList.size());
+    for (Role role : roleList) {
+      roleIdMap.put(role.getId(), role);
+    }
+
+    Map<Integer, RoleDto> roleDtoIdMap = new HashMap<>(relatedRoleIdSet.size());
+    Map<Integer, RoleCode> roleCodeMap = commonService.getRoleCodeMap();
+    for (Integer roleId : relatedRoleIdSet) {
+      Role role = roleIdMap.get(roleId);
+      if (role == null) {
+        continue;
+      }
+      RoleDto roleDto = BeanConverter.convert(role);
+      RoleCode roleCode = roleCodeMap.get(roleDto.getRoleCodeId());
+      roleDto.setRoleCode(roleCode == null ? "Unknown" : roleCode.getCode());
+      roleDtoIdMap.put(roleDto.getId(), roleDto);
+    }
+
+    // 组装结果
+    Map<Long, Set<RoleDto>> resultMap = new HashMap<>(userRoleIdSetMap.size());
+    for (Map.Entry<Long, Set<Integer>> entry : userRoleIdSetMap.entrySet()) {
+      Long userId = entry.getKey();
+      Set<Integer> roleIdSet = entry.getValue();
+      Set<RoleDto> roleDtoSet = new HashSet<>(roleIdSet.size());
+      for (Integer roleId : roleIdSet) {
+        RoleDto roleDto = roleDtoIdMap.get(roleId);
+        if (roleDto == null) {
+          continue;
+        }
+        roleDtoSet.add(roleDto);
+      }
+      resultMap.put(userId, roleDtoSet);
+    }
+    return resultMap;
+  }
+
+  /**
    * 根据条件查询角色列表.
    */
   public PageDto<RoleDto> searchRole(List<Integer> roleIds, Integer roleId, Integer domainId,
@@ -443,6 +563,7 @@ public class RoleService extends TenancyBasedService {
 
   /**
    * 替换用户与角色的关联关系.
+   *
    * @param roleId 角色Id.
    * @param userIds 用户Id集合.
    */

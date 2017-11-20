@@ -559,12 +559,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
       if (needDescendantGrpUser != null && needDescendantGrpUser) {
         GrpPathExample grpPathExample = new GrpPathExample();
         grpPathExample.createCriteria().andAncestorEqualTo(groupId);
-        List<GrpPath> grpPathes = grpPathMapper.selectByExample(grpPathExample);
-        if (CollectionUtils.isEmpty(grpPathes)) {
+        List<GrpPath> grpPaths = grpPathMapper.selectByExample(grpPathExample);
+        if (CollectionUtils.isEmpty(grpPaths)) {
           return null;
         } else {
           List<Integer> descendantIds = Lists.newArrayList();
-          for (GrpPath grpPath : grpPathes) {
+          for (GrpPath grpPath : grpPaths) {
             descendantIds.add(grpPath.getDescendant());
           }
           if (needDisabledGrpUser != null && needDisabledGrpUser) {
@@ -579,12 +579,12 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
             grpExample.createCriteria().andIdIn(descendantIds)
                 .andStatusEqualTo(AppConstants.ZERO_BYTE)
                 .andTenancyIdEqualTo(tenancyService.getTenancyIdWithCheck());
-            List<Grp> grps = grpMapper.selectByExample(grpExample);
-            if (CollectionUtils.isEmpty(grps)) {
+            List<Grp> grpList = grpMapper.selectByExample(grpExample);
+            if (CollectionUtils.isEmpty(grpList)) {
               return null;
             } else {
               List<Integer> enabledGrpIds = Lists.newArrayList();
-              for (Grp grp : grps) {
+              for (Grp grp : grpList) {
                 enabledGrpIds.add(grp.getId());
               }
               userGrpExampleCriteria.andGrpIdIn(enabledGrpIds);
@@ -917,6 +917,22 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
     return result;
   }
 
+  public UserDto getUserById(Long userId) {
+    CheckEmpty.checkEmpty(userId, "userId");
+    return BeanConverter.convert(userMapper.selectByPrimaryKey(userId));
+  }
+
+  /**
+   * 根据账号获取账号的信息, 包括普通用户账号和系统账号.
+   */
+  public UserDto getUserByAccount(String account, String tenancyCode, Long tenancyId) {
+    CheckEmpty.checkEmpty(account, "account");
+    CheckEmpty.checkEmpty(tenancyCode, "tenancyCode");
+    User user = getUserByAccount(account, tenancyCode, tenancyId, true, AppConstants.STATUS_ENABLED,
+        null);
+    return BeanConverter.convert(user);
+  }
+
   /**
    * 更新用户关联的IPA账号.
    */
@@ -1215,8 +1231,8 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
     Set<Integer> userAllRoleIds = new HashSet<>();
     UserRoleExample userRoleExample = new UserRoleExample();
-    UserRoleExample.Criteria userRoleExCrieria = userRoleExample.createCriteria();
-    userRoleExCrieria.andUserIdEqualTo(userId);
+    UserRoleExample.Criteria userRoleExCriteria = userRoleExample.createCriteria();
+    userRoleExCriteria.andUserIdEqualTo(userId);
     // roleIds user direct connected.
     List<UserRoleKey> userRoleKeys = userRoleMapper.selectByExample(userRoleExample);
     if (!CollectionUtils.isEmpty(userRoleKeys)) {
@@ -1266,7 +1282,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
         .andTenancyIdEqualTo(AppConstants.TENANCY_UNRELATED_TENANCY_ID);
     List<Domain> domainList = domainMapper.selectByExample(domainExample);
     List<DomainDto> domainDtoList = null;
-    if (domainList == null || domainList.isEmpty()) {
+    if (CollectionUtils.isEmpty(domainList)) {
       domainDtoList = Collections.EMPTY_LIST;
     } else {
       // add refactor
@@ -1279,7 +1295,7 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
   }
 
   /**
-   * 获取角色下面所有的权限
+   * 获取角色下面所有的权限.
    *
    * @param enableRoleIds 可用的角色id集合
    * @return roleId与对应的权限集合映射;<br/> 1.如果角色没有任何权限,那么角色的权限是空;<br/> 2.如果没有任何角色,那么返回empty map
@@ -1913,6 +1929,9 @@ public class UserService extends TenancyBasedService implements UserAuthenticati
 
   @Override
   public boolean supported(LoginParam loginParam) {
+    if (loginParam.getThirdAccountType() != null) {
+      return false;
+    }
     return true;
   }
 }

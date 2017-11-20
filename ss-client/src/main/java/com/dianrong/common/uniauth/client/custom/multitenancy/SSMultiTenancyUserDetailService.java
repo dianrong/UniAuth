@@ -83,8 +83,8 @@ public class SSMultiTenancyUserDetailService
       String currentDomainCode = domainDefine.getDomainCode();
       String userInfoClass = domainDefine.getUserInfoClass();
       CheckDomainDefine.checkDomainDefine(currentDomainCode);
-      if (userName == null || "".equals(userName.toString())) {
-        UsernameNotFoundException t = new UsernameNotFoundException(userName + " not found");
+      if (!StringUtils.hasText(userName)) {
+        UsernameNotFoundException t = new UsernameNotFoundException("User not found");
         loadUserFailedCallBack.loadUserFailed(userName, tenancyId, t);
         throw t;
       } else {
