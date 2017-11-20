@@ -1,7 +1,7 @@
 package com.dianrong.common.uniauth.cas.service;
 
 import com.dianrong.common.uniauth.cas.exp.InvalidPermissionException;
-import com.dianrong.common.uniauth.cas.registry.TgtIdentityRedisTicketRegistry;
+import com.dianrong.common.uniauth.cas.registry.TgtIdentityTicketRegistry;
 import com.dianrong.common.uniauth.cas.service.support.PermissionCheck;
 import com.dianrong.common.uniauth.common.bean.dto.UserDto;
 import com.dianrong.common.uniauth.common.util.Assert;
@@ -24,7 +24,7 @@ public class LoginManageService {
   private PermissionCheck permissionCheck;
 
   @Resource(name = "ticketRegistry")
-  private TgtIdentityRedisTicketRegistry tgtIdentityRedisTicketRegistry;
+  private TgtIdentityTicketRegistry tgtIdentityTicketRegistry;
 
   @Autowired
   private UserInfoManageService userInfoManageService;
@@ -60,6 +60,6 @@ public class LoginManageService {
           userId + " has permission to kick out " + beKickOutUserId);
     }
     // 查找被踢出用户所在的tgt并干掉
-    tgtIdentityRedisTicketRegistry.removeTgtByUserId(beKickOutUserId);
+    tgtIdentityTicketRegistry.removeTgtByUserId(beKickOutUserId);
   }
 }

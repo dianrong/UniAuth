@@ -1,11 +1,15 @@
 package com.dianrong.common.uniauth.cas.registry;
 
 import com.dianrong.common.uniauth.common.util.Assert;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 基于Redis的实现.
@@ -39,13 +43,31 @@ public class TgtIdentityRedisTicketRegistry extends AbstractTgtIdentityTicketReg
   }
 
   @Override
-  public String getTgtId(Long userId) {
-    return (String) this.redisTemplate.opsForValue().get(getCacheKey(userId));
+  public void deleteTgtId(Long userId, String tgt) {
+    String cacheKey = getCacheKey(userId);
+    this.redisTemplate.opsForSet().remove(cacheKey, tgt);
+  }
+
+  @Override
+  public Set<String> getTgtId(Long userId) {
+    String cacheKey = getCacheKey(userId);
+    Set<Object> result = this.redisTemplate.opsForSet().members(cacheKey);
+    if (CollectionUtils.isEmpty(result)) {
+      return Collections.emptySet();
+    }
+    Set<String> strSet = new HashSet<>(result.size());
+    for (Object o : result) {
+      strSet.add(o.toString());
+    }
+    return strSet;
   }
 
   @Override
   public void setTgtId(Long userId, String tgtId) {
-    redisTemplate.opsForValue().set(getCacheKey(userId), tgtId, tgtTimeout, TimeUnit.SECONDS);
+    String cacheKey = getCacheKey(userId);
+    this.redisTemplate.opsForSet().add(cacheKey, tgtId);
+    // 设置过期时间
+    this.redisTemplate.expire(cacheKey, tgtTimeout, TimeUnit.SECONDS);
   }
 
   protected String getCacheKey(Long userId) {

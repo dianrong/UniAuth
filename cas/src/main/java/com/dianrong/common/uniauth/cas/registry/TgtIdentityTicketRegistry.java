@@ -1,5 +1,6 @@
 package com.dianrong.common.uniauth.cas.registry;
 
+import java.util.Set;
 import org.jasig.cas.monitor.TicketRegistryState;
 import org.jasig.cas.ticket.registry.TicketRegistry;
 
@@ -14,6 +15,7 @@ public interface TgtIdentityTicketRegistry extends TicketRegistry, TicketRegistr
 
   /**
    * 根据UserId获取关联的Tgt.
+   * 有可能同一个账号在多个地方登录.
    */
-  String queryTgtByUserId(Long userId);
+  Set<String> queryTgtByUserId(Long userId);
 }

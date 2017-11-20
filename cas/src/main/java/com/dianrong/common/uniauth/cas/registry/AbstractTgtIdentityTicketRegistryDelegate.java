@@ -3,6 +3,8 @@ package com.dianrong.common.uniauth.cas.registry;
 import com.dianrong.common.uniauth.common.enm.CasProtocol;
 import com.dianrong.common.uniauth.common.util.Assert;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.jasig.cas.authentication.Authentication;
 import org.jasig.cas.authentication.principal.Principal;
@@ -10,6 +12,7 @@ import org.jasig.cas.ticket.Ticket;
 import org.jasig.cas.ticket.TicketGrantingTicket;
 import org.jasig.cas.ticket.registry.AbstractTicketRegistry;
 import org.jasig.cas.ticket.registry.TicketRegistry;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 增强TicketRegistry功能,添加可以通过用户id管理tgt的功能.
@@ -59,7 +62,7 @@ public abstract class AbstractTgtIdentityTicketRegistryDelegate implements
       if (userId != null) {
         log.debug("Delete user tgt cache:{}", userId);
         // Cache userId with tgtId.
-        deleteTgtId(userId);
+        deleteTgtId(userId, ticketId);
       }
     }
     return result;
@@ -86,34 +89,43 @@ public abstract class AbstractTgtIdentityTicketRegistryDelegate implements
    * 删除UserId关联的Tgt.
    */
   public void removeTgtByUserId(Long userId) {
-    String tgt = queryTgtByUserId(userId);
-    if (tgt != null) {
-      this.deleteTicket(tgt);
-    } else {
+    Set<String> tgtSet = queryTgtByUserId(userId);
+    if (CollectionUtils.isEmpty(tgtSet)) {
       log.debug("The Tgt associated with the user:{} does not exist", userId);
+    } else {
+      // copy one
+      Set<String> removeCol = new HashSet<>(tgtSet);
+      for (String tgt : removeCol) {
+        this.deleteTicket(tgt);
+      }
     }
   }
 
   /**
    * 根据UserId获取关联的Tgt.
    */
-  public String queryTgtByUserId(Long userId) {
+  public Set<String> queryTgtByUserId(Long userId) {
     return getTgtId(userId);
   }
 
 
   /**
-   * 根据缓存Id获取tgtId.
+   * 根据用户id删除关联的tgt.
    */
   public abstract void deleteTgtId(Long userId);
 
   /**
-   * 删除tgtId.
+   * 根据用户id,指定删除某个tgt.
    */
-  public abstract String getTgtId(Long userId);
+  public abstract void deleteTgtId(Long userId, String tgt);
 
   /**
-   * 缓存tgtId.
+   * 根据用户id获取关联的tgt集合.
+   */
+  public abstract Set<String> getTgtId(Long userId);
+
+  /**
+   * 缓存tgt.
    */
   public abstract void setTgtId(Long userId, String tgtId);
 

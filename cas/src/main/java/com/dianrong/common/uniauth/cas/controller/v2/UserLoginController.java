@@ -257,7 +257,7 @@ public class UserLoginController {
       if (extendLoginTimes > this.maxContinueLoginTimes) {
         // 延续登录次数超出最大次数了
         log.info("User '{}' continue login exceeded maximum limit times", userId);
-        return ApiResponse.failure(ResponseCode.USER_NOT_LOGIN,
+        return ApiResponse.failure(ResponseCode.CONTINUE_LOGIN_EXCEEDED_MAX_TIMES,
             UniBundleUtil.getMsg(messageSource, "api.v2.continue.login.exceeded.max.times",
                 this.maxContinueLoginTimes));
       }
