@@ -1,7 +1,5 @@
 package com.dianrong.common.uniauth.sharerw.facade;
 
-import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.PermTypeDto;
 import com.dianrong.common.uniauth.common.client.ApiCtrlAccountHolder;
 import com.dianrong.common.uniauth.common.client.SimpleApiCtrlAccountHolder;
 import com.dianrong.common.uniauth.common.client.UUIDHeaderClientRequestFilter;
@@ -44,7 +42,7 @@ public class UARWFacade {
   public UARWFacade() {}
 
   @Resource(name = "uniauthConfig")
-  private Map<String, String> allZkNodeMap;
+  private Map<String, String> uniauthConfig;
 
   private IDomainRWResource domainRWResource;
   private IGroupRWResource groupRWResource;
@@ -56,11 +54,10 @@ public class UARWFacade {
   private IConfigRWResource configRWResource;
   private ITagRWResource tagRWResource;
   private ITenancyRWResource tenancyRWResource;
-  private ISynchronousDateRWResource synchronousDateRWResource;
+  private ISynchronousDataRWResource synchronousDataRWResource;
 
   @Autowired(required = false)
   private ApiCtrlAccountHolder apiCtrlAccountHolder;
-
 
   /**
    * 构造函数.
@@ -97,18 +94,16 @@ public class UARWFacade {
           .setCtlSwitch(new ApiCallCtlSwitch() {
             @Override
             public boolean apiCtlOn() {
-              if (allZkNodeMap != null) {
+              if (uniauthConfig != null) {
                 return !"false".equalsIgnoreCase(
-                    allZkNodeMap.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
+                    uniauthConfig.get(AppConstants.UNIAUTH_SERVER_API_CALL_SWITCH));
               }
               return true;
             }
           });
     }
-    UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter =
-        new UUIDHeaderClientRequestFilter();
-    List<?> providers =
-        Arrays.asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
+    UUIDHeaderClientRequestFilter uUIDHeaderClientRequestFilter = new UUIDHeaderClientRequestFilter();
+    List<?> providers = Arrays.asList(jacksonJsonProvider, uUIDHeaderClientRequestFilter, cxfHeaderFilter);
     domainRWResource =
         UniauthRSClientFactory.create(uniWsEndpoint, IDomainRWResource.class, providers);
     groupRWResource =
@@ -125,12 +120,12 @@ public class UARWFacade {
     tagRWResource = UniauthRSClientFactory.create(uniWsEndpoint, ITagRWResource.class, providers);
     tenancyRWResource =
         UniauthRSClientFactory.create(uniWsEndpoint, ITenancyRWResource.class, providers);
-    synchronousDateRWResource =
-        UniauthRSClientFactory.create(uniWsEndpoint, ISynchronousDateRWResource.class, providers);
+    synchronousDataRWResource =
+        UniauthRSClientFactory.create(uniWsEndpoint, ISynchronousDataRWResource.class, providers);
 
     ClientFacadeUtil.addApiKey(apiName, apiKey, domainRWResource, groupRWResource,organizationRWResource,
         permissionRWResource, userRWResource, roleRWResource, auditResource, configRWResource,
-        tagRWResource, tenancyRWResource, synchronousDateRWResource);
+        tagRWResource, tenancyRWResource, synchronousDataRWResource);
   }
 
   public UARWFacade setUniWsEndpoint(String uniWsEndpoint) {
@@ -182,8 +177,8 @@ public class UARWFacade {
     return organizationRWResource;
   }
 
-  public ISynchronousDateRWResource getSynchronousDateRWResource() {
-    return synchronousDateRWResource;
+  public ISynchronousDataRWResource getSynchronousDataRWResource() {
+    return synchronousDataRWResource;
   }
 
   public void setApiCtrlAccountHolder(ApiCtrlAccountHolder apiCtrlAccountHolder) {

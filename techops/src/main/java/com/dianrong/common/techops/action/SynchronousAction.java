@@ -1,10 +1,8 @@
 package com.dianrong.common.techops.action;
 
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.AuditDto;
 import com.dianrong.common.uniauth.common.bean.dto.HrSynchronousLogDto;
 import com.dianrong.common.uniauth.common.bean.dto.PageDto;
-import com.dianrong.common.uniauth.common.bean.request.AuditParam;
 import com.dianrong.common.uniauth.common.bean.request.HrSynchronousLogParam;
 import com.dianrong.common.uniauth.common.bean.request.HrSynchronousProcessParam;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
@@ -33,7 +31,7 @@ public class SynchronousAction {
       + "and principal.permMap['DOMAIN'].contains('techops')")
   public Response<PageDto<HrSynchronousLogDto>> searchHrLogs(@RequestBody
       HrSynchronousLogParam synchronousLogParam) {
-    return uarwFacade.getSynchronousDateRWResource().querySynchronousLog(synchronousLogParam);
+    return uarwFacade.getSynchronousDataRWResource().querySynchronousLog(synchronousLogParam);
   }
 
   @RequestMapping(value = "/hr/synchronous-once", method = RequestMethod.POST,
@@ -41,7 +39,7 @@ public class SynchronousAction {
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
       + "and principal.permMap['DOMAIN'].contains('techops')")
   public Response<Void> hrSynchronousOnce(@RequestBody HrSynchronousProcessParam param) {
-    return uarwFacade.getSynchronousDateRWResource().synchronousHrData(param);
+    return uarwFacade.getSynchronousDataRWResource().synchronousHrData(param);
   }
 
   @RequestMapping(value = "/hr/delete-expired-files", method = RequestMethod.POST,
@@ -49,6 +47,6 @@ public class SynchronousAction {
   @PreAuthorize("hasRole('ROLE_SUPER_ADMIN') and principal.permMap['DOMAIN'] != null "
       + "and principal.permMap['DOMAIN'].contains('techops')")
   public Response<Void> hrDeleteExpiredFiles(@RequestBody HrSynchronousProcessParam param) {
-    return uarwFacade.getSynchronousDateRWResource().deleteExpiredFile(param);
+    return uarwFacade.getSynchronousDataRWResource().deleteExpiredFile(param);
   }
 }

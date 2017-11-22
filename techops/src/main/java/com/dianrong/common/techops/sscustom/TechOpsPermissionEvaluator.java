@@ -5,24 +5,46 @@ import com.dianrong.common.uniauth.client.custom.UniauthPermissionEvaluatorImpl;
 import com.dianrong.common.uniauth.common.bean.Info;
 import com.dianrong.common.uniauth.common.bean.Linkage;
 import com.dianrong.common.uniauth.common.bean.Response;
-import com.dianrong.common.uniauth.common.bean.dto.*;
-import com.dianrong.common.uniauth.common.bean.request.*;
+import com.dianrong.common.uniauth.common.bean.dto.DomainDto;
+import com.dianrong.common.uniauth.common.bean.dto.PageDto;
+import com.dianrong.common.uniauth.common.bean.dto.PermissionDto;
+import com.dianrong.common.uniauth.common.bean.dto.RoleDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagDto;
+import com.dianrong.common.uniauth.common.bean.dto.TagTypeDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDetailDto;
+import com.dianrong.common.uniauth.common.bean.dto.UserDto;
+import com.dianrong.common.uniauth.common.bean.request.GroupParam;
+import com.dianrong.common.uniauth.common.bean.request.OrganizationParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionParam;
+import com.dianrong.common.uniauth.common.bean.request.PermissionQuery;
+import com.dianrong.common.uniauth.common.bean.request.RoleParam;
+import com.dianrong.common.uniauth.common.bean.request.RoleQuery;
+import com.dianrong.common.uniauth.common.bean.request.TagParam;
+import com.dianrong.common.uniauth.common.bean.request.TagQuery;
+import com.dianrong.common.uniauth.common.bean.request.TagTypeParam;
+import com.dianrong.common.uniauth.common.bean.request.TagTypeQuery;
+import com.dianrong.common.uniauth.common.bean.request.UserListParam;
+import com.dianrong.common.uniauth.common.bean.request.UserParam;
+import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 import com.dianrong.common.uniauth.common.client.UniClientFacade;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.enm.UserType;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
+import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.CollectionUtils;
-
-import javax.annotation.PostConstruct;
-import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 
@@ -39,7 +61,8 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
     this.permissionChecks = new HashSet<>();
   }
 
-  @PostConstruct public void springInit() {
+  @PostConstruct
+  public void springInit() {
     init();
   }
 
@@ -53,10 +76,11 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
           try {
             // 获取默认构造函数
             // 注意: 非静态内部类的构造函数是需要在构造的时候将外部class作为第一个参数传入的
-            Constructor constructor = cls.getDeclaredConstructor(new Class<?>[] {this.getClass()});
+            Constructor constructor = cls.getDeclaredConstructor(new Class<?>[]{this.getClass()});
             constructor.setAccessible(true);
             // 将实现加入到实现列表中
-            this.permissionChecks.add((PermissionCheck) constructor.newInstance(new Object[] {this}));
+            this.permissionChecks
+                .add((PermissionCheck) constructor.newInstance(new Object[]{this}));
           } catch (Exception e) {
             LOGGER.warn("Init failed, failed instance" + cls.getName(), e);
             throw new UniauthCommonException("Init failed, failed instance" + cls.getName(), e);
@@ -91,11 +115,13 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
    * 一个标识权限Check不支持的异常类型类型.
    */
   private class NotSupportedException extends UniauthCommonException {
+
   }
 
 
   // 定义各种类型权限Check的实现
   private interface PermissionCheck {
+
     /**
      * Check权限.
      *
@@ -113,7 +139,9 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
 
 
   private class PermUserIdCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) {
       if (targetObject instanceof UserParam) {
         UserParam userParam = (UserParam) targetObject;
@@ -147,14 +175,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_USERID_CHECK.equals(permType);
     }
   }
 
 
   private class PermGroupOwner implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) {
       GroupParam groupParam = null;
       if (targetObject instanceof GroupParam) {
@@ -185,14 +216,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_GROUP_OWNER.equals(permType);
     }
   }
 
 
   private class PermOrganizationOwner implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       OrganizationParam organizationParam = null;
       if (targetObject instanceof OrganizationParam) {
@@ -226,14 +260,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_ORGANIZATION_OWNER.equals(permType);
     }
   }
 
 
   private class PermSystemUserEditCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       if (targetObject instanceof UserParam) {
         UserParam userParam = (UserParam) targetObject;
@@ -277,14 +314,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_SYSTEM_USER_EDIT_CHECK.equals(permType);
     }
   }
 
 
   private class PermRoleIdCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       Integer roleId = null;
       if (targetObject instanceof Integer) {
@@ -313,14 +353,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_ROLEID_CHECK.equals(permType);
     }
   }
 
 
   private class PermRoleIdsCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       List<Integer> roleIds = null;
       if (targetObject instanceof GroupParam) {
@@ -354,14 +397,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_ROLEIDS_CHECK.equals(permType);
     }
   }
 
 
   private class PermPermIdCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       PermissionParam permissionParam = (PermissionParam) targetObject;
       Integer permId = permissionParam.getId();
@@ -383,14 +429,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_PERMID_CHECK.equals(permType);
     }
   }
 
 
   private class PermPermIdsCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       if (targetObject instanceof RoleParam) {
         RoleParam roleParam = (RoleParam) targetObject;
@@ -416,14 +465,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_PERMIDS_CHECK.equals(permType);
     }
   }
 
 
   private class PermTagTypeIdCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       if (targetObject instanceof TagTypeParam) {
         TagTypeParam tagTypeParam = (TagTypeParam) targetObject;
@@ -452,14 +504,17 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
       throw new NotSupportedException();
     }
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_TAGTYPEID_CHECK.equals(permType);
     }
   }
 
 
   private class PermTagIdCheck implements PermissionCheck {
-    @Override public boolean hasPermission(Authentication authentication, Object targetObject,
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
         Object permission) throws NotSupportedException {
       Integer tagId = null;
       if (targetObject instanceof Integer) {
@@ -494,8 +549,30 @@ public class TechOpsPermissionEvaluator extends UniauthPermissionEvaluatorImpl {
     }
 
 
-    @Override public boolean supportCheck(String permType) {
+    @Override
+    public boolean supportCheck(String permType) {
       return PermType.PERM_TAGID_CHECK.equals(permType);
+    }
+  }
+
+  private class SystemAccountCheck implements PermissionCheck {
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetObject,
+        Object permission) throws NotSupportedException {
+      TechOpsUserExtInfo techOpsUserExtInfo = (TechOpsUserExtInfo) authentication.getPrincipal();
+      Byte userType = techOpsUserExtInfo.getUserDto().getType();
+      // 必须是系统账号才有权限
+      if (UserType.SYSTEM.equals(userType)) {
+        return true;
+      }
+      return false;
+    }
+
+
+    @Override
+    public boolean supportCheck(String permType) {
+      return PermType.SYSTEM_ACCOUNT_CHECK.equals(permType);
     }
   }
 

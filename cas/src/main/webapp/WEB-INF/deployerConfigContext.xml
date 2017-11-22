@@ -185,6 +185,6 @@
         <property name="cookieSecure"  value="#{uniauthConfig['authentication.jwt.cookie.secure']?:'false'}"/>
         <property name="cookieMaxAge"  value="-1"/>
         <property name="cookieHttpOnly" value="true"/>
-        <property name="cookieDomain" value="#{uniauthConfig['authentication.jwt.cookie.domain']}"></property>
+        <property name="cookieDomain" value="#{uniauthConfig['authentication.jwt.cookie.domain']}"/>
     </bean>
 </beans>
