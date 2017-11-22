@@ -48,13 +48,26 @@ public class ProxyInvokeService {
     Class<?> clz = field.getDeclaringClass();
     Method[] methodList = clz.getDeclaredMethods();
     String clzName = clz.getSimpleName();
-    Map<InvokeKey, InvokedApi> targetMap = clzName.contains("RW") ? writeApiMap : readApiMap;
+    Class<?> readClz;
+    Class<?> writeClz;
+    if (clzName.contains("RW")) {
+      writeClz = clz;
+      Class<?> superClz = writeClz.getSuperclass();
+      if (!superClz.equals(Object.class)) {
+        readClz = superClz;
+      } else {
+        readClz = null;
+      }
+    } else {
+      readClz = clz;
+      writeClz = null;
+    }
     for (Method method : methodList) {
       Class<?> returnClz = method.getReturnType();
       if (Response.class.isAssignableFrom(returnClz)) {
+
       }
     }
-
   }
 
   private class InvokeKey {

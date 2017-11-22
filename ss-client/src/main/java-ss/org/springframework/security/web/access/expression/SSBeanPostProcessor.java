@@ -146,14 +146,14 @@ public class SSBeanPostProcessor implements BeanPostProcessor, SwitchControl {
         }
         List<UrlRoleMappingDto> urlRoleMappings = response.getData();
         if (urlRoleMappings != null) {
-          for (UrlRoleMappingDto urlRoleMaping : urlRoleMappings) {
-            Long tenancyId = urlRoleMaping.getTenancyId();
+          for (UrlRoleMappingDto urlRoleMapping : urlRoleMappings) {
+            Long tenancyId = urlRoleMapping.getTenancyId();
             List<UrlRoleMappingDto> domainUrlRoleMappings = allUrlRoleMappings.get(tenancyId);
             if (domainUrlRoleMappings == null) {
               domainUrlRoleMappings = new ArrayList<>();
               allUrlRoleMappings.put(tenancyId, domainUrlRoleMappings);
             }
-            domainUrlRoleMappings.add(urlRoleMaping);
+            domainUrlRoleMappings.add(urlRoleMapping);
           }
         }
         startIndex = startIndex + includeTenancyIds.size();
