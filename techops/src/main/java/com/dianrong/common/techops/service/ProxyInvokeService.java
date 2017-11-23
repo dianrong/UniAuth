@@ -43,6 +43,15 @@ public class ProxyInvokeService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProxyInvokeService.class);
 
+  /**
+   * 需要忽略的resource集合.
+   */
+  private static final Set<String> IGNORE_RESOURCE_NAME = new HashSet<String>() {
+    {
+      add("ITenancyRWResource");
+    }
+  };
+
   @Resource
   private UARWFacade uarwFacade;
 
@@ -60,7 +69,8 @@ public class ProxyInvokeService {
     for (Field field : fieldArray) {
       Class<?> clz = field.getType();
       String clzName = clz.getSimpleName();
-      if (clz.isInterface() && clzName.startsWith("I") && clzName.endsWith("Resource")) {
+      if (!IGNORE_RESOURCE_NAME.contains(clzName) && clz.isInterface() && clzName.startsWith("I")
+          && clzName.endsWith("Resource")) {
         parseApiMap(field);
       }
     }
@@ -83,11 +93,13 @@ public class ProxyInvokeService {
       throws NotFoundApiException, NoAuthorityException, InvalidParameterException {
     InvokeKey key = new InvokeKey(method, path);
     if (!allApiPath.contains(key)) {
+      LOGGER.debug("No api match:" + key);
       throw new NotFoundApiException("No api match:" + key);
     }
     InvokedApi invokedApi = readApiMap.get(key);
     if (!currentRequestIsFromSuperAdmin()) {
       if (invokedApi == null) {
+        LOGGER.debug("No authority to invoke api:" + key);
         throw new NoAuthorityException("No authority to invoke api:" + key);
       }
     } else {
@@ -95,6 +107,7 @@ public class ProxyInvokeService {
       if (invokedApi == null) {
         invokedApi = writeApiMap.get(key);
         if (invokedApi == null) {
+          LOGGER.debug("No authority to invoke api:" + key);
           throw new NoAuthorityException("No authority to invoke api:" + key);
         }
       }
