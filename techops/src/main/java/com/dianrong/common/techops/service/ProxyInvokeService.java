@@ -1,10 +1,16 @@
 package com.dianrong.common.techops.service;
 
+import com.dianrong.common.techops.exp.InvalidParameterException;
+import com.dianrong.common.techops.exp.NoAuthorityException;
+import com.dianrong.common.techops.exp.NotFoundApiException;
+import com.dianrong.common.uniauth.common.cons.AppConstants;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.Assert;
+import com.dianrong.common.uniauth.common.util.JsonUtil;
 import com.dianrong.common.uniauth.sharerw.facade.UARWFacade;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,6 +26,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -47,7 +56,7 @@ public class ProxyInvokeService {
     LOGGER.info("Start collect uniauth server api list.");
     Field[] fieldArray = uarwFacade.getClass().getDeclaredFields();
     for (Field field : fieldArray) {
-      Class<?> clz = field.getDeclaringClass();
+      Class<?> clz = field.getType();
       String clzName = clz.getSimpleName();
       if (clz.isInterface() && clzName.startsWith("I") && clzName.endsWith("Resource")) {
         parseApiMap(field);
@@ -57,27 +66,97 @@ public class ProxyInvokeService {
         + writeApiMap);
   }
 
-  public String invokeApi(String paramStr, String path, String method) {
+  /**
+   * 调用Uniauth-server的Api.
+   *
+   * @param paramStr 请求json参数.
+   * @param path 请求的路径.
+   * @param method 请求方法.
+   * @return 接口返回结果.
+   * @throws NotFoundApiException 请求的方法不存在.
+   * @throws NoAuthorityException 没有权限访问.
+   * @throws InvalidParameterException 请求参数不对.
+   */
+  public Object invokeApi(String paramStr, String path, String method)
+      throws NotFoundApiException, NoAuthorityException, InvalidParameterException {
+    InvokeKey key = new InvokeKey(method, path);
+    if (!allApiPath.contains(key)) {
+      throw new NotFoundApiException("No api match:" + key);
+    }
+    InvokedApi invokedApi = readApiMap.get(key);
+    if (!currentRequestIsFromSuperAdmin()) {
+      if (invokedApi == null) {
+        throw new NoAuthorityException("No authority to invoke api:" + key);
+      }
+    } else {
+      // 超级管理员可以调用写接口.
+      if (invokedApi == null) {
+        invokedApi = writeApiMap.get(key);
+        if (invokedApi == null) {
+          throw new NoAuthorityException("No authority to invoke api:" + key);
+        }
+      }
+    }
 
+    Class<?> paramClz = invokedApi.paramClz;
+    Object[] parameters;
+    if (paramClz != null) {
+      Object param;
+      try {
+        param = JsonUtil.jsonToObject(paramStr, paramClz);
+      } catch (RuntimeException e) {
+        LOGGER.error(paramStr + " can not be cast to " + paramClz.getName(), e);
+        throw new InvalidParameterException(paramStr + " can not be cast to " + paramClz.getName());
+      }
+      parameters = new Object[]{param};
+    } else {
+      // empty parameter list
+      parameters = new Object[0];
+    }
+    try {
+      return invokedApi.invokeMethod.invoke(invokedApi.target, parameters);
+    } catch (Exception e) {
+      LOGGER.error("Failed call api:" + key, e);
+      return "Failed call api:" + key;
+    }
+  }
+
+  /**
+   * 判断当前请求用户是否是超级管理员.
+   */
+  private boolean currentRequestIsFromSuperAdmin() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) {
+      return false;
+    }
+    Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+    for (GrantedAuthority authority : authorities) {
+      if (authority.getAuthority().equalsIgnoreCase(AppConstants.ROLE_SUPER_ADMIN)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 
   private void parseApiMap(Field field) {
-    Class<?> clz = field.getDeclaringClass();
+    Class<?> clz = field.getType();
     String clzName = clz.getSimpleName();
-    Class<?> readClz;
-    Class<?> writeClz;
+    Class<?> readClz = null;
+    Class<?> writeClz = null;
     if (clzName.contains("RW")) {
       writeClz = clz;
-      Class<?> superClz = writeClz.getSuperclass();
-      if (!superClz.equals(Object.class)) {
-        readClz = superClz;
-      } else {
-        readClz = null;
+      Class<?>[] interfaces = writeClz.getInterfaces();
+      for (Class<?> superInterface : interfaces) {
+        String interfaceClzName = superInterface.getSimpleName();
+        if (superInterface.isInterface() && interfaceClzName.startsWith("I") && interfaceClzName
+            .endsWith("Resource")) {
+          readClz = superInterface;
+          break;
+        }
       }
     } else {
       readClz = clz;
-      writeClz = null;
     }
     if (readClz == null) {
       throw new UniauthCommonException(field.getName() + " is invalid!");
@@ -109,6 +188,7 @@ public class ProxyInvokeService {
       String httpMethod = getHttpMethod(method);
       Object target;
       try {
+        field.setAccessible(true);
         target = field.get(uarwFacade);
       } catch (IllegalArgumentException | IllegalAccessException e) {
         LOGGER.error("Failed get field:" + field.getName());
@@ -192,14 +272,6 @@ public class ProxyInvokeService {
       Assert.notNull(path);
       this.method = method.toUpperCase();
       this.path = clearPath(path);
-    }
-
-    public String getMethod() {
-      return method;
-    }
-
-    public String getPath() {
-      return path;
     }
 
     @Override
