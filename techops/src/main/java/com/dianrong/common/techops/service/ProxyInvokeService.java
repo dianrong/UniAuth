@@ -43,6 +43,15 @@ public class ProxyInvokeService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ProxyInvokeService.class);
 
+  /**
+   * 需要忽略的resource集合.
+   */
+  private static final Set<String> IGNORE_RESOURCE_NAME = new HashSet<String>() {
+    {
+      add("ITenancyRWResource");
+    }
+  };
+
   @Resource
   private UARWFacade uarwFacade;
 
@@ -60,7 +69,8 @@ public class ProxyInvokeService {
     for (Field field : fieldArray) {
       Class<?> clz = field.getType();
       String clzName = clz.getSimpleName();
-      if (clz.isInterface() && clzName.startsWith("I") && clzName.endsWith("Resource")) {
+      if (!IGNORE_RESOURCE_NAME.contains(clzName) && clz.isInterface() && clzName.startsWith("I")
+          && clzName.endsWith("Resource")) {
         parseApiMap(field);
       }
     }

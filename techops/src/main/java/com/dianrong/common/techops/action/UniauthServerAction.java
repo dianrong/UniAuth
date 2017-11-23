@@ -52,12 +52,9 @@ public class UniauthServerAction {
 
   private String getRelativePath(HttpServletRequest request) {
     String path = clearPath(request.getRequestURI());
-    String contextPath = clearPath(request.getContextPath());
-    if (path.startsWith(contextPath)) {
-      path = path.substring(contextPath.length());
-    }
-    if (path.startsWith("/proxy")) {
-      path = path.substring("/proxy".length());
+    String pathPrefix = clearPath(request.getContextPath() + "/proxy");
+    if (path.startsWith(pathPrefix)) {
+      path = path.substring(pathPrefix.length());
     }
     return path;
   }
