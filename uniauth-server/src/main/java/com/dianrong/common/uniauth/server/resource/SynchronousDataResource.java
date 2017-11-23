@@ -7,7 +7,7 @@ import com.dianrong.common.uniauth.common.bean.request.HrSynchronousLogParam;
 import com.dianrong.common.uniauth.common.bean.request.HrSynchronousProcessParam;
 import com.dianrong.common.uniauth.server.support.audit.ResourceAudit;
 import com.dianrong.common.uniauth.server.synchronous.hr.service.Synchronous;
-import com.dianrong.common.uniauth.sharerw.interfaces.ISynchronousDateRWResource;
+import com.dianrong.common.uniauth.sharerw.interfaces.ISynchronousDataRWResource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by Arc on 14/1/16.
  */
 @Api("同步数据操作接口") @RestController public class SynchronousDataResource
-    implements ISynchronousDateRWResource {
+    implements ISynchronousDataRWResource {
 
   @Autowired private Synchronous synchronous;
 

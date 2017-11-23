@@ -7,6 +7,7 @@ import com.dianrong.common.uniauth.common.bean.request.PrimaryKeyParam;
 import com.dianrong.common.uniauth.common.bean.request.UserParam;
 import com.dianrong.common.uniauth.common.bean.request.UserQuery;
 
+import com.dianrong.common.uniauth.common.enm.LoginAPI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -46,11 +47,13 @@ public interface IUserResource {
   // scenario: retrieve all roles connected with a user(including all other roles under a domain)
   Response<List<RoleDto>> getAllRolesToUserAndDomain(UserParam userParam);
 
+  @LoginAPI
   @POST
   @Path("login")
   // scenario: cas login
   Response<UserDto> login(LoginParam loginParam);
 
+  @LoginAPI
   @POST
   @Path("system-login")
     // scenario: cas system account login
@@ -93,6 +96,7 @@ public interface IUserResource {
   @Path("query-user/group-and-role")
   Response<List<UserDto>> getUsersByGroupCodeRoleIds(UserParam userParam);
 
+  @LoginAPI
   @POST
   @Path("vpn-login")
   // scenario: VPN login

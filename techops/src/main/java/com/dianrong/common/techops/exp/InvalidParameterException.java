@@ -3,21 +3,21 @@ package com.dianrong.common.techops.exp;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 
 /**
- * 批处理的异常类型.
+ * 没有找到对应的Api.
  */
-public class BatchProcessException extends UniauthCommonException {
+public class InvalidParameterException extends UniauthCommonException {
 
   private static final long serialVersionUID = 725349568285975577L;
-  
-  public BatchProcessException() {
+
+  public InvalidParameterException() {
     super();
   }
 
-  public BatchProcessException(String msg) {
+  public InvalidParameterException(String msg) {
     super(msg);
   }
 
-  public BatchProcessException(String msg, Throwable t) {
+  public InvalidParameterException(String msg, Throwable t) {
     super(msg, t);
   }
 }
