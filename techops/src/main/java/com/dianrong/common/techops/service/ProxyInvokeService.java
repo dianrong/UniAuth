@@ -3,7 +3,9 @@ package com.dianrong.common.techops.service;
 import com.dianrong.common.techops.exp.InvalidParameterException;
 import com.dianrong.common.techops.exp.NoAuthorityException;
 import com.dianrong.common.techops.exp.NotFoundApiException;
+import com.dianrong.common.uniauth.common.bean.request.TenancyBasedParam;
 import com.dianrong.common.uniauth.common.cons.AppConstants;
+import com.dianrong.common.uniauth.common.enm.LoginAPI;
 import com.dianrong.common.uniauth.common.exp.UniauthCommonException;
 import com.dianrong.common.uniauth.common.util.Assert;
 import com.dianrong.common.uniauth.common.util.JsonUtil;
@@ -104,6 +106,11 @@ public class ProxyInvokeService {
       Object param;
       try {
         param = JsonUtil.jsonToObject(paramStr, paramClz);
+        if ((param instanceof TenancyBasedParam) && !invokedApi.isLoginApi) {
+          // 去除租户相关信息
+          ((TenancyBasedParam) param).setTenancyCode(null);
+          ((TenancyBasedParam) param).setTenancyId(null);
+        }
       } catch (RuntimeException e) {
         LOGGER.error(paramStr + " can not be cast to " + paramClz.getName(), e);
         throw new InvalidParameterException(paramStr + " can not be cast to " + paramClz.getName());
@@ -318,11 +325,14 @@ public class ProxyInvokeService {
 
     private final Class<?> paramClz;
 
+    private final boolean isLoginApi;
+
     InvokedApi(Object target, Method invokeMethod) {
       Assert.notNull(target);
       Assert.notNull(invokeMethod);
       this.target = target;
       this.invokeMethod = invokeMethod;
+      this.isLoginApi = invokeMethod.getAnnotation(LoginAPI.class) != null;
       Class<?>[] parameterTypes = invokeMethod.getParameterTypes();
       if (parameterTypes.length > 1) {
         throw new UniauthCommonException("Not support api, parameter more than 1");
