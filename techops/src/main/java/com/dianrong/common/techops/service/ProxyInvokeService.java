@@ -83,11 +83,13 @@ public class ProxyInvokeService {
       throws NotFoundApiException, NoAuthorityException, InvalidParameterException {
     InvokeKey key = new InvokeKey(method, path);
     if (!allApiPath.contains(key)) {
+      LOGGER.debug("No api match:" + key);
       throw new NotFoundApiException("No api match:" + key);
     }
     InvokedApi invokedApi = readApiMap.get(key);
     if (!currentRequestIsFromSuperAdmin()) {
       if (invokedApi == null) {
+        LOGGER.debug("No authority to invoke api:" + key);
         throw new NoAuthorityException("No authority to invoke api:" + key);
       }
     } else {
@@ -95,6 +97,7 @@ public class ProxyInvokeService {
       if (invokedApi == null) {
         invokedApi = writeApiMap.get(key);
         if (invokedApi == null) {
+          LOGGER.debug("No authority to invoke api:" + key);
           throw new NoAuthorityException("No authority to invoke api:" + key);
         }
       }
