@@ -87,10 +87,12 @@
 	<b:bean id="cookieJWTQuery" class="com.dianrong.common.uniauth.client.custom.jwt.CookieJWTQuery">
 	   <b:property name="jwtCookieNameSuffix"  value="#{uniauthConfig['authentication.jwt.cookie.suffix']}"/>
 	</b:bean>
-	
+
+	<b:bean id = "defaultSecurityKey" class="com.dianrong.common.uniauth.common.jwt.DefaultSecurityKey"/>
 	<b:bean id="uniauthJWTSecurity" class="com.dianrong.common.uniauth.common.jwt.UniauthJWTSecurity">
         <b:constructor-arg index="0" value="#{uniauthConfig['authentication.jwt.private.key']}"/>
         <b:constructor-arg index="1" value="#{uniauthConfig['authentication.jwt.public.key']}"/>
+				<b:constructor-arg index="2" ref="defaultSecurityKey"/>
         <b:property name="issuedSecondsAheadOffset" value="10"/>
     </b:bean>
 
