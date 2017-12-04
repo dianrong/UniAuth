@@ -54,7 +54,7 @@ gradle warTechopsWebsite
 JAVA_OPTS="$JAVA_OPTS -Dcatalina.logs=/var/lib/tomcat/logs"
 
 # zookeeper cluster address (zookeeper集群不是必须的, 可单节点)
-JAVA_OPTS="$JAVA_OPTS -DR_CFG_ZOOKEEPER_ENV_URL=10.8.12.85:2181,10.8.12.85:2182,10.8.12.85:2183"
+JAVA_OPTS="$JAVA_OPTS -DDR_CFG_ZOOKEEPER_ENV_URL=10.8.12.85:2181,10.8.12.85:2182,10.8.12.85:2183"
 ```
 
 ##### windows环境
